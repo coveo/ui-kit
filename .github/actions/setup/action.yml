@@ -31,7 +31,8 @@ runs:
           packages/atomic/storybook-static
           packages/atomic/www
           packages/quantic/docs/out
-          packages/atomic-react
+          packages/atomic-react/dist
+          packages/atomic-angular/projects/atomic-angular/dist
           packages/samples/headless-react
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           !node_modules

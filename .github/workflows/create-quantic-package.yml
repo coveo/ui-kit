@@ -1,10 +1,5 @@
 name: Create Quantic Package
 
-env:
-  SFDX_AUTH_JWT_USERNAME: sfdc.integration.devv2.hub@coveo.com
-  SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}
-  SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_PACKAGE_CLIENT_ID }}
-
 on:
   workflow_dispatch:
   schedule:
@@ -46,20 +41,15 @@ jobs:
               repo: context.repo.repo,
               run_id: context.runId
             })
-      - name: Install NPM dependencies
-        working-directory: ./packages/quantic
-        run: |
-          npm i -g typescript
-          npm i -g sfdx-cli
-          npm i
-      - name: Build Quantic project
-        working-directory: ./packages/quantic
-        run: npm run build
-      - name: Copy static resources
-        working-directory: ./packages/quantic
-        run: npm run copy:staticresources
+      - name: Setup
+        uses: ./.github/actions/setup
       - name: Create package version
         working-directory: ./packages/quantic
         run: |
-          echo "$SFDX_AUTH_JWT_KEY" > server.key
-          node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations
+          echo "${{ secrets.SFDX_AUTH_PACKAGE_JWT_KEY }}" > server.key
+          npx --no-install ts-node scripts/build/create-package.ts --remove-translations --ci
+          rm server.key
+        env:
+          SFDX_AUTH_JWT_USERNAME: sfdc.integration.devv2.hub@coveo.com
+          SFDX_AUTH_JWT_KEY: server.key
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_PACKAGE_CLIENT_ID }}

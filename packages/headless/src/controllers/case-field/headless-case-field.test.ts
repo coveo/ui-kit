@@ -138,6 +138,16 @@ describe('Case Field', () => {
       );
     });
 
+    it('does not dispatch a #logCaseFieldUpdate analytics action when the autoSelection parameter is set to true', () => {
+      field.update(testValue, undefined, true);
+
+      expect(engine.actions).not.toContainEqual(
+        expect.objectContaining({
+          type: 'analytics/caseAssist/case/field/update/pending',
+        })
+      );
+    });
+
     it('dispatches a #fetchCaseClassifications action when required', () => {
       field.update(testValue, {
         caseClassifications: true,

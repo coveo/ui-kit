@@ -128,6 +128,10 @@ export default class QuanticCaseClassification extends LightningElement {
   _isSuggestionsVisible = true;
   /** @type {string} */
   renderingError = '';
+  /** @type {boolean} */
+  hideSuggestions = false;
+  /** @type {boolean} */
+  lockedState = false;
 
   connectedCallback() {
     this.validateProps();
@@ -169,13 +173,12 @@ export default class QuanticCaseClassification extends LightningElement {
       this.renderingError = `"${this.maxSuggestions}" is an invalid maximum number of suggestions. A positive integer was expected.`;
     }
     if (!this.coveoFieldName) {
-      this.renderingError =
-        'coveoFieldName is required, please set its value.';
+      this.renderingError = 'coveoFieldName is required, please set its value.';
     }
   }
 
   updateFieldState() {
-    if (this.maxSuggestions > 0) {
+    if (this.maxSuggestions > 0 && !this.lockedState) {
       this.previousClassifications = this.classifications;
       this.classifications =
         this.field.state.suggestions.slice(
@@ -183,14 +186,15 @@ export default class QuanticCaseClassification extends LightningElement {
           Math.max(Number(this.maxSuggestions), 0)
         ) ?? [];
       this.loading = this.field.state.loading;
-      if (
-        JSON.stringify(this.classifications) !==
-        JSON.stringify(this.previousClassifications)
-      ) {
-        const value = this.classifications.length
+      if (this.newSuggestionsReceived) {
+        const value = this.isAutoSelectionNeeded
           ? this.classifications[0].value
-          : '';
-        this.setFieldValue(value);
+          : this.field.state.value;
+        if (!this.isSuggestion(value) && this.isMoreOptionsVisible) {
+          this.hideSuggestions = true;
+          this.showSelect();
+        }
+        this.setFieldValue(value, true);
       }
     }
   }
@@ -312,7 +316,6 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectSuggestion(event) {
-    this._errorMessage = '';
     const value = event.target.checked ? event.target.value : '';
     this.setFieldValue(value);
   }
@@ -322,19 +325,19 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectChange(event) {
-    this._errorMessage = '';
     const value = event.target.value;
     this.setFieldValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
-      this.hideSuggestions();
+      this.animateHideSuggestions();
     }
+    this.lockedState = true;
   }
 
   /**
    * Hide the suggested options.
    * @returns {void}
    */
-  hideSuggestions() {
+  animateHideSuggestions() {
     const suggestions = this.template.querySelectorAll(
       '.case-classification-suggestion'
     );
@@ -349,8 +352,44 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setFieldValue(value) {
-    this.field.update(value);
+  setFieldValue(value, autoSelection) {
+    if (this.field.state.value !== value) {
+      this.field.update(value, undefined, autoSelection);
+    }
     this._value = value;
+    if(this._errorMessage && value){
+      this._errorMessage = '';
+    }
+  }
+
+  /**
+   * Indicates whether a value is one of the proposed suggestions.
+   * @param {string} value
+   * @returns {boolean}
+   */
+  isSuggestion(value) {
+    return this.suggestions.some((suggestion) => suggestion.value === value);
+  }
+
+  /**
+   * Indicates whether new suggestions have been received.
+   * @returns {boolean}
+   */
+  get newSuggestionsReceived() {
+    return (
+      this.classifications.length &&
+      JSON.stringify(this.classifications) !==
+        JSON.stringify(this.previousClassifications)
+    );
+  }
+  /**
+   * Indicates whether auto-selecting the suggestion with the highest confidence is needed.
+   * @returns {boolean}
+   */
+  get isAutoSelectionNeeded() {
+    return (
+      !this.field.state.value ||
+      this.previousClassifications?.[0]?.value === this.field.state.value
+    );
   }
 }

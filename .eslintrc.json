@@ -1,5 +1,10 @@
 {
-  "ignorePatterns": ["node_modules", "veracode", "stencil-generated"],
+  "ignorePatterns": [
+    "node_modules",
+    "veracode",
+    "stencil-generated",
+    "atomic-angular/dist"
+  ],
   "env": {
     "jest": true,
     "es6": true

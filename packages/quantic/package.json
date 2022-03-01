@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "1.8.14",
+  "version": "1.10.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -34,7 +34,7 @@
     "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote"
   },
   "dependencies": {
-    "@coveo/headless": "^1.46.2"
+    "@coveo/headless": "^1.48.1"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -50,7 +50,7 @@
     "@types/wait-on": "5.3.1",
     "chalk": "4.1.2",
     "change-case": "4.1.2",
-    "cypress": "^9.2.0",
+    "cypress": "^9.5.0",
     "dotenv": "^10.0.0",
     "eslint": "7.32.0",
     "eslint-plugin-cypress": "2.12.1",

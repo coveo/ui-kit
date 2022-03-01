@@ -31,6 +31,7 @@ export type AtomicStore = {
   categoryFacets: FacetStore<FacetInfo>;
   facetElements: HTMLElement[];
   sortOptions: SortDropdownOption[];
+  iconAssetsPath: string;
 };
 
 export const initialStore: () => AtomicStore = () => ({
@@ -40,6 +41,7 @@ export const initialStore: () => AtomicStore = () => ({
   categoryFacets: {},
   facetElements: [],
   sortOptions: [],
+  iconAssetsPath: '',
 });
 
 export const registerFacetToStore = <T extends FacetType, U extends string>(
