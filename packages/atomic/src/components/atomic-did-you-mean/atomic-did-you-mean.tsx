@@ -58,6 +58,7 @@ export class AtomicDidYouMean implements InitializableComponent {
       this.didYouMeanState.wasCorrectedTo
     );
     return [
+      // file deepcode ignore ReactSetInnerHtml: This is not React code
       <p
         class="text-on-background mb-1"
         part="no-results"

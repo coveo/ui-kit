@@ -56,6 +56,7 @@ export class AtomicResultText implements InitializableComponent {
       const innerHTML = escape(highlightedValue)
         .replace(new RegExp(openingDelimiter, 'g'), '<b>')
         .replace(new RegExp(closingDelimiter, 'g'), '</b>');
+      // deepcode ignore ReactSetInnerHtml: This is not React code
       return <Host innerHTML={innerHTML}></Host>;
     } catch (error) {
       this.error = error as Error;
