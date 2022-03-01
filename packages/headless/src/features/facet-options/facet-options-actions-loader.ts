@@ -30,14 +30,14 @@ export interface FacetOptionsActionCreators {
     payload: UpdateFacetOptionsActionCreatorPayload
   ): PayloadAction<UpdateFacetOptionsActionCreatorPayload>;
   /**
-   * Enables a facet, undoing the effects of `disableFacet`.
+   * Enables a facet. I.e., undoes the effects of `disable`.
    *
    * @param facetId - The unique identifier of the facet (e.g., "abcd").
    * @returns A dispatchable action.
    */
   enableFacet(facetId: string): PayloadAction<string>;
   /**
-   * Disables a facet, preventing it from filtering results.
+   * Disables a facet. I.e., prevents it from filtering results.
    *
    * @param facetId - The unique identifier of the facet (e.g., "1").
    * @returns A dispatchable action.
