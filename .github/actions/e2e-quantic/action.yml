@@ -36,7 +36,7 @@ runs:
         SFDX_AUTH_JWT_KEY: ${{inputs.jwtkey}}
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
-    - uses: cypress-io/github-action@843bfbf45d9c25770a484768aa070f6c3a6845f2
+    - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
       name: Run Cypress
       with:
         working-directory: ./packages/quantic

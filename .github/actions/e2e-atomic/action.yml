@@ -12,7 +12,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@843bfbf45d9c25770a484768aa070f6c3a6845f2
+    - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
       name: Run Cypress
       with:
         working-directory: ./packages/atomic
