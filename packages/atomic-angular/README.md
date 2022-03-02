@@ -47,7 +47,7 @@ The location of the public directory depends on how you build, configure and dis
 For example, for any project created with [Angular CLI](https://angular.io/cli), this would mean copying language and icon assets to the root of the source directory
 
 ```
-cp -r node_modules/@coveo/atomic-angular/assets src/assets src/assets
+cp -r node_modules/@coveo/atomic-angular/assets src/assets
 cp -r node_modules/@coveo/atomic-angular/lang src/lang
 ```
 
@@ -152,7 +152,7 @@ export class FieldLabelComponent implements AfterViewInit {
 
 In `field-label.component.ts`, notice that we annotate `get label()` and `set label()` with the `@Input()` angular decorator.
 
-In `app.component.html`, when we set the label in the app component, we arrange for it to be passed down and propagated to `<atomic-text>` using `atomicText.el.setAttribute` in `field-label.component.ts`. This ensures that this web component will properly receive the property without any modification by the Angular rendering engine.
+In `app.component.html`, when we set the label in the app component, we arrange for it to be passed down and propagated to `<atomic-text>` using `atomicText!['el'].setAttribute` in `field-label.component.ts`. This ensures that this web component will properly receive the property without any modification by the Angular rendering engine.
 
 The reference to `atomicText` is then obtained with the `ViewChild('atomictext')` decorator.
 `atomictext` is the reference set in the `<atomic-text #atomictext></atomic-text>` HTML template.
