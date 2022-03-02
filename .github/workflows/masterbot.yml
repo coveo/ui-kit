@@ -15,14 +15,14 @@ jobs:
     needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
   lint-check:
     name: "Check with linter"
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   unit-test:
@@ -30,7 +30,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
@@ -39,7 +39,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
         with:
@@ -50,7 +50,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-quantic
         with:
@@ -67,7 +67,7 @@ jobs:
       - "e2e-quantic-test"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           fetch-depth: 0

@@ -29,8 +29,8 @@
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
   },
   "devDependencies": {
-    "@types/jest": "26.0.24",
-    "jest": "26.6.3",
-    "ts-jest": "26.5.6"
+    "@types/jest": "27.4.1",
+    "jest": "27.5.1",
+    "ts-jest": "27.1.3"
   }
 }
