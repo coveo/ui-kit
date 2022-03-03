@@ -9,6 +9,8 @@ import {
   SearchStatusState,
   buildSearchStatus,
   FacetValue,
+  buildFacetDependenciesManager,
+  FacetDependenciesManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -29,7 +31,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {
   getFieldCaptions,
@@ -42,6 +44,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -88,6 +91,7 @@ export class AtomicFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
+  private dependenciesManager?: FacetDependenciesManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -147,6 +151,27 @@ export class AtomicFacet
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet if any value is selected in the facet with id "abc": -->
+   * <atomic-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-facet>
+   *
+   * <!-- To show the facet if value "doc" is selected in the facet with id "abc": -->
+   * <atomic-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
+
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
 
@@ -164,6 +189,9 @@ export class AtomicFacet
     }).validate({
       displayValuesAs: this.displayValuesAs,
     });
+    if (Object.keys(this.dependsOn).length > 1) {
+      throw "Depending on multiple facets isn't supported";
+    }
   }
 
   public initialize() {
@@ -180,11 +208,19 @@ export class AtomicFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
+    this.inititalizeDependenciesManager();
     registerFacetToStore(this.bindings.store, 'facets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
     });
+  }
+
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   public componentShouldUpdate(
@@ -205,6 +241,16 @@ export class AtomicFacet
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
+  }
+
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetDependenciesManager(
+      this.bindings.engine,
+      {
+        dependentFacetId: this.facetId!,
+        dependencies: parseDependsOn(this.dependsOn),
+      }
+    );
   }
 
   private renderHeader() {
@@ -391,7 +437,7 @@ export class AtomicFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
 

@@ -1,69 +1,92 @@
 export const numericFacetComponent = 'atomic-numeric-facet';
 export const NumericFacetSelectors = {
+  withId(id: string) {
+    return {
+      ...this,
+      shadow() {
+        return cy.get(`${numericFacetComponent}[facet-id="${id}"]`).shadow();
+      },
+    };
+  },
   shadow: () => cy.get(numericFacetComponent).shadow(),
-  wrapper: () => NumericFacetSelectors.shadow().find('[part="facet"]'),
-  placeholder: () =>
-    NumericFacetSelectors.shadow().find('[part="placeholder"]'),
-  selectedCheckboxValue: () =>
-    NumericFacetSelectors.shadow().find(
-      '[part="value-checkbox"][aria-checked="true"]'
-    ),
-  idleCheckboxValue: () =>
-    NumericFacetSelectors.shadow().find(
-      '[part="value-checkbox"][aria-checked="false"]'
-    ),
-  checkboxValueWithText: (text: string) =>
-    NumericFacetSelectors.shadow()
+  wrapper() {
+    return this.shadow().find('[part="facet"]');
+  },
+  placeholder() {
+    return this.shadow().find('[part="placeholder"]');
+  },
+  selectedCheckboxValue() {
+    return this.shadow().find('[part="value-checkbox"][aria-checked="true"]');
+  },
+  idleCheckboxValue() {
+    return this.shadow().find('[part="value-checkbox"][aria-checked="false"]');
+  },
+  checkboxValueWithText(text: string) {
+    return this.shadow()
       .find(`[part="value-label"]:contains("${text}")`)
       .parent()
       .parent()
-      .find('[part="value-checkbox"]'),
-  idleCheckboxValueLabel: () =>
-    NumericFacetSelectors.idleCheckboxValue()
-      .parent()
-      .find('[part="value-label"]'),
-  selectedLinkValue: () =>
-    NumericFacetSelectors.shadow().find(
-      '[part="value-link"][aria-pressed="true"]'
-    ),
-  idleLinkValue: () =>
-    NumericFacetSelectors.shadow().find(
-      '[part="value-link"][aria-pressed="false"]'
-    ),
-  selectedLinkValueWithText: (text: string) =>
-    NumericFacetSelectors.shadow().find(
+      .find('[part="value-checkbox"]');
+  },
+  idleCheckboxValueLabel() {
+    return this.idleCheckboxValue().parent().find('[part="value-label"]');
+  },
+  selectedLinkValue() {
+    return this.shadow().find('[part="value-link"][aria-pressed="true"]');
+  },
+  idleLinkValue() {
+    return this.shadow().find('[part="value-link"][aria-pressed="false"]');
+  },
+  selectedLinkValueWithText(text: string) {
+    return this.shadow().find(
       `[part="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
-    ),
-  idleLinkValueLabel: () =>
-    NumericFacetSelectors.shadow().find(
+    );
+  },
+  idleLinkValueLabel() {
+    return this.shadow().find(
       '[part="value-link"][aria-pressed="false"] [part="value-label"]'
-    ),
-  selectedBoxValue: () =>
-    NumericFacetSelectors.shadow().find(
-      '[part="value-box"][aria-pressed="true"]'
-    ),
-  idleBoxValue: () =>
-    NumericFacetSelectors.shadow().find(
-      '[part="value-box"][aria-pressed="false"]'
-    ),
-  values: () => NumericFacetSelectors.shadow().find('[part="values"]'),
-  clearButton: () =>
-    NumericFacetSelectors.shadow().find('[part="clear-button"]'),
-  labelButton: () =>
-    NumericFacetSelectors.shadow().find('[part="label-button"]'),
-  valueLabel: () => NumericFacetSelectors.shadow().find('[part="value-label"]'),
-  valueCount: () => NumericFacetSelectors.shadow().find('[part="value-count"]'),
-  valueHighlight: () =>
-    NumericFacetSelectors.shadow().find(
-      '[part="value-label"] [part="search-highlight"]'
-    ),
-  facetValueLabelAtIndex: (index: number) =>
-    NumericFacetSelectors.valueLabel().eq(index),
-  rangeInput: () =>
-    NumericFacetSelectors.shadow().find('atomic-facet-number-input form'),
-  minInput: () => NumericFacetSelectors.shadow().find('[part="input-start"]'),
-  maxInput: () => NumericFacetSelectors.shadow().find('[part="input-end"]'),
-  applyButton: () =>
-    NumericFacetSelectors.rangeInput().find('[part="input-apply-button"]'),
-  inputInvalid: () => NumericFacetSelectors.rangeInput().find('input:invalid'),
+    );
+  },
+  selectedBoxValue() {
+    return this.shadow().find('[part="value-box"][aria-pressed="true"]');
+  },
+  idleBoxValue() {
+    return this.shadow().find('[part="value-box"][aria-pressed="false"]');
+  },
+  values() {
+    return this.shadow().find('[part="values"]');
+  },
+  clearButton() {
+    return this.shadow().find('[part="clear-button"]');
+  },
+  labelButton() {
+    return this.shadow().find('[part="label-button"]');
+  },
+  valueLabel() {
+    return this.shadow().find('[part="value-label"]');
+  },
+  valueCount() {
+    return this.shadow().find('[part="value-count"]');
+  },
+  valueHighlight() {
+    return this.shadow().find('[part="value-label"] [part="search-highlight"]');
+  },
+  facetValueLabelAtIndex(index: number) {
+    return this.valueLabel().eq(index);
+  },
+  rangeInput() {
+    return this.shadow().find('atomic-facet-number-input form');
+  },
+  minInput() {
+    return this.shadow().find('[part="input-start"]');
+  },
+  maxInput() {
+    return this.shadow().find('[part="input-end"]');
+  },
+  applyButton() {
+    return this.rangeInput().find('[part="input-apply-button"]');
+  },
+  inputInvalid() {
+    return this.rangeInput().find('input:invalid');
+  },
 };

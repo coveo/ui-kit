@@ -20,6 +20,7 @@ import {
   pressClearButton,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
+  typeFacetSearchQuery,
 } from '../facet-common-actions';
 import * as NumericFacetAssertions from './numeric-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
@@ -34,6 +35,8 @@ import {
   breadboxLabel,
   deselectBreadcrumbAtIndex,
 } from '../../breadbox/breadbox-actions';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
 
 describe('Numeric Facet V1 Test Suites', () => {
   const min = 0;
@@ -1198,6 +1201,170 @@ describe('Numeric Facet V1 Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
         BreadboxAssertions.assertBreadcrumbDisplayLength(index.length);
       });
+    });
+  });
+
+  describe('with depends-on', () => {
+    const facetId = 'abc';
+    const parentFacetId = 'def';
+    const parentField = 'filetype';
+    const expectedValue = 'YouTubeVideo';
+    describe('as a dependent, without an input', () => {
+      before(() => {
+        new TestFixture()
+          .with(
+            addNumericFacet({
+              'facet-id': facetId,
+              field: numericFacetField,
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        NumericFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          NumericFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('as a dependent, with a facet and an input', () => {
+      before(() => {
+        new TestFixture()
+          .with(
+            addNumericFacet({
+              'facet-id': facetId,
+              field: numericFacetField,
+              'with-input': 'integer',
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        NumericFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          NumericFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('as a dependent, without a facet', () => {
+      before(() => {
+        new TestFixture()
+          .with(
+            addNumericFacet({
+              'facet-id': facetId,
+              field: numericFacetField,
+              'number-of-values': '0',
+              'with-input': 'integer',
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        NumericFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          NumericFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('with two dependencies', () => {
+      before(() => {
+        new TestFixture()
+          .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+          .with(addFacet({'facet-id': 'def', field: 'filetype'}))
+          .with(
+            addNumericFacet({
+              'facet-id': 'ghi',
+              field: numericFacetField,
+              'depends-on-objecttype': '',
+              'depends-on-filetype': 'pdf',
+            })
+          )
+          .init();
+      });
+
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        NumericFacetSelectors.withId('ghi'),
+        true
+      );
     });
   });
 });

@@ -13,7 +13,12 @@ import {
   timeframeFacetComponent,
   TimeframeFacetSelectors,
 } from './timeframe-facet-selectors';
-import {pressClearButton, selectIdleLinkValueAt} from '../facet-common-actions';
+import {
+  pressClearButton,
+  selectIdleLinkValueAt,
+  selectIdleCheckboxValueAt,
+  typeFacetSearchQuery,
+} from '../facet-common-actions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import * as TimeframeFacetAssertions from './timeframe-facet-assertions';
@@ -24,6 +29,8 @@ import {
   breadboxLabel,
   deselectBreadcrumbAtIndex,
 } from '../../breadbox/breadbox-actions';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
 
 const startDate = '2020-08-06';
 const endDate = '2021-09-03';
@@ -557,6 +564,175 @@ describe('Timeframe Facet V1 Test Suites', () => {
           );
         });
       });
+    });
+  });
+
+  describe('with depends-on', () => {
+    const facetId = 'abc';
+    const parentFacetId = 'def';
+    const parentField = 'filetype';
+    const expectedValue = 'rssitem';
+    describe('as a dependent, without an input', () => {
+      before(() => {
+        new TestFixture()
+          .with(
+            addTimeframeFacet(
+              {
+                'facet-id': facetId,
+                field: timeframeFacetField,
+                [`depends-on-${parentFacetId}`]: expectedValue,
+              },
+              unitFrames
+            )
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        TimeframeFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          TimeframeFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('as a dependent, with a facet and an input', () => {
+      before(() => {
+        new TestFixture()
+          .with(
+            addTimeframeFacet(
+              {
+                'facet-id': facetId,
+                field: timeframeFacetField,
+                'with-date-picker': '',
+                [`depends-on-${parentFacetId}`]: expectedValue,
+              },
+              unitFrames
+            )
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        TimeframeFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          TimeframeFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('as a dependent, without a facet', () => {
+      before(() => {
+        new TestFixture()
+          .with(
+            addTimeframeFacet({
+              'facet-id': facetId,
+              field: timeframeFacetField,
+              'with-date-picker': '',
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        TimeframeFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          TimeframeFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('with two dependencies', () => {
+      before(() => {
+        new TestFixture()
+          .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+          .with(addFacet({'facet-id': 'def', field: 'filetype'}))
+          .with(
+            addTimeframeFacet({
+              'facet-id': 'ghi',
+              field: timeframeFacetField,
+              'depends-on-objecttype': '',
+              'depends-on-filetype': 'pdf',
+            })
+          )
+          .init();
+      });
+
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        TimeframeFacetSelectors.withId('ghi'),
+        true
+      );
     });
   });
 });

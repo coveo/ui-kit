@@ -15,6 +15,8 @@ import {
   buildDateFilter,
   loadDateFacetSetActions,
   deserializeRelativeDate,
+  buildFacetDependenciesManager,
+  FacetDependenciesManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -26,7 +28,7 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn} from '../facet-common';
 import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';
@@ -37,6 +39,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -72,6 +75,7 @@ export class AtomicTimeframeFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: DateFacet;
+  private dependenciesManager?: FacetDependenciesManager;
   public filter?: DateFilter;
   public searchStatus!: SearchStatus;
   private manualTimeframes: Timeframe[] = [];
@@ -119,15 +123,51 @@ export class AtomicTimeframeFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet if any value is selected in the facet with id "abc": -->
+   * <atomic-timeframe-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-timeframe-facet>
+   *
+   * <!-- To show the facet if value "doc" is selected in the facet with id "abc": -->
+   * <atomic-timeframe-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-timeframe-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
+
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
+  private validateProps() {
+    if (Object.keys(this.dependsOn).length > 1) {
+      throw "Depending on multiple facets isn't supported";
+    }
+  }
+
   public initialize() {
+    this.validateProps();
     this.manualTimeframes = this.getManualTimeframes();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.manualTimeframes.length && this.initializeFacet();
     this.withDatePicker && this.initializeFilter();
+    this.inititalizeDependenciesManager();
     this.registerFacetToStore();
+  }
+
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private initializeFacet() {
@@ -169,6 +209,17 @@ export class AtomicTimeframeFacet
       this.bindings.store.state.dateFacets[this.filter.state.facetId] =
         this.bindings.store.state.dateFacets[this.facetId!];
     }
+  }
+
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetDependenciesManager(
+      this.bindings.engine,
+      {
+        dependentFacetId:
+          this.facet?.state.facetId ?? this.filter!.state.facetId,
+        dependencies: parseDependsOn(this.dependsOn),
+      }
+    );
   }
 
   private getManualTimeframes(): Timeframe[] {
@@ -317,6 +368,10 @@ export class AtomicTimeframeFacet
     );
   }
 
+  private get enabled() {
+    return this.facetState?.enabled ?? this.filterState?.enabled ?? true;
+  }
+
   private get valuesToRender() {
     return (
       this.facetState?.values.filter(
@@ -343,7 +398,7 @@ export class AtomicTimeframeFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.enabled) {
       return <Hidden></Hidden>;
     }
 

@@ -1,38 +1,62 @@
 export const ratingRangeFacetComponent = 'atomic-rating-range-facet';
 export const RatingRangeFacetSelectors = {
-  shadow: () => cy.get(ratingRangeFacetComponent).shadow(),
-  wrapper: () => RatingRangeFacetSelectors.shadow().find('[part="facet"]'),
-  placeholder: () =>
-    RatingRangeFacetSelectors.shadow().find('[part="placeholder"]'),
-  values: () => RatingRangeFacetSelectors.shadow().find('[part="values"]'),
-  clearButton: () =>
-    RatingRangeFacetSelectors.shadow().find('[part="clear-button"]'),
-  labelButton: () =>
-    RatingRangeFacetSelectors.shadow().find('[part="label-button"]'),
-  valueRating: () =>
-    RatingRangeFacetSelectors.shadow().find('[part="value-rating"]'),
-  valueLabel: () =>
-    RatingRangeFacetSelectors.shadow().find('[part="value-label"]'),
-  selectedLinkValue: () =>
-    RatingRangeFacetSelectors.shadow().find(
-      '[part="value-link"][aria-pressed="true"]'
-    ),
-  idleLinkValue: () =>
-    RatingRangeFacetSelectors.shadow().find(
-      '[part="value-link"][aria-pressed="false"]'
-    ),
-  selectedLinkValueWithText: (text: string) =>
-    RatingRangeFacetSelectors.shadow().find(
+  withId(id: string) {
+    return {
+      ...this,
+      shadow() {
+        return cy
+          .get(`${ratingRangeFacetComponent}[facet-id="${id}"]`)
+          .shadow();
+      },
+    };
+  },
+  shadow() {
+    return cy.get(ratingRangeFacetComponent).shadow();
+  },
+  wrapper() {
+    return this.shadow().find('[part="facet"]');
+  },
+  placeholder() {
+    return this.shadow().find('[part="placeholder"]');
+  },
+  values() {
+    return this.shadow().find('[part="values"]');
+  },
+  clearButton() {
+    return this.shadow().find('[part="clear-button"]');
+  },
+  labelButton() {
+    return this.shadow().find('[part="label-button"]');
+  },
+  valueRating() {
+    return this.shadow().find('[part="value-rating"]');
+  },
+  valueLabel() {
+    return this.shadow().find('[part="value-label"]');
+  },
+  selectedLinkValue() {
+    return this.shadow().find('[part="value-link"][aria-pressed="true"]');
+  },
+  idleLinkValue() {
+    return this.shadow().find('[part="value-link"][aria-pressed="false"]');
+  },
+  selectedLinkValueWithText(text: string) {
+    return this.shadow().find(
       `[part="value-link"][aria-pressed="true"] [part="value-rating"][aria-label="${text}"]`
-    ),
-  idleLinkValueLabel: () =>
-    RatingRangeFacetSelectors.shadow().find(
+    );
+  },
+  idleLinkValueLabel() {
+    return this.shadow().find(
       '[part="value-link"][aria-pressed="false"] [part="value-rating"]'
-    ),
-  facetValueAtIndex: (index: number) =>
-    RatingRangeFacetSelectors.valueRating().eq(index),
-  facetValueLabelAtIndex: (index: number) =>
-    RatingRangeFacetSelectors.valueLabel().eq(index),
-  starsIconAtIndex: (index: number) =>
-    RatingRangeFacetSelectors.facetValueAtIndex(index).find('atomic-icon'),
+    );
+  },
+  facetValueAtIndex(index: number) {
+    return this.valueRating().eq(index);
+  },
+  facetValueLabelAtIndex(index: number) {
+    return this.valueLabel().eq(index);
+  },
+  starsIconAtIndex(index: number) {
+    return this.facetValueAtIndex(index).find('atomic-icon');
+  },
 };

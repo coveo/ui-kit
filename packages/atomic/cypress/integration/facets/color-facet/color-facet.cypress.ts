@@ -16,6 +16,7 @@ import {
   pressShowLess,
   pressShowMore,
   typeFacetSearchQuery,
+  selectIdleCheckboxValueAt,
 } from '../facet-common-actions';
 import * as FacetAssertions from '../facet/facet-assertions';
 import * as ColorFacetAssertions from './color-facet-assertions';
@@ -32,6 +33,8 @@ import {
   BreadboxSelectors,
 } from '../../breadbox/breadbox-selectors';
 import {AnalyticsTracker} from '../../../utils/analyticsUtils';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
 
 describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {
@@ -564,6 +567,126 @@ describe('Color Facet Test Suites', () => {
         BreadboxAssertions.assertDisplayBreadcrumbShowMore(false);
         BreadboxAssertions.assertBreadcrumbDisplayLength(positions.length);
       });
+    });
+  });
+
+  describe('with depends-on', () => {
+    const facetId = 'abc';
+    describe('as a dependent', () => {
+      const parentFacetId = 'def';
+      const parentField = 'author';
+      const expectedValue = 'BPA';
+      before(() => {
+        new TestFixture()
+          .with(
+            addColorFacet({
+              'facet-id': facetId,
+              field: colorFacetField,
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        ColorFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          ColorFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('as a parent', () => {
+      const dependentFacetId = 'def';
+      const dependentField = 'author';
+      const expectedValue = 'doc';
+      before(() => {
+        new TestFixture()
+          .with(addColorFacet({'facet-id': facetId, field: colorFacetField}))
+          .with(
+            addFacet({
+              'facet-id': dependentFacetId,
+              field: dependentField,
+              [`depends-on-${facetId}`]: expectedValue,
+            })
+          )
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(dependentFacetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        ColorFacetSelectors.withId(facetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            ColorFacetSelectors.withId(facetId),
+            expectedValue,
+            true
+          );
+          selectIdleBoxValueAt(0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(dependentFacetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          ColorFacetSelectors.withId(facetId),
+          true
+        );
+      });
+    });
+
+    describe('with two dependencies', () => {
+      before(() => {
+        new TestFixture()
+          .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+          .with(addFacet({'facet-id': 'def', field: 'filetype'}))
+          .with(
+            addColorFacet({
+              'facet-id': 'ghi',
+              field: colorFacetField,
+              'depends-on-objecttype': '',
+              'depends-on-filetype': 'pdf',
+            })
+          )
+          .init();
+      });
+
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        ColorFacetSelectors.withId('ghi'),
+        true
+      );
     });
   });
 });

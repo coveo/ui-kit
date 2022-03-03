@@ -16,6 +16,8 @@ import {
   NumericFilterState,
   NumericFilter,
   loadNumericFacetSetActions,
+  buildFacetDependenciesManager,
+  FacetDependenciesManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,7 +30,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn} from '../facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
@@ -43,6 +45,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -84,6 +87,7 @@ export class AtomicNumericFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: NumericFacet;
+  private dependenciesManager?: FacetDependenciesManager;
   public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -152,6 +156,27 @@ export class AtomicNumericFacet
    */
   @Prop() public injectionDepth = 1000;
 
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet if any value is selected in the facet with id "abc": -->
+   * <atomic-numeric-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-numeric-facet>
+   *
+   * <!-- To show the facet if value "doc" is selected in the facet with id "abc": -->
+   * <atomic-numeric-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-numeric-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
+
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
@@ -163,6 +188,9 @@ export class AtomicNumericFacet
       displayValuesAs: this.displayValuesAs,
       withInput: this.withInput,
     });
+    if (Object.keys(this.dependsOn).length > 1) {
+      throw "Depending on multiple facets isn't supported";
+    }
   }
 
   public initialize() {
@@ -170,7 +198,15 @@ export class AtomicNumericFacet
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.numberOfValues && this.initializeFacet();
     this.withInput && this.initializeFilter();
+    this.inititalizeDependenciesManager();
     this.registerFacetToStore();
+  }
+
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private initializeFacet() {
@@ -217,6 +253,17 @@ export class AtomicNumericFacet
     }
   }
 
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetDependenciesManager(
+      this.bindings.engine,
+      {
+        dependentFacetId:
+          this.facet?.state.facetId ?? this.filter!.state.facetId,
+        dependencies: parseDependsOn(this.dependsOn),
+      }
+    );
+  }
+
   @Listen('atomic/numberFormat')
   public setFormat(event: CustomEvent<NumberFormatter>) {
     event.preventDefault();
@@ -253,6 +300,10 @@ export class AtomicNumericFacet
         label,
       })
     );
+  }
+
+  private get enabled() {
+    return this.facetState?.enabled ?? this.filterState?.enabled ?? true;
   }
 
   private get numberOfSelectedValues() {
@@ -420,7 +471,7 @@ export class AtomicNumericFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.enabled) {
       return <Hidden></Hidden>;
     }
 

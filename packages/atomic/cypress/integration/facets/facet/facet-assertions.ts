@@ -30,8 +30,11 @@ export function assertLogFacetSelect(field: string, index: number) {
   it('should log the facet select results to UA ', () => {
     cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
       expect(analyticsBody.customData).to.have.property('facetField', field);
-      expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
-      expect(analyticsBody.facetState[0]).to.have.property('field', field);
+      expect(analyticsBody.facetState![0]).to.have.property(
+        'state',
+        'selected'
+      );
+      expect(analyticsBody.facetState![0]).to.have.property('field', field);
 
       FacetSelectors.facetValueLabelAtIndex(index)
         .invoke('text')
@@ -42,11 +45,21 @@ export function assertLogFacetSelect(field: string, index: number) {
   });
 }
 
+export function assertLogFacetClearAll(facetId: string) {
+  it('should log the facet clear all event to UA', () => {
+    cy.expectSearchEvent('facetClearAll')
+      .should('have.property', 'customData')
+      .should('have.property', 'facetId', facetId);
+  });
+}
+
 export function assertValuesSortedAlphanumerically() {
   it('values should be ordered alphanumerically', () => {
     FacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
-      expect(originalValues).to.eql(doSortAlphanumeric(originalValues));
+      expect(originalValues).to.eql(
+        doSortAlphanumeric(originalValues as string[])
+      );
     });
   });
 }
@@ -55,7 +68,9 @@ export function assertValuesSortedByOccurrences() {
   it('values should be ordered by occurrences', () => {
     FacetSelectors.valueCount().as('facetAllValuesCount');
     cy.getTextOfAllElements('@facetAllValuesCount').then((originalValues) => {
-      expect(originalValues).to.eql(doSortOccurrences(originalValues));
+      expect(originalValues).to.eql(
+        doSortOccurrences(originalValues as string[])
+      );
     });
   });
 }
