@@ -40,7 +40,7 @@ Once this is done, you will be able to reference all atomic components inside th
 
 You can initialize the search interface at any time in the lifecycle of your application. One such suitable lifecyle hook is `AfterViewInit`.
 
-For example, using the above `AppModule` as a starting point, which bootstrap `AppComponent`:
+The following example uses this `AfterViewInit` hook, and relies on the above `AppModule` as a starting point, which bootstraps `AppComponent`.
 
 ```typescript
 // app.component.ts
