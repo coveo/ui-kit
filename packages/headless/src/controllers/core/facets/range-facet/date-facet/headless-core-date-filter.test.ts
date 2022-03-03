@@ -1,4 +1,9 @@
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  facetOptions,
+  search,
+} from '../../../../../app/reducers';
 import {SearchAppState} from '../../../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
@@ -61,6 +66,7 @@ describe('date filter', () => {
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       dateFacetSet,
+      facetOptions,
       configuration,
       search,
     });

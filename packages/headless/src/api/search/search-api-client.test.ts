@@ -179,7 +179,7 @@ describe('search api client', () => {
           numberOfResults: state.pagination.numberOfResults,
           sortCriteria: state.sortCriteria,
           firstResult: state.pagination.firstResult,
-          facetOptions: state.facetOptions,
+          facetOptions: {freezeFacetOrder: state.facetOptions.freezeFacetOrder},
           context: state.context.contextValues,
           enableDidYouMean: state.didYouMean.enableDidYouMean,
           enableQuerySyntax: state.query.enableQuerySyntax,
