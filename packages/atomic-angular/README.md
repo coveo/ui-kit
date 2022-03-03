@@ -36,9 +36,9 @@ export class AppModule {}
 
 Once this is done, you will be able to reference all atomic components inside that module.
 
-## Initializing the search interface
+## Initializing the Search Interface
 
-You can initialize the search interface at any time you desire in the lifecycle of your application. One such suitable lifecyle hook is the `AfterViewInit`,
+You can initialize the search interface at any time in the lifecycle of your application. One such suitable lifecyle hook is `AfterViewInit`.
 
 For example, using the above `AppModule` as a starting point, which bootstrap `AppComponent`:
 
