@@ -37,6 +37,7 @@ export class TestFixture {
   private responseModifiers: SearchResponseModifierPredicate[] = [];
   private returnError = false;
   private redirected = false;
+  private reflectStateInUrl = true;
 
   public with(feat: TestFeature) {
     feat(this);
@@ -45,6 +46,11 @@ export class TestFixture {
 
   public withoutFirstAutomaticSearch() {
     this.execFirstSearch = false;
+    return this;
+  }
+
+  public withoutStateInUrl() {
+    this.reflectStateInUrl = false;
     return this;
   }
 
@@ -137,6 +143,10 @@ export class TestFixture {
 
     cy.get(`@${this.elementAliases.SearchInterface}`).then(($si) => {
       const searchInterfaceComponent = $si.get()[0] as SearchInterface;
+      searchInterfaceComponent.setAttribute(
+        'reflect-state-in-url',
+        `${this.reflectStateInUrl}`
+      );
 
       if (this.language) {
         searchInterfaceComponent.setAttribute('language', this.language);

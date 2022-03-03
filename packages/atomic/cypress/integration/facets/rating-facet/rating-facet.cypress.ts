@@ -17,7 +17,10 @@ import {
   pressClearButton,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
+  typeFacetSearchQuery,
 } from '../facet-common-actions';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
 
 describe('Rating Facet Test Suites', () => {
   describe('with default rating facet', () => {
@@ -380,5 +383,101 @@ describe('Rating Facet Test Suites', () => {
       RatingFacetSelectors,
       4
     );
+  });
+
+  describe('with depends-on', () => {
+    const facetId = 'abc';
+    describe('as a dependent', () => {
+      const parentFacetId = 'def';
+      const parentField = 'language';
+      const expectedValue = 'English';
+      before(() => {
+        new TestFixture()
+          .with(
+            addRatingFacet({
+              'facet-id': facetId,
+              field: ratingFacetField,
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        RatingFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          RatingFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('with two dependencies', () => {
+      before(() => {
+        new TestFixture()
+          .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+          .with(addFacet({'facet-id': 'def', field: 'filetype'}))
+          .with(
+            addRatingFacet({
+              'facet-id': 'ghi',
+              field: ratingFacetField,
+              'depends-on-objecttype': '',
+              'depends-on-filetype': 'pdf',
+            })
+          )
+          .init();
+      });
+
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        RatingFacetSelectors.withId('ghi'),
+        true
+      );
+    });
+
+    describe('with two dependencies', () => {
+      before(() => {
+        new TestFixture()
+          .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+          .with(addFacet({'facet-id': 'def', field: 'filetype'}))
+          .with(
+            addRatingFacet({
+              'facet-id': 'ghi',
+              field: ratingFacetField,
+              'depends-on-objecttype': '',
+              'depends-on-filetype': 'pdf',
+            })
+          )
+          .init();
+      });
+
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        RatingFacetSelectors.withId('ghi'),
+        true
+      );
+    });
   });
 });

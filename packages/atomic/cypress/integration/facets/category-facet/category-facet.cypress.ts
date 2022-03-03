@@ -26,6 +26,7 @@ import {
   typeFacetSearchQuery,
   pressShowLess,
   pressShowMore,
+  selectIdleCheckboxValueAt,
 } from '../facet-common-actions';
 import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
 import {breadboxComponent} from '../../breadbox/breadbox-selectors';
@@ -34,6 +35,8 @@ import {
   breadboxLabel,
   deselectBreadcrumbAtIndex,
 } from '../../breadbox/breadbox-actions';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -786,6 +789,124 @@ describe('Category Facet Test Suites', () => {
           BreadboxAssertions.assertDisplayBreadcrumb(false);
         });
       });
+    });
+  });
+
+  describe('with depends-on', () => {
+    const facetId = 'abc';
+    describe('as a dependent', () => {
+      const parentFacetId = 'def';
+      const parentField = 'filetype';
+      const expectedValue = 'txt';
+      before(() => {
+        new TestFixture()
+          .with(
+            addCategoryFacet({
+              'facet-id': facetId,
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        CategoryFacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          CategoryFacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('as a parent', () => {
+      const dependentFacetId = 'def';
+      const dependentField = 'filetype';
+      const expectedValue = 'Fiji';
+      before(() => {
+        new TestFixture()
+          .with(addCategoryFacet({'facet-id': facetId, 'with-search': 'true'}))
+          .with(
+            addFacet({
+              'facet-id': dependentFacetId,
+              field: dependentField,
+              [`depends-on-${facetId}`]: expectedValue,
+            })
+          )
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(dependentFacetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        CategoryFacetSelectors.withId(facetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            CategoryFacetSelectors.withId(facetId),
+            expectedValue,
+            true
+          );
+          selectSearchResultAt(0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(dependentFacetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          CategoryFacetSelectors.withId(facetId),
+          true
+        );
+      });
+    });
+
+    describe('with two dependencies', () => {
+      before(() => {
+        new TestFixture()
+          .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+          .with(addFacet({'facet-id': 'def', field: 'filetype'}))
+          .with(
+            addCategoryFacet({
+              'facet-id': 'ghi',
+              'depends-on-objecttype': '',
+              'depends-on-filetype': 'pdf',
+            })
+          )
+          .init();
+      });
+
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        CategoryFacetSelectors.withId('ghi'),
+        true
+      );
     });
   });
 });
