@@ -23,6 +23,7 @@ import {configuration, version} from './reducers';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {analyticsMiddleware} from './analytics-middleware';
+import {jwtMiddleware} from './jwt-middleware';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers>;
@@ -233,5 +234,6 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
+    jwtMiddleware(logger),
   ].concat(options.middlewares || []);
 }
