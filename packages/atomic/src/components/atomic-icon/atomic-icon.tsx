@@ -1,6 +1,20 @@
-import {Component, Element, h, Host, Prop, State, Watch} from '@stencil/core';
+import {
+  Component,
+  Element,
+  forceUpdate,
+  h,
+  Host,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
 import {parseAssetURL} from '../../utils/utils';
 import {sanitize} from 'dompurify';
+import {
+  InitializableComponent,
+  InitializeBindings,
+  Bindings,
+} from '../../utils/initialization-utils';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -13,8 +27,10 @@ import {sanitize} from 'dompurify';
   shadow: false,
   assetsDirs: ['assets'],
 })
-export class AtomicIcon {
+export class AtomicIcon implements InitializableComponent {
   @Element() host!: HTMLElement;
+
+  @InitializeBindings() public bindings!: Bindings;
 
   /**
    * The SVG icon to display.
@@ -25,28 +41,32 @@ export class AtomicIcon {
    */
   @Prop() icon!: string;
 
-  private error: Error | null = null;
+  public error!: Error;
   @State() private svg: string | null = null;
   private deferRenderingPromise?: Promise<unknown>;
 
   private async fetchIcon(url: string) {
     try {
+      // deepcode ignore Ssrf: client side code
       const response = await fetch(url);
       if (response.status !== 200 && response.status !== 304) {
         throw new Error(
           `Could not fetch icon from ${url}, got status code ${response.status} (${response.statusText}).`
         );
       }
-      this.error = null;
       return await response.text();
     } catch (e) {
       this.error = e as Error;
+      forceUpdate(this);
       return null;
     }
   }
 
   private async getIcon() {
-    const url = parseAssetURL(this.icon);
+    const url = parseAssetURL(
+      this.icon,
+      this.bindings.store.get('iconAssetsPath')
+    );
     const svg = url ? await this.fetchIcon(url) : this.icon;
     const sanitizedSvg = svg
       ? sanitize(svg, {
@@ -63,7 +83,7 @@ export class AtomicIcon {
     this.svg = await svgPromise;
   }
 
-  public componentWillLoad() {
+  public initialize() {
     this.updateIcon();
   }
 
@@ -73,10 +93,12 @@ export class AtomicIcon {
 
   public render() {
     if (this.error) {
+      // deepcode ignore FormatString: client-side code.
       console.error(this.error, this.host);
       this.host.remove();
       return;
     }
+    // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code
     return <Host innerHTML={this.svg}></Host>;
   }
 }

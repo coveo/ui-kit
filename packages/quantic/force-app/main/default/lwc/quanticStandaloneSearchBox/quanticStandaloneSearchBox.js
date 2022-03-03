@@ -96,6 +96,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   standaloneSearchBox;
   /** @type {Function} */
   unsubscribe;
+  /** @type {boolean} */
+  isInitialized;
 
   /** @type {Suggestion[]} */
   get suggestions() {
@@ -117,6 +119,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   renderedCallback() {
     initializeWithHeadless(this, this.standaloneEngineId, this.initialize);
+    if (!this.isInitialized && !!this.standaloneSearchBox && !!this.input) {
+      this.input.setAttribute('is-initialized', 'true');
+      this.isInitialized = true;
+    }
   }
 
   @wire(CurrentPageReference)

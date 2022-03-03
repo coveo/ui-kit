@@ -27,7 +27,7 @@ export class AtomicFormatCurrency {
         this.host
       );
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
     }
   }
 

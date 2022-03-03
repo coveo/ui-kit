@@ -6,6 +6,8 @@
   border-color: #e5e8e8;
   height: 48px;
   box-sizing: border-box;
+  border-radius: 0.25rem;
+  overflow: hidden;
 }
 
 .searchbox__input {
@@ -24,14 +26,15 @@
 }
 
 .searchbox__submit-button {
+  width: 46.75px;
+  border-radius: 0;
+  height: 100%;
+}
+
+.searchbox__submit-button:focus {
+  border: none;
   border-top-right-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
-  height: 100%;
-  width: 46.57px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 }
 
 .searchbox__clear-button {
@@ -40,4 +43,8 @@
 
 .slds-input-has-icon .slds-input__icon.input__icon_cursor:not(button) {
   pointer-events: auto;
+}
+
+input[type="search"] {
+  -webkit-appearance: none;
 }

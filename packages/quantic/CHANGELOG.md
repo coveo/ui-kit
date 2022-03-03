@@ -3,6 +3,197 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.11.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.10.2...@coveo/quantic@1.11.0) (2022-03-03)
+
+
+### Features
+
+* **headless:** added disable facets functionality ([#1735](https://github.com/coveo/ui-kit/issues/1735)) ([c8862de](https://github.com/coveo/ui-kit/commit/c8862de04e92c4cb8c9b8d6f3f2510c6d1fd3ab2))
+
+
+
+
+
+## [1.10.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.10.1...@coveo/quantic@1.10.2) (2022-03-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.10.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.10.0...@coveo/quantic@1.10.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* **Quantic:** hide error message when fetching new classifications ([#1759](https://github.com/coveo/ui-kit/issues/1759)) ([0665702](https://github.com/coveo/ui-kit/commit/06657025def1fd76dc8fe767656ed64fdc710a87))
+
+
+
+
+
+# [1.10.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.9.1...@coveo/quantic@1.10.0) (2022-02-28)
+
+
+### Features
+
+* **quantic:** updating behaviour of QuanticCaseClassification when fetching suggestions ([#1767](https://github.com/coveo/ui-kit/issues/1767)) ([5066107](https://github.com/coveo/ui-kit/commit/50661075fead656f19339e7d3377b7eca07947f2))
+
+
+
+
+
+## [1.9.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.9.0...@coveo/quantic@1.9.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* **headless, quantic:**  Update analytics events sent when auto selecting the classification with the highest confidence ([#1740](https://github.com/coveo/ui-kit/issues/1740)) ([4145187](https://github.com/coveo/ui-kit/commit/414518781cbb7791b841e9596eb5317608fcb7a7))
+
+
+
+
+
+# [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.17...@coveo/quantic@1.9.0) (2022-02-25)
+
+
+### Features
+
+* **case-assist:** add JSDoc support ([#1762](https://github.com/coveo/ui-kit/issues/1762)) ([bdf24cb](https://github.com/coveo/ui-kit/commit/bdf24cb0178b20fa2ff503ad86149cc04d43828b))
+
+
+
+
+
+## [1.8.17](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.16...@coveo/quantic@1.8.17) (2022-02-24)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.16](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.15...@coveo/quantic@1.8.16) (2022-02-24)
+
+
+### Bug Fixes
+
+* **quantic:** fix standalone searchbox cypress tests ([#1756](https://github.com/coveo/ui-kit/issues/1756)) ([cf516df](https://github.com/coveo/ui-kit/commit/cf516df1117c8daacac928382eef4a699a000710))
+
+
+
+
+
+## [1.8.15](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.14...@coveo/quantic@1.8.15) (2022-02-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.14](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.13...@coveo/quantic@1.8.14) (2022-02-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.13](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.12...@coveo/quantic@1.8.13) (2022-02-18)
+
+
+### Bug Fixes
+
+* **quantic:** not trauncate the date in quickview  ([#1744](https://github.com/coveo/ui-kit/issues/1744)) ([544bc50](https://github.com/coveo/ui-kit/commit/544bc5012868fda9972a0ba0a2ef0f9013d80f7c))
+
+
+
+
+
+## [1.8.12](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.11...@coveo/quantic@1.8.12) (2022-02-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.10...@coveo/quantic@1.8.11) (2022-02-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.9...@coveo/quantic@1.8.10) (2022-02-16)
+
+
+### Bug Fixes
+
+* **quantic:** fix searchbox button style ([#1739](https://github.com/coveo/ui-kit/issues/1739)) ([19f480f](https://github.com/coveo/ui-kit/commit/19f480f7fa90a7e63088064419c0d08235277604))
+* **Quantic:** issue managing two document suggestions with the same title fixed ([#1736](https://github.com/coveo/ui-kit/issues/1736)) ([b34e937](https://github.com/coveo/ui-kit/commit/b34e937730b837a3842a5a916e2f30a37b7cfc4c))
+
+
+
+
+
+## [1.8.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.8...@coveo/quantic@1.8.9) (2022-02-16)
+
+
+### Bug Fixes
+
+* **quantic:** fix quickview title too long ([#1729](https://github.com/coveo/ui-kit/issues/1729)) ([1f0c303](https://github.com/coveo/ui-kit/commit/1f0c3032310bc0ad73f028b33b310d2bf700f336))
+
+
+
+
+
+## [1.8.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.7...@coveo/quantic@1.8.8) (2022-02-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.6...@coveo/quantic@1.8.7) (2022-02-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.5...@coveo/quantic@1.8.6) (2022-02-14)
+
+
+### Bug Fixes
+
+* **quantic:** fix flaky tests ([#1713](https://github.com/coveo/ui-kit/issues/1713)) ([21c1685](https://github.com/coveo/ui-kit/commit/21c168544f508a1b9dbf82c5f28e4adcbf8dd34f))
+
+
+
+
+
+## [1.8.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.4...@coveo/quantic@1.8.5) (2022-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.8.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.3...@coveo/quantic@1.8.4) (2022-02-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.8.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.8.2...@coveo/quantic@1.8.3) (2022-02-07)
 
 

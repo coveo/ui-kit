@@ -42,7 +42,7 @@ export class AtomicFormatNumber {
         this.host
       );
     } catch (error) {
-      this.error = error;
+      this.error = error as Error;
     }
   }
 

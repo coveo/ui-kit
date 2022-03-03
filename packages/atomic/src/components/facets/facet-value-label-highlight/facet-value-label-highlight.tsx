@@ -10,6 +10,7 @@ interface FacetValueLabelHighlightProps {
 export const FacetValueLabelHighlight: FunctionalComponent<FacetValueLabelHighlightProps> =
   (props) => {
     return (
+      // deepcode ignore ReactSetInnerHtml: This is not React code
       <span
         title={props.displayValue}
         part="value-label"

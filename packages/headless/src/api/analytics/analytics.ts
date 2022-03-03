@@ -88,6 +88,10 @@ export class AnalyticsProvider implements SearchPageClientProvider {
     );
   }
 
+  public getOriginContext() {
+    return this.state.configuration.analytics.originContext;
+  }
+
   public getOriginLevel1() {
     return this.state.searchHub || getSearchHubInitialState();
   }
@@ -101,7 +105,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
     // Configurable on headless engine, optionally
     // If not specified at config time, need to fallback to use current referrer parameter for search API, if any
     // Otherwise: fallback to `default`;
-    return this.state.configuration.analytics.originLevel3 || 'default';
+    return this.state.configuration.analytics.originLevel3;
   }
 
   public getFacetState() {
@@ -189,6 +193,17 @@ export const getVisitorID = () =>
   new CoveoAnalyticsClient({}).getCurrentVisitorId();
 
 export const historyStore = new history.HistoryStore();
+
+export const getPageID = () => {
+  const actions = historyStore.getHistory();
+  const lastPageView = actions.reverse().find((action) => {
+    return action.name === 'PageView';
+  });
+  if (!lastPageView) {
+    return '';
+  }
+  return lastPageView.value;
+};
 
 interface ConfigureCaseAssistAnalyticsOptions {
   state: StateNeededByCaseAssistAnalytics;

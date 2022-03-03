@@ -33,6 +33,7 @@ import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {partitionIntoParentsAndValues} from './category-facet-utils';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {disableFacet} from '../../facet-options/facet-options-actions';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),
@@ -163,6 +164,9 @@ export const categoryFacetSetReducer = createReducer(
           state,
           action.payload.response.facets
         );
+      })
+      .addCase(disableFacet, (state, action) => {
+        handleCategoryFacetDeselectAll(state, action.payload);
       });
   }
 );

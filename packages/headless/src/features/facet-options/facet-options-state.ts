@@ -1,9 +1,17 @@
-import {FacetOptions} from './facet-options';
+export type FacetOptionsSlice = {enabled: boolean};
 
-export type FacetOptionsState = FacetOptions;
+export type FacetOptionsState = {
+  freezeFacetOrder: boolean;
+  facets: Record<string, FacetOptionsSlice>;
+};
+
+export function getFacetOptionsSliceInitialState(): FacetOptionsSlice {
+  return {enabled: true};
+}
 
 export function getFacetOptionsInitialState(): FacetOptionsState {
   return {
     freezeFacetOrder: false,
+    facets: {},
   };
 }

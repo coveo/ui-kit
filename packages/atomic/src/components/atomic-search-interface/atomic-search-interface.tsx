@@ -112,6 +112,22 @@ export class AtomicSearchInterface {
    */
   @Prop() public scrollContainer = 'atomic-search-interface';
 
+  /**
+   * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+   *
+   * @example /mypublicpath/languages
+   *
+   */
+  @Prop() public languageAssetsPath = './lang';
+
+  /**
+   * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+   *
+   * @example /mypublicpath/icons
+   *
+   */
+  @Prop() public iconAssetsPath = './assets';
+
   public constructor() {
     setCoveoGlobal();
   }
@@ -167,6 +183,11 @@ export class AtomicSearchInterface {
     );
   }
 
+  @Watch('iconAssetsPath')
+  public updateIconAssetsPath() {
+    this.store.set('iconAssetsPath', this.iconAssetsPath);
+  }
+
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
     this.unsubscribeSearchStatus();
@@ -210,12 +231,13 @@ export class AtomicSearchInterface {
       );
       return;
     }
-
+    this.updateIconAssetsPath();
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
     this.initSearchStatus();
     this.initUrlManager();
+    this.initAriaLive();
 
     this.initialized = true;
   }
@@ -342,6 +364,10 @@ export class AtomicSearchInterface {
     window.addEventListener('hashchange', this.onHashChange);
   }
 
+  private initAriaLive() {
+    this.host.prepend(document.createElement('atomic-aria-live'));
+  }
+
   private initSearchStatus() {
     this.searchStatus = buildSearchStatus(this.engine!);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => {
@@ -385,14 +411,13 @@ export class AtomicSearchInterface {
           bindings={this.bindings}
         ></atomic-relevance-inspector>
       ),
-      <atomic-aria-live></atomic-aria-live>,
       <slot></slot>,
     ];
   }
 
   private get i18nBackendOptions(): BackendOptions {
     return {
-      loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
     };
   }
 }

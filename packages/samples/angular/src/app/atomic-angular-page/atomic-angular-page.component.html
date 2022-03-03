@@ -25,12 +25,9 @@
       <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
     </atomic-timeframe-facet>
     <atomic-rating-facet field="ec_rating" label="Rating" numberOfIntervals="5"></atomic-rating-facet>
-    <atomic-rating-range-facet
-      field="ec_rating"
-      label="Rating range"
-      numberOfIntervals="5"
-      facetId="ec_rating_range"
-    ></atomic-rating-range-facet>
+    <atomic-rating-range-facet field="ec_rating" label="Rating range" numberOfIntervals="5" facetId="ec_rating_range">
+    </atomic-rating-range-facet>
+    <atomic-facet field="source"></atomic-facet>
   </atomic-facet-manager>
 
   <atomic-breadbox></atomic-breadbox>
@@ -47,27 +44,50 @@
   <div class="results">
     <atomic-did-you-mean></atomic-did-you-mean>
     <atomic-result-list
-      fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+      fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+      display="grid"
+      image-size="large"
     >
-      <!-- 
-            TODO: Result templates broken with angular
-            <atomic-result-template>
-                <template>
-                    <atomic-result-section-badges>
-                        <atomic-result-badge field="ec_brand"></atomic-result-badge>
-                    </atomic-result-section-badges>
-                    <atomic-result-section-visual>
-                        <atomic-result-image field="ec_images"></atomic-result-image>
-                    </atomic-result-section-visual>
-                    <atomic-result-section-title>
-                        <atomic-result-link></atomic-result-link>
-                    </atomic-result-section-title>
-                    <atomic-result-section-title-metadata>
-                        <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                    </atomic-result-section-title-metadata>
-                </template>
-            </atomic-result-template> 
-            -->
+      <atomic-result-template>
+        <template>
+          <atomic-result-section-title>
+            <h2>
+              <atomic-result-link></atomic-result-link>
+            </h2>
+          </atomic-result-section-title>
+          <atomic-result-section-emphasized>
+            <atomic-result-number field="ec_price">
+              <atomic-format-currency currency="USD"></atomic-format-currency>
+            </atomic-result-number>
+          </atomic-result-section-emphasized>
+          <atomic-result-section-title-metadata>
+            <atomic-result-rating field="ec_rating"></atomic-result-rating>
+            <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+          </atomic-result-section-title-metadata>
+          <atomic-result-section-badges>
+            <atomic-result-badge field="ec_brand"></atomic-result-badge>
+          </atomic-result-section-badges>
+          <atomic-result-section-visual>
+            <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+          </atomic-result-section-visual>
+          <atomic-result-section-excerpt>
+            <atomic-result-text field="ec_shortdesc"></atomic-result-text>
+          </atomic-result-section-excerpt>
+          <atomic-result-section-bottom-metadata>
+            <atomic-result-fields-list>
+              <atomic-field-condition class="field" if-defined="cat_platform">
+                <app-label-and-field-value label="Platform" field="cat_platform"></app-label-and-field-value>
+              </atomic-field-condition>
+              <atomic-field-condition class="field" if-defined="cat_condition">
+                <app-label-and-field-value label="Condition" field="cat_condition"></app-label-and-field-value>
+              </atomic-field-condition>
+              <atomic-field-condition class="field" if-defined="cat_categories">
+                <app-label-and-field-value label="Tags" field="cat_categories"></app-label-and-field-value>
+              </atomic-field-condition>
+            </atomic-result-fields-list>
+          </atomic-result-section-bottom-metadata>
+        </template>
+      </atomic-result-template>
     </atomic-result-list>
     <div class="pagination">
       <atomic-load-more-results></atomic-load-more-results>

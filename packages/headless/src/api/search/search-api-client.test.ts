@@ -179,7 +179,7 @@ describe('search api client', () => {
           numberOfResults: state.pagination.numberOfResults,
           sortCriteria: state.sortCriteria,
           firstResult: state.pagination.firstResult,
-          facetOptions: state.facetOptions,
+          facetOptions: {freezeFacetOrder: state.facetOptions.freezeFacetOrder},
           context: state.context.contextValues,
           enableDidYouMean: state.didYouMean.enableDidYouMean,
           enableQuerySyntax: state.query.enableQuerySyntax,
@@ -315,6 +315,8 @@ describe('search api client', () => {
         const {query} = facetSearchState.options;
         const newQuery = `*${query}*`;
 
+        const searchRequest = (await buildSearchRequest(state)).request;
+
         expect(request).toMatchObject({
           requestParams: {
             type: 'specific',
@@ -324,8 +326,13 @@ describe('search api client', () => {
             field: facetState.field,
             ignoreValues: [],
             searchContext: {
-              ...(await buildSearchRequest(state)).request,
+              ...searchRequest,
               visitorId: expect.any(String),
+              analytics: {
+                ...searchRequest.analytics,
+                clientId: expect.any(String),
+                clientTimestamp: expect.any(String),
+              },
             },
           },
         });
@@ -351,6 +358,8 @@ describe('search api client', () => {
         const {query} = categoryFacetSearch.options;
         const newQuery = `*${query}*`;
 
+        const searchRequest = (await buildSearchRequest(state)).request;
+
         expect(request).toMatchObject({
           requestParams: {
             type: 'hierarchical',
@@ -362,8 +371,13 @@ describe('search api client', () => {
             delimitingCharacter: categoryFacet.delimitingCharacter,
             ignorePaths: [],
             searchContext: {
-              ...(await buildSearchRequest(state)).request,
+              ...searchRequest,
               visitorId: expect.any(String),
+              analytics: {
+                ...searchRequest.analytics,
+                clientId: expect.any(String),
+                clientTimestamp: expect.any(String),
+              },
             },
           },
         });

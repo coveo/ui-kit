@@ -1,7 +1,7 @@
 {
   "name": "@coveo/auth",
   "private": false,
-  "version": "1.1.7",
+  "version": "1.1.9",
   "description": "Functions to help authenticate with the Coveo platform.",
   "main": "./dist/auth.js",
   "module": "./dist/auth.esm.js",
@@ -37,11 +37,11 @@
   },
   "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
   "devDependencies": {
-    "@types/jest": "^27.0.3",
-    "jest": "^27.3.0",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.7",
-    "vite": "^2.6.14"
+    "@types/jest": "27.0.3",
+    "jest": "27.3.0",
+    "rimraf": "3.0.2",
+    "ts-jest": "27.0.7",
+    "vite": "2.6.14"
   },
   "engines": {
     "node": ">=10"

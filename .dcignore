@@ -1,0 +1,7 @@
+*.spec.*
+*.test.*
+*.stories.tsx
+scripts
+packages/samples
+.storybook
+cypress

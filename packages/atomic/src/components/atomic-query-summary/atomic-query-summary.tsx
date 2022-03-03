@@ -115,6 +115,7 @@ export class AtomicQuerySummary implements InitializableComponent {
     );
 
     return (
+      // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
         part="results"
         class="overflow-hidden overflow-ellipsis"

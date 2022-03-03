@@ -40,7 +40,7 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
     >
       <atomic-icon
         part="label-button-icon"
-        class="w-3 self-center flex-shrink-0 ml-4"
+        class="w-3 self-center shrink-0 ml-4"
         icon={props.isCollapsed ? ArrowTopIcon : ArrowBottomIcon}
       ></atomic-icon>
     </Button>,

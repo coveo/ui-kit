@@ -9,6 +9,7 @@ import {
   documentSuggestion,
 } from '../../app/reducers';
 import {
+  logAutoSelectCaseField,
   logClassificationClick,
   logUpdateCaseField,
 } from '../../features/case-assist/case-assist-analytics-actions';
@@ -73,8 +74,13 @@ export interface CaseField extends Controller {
    *
    * @param value - The field value to set.
    * @param updatesToFetch - A set of flags dictating whether to fetch case assist data after updating the field value.
+   * @param autoSelection - A flag indicating whether the update was triggered by an automatic selection.
    */
-  update(value: string, updatesToFetch?: UpdateCaseFieldFetchOptions): void;
+  update(
+    value: string,
+    updatesToFetch?: UpdateCaseFieldFetchOptions,
+    autoSelection?: boolean
+  ): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `CaseField` controller.
@@ -112,16 +118,20 @@ export function buildCaseField(
     'buildCaseField'
   ) as Required<CaseFieldOptions>;
 
-  dispatch(
-    registerCaseField({
-      fieldName: options.field,
-      fieldValue: '',
-    })
-  );
-
   const getState = () => {
     return engine.state;
   };
+
+  const isRegistered = getState().caseField?.fields?.[options.field];
+
+  if (!isRegistered) {
+    dispatch(
+      registerCaseField({
+        fieldName: options.field,
+        fieldValue: '',
+      })
+    );
+  }
 
   return {
     ...controller,
@@ -142,13 +152,19 @@ export function buildCaseField(
       };
     },
 
-    update(value: string, updatesToFetch?: UpdateCaseFieldFetchOptions) {
+    update(
+      value: string,
+      updatesToFetch?: UpdateCaseFieldFetchOptions,
+      autoSelection?: boolean
+    ) {
       const suggestionId = getState().caseField?.fields?.[
         options.field
       ]?.suggestions?.find((s) => s.value === value)?.id;
 
       if (suggestionId) {
-        dispatch(logClassificationClick(suggestionId));
+        autoSelection
+          ? dispatch(logAutoSelectCaseField(suggestionId))
+          : dispatch(logClassificationClick(suggestionId));
       }
 
       dispatch(
@@ -158,7 +174,7 @@ export function buildCaseField(
         })
       );
 
-      dispatch(logUpdateCaseField(options.field));
+      !autoSelection && dispatch(logUpdateCaseField(options.field));
 
       updatesToFetch?.caseClassifications &&
         dispatch(fetchCaseClassifications());

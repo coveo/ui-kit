@@ -10,13 +10,19 @@ import {
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../features/facet-options/facet-options-actions';
 import {
   ConfigurationSection,
+  FacetOptionsSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {isRangeFacetValueSelected} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {CoreEngine} from '../../../../app/engine';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 
 export type RangeFacet = ReturnType<typeof buildCoreRangeFacet>;
 
@@ -29,7 +35,9 @@ export function buildCoreRangeFacet<
   T extends RangeFacetRequest,
   R extends RangeFacetResponse
 >(
-  engine: CoreEngine<ConfigurationSection & SearchSection>,
+  engine: CoreEngine<
+    ConfigurationSection & SearchSection & FacetOptionsSection
+  >,
   props: RangeFacetProps<T>
 ) {
   type RangeFacetValue = R['values'][0];
@@ -37,6 +45,8 @@ export function buildCoreRangeFacet<
   const {facetId, getRequest} = props;
   const controller = buildController(engine);
   const dispatch = engine.dispatch;
+
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   return {
     ...controller,
@@ -57,6 +67,14 @@ export function buildCoreRangeFacet<
       return this.state.sortCriterion === criterion;
     },
 
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
+
     get state() {
       const request = getRequest();
       const response = baseFacetResponseSelector(engine.state, facetId) as
@@ -66,6 +84,7 @@ export function buildCoreRangeFacet<
       const sortCriterion = request.sortCriteria;
       const values: R['values'] = response ? response.values : [];
       const isLoading = isFacetLoadingResponseSelector(engine.state);
+      const enabled = getIsEnabled();
       const hasActiveValues = values.some(
         (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
       );
@@ -76,6 +95,7 @@ export function buildCoreRangeFacet<
         sortCriterion,
         hasActiveValues,
         isLoading,
+        enabled,
       };
     },
   };

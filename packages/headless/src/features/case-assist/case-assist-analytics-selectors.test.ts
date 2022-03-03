@@ -217,6 +217,25 @@ describe('case assist analytics selectors', () => {
       });
     });
 
+    it('should return the classification matching the specified ID with the field autoSelection when the autoSelection parameter is set to true', () => {
+      const classification = caseAssistCaseClassificationSelector(
+        buildStateWithCaseField(),
+        'service-suggestion-id',
+        true
+      );
+
+      expect(classification).toMatchObject({
+        autoSelection: true,
+        classificationId: 'service-suggestion-id',
+        responseId: 'last-response-id',
+        fieldName: 'category',
+        classification: {
+          value: 'service',
+          confidence: 0.765,
+        },
+      });
+    });
+
     it('should throw when the classification is not found', () => {
       expect(() =>
         caseAssistCaseClassificationSelector(
@@ -258,6 +277,28 @@ describe('case assist analytics selectors', () => {
         responseId: 'last-document-suggestion-response-id',
         suggestionId: 'document-id',
         fromQuickview: true,
+        suggestion: {
+          documentPosition: 0,
+          documentTitle: 'My Document',
+          documentUri: 'http://my.document.uri',
+          documentUriHash: 'document-uri-hash',
+          documentUrl: 'http://my.document.uri/clickable',
+        },
+      });
+    });
+
+    it('should return the document suggestion matching the specified ID with the field openDocument when the openDocument parameter is set to true', () => {
+      const suggestion = caseAssistDocumentSuggestionSelector(
+        buildStateWithDocumentSuggestions(),
+        'document-id',
+        false,
+        true
+      );
+
+      expect(suggestion).toMatchObject({
+        responseId: 'last-document-suggestion-response-id',
+        suggestionId: 'document-id',
+        openDocument: true,
         suggestion: {
           documentPosition: 0,
           documentTitle: 'My Document',

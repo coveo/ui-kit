@@ -20,15 +20,15 @@
             <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={labels.close}></lightning-icon>
           </button>
           <h3 id="quickview-modal-heading" class="slds-modal__title slds-truncate slds-grid slds-grid_vertical-align-center">
-            <div class="slds-grid slds-grid_vertical-align-center slds-text-align_left">
+            <div class="slds-grid slds-truncate slds-grid_vertical-align-center slds-text-align_left">
               <div class="slds-m-right_small">
                 <c-quantic-result-label result={result} icon-only></c-quantic-result-label>
               </div>
               <div class="slds-truncate quickview__result-title">
-                <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+                <c-quantic-result-link target="_blank" use-case={useCase} result={result} engine-id={engineId}></c-quantic-result-link>
               </div>
             </div>
-            <div class="slds-truncate slds-text-align_right quickview__result-date slds-col_bump-left">
+            <div class="slds-text-align_right quickview__result-date slds-col_bump-left">
               <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
             </div>
           </h3>
