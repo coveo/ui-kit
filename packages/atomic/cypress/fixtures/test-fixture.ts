@@ -36,7 +36,6 @@ export class TestFixture {
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifierPredicate[] = [];
   private returnError = false;
-  private redirected = false;
   private reflectStateInUrl = true;
 
   public with(feat: TestFeature) {
