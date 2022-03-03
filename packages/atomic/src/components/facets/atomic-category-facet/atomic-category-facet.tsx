@@ -170,13 +170,13 @@ export class AtomicCategoryFacet
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
    *
-   * <!-- To show the facet if any value is selected in the facet with id "abc": -->
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
    * <atomic-category-facet
    *   depends-on-abc
    *   ...
    * ></atomic-category-facet>
    *
-   * <!-- To show the facet if value "doc" is selected in the facet with id "abc": -->
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
    * <atomic-category-facet
    *   depends-on-abc="doc"
    *   ...

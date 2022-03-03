@@ -147,13 +147,13 @@ export class AtomicRatingFacet
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
    *
-   * <!-- To show the facet if any value is selected in the facet with id "abc": -->
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
    * <atomic-rating-facet
    *   depends-on-abc
    *   ...
    * ></atomic-rating-facet>
    *
-   * <!-- To show the facet if value "doc" is selected in the facet with id "abc": -->
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
    * <atomic-rating-facet
    *   depends-on-abc="doc"
    *   ...
