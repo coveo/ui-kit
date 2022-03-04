@@ -161,7 +161,22 @@
     ]
   },
   "snyk_code": {
-    "no_scan": false
+    "no_scan": false,
+    "configurations": [
+      {
+        "path": "packages/headless",
+        "project_name": "headless-engine",
+        "org": "coveo-jsui"
+      },
+      {
+        "path": "packages/atomic",
+        "project_name": "atomic",
+        "org": "coveo-jsui"
+      }
+    ]
+  },
+  "veracode": {
+    "no_scan": true
   },
   "observatory": {
     "no_endpoint": true
