@@ -151,32 +151,12 @@
     "no_container_images": true,
     "configurations": [
       {
-        "directory": "packages/bueno",
-        "project_name": "bueno"
-      },
-      {
-        "directory": "packages/auth",
-        "project_name": "auth"
-      },
-      {
         "directory": "packages/headless",
         "project_name": "headless-engine"
       },
       {
-        "directory": "packages/quantic",
-        "project_name": "quantic"
-      },
-      {
         "directory": "packages/atomic",
         "project_name": "atomic"
-      },
-      {
-        "directory": "packages/atomic-react",
-        "project_name": "atomic-react"
-      },
-      {
-        "directory": "packages/atomic-angular",
-        "project_name": "atomic-angular"
       }
     ]
   },
@@ -184,13 +164,38 @@
     "no_scan": false,
     "configurations": [
       {
+        "path": "packages/bueno",
+        "project_name": "bueno",
+        "org": "coveo-jsui"
+      },
+      {
+        "path": "packages/auth",
+        "project_name": "auth",
+        "org": "coveo-jsui"
+      },
+      {
         "path": "packages/headless",
         "project_name": "headless-engine",
         "org": "coveo-jsui"
       },
       {
+        "path": "packages/quantic",
+        "project_name": "quantic",
+        "org": "coveo-jsui"
+      },
+      {
         "path": "packages/atomic",
         "project_name": "atomic",
+        "org": "coveo-jsui"
+      },
+      {
+        "path": "packages/atomic-react",
+        "project_name": "atomic-react",
+        "org": "coveo-jsui"
+      },
+      {
+        "path": "packages/atomic-angular",
+        "project_name": "atomic-angular",
         "org": "coveo-jsui"
       }
     ]
