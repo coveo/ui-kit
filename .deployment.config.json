@@ -151,12 +151,32 @@
     "no_container_images": true,
     "configurations": [
       {
+        "directory": "packages/bueno",
+        "project_name": "bueno"
+      },
+      {
+        "directory": "packages/auth",
+        "project_name": "auth"
+      },
+      {
         "directory": "packages/headless",
         "project_name": "headless-engine"
       },
       {
+        "directory": "packages/quantic",
+        "project_name": "quantic"
+      },
+      {
         "directory": "packages/atomic",
         "project_name": "atomic"
+      },
+      {
+        "directory": "packages/atomic-react",
+        "project_name": "atomic-react"
+      },
+      {
+        "directory": "packages/atomic-angular",
+        "project_name": "atomic-angular"
       }
     ]
   },
