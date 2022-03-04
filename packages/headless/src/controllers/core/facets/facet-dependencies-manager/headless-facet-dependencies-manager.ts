@@ -17,19 +17,53 @@ import {
 import {loadReducerError} from '../../../../utils/errors';
 
 export interface AnyFacetDependency<T extends AnyFacetValueRequest> {
+  /**
+   * The id of the facet to watch.
+   */
   parentFacetId: string;
-  isDependencyMet: (parentValues: T[]) => boolean;
+  /**
+   * The callback that determines whether this dependency is met
+   * @example
+   * ```ts
+   * const fileTypeHasSomeSelectedValue: AnyFacetDependency<FacetValueRequest> = {
+   *   parentFacetId: 'filetype',
+   *   isDependencyMet: (parentValues) => parentValues.some(value => value.state === 'selected')
+   * }
+   * ```
+   * .
+   * @param parentValues - The current values of the facet with the id equal to `parentFacetId`.
+   * @returns Whether the intended dependency is met.
+   */
+  isDependencyMet(parentValues: T[]): boolean;
 }
 
 export interface FacetDependenciesManagerProps {
+  /**
+   * The id of the facet to enable or disable depending on whether dependencies are met.
+   */
   dependentFacetId: string;
+  /**
+   * The dependencies to watch.
+   *
+   * * If any of these dependencies are met, the dependent facet is enabled.
+   * * If none of these dependencies are met, the dependent facet is disabled.
+   */
   dependencies: AnyFacetDependency<AnyFacetValueRequest>[];
 }
 
 export interface FacetDependenciesManager {
+  /**
+   * Stops enabling and disabling the dependent facet.
+   */
   stopWatching(): void;
 }
 
+/**
+ * A manager that enables or disables a facet based on whether dependencies are met.
+ * @param engine - The headless engine.
+ * @param props - The configurable `FacetDependenciesManager` properties.
+ * @returns A new facet dependencies manager.
+ */
 export function buildFacetDependenciesManager(
   engine: CoreEngine,
   props: FacetDependenciesManagerProps
