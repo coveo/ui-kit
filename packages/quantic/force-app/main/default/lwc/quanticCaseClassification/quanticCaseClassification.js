@@ -44,8 +44,11 @@ export default class QuanticCaseClassification extends LightningElement {
       console.error('Error getting the picklist values');
     } else {
       this.picklistValues = data;
-      if (data && !data.picklistFieldValues[this.sfFieldApiName]) {
-        this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
+      if (data) {
+        this.allOptionsReceived = true;
+        if (!data.picklistFieldValues[this.sfFieldApiName]) {
+          this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
+        }
       }
     }
   }
@@ -132,6 +135,10 @@ export default class QuanticCaseClassification extends LightningElement {
   hideSuggestions = false;
   /** @type {boolean} */
   lockedState = false;
+  /** @type {boolean} */
+  allOptionsReceived;
+  /** @type {Array<boolean>} */
+  loggedWarnings = [];
 
   connectedCallback() {
     this.validateProps();
@@ -298,9 +305,24 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {Array<object>}
    */
   get suggestions() {
-    return this.classifications.map((suggestion) => {
-      return {...suggestion, checked: suggestion.value === this._value};
-    });
+    if (!this.allOptionsReceived) {
+      return [];
+    }
+    return this.classifications
+      .filter((suggestion) => {
+        const suggestionIncludedInOptions = this.options.some(
+          (option) => option.value === suggestion.value
+        );
+        if (!suggestionIncludedInOptions) {
+          this.logWarningOnce(
+            `The value "${suggestion.value}" was not found among all the options retrieved from Salesforce. Please confirm that the coveoFieldName corresponds to the correct sfFieldApiName.`
+          );
+        }
+        return suggestionIncludedInOptions;
+      })
+      .map((suggestion) => {
+        return {...suggestion, checked: suggestion.value === this._value};
+      });
   }
 
   /**
@@ -357,7 +379,7 @@ export default class QuanticCaseClassification extends LightningElement {
       this.field.update(value, undefined, autoSelection);
     }
     this._value = value;
-    if(this._errorMessage && value){
+    if (this._errorMessage && value) {
       this._errorMessage = '';
     }
   }
@@ -391,5 +413,12 @@ export default class QuanticCaseClassification extends LightningElement {
       !this.field.state.value ||
       this.previousClassifications?.[0]?.value === this.field.state.value
     );
+  }
+
+  logWarningOnce(message) {
+    if (!this.loggedWarnings[message]) {
+      this.loggedWarnings[message] = true;
+      console.warn(message);
+    }
   }
 }

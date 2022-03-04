@@ -9,6 +9,7 @@ import {CaseClassificationExpectations as Expect} from './case-classification-ex
 import {CaseClassificationActions as Actions} from './case-classification-actions';
 import {scope} from '../../reporters/detailed-collector';
 import {fetchClassifications} from '../../page-objects/actions/action-fetch-classifications';
+import {stubConsoleWarning} from '../console-selectors';
 
 interface CaseClassificationOptions {
   maxSuggestions: number;
@@ -30,6 +31,9 @@ const invalidMaxSuggestionsError = (value: string | number) => {
 };
 const missingCoveoFieldNameError =
   'coveoFieldName is required, please set its value.';
+const nonCorrespondingSuggestionWarning = (value: string) => {
+  return `The value "${value}" was not found among all the options retrieved from Salesforce. Please confirm that the coveoFieldName corresponds to the correct sfFieldApiName.`;
+};
 
 describe('quantic-case-classification', () => {
   const pageUrl = 's/quantic-case-classification';
@@ -43,6 +47,10 @@ describe('quantic-case-classification', () => {
     {id: '2', value: 'Medium', label: 'Medium'},
     {id: '3', value: 'High', label: 'High'},
     {id: '4', value: 'Very high', label: 'Very high'},
+  ];
+  const nonCorrespondingSuggestions = [
+    {id: '0', value: 'Web', label: 'Web'},
+    {id: '1', value: 'Phone', label: 'Phone'},
   ];
 
   function visitCaseClassification(
@@ -818,6 +826,44 @@ describe('quantic-case-classification', () => {
         Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.correctValue(allOptions[clickedIndex].value);
+      });
+    });
+  });
+
+  describe('when the suggestions are not included in all the options retrieved from Salesforce', () => {
+    it('should display only the select dropdown and log warnings in the console', () => {
+      interceptCaseAssist();
+      mockSfPicklistValues(sfDefaultField, allOptions);
+
+      cy.visit(pageUrl, {
+        onBeforeLoad(win) {
+          stubConsoleWarning(win);
+        },
+      });
+      configure({
+        maxSuggestions: defaultMaxSuggestions,
+      });
+
+      scope('when loading the page', () => {
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockCaseClassification(coveoDefaultField, nonCorrespondingSuggestions);
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+        Expect.numberOfSuggestions(0);
+        Expect.numberOfInlineOptions(0);
+        nonCorrespondingSuggestions.forEach((suggestion: {value: string}) => {
+          Expect.console.warning(
+            true,
+            nonCorrespondingSuggestionWarning(suggestion.value)
+          );
+        });
       });
     });
   });
