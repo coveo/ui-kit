@@ -36,6 +36,43 @@ export class AppModule {}
 
 Once this is done, you will be able to reference all atomic components inside that module.
 
+## Initializing the Search Interface
+
+You can initialize the search interface at any time in the lifecycle of your application. One such suitable lifecyle hook is `AfterViewInit`.
+
+The following example uses this `AfterViewInit` hook, and relies on the above `AppModule` as a starting point, which bootstraps `AppComponent`.
+
+```typescript
+// app.component.ts
+
+import {AfterViewInit, Component} from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+})
+export class AppComponent implements AfterViewInit {
+  ngAfterViewInit(): void {
+    const searchInterface = document.querySelector('atomic-search-interface');
+    searchInterface
+      ?.initialize({
+        accessToken: '<REPLACE_WITH_TOKEN>',
+        organizationId: '<REPLACE_WITH_COVEO_ORGANIZATION_ID>',
+      })
+      .then(() => {
+        searchInterface.executeFirstSearch();
+      });
+  }
+}
+```
+```html
+<!-- app.component.html  -->
+<atomic-search-interface>
+  <!-- content of the interface -->
+</atomic-search-interface>
+```
+
 ## Static Assets - Languages and SVGs
 
 For performance reasons, the generated JavaScript bundle does not automatically include static assets that are loaded on demand. This impacts language support, as well as the use of included SVG icons.
