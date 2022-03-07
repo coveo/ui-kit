@@ -6,6 +6,7 @@ import {
   ReducersMapObject,
   StateFromReducersMapObject,
   Middleware,
+  Reducer,
 } from '@reduxjs/toolkit';
 import {
   disableAnalytics,
@@ -23,7 +24,6 @@ import {configuration, version} from './reducers';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {analyticsMiddleware} from './analytics-middleware';
-import {jwtMiddleware} from './jwt-middleware';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers>;
@@ -94,6 +94,12 @@ export interface EngineOptions<Reducers extends ReducersMapObject>
    * [Redux documentation on reducers.](https://redux.js.org/glossary#reducer)
    */
   reducers: Reducers;
+  /**
+   * An optional cross slice (or root) reducer that can be combined with the slice reducers.
+   *
+   * [Redux documentation on root reducers.](https://redux.js.org/usage/structuring-reducers/beyond-combinereducers)
+   */
+  crossSlice?: Reducer;
 }
 
 export interface ExternalEngineOptions<State extends object> {
@@ -164,6 +170,9 @@ function buildCoreEngine<
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const {reducers} = options;
   const reducerManager = createReducerManager({...coreReducers, ...reducers});
+  if (options.crossSlice) {
+    reducerManager.addCrossSlice(options.crossSlice);
+  }
   const logger = thunkExtraArguments.logger;
   const store = createStore(options, thunkExtraArguments, reducerManager);
 
@@ -234,6 +243,5 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
-    jwtMiddleware(logger),
   ].concat(options.middlewares || []);
 }
