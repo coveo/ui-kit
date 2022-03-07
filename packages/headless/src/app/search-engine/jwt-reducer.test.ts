@@ -79,6 +79,12 @@ describe('jwt-reducer', () => {
         reducer(initialState, setSearchHub('testing hub'));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
+
+      it('should not reconcile the search hub if the search token is empty', () => {
+        initialState.configuration.accessToken = emptyJwtToken;
+        const newState = reducer(initialState, setSearchHub('random stuff'));
+        expect(newState).toMatchObject(initialState);
+      });
     });
 
     describe('when executing setPipeline', () => {
@@ -191,7 +197,7 @@ describe('jwt-reducer', () => {
         expect(loggerSpy).not.toHaveBeenCalled();
       });
 
-      it('should not reconcole the pipeline and search hub if the search token is empty', () => {
+      it('should not reconcile the pipeline and search hub if the search token is empty', () => {
         initialState.configuration.accessToken = emptyJwtToken;
         const newState = reducer(
           initialState,
