@@ -447,7 +447,7 @@ export class AtomicSearchBox {
     return (
       <Button
         style="primary"
-        class="w-12 h-auto rounded-r-md rounded-l-none -my-px"
+        class="w-12 h-auto rounded-r-md rounded-l-none -my-px -mr-px"
         part="submit-button"
         ariaLabel={this.bindings.i18n.t('search')}
         onClick={() => {
