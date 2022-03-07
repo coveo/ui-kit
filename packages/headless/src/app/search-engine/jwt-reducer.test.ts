@@ -23,14 +23,27 @@ describe('jwt-reducer', () => {
   const jwtToken =
     'eyJhbGciOiJIUzI1NiJ9.eyJwaXBlbGluZSI6InRlc3RpbmciLCJzZWFyY2hIdWIiOiJ0ZXN0aW5nIGh1YiIsInY4Ijp0cnVlLCJvcmdhbml6YXRpb24iOiJzZWFyY2h1aXNhbXBsZXMiLCJ1c2VySWRzIjpbeyJhdXRoQ29va2llIjoiIiwicHJvdmlkZXIiOiJFbWFpbCBTZWN1cml0eSBQcm92aWRlciIsIm5hbWUiOiJhc21pdGhAZXhhbXBsZS5jb20iLCJ0eXBlIjoiVXNlciIsImluZm9zIjp7fX1dLCJyb2xlcyI6WyJxdWVyeUV4ZWN1dG9yIl0sInVzZXJEaXNwbGF5TmFtZSI6IkFsaWNlIFNtaXRoIiwiZXhwIjoxNjQ2NzUzNDM0LCJpYXQiOjE2NDY2NjcwMzR9.p70UUYXKmg3sHU961G1Vmwp45qp8EgxvHisPMk-RUPw';
 
+  // expired search token that is "empty" and contains no search hub, pipeline, userDisplayName
+  const emptyJwtToken =
+    'eyJhbGciOiJIUzI1NiJ9.eyJ2OCI6dHJ1ZSwib3JnYW5pemF0aW9uIjoic2VhcmNodWlzYW1wbGVzIiwidXNlcklkcyI6W3siYXV0aENvb2tpZSI6IiIsInByb3ZpZGVyIjoiRW1haWwgU2VjdXJpdHkgUHJvdmlkZXIiLCJuYW1lIjoiYXNtaXRoQGV4YW1wbGUuY29tIiwidHlwZSI6IlVzZXIiLCJpbmZvcyI6e319XSwicm9sZXMiOlsicXVlcnlFeGVjdXRvciJdLCJleHAiOjE2NDY3NjEyODUsImlhdCI6MTY0NjY3NDg4NX0.3wikhpJzJuoMeHDpokdkbIjf92DLxdsS4zRFSqt-niY';
+
   afterEach(() => {
     jest.clearAllMocks();
   });
   it('should handle access token not being JWT token', () => {
     const initialState = createMockState();
     initialState.configuration.accessToken = 'random stuff';
-    const newState = reducer(initialState, {type: 'foo'});
-    expect(newState).toMatchObject(initialState);
+
+    [
+      {type: 'foo'},
+      setSearchHub('foo'),
+      setPipeline('foo'),
+      updateSearchConfiguration({searchHub: 'foo', pipeline: 'foo'}),
+      updateAnalyticsConfiguration({userDisplayName: 'foo'}),
+    ].forEach((testCase) => {
+      const newState = reducer(initialState, testCase);
+      expect(newState).toMatchObject(initialState);
+    });
   });
 
   describe('when an access token is a valid JWT token', () => {
@@ -57,8 +70,13 @@ describe('jwt-reducer', () => {
         expect(loggerSpy).toHaveBeenCalled();
       });
 
-      it('should not warn when initial search hub is default', () => {
+      it('should not warn when search hub is default', () => {
         reducer(initialState, setSearchHub(getSearchHubInitialState()));
+        expect(loggerSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not warn when search hub is matching', () => {
+        reducer(initialState, setSearchHub('testing hub'));
         expect(loggerSpy).not.toHaveBeenCalled();
       });
     });
@@ -81,6 +99,17 @@ describe('jwt-reducer', () => {
       it('should not warn when pipeline is default', () => {
         reducer(initialState, setPipeline(getPipelineInitialState()));
         expect(loggerSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not warn when pipeline is matching', () => {
+        reducer(initialState, setPipeline('testing'));
+        expect(loggerSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not reconcile the pipeline if the search token is empty', () => {
+        initialState.configuration.accessToken = emptyJwtToken;
+        const newState = reducer(initialState, setPipeline('random stuff'));
+        expect(newState).toMatchObject(initialState);
       });
     });
 
@@ -150,6 +179,29 @@ describe('jwt-reducer', () => {
         );
         expect(loggerSpy).not.toHaveBeenCalled();
       });
+
+      it('should not warn when search hub and pipeline is matching', () => {
+        reducer(
+          initialState,
+          updateSearchConfiguration({
+            searchHub: 'testing hub',
+            pipeline: 'testing',
+          })
+        );
+        expect(loggerSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not reconcole the pipeline and search hub if the search token is empty', () => {
+        initialState.configuration.accessToken = emptyJwtToken;
+        const newState = reducer(
+          initialState,
+          updateSearchConfiguration({
+            searchHub: 'random hub',
+            pipeline: 'random pipeline',
+          })
+        );
+        expect(newState).toMatchObject(initialState);
+      });
     });
 
     describe('when executing updateAnalyticsConfiguration', () => {
@@ -197,6 +249,25 @@ describe('jwt-reducer', () => {
           })
         );
         expect(loggerSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not warn when userDisplayName is not matching', () => {
+        reducer(
+          initialState,
+          updateAnalyticsConfiguration({
+            userDisplayName: 'Alice Smith',
+          })
+        );
+        expect(loggerSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not reconcile the userDisplayName if the search token is empty', () => {
+        initialState.configuration.accessToken = emptyJwtToken;
+        const newState = reducer(
+          initialState,
+          updateAnalyticsConfiguration({userDisplayName: 'random name'})
+        );
+        expect(newState).toMatchObject(initialState);
       });
     });
   });

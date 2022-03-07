@@ -57,12 +57,9 @@ const possiblyWarnOnMismatch = (
 };
 
 const shouldReconcileValues = (
-  token: CoveoJSONWebToken,
-  tokenProp: keyof CoveoJSONWebToken,
+  tokenValue: string | undefined,
   stateValue: string
 ): boolean => {
-  const tokenValue = token[tokenProp];
-
   if (isNullOrUndefined(tokenValue)) {
     return false;
   }
@@ -112,7 +109,7 @@ const handleMismatchOnSearchHub = (
     payload,
     logger
   );
-  if (shouldReconcileValues(jwt, 'searchHub', state.searchHub)) {
+  if (shouldReconcileValues(jwt.searchHub, state.searchHub)) {
     return {
       ...state,
       searchHub: jwt.searchHub!,
@@ -136,7 +133,7 @@ const handleMismatchOnPipeline = (
     payload,
     logger
   );
-  if (shouldReconcileValues(jwt, 'pipeline', state.pipeline)) {
+  if (shouldReconcileValues(jwt.pipeline, state.pipeline)) {
     return {
       ...state,
       pipeline: jwt.pipeline!,
@@ -161,8 +158,7 @@ const handleMismatchOnUserDisplayName = (
   );
   if (
     shouldReconcileValues(
-      jwt,
-      'userDisplayName',
+      jwt.userDisplayName,
       state.configuration.analytics.userDisplayName
     )
   ) {
