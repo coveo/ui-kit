@@ -40,7 +40,6 @@ describe('quantic-case-classification', () => {
 
   const sfDefaultField = 'Priority';
   const coveoDefaultField = 'sfpriority';
-  const defaultMaxSuggestions = 3;
   const allOptions = [
     {id: '0', value: 'Very low', label: 'Very low'},
     {id: '1', value: 'Low', label: 'Low'},
@@ -64,9 +63,7 @@ describe('quantic-case-classification', () => {
 
   describe('when using default options', () => {
     it('should render the component and all parts', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -124,9 +121,7 @@ describe('quantic-case-classification', () => {
 
   describe('when the suggestions are loading', () => {
     it('should display the loading spinner', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -155,9 +150,7 @@ describe('quantic-case-classification', () => {
 
   describe('when no suggestions are found', () => {
     it('should display only the select dropdown', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.numberOfInlineOptions(0);
@@ -567,9 +560,7 @@ describe('quantic-case-classification', () => {
   describe('when selecting a suggestion and then receiving new suggestions', () => {
     it('should keep the suggestion selected by the user', () => {
       const clickedIndex = 1;
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -628,9 +619,7 @@ describe('quantic-case-classification', () => {
   describe('when selecting a specific suggestion and then receiving new suggestions that does not contain the previously selected option', () => {
     it('should keep the suggestion selected by the user and display it in the select input', () => {
       const clickedIndex = 2;
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -688,9 +677,7 @@ describe('quantic-case-classification', () => {
   describe('when selecting an option from the select input and then fetching suggestions', () => {
     it('should keep the option selected by the user, display it in the select input and hide the suggestions', () => {
       const clickedIndex = 3;
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -730,9 +717,7 @@ describe('quantic-case-classification', () => {
 
   describe('when receiving new suggestions without changing the by default auto-selected suggestion', () => {
     it('should auto-select the suggestion with the highest confidence from the newly recieved suggestions', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -840,9 +825,7 @@ describe('quantic-case-classification', () => {
           stubConsoleWarning(win);
         },
       });
-      configure({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      configure();
 
       scope('when loading the page', () => {
         Expect.numberOfInlineOptions(0);

@@ -43,8 +43,8 @@ export default class QuanticCaseClassification extends LightningElement {
     if (error) {
       console.error('Error getting the picklist values');
     } else {
-      this.picklistValues = data;
       if (data) {
+        this.picklistValues = data;
         this.allOptionsReceived = true;
         if (!data.picklistFieldValues[this.sfFieldApiName]) {
           this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
@@ -137,8 +137,8 @@ export default class QuanticCaseClassification extends LightningElement {
   lockedState = false;
   /** @type {boolean} */
   allOptionsReceived;
-  /** @type {Array<boolean>} */
-  loggedWarnings = [];
+  /** @type {Object} */
+  loggedInvalidFieldValueWarnings = {};
 
   connectedCallback() {
     this.validateProps();
@@ -314,9 +314,7 @@ export default class QuanticCaseClassification extends LightningElement {
           (option) => option.value === suggestion.value
         );
         if (!suggestionIncludedInOptions) {
-          this.logWarningOnce(
-            `The value "${suggestion.value}" was not found among all the options retrieved from Salesforce. Please confirm that the coveoFieldName corresponds to the correct sfFieldApiName.`
-          );
+          this.logInvalidFieldValueWarningOnce(suggestion.value);
         }
         return suggestionIncludedInOptions;
       })
@@ -415,10 +413,12 @@ export default class QuanticCaseClassification extends LightningElement {
     );
   }
 
-  logWarningOnce(message) {
-    if (!this.loggedWarnings[message]) {
-      this.loggedWarnings[message] = true;
-      console.warn(message);
+  logInvalidFieldValueWarningOnce(value) {
+    if (!this.loggedInvalidFieldValueWarnings[value]) {
+      this.loggedInvalidFieldValueWarnings[value] = true;
+      console.warn(
+        `The value "${value}" was not found among all the options retrieved from Salesforce. Please confirm that the coveoFieldName corresponds to the correct sfFieldApiName.`
+      );
     }
   }
 }
