@@ -30,7 +30,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet, parseDependsOn} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
@@ -188,9 +188,7 @@ export class AtomicNumericFacet
       displayValuesAs: this.displayValuesAs,
       withInput: this.withInput,
     });
-    if (Object.keys(this.dependsOn).length > 1) {
-      throw "Depending on multiple facets isn't supported";
-    }
+    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {

@@ -24,7 +24,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {BaseFacet, parseDependsOn} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {registerFacetToStore} from '../../../utils/store';
 import {Hidden} from '../../common/hidden';
@@ -157,9 +157,7 @@ export class AtomicRatingRangeFacet
   private headerFocus!: FocusTargetController;
 
   private validateProps() {
-    if (Object.keys(this.dependsOn).length > 1) {
-      throw "Depending on multiple facets isn't supported";
-    }
+    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {

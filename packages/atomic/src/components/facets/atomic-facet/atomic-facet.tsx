@@ -31,7 +31,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet, parseDependsOn} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {
   getFieldCaptions,
@@ -189,9 +189,7 @@ export class AtomicFacet
     }).validate({
       displayValuesAs: this.displayValuesAs,
     });
-    if (Object.keys(this.dependsOn).length > 1) {
-      throw "Depending on multiple facets isn't supported";
-    }
+    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {

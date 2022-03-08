@@ -39,7 +39,7 @@ function isCategoryFacetValueRequest(
 
 function isFacetValueRequest(
   value: AnyFacetValueRequest
-): value is FacetValueRequest | CategoryFacetValueRequest {
+): value is FacetValueRequest {
   return (
     'value' in value &&
     typeof value.value === 'string' &&
@@ -48,12 +48,12 @@ function isFacetValueRequest(
 }
 
 function getSelectedCategoryFacetValueRequest(
-  ancestor: CategoryFacetValueRequest
+  value: CategoryFacetValueRequest
 ): CategoryFacetValueRequest | null {
-  if (ancestor.state === 'selected') {
-    return ancestor;
+  if (value.state === 'selected') {
+    return value;
   }
-  for (const child of ancestor.children) {
+  for (const child of value.children) {
     const selectedValue = getSelectedCategoryFacetValueRequest(child);
     if (selectedValue !== null) {
       return selectedValue;
@@ -94,4 +94,10 @@ export function parseDependsOn(
       },
     };
   });
+}
+
+export function validateDependsOn(dependsOn: Record<string, string>) {
+  if (Object.keys(dependsOn).length > 1) {
+    throw "Depending on multiple facets isn't supported";
+  }
 }

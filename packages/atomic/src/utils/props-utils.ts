@@ -17,24 +17,40 @@ export function MapProp(opts?: MapPropOptions) {
     }
 
     component.componentWillLoad = function () {
-      const prefix = opts?.attributePrefix ?? variableName;
+      const prefix = (opts && opts.attributePrefix) || variableName;
+      const variable = this[variableName];
       const attributes = getElement(this).attributes;
-      const map = attributesToStringMap(prefix, Array.from(attributes));
-      this[variableName] = opts?.splitValues
-        ? stringMapToStringArrayMap(map)
-        : map;
+      mapAttributesToProp(
+        prefix,
+        variable,
+        Array.from(attributes),
+        opts?.splitValues ?? false
+      );
       componentWillLoad.call(this);
     };
   };
 }
 
-export function stringMapToStringArrayMap(map: Record<string, string>) {
+export function mapAttributesToProp(
+  prefix: string,
+  mapVariable: Record<string, string | string[]>,
+  attributes: {name: string; value: string}[],
+  splitValues: boolean
+) {
+  const map = attributesToStringMap(prefix, attributes);
+  Object.assign(
+    mapVariable,
+    splitValues ? stringMapToStringArrayMap(map) : map
+  );
+}
+
+function stringMapToStringArrayMap(map: Record<string, string>) {
   return mapValues(map, (value) =>
     value.split(',').map((subValue) => subValue.trim())
   );
 }
 
-export function attributesToStringMap(
+function attributesToStringMap(
   prefix: string,
   attributes: {name: string; value: string}[]
 ) {

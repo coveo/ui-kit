@@ -28,7 +28,7 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet, parseDependsOn} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';
@@ -148,9 +148,7 @@ export class AtomicTimeframeFacet
   private headerFocus!: FocusTargetController;
 
   private validateProps() {
-    if (Object.keys(this.dependsOn).length > 1) {
-      throw "Depending on multiple facets isn't supported";
-    }
+    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {
