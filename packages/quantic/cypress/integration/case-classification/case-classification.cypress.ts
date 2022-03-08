@@ -9,6 +9,7 @@ import {CaseClassificationExpectations as Expect} from './case-classification-ex
 import {CaseClassificationActions as Actions} from './case-classification-actions';
 import {scope} from '../../reporters/detailed-collector';
 import {fetchClassifications} from '../../page-objects/actions/action-fetch-classifications';
+import {stubConsoleWarning} from '../console-selectors';
 
 interface CaseClassificationOptions {
   maxSuggestions: number;
@@ -30,19 +31,30 @@ const invalidMaxSuggestionsError = (value: string | number) => {
 };
 const missingCoveoFieldNameError =
   'coveoFieldName is required, please set its value.';
+const nonCorrespondingSuggestionWarning = (
+  value: string,
+  coveoFieldName: string,
+  sfFieldApiName: string
+) => {
+  return `The value "${value}" was not found among all the options retrieved from Salesforce. Ensure that the Coveo field name "${coveoFieldName}" corresponds to the correct Salesforce field name "${sfFieldApiName}".`;
+};
 
 describe('quantic-case-classification', () => {
   const pageUrl = 's/quantic-case-classification';
 
   const sfDefaultField = 'Priority';
   const coveoDefaultField = 'sfpriority';
-  const defaultMaxSuggestions = 3;
+  const nonCorrespondingCoveoField = 'sforigin';
   const allOptions = [
     {id: '0', value: 'Very low', label: 'Very low'},
     {id: '1', value: 'Low', label: 'Low'},
     {id: '2', value: 'Medium', label: 'Medium'},
     {id: '3', value: 'High', label: 'High'},
     {id: '4', value: 'Very high', label: 'Very high'},
+  ];
+  const nonCorrespondingSuggestions = [
+    {id: '0', value: 'Web', label: 'Web'},
+    {id: '1', value: 'Phone', label: 'Phone'},
   ];
 
   function visitCaseClassification(
@@ -56,9 +68,7 @@ describe('quantic-case-classification', () => {
 
   describe('when using default options', () => {
     it('should render the component and all parts', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -116,9 +126,7 @@ describe('quantic-case-classification', () => {
 
   describe('when the suggestions are loading', () => {
     it('should display the loading spinner', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -147,9 +155,7 @@ describe('quantic-case-classification', () => {
 
   describe('when no suggestions are found', () => {
     it('should display only the select dropdown', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.numberOfInlineOptions(0);
@@ -559,9 +565,7 @@ describe('quantic-case-classification', () => {
   describe('when selecting a suggestion and then receiving new suggestions', () => {
     it('should keep the suggestion selected by the user', () => {
       const clickedIndex = 1;
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -620,9 +624,7 @@ describe('quantic-case-classification', () => {
   describe('when selecting a specific suggestion and then receiving new suggestions that does not contain the previously selected option', () => {
     it('should keep the suggestion selected by the user and display it in the select input', () => {
       const clickedIndex = 2;
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -680,9 +682,7 @@ describe('quantic-case-classification', () => {
   describe('when selecting an option from the select input and then fetching suggestions', () => {
     it('should keep the option selected by the user, display it in the select input and hide the suggestions', () => {
       const clickedIndex = 3;
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -722,9 +722,7 @@ describe('quantic-case-classification', () => {
 
   describe('when receiving new suggestions without changing the by default auto-selected suggestion', () => {
     it('should auto-select the suggestion with the highest confidence from the newly recieved suggestions', () => {
-      visitCaseClassification({
-        maxSuggestions: defaultMaxSuggestions,
-      });
+      visitCaseClassification({});
 
       scope('when loading the page', () => {
         Expect.displayLabel(true);
@@ -818,6 +816,51 @@ describe('quantic-case-classification', () => {
         Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
         Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
         Expect.correctValue(allOptions[clickedIndex].value);
+      });
+    });
+  });
+
+  describe('when the suggestions are not included in all the options retrieved from Salesforce', () => {
+    it('should display only the select dropdown and log warnings in the console', () => {
+      interceptCaseAssist();
+      mockSfPicklistValues(sfDefaultField, allOptions);
+
+      cy.visit(pageUrl, {
+        onBeforeLoad(win) {
+          stubConsoleWarning(win);
+        },
+      });
+      configure({
+        coveoFieldName: nonCorrespondingCoveoField,
+      });
+
+      scope('when loading the page', () => {
+        Expect.numberOfInlineOptions(0);
+        Expect.numberOfSuggestions(0);
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+      });
+
+      scope('when fetching suggestions', () => {
+        mockCaseClassification(
+          nonCorrespondingCoveoField,
+          nonCorrespondingSuggestions
+        );
+        fetchClassifications();
+        Expect.displaySelectTitle(false);
+        Expect.displaySelectInput(true);
+        Expect.numberOfSuggestions(0);
+        Expect.numberOfInlineOptions(0);
+        nonCorrespondingSuggestions.forEach((suggestion: {value: string}) => {
+          Expect.console.warning(
+            true,
+            nonCorrespondingSuggestionWarning(
+              suggestion.value,
+              nonCorrespondingCoveoField,
+              sfDefaultField
+            )
+          );
+        });
       });
     });
   });

@@ -5,6 +5,7 @@ import {
   CaseClassificationSelector,
   CaseClassificationSelectors,
 } from './case-classification-selectors';
+import {ConsoleExpectations} from '../console-expectations';
 
 function caseClassificationExpectations(selector: CaseClassificationSelector) {
   return {
@@ -168,4 +169,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
 
 export const CaseClassificationExpectations = {
   ...caseClassificationExpectations(CaseClassificationSelectors),
+  console: {
+    ...ConsoleExpectations,
+  },
 };
