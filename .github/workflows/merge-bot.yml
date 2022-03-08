@@ -13,6 +13,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       steps:
-        - uses: actions/setup-node@v2
+        - uses: actions/setup-node@v3
         - name: Run the Bot
           run: npx @coveo/merge-bot
