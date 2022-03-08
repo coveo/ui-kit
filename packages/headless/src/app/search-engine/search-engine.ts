@@ -98,7 +98,7 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const augmentedOptions: EngineOptions<SearchEngineReducers> = {
     ...options,
     reducers: searchEngineReducers,
-    crossSlice: jwtReducer(logger),
+    crossReducer: jwtReducer(logger),
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);

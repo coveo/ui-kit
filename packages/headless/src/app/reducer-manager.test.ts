@@ -32,7 +32,7 @@ describe('ReducerManager', () => {
   it('should call root reducer when configured', () => {
     const manager = createReducerManager({pagination});
     const rootReducer = jest.fn();
-    manager.addCrossSlice(rootReducer);
+    manager.addCrossReducer(rootReducer);
     manager.combinedReducer(undefined, {type: ''});
     expect(rootReducer).toHaveBeenCalled();
   });

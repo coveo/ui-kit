@@ -3,29 +3,29 @@ import {
   ReducersMapObject,
   Reducer,
   AnyAction,
+  StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
 
 export interface ReducerManager {
   combinedReducer: Reducer;
   add(newReducers: ReducersMapObject): void;
   containsAll(newReducers: ReducersMapObject): boolean;
-  addCrossSlice(crossSliceReuder: Reducer): void;
+  addCrossReducer(reducer: Reducer): void;
 }
 
 export function createReducerManager(
   initialReducers: ReducersMapObject
 ): ReducerManager {
   const reducers = {...initialReducers};
-  let crossSlice: Reducer;
+  let crossReducer: Reducer;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rootReducer: (combined: Reducer<any, AnyAction>) => Reducer = (
-    combined
-  ) => {
+  const rootReducer: (
+    combined: Reducer<StateFromReducersMapObject<ReducersMapObject>, AnyAction>
+  ) => Reducer = (combined) => {
     return (state, action) => {
       const intermediate = combined(state, action);
-      const final = crossSlice
-        ? crossSlice(intermediate, action)
+      const final = crossReducer
+        ? crossReducer(intermediate, action)
         : intermediate;
       return final;
     };
@@ -47,8 +47,8 @@ export function createReducerManager(
         .forEach((key) => (reducers[key] = newReducers[key]));
     },
 
-    addCrossSlice(crossSliceReducer: Reducer) {
-      crossSlice = crossSliceReducer;
+    addCrossReducer(reducer: Reducer) {
+      crossReducer = reducer;
     },
   };
 }

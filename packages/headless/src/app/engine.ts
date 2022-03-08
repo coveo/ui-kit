@@ -95,11 +95,11 @@ export interface EngineOptions<Reducers extends ReducersMapObject>
    */
   reducers: Reducers;
   /**
-   * An optional cross slice (or root) reducer that can be combined with the slice reducers.
+   * An optional cross reducer (aka: root reducer) that can be combined with the slice reducers.
    *
    * [Redux documentation on root reducers.](https://redux.js.org/usage/structuring-reducers/beyond-combinereducers)
    */
-  crossSlice?: Reducer;
+  crossReducer?: Reducer;
 }
 
 export interface ExternalEngineOptions<State extends object> {
@@ -170,8 +170,8 @@ function buildCoreEngine<
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const {reducers} = options;
   const reducerManager = createReducerManager({...coreReducers, ...reducers});
-  if (options.crossSlice) {
-    reducerManager.addCrossSlice(options.crossSlice);
+  if (options.crossReducer) {
+    reducerManager.addCrossReducer(options.crossReducer);
   }
   const logger = thunkExtraArguments.logger;
   const store = createStore(options, thunkExtraArguments, reducerManager);

@@ -1,4 +1,4 @@
-import {AnyAction, Reducer} from '@reduxjs/toolkit';
+import {createReducer, Reducer} from '@reduxjs/toolkit';
 import {SearchAppState} from '../..';
 import {atob as atobshim} from 'abab';
 import {isNullOrUndefined} from '@coveo/bueno';
@@ -110,10 +110,7 @@ const handleMismatchOnSearchHub = (
     logger
   );
   if (shouldReconcileValues(jwt.searchHub, state.searchHub)) {
-    return {
-      ...state,
-      searchHub: jwt.searchHub!,
-    };
+    state.searchHub = jwt.searchHub!;
   }
 
   return state;
@@ -134,10 +131,7 @@ const handleMismatchOnPipeline = (
     logger
   );
   if (shouldReconcileValues(jwt.pipeline, state.pipeline)) {
-    return {
-      ...state,
-      pipeline: jwt.pipeline!,
-    };
+    state.pipeline = jwt.pipeline!;
   }
   return state;
 };
@@ -162,36 +156,38 @@ const handleMismatchOnUserDisplayName = (
       state.configuration.analytics.userDisplayName
     )
   ) {
-    return {
-      ...state,
-      configuration: {
-        ...state.configuration,
-        analytics: {
-          ...state.configuration.analytics,
-          userDisplayName: jwt.userDisplayName!,
-        },
-      },
-    };
+    state.configuration.analytics.userDisplayName = jwt.userDisplayName!;
   }
   return state;
 };
 
 export const jwtReducer: (logger: P.Logger) => Reducer = (logger) => {
-  return (state: SearchAppState, action: AnyAction) => {
-    const jwt = decodeJSONWebToken(state.configuration.accessToken);
-    if (!jwt) {
-      return state;
-    }
-    switch (action.type) {
-      case setSearchHub.type:
+  return createReducer({} as SearchAppState, (builder) => {
+    builder
+      .addCase(setSearchHub, (state, action) => {
+        const jwt = decodeJSONWebToken(state.configuration.accessToken);
+        if (!jwt) {
+          return state;
+        }
         return handleMismatchOnSearchHub(jwt, state, action.payload, logger);
-      case setPipeline.type:
+      })
+      .addCase(setPipeline, (state, action) => {
+        const jwt = decodeJSONWebToken(state.configuration.accessToken);
+        if (!jwt) {
+          return state;
+        }
         return handleMismatchOnPipeline(jwt, state, action.payload, logger);
-      case updateSearchConfiguration.type: {
+      })
+      .addCase(updateSearchConfiguration, (state, action) => {
+        const jwt = decodeJSONWebToken(state.configuration.accessToken);
+        if (!jwt) {
+          return state;
+        }
+
         const searchHubReconciled = handleMismatchOnSearchHub(
           jwt,
           state,
-          action.payload?.searchHub,
+          action.payload.searchHub,
           logger
         );
         const pipelineReconciled = handleMismatchOnPipeline(
@@ -201,19 +197,18 @@ export const jwtReducer: (logger: P.Logger) => Reducer = (logger) => {
           logger
         );
         return pipelineReconciled;
-      }
-
-      case updateAnalyticsConfiguration.type: {
+      })
+      .addCase(updateAnalyticsConfiguration, (state, action) => {
+        const jwt = decodeJSONWebToken(state.configuration.accessToken);
+        if (!jwt) {
+          return state;
+        }
         return handleMismatchOnUserDisplayName(
           jwt,
           state,
           action.payload.userDisplayName,
           logger
         );
-      }
-
-      default:
-        return state;
-    }
-  };
+      });
+  });
 };
