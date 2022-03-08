@@ -31,8 +31,12 @@ const invalidMaxSuggestionsError = (value: string | number) => {
 };
 const missingCoveoFieldNameError =
   'coveoFieldName is required, please set its value.';
-const nonCorrespondingSuggestionWarning = (value: string) => {
-  return `The value "${value}" was not found among all the options retrieved from Salesforce. Please confirm that the coveoFieldName corresponds to the correct sfFieldApiName.`;
+const nonCorrespondingSuggestionWarning = (
+  value: string,
+  coveoFieldName: string,
+  sfFieldApiName: string
+) => {
+  return `The value "${value}" was not found among all the options retrieved from Salesforce. Ensure that the Coveo field name "${coveoFieldName}" corresponds to the correct Salesforce field name "${sfFieldApiName}".`;
 };
 
 describe('quantic-case-classification', () => {
@@ -40,6 +44,7 @@ describe('quantic-case-classification', () => {
 
   const sfDefaultField = 'Priority';
   const coveoDefaultField = 'sfpriority';
+  const nonCorrespondingCoveoField = 'sforigin';
   const allOptions = [
     {id: '0', value: 'Very low', label: 'Very low'},
     {id: '1', value: 'Low', label: 'Low'},
@@ -825,7 +830,9 @@ describe('quantic-case-classification', () => {
           stubConsoleWarning(win);
         },
       });
-      configure();
+      configure({
+        coveoFieldName: nonCorrespondingCoveoField,
+      });
 
       scope('when loading the page', () => {
         Expect.numberOfInlineOptions(0);
@@ -835,7 +842,10 @@ describe('quantic-case-classification', () => {
       });
 
       scope('when fetching suggestions', () => {
-        mockCaseClassification(coveoDefaultField, nonCorrespondingSuggestions);
+        mockCaseClassification(
+          nonCorrespondingCoveoField,
+          nonCorrespondingSuggestions
+        );
         fetchClassifications();
         Expect.displaySelectTitle(false);
         Expect.displaySelectInput(true);
@@ -844,7 +854,11 @@ describe('quantic-case-classification', () => {
         nonCorrespondingSuggestions.forEach((suggestion: {value: string}) => {
           Expect.console.warning(
             true,
-            nonCorrespondingSuggestionWarning(suggestion.value)
+            nonCorrespondingSuggestionWarning(
+              suggestion.value,
+              nonCorrespondingCoveoField,
+              sfDefaultField
+            )
           );
         });
       });

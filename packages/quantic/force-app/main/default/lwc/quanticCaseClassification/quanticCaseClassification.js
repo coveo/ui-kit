@@ -417,7 +417,7 @@ export default class QuanticCaseClassification extends LightningElement {
     if (!this.loggedInvalidFieldValueWarnings[value]) {
       this.loggedInvalidFieldValueWarnings[value] = true;
       console.warn(
-        `The value "${value}" was not found among all the options retrieved from Salesforce. Please confirm that the coveoFieldName corresponds to the correct sfFieldApiName.`
+        `The value "${value}" was not found among all the options retrieved from Salesforce. Ensure that the Coveo field name "${this.coveoFieldName}" corresponds to the correct Salesforce field name "${this.sfFieldApiName}".`
       );
     }
   }
