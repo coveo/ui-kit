@@ -23,6 +23,26 @@ function getPackageVersion(): string {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
 
+function replaceHeadlessMap() {
+  return {
+    name: 'replace-map-for-headless-dev',
+    generateBundle: (options, bundle) => {
+      const headlessBundle = Object.keys(bundle).find(
+        (bundle) => bundle.indexOf('headless.esm') !== -1
+      );
+      if (!headlessBundle) {
+        return;
+      }
+
+      bundle[headlessBundle].map = null;
+
+      bundle[headlessBundle].code +=
+        '//# sourceMappingURL=./headless/headless.esm.js.map';
+      return bundle;
+    },
+  };
+}
+
 function replace() {
   const env = isProduction ? 'production' : 'development';
   const version = getPackageVersion();
@@ -80,7 +100,7 @@ export const config: Config = {
     },
     {
       type: 'www',
-      serviceWorker: null, // disable service workers
+      serviceWorker: null, // disable service worker
       copy: [
         {src: 'pages', keepDirStructure: false},
         {src: 'themes'},
@@ -160,6 +180,7 @@ export const config: Config = {
       html({
         include: 'src/templates/**/*.html',
       }),
+      isDevWatch && replaceHeadlessMap(),
     ],
   },
 };
