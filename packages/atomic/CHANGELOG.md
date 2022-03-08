@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.33.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.0...@coveo/atomic@1.33.1) (2022-03-08)
+
+
+### Bug Fixes
+
+* invert collapsible facet icon ([#1796](https://github.com/coveo/ui-kit/issues/1796)) ([d5c03af](https://github.com/coveo/ui-kit/commit/d5c03af01d3b4465570fefbbd42353e444be1681))
+* **atomic:** remove unnecessary border from search box ([#1795](https://github.com/coveo/ui-kit/issues/1795)) ([b345c26](https://github.com/coveo/ui-kit/commit/b345c2609cb88b6fffc3bd89ed741556d1992029))
+
+
+
+
+
 # [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.32.2...@coveo/atomic@1.33.0) (2022-03-04)
 
 
