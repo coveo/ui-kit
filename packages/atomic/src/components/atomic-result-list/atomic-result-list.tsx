@@ -210,9 +210,7 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildListResults() {
     return this.resultListState.results.map((result) => {
-      const content = this.renderingFunction
-        ? this.renderingFunction(result)
-        : this.getTemplate(result);
+      const content = this.getContentOfResultTemplate(result);
 
       const atomicResult = (
         <atomic-result
@@ -255,9 +253,9 @@ export class AtomicResultList implements InitializableComponent {
 
   private buildTable() {
     const fieldColumns = Array.from(
-      this.getTemplate(this.resultListState.results[0]).querySelectorAll(
-        'atomic-table-element'
-      )
+      this.getContentOfResultTemplate(
+        this.resultListState.results[0]
+      ).querySelectorAll('atomic-table-element')
     );
 
     if (fieldColumns.length === 0) {
@@ -305,6 +303,14 @@ export class AtomicResultList implements InitializableComponent {
         </tbody>
       </table>
     );
+  }
+
+  private getContentOfResultTemplate(
+    result: Result
+  ): HTMLElement | DocumentFragment {
+    return this.renderingFunction
+      ? this.renderingFunction(result)
+      : this.getTemplate(result);
   }
 
   private buildList() {
