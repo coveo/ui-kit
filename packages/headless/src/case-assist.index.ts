@@ -75,7 +75,10 @@ export type {
 } from './controllers/document-suggestion-list/headless-document-suggestion-list';
 export {buildDocumentSuggestionList} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 
-// Types exported for backward compatibility only.
+/**
+ * @deprecated
+ * Types exported for backward compatibility only.
+ */
 export type {
   DocumentSuggestionList as DocumentSuggestion,
   DocumentSuggestionListState as DocumentSuggestionState,

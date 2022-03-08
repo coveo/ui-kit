@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.0...@coveo/quantic@1.11.1) (2022-03-04)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.11.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.10.2...@coveo/quantic@1.11.0) (2022-03-03)
+
+
+### Features
+
+* **headless:** added disable facets functionality ([#1735](https://github.com/coveo/ui-kit/issues/1735)) ([c8862de](https://github.com/coveo/ui-kit/commit/c8862de04e92c4cb8c9b8d6f3f2510c6d1fd3ab2))
+
+
+
+
+
+## [1.10.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.10.1...@coveo/quantic@1.10.2) (2022-03-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.10.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.10.0...@coveo/quantic@1.10.1) (2022-02-28)
 
 

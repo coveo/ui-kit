@@ -16,6 +16,7 @@ import {
 } from '../headless-core-range-facet';
 import {
   ConfigurationSection,
+  FacetOptionsSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../../state/state-sections';
@@ -31,6 +32,7 @@ import {RangeFacetSortCriterion} from '../../../../../features/facets/range-face
 import {
   configuration,
   numericFacetSet,
+  facetOptions,
   search,
 } from '../../../../../app/reducers';
 import {loadReducerError} from '../../../../../utils/errors';
@@ -98,6 +100,16 @@ export interface NumericFacet extends Controller {
   toggleSingleSelect(selection: NumericFacetValue): void;
 
   /**
+   * Enables the facet. I.e., undoes the effects of `disable`.
+   */
+  enable(): void;
+
+  /**
+   * Disables the facet. I.e., prevents it from filtering results.
+   */
+  disable(): void;
+
+  /**
    * The state of the `NumericFacet` controller.
    */
   state: NumericFacetState;
@@ -131,6 +143,11 @@ export interface NumericFacetState {
    * `true` if there is at least one non-idle value and `false` otherwise.
    */
   hasActiveValues: boolean;
+
+  /**
+   * Whether the facet is enabled and its values are used to filter search results.
+   */
+  enabled: boolean;
 }
 
 /**
@@ -160,6 +177,7 @@ export function buildCoreNumericFacet(
   };
 
   validateNumericFacetOptions(engine, options);
+
   dispatch(registerNumericFacet(options));
 
   const rangeFacet = buildCoreRangeFacet<
@@ -192,8 +210,11 @@ export function buildCoreNumericFacet(
 function loadNumericFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  NumericFacetSection & ConfigurationSection & SearchSection
+  NumericFacetSection &
+    FacetOptionsSection &
+    ConfigurationSection &
+    SearchSection
 > {
-  engine.addReducers({numericFacetSet, configuration, search});
+  engine.addReducers({numericFacetSet, facetOptions, configuration, search});
   return true;
 }

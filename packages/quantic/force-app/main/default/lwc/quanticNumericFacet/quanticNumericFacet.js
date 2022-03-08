@@ -128,6 +128,7 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {NumericFilterState} */
   @track filterState = {
     isLoading: false,
+    enabled: true,
     facetId: undefined
   }
 

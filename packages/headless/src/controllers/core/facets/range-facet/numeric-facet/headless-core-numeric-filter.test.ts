@@ -1,6 +1,7 @@
 import {
   configuration,
   numericFacetSet,
+  facetOptions,
   search,
 } from '../../../../../app/reducers';
 import {SearchAppState} from '../../../../../state/search-app-state';
@@ -68,6 +69,7 @@ describe('numeric filter', () => {
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       numericFacetSet,
+      facetOptions,
       configuration,
       search,
     });

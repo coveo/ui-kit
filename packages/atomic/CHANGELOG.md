@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.32.2...@coveo/atomic@1.33.0) (2022-03-04)
+
+
+### Features
+
+* **headless:** updates the possible values for the Section property ([#1788](https://github.com/coveo/ui-kit/issues/1788)) ([56b9286](https://github.com/coveo/ui-kit/commit/56b9286c524db7134d6f659b703daf4c9f9b0bed))
+
+
+
+
+
+## [1.32.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.32.1...@coveo/atomic@1.32.2) (2022-03-03)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.32.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.32.0...@coveo/atomic@1.32.1) (2022-03-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.32.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.31.3...@coveo/atomic@1.32.0) (2022-02-28)
 
 
