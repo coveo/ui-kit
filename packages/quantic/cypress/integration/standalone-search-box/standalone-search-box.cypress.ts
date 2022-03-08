@@ -61,8 +61,15 @@ describe('quantic-standalone-search-box', () => {
       });
 
       scope('when setting suggestions', () => {
+        const interceptAlias = '@qsWithDefaultParams';
+        const params = {
+          searchHub: 'default',
+          pipeline: undefined,
+        };
+        interceptQuerySuggestWithParam(params, interceptAlias);
+
         Actions.focusSearchBox();
-        cy.wait(InterceptAliases.QuerySuggestions).then(() => {
+        cy.wait(interceptAlias).then(() => {
           Expect.displaySuggestionList(true);
           Expect.numberOfSuggestions(2);
         });

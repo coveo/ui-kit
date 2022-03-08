@@ -6,8 +6,16 @@ import {
   // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
 
+type RequestParams = Record<string, string | number | boolean | undefined>;
+
 function uaAlias(eventName: string) {
   return `@UA-${eventName}`;
+}
+
+function compare(superset: RequestParams, subset: RequestParams) {
+  return Object.keys(subset).reduce((isMatching, key) => {
+    return isMatching && superset[key] === subset[key];
+  }, true);
 }
 
 export const InterceptAliases = {
@@ -165,7 +173,7 @@ export function mockResultHtmlContent(tag: string, innerHtml?: string) {
 }
 
 export function interceptQuerySuggestWithParam(
-  params: Record<string, string | number | boolean>,
+  params: RequestParams,
   alias: string
 ) {
   cy.intercept('POST', routeMatchers.querySuggest, (req) => {
@@ -173,13 +181,4 @@ export function interceptQuerySuggestWithParam(
       req.alias = alias.substring(1);
     }
   });
-}
-
-function compare(
-  superset: Record<string, string | number | boolean>,
-  subset: Record<string, string | number | boolean>
-) {
-  return Object.keys(subset).reduce((isMatching, key) => {
-    return isMatching && superset[key] === subset[key];
-  }, true);
 }
