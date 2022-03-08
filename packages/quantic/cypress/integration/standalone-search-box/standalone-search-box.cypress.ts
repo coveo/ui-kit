@@ -1,6 +1,7 @@
 import {configure} from '../../page-objects/configurator';
 import {
   InterceptAliases,
+  interceptQuerySuggestWithParam,
   interceptSearch,
   routeMatchers,
 } from '../../page-objects/search';
@@ -13,6 +14,8 @@ interface StandaloneSearchBoxOptions {
   withoutSubmitButton: boolean;
   numberOfSuggestions: number;
   redirectUrl: string;
+  searchHub: string;
+  pipeline: string;
 }
 
 function mockSuggestions() {
@@ -153,6 +156,36 @@ describe('quantic-standalone-search-box', () => {
         Actions.submitSearch();
         Expect.urlHashContains(`/full-search-example#q=${encodeURI(query)}`);
         Expect.logSearchFromLink(query);
+      });
+
+      scope('with custom #searchHub', () => {
+        const interceptAlias = '@qsWithSearchHub';
+        const searchHub = 'test-hub';
+        const requestParams = {searchHub};
+        visitStandaloneSearchBox({
+          searchHub,
+        });
+        interceptQuerySuggestWithParam(requestParams, interceptAlias);
+
+        Expect.inputInitialized();
+        Actions.focusSearchBox();
+
+        Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
+      });
+
+      scope('with custom #pipeline', () => {
+        const interceptAlias = '@qsWithPipeline';
+        const pipeline = 'test-pipeline';
+        const requestParams = {pipeline};
+        visitStandaloneSearchBox({
+          pipeline,
+        });
+        interceptQuerySuggestWithParam(requestParams, interceptAlias);
+
+        Expect.inputInitialized();
+        Actions.focusSearchBox();
+
+        Expect.fetchQuerySuggestWithParams(requestParams, interceptAlias);
       });
     });
   });

@@ -163,3 +163,23 @@ export function mockResultHtmlContent(tag: string, innerHtml?: string) {
     });
   });
 }
+
+export function interceptQuerySuggestWithParam(
+  params: Record<string, string | number | boolean>,
+  alias: string
+) {
+  cy.intercept('POST', routeMatchers.querySuggest, (req) => {
+    if (compare(req.body, params)) {
+      req.alias = alias.substring(1);
+    }
+  });
+}
+
+function compare(
+  superset: Record<string, string | number | boolean>,
+  subset: Record<string, string | number | boolean>
+) {
+  return Object.keys(subset).reduce((isMatching, key) => {
+    return isMatching && superset[key] === subset[key];
+  }, true);
+}

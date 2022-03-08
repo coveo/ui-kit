@@ -75,6 +75,13 @@ function standaloneSearchBoxExpectations(
         })
         .logDetail('should log the "searchFromLink" UA event');
     },
+    fetchQuerySuggestWithParams: (
+      params: Record<string, string | number | boolean>,
+      alias: string
+    ) => {
+      cy.wait(alias);
+      cy.logDetail(`should fetch query suggestions with ${params}`);
+    },
   };
 }
 

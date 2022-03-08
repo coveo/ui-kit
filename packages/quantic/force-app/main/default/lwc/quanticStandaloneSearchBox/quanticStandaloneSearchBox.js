@@ -1,8 +1,5 @@
 import {LightningElement, api, track, wire} from 'lwc';
-import {
-  CurrentPageReference,
-  NavigationMixin,
-} from 'lightning/navigation';
+import {CurrentPageReference, NavigationMixin} from 'lightning/navigation';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -30,12 +27,11 @@ const CLASS_WITHOUT_SUBMIT =
  * See [Use a Standalone Search Box](https://docs.coveo.com/en/quantic/latest/usage/ssb-usage/).
  * @category Search
  * @example
- * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri"></c-quantic-standalone-search-box>
+ * <c-quantic-standalone-search-box engine-id={engineId} placeholder="Enter a query..." without-submit-button number-of-suggestions="8" redirect-url="/my-search-page/%40uri" search-hub="myhub" pipeine="mypipeline"></c-quantic-standalone-search-box>
  */
 export default class QuanticStandaloneSearchBox extends NavigationMixin(
   LightningElement
 ) {
-  
   labels = {
     search,
     clear,
@@ -48,25 +44,25 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   @api engineId;
   /**
-  * The placeholder text to display in the search box input area.
-  * @api
-  * @type {string}
-  * @defaultValue 'Search...'
-  */
+   * The placeholder text to display in the search box input area.
+   * @api
+   * @type {string}
+   * @defaultValue 'Search...'
+   */
   @api placeholder = `${this.labels.search}`;
   /**
-  * Whether not to render a submit button.
-  * @api
-  * @type {boolean}
-  * @defaultValue 'false'
-  */
+   * Whether not to render a submit button.
+   * @api
+   * @type {boolean}
+   * @defaultValue 'false'
+   */
   @api withoutSubmitButton = false;
   /**
-  * The maximum number of suggestions to display.
-  * @api
-  * @type {number}
-  * @defaultValue 5
-  */
+   * The maximum number of suggestions to display.
+   * @api
+   * @type {number}
+   * @defaultValue 5
+   */
   @api numberOfSuggestions = 5;
   /**
    * The url of the search page to redirect to when a query is made.
@@ -76,6 +72,24 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    * @defaultValue '/global-search/%40uri'
    */
   @api redirectUrl = '/global-search/%40uri';
+  /**
+   * The [search hub](https://docs.coveo.com/en/1342/) to use for this Standalone Search Box.
+   * This value does not affect the target search page after redirection.
+   * Setting the searchhub to be used on the target search page should be done on said search page component.
+   * @api
+   * @type {string}
+   * @defaultValue 'default'
+   */
+  @api searchHub = 'default';
+  /**
+   * The [query pipeline](https://docs.coveo.com/en/180/) to use for this Standalone Search Box.
+   * This value does not affect the target search page after redirection.
+   * Setting the pipeline to be used on the target search page should be done on said search page component.
+   * @api
+   * @type {string}
+   * @defaultValue `undefined`
+   */
+  @api pipeline;
 
   /** @type {boolean} */
   @track isStandalone = true;
@@ -156,7 +170,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
     this.unsubscribe = this.standaloneSearchBox.subscribe(() =>
       this.updateStandaloneState()
     );
-  }
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -197,7 +211,9 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   get searchBoxInputClass() {
-    return this.withoutSubmitButton ? 'slds-input searchbox__input' : 'slds-input searchbox__input searchbox__input-with-button';
+    return this.withoutSubmitButton
+      ? 'slds-input searchbox__input'
+      : 'slds-input searchbox__input searchbox__input-with-button';
   }
 
   showSuggestions() {
@@ -273,7 +289,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   resetStandaloneSearchboxState() {
     const engine = getHeadlessBindings(this.standaloneEngineId)?.engine;
-    if(!engine) {
+    if (!engine) {
       return;
     }
     const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
