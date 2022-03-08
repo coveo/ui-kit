@@ -44,18 +44,19 @@ import {extractHistory} from '../history/history-state';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {MappedSearchRequest, mapSearchResponse} from './search-mappings';
-import {BooleanValue, StringValue} from '@coveo/bueno';
 import {updatePage} from '../pagination/pagination-actions';
-import {validatePayload} from '../../utils/validate-payload';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {buildSearchRequest} from './search-request';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {currentQuerySelector} from '../query/query-selectors';
+import {deepEqualAnyOrder} from '../../utils/compare-utils';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
+  QuerySection &
+  SearchSection &
   Partial<
-    QuerySection &
-      AdvancedSearchQueriesSection &
+    AdvancedSearchQueriesSection &
       PaginationSection &
       SortSection &
       FacetSection &
@@ -107,15 +108,16 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   UpdateQueryActionCreatorPayload,
   AsyncThunkOptions<StateNeededByExecuteSearch>
 >('search/prepareForSearchWithQuery', (payload, thunk) => {
-  const {dispatch} = thunk;
-  validatePayload(payload, {
-    q: new StringValue(),
-    enableQuerySyntax: new BooleanValue(),
-  });
-
+  const {dispatch, getState} = thunk;
+  const {calls, ...currentQueryState} = currentQuerySelector(getState());
+  dispatch(
+    updateQuery({
+      ...payload,
+      calls: deepEqualAnyOrder(currentQueryState, payload) ? calls : 0,
+    })
+  );
   dispatch(deselectAllBreadcrumbs());
   dispatch(updateFacetAutoSelection({allow: true}));
-  dispatch(updateQuery(payload));
   dispatch(updatePage(1));
 });
 
@@ -130,12 +132,25 @@ export const executeSearch = createAsyncThunk<
     {getState, dispatch, rejectWithValue, extra}
   ) => {
     const state = getState();
+    const {calls} = currentQuerySelector(state);
+
+    if (calls > 2) {
+      return {
+        ...state.search,
+        response: state.search.response,
+        automaticallyCorrected: false,
+        originalQuery: getOriginalQuery(state),
+        analyticsAction,
+      };
+    }
     addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
       await buildSearchRequest(state)
     );
+
+    increaseCallCount(state, dispatch);
 
     if (isErrorResponse(fetched.response)) {
       dispatch(logQueryError(fetched.response.error));
@@ -208,6 +223,8 @@ export const fetchMoreResults = createAsyncThunk<
       await buildFetchMoreRequest(state)
     );
 
+    increaseCallCount(state, dispatch);
+
     if (isErrorResponse(fetched.response)) {
       dispatch(logQueryError(fetched.response.error));
       return rejectWithValue(fetched.response.error);
@@ -276,6 +293,7 @@ const getStateAfterResponse: (
     enableQuerySyntax:
       previousState.query?.enableQuerySyntax ??
       getQueryInitialState().enableQuerySyntax,
+    calls: previousState.query.calls,
   },
   search: {
     ...getSearchInitialState(),
@@ -350,3 +368,16 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';
+
+const increaseCallCount = (
+  state: StateNeededByExecuteSearch,
+  dispatch: ThunkDispatch<never, never, AnyAction>
+) => {
+  const {calls, ...currentQueryState} = currentQuerySelector(state);
+  dispatch(
+    updateQuery({
+      ...currentQueryState,
+      calls: (calls || 0) + 1,
+    })
+  );
+};

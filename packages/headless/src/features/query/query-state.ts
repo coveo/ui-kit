@@ -7,9 +7,14 @@ export interface QueryState {
    * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/searching-with-coveo/search-prefixes-and-operators) in the query.
    */
   enableQuerySyntax: boolean;
+  /**
+   * Number of times the same query has been executed in a row.
+   */
+  calls: number;
 }
 
 export const getQueryInitialState: () => QueryState = () => ({
   q: '',
   enableQuerySyntax: false,
+  calls: 0,
 });
