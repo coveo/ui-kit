@@ -4,7 +4,6 @@ import {
   DocumentSuggestionSelector,
   DocumentSuggestionSelectors,
 } from './document-suggestion-selectors';
-import {ConsoleExpectations} from '../console-expectations';
 
 interface Fields {
   uri: string;

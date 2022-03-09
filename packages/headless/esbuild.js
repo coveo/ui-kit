@@ -3,7 +3,7 @@ const fs = require('fs');
 const {build} = require('esbuild');
 const alias = require('esbuild-plugin-alias');
 const {umdWrapper} = require('../../scripts/bundle/umd');
-const { apacheLicense } = require('../../scripts/license/apache');
+const {apacheLicense} = require('../../scripts/license/apache');
 
 const devMode = process.argv[2] === 'dev';
 
@@ -22,7 +22,7 @@ function getUmdGlobalName(useCase) {
     'product-recommendation': 'CoveoHeadlessProductRecommendation',
     'product-listing': 'CoveoHeadlessProductListing',
     'case-assist': 'CoveoHeadlessCaseAssist',
-  }
+  };
 
   const globalName = map[useCase];
 
@@ -30,7 +30,9 @@ function getUmdGlobalName(useCase) {
     return globalName;
   }
 
-  throw new Error(`Please specify a global name for the "${useCase}" use-case.`)
+  throw new Error(
+    `Please specify a global name for the "${useCase}" use-case.`
+  );
 }
 
 function getPackageVersion() {
@@ -51,21 +53,24 @@ const base = {
     'process.env.NODE_ENV': JSON.stringify('production'),
     'process.env.VERSION': JSON.stringify(getPackageVersion()),
   },
-  banner: {js: apacheLicense()}
+  banner: {js: apacheLicense()},
 };
 
-const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map((entry) => {
-  const [useCase, entryPoint] = entry;
-  const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
-  const outfile = `${outDir}/headless.esm.js`;
+const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
+  (entry) => {
+    const [useCase, entryPoint] = entry;
+    const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
+    const outfile = `${outDir}/headless.esm.js`;
 
-  return buildBrowserConfig({
-    entryPoints: [entryPoint],
-    outfile,
-    format: 'esm',
-    watch: devMode,
-  });
-});
+    return buildBrowserConfig({
+      entryPoints: [entryPoint],
+      outfile,
+      format: 'esm',
+      watch: devMode,
+      minify: false,
+    });
+  }
+);
 
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
@@ -83,7 +88,7 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/browser/', useCase);
   const outfile = `${outDir}/headless.js`;
-  
+
   const globalName = getUmdGlobalName(useCase);
   const umd = umdWrapper(globalName);
 
@@ -92,11 +97,11 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
     outfile,
     format: 'cjs',
     banner: {
-      js: `${base.banner.js}\n${umd.header}`
+      js: `${base.banner.js}\n${umd.header}`,
     },
     footer: {
-      js: umd.footer
-    }, 
+      js: umd.footer,
+    },
   });
 });
 
@@ -178,15 +183,17 @@ function buildNodeConfig(options) {
 // https://github.com/coveo/ui-kit/issues/1616
 function adjustRequireImportsInNodeEsmBundles() {
   const paths = getNodeEsmBundlePaths();
-  
+
   return paths.map(async (filePath) => {
     const resolvedPath = path.resolve(__dirname, filePath);
 
-    const content = await fs.promises.readFile(resolvedPath, {encoding: 'utf-8'});
+    const content = await fs.promises.readFile(resolvedPath, {
+      encoding: 'utf-8',
+    });
     const modified = content.replace(/__require\(/g, 'require(');
 
     await fs.promises.writeFile(resolvedPath, modified);
-  })
+  });
 }
 
 function getNodeEsmBundlePaths() {
@@ -194,12 +201,18 @@ function getNodeEsmBundlePaths() {
     const [useCase] = entry;
     const dir = getUseCaseDir('dist/', useCase);
     return `${dir}/headless.esm.js`;
-  })
+  });
 }
 
 async function main() {
-  await Promise.all([...browserEsm, ...browserUmd, ...browserEsmForAtomicDevelopment, ...nodeEsm, ...nodeCjs]);
-  await Promise.all(adjustRequireImportsInNodeEsmBundles())
+  await Promise.all([
+    ...browserEsm,
+    ...browserUmd,
+    ...browserEsmForAtomicDevelopment,
+    ...nodeEsm,
+    ...nodeCjs,
+  ]);
+  await Promise.all(adjustRequireImportsInNodeEsmBundles());
 }
 
 main();

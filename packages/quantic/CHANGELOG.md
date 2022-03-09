@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.3...@coveo/quantic@1.11.4) (2022-03-09)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.11.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.2...@coveo/quantic@1.11.3) (2022-03-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.11.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.1...@coveo/quantic@1.11.2) (2022-03-08)
+
+
+### Bug Fixes
+
+* **quantic:** not displaying suggestions when they are not among all the available options ([#1791](https://github.com/coveo/ui-kit/issues/1791)) ([185a7aa](https://github.com/coveo/ui-kit/commit/185a7aa78c33e36b717c2d65039daf61b79fd0be))
+
+
+
+
+
 ## [1.11.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.0...@coveo/quantic@1.11.1) (2022-03-04)
 
 **Note:** Version bump only for package @coveo/quantic

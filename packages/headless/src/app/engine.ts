@@ -6,6 +6,7 @@ import {
   ReducersMapObject,
   StateFromReducersMapObject,
   Middleware,
+  Reducer,
 } from '@reduxjs/toolkit';
 import {
   disableAnalytics,
@@ -93,6 +94,12 @@ export interface EngineOptions<Reducers extends ReducersMapObject>
    * [Redux documentation on reducers.](https://redux.js.org/glossary#reducer)
    */
   reducers: Reducers;
+  /**
+   * An optional cross reducer (aka: root reducer) that can be combined with the slice reducers.
+   *
+   * [Redux documentation on root reducers.](https://redux.js.org/usage/structuring-reducers/beyond-combinereducers)
+   */
+  crossReducer?: Reducer;
 }
 
 export interface ExternalEngineOptions<State extends object> {
@@ -163,6 +170,9 @@ function buildCoreEngine<
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const {reducers} = options;
   const reducerManager = createReducerManager({...coreReducers, ...reducers});
+  if (options.crossReducer) {
+    reducerManager.addCrossReducer(options.crossReducer);
+  }
   const logger = thunkExtraArguments.logger;
   const store = createStore(options, thunkExtraArguments, reducerManager);
 
