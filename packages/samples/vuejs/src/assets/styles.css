@@ -1,0 +1,14 @@
+atomic-search-interface {
+  display: grid;
+  grid-template-areas: 'facets main';
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+}
+
+.facets {
+  grid-area: facets;
+}
+
+.main {
+  grid-area: main;
+}
