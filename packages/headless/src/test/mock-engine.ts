@@ -74,6 +74,7 @@ export function buildMockSearchAppEngine(
     ...engine,
     executeFirstSearch: jest.fn(),
     executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
+    options: engine.state,
   };
 }
 

@@ -64,6 +64,11 @@ export interface SearchEngine<State extends object = {}>
   executeFirstSearchAfterStandaloneSearchBoxRedirect(
     analytics: StandaloneSearchBoxAnalytics
   ): void;
+
+  /**
+   * Return the options with which the engine was originally configured with.
+   */
+  options: SearchEngineOptions;
 }
 
 /**
@@ -114,6 +119,10 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
     get state() {
       return engine.state;
+    },
+
+    get options() {
+      return options;
     },
 
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
