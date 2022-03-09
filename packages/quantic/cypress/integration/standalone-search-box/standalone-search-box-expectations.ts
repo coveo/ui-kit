@@ -80,7 +80,9 @@ function standaloneSearchBoxExpectations(
       alias: string
     ) => {
       cy.wait(alias);
-      cy.logDetail(`should fetch query suggestions with ${params}`);
+      cy.logDetail(
+        `should fetch query suggestions with ${JSON.stringify(params)}`
+      );
     },
   };
 }

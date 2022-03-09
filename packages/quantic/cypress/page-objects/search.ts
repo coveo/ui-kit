@@ -12,7 +12,7 @@ function uaAlias(eventName: string) {
   return `@UA-${eventName}`;
 }
 
-function compare(superset: RequestParams, subset: RequestParams) {
+function paramsInclude(superset: RequestParams, subset: RequestParams) {
   return Object.keys(subset).reduce((isMatching, key) => {
     return isMatching && superset[key] === subset[key];
   }, true);
@@ -177,7 +177,7 @@ export function interceptQuerySuggestWithParam(
   alias: string
 ) {
   cy.intercept('POST', routeMatchers.querySuggest, (req) => {
-    if (compare(req.body, params)) {
+    if (paramsInclude(req.body, params)) {
       req.alias = alias.substring(1);
     }
   });
