@@ -211,7 +211,7 @@ const MyPage = () => {
 
 ## Localization (i18n)
 
-AtomicReact offers an optional callback to allow to localize the search interface, as described here: https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+The Atomic React search interface component exposes an optional `localization` option, which takes a callback function that lets you handle [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
 
 ```jsx
 <AtomicSearchInterface

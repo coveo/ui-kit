@@ -30,9 +30,9 @@ interface WrapperProps extends Omit<JSX.AtomicSearchInterface, 'i18n'> {
    */
   theme?: string | 'none';
   /**
-   * An optional callback that can be used to control the localization of the interface.
+   * An optional callback that lets you control the interface localization.
    *
-   * The function receive the search interface 18n instance, which can then be leveraged as described here : https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+   * The function receives the search interface 18n instance, which you can then modify (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
    *
    */
   localization?: (i18n: i18n) => void;
