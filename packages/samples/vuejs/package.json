@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@coveo/atomic": "^1.32.0",
     "vue": "^3.2.31"
   },
   "devDependencies": {
