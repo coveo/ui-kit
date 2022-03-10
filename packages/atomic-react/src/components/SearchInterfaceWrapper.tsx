@@ -60,13 +60,11 @@ export const SearchInterfaceWrapper = (
 
   useEffect(() => {
     const searchInterfaceAtomic = searchInterfaceRef.current!;
-    searchInterfaceAtomic
-      .initialize({...engine.options.configuration})
-      .then(() => {
-        onReady(
-          searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
-        );
-      });
+    searchInterfaceAtomic.initializeWithSearchEngine(engine).then(() => {
+      onReady(
+        searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
+      );
+    });
   }, [searchInterfaceRef]);
 
   return (

@@ -712,6 +712,10 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
+          * Initializes the connection with an already built headless search engine
+         */
+        "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
+        /**
           * The search interface language.
          */
         "language": string;
