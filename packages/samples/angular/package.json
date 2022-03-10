@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run link:local && npm run copy:assets && ng serve",
+    "start": "npm run copy:assets && ng serve",
     "watch": "ng build --watch --configuration development",
     "link:local": "npm link ../../atomic-angular/projects/atomic-angular/dist/",
     "copy:assets": "ncp node_modules/@coveo/atomic-angular/assets src/assets && ncp node_modules/@coveo/atomic-angular/lang src/lang"
@@ -19,7 +19,7 @@
     "@angular/platform-browser-dynamic": "13.1.3",
     "@angular/router": "13.1.3",
     "@coveo/atomic": "^1.23.7",
-    "@coveo/atomic-angular": "^0.0.1",
+    "@coveo/atomic-angular": "^0.4.1",
     "rxjs": "7.4.0",
     "tslib": "2.3.1",
     "zone.js": "0.11.4"
