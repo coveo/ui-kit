@@ -5,3 +5,4 @@
 **/stencil-generated/**/*
 .sfdx
 **/atomic-angular/dist/**/*
+dist
