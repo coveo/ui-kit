@@ -712,7 +712,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already built headless search engine
+          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
