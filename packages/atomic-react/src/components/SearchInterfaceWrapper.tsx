@@ -60,6 +60,7 @@ export const SearchInterfaceWrapper = (
 
   useEffect(() => {
     const searchInterfaceAtomic = searchInterfaceRef.current!;
+
     searchInterfaceAtomic.initializeWithSearchEngine(engine).then(() => {
       onReady(
         searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
