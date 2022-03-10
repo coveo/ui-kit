@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import type {JSX} from '@coveo/atomic';
+import type {JSX, i18n} from '@coveo/atomic';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
@@ -10,7 +10,7 @@ type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];
 /**
  * The properties of the AtomicSearchInterface component
  */
-interface WrapperProps extends JSX.AtomicSearchInterface {
+interface WrapperProps extends Omit<JSX.AtomicSearchInterface, 'i18n'> {
   /**
    * An optional callback function that can be used to control the execution of the first query.
    *
@@ -29,13 +29,23 @@ interface WrapperProps extends JSX.AtomicSearchInterface {
    * Read more about theming and visual customization here : https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/
    */
   theme?: string | 'none';
+  /**
+   * An optional callback that lets you control the interface localization.
+   *
+   * The function receives the search interface 18n instance, which you can then modify (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
+   *
+   */
+  localization?: (i18n: i18n) => void;
 }
 
-const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'theme'>> = {
+const DefaultProps: Required<
+  Pick<WrapperProps, 'onReady' | 'theme' | 'localization'>
+> = {
   onReady: (executeFirstSearch) => {
     return executeFirstSearch();
   },
   theme: 'coveo',
+  localization: () => {},
 };
 
 /**
@@ -52,7 +62,7 @@ export const SearchInterfaceWrapper = (
       configuration: getSampleSearchEngineConfiguration(),
     });
   }
-  const {engine, theme, onReady, ...allOtherProps} = mergedProps;
+  const {engine, theme, localization, onReady, ...allOtherProps} = mergedProps;
   const searchInterfaceRef = useRef<HTMLAtomicSearchInterfaceElement>(null);
   if (theme !== 'none') {
     import(`@coveo/atomic/dist/atomic/themes/${theme}.css`);
@@ -61,6 +71,7 @@ export const SearchInterfaceWrapper = (
   useEffect(() => {
     const searchInterfaceAtomic = searchInterfaceRef.current!;
     searchInterfaceAtomic.initialize(engine.state.configuration).then(() => {
+      localization(searchInterfaceAtomic.i18n);
       onReady(
         searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
       );
