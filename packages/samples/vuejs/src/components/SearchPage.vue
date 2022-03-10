@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import {onMounted} from 'vue';
 
+interface InitializationOptions {
+  organizationId: string;
+  accessToken: string;
+}
+
+interface HTMLAtomicSearchInterfaceElement extends HTMLElement {
+  initialize: (options: InitializationOptions) => Promise<void>;
+  executeFirstSearch(): Promise<void>;
+}
+
 async function initInterface() {
   await customElements.whenDefined('atomic-search-interface');
-  const searchInterface = document.querySelector('atomic-search-interface');
+  const searchInterface = document.querySelector(
+    'atomic-search-interface'
+  ) as HTMLAtomicSearchInterfaceElement;
 
   // Initialization
   await searchInterface.initialize({
