@@ -20,11 +20,11 @@ import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-requ
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {
-  buildFacetDependenciesManager,
-  FacetDependenciesManager,
-} from './headless-facet-dependencies-manager';
+  buildFacetConditionsManager,
+  FacetConditionsManager,
+} from './headless-facet-conditions-manager';
 
-describe('facet dependencies manager', () => {
+describe('facet conditions manager', () => {
   let state: SearchAppState;
   let engine: MockSearchEngine;
   let engineListener: Function;
@@ -44,32 +44,32 @@ describe('facet dependencies manager', () => {
     });
   });
 
-  describe('with a single dependency', () => {
-    const dependentFacetId = 'abc';
+  describe('with a single condition', () => {
+    const facetId = 'abc';
     const parentFacetId = 'def';
-    let facetDependenciesManager: FacetDependenciesManager;
-    let isDependencyMet: jest.Mock;
+    let facetConditionsManager: FacetConditionsManager;
+    let condition: jest.Mock;
 
-    function initDependency() {
-      facetDependenciesManager = buildFacetDependenciesManager(engine, {
-        dependentFacetId,
-        dependencies: [
+    function initCondition() {
+      facetConditionsManager = buildFacetConditionsManager(engine, {
+        facetId: facetId,
+        conditions: [
           {
             parentFacetId,
-            isDependencyMet: (isDependencyMet = jest.fn(() => false)),
+            condition: (condition = jest.fn(() => false)),
           },
         ],
       });
     }
 
     it('subscribes', () => {
-      initDependency();
+      initCondition();
       expect(engine.subscribe).toHaveBeenCalledTimes(1);
     });
 
     it('when stopWatching is called, unsubscribes', () => {
-      initDependency();
-      facetDependenciesManager.stopWatching();
+      initCondition();
+      facetConditionsManager.stopWatching();
       expect(engineUnsubscriber).toHaveBeenCalledTimes(1);
     });
 
@@ -79,7 +79,7 @@ describe('facet dependencies manager', () => {
         state.facetOptions = buildMockFacetOptions({
           facets: {[parentFacetId]: buildFacetOptionsSlice()},
         });
-        initDependency();
+        initCondition();
         state.facetSet[parentFacetId].currentValues = [
           buildMockFacetValueRequest({
             state: 'idle',
@@ -93,8 +93,8 @@ describe('facet dependencies manager', () => {
         engineListener();
       });
 
-      it('calls isDependencyMet with the correct values', () => {
-        expect(isDependencyMet).toHaveBeenCalledWith(
+      it('calls condition with the correct values', () => {
+        expect(condition).toHaveBeenCalledWith(
           state.facetSet[parentFacetId].currentValues
         );
       });
@@ -108,7 +108,7 @@ describe('facet dependencies manager', () => {
         state.facetOptions = buildMockFacetOptions({
           facets: {[parentFacetId]: buildFacetOptionsSlice()},
         });
-        initDependency();
+        initCondition();
         state.categoryFacetSet[parentFacetId]!.request.currentValues = [
           buildMockCategoryFacetValueRequest({
             state: 'idle',
@@ -122,8 +122,8 @@ describe('facet dependencies manager', () => {
         engineListener();
       });
 
-      it('calls isDependencyMet with the correct values', () => {
-        expect(isDependencyMet).toHaveBeenCalledWith(
+      it('calls condition with the correct values', () => {
+        expect(condition).toHaveBeenCalledWith(
           state.categoryFacetSet[parentFacetId]!.request.currentValues
         );
       });
@@ -137,7 +137,7 @@ describe('facet dependencies manager', () => {
         state.facetOptions = buildMockFacetOptions({
           facets: {[parentFacetId]: buildFacetOptionsSlice()},
         });
-        initDependency();
+        initCondition();
         state.numericFacetSet[parentFacetId].currentValues = [
           buildMockNumericFacetValue({
             state: 'idle',
@@ -153,8 +153,8 @@ describe('facet dependencies manager', () => {
         engineListener();
       });
 
-      it('calls isDependencyMet with the correct values', () => {
-        expect(isDependencyMet).toHaveBeenCalledWith(
+      it('calls condition with the correct values', () => {
+        expect(condition).toHaveBeenCalledWith(
           state.numericFacetSet[parentFacetId].currentValues
         );
       });
@@ -166,7 +166,7 @@ describe('facet dependencies manager', () => {
         state.facetOptions = buildMockFacetOptions({
           facets: {[parentFacetId]: buildFacetOptionsSlice()},
         });
-        initDependency();
+        initCondition();
         state.dateFacetSet[parentFacetId].currentValues = [
           buildMockDateFacetValue({
             state: 'idle',
@@ -182,27 +182,27 @@ describe('facet dependencies manager', () => {
         engineListener();
       });
 
-      it('calls isDependencyMet with the correct values', () => {
-        expect(isDependencyMet).toHaveBeenCalledWith(
+      it('calls condition with the correct values', () => {
+        expect(condition).toHaveBeenCalledWith(
           state.dateFacetSet[parentFacetId].currentValues
         );
       });
     });
   });
 
-  describe('with two dependencies', () => {
-    const dependentFacetId = 'abc';
+  describe('with two conditions', () => {
+    const facetId = 'abc';
     const parentFacetAId = 'def';
     const parentFacetBId = 'ghi';
-    function initDependencies(
-      dependentEnabled: boolean,
-      facetA: {enabled: boolean; dependencyMet: boolean},
-      facetB: {enabled: boolean; dependencyMet: boolean}
+    function initConditions(
+      facetEnabled: boolean,
+      facetA: {enabled: boolean; conditionMet: boolean},
+      facetB: {enabled: boolean; conditionMet: boolean}
     ) {
       state.facetOptions = buildMockFacetOptions({
         facets: {
-          [dependentFacetId]: buildFacetOptionsSlice({
-            enabled: dependentEnabled,
+          [facetId]: buildFacetOptionsSlice({
+            enabled: facetEnabled,
           }),
           [parentFacetAId]: buildFacetOptionsSlice({enabled: facetA.enabled}),
           [parentFacetBId]: buildFacetOptionsSlice({enabled: facetB.enabled}),
@@ -214,89 +214,89 @@ describe('facet dependencies manager', () => {
       state.facetSet[parentFacetBId] = buildMockFacetRequest({
         facetId: parentFacetBId,
       });
-      buildFacetDependenciesManager(engine, {
-        dependentFacetId,
-        dependencies: [
+      buildFacetConditionsManager(engine, {
+        facetId: facetId,
+        conditions: [
           {
             parentFacetId: parentFacetAId,
-            isDependencyMet: jest.fn(() => facetA.dependencyMet),
+            condition: jest.fn(() => facetA.conditionMet),
           },
           {
             parentFacetId: parentFacetBId,
-            isDependencyMet: jest.fn(() => facetB.dependencyMet),
+            condition: jest.fn(() => facetB.conditionMet),
           },
         ],
       });
     }
 
-    it('when all facets are enabled and no dependency is met, disables the facet', () => {
-      initDependencies(
+    it('when all facets are enabled and no condition is met, disables the facet', () => {
+      initConditions(
         true,
-        {enabled: true, dependencyMet: false},
-        {enabled: true, dependencyMet: false}
+        {enabled: true, conditionMet: false},
+        {enabled: true, conditionMet: false}
       );
-      expect(engine.actions).toContainEqual(disableFacet(dependentFacetId));
+      expect(engine.actions).toContainEqual(disableFacet(facetId));
     });
 
-    it('when all facets are enabled and one dependency is met, does not dispatch any action', () => {
-      initDependencies(
+    it('when all facets are enabled and one condition is met, does not dispatch any action', () => {
+      initConditions(
         true,
-        {enabled: true, dependencyMet: true},
-        {enabled: true, dependencyMet: false}
+        {enabled: true, conditionMet: true},
+        {enabled: true, conditionMet: false}
       );
       expect(engine.actions).toEqual([]);
     });
 
-    it('when only the dependent facet is disabled and no dependency is met, does not dispatch any action', () => {
-      initDependencies(
+    it('when only the child facet is disabled and no condition is met, does not dispatch any action', () => {
+      initConditions(
         false,
-        {enabled: true, dependencyMet: false},
-        {enabled: true, dependencyMet: false}
+        {enabled: true, conditionMet: false},
+        {enabled: true, conditionMet: false}
       );
       expect(engine.actions).toEqual([]);
     });
 
-    it('when only the dependent facet is disabled and one dependency is met, enables the facet', () => {
-      initDependencies(
+    it('when only the child facet is disabled and one condition is met, enables the facet', () => {
+      initConditions(
         false,
-        {enabled: true, dependencyMet: true},
-        {enabled: true, dependencyMet: false}
+        {enabled: true, conditionMet: true},
+        {enabled: true, conditionMet: false}
       );
-      expect(engine.actions).toContainEqual(enableFacet(dependentFacetId));
+      expect(engine.actions).toContainEqual(enableFacet(facetId));
     });
 
-    it('when only facet B is enabled and dependency A is met, does not dispatch any action', () => {
-      initDependencies(
+    it('when only facet B is enabled and condition A is met, does not dispatch any action', () => {
+      initConditions(
         false,
-        {enabled: false, dependencyMet: true},
-        {enabled: true, dependencyMet: false}
+        {enabled: false, conditionMet: true},
+        {enabled: true, conditionMet: false}
       );
       expect(engine.actions).toEqual([]);
     });
 
-    it('when only facet A is enabled and dependency A is met, enables the facet', () => {
-      initDependencies(
+    it('when only facet A is enabled and condition A is met, enables the facet', () => {
+      initConditions(
         false,
-        {enabled: true, dependencyMet: true},
-        {enabled: false, dependencyMet: false}
+        {enabled: true, conditionMet: true},
+        {enabled: false, conditionMet: false}
       );
-      expect(engine.actions).toContainEqual(enableFacet(dependentFacetId));
+      expect(engine.actions).toContainEqual(enableFacet(facetId));
     });
 
-    it('when only facet A is disabled and dependency A is met, disables the facet', () => {
-      initDependencies(
+    it('when only facet A is disabled and condition A is met, disables the facet', () => {
+      initConditions(
         true,
-        {enabled: false, dependencyMet: true},
-        {enabled: true, dependencyMet: false}
+        {enabled: false, conditionMet: true},
+        {enabled: true, conditionMet: false}
       );
-      expect(engine.actions).toContainEqual(disableFacet(dependentFacetId));
+      expect(engine.actions).toContainEqual(disableFacet(facetId));
     });
 
-    it('when only facet B is disabled and dependency A is met, does not dispatch any action', () => {
-      initDependencies(
+    it('when only facet B is disabled and condition A is met, does not dispatch any action', () => {
+      initConditions(
         true,
-        {enabled: true, dependencyMet: true},
-        {enabled: false, dependencyMet: false}
+        {enabled: true, conditionMet: true},
+        {enabled: false, conditionMet: false}
       );
       expect(engine.actions).toEqual([]);
     });

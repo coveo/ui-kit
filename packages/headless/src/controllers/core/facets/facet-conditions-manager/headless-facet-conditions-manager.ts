@@ -16,7 +16,7 @@ import {
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 
-export interface AnyFacetDependency<T extends AnyFacetValueRequest> {
+export interface AnyFacetValueCondition<T extends AnyFacetValueRequest> {
   /**
    * The `facetId` of the facet whose values are used as input by the condition.
    */
@@ -25,35 +25,35 @@ export interface AnyFacetDependency<T extends AnyFacetValueRequest> {
    * A callback function that must evaluate to `true` for the condition to be met.
    * @example
    * ```ts
-   * const fileTypeHasSomeSelectedValue: AnyFacetDependency<FacetValueRequest> = {
+   * const fileTypeHasSomeSelectedValue: AnyFacetValueCondition<FacetValueRequest> = {
    *   parentFacetId: 'filetype',
-   *   isDependencyMet: (parentValues) => parentValues.some(value => value.state === 'selected')
+   *   condition: (parentValues) => parentValues.some(value => value.state === 'selected')
    * }
    * ```
    * .
    * @param parentValues - The current values of the facet whose `facetId` is the `parentFacetId` value.
    * @returns Whether the condition is met.
    */
-  isDependencyMet(parentValues: T[]): boolean;
+  condition(parentValues: T[]): boolean;
 }
 
-export interface FacetDependenciesManagerProps {
+export interface FacetConditionsManagerProps {
   /**
    * The `facetId` of the facet to enable or disable depending on whether conditions are met.
    */
-  dependentFacetId: string;
+  facetId: string;
   /**
-   * The dependencies to watch.
+   * The conditions to evaluate.
    *
-   * * If any of these dependencies are met, the dependent facet is enabled.
-   * * If none of these dependencies are met, the dependent facet is disabled.
+   * * If any of these conditions are met, the dependent facet is enabled.
+   * * If none of these conditions are met, the dependent facet is disabled.
    */
-  dependencies: AnyFacetDependency<AnyFacetValueRequest>[];
+  conditions: AnyFacetValueCondition<AnyFacetValueRequest>[];
 }
 
-export interface FacetDependenciesManager {
+export interface FacetConditionsManager {
   /**
-   * Unsubscribes the target facet from this condition.
+   * Unsubscribes the target facet from this managers' conditions.
    */
   stopWatching(): void;
 }
@@ -61,14 +61,14 @@ export interface FacetDependenciesManager {
 /**
  * A manager that enables or disables a facet based on whether target conditions are met.
  * @param engine - The headless engine.
- * @param props - The configurable `FacetDependenciesManager` properties.
- * @returns A new facet dependencies manager.
+ * @param props - The configurable `FacetConditionsManager` properties.
+ * @returns A new facet conditions manager.
  */
-export function buildFacetDependenciesManager(
+export function buildFacetConditionsManager(
   engine: CoreEngine,
-  props: FacetDependenciesManagerProps
-): FacetDependenciesManager {
-  if (!loadFacetDependenciesManagerReducers(engine)) {
+  props: FacetConditionsManagerProps
+): FacetConditionsManager {
+  if (!loadFacetConditionsManagerReducers(engine)) {
     throw loadReducerError;
   }
   const lastObservedValuesPerParentFacet: Record<string, string> = {};
@@ -116,16 +116,16 @@ export function buildFacetDependenciesManager(
     return anyParentWasUpdated;
   };
 
-  const areDependenciesMet = () => {
-    return props.dependencies.some((dependency) => {
-      if (!isFacetEnabled(dependency.parentFacetId)) {
+  const areConditionsMet = () => {
+    return props.conditions.some((condition) => {
+      if (!isFacetEnabled(condition.parentFacetId)) {
         return false;
       }
-      const values = getFacetValuesById(dependency.parentFacetId);
+      const values = getFacetValuesById(condition.parentFacetId);
       if (values === null) {
         return false;
       }
-      return dependency.isDependencyMet(values as AnyFacetValue[]);
+      return condition.condition(values as AnyFacetValue[]);
     });
   };
 
@@ -142,26 +142,26 @@ export function buildFacetDependenciesManager(
   };
 
   const ensureConditions = () => {
-    const isEnabled = isFacetEnabled(props.dependentFacetId);
-    const shouldBeEnabled = areDependenciesMet();
+    const isEnabled = isFacetEnabled(props.facetId);
+    const shouldBeEnabled = areConditionsMet();
     if (isEnabled !== shouldBeEnabled) {
       engine.dispatch(
         shouldBeEnabled
-          ? enableFacet(props.dependentFacetId)
-          : disableFacet(props.dependentFacetId)
+          ? enableFacet(props.facetId)
+          : disableFacet(props.facetId)
       );
       unfreezeFacetValues();
     }
   };
 
-  props.dependencies.forEach((dependency) => {
-    if (!(dependency.parentFacetId in lastObservedValuesPerParentFacet)) {
-      lastObservedValuesPerParentFacet[dependency.parentFacetId] =
-        JSON.stringify(getFacetValuesById(dependency.parentFacetId));
+  props.conditions.forEach((condition) => {
+    if (!(condition.parentFacetId in lastObservedValuesPerParentFacet)) {
+      lastObservedValuesPerParentFacet[condition.parentFacetId] =
+        JSON.stringify(getFacetValuesById(condition.parentFacetId));
     }
   });
 
-  const unsubscribe = props.dependencies.length
+  const unsubscribe = props.conditions.length
     ? engine.subscribe(() => {
         if (checkIfParentValuesWereChanged()) {
           ensureConditions();
@@ -169,7 +169,7 @@ export function buildFacetDependenciesManager(
       })
     : () => {};
 
-  if (props.dependencies.length) {
+  if (props.conditions.length) {
     ensureConditions();
   }
 
@@ -180,7 +180,7 @@ export function buildFacetDependenciesManager(
   };
 }
 
-function loadFacetDependenciesManagerReducers(
+function loadFacetConditionsManagerReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
   FacetOptionsSection &
