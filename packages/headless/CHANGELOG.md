@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.50.1...@coveo/headless@1.51.0) (2022-03-11)
+
+
+### Features
+
+* **headless:** add excerpt length support ([#1812](https://github.com/coveo/ui-kit/issues/1812)) ([b54f937](https://github.com/coveo/ui-kit/commit/b54f9371034e4ceca71118331943fa79e515db52))
+
+
+
+
+
 ## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.50.0...@coveo/headless@1.50.1) (2022-03-09)
 
 **Note:** Version bump only for package @coveo/headless

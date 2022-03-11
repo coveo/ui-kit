@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/coveo/ui-kit/compare/vue-search@0.1.0...vue-search@0.1.1) (2022-03-11)
+
+**Note:** Version bump only for package vue-search
+
+
+
+
+
 # [0.1.0](https://github.com/coveo/ui-kit/compare/vue-search@0.0.1...vue-search@0.1.0) (2022-03-11)
 
 
