@@ -223,23 +223,16 @@ export class AtomicSearchInterface {
   /**
    * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
-  @Method() public async initialize(options: InitializationOptions) {
-    if (this.engine) {
-      this.engine.logger.warn(
-        'The atomic-search-interface component "initialize" has already been called.',
-        this.host
-      );
-      return;
-    }
-    this.updateIconAssetsPath();
-    this.initEngine(options);
-    await this.initI18n();
-    this.initComponents();
-    this.initSearchStatus();
-    this.initUrlManager();
-    this.initAriaLive();
+  @Method() public initialize(options: InitializationOptions) {
+    return this.internalInitialization(() => this.initEngine(options));
+  }
 
-    this.initialized = true;
+  /**
+   * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
+   *
+   */
+  @Method() public async initializeWithSearchEngine(engine: SearchEngine) {
+    return this.internalInitialization(() => (this.engine = engine));
   }
 
   /**
@@ -419,5 +412,24 @@ export class AtomicSearchInterface {
     return {
       loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
     };
+  }
+
+  private async internalInitialization(initEngine: () => void) {
+    if (this.engine) {
+      this.engine.logger.warn(
+        'The atomic-search-interface component "initialize" has already been called.',
+        this.host
+      );
+      return;
+    }
+    this.updateIconAssetsPath();
+    initEngine();
+    await this.initI18n();
+    this.initComponents();
+    this.initSearchStatus();
+    this.initUrlManager();
+    this.initAriaLive();
+
+    this.initialized = true;
   }
 }
