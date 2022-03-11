@@ -45,8 +45,8 @@ export interface FacetConditionsManagerProps {
   /**
    * The conditions to evaluate.
    *
-   * * If any of these conditions are met, the dependent facet is enabled.
-   * * If none of these conditions are met, the dependent facet is disabled.
+   * * If any of these conditions is met, the dependent facet is enabled.
+   * * If none of these conditions is met, the dependent facet is disabled.
    */
   conditions: AnyFacetValuesCondition<AnyFacetValueRequest>[];
 }
