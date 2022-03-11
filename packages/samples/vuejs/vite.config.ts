@@ -11,9 +11,7 @@ export default defineConfig({
       template: {
         compilerOptions: {
           isCustomElement: (tag) => {
-            return (
-              tag.startsWith('atomic-') || tag === 'app-label-and-field-value'
-            );
+            return tag.startsWith('atomic-');
           },
         },
       },

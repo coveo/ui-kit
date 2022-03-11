@@ -1,31 +1,5 @@
 <script setup lang="ts">
-import {onMounted} from 'vue';
 import resultTemplate from '../templates/result-template.html?raw';
-
-onMounted(initializeResults);
-
-// TODO: get these types from atomic package
-interface RenderFunction {
-  (): HTMLElement;
-}
-
-interface AtomicResultList extends HTMLElement {
-  setRenderFunction: (arg: RenderFunction) => void;
-}
-
-async function initializeResults() {
-  await customElements.whenDefined('atomic-result-list');
-  await customElements.whenDefined('atomic-result-section-title');
-  const atomicResultList = document.querySelector(
-    'atomic-result-list'
-  ) as AtomicResultList;
-
-  atomicResultList.setRenderFunction(() => {
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = resultTemplate;
-    return wrapper;
-  });
-}
 </script>
 
 <template>
@@ -36,6 +10,7 @@ async function initializeResults() {
       display="grid"
       image-size="large"
     >
+      <atomic-result-template v-html="resultTemplate"> </atomic-result-template>
     </atomic-result-list>
     <div class="pagination">
       <atomic-load-more-results></atomic-load-more-results>
