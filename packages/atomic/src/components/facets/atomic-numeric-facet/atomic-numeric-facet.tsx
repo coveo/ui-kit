@@ -108,35 +108,38 @@ export class AtomicNumericFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    * If the number of values is 0, no ranges will be displayed.
    */
-  @Prop() public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain an input allowing users to set custom ranges.
    * Depending on the field, the input can allow either decimal or integer values.
    */
-  @Prop() public withInput?: NumberInputType;
+  @Prop({reflect: true}) public withInput?: NumberInputType;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
    */
-  @Prop() public sortCriteria: RangeFacetSortCriterion = 'ascending';
+  @Prop({reflect: true}) public sortCriteria: RangeFacetSortCriterion =
+    'ascending';
   /**
    * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
    */
-  @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'equiprobable';
+  @Prop({reflect: true}) public rangeAlgorithm: RangeFacetRangeAlgorithm =
+    'equiprobable';
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
+    'checkbox';
   /**
    * Specifies if the facet is collapsed.
    */
@@ -144,13 +147,13 @@ export class AtomicNumericFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;

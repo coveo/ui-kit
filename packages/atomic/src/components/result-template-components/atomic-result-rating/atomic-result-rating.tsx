@@ -26,12 +26,12 @@ export class AtomicResultRating {
   /**
    * The field whose values you want to display as a rating.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
 
   /**
    * The maximum value of the field. This value is also used as the number of icons to be displayed.
    */
-  @Prop() public maxValueInIndex = 5;
+  @Prop({reflect: true}) public maxValueInIndex = 5;
 
   /**
    * The SVG icon to use to display the rating.
@@ -46,7 +46,7 @@ export class AtomicResultRating {
    * - `--atomic-rating-facet-icon-active-color`
    * - `--atomic-rating-facet-icon-inactive-color`
    */
-  @Prop() public icon = Star;
+  @Prop({reflect: true}) public icon = Star;
 
   @State() public error!: Error;
 

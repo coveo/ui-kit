@@ -15,7 +15,7 @@ export class AtomicExternal {
   /**
    * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
    */
-  @Prop() selector = 'atomic-search-interface';
+  @Prop({reflect: true}) selector = 'atomic-search-interface';
   @Listen('atomic/initializeComponent')
   public handleInitialization(event: InitializeEvent) {
     event.preventDefault();

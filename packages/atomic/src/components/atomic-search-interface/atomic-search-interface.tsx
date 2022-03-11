@@ -85,7 +85,7 @@ export class AtomicSearchInterface {
   /**
    * The severity level of the messages to log in the console.
    */
-  @Prop() public logLevel?: LogLevel;
+  @Prop({reflect: true}) public logLevel?: LogLevel;
 
   /**
    * The search interface i18next instance.
@@ -105,12 +105,12 @@ export class AtomicSearchInterface {
   /**
    * Whether the state should be reflected in the URL parameters.
    */
-  @Prop() public reflectStateInUrl = true;
+  @Prop({reflect: true}) public reflectStateInUrl = true;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
    */
-  @Prop() public scrollContainer = 'atomic-search-interface';
+  @Prop({reflect: true}) public scrollContainer = 'atomic-search-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -118,7 +118,7 @@ export class AtomicSearchInterface {
    * @example /mypublicpath/languages
    *
    */
-  @Prop() public languageAssetsPath = './lang';
+  @Prop({reflect: true}) public languageAssetsPath = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -126,7 +126,7 @@ export class AtomicSearchInterface {
    * @example /mypublicpath/icons
    *
    */
-  @Prop() public iconAssetsPath = './assets';
+  @Prop({reflect: true}) public iconAssetsPath = './assets';
 
   public constructor() {
     setCoveoGlobal();

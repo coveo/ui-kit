@@ -39,7 +39,7 @@ export class AtomicResultLink implements InitializableComponent {
    * * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`.
    * * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
    */
-  @Prop() target = '_self';
+  @Prop({reflect: true}) target = '_self';
 
   private interactiveResult!: InteractiveResult;
   private hasSlot!: boolean;

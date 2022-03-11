@@ -47,11 +47,11 @@ export class AtomicResultsPerPage implements InitializableComponent {
   /**
    * A list of choices for the number of results to display per page, separated by commas.
    */
-  @Prop() choicesDisplayed = '10,25,50,100';
+  @Prop({reflect: true}) choicesDisplayed = '10,25,50,100';
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    */
-  @Prop({mutable: true}) initialChoice?: number;
+  @Prop({mutable: true, reflect: true}) initialChoice?: number;
 
   public initialize() {
     this.choices = this.validateChoicesDisplayed();

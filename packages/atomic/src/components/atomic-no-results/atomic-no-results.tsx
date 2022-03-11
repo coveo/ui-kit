@@ -56,7 +56,7 @@ export class AtomicNoResults {
   /**
    * Whether to display a button which cancels the last available action.
    */
-  @Prop() enableCancelLastAction = true;
+  @Prop({reflect: true}) enableCancelLastAction = true;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);

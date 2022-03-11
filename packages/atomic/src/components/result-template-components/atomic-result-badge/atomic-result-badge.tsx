@@ -43,14 +43,14 @@ export class AtomicResultBadge {
    *
    * Not compatible with `label` nor slotted elements.
    */
-  @Prop() public field?: string;
+  @Prop({reflect: true}) public field?: string;
 
   /**
    * The text to display in the badge.
    *
    * Not compatible with `field` nor slotted elements.
    */
-  @Prop() public label?: string;
+  @Prop({reflect: true}) public label?: string;
 
   /**
    * Specifies an icon to display at the left-end of the badge.
@@ -60,7 +60,7 @@ export class AtomicResultBadge {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly
    */
-  @Prop() public icon?: string;
+  @Prop({reflect: true}) public icon?: string;
 
   private renderIcon() {
     return (

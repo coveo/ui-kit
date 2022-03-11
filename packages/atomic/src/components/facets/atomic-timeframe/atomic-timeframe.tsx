@@ -15,24 +15,24 @@ export class AtomicTimeframe implements Timeframe {
   /**
    * The relative period of time to now.
    */
-  @Prop() public period: 'past' | 'next' = 'past';
+  @Prop({reflect: true}) public period: 'past' | 'next' = 'past';
 
   /**
    * The unit used to define:
    * - the start date of the timeframe, if the period is `past`
    * - the end date of the timeframe, if the period is `future`
    */
-  @Prop() public unit!: RelativeDateUnit;
+  @Prop({reflect: true}) public unit!: RelativeDateUnit;
 
   /**
    * The amount of units from which to count.
    *
    * E.g., 10 days, 1 year, etc.
    */
-  @Prop() public amount = 1;
+  @Prop({reflect: true}) public amount = 1;
 
   /**
    * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
    */
-  @Prop() public label?: string;
+  @Prop({reflect: true}) public label?: string;
 }

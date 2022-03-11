@@ -17,23 +17,23 @@ export class AtomicFormatNumber {
   /**
    * The minimum number of integer digits to use.
    */
-  @Prop() public minimumIntegerDigits?: number;
+  @Prop({reflect: true}) public minimumIntegerDigits?: number;
   /**
    * The minimum number of fraction digits to use.
    */
-  @Prop() public minimumFractionDigits?: number;
+  @Prop({reflect: true}) public minimumFractionDigits?: number;
   /**
    * The maximum number of fraction digits to use.
    */
-  @Prop() public maximumFractionDigits?: number;
+  @Prop({reflect: true}) public maximumFractionDigits?: number;
   /**
    * The minimum number of significant digits to use.
    */
-  @Prop() public minimumSignificantDigits?: number;
+  @Prop({reflect: true}) public minimumSignificantDigits?: number;
   /**
    * The maximum number of significant digits to use.
    */
-  @Prop() public maximumSignificantDigits?: number;
+  @Prop({reflect: true}) public maximumSignificantDigits?: number;
 
   componentWillLoad() {
     try {

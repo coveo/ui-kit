@@ -12,15 +12,15 @@ export class AtomicLayoutSection {
   /**
    * The name of the layout section.
    */
-  @Prop() public section!: Section;
+  @Prop({reflect: true}) public section!: Section;
   /**
    * For column sections, the minimum horizontal space it should take.
    * E.g. '300px'
    */
-  @Prop() public minWidth?: string;
+  @Prop({reflect: true}) public minWidth?: string;
   /**
    * For column sections, the maximum horizontal space it should take.
    * E.g. '300px'
    */
-  @Prop() public maxWidth?: string;
+  @Prop({reflect: true}) public maxWidth?: string;
 }

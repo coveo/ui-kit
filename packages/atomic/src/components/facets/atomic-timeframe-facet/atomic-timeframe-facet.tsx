@@ -95,15 +95,15 @@ export class AtomicTimeframeFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field = 'date';
+  @Prop({reflect: true}) public field = 'date';
   /**
    * Whether this facet should contain an datepicker allowing users to set custom ranges.
    */
-  @Prop() public withDatePicker = false;
+  @Prop({reflect: true}) public withDatePicker = false;
   /**
    * Specifies if the facet is collapsed.
    */
@@ -111,13 +111,13 @@ export class AtomicTimeframeFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;

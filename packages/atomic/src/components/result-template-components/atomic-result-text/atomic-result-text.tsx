@@ -29,16 +29,16 @@ export class AtomicResultText implements InitializableComponent {
    * This will look in the Result object first, and then in the Result.raw object for the fields.
    * It is important to include the necessary field in the ResultList component.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * If this is set to true, it will look for the corresponding highlight property and use it if available.
    */
-  @Prop() public shouldHighlight = true;
+  @Prop({reflect: true}) public shouldHighlight = true;
 
   /**
    * The locale key for the text to display when the configured field has no value.
    */
-  @Prop() public default?: string;
+  @Prop({reflect: true}) public default?: string;
 
   private renderWithHighlights(
     value: string,

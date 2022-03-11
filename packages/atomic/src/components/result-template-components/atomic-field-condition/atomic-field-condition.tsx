@@ -23,11 +23,11 @@ export class AtomicFieldCondition {
   /**
    * Verifies wheter the specified fields are defined.
    */
-  @Prop() ifDefined?: string;
+  @Prop({reflect: true}) ifDefined?: string;
   /**
    * Verifies whether the specified fields are not defined.
    */
-  @Prop() ifNotDefined?: string;
+  @Prop({reflect: true}) ifNotDefined?: string;
   /**
    * A list of conditions that must be fulfilled for this template to be selected.
    */

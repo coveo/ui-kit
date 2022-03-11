@@ -70,7 +70,7 @@ export class AtomicSearchBox {
    *  - atomic-search-box-query-suggestions
    *  - atomic-search-box-recent-queries
    */
-  @Prop() public numberOfQueries = 8;
+  @Prop({reflect: true}) public numberOfQueries = 8;
 
   /**
    * Defining this option makes the search box standalone.
@@ -79,7 +79,7 @@ export class AtomicSearchBox {
    * If a query pipeline redirect is triggered, it will redirect to that URL instead
    * (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
    */
-  @Prop() public redirectionUrl?: string;
+  @Prop({reflect: true}) public redirectionUrl?: string;
 
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
