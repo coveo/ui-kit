@@ -18,11 +18,11 @@ import {loadReducerError} from '../../../../utils/errors';
 
 export interface AnyFacetDependency<T extends AnyFacetValueRequest> {
   /**
-   * The id of the facet to watch.
+   * The `facetId` of the facet whose values are used as input by the condition.
    */
   parentFacetId: string;
   /**
-   * The callback that determines whether this dependency is met
+   * A callback function that must evaluate to `true` for the condition to be met.
    * @example
    * ```ts
    * const fileTypeHasSomeSelectedValue: AnyFacetDependency<FacetValueRequest> = {
@@ -31,15 +31,15 @@ export interface AnyFacetDependency<T extends AnyFacetValueRequest> {
    * }
    * ```
    * .
-   * @param parentValues - The current values of the facet with the id equal to `parentFacetId`.
-   * @returns Whether the intended dependency is met.
+   * @param parentValues - The current values of the facet whose `facetId` is the `parentFacetId` value.
+   * @returns Whether the condition is met.
    */
   isDependencyMet(parentValues: T[]): boolean;
 }
 
 export interface FacetDependenciesManagerProps {
   /**
-   * The id of the facet to enable or disable depending on whether dependencies are met.
+   * The `facetId` of the facet to enable or disable depending on whether conditions are met.
    */
   dependentFacetId: string;
   /**
@@ -53,13 +53,13 @@ export interface FacetDependenciesManagerProps {
 
 export interface FacetDependenciesManager {
   /**
-   * Stops enabling and disabling the dependent facet.
+   * Unsubscribes the target facet from this condition.
    */
   stopWatching(): void;
 }
 
 /**
- * A manager that enables or disables a facet based on whether dependencies are met.
+ * A manager that enables or disables a facet based on whether target conditions are met.
  * @param engine - The headless engine.
  * @param props - The configurable `FacetDependenciesManager` properties.
  * @returns A new facet dependencies manager.
