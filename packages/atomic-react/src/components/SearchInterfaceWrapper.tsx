@@ -70,7 +70,8 @@ export const SearchInterfaceWrapper = (
 
   useEffect(() => {
     const searchInterfaceAtomic = searchInterfaceRef.current!;
-    searchInterfaceAtomic.initialize(engine.state.configuration).then(() => {
+
+    searchInterfaceAtomic.initializeWithSearchEngine(engine).then(() => {
       localization(searchInterfaceAtomic.i18n);
       onReady(
         searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
