@@ -3,13 +3,13 @@
     <atomic-category-facet
       field="ec_category"
       label="Category"
-      withSearch="true"
+      with-search="true"
     ></atomic-category-facet>
     <atomic-facet field="ec_brand" label="Brand"></atomic-facet>
     <atomic-numeric-facet
       field="cat_review_count"
       label="Amount of reviews"
-      displayValuesAs="link"
+      display-values-as="link"
     >
       <atomic-numeric-range
         start="0"
@@ -30,14 +30,14 @@
     <atomic-color-facet
       field="cat_color"
       label="Color"
-      numberOfValues="6"
-      sortCriteria="occurrences"
+      number-of-values="6"
+      sort-criteria="occurrences"
     >
     </atomic-color-facet>
-    <atomic-numeric-facet field="ec_price" label="Cost" withInput="integer">
+    <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer">
       <atomic-format-currency currency="USD"></atomic-format-currency>
     </atomic-numeric-facet>
-    <atomic-timeframe-facet withDatePicker="true" label="Listed within">
+    <atomic-timeframe-facet with-date-picker="true" label="Listed within">
       <atomic-timeframe unit="hour"></atomic-timeframe>
       <atomic-timeframe unit="day"></atomic-timeframe>
       <atomic-timeframe unit="week"></atomic-timeframe>
@@ -50,11 +50,16 @@
         period="next"
       ></atomic-timeframe>
     </atomic-timeframe-facet>
+    <atomic-rating-facet
+      field="ec_rating"
+      label="Rating"
+      number-of-intervals="5"
+    ></atomic-rating-facet>
     <atomic-rating-range-facet
       field="ec_rating"
       label="Rating range"
-      numberOfIntervals="5"
-      facetId="ec_rating_range"
+      number-of-intervals="5"
+      facet-id="ec_rating_range"
     >
     </atomic-rating-range-facet>
     <atomic-facet field="source"></atomic-facet>
