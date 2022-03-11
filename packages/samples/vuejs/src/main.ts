@@ -4,12 +4,10 @@ import * as components from './components/index.ts';
 
 function kebabCase(str: string): string {
   if (str) {
-    return str
-      .match(
-        /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
-      )
-      .join('-')
-      .toLowerCase();
+    const match = str.match(
+      /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+    );
+    return match ? match.join('-').toLowerCase() : str;
   }
   return '';
 }
