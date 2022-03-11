@@ -634,23 +634,26 @@ describe('quantic-case-classification', () => {
         Expect.displaySelectInput(true);
       });
 
-      scope('when fetching suggestions', () => {
-        const suggestionsCount = 3;
-        const firstSuggestionIndex = 0;
+      scope(
+        'when fetching suggestions and getting a firt set of suggestions',
+        () => {
+          const suggestionsCount = 3;
+          const firstSuggestionIndex = 0;
 
-        mockCaseClassification(
-          coveoDefaultField,
-          allOptions.slice(0, suggestionsCount)
-        );
-        fetchClassifications();
-        Expect.displaySelectTitle(true);
-        Expect.displaySelectInput(false);
-        Expect.numberOfSuggestions(suggestionsCount);
-        Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
-        Expect.numberOfInlineOptions(0);
-        Expect.logClickedSuggestion(firstSuggestionIndex, true);
-        Expect.correctValue(allOptions[firstSuggestionIndex].value);
-      });
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(true);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.numberOfInlineOptions(0);
+          Expect.logClickedSuggestion(firstSuggestionIndex, true);
+          Expect.correctValue(allOptions[firstSuggestionIndex].value);
+        }
+      );
 
       scope('when selecting a suggestion', () => {
         Actions.clickSuggestion(clickedIndex);
@@ -662,20 +665,42 @@ describe('quantic-case-classification', () => {
         Expect.correctValue(allOptions[clickedIndex].value);
       });
 
-      scope('when fetching suggestions again', () => {
-        const suggestionsCount = 1;
+      scope(
+        'when fetching suggestions and getting a different set of suggestions',
+        () => {
+          const suggestionsCount = 1;
 
-        mockCaseClassification(
-          coveoDefaultField,
-          allOptions.slice(0, suggestionsCount)
-        );
-        fetchClassifications();
-        Expect.displaySelectTitle(false);
-        Expect.displaySelectInput(false);
-        Expect.numberOfSuggestions(0);
-        Expect.numberOfInlineOptions(0);
-        Expect.correctValue(allOptions[clickedIndex].value);
-      });
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(false);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(0);
+          Expect.numberOfInlineOptions(0);
+          Expect.correctValue(allOptions[clickedIndex].value);
+        }
+      );
+
+      scope(
+        'when fetching suggestions and getting again the first set of suggestions',
+        () => {
+          const suggestionsCount = 3;
+
+          mockCaseClassification(
+            coveoDefaultField,
+            allOptions.slice(0, suggestionsCount)
+          );
+          fetchClassifications();
+          Expect.displaySelectTitle(true);
+          Expect.displaySelectInput(false);
+          Expect.numberOfSuggestions(suggestionsCount);
+          Expect.correctSugestionsOrder(allOptions.slice(0, suggestionsCount));
+          Expect.numberOfInlineOptions(0);
+          Expect.correctValue(allOptions[clickedIndex].value);
+        }
+      );
     });
   });
 

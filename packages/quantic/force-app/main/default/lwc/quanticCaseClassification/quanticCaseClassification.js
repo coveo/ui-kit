@@ -200,6 +200,9 @@ export default class QuanticCaseClassification extends LightningElement {
         if (!this.isSuggestion(value) && this.isMoreOptionsVisible) {
           this.hideSuggestions = true;
           this.showSelect();
+        } else {
+          this.hideSuggestions = false;
+          this.hideSelect();
         }
         this.setFieldValue(value, true);
       }
@@ -329,6 +332,14 @@ export default class QuanticCaseClassification extends LightningElement {
    */
   showSelect() {
     this._isSelectVisible = true;
+  }
+
+  /**
+   * Hides the select input.
+   * @returns {void}
+   */
+  hideSelect() {
+    this._isSelectVisible = false;
   }
 
   /**
