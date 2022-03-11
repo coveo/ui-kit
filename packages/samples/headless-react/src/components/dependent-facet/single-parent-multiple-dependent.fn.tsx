@@ -22,7 +22,7 @@ export const SingleParentMultipleDependentFacet: React.FunctionComponent<{
 
   dependentFacets.forEach((facet) => {
     useEffect(() => {
-      const facetDependenciesManager = buildFacetConditionsManager(engine, {
+      const facetConditionsManager = buildFacetConditionsManager(engine, {
         facetId: facet.state.facetId,
         conditions: [
           {
@@ -32,7 +32,7 @@ export const SingleParentMultipleDependentFacet: React.FunctionComponent<{
           },
         ],
       });
-      return facetDependenciesManager.stopWatching;
+      return facetConditionsManager.stopWatching;
     });
   });
 

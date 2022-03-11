@@ -22,7 +22,7 @@ export const SingleParentSingleDependentFacet: React.FunctionComponent<{
   );
 
   useEffect(() => {
-    const facetDependenciesManager = buildFacetConditionsManager(engine, {
+    const facetConditionsManager = buildFacetConditionsManager(engine, {
       facetId: dependentFacet.state.facetId,
       conditions: [
         {
@@ -32,7 +32,7 @@ export const SingleParentSingleDependentFacet: React.FunctionComponent<{
         },
       ],
     });
-    return facetDependenciesManager.stopWatching;
+    return facetConditionsManager.stopWatching;
   });
 
   const parent = <Facet controller={parentFacet} />;

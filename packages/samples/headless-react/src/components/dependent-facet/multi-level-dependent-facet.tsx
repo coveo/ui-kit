@@ -41,7 +41,7 @@ export const MultilevelDependentFacet: React.FunctionComponent<{
       if (!dependsOn) {
         return;
       }
-      const facetDependenciesManager = buildFacetConditionsManager(engine, {
+      const facetConditionsManager = buildFacetConditionsManager(engine, {
         facetId: facet.state.facetId,
         conditions: [
           {
@@ -51,7 +51,7 @@ export const MultilevelDependentFacet: React.FunctionComponent<{
           },
         ],
       });
-      return facetDependenciesManager.stopWatching;
+      return facetConditionsManager.stopWatching;
     });
   });
 
