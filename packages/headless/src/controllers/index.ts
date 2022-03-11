@@ -363,6 +363,6 @@ export {
 
 export type {
   FacetConditionsManager,
-  AnyFacetValueCondition,
+  AnyFacetValuesCondition,
 } from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
 export {buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';

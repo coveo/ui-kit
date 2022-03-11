@@ -16,7 +16,7 @@ import {
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 
-export interface AnyFacetValueCondition<T extends AnyFacetValueRequest> {
+export interface AnyFacetValuesCondition<T extends AnyFacetValueRequest> {
   /**
    * The `facetId` of the facet whose values are used as input by the condition.
    */
@@ -48,7 +48,7 @@ export interface FacetConditionsManagerProps {
    * * If any of these conditions are met, the dependent facet is enabled.
    * * If none of these conditions are met, the dependent facet is disabled.
    */
-  conditions: AnyFacetValueCondition<AnyFacetValueRequest>[];
+  conditions: AnyFacetValuesCondition<AnyFacetValueRequest>[];
 }
 
 export interface FacetConditionsManager {
