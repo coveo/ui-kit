@@ -202,6 +202,9 @@ export default class QuanticCaseClassification extends LightningElement {
           this.showSelect();
         }
         this.setFieldValue(value, true);
+      } else {
+        const value = this.field.state.value;
+        this.setFieldValue(value);
       }
     }
   }
