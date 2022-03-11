@@ -1,6 +1,6 @@
 {
   "name": "vue-search",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
@@ -8,7 +8,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@coveo/atomic": "^1.33.3",
+    "@coveo/atomic": "^1.34.0",
     "vue": "^3.2.31"
   },
   "devDependencies": {
