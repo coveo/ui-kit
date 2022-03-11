@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {onMounted} from 'vue';
 
+// TODO: get these types from atomic package
 interface InitializationOptions {
   organizationId: string;
   accessToken: string;
@@ -19,34 +20,25 @@ async function initInterface() {
 
   // Initialization
   await searchInterface.initialize({
-    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-    organizationId: 'searchuisamples',
+    accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+    organizationId: 'electronicscoveodemocomo0n2fu8v',
   });
 
   // Trigger a first search
   searchInterface.executeFirstSearch();
 }
 
-const resultTemplate = `
-      <template>
-        <p>Title:</p>
-        <atomic-result-link></atomic-result-link>
-      </template>`;
-
 onMounted(initInterface);
 </script>
 
 <template>
-  <atomic-search-interface>
-    <div class="facets">
-      <atomic-facet field="author" label="Author"></atomic-facet>
+  <atomic-search-interface searchHub="MainSearch" pipeline="Search">
+    <div class="search">
+      <atomic-search-box></atomic-search-box>
     </div>
-    <div class="main">
-      <atomic-query-summary></atomic-query-summary>
-      <atomic-result-list>
-        <atomic-result-template v-html="resultTemplate">
-        </atomic-result-template>
-      </atomic-result-list>
-    </div>
+    <facet-manager />
+    <atomic-breadbox></atomic-breadbox>
+    <top-bar />
+    <results-list />
   </atomic-search-interface>
 </template>
