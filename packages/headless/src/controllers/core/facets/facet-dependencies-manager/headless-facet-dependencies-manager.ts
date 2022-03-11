@@ -99,7 +99,7 @@ export function buildFacetDependenciesManager(
     return null;
   };
 
-  const updateLastObservedValues = () => {
+  const checkIfParentValuesWereChanged = () => {
     let anyParentWasUpdated = false;
     Object.keys(lastObservedValuesPerParentFacet).forEach((parentFacetId) => {
       const stringifiedValues = JSON.stringify(
@@ -129,7 +129,7 @@ export function buildFacetDependenciesManager(
     });
   };
 
-  const thawFacets = () => {
+  const unfreezeFacetValues = () => {
     if (engine.state.facetSet) {
       Object.entries(engine.state.facetSet).forEach(
         ([facetId, request]) =>
@@ -141,7 +141,7 @@ export function buildFacetDependenciesManager(
     }
   };
 
-  const ensureDependenciesAreMet = () => {
+  const ensureConditions = () => {
     const isEnabled = isFacetEnabled(props.dependentFacetId);
     const shouldBeEnabled = areDependenciesMet();
     if (isEnabled !== shouldBeEnabled) {
@@ -150,7 +150,7 @@ export function buildFacetDependenciesManager(
           ? enableFacet(props.dependentFacetId)
           : disableFacet(props.dependentFacetId)
       );
-      thawFacets();
+      unfreezeFacetValues();
     }
   };
 
@@ -163,14 +163,14 @@ export function buildFacetDependenciesManager(
 
   const unsubscribe = props.dependencies.length
     ? engine.subscribe(() => {
-        if (updateLastObservedValues()) {
-          ensureDependenciesAreMet();
+        if (checkIfParentValuesWereChanged()) {
+          ensureConditions();
         }
       })
     : () => {};
 
   if (props.dependencies.length) {
-    ensureDependenciesAreMet();
+    ensureConditions();
   }
 
   return {
