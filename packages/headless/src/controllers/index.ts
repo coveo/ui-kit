@@ -362,7 +362,7 @@ export {
 } from './core/interactive-result/headless-core-interactive-result';
 
 export type {
-  FacetConditionsManager as FacetDependenciesManager,
-  AnyFacetValueCondition as AnyFacetDependency,
+  FacetConditionsManager,
+  AnyFacetValueCondition,
 } from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
-export {buildFacetConditionsManager as buildFacetDependenciesManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
+export {buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
