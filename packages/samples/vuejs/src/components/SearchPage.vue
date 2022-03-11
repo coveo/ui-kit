@@ -32,7 +32,7 @@ onMounted(initInterface);
 </script>
 
 <template>
-  <atomic-search-interface searchHub="MainSearch" pipeline="Search">
+  <atomic-search-interface search-hub="MainSearch" pipeline="Search">
     <div class="search">
       <atomic-search-box></atomic-search-box>
     </div>
