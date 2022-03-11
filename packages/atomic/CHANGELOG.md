@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.34.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.3...@coveo/atomic@1.34.0) (2022-03-11)
+
+
+### Features
+
+* **atomic:** add initWithSearchEngine method to be leveraged by atomic-react ([#1809](https://github.com/coveo/ui-kit/issues/1809)) ([eb62182](https://github.com/coveo/ui-kit/commit/eb621827d2beea2a7bda7d24cc84c6f30fe56a55))
+* **atomic-react:** improve localization configuration for atomic-react ([#1807](https://github.com/coveo/ui-kit/issues/1807)) ([4fc2a04](https://github.com/coveo/ui-kit/commit/4fc2a0460b541099c55b00be1ccad69b655b30f7))
+
+
+
+
+
+## [1.33.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.2...@coveo/atomic@1.33.3) (2022-03-09)
+
+
+### Bug Fixes
+
+* **atomic-react:** fix result list table layout ([#1801](https://github.com/coveo/ui-kit/issues/1801)) ([e02d3f8](https://github.com/coveo/ui-kit/commit/e02d3f817420162b35b3f20925fd1feb2ef46f1e))
+
+
+
+
+
+## [1.33.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.1...@coveo/atomic@1.33.2) (2022-03-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.33.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.0...@coveo/atomic@1.33.1) (2022-03-08)
 
 

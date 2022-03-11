@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.50.0...@coveo/headless@1.50.1) (2022-03-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.49.1...@coveo/headless@1.50.0) (2022-03-08)
+
+
+### Features
+
+* **headless:** reconcile search token config with engine config ([#1797](https://github.com/coveo/ui-kit/issues/1797)) ([89633b3](https://github.com/coveo/ui-kit/commit/89633b30c12160e247be6418b01bdce7eba06058))
+
+
+
+
+
 ## [1.49.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.49.0...@coveo/headless@1.49.1) (2022-03-08)
 
 **Note:** Version bump only for package @coveo/headless
