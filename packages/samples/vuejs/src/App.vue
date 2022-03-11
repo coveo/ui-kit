@@ -1,5 +1,9 @@
+<script setup lang="ts">
+import SearchPage from './components/SearchPage.vue';
+</script>
+
 <template>
-  <search-page />
+  <SearchPage />
 </template>
 
 <style>

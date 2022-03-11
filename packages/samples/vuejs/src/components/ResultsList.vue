@@ -19,6 +19,7 @@ async function initializeResults() {
   const atomicResultList = document.querySelector(
     'atomic-result-list'
   ) as AtomicResultList;
+
   atomicResultList.setRenderFunction(() => {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = resultTemplate;

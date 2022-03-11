@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import {onMounted} from 'vue';
+import TopBar from './TopBar.vue';
+import SearchPageFacets from './SearchPageFacets.vue';
+import ResultsList from './ResultsList.vue';
 
 // TODO: get these types from atomic package
 interface InitializationOptions {
@@ -36,9 +39,9 @@ onMounted(initInterface);
     <div class="search">
       <atomic-search-box></atomic-search-box>
     </div>
-    <facet-manager />
+    <SearchPageFacets />
     <atomic-breadbox></atomic-breadbox>
-    <top-bar />
-    <results-list />
+    <TopBar />
+    <ResultsList />
   </atomic-search-interface>
 </template>
