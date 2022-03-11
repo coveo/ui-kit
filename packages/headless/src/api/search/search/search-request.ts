@@ -14,6 +14,7 @@ import {
   ConstantQueryParam,
   EnableDidYouMeanParam,
   EnableQuerySyntaxParam,
+  ExcerptLength,
   FacetOptionsParam,
   FacetsParam,
   FieldsToIncludeParam,
@@ -50,4 +51,5 @@ export type SearchRequest = BaseParam &
   TabParam &
   ReferrerParam &
   TimezoneParam &
-  AnalyticsParam;
+  AnalyticsParam &
+  ExcerptLength;

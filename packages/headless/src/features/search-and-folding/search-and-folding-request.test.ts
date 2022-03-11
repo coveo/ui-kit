@@ -62,4 +62,22 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       expect(request.lq).toBe(undefined);
     });
   });
+
+  describe('#excerptLength', () => {
+    it(`when there is an excerpt length in state,
+    the parameter is included in the request`, async () => {
+      const state = createMockState();
+      state.excerptLength = {length: 1234};
+
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.excerptLength).toBe(1234);
+    });
+
+    it('when there is no excerptLength in the state, the parameter is not included in the request', async () => {
+      const state = createMockState();
+      state.excerptLength.length = undefined;
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.excerptLength).toBe(undefined);
+    });
+  });
 });
