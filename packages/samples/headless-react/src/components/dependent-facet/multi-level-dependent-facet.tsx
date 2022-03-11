@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {
-  buildFacetDependenciesManager,
+  buildFacetConditionsManager,
   CoreEngine,
   Facet as HeadlessFacet,
 } from '@coveo/headless';
@@ -41,12 +41,12 @@ export const MultilevelDependentFacet: React.FunctionComponent<{
       if (!dependsOn) {
         return;
       }
-      const facetDependenciesManager = buildFacetDependenciesManager(engine, {
-        dependentFacetId: facet.state.facetId,
-        dependencies: [
+      const facetDependenciesManager = buildFacetConditionsManager(engine, {
+        facetId: facet.state.facetId,
+        conditions: [
           {
             parentFacetId: dependsOn.state.facetId,
-            isDependencyMet: (parentValues) =>
+            condition: (parentValues) =>
               parentValues.some((value) => value.state === 'selected'),
           },
         ],

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {
-  buildFacetDependenciesManager,
+  buildFacetConditionsManager,
   CoreEngine,
   Facet as HeadlessFacet,
 } from '@coveo/headless';
@@ -23,12 +23,12 @@ export const SingleValueDependentFacet: React.FunctionComponent<{
   );
 
   useEffect(() => {
-    const facetDependenciesManager = buildFacetDependenciesManager(engine, {
-      dependentFacetId: dependentFacet.state.facetId,
-      dependencies: [
+    const facetDependenciesManager = buildFacetConditionsManager(engine, {
+      facetId: dependentFacet.state.facetId,
+      conditions: [
         {
           parentFacetId: parentFacet.state.facetId,
-          isDependencyMet: (parentValues) =>
+          condition: (parentValues) =>
             parentValues.some(
               (value) =>
                 'value' in value &&
