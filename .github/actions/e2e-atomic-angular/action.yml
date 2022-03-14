@@ -1,0 +1,27 @@
+name: 'Atomic Angular E2E tests'
+description: 'Runs Cypress tests for Atomic Angular'
+inputs:
+  cypress-record-key:
+    description: The Cypress record key for actions that must be recorded
+    required: false
+    default: ''
+  github-token:
+    description: The GitHub token for actions that must be recorded
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33
+      name: Run Cypress
+      with:
+        working-directory: ./packages/samples/angular
+        start: npm run start
+        wait-on: 'http://localhost:4200'
+        install: true
+        record: false
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: packages/samples/angular/cypress/screenshots
