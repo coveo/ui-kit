@@ -3,7 +3,7 @@ import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
-  shadow: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  shadow: () => Cypress.Chainable<JQuery<any>>;
 }
 
 export function should(should: boolean) {

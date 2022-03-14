@@ -527,20 +527,10 @@ describe('Color Facet Test Suites', () => {
           deselectBreadcrumbAtIndex(deselectionIndex);
         }
 
-        describe('verify rendering', () => {
-          before(setupDeselectColorFacetValue);
-          BreadboxAssertions.assertDisplayBreadcrumb(false);
-        });
-
-        describe('verify analytic', () => {
-          before(setupDeselectColorFacetValue);
-          BreadboxAssertions.assertLogBreadcrumbFacet(colorFacetField);
-        });
-
-        describe('verify selected facetValue', () => {
-          before(setupSelectedColorFacet);
-          BreadboxAssertions.assertDeselectColorFacet(deselectionIndex);
-        });
+        before(setupDeselectColorFacetValue);
+        BreadboxAssertions.assertDisplayBreadcrumb(false);
+        BreadboxAssertions.assertLogBreadcrumbFacet(colorFacetField);
+        ColorFacetAssertions.assertNumberOfSelectedBoxValues(0);
       });
     });
 
