@@ -1,15 +1,14 @@
 {
   "name": "vue-search",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --port 5050",
-    "typecheck": "vue-tsc --noEmit",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@coveo/atomic": "^1.33.3",
+    "@coveo/atomic": "^1.34.1",
     "vue": "^3.2.31"
   },
   "devDependencies": {

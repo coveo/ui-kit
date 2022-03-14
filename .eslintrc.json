@@ -2,7 +2,7 @@
   "ignorePatterns": [
     "node_modules",
     "stencil-generated",
-    "atomic-angular/dist"
+    "dist"
   ],
   "env": {
     "jest": true,

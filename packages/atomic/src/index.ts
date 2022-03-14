@@ -1,4 +1,5 @@
 export {Components, JSX} from './components';
+export type {i18n} from 'i18next';
 
 export {bindLogDocumentOpenOnResult} from './utils/result-utils';
 
