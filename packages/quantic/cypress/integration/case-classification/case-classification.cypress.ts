@@ -635,7 +635,7 @@ describe('quantic-case-classification', () => {
       });
 
       scope(
-        'when fetching suggestions and getting a firt set of suggestions',
+        'when fetching suggestions and getting a first set of suggestions',
         () => {
           const suggestionsCount = 3;
           const firstSuggestionIndex = 0;
