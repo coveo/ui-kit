@@ -2,6 +2,7 @@ import {SearchAppState} from '../../state/search-app-state';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {ConfigurationSection} from '../../state/state-sections';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
@@ -57,5 +58,9 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
       (await fromAnalyticsStateToAnalyticsParams(
         state.configuration.analytics
       ))),
+    ...(state.excerptLength &&
+      !isNullOrUndefined(state.excerptLength.length) && {
+        excerptLength: state.excerptLength.length,
+      }),
   };
 };

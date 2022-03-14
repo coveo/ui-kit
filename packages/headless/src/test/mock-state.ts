@@ -33,6 +33,7 @@ import {getRecentQueriesInitialState} from '../features/recent-queries/recent-qu
 import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
+import {getExcerptLengthInitialState} from '../features/excerpt-length/excerpt-length-state';
 
 /**
  * For internal use only.
@@ -80,6 +81,7 @@ export function createMockState(
     standaloneSearchBoxSet: getStandaloneSearchBoxSetInitialState(),
     recentResults: getRecentResultsInitialState(),
     recentQueries: getRecentQueriesInitialState(),
+    excerptLength: getExcerptLengthInitialState(),
     ...config,
   };
 }
