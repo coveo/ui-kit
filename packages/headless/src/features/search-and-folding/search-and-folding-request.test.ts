@@ -94,7 +94,7 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       expect(request.visitorId).toBeDefined();
     });
 
-    it('#visitorId is included in the request', async () => {
+    it('#actionsHistory is included in the request', async () => {
       const request = await buildSearchAndFoldingLoadCollectionRequest(state);
       expect(request.actionsHistory).toBeDefined();
     });
@@ -107,12 +107,12 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       state.configuration.analytics.enabled = false;
     });
 
-    it('#visitorId is included in the request', async () => {
+    it('#visitorId is not included in the request', async () => {
       const request = await buildSearchAndFoldingLoadCollectionRequest(state);
       expect(request.visitorId).toBeUndefined();
     });
 
-    it('#visitorId is included in the request', async () => {
+    it('#actionsHistory is not included in the request', async () => {
       const request = await buildSearchAndFoldingLoadCollectionRequest(state);
       expect(request.actionsHistory).toBeUndefined();
     });
