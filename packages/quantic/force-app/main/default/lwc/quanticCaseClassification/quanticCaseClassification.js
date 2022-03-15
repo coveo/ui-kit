@@ -420,6 +420,10 @@ export default class QuanticCaseClassification extends LightningElement {
     );
   }
 
+  /**
+   * Logs warning message when a field receives an invalid suggestion value.
+   * @returns {void}
+   */
   logInvalidFieldValueWarningOnce(value) {
     if (!this.loggedInvalidFieldValueWarnings[value]) {
       this.loggedInvalidFieldValueWarnings[value] = true;
@@ -429,6 +433,10 @@ export default class QuanticCaseClassification extends LightningElement {
     }
   }
 
+  /**
+   * Handles the display behaviour of the suggestions.
+   * @returns {void}
+   */
   handleSuggestionsDisplayBehaviour() {
     if (
       this._value &&
