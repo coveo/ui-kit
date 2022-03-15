@@ -1,0 +1,25 @@
+{
+  "name": "vuejswithcli",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "dev": "npm run copy:assets && npm run serve",
+    "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets public/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang public/lang"
+  },
+  "dependencies": {
+    "@coveo/atomic": "^1.33.2",
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13",
+    "vue-class-component": "^8.0.0-0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "html-loader": "^3.1.0",
+    "ncp": "^2.0.0",
+    "typescript": "~4.5.5"
+  }
+}
