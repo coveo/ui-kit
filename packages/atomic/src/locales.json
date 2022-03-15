@@ -1137,5 +1137,13 @@
   "between-parentheses": {
     "en": "({{text}})",
     "fr": "(\u00A0{{text}}\u00A0)"
+  },
+  "smart-snippet": {
+    "en": "Potential answer to your question",
+    "fr": "Réponse potentielle à votre question"
+  },
+  "smart-snippet-source": {
+    "en": "Source of the answer",
+    "fr": "Source de la réponse"
   }
 }

@@ -756,6 +756,15 @@ export namespace Components {
          */
         "mobileBreakpoint": string;
     }
+    interface AtomicSmartSnippet {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 6.  It's strongly recommended to set this property in order to improve accessibility.
+         */
+        "headingLevel": number;
+    }
+    interface AtomicSmartSnippetAnswer {
+        "htmlContent": string;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -1200,6 +1209,18 @@ declare global {
         prototype: HTMLAtomicSearchLayoutElement;
         new (): HTMLAtomicSearchLayoutElement;
     };
+    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetElement: {
+        prototype: HTMLAtomicSmartSnippetElement;
+        new (): HTMLAtomicSmartSnippetElement;
+    };
+    interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetAnswerElement: {
+        prototype: HTMLAtomicSmartSnippetAnswerElement;
+        new (): HTMLAtomicSmartSnippetAnswerElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1298,6 +1319,8 @@ declare global {
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
+        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
+        "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
@@ -2028,6 +2051,15 @@ declare namespace LocalJSX {
          */
         "mobileBreakpoint"?: string;
     }
+    interface AtomicSmartSnippet {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 6.  It's strongly recommended to set this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
+    }
+    interface AtomicSmartSnippetAnswer {
+        "htmlContent": string;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -2166,6 +2198,8 @@ declare namespace LocalJSX {
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
+        "atomic-smart-snippet": AtomicSmartSnippet;
+        "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-element": AtomicTableElement;
@@ -2239,6 +2273,8 @@ declare module "@stencil/core" {
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
+            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
+            "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
