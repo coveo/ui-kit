@@ -23,6 +23,16 @@
     <atomic-result-text field="ec_shortdesc"></atomic-result-text>
   </atomic-result-section-excerpt>
   <atomic-result-section-bottom-metadata>
-    <atomic-result-fields-list> </atomic-result-fields-list>
+    <atomic-result-fields-list>
+      <atomic-field-condition class="field" if-defined="cat_platform">
+        <result-text-field label="Platform" field="cat_platform"></result-text-field>
+      </atomic-field-condition>
+      <atomic-field-condition class="field" if-defined="cat_condition">
+        <result-text-field label="Condition" field="cat_condition"></result-text-field>
+      </atomic-field-condition>
+      <atomic-field-condition class="field" if-defined="cat_categories">
+        <result-text-field label="Tags" field="cat_categories"></result-text-field>
+      </atomic-field-condition>
+    </atomic-result-fields-list>
   </atomic-result-section-bottom-metadata>
 </template>

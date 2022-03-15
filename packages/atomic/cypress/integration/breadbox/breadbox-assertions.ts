@@ -144,13 +144,6 @@ export function assertDeselectCheckboxFacet(
   });
 }
 
-export function assertDeselectCategoryFacet(index: number) {
-  it('should be deselected after removing from breadcrumb list', () => {
-    deselectBreadcrumbAtIndex(index);
-    CategoryFacetSelectors.activeParentValue().should('not.exist');
-  });
-}
-
 export function assertDeselectLinkFacet(
   FacetWithLinkSelector: FacetWithLinkSelector,
   index: number
@@ -163,17 +156,6 @@ export function assertDeselectLinkFacet(
         FacetWithLinkSelector.selectedLinkValueWithText(text).should(
           'not.exist'
         );
-      });
-  });
-}
-
-export function assertDeselectColorFacet(index: number) {
-  it('should be deselected after removing from breadcrumb list', () => {
-    BreadboxSelectors.breadcrumbValueAtIndex(index)
-      .invoke('text')
-      .then((text) => {
-        deselectBreadcrumbAtIndex(index);
-        ColorFacetSelectors.selectedBoxValueWithText(text).should('not.exist');
       });
   });
 }
