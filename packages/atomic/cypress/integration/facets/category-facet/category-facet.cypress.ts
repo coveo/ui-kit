@@ -744,13 +744,9 @@ describe('Category Facet Test Suites', () => {
           );
         });
 
-        describe('verify analytic', () => {
-          before(setupDeselectCategoryFacetValue);
-        });
-
         describe('verify selected facetValue', () => {
-          before(setupSelectedCategoryFacet);
-          BreadboxAssertions.assertDeselectCategoryFacet(deselectionIndex);
+          before(setupDeselectCategoryFacetValue);
+          CategoryFacetAssertions.assertNumberOfParentValues(0);
         });
       });
     });
