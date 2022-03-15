@@ -111,39 +111,40 @@ export class AtomicCategoryFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
-  @Prop() public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    * When "true", the search is only enabled when more facet values are available.
    */
-  @Prop() public withSearch = false;
+  @Prop({reflect: true}) public withSearch = false;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'alphanumeric' and 'occurrences'.
    */
   // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
-  @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
+  @Prop({reflect: true}) public sortCriteria: CategoryFacetSortCriterion =
+    'occurrences';
   /**
    * The character that separates values of a multi-value field.
    */
-  @Prop() public delimitingCharacter = ';';
+  @Prop({reflect: true}) public delimitingCharacter = ';';
   /**
    * The base path shared by all values for the facet, separated by commas.
    */
-  @Prop() public basePath?: string;
+  @Prop({reflect: true}) public basePath?: string;
   /**
    * Whether to use basePath as a filter for the results.
    */
-  @Prop() public filterByBasePath = true;
+  @Prop({reflect: true}) public filterByBasePath = true;
   /**
    * Specifies if the facet is collapsed.
    */
@@ -151,13 +152,13 @@ export class AtomicCategoryFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   @FocusTarget()

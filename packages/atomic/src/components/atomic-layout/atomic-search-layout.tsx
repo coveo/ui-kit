@@ -16,7 +16,7 @@ export class AtomicSearchLayout {
    * CSS valuethat defines where the layout goes from mobile to desktop.
    * e.g., 800px, 65rem.
    */
-  @Prop() public mobileBreakpoint = '1024px';
+  @Prop({reflect: true}) public mobileBreakpoint = '1024px';
 
   public connectedCallback() {
     const id = this.host.id || randomID('atomic-search-layout-');

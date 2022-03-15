@@ -22,11 +22,11 @@ export class AtomicResultDate {
    * This will look for the field in the Result object first, and then in the Result.raw object.
    * It is important to include the necessary field in the ResultList component.
    */
-  @Prop() field = 'date';
+  @Prop({reflect: true}) field = 'date';
   /**
    * Available formats: https://day.js.org/docs/en/display/format
    */
-  @Prop() format = 'D/M/YYYY';
+  @Prop({reflect: true}) format = 'D/M/YYYY';
 
   private dateToRender: string | null = null;
 

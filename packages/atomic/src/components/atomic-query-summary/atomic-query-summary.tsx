@@ -44,7 +44,7 @@ export class AtomicQuerySummary implements InitializableComponent {
    * Whether to display the duration of the last query execution.
    * @deprecated Use the `duration` part.
    */
-  @Prop() enableDuration = false;
+  @Prop({reflect: true}) enableDuration = false;
 
   @AriaLiveRegion('query-summary')
   protected ariaMessage!: string;
