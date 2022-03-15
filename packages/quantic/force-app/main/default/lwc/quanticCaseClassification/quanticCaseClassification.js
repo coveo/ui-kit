@@ -185,27 +185,17 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   updateFieldState() {
-    if (this.maxSuggestions > 0 && !this.lockedState) {
-      this.previousClassifications = this.classifications;
-      this.classifications =
-        this.field.state.suggestions.slice(
-          0,
-          Math.max(Number(this.maxSuggestions), 0)
-        ) ?? [];
+    if (!this.lockedState) {
       this.loading = this.field.state.loading;
-      if (this.newSuggestionsReceived) {
+      if (this.maxSuggestions > 0 && this.newSuggestionsReceived) {
         const value = this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-        if (!this.isSuggestion(value) && this.isMoreOptionsVisible) {
-          this.hideSuggestions = true;
-          this.showSelect();
-        }
         this.setFieldValue(value, true);
       } else {
-        const value = this.field.state.value;
-        this.setFieldValue(value);
+        this.setFieldValue(this.field.state.value);
       }
+      this.handleSuggestionsDisplayBehaviour();
     }
   }
 
@@ -348,12 +338,12 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectChange(event) {
+    this.lockedState = true;
     const value = event.target.value;
     this.setFieldValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.animateHideSuggestions();
     }
-    this.lockedState = true;
   }
 
   /**
@@ -399,6 +389,12 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get newSuggestionsReceived() {
+    this.previousClassifications = this.classifications;
+    this.classifications =
+      this.field.state.suggestions.slice(
+        0,
+        Math.max(Number(this.maxSuggestions), 0)
+      ) ?? [];
     return (
       this.classifications.length &&
       JSON.stringify(this.classifications) !==
@@ -422,6 +418,20 @@ export default class QuanticCaseClassification extends LightningElement {
       console.warn(
         `The value "${value}" was not found among all the options retrieved from Salesforce. Ensure that the Coveo field name "${this.coveoFieldName}" corresponds to the correct Salesforce field name "${this.sfFieldApiName}".`
       );
+    }
+  }
+
+  handleSuggestionsDisplayBehaviour() {
+    if (
+      this._value &&
+      !this.isSuggestion(this._value) &&
+      this.isMoreOptionsVisible
+    ) {
+      this.hideSuggestions = true;
+      this.showSelect();
+    } else {
+      this.hideSuggestions = false;
+      this._isSelectVisible = false;
     }
   }
 }
