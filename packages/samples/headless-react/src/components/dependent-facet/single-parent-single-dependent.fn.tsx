@@ -1,39 +1,26 @@
 import {useEffect, useState} from 'react';
-import {
-  buildFacetConditionsManager,
-  CoreEngine,
-  Facet as HeadlessFacet,
-} from '@coveo/headless';
+import {Facet as HeadlessFacet} from '@coveo/headless';
 import {Facet} from '../facet/facet.fn';
 
 export const SingleParentSingleDependentFacet: React.FunctionComponent<{
-  engine: CoreEngine;
   parentFacet: HeadlessFacet;
   dependentFacet: HeadlessFacet;
-}> = ({engine, parentFacet, dependentFacet}) => {
+}> = ({parentFacet, dependentFacet}) => {
   const [showDependentFacet, setShowDependentFacet] = useState(false);
+  const [parentState, setParentState] = useState(parentFacet.state);
+
+  const linkFacets = () => {
+    if (showDependentFacet && !parentState.hasActiveValues) {
+      dependentFacet.deselectAll();
+    }
+    setShowDependentFacet(parentState.hasActiveValues);
+  };
 
   useEffect(
-    () =>
-      dependentFacet.subscribe(() =>
-        setShowDependentFacet(dependentFacet.state.enabled)
-      ),
+    () => parentFacet.subscribe(() => setParentState(parentFacet.state)),
     []
   );
-
-  useEffect(() => {
-    const facetConditionsManager = buildFacetConditionsManager(engine, {
-      facetId: dependentFacet.state.facetId,
-      conditions: [
-        {
-          parentFacetId: parentFacet.state.facetId,
-          condition: (parentValues) =>
-            parentValues.some((value) => value.state === 'selected'),
-        },
-      ],
-    });
-    return facetConditionsManager.stopWatching;
-  });
+  useEffect(linkFacets, [parentState.hasActiveValues]);
 
   const parent = <Facet controller={parentFacet} />;
   const dependent = <Facet controller={dependentFacet} />;

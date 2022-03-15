@@ -96,7 +96,6 @@ export class DependentFacetPage extends Component<
       case 'SingleParentSingleDependent':
         return (
           <SingleParentSingleDependentFacet
-            engine={this.engine}
             parentFacet={this.sourceFacet}
             dependentFacet={this.objectTypeFacet}
           />
@@ -104,7 +103,6 @@ export class DependentFacetPage extends Component<
       case 'SingleParentMultipleDependent':
         return (
           <SingleParentMultipleDependentFacet
-            engine={this.engine}
             parentFacet={this.sourceFacet}
             dependentFacets={[this.objectTypeFacet, this.fileTypeFacet]}
           />
@@ -113,7 +111,6 @@ export class DependentFacetPage extends Component<
       case 'SingleValueDependent':
         return (
           <SingleValueDependentFacet
-            engine={this.engine}
             parentFacet={this.fileTypeFacet}
             dependentFacet={this.authorFacet}
             dependentValue="doc"
@@ -123,7 +120,6 @@ export class DependentFacetPage extends Component<
       case 'ComplexDependencies':
         return (
           <MultilevelDependentFacet
-            engine={this.engine}
             dependencies={{
               [this.sourceFacet.state.facetId]: {
                 facet: this.sourceFacet,
