@@ -101,6 +101,10 @@ export interface AnalyticsParam {
   };
 }
 
+export interface ExcerptLength {
+  excerptLength?: number;
+}
+
 export const baseSearchRequest = (
   req: BaseParam,
   method: HttpMethods,
