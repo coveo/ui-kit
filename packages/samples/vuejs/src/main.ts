@@ -1,9 +1,9 @@
 import {createApp, defineCustomElement} from 'vue';
 import App from './App.vue';
-import ResultLabel from './components/ResultLabel.vue';
+import ResultTextField from './components/ResultTextField.vue';
 
-const resultLabel = defineCustomElement(ResultLabel);
-customElements.define('result-label', resultLabel);
+const resultTextField = defineCustomElement(ResultTextField);
+customElements.define('result-text-field', resultTextField);
 
 const app = createApp(App);
 
