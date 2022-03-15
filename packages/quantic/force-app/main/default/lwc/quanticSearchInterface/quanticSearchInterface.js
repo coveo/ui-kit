@@ -18,12 +18,12 @@ import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 /**
  * The `QuanticSearchInterface` component handles the headless search engine and localization configurations.
  * A single instance should be used for each instance of the Coveo Headless search engine.
- * 
- * 
+ *
+ *
  * The `timezone` used in the search engine options is taken from the [Time Zone settings](https://help.salesforce.com/s/articleView?id=admin_supported_timezone.htm&type=5&language=en_US) of the Salesforce org.
  * It is used to correctly interpret dates in the query expression, facets, and result items.
- * 
- * 
+ *
+ *
  * The `locale` used in the search engine options is taken from the [Language Settings](https://help.salesforce.com/s/articleView?id=sf.setting_your_language.htm&type=5).
  * Coveo Machine Learning models use this information to provide contextually relevant output.
  * Moreover, this information can be referred to in query expressions and QPL statements by using the `$locale` object.
@@ -38,7 +38,6 @@ export default class QuanticSearchInterface extends LightningElement {
    * @type {string}
    */
   @api engineId;
-
   /**
    * The search interface [search hub](https://docs.coveo.com/en/1342/).
    * @api
@@ -46,7 +45,6 @@ export default class QuanticSearchInterface extends LightningElement {
    * @defaultValue 'default'
    */
   @api searchHub = 'default';
-
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    * @api
@@ -54,7 +52,6 @@ export default class QuanticSearchInterface extends LightningElement {
    * @defaultValue `undefined`
    */
   @api pipeline;
-
   /**
    * Whether the state should not be reflected in the URL parameters.
    * @api
@@ -62,7 +59,6 @@ export default class QuanticSearchInterface extends LightningElement {
    * @defaultValue false
    */
   @api disableStateInUrl = false;
-
   /**
    * Whether not to perform a search once the interface and its components are initialized.
    * @api
@@ -92,7 +88,7 @@ export default class QuanticSearchInterface extends LightningElement {
                   searchHub: this.searchHub,
                   pipeline: this.pipeline,
                   locale: LOCALE,
-                  timezone: TIMEZONE
+                  timezone: TIMEZONE,
                 },
               },
             };
@@ -136,7 +132,7 @@ export default class QuanticSearchInterface extends LightningElement {
       }
       window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
       const {value, analytics} = JSON.parse(redirectData);
-      
+
       engine.dispatch(updateQuery({q: value}));
       engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
     }

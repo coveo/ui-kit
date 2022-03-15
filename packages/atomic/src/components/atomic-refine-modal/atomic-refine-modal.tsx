@@ -262,7 +262,7 @@ export class AtomicRefineModal implements InitializableComponent {
       <atomic-focus-trap active={isOpened}>
         <div
           part="container"
-          class={`w-screen h-screen fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 z-10 ${
+          class={`fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 right-0 bottom-0 z-10 ${
             isOpened
               ? 'animate-scaleUpRefineModal'
               : 'animate-slideDownRefineModal'

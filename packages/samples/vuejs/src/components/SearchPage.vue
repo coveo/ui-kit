@@ -36,12 +36,22 @@ onMounted(initInterface);
 
 <template>
   <atomic-search-interface search-hub="MainSearch" pipeline="Search">
-    <div class="search">
-      <atomic-search-box></atomic-search-box>
-    </div>
-    <SearchPageFacets />
-    <atomic-breadbox></atomic-breadbox>
-    <TopBar />
-    <ResultsList />
+    <atomic-search-layout>
+      <atomic-layout-section section="search">
+        <atomic-search-box></atomic-search-box>
+      </atomic-layout-section>
+      <atomic-layout-section section="facets">
+        <SearchPageFacets />
+      </atomic-layout-section>
+      <atomic-layout-section section="main">
+        <atomic-layout-section section="status">
+          <atomic-breadbox></atomic-breadbox>
+          <TopBar />
+        </atomic-layout-section>
+        <atomic-layout-section section="pagination">
+          <ResultsList />
+        </atomic-layout-section>
+      </atomic-layout-section>
+    </atomic-search-layout>
   </atomic-search-interface>
 </template>
