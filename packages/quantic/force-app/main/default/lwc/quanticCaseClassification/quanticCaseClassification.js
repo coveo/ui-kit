@@ -325,6 +325,14 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
+   * Hides the select input.
+   * @returns {void}
+   */
+  hideSelect() {
+    this._isSelectVisible = false;
+  }
+
+  /**
    * Handles the selection of a suggestion.
    * @returns {void}
    */
@@ -431,7 +439,7 @@ export default class QuanticCaseClassification extends LightningElement {
       this.showSelect();
     } else {
       this.hideSuggestions = false;
-      this._isSelectVisible = false;
+      this.hideSelect();
     }
   }
 }
