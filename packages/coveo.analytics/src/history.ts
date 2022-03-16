@@ -139,7 +139,7 @@ export class HistoryStore {
 
 export interface HistoryElement {
     name: string;
-    value: string;
+    value?: string;
     time: string;
     internalTime?: number;
 }
