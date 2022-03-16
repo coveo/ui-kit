@@ -187,15 +187,14 @@ export default class QuanticCaseClassification extends LightningElement {
   updateFieldState() {
     if (!this.lockedState) {
       this.loading = this.field.state.loading;
-      if (this.maxSuggestions > 0 && this.newSuggestionsReceived) {
-        const value = this.isAutoSelectionNeeded
+      const hasNewSuggestions =
+        this.maxSuggestions > 0 && this.newSuggestionsReceived;
+      const value =
+        hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-        this.setFieldValue(value, true);
-      } else {
-        this.setFieldValue(this.field.state.value);
-      }
-      this.handleSuggestionsDisplayBehaviour();
+      this.setFieldValue(value, hasNewSuggestions);
+      this.updateSuggestionsVisibility();
     }
   }
 
@@ -434,10 +433,10 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
-   * Handles the display behaviour of the suggestions.
+   * Updates the visibility of the suggestions.
    * @returns {void}
    */
-  handleSuggestionsDisplayBehaviour() {
+  updateSuggestionsVisibility() {
     if (
       this._value &&
       !this.isSuggestion(this._value) &&
