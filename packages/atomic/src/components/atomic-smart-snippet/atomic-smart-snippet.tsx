@@ -20,7 +20,7 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
  *
  * @part smart-snippet - The wrapper of the entire smart snippet.
- * @part heading - The header displaying the question that is answered by the found document excerpt.
+ * @part question - The header displaying the question that is answered by the found document excerpt.
  * @part answer - The found document excerpt.
  * @part source-url - The URL to the document the excerpt is from.
  * @part source-title - The title of the document the excerpt is from.
@@ -63,12 +63,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return linkedDocument ?? null;
   }
 
-  public readerHeading() {
+  public renderQuestion() {
     return (
       <Heading
         level={this.headingLevel ? this.headingLevel + 1 : 0}
         class="mb-4 text-xl font-bold"
-        part="heading"
+        part="question"
       >
         {this.smartSnippetState.question}
       </Heading>
@@ -131,7 +131,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
           class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background mb-6"
           part="smart-snippet"
         >
-          {this.readerHeading()}
+          {this.renderQuestion()}
           {this.renderContent()}
           <footer part="footer">{this.renderSource()}</footer>
         </article>

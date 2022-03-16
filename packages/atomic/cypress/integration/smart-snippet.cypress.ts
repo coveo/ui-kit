@@ -52,12 +52,20 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture().with(addSmartSnippet()).init();
     });
 
-    it('should fallback to a span for the heading', () => {
-      SmartSnippetSelectors.heading().should('have.prop', 'tagName', 'SPAN');
+    it('should fallback to a span for the accessibility heading', () => {
+      SmartSnippetSelectors.accessibilityHeading().should(
+        'have.prop',
+        'tagName',
+        'SPAN'
+      );
+    });
+
+    it('should fallback to a span for the question', () => {
+      SmartSnippetSelectors.question().should('have.prop', 'tagName', 'SPAN');
     });
 
     it('render the correct question', () => {
-      SmartSnippetSelectors.heading().should('have.text', question);
+      SmartSnippetSelectors.question().should('have.text', question);
     });
 
     it('should have links to the source', () => {
@@ -78,11 +86,19 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture().with(addSmartSnippet(headingLevel)).init();
     });
 
-    it('should fallback to a span for the heading', () => {
-      SmartSnippetSelectors.heading().should(
+    it('should use the correct heading level for the accessibility heading', () => {
+      SmartSnippetSelectors.accessibilityHeading().should(
         'have.prop',
         'tagName',
         'H' + headingLevel
+      );
+    });
+
+    it('should use the correct heading level for the question', () => {
+      SmartSnippetSelectors.question().should(
+        'have.prop',
+        'tagName',
+        'H' + (headingLevel + 1)
       );
     });
   });
