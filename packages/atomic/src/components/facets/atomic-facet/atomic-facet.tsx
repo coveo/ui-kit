@@ -9,8 +9,8 @@ import {
   SearchStatusState,
   buildSearchStatus,
   FacetValue,
-  buildFacetDependenciesManager,
-  FacetDependenciesManager,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -91,7 +91,7 @@ export class AtomicFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
-  private dependenciesManager?: FacetDependenciesManager;
+  private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -242,11 +242,11 @@ export class AtomicFacet
   }
 
   private inititalizeDependenciesManager() {
-    this.dependenciesManager = buildFacetDependenciesManager(
+    this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
-        dependentFacetId: this.facetId!,
-        dependencies: parseDependsOn(this.dependsOn),
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
       }
     );
   }

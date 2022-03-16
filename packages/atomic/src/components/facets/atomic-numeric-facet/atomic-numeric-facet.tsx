@@ -16,8 +16,8 @@ import {
   NumericFilterState,
   NumericFilter,
   loadNumericFacetSetActions,
-  buildFacetDependenciesManager,
-  FacetDependenciesManager,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -87,7 +87,7 @@ export class AtomicNumericFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: NumericFacet;
-  private dependenciesManager?: FacetDependenciesManager;
+  private dependenciesManager?: FacetConditionsManager;
   public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -252,12 +252,11 @@ export class AtomicNumericFacet
   }
 
   private inititalizeDependenciesManager() {
-    this.dependenciesManager = buildFacetDependenciesManager(
+    this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
-        dependentFacetId:
-          this.facet?.state.facetId ?? this.filter!.state.facetId,
-        dependencies: parseDependsOn(this.dependsOn),
+        facetId: this.facet?.state.facetId ?? this.filter!.state.facetId,
+        conditions: parseDependsOn(this.dependsOn),
       }
     );
   }

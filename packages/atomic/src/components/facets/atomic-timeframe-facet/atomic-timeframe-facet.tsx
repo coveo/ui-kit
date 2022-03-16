@@ -15,8 +15,8 @@ import {
   buildDateFilter,
   loadDateFacetSetActions,
   deserializeRelativeDate,
-  buildFacetDependenciesManager,
-  FacetDependenciesManager,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -75,7 +75,7 @@ export class AtomicTimeframeFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: DateFacet;
-  private dependenciesManager?: FacetDependenciesManager;
+  private dependenciesManager?: FacetConditionsManager;
   public filter?: DateFilter;
   public searchStatus!: SearchStatus;
   private manualTimeframes: Timeframe[] = [];
@@ -210,12 +210,11 @@ export class AtomicTimeframeFacet
   }
 
   private inititalizeDependenciesManager() {
-    this.dependenciesManager = buildFacetDependenciesManager(
+    this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
-        dependentFacetId:
-          this.facet?.state.facetId ?? this.filter!.state.facetId,
-        dependencies: parseDependsOn(this.dependsOn),
+        facetId: this.facet?.state.facetId ?? this.filter!.state.facetId,
+        conditions: parseDependsOn(this.dependsOn),
       }
     );
   }

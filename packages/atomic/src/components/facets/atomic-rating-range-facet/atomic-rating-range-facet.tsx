@@ -10,8 +10,8 @@ import {
   NumericFacetValue,
   NumericRangeRequest,
   buildNumericRange,
-  buildFacetDependenciesManager,
-  FacetDependenciesManager,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -67,7 +67,7 @@ export class AtomicRatingRangeFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
-  private dependenciesManager?: FacetDependenciesManager;
+  private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -206,11 +206,11 @@ export class AtomicRatingRangeFacet
   }
 
   private inititalizeDependenciesManager() {
-    this.dependenciesManager = buildFacetDependenciesManager(
+    this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
-        dependentFacetId: this.facetId!,
-        dependencies: parseDependsOn(this.dependsOn),
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
       }
     );
   }
