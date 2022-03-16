@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.5...@coveo/quantic@1.12.0) (2022-03-16)
+
+
+### Bug Fixes
+
+* **quantic:** improvement of the display behaviour of the suggestions ([#1815](https://github.com/coveo/ui-kit/issues/1815)) ([6365454](https://github.com/coveo/ui-kit/commit/636545419594a3708ea2c5690023eb9e639f3172))
+
+
+### Features
+
+* **quantic:** added searchhub and pipeline params to ssb ([#1803](https://github.com/coveo/ui-kit/issues/1803)) ([71e999b](https://github.com/coveo/ui-kit/commit/71e999ba7f0997cd6a97db9319b1156379ea9864))
+
+
+
+
+
 ## [1.11.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.4...@coveo/quantic@1.11.5) (2022-03-11)
 
 **Note:** Version bump only for package @coveo/quantic
