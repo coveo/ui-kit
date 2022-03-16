@@ -93,7 +93,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     });
     return (
       <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
-        <div class="text-base mt-2 hover:underline" part="source-url">
+        <div part="source-url">
           <LinkWithResultAnalytics
             title={source.clickUri}
             href={source.clickUri}
@@ -103,7 +103,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
             {source.clickUri}
           </LinkWithResultAnalytics>
         </div>
-        <div class="text-2xl mt-1 mb-2 hover:underline" part="source-title">
+        <div part="source-title">
           <LinkWithResultAnalytics
             title={source.title}
             href={source.clickUri}
