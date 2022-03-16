@@ -14,7 +14,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
           r.body.questionAnswer = {
             documentId: {
               contentIdKey: 'permanentid',
-              contentIdValue: result.raw.permanentid,
+              contentIdValue: result.raw.permanentid!,
             },
             question: 'Creating an In-Product Experience (IPX)',
             answerSnippet: `
