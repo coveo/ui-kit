@@ -33,7 +33,7 @@ const addSmartSnippet = (headingLevel?: number) => (fixture: TestFixture) => {
                 <li>In the Configuration tab, fill the Basic settings section.</li>
                 <li>(Optional) Use the Design and Content access tabs to customize your <b>IPX</b> interface.</li>
                 <li>Click Save.</li>
-                <li>In the Loader snippet panel that appears, you may click Copy to save the loader snipper for your <b>IPX</b> to your clipboard, and then click Save.  You can Always retrieve the loader snippet later.</li>
+                <li>In the Loader snippet panel that appears, you may click Copy to save the loader snippet for your <b>IPX</b> to your clipboard, and then click Save.  You can Always retrieve the loader snippet later.</li>
               </ol>
               
               <p>
