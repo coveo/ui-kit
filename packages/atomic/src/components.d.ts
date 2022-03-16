@@ -758,7 +758,7 @@ export namespace Components {
     }
     interface AtomicSmartSnippet {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel": number;
     }
@@ -2053,7 +2053,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippet {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel"?: number;
     }

@@ -14,9 +14,5 @@ export const Heading: FunctionalComponent<
   HeadingProps & JSXBase.HTMLAttributes<HTMLHeadingElement>
 > = ({level, ...htmlProps}, children) => {
   const HeadingTag = level > 0 && level <= 6 ? `h${level}` : 'span';
-  return (
-    <HeadingTag class="atomic-hidden" {...htmlProps}>
-      {children}
-    </HeadingTag>
-  );
+  return <HeadingTag {...htmlProps}>{children}</HeadingTag>;
 };

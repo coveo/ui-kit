@@ -40,7 +40,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   public error!: Error;
 
   /**
-   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 6.
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
    *
    * We recommend setting this property in order to improve accessibility.
    */
@@ -66,7 +66,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   public readerHeading() {
     return (
       <Heading
-        level={this.headingLevel}
+        level={this.headingLevel ? this.headingLevel + 1 : 0}
         class="mb-4 text-xl font-bold"
         part="heading"
       >
@@ -123,7 +123,10 @@ export class AtomicSmartSnippet implements InitializableComponent {
     }
 
     return (
-      <aside aria-label={this.bindings.i18n.t('smart-snippet')}>
+      <aside>
+        <Heading level={this.headingLevel ?? 0} class="accessibility-only">
+          {this.bindings.i18n.t('smart-snippet')}
+        </Heading>
         <article
           class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background mb-6"
           part="smart-snippet"
