@@ -13,7 +13,7 @@ export class AtomicSortExpression {
   /**
    * The non-localized label to display for this expression.
    */
-  @Prop() public label!: string;
+  @Prop({reflect: true}) public label!: string;
 
   /**
    * One or more sort criteria that the end user can select or toggle between.
@@ -27,7 +27,7 @@ export class AtomicSortExpression {
    *
    * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
    */
-  @Prop() public expression!: string;
+  @Prop({reflect: true}) public expression!: string;
 
   public render() {
     const dropdownComponent = 'atomic-sort-dropdown';

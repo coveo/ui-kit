@@ -103,31 +103,31 @@ export class AtomicColorFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
-  @Prop() public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    * When "true", the search is only enabled when more facet values are available.
    */
-  @Prop() public withSearch = true;
+  @Prop({reflect: true}) public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
-  @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
+  @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection).
    * Possible values are 'checkbox', and 'box'.
    */
-  @Prop() public displayValuesAs: 'checkbox' | 'box' = 'box';
+  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'box' = 'box';
   /**
    * Specifies if the facet is collapsed.
    */
@@ -135,13 +135,13 @@ export class AtomicColorFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   @FocusTarget()

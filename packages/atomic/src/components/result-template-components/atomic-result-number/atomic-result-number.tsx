@@ -32,7 +32,7 @@ export class AtomicResultNumber {
    * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
    * Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
    */
-  @Prop() field!: string;
+  @Prop({reflect: true}) field!: string;
 
   @State() formatter: NumberFormatter = defaultNumberFormatter;
 

@@ -85,28 +85,29 @@ export class AtomicRatingFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
-  @Prop() public numberOfIntervals = 5;
+  @Prop({reflect: true}) public numberOfIntervals = 5;
   /**
    * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
    */
-  @Prop() public maxValueInIndex = this.numberOfIntervals;
+  @Prop({reflect: true}) public maxValueInIndex = this.numberOfIntervals;
   /**
    * The minimum value of the field.
    */
-  @Prop() public minValueInIndex = 1;
+  @Prop({reflect: true}) public minValueInIndex = 1;
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
+    'checkbox';
   /**
    * The SVG icon to use to display the rating.
    *
@@ -121,7 +122,7 @@ export class AtomicRatingFacet
    * - `--atomic-rating-facet-icon-inactive-color`
 
    */
-  @Prop() public icon = Star;
+  @Prop({reflect: true}) public icon = Star;
   /**
    * Specifies if the facet is collapsed.
    */
@@ -129,13 +130,13 @@ export class AtomicRatingFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;

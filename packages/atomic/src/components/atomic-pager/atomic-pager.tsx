@@ -59,7 +59,7 @@ export class AtomicPager implements InitializableComponent {
   /**
    * Specifies how many page buttons to display in the pager.
    */
-  @Prop() numberOfPages = 5;
+  @Prop({reflect: true}) numberOfPages = 5;
 
   @FocusTarget()
   private activePage!: FocusTargetController;
