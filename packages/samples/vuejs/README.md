@@ -1,33 +1,27 @@
 # Vue.js Search Page
 
+This code sample was created to provide developers with a minimal working page that exemplifies the configuration and implementation of the atomic library in a Vue.js application.
+
 ## Project setup
+
+If you would like to test it, you will need to run it locally by following the steps below:
 
 ```sh
 npm install
-```
-
-### Compiles and hot-reloads for development
-
-```sh
 npm run serve
 ```
 
-### Compiles and minifies for production
+## Using atomic
 
-```sh
-npm run build
-```
+You can either install the npm package or add it to your page via CDN. The configuration below is the same for both, however the usage differs slightly.
 
-### Customize configuration
+You might have a preference, or need to use one or the other based on how your project is built, however there is one case where you will need to use the CDN, and that is if your project uses [Vite](https://vitejs.dev/) - like projects created using this official [Vue.js tutorial](https://vuejs.org/guide/quick-start.html#with-build-tools). This is due to an issue with Stenciljs detailed [here](https://github.com/ionic-team/stencil/issues/3195)
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Usage for both is explained in separate sections in this file.
 
-&nbsp;
+## Configuration
 
-## Configuring `@coveo/atomic`
-&nbsp;
-
-### Add Vue configuration to help it handle atomic's components
+Add Vue configuration to help it handle atomic's components
 
 ```js
 // vue.config.js
@@ -55,16 +49,33 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 }
 ```
 
-### Add dependencies
+Add the `html-loader` dev-dependency
 
-`html-loader` is necessary for the configuration above to work and
-`ncp` is a utility that we will use to copy some assets from the atomic project into the vue project in the next step
 ```sh
-npm install --save-dev ncp html-loader
+npm install --save-dev html-loader
 ```
 
-### Add scripts to package.json
-In order for you to be able to leverage everything that atomic has to offer, you will need to add the following scripts to your `package.json` file:
+## Using the `@coveo/atomic` npm package
+
+### Add dependencies
+Install `@coveo/atomic` with the command
+
+```sh
+npm install --save @coveo/atomic
+```
+
+Install `ncp`:
+
+```sh
+npm install --save-dev ncp
+```
+
+> `ncp` is a utility that we will use to copy assets from the atomic project into the vue application, as explained below.
+
+### Copy assets from `@coveo/atomic`
+
+In order for you to be able to leverage everything that atomic has to offer, you will need to copy some assets into your public folder. If you skip this step, some of your dynamic content that is based on localization or svgs will be missing, and you will see some content being displayed as the placeholder 'between-parentheses' instead.
+
 ```json
 scripts: {
   ...,
@@ -72,23 +83,23 @@ scripts: {
   "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets public/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang public/lang"
 }
 ```
-The `dev` script assumes you are using the default `serve` script for running your application.
 
+> The `dev` script assumes you are using the default `serve` script and `public/assets` path for running your application. Don't forget to adjust if needed.
 
-> **Note:** If you are trying to use `@coveo/atomic` in a project that runs on [vite](https://vitejs.dev/), as per [this tutorial](https://vuejs.org/guide/quick-start.html#with-build-tools), you might need to [import atomic via cdn](https://vuejs.org/guide/quick-start.html#with-build-tools), as currently there are issues setting up stencils projects using this build tool. In this case, you won't need to add the assets as they will already be available.
+### Update your entry file
 
-&nbsp;
-## Using `@coveo/atomic`
-&nbsp;
+The atomic package allows you to customise your components by defining CSS variables in your own stylesheet - you can read about that [here](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/).
 
-In your entry file, import the assets and define atomic custom elements before creating your app.
+It also offers you a default theme that you can use as is or build upon. Those styles live in `@coveo/atomic/dist/atomic/themes/coveo.css` and you can import them in your entry file like below.
+
 
 ```ts
-import '@coveo/atomic/dist/atomic/themes/coveo.css';
+import '@coveo/atomic/dist/atomic/themes/coveo.css'; // optional!
 import {applyPolyfills, defineCustomElements} from '@coveo/atomic/loader';
 import {createApp} from 'vue';
 import App from './App.vue';
 
+// Bind the custom elements to the window object [https://stenciljs.com/docs/vue]
 applyPolyfills().then(() => {
   defineCustomElements(window);
 });
@@ -96,7 +107,11 @@ applyPolyfills().then(() => {
 createApp(App).mount('#app');
 ```
 
-> **Note:** This step is not necessary if you are importing atomic via cdn.
+## Using the CDN
+
+> **Note:** If you are trying to use `@coveo/atomic` in a project that runs on [vite](https://vitejs.dev/), as per [this tutorial](https://vuejs.org/guide/quick-start.html#with-build-tools), you might need to [import atomic via cdn](https://vuejs.org/guide/quick-start.html#with-build-tools), as currently there are issues setting up stencils projects using this build tool. In this case, you won't need to add the assets as they will already be available.
+
+&nbsp;
 
 &nbsp;
 
