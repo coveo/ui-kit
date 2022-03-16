@@ -19,10 +19,7 @@ runs:
         start: npm run dev
         wait-on: 'http://localhost:3000'
         install: true
-        record: ${{ github.ref == 'refs/heads/master' && true || false }}
-      env:
-        CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
-        GITHUB_TOKEN: ${{ inputs.github-token }}
+        record: false
     - uses: actions/upload-artifact@v2
       if: failure()
       with:

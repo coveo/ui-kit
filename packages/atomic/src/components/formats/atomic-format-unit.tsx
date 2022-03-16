@@ -19,7 +19,7 @@ export class AtomicFormatUnit {
    * Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor.
    * The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
    */
-  @Prop() public unit!: string;
+  @Prop({reflect: true}) public unit!: string;
   /**
    * The unit formatting style to use in unit formatting.
    *
@@ -27,7 +27,8 @@ export class AtomicFormatUnit {
    * * "short" (e.g., 16 l)
    * * "narrow" (e.g., 16l)
    */
-  @Prop() public unitDisplay?: 'long' | 'short' | 'narrow' = 'short';
+  @Prop({reflect: true}) public unitDisplay?: 'long' | 'short' | 'narrow' =
+    'short';
 
   componentWillLoad() {
     try {

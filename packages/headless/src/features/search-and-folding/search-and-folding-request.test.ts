@@ -1,3 +1,4 @@
+import {SearchAppState} from '../..';
 import {createMockState} from '../../test';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {buildSearchAndFoldingLoadCollectionRequest} from './search-and-folding-request';
@@ -60,6 +61,60 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
 
       const request = await buildSearchAndFoldingLoadCollectionRequest(state);
       expect(request.lq).toBe(undefined);
+    });
+  });
+
+  describe('#excerptLength', () => {
+    it(`when there is an excerpt length in state,
+    the parameter is included in the request`, async () => {
+      const state = createMockState();
+      state.excerptLength = {length: 1234};
+
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.excerptLength).toBe(1234);
+    });
+
+    it('when there is no excerptLength in the state, the parameter is not included in the request', async () => {
+      const state = createMockState();
+      state.excerptLength.length = undefined;
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.excerptLength).toBe(undefined);
+    });
+  });
+
+  describe('when analytics are enabled', () => {
+    let state: SearchAppState;
+    beforeEach(() => {
+      state = createMockState();
+      state.configuration.analytics.enabled = true;
+    });
+
+    it('#visitorId is included in the request', async () => {
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.visitorId).toBeDefined();
+    });
+
+    it('#actionsHistory is included in the request', async () => {
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.actionsHistory).toBeDefined();
+    });
+  });
+
+  describe('when analytics are disabled', () => {
+    let state: SearchAppState;
+    beforeEach(() => {
+      state = createMockState();
+      state.configuration.analytics.enabled = false;
+    });
+
+    it('#visitorId is not included in the request', async () => {
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.visitorId).toBeUndefined();
+    });
+
+    it('#actionsHistory is not included in the request', async () => {
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.actionsHistory).toBeUndefined();
     });
   });
 });

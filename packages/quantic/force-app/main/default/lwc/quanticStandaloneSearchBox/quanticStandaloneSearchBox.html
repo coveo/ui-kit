@@ -1,6 +1,6 @@
 <template>
   <template if:true={isStandalone}>
-    <c-quantic-search-interface engine-id={standaloneEngineId} skip-first-search disable-state-in-url>
+    <c-quantic-search-interface engine-id={standaloneEngineId} search-hub={searchHub} pipeline={pipeline} skip-first-search disable-state-in-url>
       <div class="slds-form-element">
         <div class="slds-form-element__control">
           <div class="slds-combobox_container">

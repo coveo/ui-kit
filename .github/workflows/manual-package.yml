@@ -14,6 +14,15 @@ on:
         description: 'Skip Unit tests'
         type: boolean
         required: false
+      skipAtomicReactE2E:
+        description: 'Skip Atomic React end to end tests'
+        type: boolean
+        required: false
+      skipAtomicAngularE2E:
+        description: 'Skip Atomic Angular end to end tests'
+        type: boolean
+        required: false
+
 jobs:
   build:
     name: 'Build'
@@ -51,6 +60,7 @@ jobs:
         with:
           cypress-record-key: ${{ secrets.ATOMIC_CYPRESS_RECORD_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
   e2e-quantic-test:
     name: 'Run e2e tests on Quantic'
     if: ${{ github.event.inputs.skipQuanticE2E != 'true' }}
@@ -65,6 +75,27 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+
+  e2e-atomic-react-test:
+    name: 'Run e2e tests on Atomic React'
+    if: ${{ github.event.inputs.skipAtomicReactE2E != 'true' }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-react
+
+  e2e-atomic-angular-test:
+    name: 'Run e2e tests on Atomic Angular'
+    if: ${{ github.event.inputs.skipAtomicAngularE2E != 'true' }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-angular
+
   bump-version:
     name: 'Bump version'
     needs:

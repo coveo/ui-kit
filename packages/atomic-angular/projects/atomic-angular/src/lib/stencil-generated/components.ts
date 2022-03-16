@@ -1124,7 +1124,7 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
-  methods: ['initialize', 'executeFirstSearch']
+  methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
 })
 @Component({
   selector: 'atomic-search-interface',

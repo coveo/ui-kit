@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.52.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.51.0...@coveo/headless@1.52.0) (2022-03-16)
+
+
+### Bug Fixes
+
+* **headless:** add actionsHistory to search request ([#1824](https://github.com/coveo/ui-kit/issues/1824)) ([1a4f3f8](https://github.com/coveo/ui-kit/commit/1a4f3f81befa1c342c9b4595a5aaa13c85864425))
+
+
+### Features
+
+* **headless:** added FacetConditionsManager ([#1792](https://github.com/coveo/ui-kit/issues/1792)) ([102d0db](https://github.com/coveo/ui-kit/commit/102d0db312896e457dfdd0adf32adb5f8d2815a1))
+
+
+
+
+
+# [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.50.1...@coveo/headless@1.51.0) (2022-03-11)
+
+
+### Features
+
+* **headless:** add excerpt length support ([#1812](https://github.com/coveo/ui-kit/issues/1812)) ([b54f937](https://github.com/coveo/ui-kit/commit/b54f9371034e4ceca71118331943fa79e515db52))
+
+
+
+
+
 ## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.50.0...@coveo/headless@1.50.1) (2022-03-09)
 
 **Note:** Version bump only for package @coveo/headless

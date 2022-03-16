@@ -32,11 +32,11 @@ export class AtomicSearchBoxRecentQueries {
   /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
-  @Prop() public maxWithQuery = 3;
+  @Prop({reflect: true}) public maxWithQuery = 3;
   /**
    * The maximum number of suggestions that will be displayed initially when the input field is empty.
    */
-  @Prop() public maxWithoutQuery?: number;
+  @Prop({reflect: true}) public maxWithoutQuery?: number;
 
   componentWillLoad() {
     try {

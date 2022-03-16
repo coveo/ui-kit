@@ -85,7 +85,7 @@ export class AtomicSearchInterface {
   /**
    * The severity level of the messages to log in the console.
    */
-  @Prop() public logLevel?: LogLevel;
+  @Prop({reflect: true}) public logLevel?: LogLevel;
 
   /**
    * The search interface i18next instance.
@@ -105,12 +105,12 @@ export class AtomicSearchInterface {
   /**
    * Whether the state should be reflected in the URL parameters.
    */
-  @Prop() public reflectStateInUrl = true;
+  @Prop({reflect: true}) public reflectStateInUrl = true;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
    */
-  @Prop() public scrollContainer = 'atomic-search-interface';
+  @Prop({reflect: true}) public scrollContainer = 'atomic-search-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -118,7 +118,7 @@ export class AtomicSearchInterface {
    * @example /mypublicpath/languages
    *
    */
-  @Prop() public languageAssetsPath = './lang';
+  @Prop({reflect: true}) public languageAssetsPath = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -126,7 +126,7 @@ export class AtomicSearchInterface {
    * @example /mypublicpath/icons
    *
    */
-  @Prop() public iconAssetsPath = './assets';
+  @Prop({reflect: true}) public iconAssetsPath = './assets';
 
   public constructor() {
     setCoveoGlobal();
@@ -223,23 +223,16 @@ export class AtomicSearchInterface {
   /**
    * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
-  @Method() public async initialize(options: InitializationOptions) {
-    if (this.engine) {
-      this.engine.logger.warn(
-        'The atomic-search-interface component "initialize" has already been called.',
-        this.host
-      );
-      return;
-    }
-    this.updateIconAssetsPath();
-    this.initEngine(options);
-    await this.initI18n();
-    this.initComponents();
-    this.initSearchStatus();
-    this.initUrlManager();
-    this.initAriaLive();
+  @Method() public initialize(options: InitializationOptions) {
+    return this.internalInitialization(() => this.initEngine(options));
+  }
 
-    this.initialized = true;
+  /**
+   * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
+   *
+   */
+  @Method() public async initializeWithSearchEngine(engine: SearchEngine) {
+    return this.internalInitialization(() => (this.engine = engine));
   }
 
   /**
@@ -419,5 +412,24 @@ export class AtomicSearchInterface {
     return {
       loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
     };
+  }
+
+  private async internalInitialization(initEngine: () => void) {
+    if (this.engine) {
+      this.engine.logger.warn(
+        'The atomic-search-interface component "initialize" has already been called.',
+        this.host
+      );
+      return;
+    }
+    this.updateIconAssetsPath();
+    initEngine();
+    await this.initI18n();
+    this.initComponents();
+    this.initSearchStatus();
+    this.initUrlManager();
+    this.initAriaLive();
+
+    this.initialized = true;
   }
 }
