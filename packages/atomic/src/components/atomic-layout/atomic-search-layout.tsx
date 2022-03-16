@@ -18,7 +18,7 @@ export class AtomicSearchLayout {
    */
   @Prop({reflect: true}) public mobileBreakpoint = '1024px';
 
-  public connectedCallback() {
+  public componentDidLoad() {
     const id = this.host.id || randomID('atomic-search-layout-');
     this.host.id = id;
 
