@@ -81,8 +81,6 @@ export const config: Config = {
     }),
     {
       type: 'dist-custom-elements',
-      autoDefineCustomElements: true,
-      includeGlobalScripts: true,
     },
     {
       type: 'dist',

@@ -1,7 +1,5 @@
-import {
-  applyPolyfills,
-  defineCustomElements,
-} from '../node_modules/@coveo/atomic/loader';
+import '@coveo/atomic/dist/atomic/themes/coveo.css';
+import {applyPolyfills, defineCustomElements} from '@coveo/atomic/loader';
 import {createApp, defineCustomElement} from 'vue';
 import App from './App.vue';
 import ResultTextField from './components/ResultTextField.vue';
