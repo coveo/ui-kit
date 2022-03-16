@@ -15,9 +15,14 @@ npm run serve
 
 You can either install the npm package or add it to your page via CDN. The configuration below is the same for both, however the usage differs slightly.
 
-You might have a preference, or need to use one or the other based on how your project is built, however there is one case where you will need to use the CDN, and that is if your project uses [Vite](https://vitejs.dev/) - like projects created using this official [Vue.js tutorial](https://vuejs.org/guide/quick-start.html#with-build-tools). This is due to an issue with Stenciljs detailed [here](https://github.com/ionic-team/stencil/issues/3195)
+If you are using the npm package and seeing the warning bellow, you might want to switch to using the CDN, as there is currently [a small issue](https://github.com/ionic-team/stencil/issues/3195) with Stencil and Vite. This shouldn't affect the application however, and you can suppress the warning if you prefer.
 
-Usage for both is explained in separate sections in this file.
+```txt
+The above dynamic import cannot be analyzed by vite.
+See https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations for supported dynamic import formats. If this is intended to be left as-is, you can use the /* @vite-ignore */ comment inside the import() call to suppress this warning.
+```
+
+Usage for both the npm package and CDN are explained in separate sections further in this file.
 
 ## Configuration
 
@@ -58,13 +63,14 @@ npm install --save-dev html-loader
 ## Using the `@coveo/atomic` npm package
 
 ### Add dependencies
-Install `@coveo/atomic` with the command
+
+Install `@coveo/atomic`
 
 ```sh
 npm install --save @coveo/atomic
 ```
 
-Install `ncp`:
+Install `ncp`
 
 ```sh
 npm install --save-dev ncp
@@ -90,7 +96,7 @@ scripts: {
 
 The atomic package allows you to customise your components by defining CSS variables in your own stylesheet - you can read about that [here](https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/).
 
-It also offers you a default theme that you can use as is or build upon. Those styles live in `@coveo/atomic/dist/atomic/themes/coveo.css` and you can import them in your entry file like below.
+It also offers you a default theme that you can use as is or build upon. Those styles live in `@coveo/atomic/dist/atomic/themes/coveo.css` and you can import them in your entry js file like below.
 
 
 ```ts
@@ -109,11 +115,9 @@ createApp(App).mount('#app');
 
 ## Using the CDN
 
-> **Note:** If you are trying to use `@coveo/atomic` in a project that runs on [vite](https://vitejs.dev/), as per [this tutorial](https://vuejs.org/guide/quick-start.html#with-build-tools), you might need to [import atomic via cdn](https://vuejs.org/guide/quick-start.html#with-build-tools), as currently there are issues setting up stencils projects using this build tool. In this case, you won't need to add the assets as they will already be available.
+Follow the instructions [here](https://docs.coveo.com/en/atomic/latest/usage/#cdn) to add the CDN script to your entry html file. The script will initialize your components, avoiding the need to manually do it like in the npm package usage above. You will also not need to copy any assets over.
 
-&nbsp;
-
-&nbsp;
+## Initializing your search interface
 
 After you render your search interface, make sure to initialize it
 
@@ -143,8 +147,8 @@ onMounted(initInterface);
 
 As you are aware, Vue treats the `<template>` tag as a container for Vue components and therefore doesn't render it to the page. This poses an obstacle for working with the `<atomic-result-template>`, which expects a native `<template>` that it will then use to create each result element. In order for this to work, your result templates will need to live in an html file, like in this example's `src/templates/result-template.html` and then imported and used like below
 
-```js
-// .vue component
+```html
+<!-- .vue component -->
 <script setup lang="ts">
 import resultTemplate from '../templates/result-template.html';
 </script>
@@ -157,16 +161,71 @@ import resultTemplate from '../templates/result-template.html';
 
 ```
 
-This, of course, has some limitations such as not allowing you to use vue components directly into the template results. To work around that, we can make use of the helpful `defineCustomElement` function provided by Vue, which you can use in your entry file like so
+### Using custom components
+
+Writing your own components to leverage Vue components should be as straightforward as using the atomic components on any other page. However, it becomes a little bit trickier when you want to use a custom Vue component inside your result templates which, as shown above, need to be passed down as raw html.
+
+For example, in this project we defined the simple `ResultTextField` component, which takes a `label` and a `field` as `props` and render some atomic components
+
+```html
+<!-- ResultTextField.vue -->
+<script setup lang="ts">
+const props = defineProps({
+  label: String,
+  field: String,
+});
+</script>
+
+<template>
+  <atomic-text :value="props.label"></atomic-text>:
+  <atomic-result-text :field="props.field"></atomic-result-text>
+</template>
+
+```
+
+If you try to use this component in an html template like the snippet below and then try to use in in the component below it, Vue will not attempt to render it, as it expects onli native html to be passed via the `v-html` directive.
+
+```html
+<!-- templates/result-template.html -->
+<template>
+  <atomic-result-fields-list>
+  <atomic-field-condition class="field" if-defined="cat_platform">
+    <result-text-field label="Platform" field="cat_platform"></result-text-field>
+  </atomic-field-condition>
+  <atomic-field-condition class="field" if-defined="cat_condition">
+    <result-text-field label="Condition" field="cat_condition"></result-text-field>
+  </atomic-field-condition>
+  <atomic-field-condition class="field" if-defined="cat_categories">
+    <result-text-field label="Tags" field="cat_categories"></result-text-field>
+  </atomic-field-condition>
+</atomic-result-fields-list>
+</template>
+```
+
+```html
+ <!-- .vue component -->
+<script setup lang="ts">
+import resultTemplate from '../templates/result-template.html';
+</script>
+
+<template>
+    <atomic-result-list>
+      <atomic-result-template v-html="resultTemplate"></atomic-result-template>
+    </atomic-result-list>
+</template>
+
+```
+
+The solution here is to import your component and define it as a custom element in the browser. In your entry js file, make sure to define your element with the vue helper function and then define it in the browser with the native `customElements.define` function. By doing this, the snippets above will work and you can use your Vue components in html templates.
 
 ```js
+// handy helper function that transforms a vue component into something the browser can use
 import {defineCustomElement} from 'vue';
 // custom component that you want to use inside your html template
 import ResultTextField from './components/ResultTextField.vue';
 
 const resultTextField = defineCustomElement(ResultTextField);
+
 // `customElements.define` is native to the browser
 customElements.define('result-text-field', resultTextField);
 ```
-
-That's enough for you to be able to use a `result-text-field` component and give it props in your html result template.
