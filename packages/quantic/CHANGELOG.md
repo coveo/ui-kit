@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.12.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.12.0...@coveo/quantic@1.12.1) (2022-03-16)
+
+
+### Bug Fixes
+
+* **quantic:** persisting case classification values ([#1813](https://github.com/coveo/ui-kit/issues/1813)) ([7c6e7dd](https://github.com/coveo/ui-kit/commit/7c6e7dd6d353a8ae8d72e04e20e835748d4ee577))
+
+
+
+
+
 # [1.12.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.11.5...@coveo/quantic@1.12.0) (2022-03-16)
 
 

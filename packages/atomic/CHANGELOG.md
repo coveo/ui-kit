@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.35.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.3...@coveo/atomic@1.35.0) (2022-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** make layout & refine modal compatible with Stencil's JSX ([#1817](https://github.com/coveo/ui-kit/issues/1817)) ([7c35fd6](https://github.com/coveo/ui-kit/commit/7c35fd6b23e3d37ab0cd9f4579dc1a82fe3ba55d))
+
+
+### Features
+
+* **atomic:** added dependsOn ([#1786](https://github.com/coveo/ui-kit/issues/1786)) ([3444b96](https://github.com/coveo/ui-kit/commit/3444b961d430a4157eb13a9b42a0738cef4fee06))
+
+
+
+
+
 ## [1.34.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.2...@coveo/atomic@1.34.3) (2022-03-16)
 
 
