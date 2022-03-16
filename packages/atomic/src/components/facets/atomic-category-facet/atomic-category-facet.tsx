@@ -9,6 +9,8 @@ import {
   SearchStatusState,
   buildSearchStatus,
   CategoryFacetValue,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -26,7 +28,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {
   getFieldCaptions,
   getFieldValueCaption,
@@ -42,6 +44,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -93,6 +96,7 @@ export class AtomicCategoryFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
+  private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -161,6 +165,27 @@ export class AtomicCategoryFacet
   @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-category-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-category-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-category-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-category-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
+
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
 
@@ -173,7 +198,12 @@ export class AtomicCategoryFacet
   @FocusTarget()
   private activeValueFocus!: FocusTargetController;
 
+  private validateProps() {
+    validateDependsOn(this.dependsOn);
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
       facetId: this.facetId,
@@ -196,6 +226,14 @@ export class AtomicCategoryFacet
       facetId: this.facetId!,
       element: this.host,
     });
+    this.inititalizeDependenciesManager();
+  }
+
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   public componentShouldUpdate(
@@ -215,6 +253,16 @@ export class AtomicCategoryFacet
 
   private get hasParents() {
     return !!this.facetState.parents.length;
+  }
+
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
+      }
+    );
   }
 
   private renderHeader() {
@@ -464,7 +512,7 @@ export class AtomicCategoryFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
 

@@ -8,49 +8,84 @@ export const BreadcrumbSelectors = {
 
 export const categoryFacetComponent = 'atomic-category-facet';
 export const CategoryFacetSelectors = {
-  shadow: () => cy.get(categoryFacetComponent).shadow(),
-  wrapper: () => CategoryFacetSelectors.shadow().find('[part="facet"]'),
-  labelButton: () =>
-    CategoryFacetSelectors.shadow().find('[part="label-button"]'),
-  placeholder: () =>
-    CategoryFacetSelectors.shadow().find('[part="placeholder"]'),
-  clearButton: () =>
-    CategoryFacetSelectors.shadow().find('[part="clear-button"]'),
-  allCategoriesButton: () =>
-    CategoryFacetSelectors.shadow().find('[part="all-categories-button"]'),
-  valueLabel: () =>
-    CategoryFacetSelectors.shadow().find('[part="value-label"]'),
-  values: () => CategoryFacetSelectors.shadow().find('[part="values"]'),
-  childValue: () => CategoryFacetSelectors.shadow().find('[part="value-link"]'),
-  childValueLabel: () =>
-    CategoryFacetSelectors.childValue().find('[part="value-label"]'),
-  valueCount: () =>
-    CategoryFacetSelectors.shadow().find('[part="value-count"]'),
-  parentValue: () =>
-    CategoryFacetSelectors.shadow().find('[part="parent-button"]'),
-  activeParentValue: () =>
-    CategoryFacetSelectors.shadow().find('[part="active-parent"]'),
-  activeParentValueWithText: (text: string) =>
-    CategoryFacetSelectors.shadow().find(
-      `[part="active-parent"]:contains("${text}")`
-    ),
-  showMoreButton: () =>
-    CategoryFacetSelectors.shadow().find('[part="show-more"]'),
-  showLessButton: () =>
-    CategoryFacetSelectors.shadow().find('[part="show-less"]'),
-  searchInput: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-input"]'),
-  searchClearButton: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-clear-button"]'),
-  searchResults: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-results"]'),
-  searchResult: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-result"]'),
-  searchResultPath: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-result-path"]'),
-  moreMatches: () =>
-    CategoryFacetSelectors.shadow().find('[part="more-matches"]'),
-  noMatches: () => CategoryFacetSelectors.shadow().find('[part="no-matches"]'),
-  valueHighlight: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-highlight"]'),
+  withId(id: string) {
+    return {
+      ...this,
+      shadow() {
+        return cy.get(`${categoryFacetComponent}[facet-id="${id}"]`).shadow();
+      },
+    };
+  },
+  shadow() {
+    return cy.get(categoryFacetComponent).shadow();
+  },
+  wrapper() {
+    return this.shadow().find('[part="facet"]');
+  },
+  labelButton() {
+    return this.shadow().find('[part="label-button"]');
+  },
+  placeholder() {
+    return this.shadow().find('[part="placeholder"]');
+  },
+  clearButton() {
+    return this.shadow().find('[part="clear-button"]');
+  },
+  allCategoriesButton() {
+    return this.shadow().find('[part="all-categories-button"]');
+  },
+  valueLabel() {
+    return this.shadow().find('[part="value-label"]');
+  },
+  values() {
+    return this.shadow().find('[part="values"]');
+  },
+  childValue() {
+    return this.shadow().find('[part="value-link"]');
+  },
+  childValueLabel() {
+    return this.childValue().find('[part="value-label"]');
+  },
+  valueCount() {
+    return this.shadow().find('[part="value-count"]');
+  },
+  parentValue() {
+    return this.shadow().find('[part="parent-button"]');
+  },
+  activeParentValue() {
+    return this.shadow().find('[part="active-parent"]');
+  },
+  activeParentValueWithText(text: string) {
+    return this.shadow().find(`[part="active-parent"]:contains("${text}")`);
+  },
+  showMoreButton() {
+    return this.shadow().find('[part="show-more"]');
+  },
+  showLessButton() {
+    return this.shadow().find('[part="show-less"]');
+  },
+  searchInput() {
+    return this.shadow().find('[part="search-input"]');
+  },
+  searchClearButton() {
+    return this.shadow().find('[part="search-clear-button"]');
+  },
+  searchResults() {
+    return this.shadow().find('[part="search-results"]');
+  },
+  searchResult() {
+    return this.shadow().find('[part="search-result"]');
+  },
+  searchResultPath() {
+    return this.shadow().find('[part="search-result-path"]');
+  },
+  moreMatches() {
+    return this.shadow().find('[part="more-matches"]');
+  },
+  noMatches() {
+    return this.shadow().find('[part="no-matches"]');
+  },
+  valueHighlight() {
+    return this.shadow().find('[part="search-highlight"]');
+  },
 };

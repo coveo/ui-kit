@@ -984,4 +984,77 @@ describe('Facet v1 Test Suites', () => {
       });
     });
   });
+
+  describe('with depends-on', () => {
+    describe('as a dependent & parent', () => {
+      const facetId = 'abc';
+      const parentFacetId = 'def';
+      const parentField = 'filetype';
+      const expectedValue = 'txt';
+      before(() => {
+        new TestFixture()
+          .with(
+            addFacet({
+              'facet-id': facetId,
+              field,
+              [`depends-on-${parentFacetId}`]: expectedValue,
+            })
+          )
+          .with(addFacet({'facet-id': parentFacetId, field: parentField}))
+          .init();
+      });
+
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(facetId),
+        false
+      );
+      CommonFacetAssertions.assertDisplayFacet(
+        FacetSelectors.withId(parentFacetId),
+        true
+      );
+
+      describe('when the dependency is met', () => {
+        before(() => {
+          typeFacetSearchQuery(
+            FacetSelectors.withId(parentFacetId),
+            expectedValue,
+            true
+          );
+          selectIdleCheckboxValueAt(FacetSelectors.withId(parentFacetId), 0);
+        });
+
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(facetId),
+          true
+        );
+        CommonFacetAssertions.assertDisplayFacet(
+          FacetSelectors.withId(parentFacetId),
+          true
+        );
+      });
+    });
+
+    describe('with two dependencies', () => {
+      before(() => {
+        new TestFixture()
+          .with(addFacet({'facet-id': 'abc', field: 'objecttype'}))
+          .with(addFacet({'facet-id': 'def', field: 'filetype'}))
+          .with(
+            addFacet({
+              'facet-id': 'ghi',
+              field,
+              'depends-on-objecttype': '',
+              'depends-on-filetype': 'pdf',
+            })
+          )
+          .init();
+      });
+
+      CommonAssertions.assertConsoleError(true);
+      CommonAssertions.assertContainsComponentError(
+        FacetSelectors.withId('ghi'),
+        true
+      );
+    });
+  });
 });

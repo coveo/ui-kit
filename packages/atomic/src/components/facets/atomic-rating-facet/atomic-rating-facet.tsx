@@ -10,6 +10,8 @@ import {
   NumericFacetValue,
   NumericRangeRequest,
   buildNumericRange,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -23,7 +25,7 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
@@ -32,6 +34,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -67,6 +70,7 @@ export class AtomicRatingFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
+  private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -138,6 +142,27 @@ export class AtomicRatingFacet
    */
   @Prop({reflect: true}) public injectionDepth = 1000;
 
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-rating-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-rating-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-rating-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-rating-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
+
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
@@ -147,12 +172,14 @@ export class AtomicRatingFacet
     }).validate({
       displayValuesAs: this.displayValuesAs,
     });
+    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
+    this.inititalizeDependenciesManager();
   }
 
   private initializeFacet() {
@@ -177,6 +204,13 @@ export class AtomicRatingFacet
     });
   }
 
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
+  }
+
   private get scaleFactor() {
     return this.maxValueInIndex / this.numberOfIntervals;
   }
@@ -184,6 +218,16 @@ export class AtomicRatingFacet
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
+  }
+
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
+      }
+    );
   }
 
   private generateCurrentValues() {
@@ -293,7 +337,7 @@ export class AtomicRatingFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
 

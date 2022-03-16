@@ -9,6 +9,8 @@ import {
   SearchStatusState,
   buildSearchStatus,
   FacetValue,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,7 +30,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {
   getFieldCaptions,
@@ -40,6 +42,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -85,6 +88,7 @@ export class AtomicColorFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
+  private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -144,6 +148,27 @@ export class AtomicColorFacet
   @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-color-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-color-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-color-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-color-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
+
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
 
@@ -153,7 +178,12 @@ export class AtomicColorFacet
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
+  private validateProps() {
+    validateDependsOn(this.dependsOn);
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
       facetId: this.facetId,
@@ -171,6 +201,14 @@ export class AtomicColorFacet
       facetId: this.facetId!,
       element: this.host,
     });
+    this.inititalizeDependenciesManager();
+  }
+
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   public componentShouldUpdate(
@@ -191,6 +229,16 @@ export class AtomicColorFacet
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
+  }
+
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
+      }
+    );
   }
 
   private renderHeader() {
@@ -360,7 +408,7 @@ export class AtomicColorFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
 
