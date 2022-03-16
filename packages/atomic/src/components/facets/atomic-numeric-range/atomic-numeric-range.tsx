@@ -13,17 +13,17 @@ export class AtomicNumericRange {
   /**
    * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
    */
-  @Prop() public label?: string;
+  @Prop({reflect: true}) public label?: string;
   /**
    * The starting value for the numeric range.
    */
-  @Prop() public start!: number;
+  @Prop({reflect: true}) public start!: number;
   /**
    * The ending value for the numeric range.
    */
-  @Prop() public end!: number;
+  @Prop({reflect: true}) public end!: number;
   /**
    * Specifies whether the end value should be included in the range.
    */
-  @Prop() public endInclusive = false;
+  @Prop({reflect: true}) public endInclusive = false;
 }

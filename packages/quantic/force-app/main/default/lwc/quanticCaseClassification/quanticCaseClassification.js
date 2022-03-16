@@ -185,27 +185,16 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   updateFieldState() {
-    if (this.maxSuggestions > 0 && !this.lockedState) {
-      this.previousClassifications = this.classifications;
-      this.classifications =
-        this.field.state.suggestions.slice(
-          0,
-          Math.max(Number(this.maxSuggestions), 0)
-        ) ?? [];
+    if (!this.lockedState) {
       this.loading = this.field.state.loading;
-      if (this.newSuggestionsReceived) {
-        const value = this.isAutoSelectionNeeded
+      const hasNewSuggestions =
+        this.maxSuggestions > 0 && this.newSuggestionsReceived;
+      const value =
+        hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value
           : this.field.state.value;
-        if (!this.isSuggestion(value) && this.isMoreOptionsVisible) {
-          this.hideSuggestions = true;
-          this.showSelect();
-        } else {
-          this.hideSuggestions = false;
-          this.hideSelect();
-        }
-        this.setFieldValue(value, true);
-      }
+      this.setFieldValue(value, hasNewSuggestions);
+      this.updateSuggestionsVisibility();
     }
   }
 
@@ -356,12 +345,12 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectChange(event) {
+    this.lockedState = true;
     const value = event.target.value;
     this.setFieldValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
       this.animateHideSuggestions();
     }
-    this.lockedState = true;
   }
 
   /**
@@ -407,6 +396,12 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {boolean}
    */
   get newSuggestionsReceived() {
+    this.previousClassifications = this.classifications;
+    this.classifications =
+      this.field.state.suggestions.slice(
+        0,
+        Math.max(Number(this.maxSuggestions), 0)
+      ) ?? [];
     return (
       this.classifications.length &&
       JSON.stringify(this.classifications) !==
@@ -424,12 +419,34 @@ export default class QuanticCaseClassification extends LightningElement {
     );
   }
 
+  /**
+   * Logs warning message when a field receives an invalid suggestion value.
+   * @returns {void}
+   */
   logInvalidFieldValueWarningOnce(value) {
     if (!this.loggedInvalidFieldValueWarnings[value]) {
       this.loggedInvalidFieldValueWarnings[value] = true;
       console.warn(
         `The value "${value}" was not found among all the options retrieved from Salesforce. Ensure that the Coveo field name "${this.coveoFieldName}" corresponds to the correct Salesforce field name "${this.sfFieldApiName}".`
       );
+    }
+  }
+
+  /**
+   * Updates the visibility of the suggestions.
+   * @returns {void}
+   */
+  updateSuggestionsVisibility() {
+    if (
+      this._value &&
+      !this.isSuggestion(this._value) &&
+      this.isMoreOptionsVisible
+    ) {
+      this.hideSuggestions = true;
+      this.showSelect();
+    } else {
+      this.hideSuggestions = false;
+      this.hideSelect();
     }
   }
 }

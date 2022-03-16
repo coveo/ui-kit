@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.34.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.2...@coveo/atomic@1.34.3) (2022-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** temp fix for outline rings ([#1826](https://github.com/coveo/ui-kit/issues/1826)) ([917a007](https://github.com/coveo/ui-kit/commit/917a007908a0913fe8fe3f087dcacc56272191f2))
+
+
+
+
+
+## [1.34.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.1...@coveo/atomic@1.34.2) (2022-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** moved "view results" button on Android above the navigation bar ([#1818](https://github.com/coveo/ui-kit/issues/1818)) ([7cd0b71](https://github.com/coveo/ui-kit/commit/7cd0b7118223a6501238520b54a5b65dfc4bd329))
+* **atomic:** reflect all relevant props ([#1816](https://github.com/coveo/ui-kit/issues/1816)) ([4100e43](https://github.com/coveo/ui-kit/commit/4100e436d7a31da3a7502c2933d8ccbf6fc4a351))
+
+
+
+
+
 ## [1.34.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.0...@coveo/atomic@1.34.1) (2022-03-11)
 
 **Note:** Version bump only for package @coveo/atomic

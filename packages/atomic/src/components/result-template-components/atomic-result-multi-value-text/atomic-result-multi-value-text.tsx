@@ -40,18 +40,18 @@ export class AtomicResultMultiText {
    * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
    * Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
 
   /**
    * The maximum number of field values to display.
    * If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
    */
-  @Prop() public maxValuesToDisplay = 3;
+  @Prop({reflect: true}) public maxValuesToDisplay = 3;
 
   /**
    * The delimiter used to separate values when the field isn't indexed as a multi value field.
    */
-  @Prop() public delimiter: string | null = null;
+  @Prop({reflect: true}) public delimiter: string | null = null;
 
   private sortedValues: string[] | null = null;
 

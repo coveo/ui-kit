@@ -23,17 +23,17 @@ export class AtomicFieldCondition {
   /**
    * Verifies wheter the specified fields are defined.
    */
-  @Prop() ifDefined?: string;
+  @Prop({reflect: true}) ifDefined?: string;
   /**
    * Verifies whether the specified fields are not defined.
    */
-  @Prop() ifNotDefined?: string;
+  @Prop({reflect: true}) ifNotDefined?: string;
   /**
    * A list of conditions that must be fulfilled for this template to be selected.
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
-  @MapProp() mustMatch: Record<string, string[]> = {};
-  @MapProp() mustNotMatch: Record<string, string[]> = {};
+  @MapProp({splitValues: true}) mustMatch: Record<string, string[]> = {};
+  @MapProp({splitValues: true}) mustNotMatch: Record<string, string[]> = {};
 
   private shouldBeRemoved = false;
 

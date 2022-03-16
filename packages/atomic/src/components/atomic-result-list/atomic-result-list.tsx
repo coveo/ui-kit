@@ -84,23 +84,23 @@ export class AtomicResultList implements InitializableComponent {
    * A list of non-default fields to include in the query results, separated by commas.
    * The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
    */
-  @Prop() public fieldsToInclude = '';
+  @Prop({reflect: true}) public fieldsToInclude = '';
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  @Prop() display: ResultDisplayLayout = 'list';
+  @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop() density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop() imageSize?: ResultDisplayImageSize;
+  @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
   /**
    * @deprecated use `imageSize` instead.
    */
-  @Prop() image: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
 
   private renderingFunction?: (result: Result) => HTMLElement = undefined;
 

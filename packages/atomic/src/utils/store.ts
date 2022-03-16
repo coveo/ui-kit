@@ -57,8 +57,21 @@ export const registerFacetToStore = <T extends FacetType, U extends string>(
   store.state.facetElements.push(data.element);
 };
 
+// https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
+function isInDocument(element: Node) {
+  let currentElement = element;
+  while (currentElement && currentElement.parentNode) {
+    if (currentElement.parentNode === document) {
+      return true;
+    } else if (currentElement.parentNode instanceof ShadowRoot) {
+      currentElement = currentElement.parentNode.host;
+    } else {
+      currentElement = currentElement.parentNode;
+    }
+  }
+  return false;
+}
+
 export const getFacetElements = (store: ObservableMap<AtomicStore>) => {
-  return store.state.facetElements.filter((element) =>
-    document.contains(element)
-  );
+  return store.state.facetElements.filter((element) => isInDocument(element));
 };

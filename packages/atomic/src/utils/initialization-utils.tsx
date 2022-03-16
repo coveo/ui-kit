@@ -154,8 +154,8 @@ export function InitializeBindings() {
       return componentWillLoad && componentWillLoad.call(this);
     };
 
-    let hasRendered = false;
-    let hasLoaded = false;
+    component['hasRendered'] = false;
+    component['hasLoaded'] = false;
 
     component.render = function () {
       if (this.error) {
@@ -171,24 +171,26 @@ export function InitializeBindings() {
         return <Hidden></Hidden>;
       }
 
-      hasRendered = true;
+      component['hasRendered'] = true;
       return render && render.call(this);
     };
 
     component.disconnectedCallback = function () {
+      component['hasRendered'] = false;
+      component['hasLoaded'] = false;
       unsubscribeLanguage();
       disconnectedCallback && disconnectedCallback.call(this);
     };
 
     component.componentDidRender = function () {
-      if (!hasRendered) {
+      if (!component['hasRendered']) {
         return;
       }
 
       componentDidRender && componentDidRender.call(this);
-      if (!hasLoaded) {
+      if (!component['hasLoaded']) {
         componentDidLoad && componentDidLoad.call(this);
-        hasLoaded = true;
+        component['hasLoaded'] = true;
       }
     };
 

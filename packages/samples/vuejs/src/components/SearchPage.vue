@@ -4,17 +4,6 @@ import TopBar from './TopBar.vue';
 import SearchPageFacets from './SearchPageFacets.vue';
 import ResultsList from './ResultsList.vue';
 
-// TODO: get these types from atomic package
-interface InitializationOptions {
-  organizationId: string;
-  accessToken: string;
-}
-
-interface HTMLAtomicSearchInterfaceElement extends HTMLElement {
-  initialize: (options: InitializationOptions) => Promise<void>;
-  executeFirstSearch(): Promise<void>;
-}
-
 async function initInterface() {
   await customElements.whenDefined('atomic-search-interface');
   const searchInterface = document.querySelector(

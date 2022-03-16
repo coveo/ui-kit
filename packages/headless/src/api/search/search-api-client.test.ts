@@ -187,6 +187,7 @@ describe('search api client', () => {
           pipeline: state.pipeline,
           searchHub: state.searchHub,
           visitorId: expect.any(String),
+          actionsHistory: expect.any(Array),
         },
         preprocessRequest: NoopPreprocessRequest,
       };

@@ -39,7 +39,7 @@ export class AtomicIcon implements InitializableComponent {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop() icon!: string;
+  @Prop({reflect: true}) icon!: string;
 
   public error!: Error;
   @State() private svg: string | null = null;

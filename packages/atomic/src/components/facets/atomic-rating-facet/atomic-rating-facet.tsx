@@ -10,6 +10,8 @@ import {
   NumericFacetValue,
   NumericRangeRequest,
   buildNumericRange,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -23,7 +25,7 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import Star from '../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
 import {registerFacetToStore} from '../../../utils/store';
@@ -32,6 +34,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -67,6 +70,7 @@ export class AtomicRatingFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
+  private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -85,28 +89,29 @@ export class AtomicRatingFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
    */
-  @Prop() public numberOfIntervals = 5;
+  @Prop({reflect: true}) public numberOfIntervals = 5;
   /**
    * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
    */
-  @Prop() public maxValueInIndex = this.numberOfIntervals;
+  @Prop({reflect: true}) public maxValueInIndex = this.numberOfIntervals;
   /**
    * The minimum value of the field.
    */
-  @Prop() public minValueInIndex = 1;
+  @Prop({reflect: true}) public minValueInIndex = 1;
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
+    'checkbox';
   /**
    * The SVG icon to use to display the rating.
    *
@@ -121,7 +126,7 @@ export class AtomicRatingFacet
    * - `--atomic-rating-facet-icon-inactive-color`
 
    */
-  @Prop() public icon = Star;
+  @Prop({reflect: true}) public icon = Star;
   /**
    * Specifies if the facet is collapsed.
    */
@@ -129,13 +134,34 @@ export class AtomicRatingFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
+
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-rating-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-rating-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-rating-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-rating-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -146,12 +172,14 @@ export class AtomicRatingFacet
     }).validate({
       displayValuesAs: this.displayValuesAs,
     });
+    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.initializeFacet();
+    this.inititalizeDependenciesManager();
   }
 
   private initializeFacet() {
@@ -176,6 +204,13 @@ export class AtomicRatingFacet
     });
   }
 
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
+  }
+
   private get scaleFactor() {
     return this.maxValueInIndex / this.numberOfIntervals;
   }
@@ -183,6 +218,16 @@ export class AtomicRatingFacet
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
+  }
+
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
+      }
+    );
   }
 
   private generateCurrentValues() {
@@ -292,7 +337,7 @@ export class AtomicRatingFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
 
