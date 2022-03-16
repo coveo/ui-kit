@@ -1,7 +1,7 @@
 import {
   SearchStatus,
   SearchStatusState,
-  AnyFacetValueCondition,
+  AnyFacetValuesCondition,
   AnyFacetValueRequest,
   FacetValueRequest,
   CategoryFacetValueRequest,
@@ -64,7 +64,7 @@ function getSelectedCategoryFacetValueRequest(
 
 export function parseDependsOn(
   dependsOn: Record<string, string>
-): AnyFacetValueCondition<AnyFacetValueRequest>[] {
+): AnyFacetValuesCondition<AnyFacetValueRequest>[] {
   return Object.entries(dependsOn).map(([parentFacetId, expectedValue]) => {
     return {
       parentFacetId,

@@ -27,7 +27,7 @@ const Examples = {
     description:
       'A dependency where the dependent facet only appears if a precise value is selected (filetype == doc)',
   },
-  Complexconditions: {
+  ComplexDependencies: {
     name: 'Complex dependency (multiple level)',
     description:
       'A dependency with multiple level of hierarchy, where a grandparent facet controls the appearance of multiple parent facet, each with their own dependent facet',
