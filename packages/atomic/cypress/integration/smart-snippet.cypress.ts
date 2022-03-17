@@ -52,16 +52,16 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture().with(addSmartSnippet()).init();
     });
 
-    it('should fallback to a span for the accessibility heading', () => {
+    it('should fallback to a div for the accessibility heading', () => {
       SmartSnippetSelectors.accessibilityHeading().should(
         'have.prop',
         'tagName',
-        'SPAN'
+        'DIV'
       );
     });
 
-    it('should fallback to a span for the question', () => {
-      SmartSnippetSelectors.question().should('have.prop', 'tagName', 'SPAN');
+    it('should fallback to a div for the question', () => {
+      SmartSnippetSelectors.question().should('have.prop', 'tagName', 'DIV');
     });
 
     it('render the correct question', () => {
