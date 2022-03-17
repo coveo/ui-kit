@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const {build} = require('esbuild');
 const alias = require('esbuild-plugin-alias');
-const {umdWrapper} = require('../../scripts/bundle/umd');
+const {umdFooter} = require('../../scripts/bundle/umd');
 const {apacheLicense} = require('../../scripts/license/apache');
 
 const devMode = process.argv[2] === 'dev';
@@ -81,6 +81,7 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
     entryPoints: [entryPoint],
     outfile,
     format: 'esm',
+    target: 'es6',
   });
 });
 
@@ -90,17 +91,15 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const outfile = `${outDir}/headless.js`;
 
   const globalName = getUmdGlobalName(useCase);
-  const umd = umdWrapper(globalName);
+  const footer = umdFooter(globalName);
 
   return buildBrowserConfig({
     entryPoints: [entryPoint],
     outfile,
-    format: 'cjs',
-    banner: {
-      js: `${base.banner.js}\n${umd.header}`,
-    },
+    format: 'iife',
+    globalName: globalName,
     footer: {
-      js: umd.footer,
+      js: footer,
     },
   });
 });
