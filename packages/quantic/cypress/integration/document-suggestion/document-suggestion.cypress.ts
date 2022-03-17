@@ -19,7 +19,7 @@ import {
 interface DocumentSuggestionOptions {
   maxDocuments: number;
   fetchOnInit: boolean;
-  showQuickview: boolean;
+  hideQuickview: boolean;
   numberOfAutoOpenedDocuments: number;
 }
 
@@ -66,6 +66,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(defaultMaxDocuments);
         Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayQuickviewButton(true, 0);
       });
 
       scope('when clicking on a document suggestion', () => {
@@ -75,6 +76,7 @@ describe('quantic-document-suggestion', () => {
         Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
+        Expect.displayQuickviewButton(true, clickIndex);
       });
 
       scope('when rating a document suggestion', () => {
@@ -82,6 +84,15 @@ describe('quantic-document-suggestion', () => {
 
         sendRating(clickIndex);
         Expect.logRatingSuggestion(clickIndex, allDocuments);
+      });
+
+      scope('when opening a quickview of a document suggestion', () => {
+        const clickIndex = 0;
+
+        Actions.openQuickview(clickIndex);
+        cy.wait(InterceptAliases.ResultHtml);
+        Expect.logClickingSuggestion(clickIndex, allDocuments, true);
+        Actions.closeQuickview();
       });
     });
   });
@@ -96,6 +107,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(defaultMaxDocuments);
         Expect.displayAccordionSectionContent(true, 0);
+        Expect.displayQuickviewButton(true, 0);
       });
 
       scope('when clicking on a document suggestion', () => {
@@ -105,6 +117,7 @@ describe('quantic-document-suggestion', () => {
         Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
+        Expect.displayQuickviewButton(true, clickIndex);
       });
 
       scope('when rating a document suggestion', () => {
@@ -137,7 +150,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(maxDocuments);
         Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviewButton(true, 0);
       });
 
       scope('when clicking on a document suggestion', () => {
@@ -147,7 +160,7 @@ describe('quantic-document-suggestion', () => {
         Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviewButton(true, clickIndex);
       });
 
       scope('when rating a document suggestion', () => {
@@ -181,8 +194,8 @@ describe('quantic-document-suggestion', () => {
         Expect.numberOfSuggestions(defaultMaxDocuments);
         for (let i = 0; i < numberOfAutoOpenedDocuments; i++) {
           Expect.displayAccordionSectionContent(true, i);
+          Expect.displayQuickviewButton(true, i);
         }
-        Expect.displayQuickviews(false);
       });
     });
 
@@ -204,8 +217,6 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(defaultMaxDocuments);
         Expect.displayAccordionSectionContent(false, 0);
-
-        Expect.displayQuickviews(false);
       });
     });
   });
@@ -247,8 +258,8 @@ describe('quantic-document-suggestion', () => {
         Expect.numberOfSuggestions(defaultMaxDocuments);
         for (let i = 0; i < defaultMaxDocuments; i++) {
           Expect.displayAccordionSectionContent(true, i);
+          Expect.displayQuickviewButton(true, i);
         }
-        Expect.displayQuickviews(false);
       });
     });
   });
@@ -306,7 +317,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(5);
         Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviews(false);
+        Expect.displayQuickviewButton(true, 0);
       });
     });
   });
@@ -352,10 +363,10 @@ describe('quantic-document-suggestion', () => {
     });
   });
 
-  describe('when showQuickView is set to true', () => {
+  describe('when hideQuickView is set to true', () => {
     it('should render the component and all parts', () => {
       visitDocumentSuggestion({
-        showQuickview: true,
+        hideQuickview: true,
       });
 
       scope('when loading the page', () => {
@@ -371,7 +382,7 @@ describe('quantic-document-suggestion', () => {
         Expect.displayAccordion(true);
         Expect.numberOfSuggestions(defaultMaxDocuments);
         Expect.displayAccordionSectionContent(true, 0);
-        Expect.displayQuickviewButton(true, 0);
+        Expect.displayQuickviews(false);
       });
 
       scope('when clicking on a document suggestion', () => {
@@ -381,8 +392,7 @@ describe('quantic-document-suggestion', () => {
         Expect.logClickingSuggestion(clickIndex, allDocuments);
         Expect.displayAccordionSectionContent(true, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
-        Expect.displayQuickviewButton(true, 0);
-        Expect.displayQuickviewButton(true, 1);
+        Expect.displayQuickviews(false);
       });
 
       scope('when rating a document suggestion', () => {
@@ -390,15 +400,6 @@ describe('quantic-document-suggestion', () => {
 
         sendRating(clickIndex);
         Expect.logRatingSuggestion(clickIndex, allDocuments);
-      });
-
-      scope('when opening a quickview of a document suggestion', () => {
-        const clickIndex = 0;
-
-        Actions.openQuickview(clickIndex);
-        cy.wait(InterceptAliases.ResultHtml);
-        Expect.logClickingSuggestion(clickIndex, allDocuments, true);
-        Actions.closeQuickview();
       });
     });
   });
@@ -431,6 +432,7 @@ describe('quantic-document-suggestion', () => {
         Expect.logClickingSuggestion(clickIndex, similarDocuments);
         Expect.displayAccordionSectionContent(false, 0);
         Expect.displayAccordionSectionContent(true, clickIndex);
+        Expect.displayQuickviewButton(true, clickIndex);
       });
 
       scope('when rating a document suggestion', () => {

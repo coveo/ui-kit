@@ -1,4 +1,4 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -31,12 +31,16 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    */
   @api engineId;
   /**
-   * Whether or not we want to display the quick view for the document suggestions.
-   * @api
-   * @type {boolean}
-   * @defaultValue `false`
+   * @deprecated
    */
   @api showQuickview = false;
+  /**
+ * Whether or not we want to hide the quick view for the document suggestions.
+ * @api
+ * @type {boolean}
+ * @defaultValue `false`
+ */
+  @api hideQuickview = false;
   /**
    * Whether or not we want to fetch suggestions when initializing this component.
    * @api
