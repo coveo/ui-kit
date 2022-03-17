@@ -7,3 +7,21 @@
   --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
   line-height: var(--line-height);
 }
+
+@define-mixin link-style {
+  color: var(--atomic-on-background);
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+    color: var(--atomic-primary);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:visited {
+    color: var(--atomic-visited);
+  }
+}

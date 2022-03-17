@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "dev": "npm run copy:assets && npm run serve",
     "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets public/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang public/lang"

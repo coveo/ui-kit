@@ -1162,6 +1162,27 @@ export class AtomicSearchLayout {
 }
 
 
+export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['headingLevel']
+})
+@Component({
+  selector: 'atomic-smart-snippet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['headingLevel']
+})
+export class AtomicSmartSnippet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicSortDropdown extends Components.AtomicSortDropdown {}
 
 @ProxyCmp({
