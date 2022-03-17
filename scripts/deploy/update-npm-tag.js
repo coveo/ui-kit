@@ -6,7 +6,8 @@ const packageDirs = [
   'auth',
   'bueno',
   'headless',
-  'atomic-react'
+  'atomic-react',
+  'atomic-angular/projects/atomic-angular'
 ];
 
 async function main() {
