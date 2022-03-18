@@ -199,7 +199,7 @@ export const getPageID = () => {
   const lastPageView = actions.reverse().find((action) => {
     return action.name === 'PageView';
   });
-  if (!lastPageView) {
+  if (!lastPageView?.value) {
     return '';
   }
   return lastPageView.value;
