@@ -34,7 +34,7 @@ export default class QuanticDocumentSuggestion extends LightningElement {
    * @deprecated
    */
   @api showQuickview = false;
-  /**
+ /**
  * Whether or not we want to hide the quick view for the document suggestions.
  * @api
  * @type {boolean}
