@@ -197,12 +197,14 @@ export const historyStore = new history.HistoryStore();
 export const getPageID = () => {
   const actions = historyStore.getHistory();
   const lastPageView = actions.reverse().find((action) => {
-    return action.name === 'PageView';
+    return action.name === 'PageView' && action.value;
   });
-  if (!lastPageView?.value) {
+
+  if (!lastPageView) {
     return '';
   }
-  return lastPageView.value;
+
+  return lastPageView.value!;
 };
 
 interface ConfigureCaseAssistAnalyticsOptions {
