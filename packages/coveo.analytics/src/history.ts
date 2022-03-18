@@ -140,7 +140,7 @@ export class HistoryStore {
 
     private stripEmptyQuery(part: HistoryElement) {
         const {name, time, value} = part;
-        if (name && value && name.toLowerCase() === 'query' && value.trim() === '') {
+        if (name && typeof value === 'string' && name.toLowerCase() === 'query' && value.trim() === '') {
             return {name, time};
         }
 
