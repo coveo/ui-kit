@@ -115,6 +115,44 @@ describe('history', () => {
         }
     });
 
+    it('should strip empty query values when calling getHistoryAsync', async () => {
+        data.name = 'Query';
+        data.value = '';
+        const historyElements: history.HistoryElement[] = [data];
+        historyStore.setHistory(historyElements);
+
+        const history = await historyStore.getHistoryAsync();
+        expect(history[0].value).toBeUndefined();
+    });
+
+    it('should strip empty query values when calling getHistory', () => {
+        data.name = 'Query';
+        data.value = '';
+        const historyElements: history.HistoryElement[] = [data];
+        historyStore.setHistory(historyElements);
+
+        const history = historyStore.getHistory();
+        expect(history[0].value).toBeUndefined();
+    });
+
+    it('should strip empty query from new element (addElement)', () => {
+        data.name = 'Query';
+        data.value = '';
+        historyStore.addElement(data);
+
+        const [_, setData] = storageMock.setItem.mock.calls[0];
+        expect(setData).not.toMatch(/"value"/);
+    });
+
+    it('should strip empty query from new element (addElementAsync)', async () => {
+        data.name = 'Query';
+        data.value = '';
+        await historyStore.addElementAsync(data);
+
+        const [_, setData] = storageMock.setItem.mock.calls[0];
+        expect(setData).not.toMatch(/"value"/);
+    });
+
     it('should remove item when cleared', () => {
         historyStore.clear();
 
