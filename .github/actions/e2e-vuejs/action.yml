@@ -17,7 +17,7 @@ runs:
       with:
         working-directory: ./packages/samples/vuejs
         start: npm run dev
-        wait-on: 'http://localhost:8081'
+        wait-on: 'http://localhost:8080'
         install: true
         record: false
     - uses: actions/upload-artifact@v2
