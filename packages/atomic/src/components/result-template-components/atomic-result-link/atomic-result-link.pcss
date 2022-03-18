@@ -1,19 +1,7 @@
+@import '../../../global/mixins.pcss';
+
 atomic-result-link {
   a {
-    color: var(--atomic-on-background);
-
-    &:hover,
-    &:focus-visible {
-      text-decoration: underline;
-      color: var(--atomic-primary);
-    }
-
-    &:focus {
-      outline: none;
-    }
-
-    &:visited {
-      color: var(--atomic-visited);
-    }
+    @mixin link-style;
   }
 }
