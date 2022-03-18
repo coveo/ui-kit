@@ -16,7 +16,7 @@ export class HistoryStore {
      */
     addElement(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
-        this.cropQueryElement(elem);
+        elem = this.cropQueryElement(this.stripEmptyQuery(elem));
         let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
@@ -29,7 +29,7 @@ export class HistoryStore {
 
     async addElementAsync(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
-        this.cropQueryElement(elem);
+        elem = this.cropQueryElement(this.stripEmptyQuery(elem));
         let currentHistory = await this.getHistoryWithInternalTimeAsync();
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
@@ -45,12 +45,12 @@ export class HistoryStore {
      */
     getHistory(): HistoryElement[] {
         const history = this.getHistoryWithInternalTime();
-        return this.stripInternalTime(history);
+        return this.stripEmptyQueries(this.stripInternalTime(history));
     }
 
     async getHistoryAsync(): Promise<HistoryElement[]> {
         const history = await this.getHistoryWithInternalTimeAsync();
-        return this.stripInternalTime(history);
+        return this.stripEmptyQueries(this.stripInternalTime(history));
     }
 
     private getHistoryWithInternalTime(): HistoryElement[] {
@@ -114,10 +114,12 @@ export class HistoryStore {
         return null;
     }
 
-    private cropQueryElement(elem: HistoryElement) {
-        if (elem.name && elem.name.toLowerCase() == 'query' && elem.value != null) {
-            elem.value = elem.value.slice(0, MAX_VALUE_SIZE);
+    private cropQueryElement(part: HistoryElement) {
+        if (part.name && part.value && part.name.toLowerCase() === 'query') {
+            part.value = part.value.slice(0, MAX_VALUE_SIZE);
         }
+
+        return part;
     }
 
     private isValidEntry(elem: HistoryElement): boolean {
@@ -134,6 +136,19 @@ export class HistoryStore {
             const {name, time, value} = part;
             return {name, time, value};
         });
+    }
+
+    private stripEmptyQuery(part: HistoryElement) {
+        const {name, time, value} = part;
+        if (name && value && name.toLowerCase() === 'query' && value.trim() === '') {
+            return {name, time};
+        }
+
+        return part;
+    }
+
+    private stripEmptyQueries(history: HistoryElement[]): HistoryElement[] {
+        return history.map((part) => this.stripEmptyQuery(part));
     }
 }
 
