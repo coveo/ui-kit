@@ -137,9 +137,7 @@ function getParamDescription(param: Parameter) {
   const description = emitAsTsDoc(nodes as unknown as readonly DocNode[]);
 
   if (!description) {
-    throw new Error(
-      `No description found for param: ${param.name} ${param.parameterTypeExcerpt.text}`
-    );
+    throw new Error(`No description found for param: ${param.name}`);
   }
 
   return description;
