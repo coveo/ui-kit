@@ -766,7 +766,7 @@ export namespace Components {
          */
         "headingLevel": number;
         /**
-          * The height (in pixels) which, when exceeded by the snippet, displays a "show more" button and truncates the snippet.
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "minimumSnippetHeightForShowMore": number;
     }
@@ -779,7 +779,7 @@ export namespace Components {
          */
         "answerHeightWhenCollapsed": number;
         /**
-          * The height (in pixels) which, when exceeded by the snippet, displays a "show more" button and truncates the snippet.
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "minimumSnippetHeightForShowMore": number;
     }
@@ -2086,7 +2086,7 @@ declare namespace LocalJSX {
          */
         "headingLevel"?: number;
         /**
-          * The height (in pixels) which, when exceeded by the snippet, displays a "show more" button and truncates the snippet.
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "minimumSnippetHeightForShowMore"?: number;
     }
@@ -2100,7 +2100,7 @@ declare namespace LocalJSX {
          */
         "answerHeightWhenCollapsed"?: number;
         /**
-          * The height (in pixels) which, when exceeded by the snippet, displays a "show more" button and truncates the snippet.
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "minimumSnippetHeightForShowMore"?: number;
     }

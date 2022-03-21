@@ -51,7 +51,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @Prop({reflect: true}) public headingLevel = 0;
 
   /**
-   * The height (in pixels) which, when exceeded by the snippet, displays a "show more" button and truncates the snippet.
+   * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
    */
   @Prop({reflect: true}) minimumSnippetHeightForShowMore = 250;
   /**
