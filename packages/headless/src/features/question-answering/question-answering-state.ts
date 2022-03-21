@@ -17,6 +17,10 @@ export interface QuestionAnsweringState {
    * Determines if the snippet is expanded.
    */
   expanded: boolean;
+  /**
+   * Determines if the feedback modal with the purpose of explaining why the end user disliked the snippet is currently opened.
+   */
+  feedbackModalOpened: boolean;
   relatedQuestions: QuestionAnsweringRelatedQuestionState[];
 }
 
@@ -25,5 +29,6 @@ export const getQuestionAnsweringInitialState: () => QuestionAnsweringState =
     liked: false,
     disliked: false,
     expanded: false,
+    feedbackModalOpened: false,
     relatedQuestions: [],
   });

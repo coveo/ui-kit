@@ -8,6 +8,8 @@ import {
   expandSmartSnippet,
   expandSmartSnippetRelatedQuestion,
   likeSmartSnippet,
+  openFeedbackModal,
+  closeFeedbackModal,
 } from './question-answering-actions';
 import {
   getQuestionAnsweringInitialState,
@@ -37,10 +39,17 @@ export const questionAnsweringReducer = createReducer(
       .addCase(likeSmartSnippet, (state) => {
         state.liked = true;
         state.disliked = false;
+        state.feedbackModalOpened = false;
       })
       .addCase(dislikeSmartSnippet, (state) => {
         state.liked = false;
         state.disliked = true;
+      })
+      .addCase(openFeedbackModal, (state) => {
+        state.feedbackModalOpened = true;
+      })
+      .addCase(closeFeedbackModal, (state) => {
+        state.feedbackModalOpened = false;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         state.relatedQuestions =

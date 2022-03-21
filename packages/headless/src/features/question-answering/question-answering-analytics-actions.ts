@@ -1,9 +1,30 @@
+import {CoveoSearchPageClient} from 'coveo.analytics';
 import {validatePayload} from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {
   documentIdentifierPayloadDefinition,
   QuestionAnsweringDocumentIdActionCreatorPayload,
 } from './question-answering-document-id';
+
+type AnalyticsSmartSnippetFeedbackReason = Parameters<
+  CoveoSearchPageClient['logSmartSnippetFeedbackReason']
+>[0];
+
+export type SmartSnippetFeedback =
+  | 'does_not_answer'
+  | 'partially_answers'
+  | 'was_not_a_question';
+
+function parseSmartSnippetFeedbackReason(
+  feedback: SmartSnippetFeedback
+): AnalyticsSmartSnippetFeedbackReason {
+  switch (feedback) {
+    case 'does_not_answer':
+    case 'partially_answers':
+    case 'was_not_a_question':
+      return feedback as AnalyticsSmartSnippetFeedbackReason;
+  }
+}
 
 export const logExpandSmartSnippet = makeAnalyticsAction(
   'analytics/smartSnippet/expand',
@@ -28,6 +49,39 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
   AnalyticsType.Custom,
   (client) => client.logDislikeSmartSnippet()
 );
+
+export const logOpenSmartSnippetFeedbackModal = makeAnalyticsAction(
+  'analytics/smartSnippet/feedbackModal/open',
+  AnalyticsType.Custom,
+  (client) => client.logOpenSmartSnippetFeedbackModal()
+);
+
+export const logCloseSmartSnippetFeedbackModal = makeAnalyticsAction(
+  'analytics/smartSnippet/feedbackModal/close',
+  AnalyticsType.Custom,
+  (client) => client.logCloseSmartSnippetFeedbackModal()
+);
+
+export const logSmartSnippetFeedback = (feedback: SmartSnippetFeedback) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/sendFeedback',
+    AnalyticsType.Custom,
+    (client) =>
+      client.logSmartSnippetFeedbackReason(
+        parseSmartSnippetFeedbackReason(feedback)
+      )
+  )();
+
+export const logSmartSnippetDetailedFeedback = (details: string) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/sendFeedback',
+    AnalyticsType.Custom,
+    (client) =>
+      client.logSmartSnippetFeedbackReason(
+        'other' as AnalyticsSmartSnippetFeedbackReason,
+        details
+      )
+  )();
 
 export const logExpandSmartSnippetSuggestion = (
   payload: QuestionAnsweringDocumentIdActionCreatorPayload
