@@ -34,7 +34,7 @@ export function assertAnswerTopMargin(margin: number) {
 }
 
 export function assertAnswerBottomMargin(margin: number) {
-  it(`has a ${margin} gap between the snippet and the show less button`, () => {
+  it(`has a ${margin}px gap between the snippet and the show less button`, () => {
     SmartSnippetSelectors.answer()
       .distanceTo(SmartSnippetSelectors.showLessButton)
       .should('have.property', 'vertical', margin);
