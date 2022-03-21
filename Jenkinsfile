@@ -22,6 +22,10 @@ node('linux && docker') {
       stage('Build') {
         sh 'npm run build'
       }
+
+      stage('Generate docs') {
+        sh 'npm run doc:generate'
+      }
     }
 
     stage('Clean working directory') {
