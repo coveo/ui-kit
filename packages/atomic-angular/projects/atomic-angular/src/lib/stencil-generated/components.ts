@@ -1166,13 +1166,13 @@ export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippe
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['headingLevel']
+  inputs: ['answerHeightWhenCollapsed', 'headingLevel', 'minimumSnippetHeightForShowMore']
 })
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['headingLevel']
+  inputs: ['answerHeightWhenCollapsed', 'headingLevel', 'minimumSnippetHeightForShowMore']
 })
 export class AtomicSmartSnippet {
   protected el: HTMLElement;

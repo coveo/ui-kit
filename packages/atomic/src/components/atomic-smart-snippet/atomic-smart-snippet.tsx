@@ -21,7 +21,11 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
  *
  * @part smart-snippet - The wrapper of the entire smart snippet.
  * @part question - The header displaying the question that is answered by the found document excerpt.
- * @part answer - The found document excerpt.
+ * @part answer - The container displaying the full document excerpt.
+ * @part truncated-answer - The container displaying only part of the answer.
+ * @part show-more-button - The show more button.
+ * @part show-less-button - The show less button.
+ * @part body - The body of the smart snippet, containing the truncated answer and the show more or show less button.
  * @part source-url - The URL to the document the excerpt is from.
  * @part source-title - The title of the document the excerpt is from.
  * @part footer - The footer underneath the answer.
@@ -46,6 +50,15 @@ export class AtomicSmartSnippet implements InitializableComponent {
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
+  /**
+   * The height (in pixels) which, when exceeded by the snippet, displays a "show more" button and truncates the snippet.
+   */
+  @Prop({reflect: true}) minimumSnippetHeightForShowMore = 250;
+  /**
+   * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+   */
+  @Prop({reflect: true}) answerHeightWhenCollapsed = 180;
+
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
@@ -67,7 +80,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return (
       <Heading
         level={this.headingLevel ? this.headingLevel + 1 : 0}
-        class="mb-4 text-xl font-bold"
+        class="text-xl font-bold"
         part="question"
       >
         {this.smartSnippetState.question}
@@ -77,9 +90,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public renderContent() {
     return (
-      <atomic-smart-snippet-answer
-        htmlContent={this.smartSnippetState.answer}
-      ></atomic-smart-snippet-answer>
+      <atomic-smart-snippet-expandable-answer
+        exportparts="answer,show-more-button,show-less-button,truncated-answer"
+        part="body"
+        minimumSnippetHeightForShowMore={this.minimumSnippetHeightForShowMore}
+        answerHeightWhenCollapsed={this.answerHeightWhenCollapsed}
+      ></atomic-smart-snippet-expandable-answer>
     );
   }
 

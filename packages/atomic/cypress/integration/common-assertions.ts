@@ -37,7 +37,7 @@ export function assertContainsComponentError(
   it(`${should(display)} display an error component`, () => {
     componentSelector
       .shadow()
-      .find(ComponentErrorSelectors.component)
+      .find(ComponentErrorSelectors.component, {includeShadowDom: true})
       .should(display ? 'be.visible' : 'not.exist');
   });
 }
