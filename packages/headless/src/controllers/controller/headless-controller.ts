@@ -1,7 +1,7 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../app/engine';
 
-export interface Controller {
+export interface Subscribable {
   /**
    * Adds a callback that's invoked on state change.
    *
@@ -9,6 +9,9 @@ export interface Controller {
    * @returns A function to remove the listener.
    */
   subscribe(listener: () => void): Unsubscribe;
+}
+
+export interface Controller extends Subscribable {
   readonly state: {};
 }
 
