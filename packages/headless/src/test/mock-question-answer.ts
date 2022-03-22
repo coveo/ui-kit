@@ -22,14 +22,8 @@ export function buildMockQuestionsAnswers(
   config: Partial<QuestionsAnswers> = {}
 ): QuestionsAnswers {
   return {
-    answerSnippet: '',
-    documentId: {
-      contentIdKey: '',
-      contentIdValue: '',
-    },
-    question: '',
+    ...buildMockQuestionAnswer(),
     relatedQuestions: [],
-    score: 0,
     ...config,
   };
 }
