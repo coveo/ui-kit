@@ -1,5 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {
+  QuestionAnswer,
+  QuestionAnswerDocumentIdentifier,
+} from '../../api/search/search/question-answering';
+import {btoaHash} from '../../utils/utils';
 import {executeSearch} from '../search/search-actions';
 import {
   collapseSmartSnippet,
@@ -24,6 +28,21 @@ export const findRelatedQuestionIdx = (
       relatedQuestion.contentIdKey === identifier.contentIdKey
   );
 
+function hashQuestionAnswer({
+  question,
+  answerSnippet,
+  documentId: {contentIdKey, contentIdValue},
+}: QuestionAnswer) {
+  return btoaHash(
+    JSON.stringify({
+      question,
+      answerSnippet,
+      contentIdKey,
+      contentIdValue,
+    })
+  );
+}
+
 export const questionAnsweringReducer = createReducer(
   getQuestionAnsweringInitialState(),
   (builder) =>
@@ -43,7 +62,7 @@ export const questionAnsweringReducer = createReducer(
         state.disliked = true;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        state.relatedQuestions =
+        const relatedQuestions =
           action.payload.response.questionAnswer.relatedQuestions.map(
             (relatedQuestion) => ({
               contentIdKey: relatedQuestion.documentId.contentIdKey,
@@ -51,6 +70,20 @@ export const questionAnsweringReducer = createReducer(
               expanded: false,
             })
           );
+        const questionAnswerHash = hashQuestionAnswer(
+          action.payload.response.questionAnswer
+        );
+        if (state.questionAnswerHash === questionAnswerHash) {
+          return {
+            ...state,
+            relatedQuestions,
+          };
+        }
+        return {
+          ...getQuestionAnsweringInitialState(),
+          relatedQuestions,
+          questionAnswerHash,
+        };
       })
       .addCase(expandSmartSnippetRelatedQuestion, (state, action) => {
         const idx = findRelatedQuestionIdx(

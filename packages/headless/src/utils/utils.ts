@@ -1,3 +1,5 @@
+import {btoa as btoashim} from 'abab';
+
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
   Math.random()
@@ -25,4 +27,10 @@ export function removeDuplicates<T>(
       <Record<string, T>>{}
     )
   );
+}
+
+export function btoaHash(stringToEncode: string) {
+  return (typeof btoa !== 'undefined' ? btoa : btoashim)(
+    encodeURI(stringToEncode)
+  )!;
 }

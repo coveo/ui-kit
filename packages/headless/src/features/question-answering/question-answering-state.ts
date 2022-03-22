@@ -17,6 +17,10 @@ export interface QuestionAnsweringState {
    * Determines if the snippet is expanded.
    */
   expanded: boolean;
+  /**
+   * The unique hash for this question & answer.
+   */
+  questionAnswerHash?: string;
   relatedQuestions: QuestionAnsweringRelatedQuestionState[];
 }
 

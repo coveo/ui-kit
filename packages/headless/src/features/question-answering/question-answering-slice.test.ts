@@ -1,7 +1,12 @@
+import {SearchResponseSuccess} from '../../api/search/search/search-response';
+import {buildMockRaw, buildMockResult} from '../../test';
+import {
+  buildMockQuestionAnswer,
+  buildMockQuestionsAnswers,
+} from '../../test/mock-question-answer';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {executeSearch} from '../search/search-actions';
-import {emptyQuestionAnswer} from '../search/search-state';
 import {
   collapseSmartSnippet,
   collapseSmartSnippetRelatedQuestion,
@@ -15,6 +20,34 @@ import {
   getQuestionAnsweringInitialState,
   QuestionAnsweringState,
 } from './question-answering-state';
+
+function buildUniqueQuestionAnswer(increment: number) {
+  return buildMockQuestionAnswer({
+    documentId: {
+      contentIdKey: 'permanentid',
+      contentIdValue: `permanent\u0100id${increment}`,
+    },
+    answerSnippet: `ans\u0100wer${increment}`,
+    question: `quest\u0100ion${increment}`,
+    score: increment * 42,
+  });
+}
+
+function buildUniqueSearchResponse(increment: number): SearchResponseSuccess {
+  const permanentid = `permanent\u0100id${increment}`;
+  return buildMockSearchResponse({
+    searchUid: `searchUid${increment}`,
+    results: [
+      buildMockResult({
+        raw: buildMockRaw({permanentid}),
+      }),
+    ],
+    questionAnswer: buildMockQuestionsAnswers({
+      ...buildUniqueQuestionAnswer(increment),
+      relatedQuestions: [buildUniqueQuestionAnswer(increment * 1000)],
+    }),
+  });
+}
 
 describe('question answering slice', () => {
   let state: QuestionAnsweringState;
@@ -86,41 +119,84 @@ describe('question answering slice', () => {
   });
 
   it('should handle executeSearch to populate relatedQuestions', () => {
+    const response = buildUniqueSearchResponse(0);
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
-        response: buildMockSearchResponse({
-          questionAnswer: {
-            ...emptyQuestionAnswer(),
-            relatedQuestions: [
-              {
-                documentId: {contentIdKey: 'foo', contentIdValue: 'bar'},
-                score: 123,
-                answerSnippet: 'answer 1',
-                question: 'question 1',
-              },
-              {
-                documentId: {contentIdKey: 'buzz', contentIdValue: 'bazz'},
-                score: 321,
-                answerSnippet: 'answer 2',
-                question: 'question 2',
-              },
-            ],
-          },
-        }),
+        response,
       }),
       '',
       null as never
     );
     const resulting = questionAnsweringReducer(state, searchAction);
+    const {contentIdKey, contentIdValue} =
+      response.questionAnswer.relatedQuestions[0].documentId;
     expect(resulting.relatedQuestions[0]).toMatchObject({
-      contentIdKey: 'foo',
-      contentIdValue: 'bar',
+      contentIdKey,
+      contentIdValue,
       expanded: false,
     });
-    expect(resulting.relatedQuestions[1]).toMatchObject({
-      contentIdKey: 'buzz',
-      contentIdValue: 'bazz',
-      expanded: false,
-    });
+  });
+
+  it('when executeSearch is triggered again with the same question answer, does not reset', () => {
+    const firstSearchResponse = buildUniqueSearchResponse(0);
+    const firstResponseState = questionAnsweringReducer(
+      state,
+      executeSearch.fulfilled(
+        buildMockSearch({response: firstSearchResponse}),
+        '',
+        null as never
+      )
+    );
+
+    const intermediateState = questionAnsweringReducer(
+      firstResponseState,
+      likeSmartSnippet()
+    );
+
+    const secondSearchResponse = buildUniqueSearchResponse(1);
+    secondSearchResponse.questionAnswer =
+      buildUniqueSearchResponse(0).questionAnswer;
+    const finalState = questionAnsweringReducer(
+      intermediateState,
+      executeSearch.fulfilled(
+        buildMockSearch({response: secondSearchResponse}),
+        '',
+        null as never
+      )
+    );
+
+    expect(finalState.liked).toBeTruthy();
+  });
+
+  it('when executeSearch is triggered again with a slightly different question answer, resets', () => {
+    const firstSearchResponse = buildUniqueSearchResponse(0);
+    const firstResponseState = questionAnsweringReducer(
+      state,
+      executeSearch.fulfilled(
+        buildMockSearch({response: firstSearchResponse}),
+        '',
+        null as never
+      )
+    );
+
+    const intermediateState = questionAnsweringReducer(
+      firstResponseState,
+      likeSmartSnippet()
+    );
+
+    const secondSearchResponse = buildUniqueSearchResponse(1);
+    secondSearchResponse.questionAnswer =
+      buildUniqueSearchResponse(0).questionAnswer;
+    secondSearchResponse.questionAnswer.question += 'a';
+    const finalState = questionAnsweringReducer(
+      intermediateState,
+      executeSearch.fulfilled(
+        buildMockSearch({response: secondSearchResponse}),
+        '',
+        null as never
+      )
+    );
+
+    expect(finalState.liked).toBeFalsy();
   });
 });
