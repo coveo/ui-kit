@@ -27,7 +27,10 @@ export * from './features/dictionary-field-context/dictionary-field-context-acti
 export * from './features/search-hub/search-hub-actions-loader';
 
 // Controllers
-export type {Controller} from './controllers/controller/headless-controller';
+export type {
+  Controller,
+  Subscribable,
+} from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
