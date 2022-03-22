@@ -97,6 +97,7 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
     entryPoints: [entryPoint],
     outfile,
     format: 'iife',
+    target: 'es6',
     globalName: globalName,
     footer: {
       js: footer,
