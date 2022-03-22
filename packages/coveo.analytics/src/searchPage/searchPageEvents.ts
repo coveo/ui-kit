@@ -370,12 +370,7 @@ export interface QueryErrorMeta {
     errorMessage: string;
 }
 
-export enum SmartSnippetFeedbackReason {
-    DoesNotAnswer = 'does_not_answer',
-    PartiallyAnswers = 'partially_answers',
-    WasNotAQuestion = 'was_not_a_question',
-    Other = 'other',
-}
+export type SmartSnippetFeedbackReason = 'does_not_answer' | 'partially_answers' | 'was_not_a_question' | 'other';
 
 export interface SmartSnippetSuggestionMeta {
     contentIdKey: string;

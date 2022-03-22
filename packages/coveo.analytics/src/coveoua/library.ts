@@ -8,7 +8,6 @@ export {PreprocessAnalyticsRequest} from '../client/analyticsRequestClient';
 export {IRuntimeEnvironment} from '../client/runtimeEnvironment';
 export {CoveoUA, getCurrentClient, handleOneAnalyticsEvent} from './simpleanalytics';
 export {CoveoSearchPageClient, SearchPageClientProvider} from '../searchPage/searchPageClient';
-export {SmartSnippetFeedbackReason} from '../searchPage/searchPageEvents';
 export {CaseAssistClient} from '../caseAssist/caseAssistClient';
 
 export {analytics, donottrack, history, SimpleAnalytics, storage};
