@@ -10,6 +10,7 @@ import {
   Bindings,
   BindStateToController,
 } from '../../utils/initialization-utils';
+import {Hidden} from '../common/hidden';
 
 /**
  * @internal
@@ -48,15 +49,6 @@ export class AtomicSmartSnippetExpandableAnswer {
   public initialize() {
     this.validateProps();
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
-  }
-
-  public async componentWillRender() {
-    if (this.error) {
-      return;
-    }
-    if (!this.smartSnippetState.answerFound) {
-      throw 'No answer returned by the query';
-    }
   }
 
   @Listen('atomic/smartSnippet/answerRendered')
@@ -106,6 +98,9 @@ export class AtomicSmartSnippetExpandableAnswer {
   }
 
   public render() {
+    if (!this.smartSnippetState.answerFound) {
+      return <Hidden></Hidden>;
+    }
     return (
       <div class={this.expanded ? 'expanded' : ''}>
         {this.renderAnswer()}
