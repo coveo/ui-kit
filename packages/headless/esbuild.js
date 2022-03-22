@@ -114,7 +114,7 @@ function buildBrowserConfig(options) {
   return build({
     ...base,
     platform: 'browser',
-    minify: true,
+    minify: false,
     sourcemap: true,
     plugins: [
       alias({
