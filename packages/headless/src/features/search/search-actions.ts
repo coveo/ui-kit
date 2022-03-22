@@ -342,7 +342,9 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {
     historyStore.addElement({
       name: 'Query',
-      value: state.query?.q || getQueryInitialState().q,
+      ...(state.query?.q && {
+        value: state.query.q,
+      }),
       time: JSON.stringify(new Date()),
     });
   }
