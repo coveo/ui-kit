@@ -7,11 +7,11 @@ import {
 } from '../../facets/category-facet/headless-category-facet';
 
 /**
- * The `CategoryFieldSuggestions` controller is responsible to provide query suggestions based on a particular category facet field.
+ * The `CategoryFieldSuggestions` controller provides query suggestions based on a particular category facet field.
  *
- * For example, you could use this controller to provide auto-complete suggestions while the end user is typing the category of an item.
+ * For example, you could use this controller to provide auto-completion suggestions while the end user is typing an item category.
  *
- * This controller is a wrapper around the basic category facet controller search functionnality, and thus expose similar options and properties.
+ * This controller is a wrapper around the basic category facet controller search functionality, and thus exposes similar options and properties.
  */
 export interface CategoryFieldSuggestions
   extends CategoryFacetSearch,

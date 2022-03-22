@@ -5,11 +5,11 @@ import {FacetOptions} from '../../facets/facet/headless-facet-options';
 import {Subscribable} from '../../controller/headless-controller';
 
 /**
- * The `FieldSuggestions` controller is responsible to provide query suggestions based on a particular facet field.
+ * The `FieldSuggestions` controller provides query suggestions based on a particular facet field.
  *
- * For example, you could use this controller to provide auto-complete suggestions while the end user is typing the title of an item.
+ * For example, you could use this controller to provide auto-completion suggestions while the end user is typing an item title.
  *
- * This controller is a wrapper around the basic facet controller search functionnality, and thus expose similar options and properties.
+ * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
  */
 export interface FieldSuggestions extends FacetSearch, Subscribable {}
 
