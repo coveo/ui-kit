@@ -127,7 +127,7 @@ describe('Smart Snippet Test Suites', () => {
     });
   });
 
-  describe('when minimumSnippetHeightForShowMore is smaller than answerHeightWhenCollapsed', () => {
+  describe('when maximumHeight is smaller than collapsedHeight', () => {
     before(() => {
       const value = 50;
       new TestFixture()
@@ -146,7 +146,7 @@ describe('Smart Snippet Test Suites', () => {
     CommonAssertions.assertContainsComponentError(SmartSnippetSelectors, true);
   });
 
-  describe('when the snippet height is equal to minimumSnippetHeightForShowMore', () => {
+  describe('when the snippet height is equal to maximumHeight', () => {
     before(() => {
       const height = 300;
       new TestFixture()
@@ -166,7 +166,7 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertShowLess(false);
   });
 
-  describe('when the snippet height is greater than minimumSnippetHeightForShowMore', () => {
+  describe('when the snippet height is greater than maximumHeight', () => {
     const height = 300;
     const heightWhenCollapsed = 150;
     before(() => {

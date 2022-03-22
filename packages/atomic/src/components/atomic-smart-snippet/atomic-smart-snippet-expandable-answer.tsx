@@ -31,17 +31,17 @@ export class AtomicSmartSnippetExpandableAnswer {
   /**
    * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
    */
-  @Prop({reflect: true}) minimumSnippetHeightForShowMore = 250;
+  @Prop({reflect: true}) maximumHeight = 250;
   /**
    * When the answer is partly hidden, how much of its height (in pixels) should be visible.
    */
-  @Prop({reflect: true}) answerHeightWhenCollapsed = 180;
+  @Prop({reflect: true}) collapsedHeight = 180;
 
   @State() showButton = true;
 
   private validateProps() {
-    if (this.minimumSnippetHeightForShowMore < this.answerHeightWhenCollapsed) {
-      throw 'minimumSnippetHeightForShowMore must be equal or greater than answerHeightWhenCollapsed';
+    if (this.maximumHeight < this.collapsedHeight) {
+      throw 'maximumHeight must be equal or greater than collapsedHeight';
     }
   }
 
@@ -63,10 +63,10 @@ export class AtomicSmartSnippetExpandableAnswer {
   public answerRendered(event: CustomEvent<{height: number}>) {
     const {height} = event.detail;
     this.host.style.setProperty('--full-height', `${height}px`);
-    this.showButton = height > this.minimumSnippetHeightForShowMore;
+    this.showButton = height > this.maximumHeight;
     this.host.style.setProperty(
       '--collapsed-size',
-      `${this.showButton ? this.answerHeightWhenCollapsed : height}px`
+      `${this.showButton ? this.collapsedHeight : height}px`
     );
   }
 
