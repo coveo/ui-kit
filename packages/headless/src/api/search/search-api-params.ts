@@ -24,6 +24,14 @@ export interface ConstantQueryParam {
   cq?: string;
 }
 
+export interface LargeQueryParam {
+  lq?: string;
+}
+
+export interface DisjunctionQueryParam {
+  dq?: string;
+}
+
 export interface SortCriteriaParam {
   sortCriteria?: string;
 }
@@ -82,7 +90,7 @@ export interface MaximumAgeParam {
 }
 
 export interface ActionsHistoryParam {
-  actionsHistory: history.HistoryElement[];
+  actionsHistory?: history.HistoryElement[];
 }
 
 export interface TimezoneParam {
