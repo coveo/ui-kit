@@ -48,12 +48,14 @@ export class AtomicResultTemplate {
     {};
 
   constructor() {
-    const isParentResultList =
-      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST';
+    const allowedParents = ['ATOMIC-RESULT-LIST', 'ATOMIC-FOLDED-RESULT-LIST'];
+    const isParentResultList = allowedParents.includes(
+      this.host.parentElement?.nodeName || ''
+    );
 
     if (!isParentResultList) {
       this.error = new Error(
-        'The "atomic-result-template" component has to be the child of an "atomic-result-list" component.'
+        'The "atomic-result-template" component has to be the child of either an "atomic-result-list" or an "atomic-folded-result-list" component.'
       );
       return;
     }

@@ -5,13 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
+import { TemplateContent as TemplateContent1 } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -70,6 +71,13 @@ export namespace Components {
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
         "withSearch": boolean;
+    }
+    interface AtomicChildResult {
+        /**
+          * The result content to display.
+         */
+        "content": ParentNode;
+        "result": Result;
     }
     interface AtomicColorFacet {
         /**
@@ -202,6 +210,45 @@ export namespace Components {
     }
     interface AtomicFocusTrap {
         "active": boolean;
+    }
+    interface AtomicFoldedResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+         */
+        "fieldsToInclude": string;
+        /**
+          * TODO:
+         */
+        "foldingChild"?: string;
+        /**
+          * TODO:
+         */
+        "foldingCollection"?: string;
+        /**
+          * TODO:
+         */
+        "foldingParent"?: string;
+        /**
+          * @deprecated use `imageSize` instead.
+         */
+        "image": ResultDisplayImageSize;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param render
+         */
+        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
     }
     interface AtomicFormatCurrency {
         /**
@@ -468,6 +515,10 @@ export namespace Components {
          */
         "engine": SearchEngine;
         /**
+          * The folded result item.
+         */
+        "foldedResult"?: FoldedResult;
+        /**
           * @deprecated use `imageSize` instead.
          */
         "image": ResultDisplayImageSize;
@@ -493,6 +544,20 @@ export namespace Components {
           * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
+    }
+    interface AtomicResultChildTemplate {
+        "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
+    }
+    interface AtomicResultChildren {
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param render
+         */
+        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
     }
     interface AtomicResultDate {
         /**
@@ -861,6 +926,12 @@ declare global {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
     };
+    interface HTMLAtomicChildResultElement extends Components.AtomicChildResult, HTMLStencilElement {
+    }
+    var HTMLAtomicChildResultElement: {
+        prototype: HTMLAtomicChildResultElement;
+        new (): HTMLAtomicChildResultElement;
+    };
     interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
     }
     var HTMLAtomicColorFacetElement: {
@@ -920,6 +991,12 @@ declare global {
     var HTMLAtomicFocusTrapElement: {
         prototype: HTMLAtomicFocusTrapElement;
         new (): HTMLAtomicFocusTrapElement;
+    };
+    interface HTMLAtomicFoldedResultListElement extends Components.AtomicFoldedResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicFoldedResultListElement: {
+        prototype: HTMLAtomicFoldedResultListElement;
+        new (): HTMLAtomicFoldedResultListElement;
     };
     interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
     }
@@ -1040,6 +1117,18 @@ declare global {
     var HTMLAtomicResultBadgeElement: {
         prototype: HTMLAtomicResultBadgeElement;
         new (): HTMLAtomicResultBadgeElement;
+    };
+    interface HTMLAtomicResultChildTemplateElement extends Components.AtomicResultChildTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicResultChildTemplateElement: {
+        prototype: HTMLAtomicResultChildTemplateElement;
+        new (): HTMLAtomicResultChildTemplateElement;
+    };
+    interface HTMLAtomicResultChildrenElement extends Components.AtomicResultChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicResultChildrenElement: {
+        prototype: HTMLAtomicResultChildrenElement;
+        new (): HTMLAtomicResultChildrenElement;
     };
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
     }
@@ -1261,6 +1350,7 @@ declare global {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-child-result": HTMLAtomicChildResultElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -1271,6 +1361,7 @@ declare global {
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-focus-trap": HTMLAtomicFocusTrapElement;
+        "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
@@ -1291,6 +1382,8 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
+        "atomic-result-child-template": HTMLAtomicResultChildTemplateElement;
+        "atomic-result-children": HTMLAtomicResultChildrenElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
@@ -1383,6 +1476,13 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
         "withSearch"?: boolean;
+    }
+    interface AtomicChildResult {
+        /**
+          * The result content to display.
+         */
+        "content": ParentNode;
+        "result": Result;
     }
     interface AtomicColorFacet {
         /**
@@ -1517,6 +1617,40 @@ declare namespace LocalJSX {
     }
     interface AtomicFocusTrap {
         "active"?: boolean;
+    }
+    interface AtomicFoldedResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+         */
+        "fieldsToInclude"?: string;
+        /**
+          * TODO:
+         */
+        "foldingChild"?: string;
+        /**
+          * TODO:
+         */
+        "foldingCollection"?: string;
+        /**
+          * TODO:
+         */
+        "foldingParent"?: string;
+        /**
+          * @deprecated use `imageSize` instead.
+         */
+        "image"?: ResultDisplayImageSize;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicFormatCurrency {
         /**
@@ -1784,6 +1918,10 @@ declare namespace LocalJSX {
          */
         "engine": SearchEngine;
         /**
+          * The folded result item.
+         */
+        "foldedResult"?: FoldedResult;
+        /**
           * @deprecated use `imageSize` instead.
          */
         "image"?: ResultDisplayImageSize;
@@ -1809,6 +1947,11 @@ declare namespace LocalJSX {
           * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
+    }
+    interface AtomicResultChildTemplate {
+        "conditions"?: ResultTemplateCondition[];
+    }
+    interface AtomicResultChildren {
     }
     interface AtomicResultDate {
         /**
@@ -2140,6 +2283,7 @@ declare namespace LocalJSX {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-child-result": AtomicChildResult;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -2150,6 +2294,7 @@ declare namespace LocalJSX {
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-focus-trap": AtomicFocusTrap;
+        "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
@@ -2170,6 +2315,8 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge": AtomicResultBadge;
+        "atomic-result-child-template": AtomicResultChildTemplate;
+        "atomic-result-children": AtomicResultChildren;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
@@ -2215,6 +2362,7 @@ declare module "@stencil/core" {
             "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-child-result": LocalJSX.AtomicChildResult & JSXBase.HTMLAttributes<HTMLAtomicChildResultElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
@@ -2225,6 +2373,7 @@ declare module "@stencil/core" {
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
+            "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
             "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
@@ -2245,6 +2394,8 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
+            "atomic-result-child-template": LocalJSX.AtomicResultChildTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultChildTemplateElement>;
+            "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;

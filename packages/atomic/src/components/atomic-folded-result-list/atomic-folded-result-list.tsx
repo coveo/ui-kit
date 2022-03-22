@@ -9,16 +9,18 @@ import {
   Method,
 } from '@stencil/core';
 import {
-  ResultList,
-  ResultListState,
   ResultTemplatesManager,
-  buildResultList,
   buildResultTemplatesManager,
   Result,
   buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
   buildInteractiveResult,
+  buildFoldedResultList,
+  FoldedResultList,
+  FoldedResult,
+  FoldedResultListState,
+  FoldedResultListProps,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -51,13 +53,13 @@ import {updateBreakpoints} from '../../utils/replace-breakpoint';
  * @part result-table-cell - The element representing a cell of the result table's body
  */
 @Component({
-  tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.pcss',
+  tag: 'atomic-folded-result-list',
+  styleUrl: 'atomic-folded-result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList implements InitializableComponent {
+export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  private resultList!: ResultList;
+  private resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
@@ -65,7 +67,7 @@ export class AtomicResultList implements InitializableComponent {
 
   @BindStateToController('resultList')
   @State()
-  private resultListState!: ResultListState;
+  private resultListState!: FoldedResultListState;
 
   @BindStateToController('resultsPerPage')
   @State()
@@ -73,6 +75,19 @@ export class AtomicResultList implements InitializableComponent {
 
   @State() public error!: Error;
   @State() private templateHasError = false;
+
+  /**
+   * TODO:
+   */
+  @Prop({reflect: true}) public foldingCollection?: string;
+  /**
+   * TODO:
+   */
+  @Prop({reflect: true}) public foldingParent?: string;
+  /**
+   * TODO:
+   */
+  @Prop({reflect: true}) public foldingChild?: string;
 
   /**
    * TODO: KIT-452 Infinite scroll feature
@@ -153,14 +168,25 @@ export class AtomicResultList implements InitializableComponent {
     this.resultTemplatesManager = buildResultTemplatesManager(
       this.bindings.engine
     );
-    this.resultList = buildResultList(this.bindings.engine, {
-      options: {
-        fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
-      },
+    this.resultList = this.initFolding({
+      fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
     });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
+  }
+
+  private initFolding(options = {}) {
+    const opts: FoldedResultListProps = {};
+    opts.options = {...options};
+    opts.options.folding = {};
+    if (this.foldingCollection)
+      opts.options.folding.collectionField = this.foldingCollection;
+    if (this.foldingParent)
+      opts.options.folding.parentField = this.foldingParent;
+    if (this.foldingChild) opts.options.folding.childField = this.foldingChild;
+
+    return buildFoldedResultList(this.bindings.engine, opts);
   }
 
   private registerDefaultResultTemplates() {
@@ -186,8 +212,8 @@ export class AtomicResultList implements InitializableComponent {
       });
   }
 
-  private getTemplate(result: Result): TemplateContent {
-    return this.resultTemplatesManager.selectTemplate(result)!;
+  private getTemplate(foldedResult: FoldedResult): TemplateContent {
+    return this.resultTemplatesManager.selectTemplate(foldedResult.result)!;
   }
 
   private getId(result: Result) {
@@ -214,8 +240,9 @@ export class AtomicResultList implements InitializableComponent {
 
       const atomicResult = (
         <atomic-result
-          key={this.getId(result)}
-          result={result}
+          key={this.getId(result.result)}
+          result={result.result}
+          foldedResult={result}
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
@@ -228,9 +255,9 @@ export class AtomicResultList implements InitializableComponent {
         <LinkWithResultAnalytics
           part="result-list-grid-clickable"
           interactiveResult={buildInteractiveResult(this.bindings.engine, {
-            options: {result},
+            options: {result: result.result},
           })}
-          href={result.clickUri}
+          href={result.result.clickUri}
           target="_self"
         >
           {atomicResult}
@@ -280,16 +307,19 @@ export class AtomicResultList implements InitializableComponent {
         </thead>
         <tbody part="result-table-body">
           {this.resultListState.results.map((result) => (
-            <tr key={this.getId(result)} part="result-table-row">
+            <tr key={this.getId(result.result)} part="result-table-row">
               {fieldColumns.map((column) => {
                 return (
                   <td
-                    key={column.getAttribute('label')! + this.getId(result)}
+                    key={
+                      column.getAttribute('label')! + this.getId(result.result)
+                    }
                     part="result-table-cell"
                   >
                     <atomic-result
                       engine={this.bindings.engine}
-                      result={result}
+                      result={result.result}
+                      foldedResult={result}
                       display={this.display}
                       density={this.density}
                       image-size={this.imageSize ?? this.image}
@@ -306,10 +336,10 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private getContentOfResultTemplate(
-    result: Result
+    result: FoldedResult
   ): HTMLElement | DocumentFragment {
     return this.renderingFunction
-      ? this.renderingFunction(result)
+      ? this.renderingFunction(result.result)
       : this.getTemplate(result);
   }
 

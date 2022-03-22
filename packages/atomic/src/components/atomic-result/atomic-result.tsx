@@ -1,5 +1,5 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {Result, SearchEngine} from '@coveo/headless';
+import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
@@ -7,7 +7,10 @@ import {
   getResultDisplayClasses,
 } from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
+import {
+  FoldedResultContextEvent,
+  ResultContextEvent,
+} from '../result-template-components/result-template-decorators';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -35,6 +38,11 @@ export class AtomicResult {
    * The result item.
    */
   @Prop() result!: Result;
+
+  /**
+   * The folded result item.
+   */
+  @Prop() foldedResult?: FoldedResult;
 
   /**
    * The headless search engine.
@@ -73,6 +81,12 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+  @Listen('atomic/resolveFoldedResult')
+  public resolveFoldedResult(event: FoldedResultContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.detail(this.foldedResult!);
   }
 
   private containsSections() {
