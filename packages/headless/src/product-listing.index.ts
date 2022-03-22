@@ -26,7 +26,10 @@ export * from './features/configuration/configuration-actions-loader';
 export * from './features/product-listing/product-listing-actions-loader';
 
 // Controllers
-export type {Controller} from './controllers/controller/headless-controller';
+export type {
+  Controller,
+  Subscribable,
+} from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
