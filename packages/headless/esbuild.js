@@ -136,7 +136,6 @@ const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const dir = getUseCaseDir('dist/', useCase);
   const outfile = `${dir}/headless.js`;
-
   return buildNodeConfig({
     entryPoints: [entryPoint],
     outfile,
