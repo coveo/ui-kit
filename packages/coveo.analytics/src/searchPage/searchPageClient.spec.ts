@@ -506,10 +506,10 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #logSmartSnippetFeedbackReason', async () => {
-        await client.logSmartSnippetFeedbackReason(SmartSnippetFeedbackReason.DoesNotAnswer, 'this is irrelevant');
+        await client.logSmartSnippetFeedbackReason('does_not_answer', 'this is irrelevant');
         expectMatchCustomEventPayload(SearchPageEvents.sendSmartSnippetReason, {
             details: 'this is irrelevant',
-            reason: SmartSnippetFeedbackReason.DoesNotAnswer,
+            reason: 'does_not_answer',
         });
     });
 
