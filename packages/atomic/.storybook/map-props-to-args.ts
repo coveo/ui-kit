@@ -37,15 +37,19 @@ export const mapPropsToArgTypes = (componentTag: string): ArgTypes => {
 
   const ret: ArgTypes = {};
 
-  componentDocumentation.props.forEach((prop) => {
-    ret[prop.name] = {
-      description: prop.docs,
-      table: {
-        defaultValue: {summary: prop.default},
-      },
-      control: determineControlTypeFromJsonValues(prop.values),
-    };
-  });
+  componentDocumentation.props
+    .filter((prop) =>
+      !prop.docsTags.find((value) => value.name === 'disableStorybook')
+    )
+    .forEach((prop) => {
+      ret[prop.name] = {
+        description: prop.docs,
+        table: {
+          defaultValue: {summary: prop.default},
+        },
+        control: determineControlTypeFromJsonValues(prop.values),
+      };
+    });
 
   return ret;
 };
