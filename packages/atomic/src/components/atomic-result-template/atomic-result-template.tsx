@@ -118,7 +118,37 @@ export class AtomicResultTemplate {
   }
 
   private getContent() {
-    return this.getTemplateElement().content;
+    // TODO: reorganise
+    const childTemplatesBySection: HTMLAtomicResultChildrenTemplateElement[][] =
+      [];
+    const content = this.getTemplateElement().content;
+    const childrenTemplates = content.querySelectorAll(
+      'atomic-result-children-template'
+    );
+    childrenTemplates.forEach((template) => {
+      // move contents of atomic-result-children-template into a template tag
+      const templateTag = document.createElement('template');
+      templateTag.innerHTML = template.innerHTML;
+      if (template.previousElementSibling?.tagName === template.tagName) {
+        childTemplatesBySection[childTemplatesBySection.length - 1].push(
+          template
+        );
+      } else {
+        childTemplatesBySection.push([template]);
+      }
+      template.innerHTML = templateTag.outerHTML;
+    });
+
+    childTemplatesBySection.forEach((childTemplateSection) => {
+      // add a list element at the beginning of each section
+      const childResult = document.createElement('atomic-children-result-list');
+      childTemplateSection[0].insertAdjacentElement('beforebegin', childResult);
+      childTemplateSection.forEach((template) => {
+        childResult.appendChild(template);
+      });
+      // childTemplateSection.forEach((template) => template.remove());
+    });
+    return content;
   }
 
   public render() {

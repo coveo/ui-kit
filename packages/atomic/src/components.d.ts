@@ -12,6 +12,7 @@ import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } fro
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
+import { TemplateContent as TemplateContent1 } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -72,8 +73,10 @@ export namespace Components {
         "withSearch": boolean;
     }
     interface AtomicChildResult {
-        "result": FoldedResult;
-        "templateHTML": string;
+        "child": Result;
+        "template": DocumentFragment;
+    }
+    interface AtomicChildrenResultList {
     }
     interface AtomicColorFacet {
         /**
@@ -542,6 +545,11 @@ export namespace Components {
         "label"?: string;
     }
     interface AtomicResultChildrenTemplate {
+        "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -917,6 +925,12 @@ declare global {
     var HTMLAtomicChildResultElement: {
         prototype: HTMLAtomicChildResultElement;
         new (): HTMLAtomicChildResultElement;
+    };
+    interface HTMLAtomicChildrenResultListElement extends Components.AtomicChildrenResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicChildrenResultListElement: {
+        prototype: HTMLAtomicChildrenResultListElement;
+        new (): HTMLAtomicChildrenResultListElement;
     };
     interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
     }
@@ -1337,6 +1351,7 @@ declare global {
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-child-result": HTMLAtomicChildResultElement;
+        "atomic-children-result-list": HTMLAtomicChildrenResultListElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -1464,8 +1479,10 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     interface AtomicChildResult {
-        "result": FoldedResult;
-        "templateHTML": string;
+        "child": Result;
+        "template": DocumentFragment;
+    }
+    interface AtomicChildrenResultList {
     }
     interface AtomicColorFacet {
         /**
@@ -1932,6 +1949,7 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicResultChildrenTemplate {
+        "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultDate {
         /**
@@ -2266,6 +2284,7 @@ declare namespace LocalJSX {
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-child-result": AtomicChildResult;
+        "atomic-children-result-list": AtomicChildrenResultList;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -2345,6 +2364,7 @@ declare module "@stencil/core" {
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-child-result": LocalJSX.AtomicChildResult & JSXBase.HTMLAttributes<HTMLAtomicChildResultElement>;
+            "atomic-children-result-list": LocalJSX.AtomicChildrenResultList & JSXBase.HTMLAttributes<HTMLAtomicChildrenResultListElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;

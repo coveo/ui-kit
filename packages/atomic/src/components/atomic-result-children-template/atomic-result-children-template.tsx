@@ -1,11 +1,11 @@
 import {
-  FoldedResult,
+  ResultTemplate,
   ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {Component, Element, h, State} from '@stencil/core';
+import {Component, Element, h, Method, Prop, State} from '@stencil/core';
 import {MapProp} from '../../utils/props-utils';
-import {FoldedResultContext} from '../result-template-components/result-template-decorators';
+import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 
 @Component({
   tag: 'atomic-result-children-template',
@@ -13,12 +13,12 @@ import {FoldedResultContext} from '../result-template-components/result-template
 })
 export class AtomicResultChildrenTemplate {
   private matchConditions: ResultTemplateCondition[] = [];
-  @FoldedResultContext() private foldedResult!: FoldedResult;
 
   @State() private error?: Error;
 
   @Element() private host!: HTMLDivElement;
 
+  @Prop() public conditions: ResultTemplateCondition[] = [];
   /**
    * Fields and field values that results must match for the result template to apply.
    *
@@ -63,6 +63,36 @@ export class AtomicResultChildrenTemplate {
     }
   }
 
+  /**
+   * Gets the appropriate result template based on conditions applied.
+   */
+  @Method()
+  public async getTemplate(): Promise<ResultTemplate<TemplateContent> | null> {
+    if (this.error) {
+      return null;
+    }
+
+    return {
+      conditions: this.getConditions(),
+      content: this.getContent(),
+      priority: 1,
+    };
+  }
+
+  private getConditions() {
+    return this.conditions.concat(this.matchConditions);
+  }
+
+  private getTemplateElement() {
+    return (
+      this.host.querySelector('template') ?? document.createElement('template')
+    );
+  }
+
+  private getContent() {
+    return this.getTemplateElement().content;
+  }
+
   public render() {
     if (this.error) {
       return (
@@ -72,29 +102,5 @@ export class AtomicResultChildrenTemplate {
         ></atomic-component-error>
       );
     }
-    if (this.foldedResult.children.length) {
-      const inner = this.host.innerHTML.trim();
-      const els = this.foldedResult.children
-        .map((child) => {
-          if (
-            this.matchConditions.every((condition) => condition(child.result))
-          ) {
-            return (
-              <atomic-child-result
-                result={child}
-                templateHTML={inner || atomicLink}
-              ></atomic-child-result>
-            );
-          }
-        })
-        .filter((el) => el);
-      if (els.length) {
-        return els;
-      } else {
-        this.host.remove();
-      }
-    }
   }
 }
-
-const atomicLink = '<atomic-result-link></atomic-result-link>';
