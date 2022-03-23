@@ -97,8 +97,6 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
     entryPoints: [entryPoint],
     outfile,
     format: 'iife',
-    target: 'es6',
-    minify: false,
     globalName: globalName,
     footer: {
       js: footer,
@@ -114,7 +112,7 @@ function buildBrowserConfig(options) {
   return build({
     ...base,
     platform: 'browser',
-    minify: false,
+    minify: true,
     sourcemap: true,
     plugins: [
       alias({
