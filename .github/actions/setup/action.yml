@@ -43,7 +43,7 @@ runs:
         path: |
           node_modules
           **/node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}
+        key: ${{ hashFiles('**/package-lock.json') }}-foo
     - run: |
         npm ci
         npx --no-install lerna bootstrap --ci
