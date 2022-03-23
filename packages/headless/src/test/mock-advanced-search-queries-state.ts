@@ -10,7 +10,9 @@ export function buildMockAdvancedSearchQueriesState(
     aqWasSet: false,
     lq: '',
     lqWasSet: false,
-    defaultFilters: {aq: '', cq: '', lq: ''},
+    dq: '',
+    dqWasSet: false,
+    defaultFilters: {aq: '', cq: '', lq: '', dq: ''},
     ...config,
   };
 }

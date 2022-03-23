@@ -64,6 +64,26 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
     });
   });
 
+  describe('#dq', () => {
+    it(`when there is a dq in state,
+    the expression is included in the request`, async () => {
+      const state = createMockState();
+      state.advancedSearchQueries.dq = 'a';
+
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.dq).toBe('a');
+    });
+
+    it(`when the dq is an empty string,
+    the dq is not included in the request`, async () => {
+      const state = createMockState();
+      state.advancedSearchQueries.dq = '';
+
+      const request = await buildSearchAndFoldingLoadCollectionRequest(state);
+      expect(request.dq).toBe(undefined);
+    });
+  });
+
   describe('#excerptLength', () => {
     it(`when there is an excerpt length in state,
     the parameter is included in the request`, async () => {
