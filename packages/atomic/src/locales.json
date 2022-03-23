@@ -930,6 +930,14 @@
     "en": "Apply",
     "fr": "Filtrer"
   },
+  "yes": {
+    "en": "Yes",
+    "fr": "Oui"
+  },
+  "no": {
+    "en": "No",
+    "fr": "Non"
+  },
   "number-input-minimum": {
     "en": "Enter a minimum numerical value for the {{label}} facet",
     "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"
@@ -1145,5 +1153,13 @@
   "smart-snippet-source": {
     "en": "Source of the answer",
     "fr": "Source de la réponse"
+  },
+  "smart-snippet-feedback-inquiry": {
+    "en": "Was this information useful?",
+    "fr": "Est-ce que cette information est utile\u00A0?"
+  },
+  "smart-snippet-feedback-thanks": {
+    "en": "Thank you for your feedback!",
+    "fr": "Merci pour votre réponse\u00A0!"
   }
 }

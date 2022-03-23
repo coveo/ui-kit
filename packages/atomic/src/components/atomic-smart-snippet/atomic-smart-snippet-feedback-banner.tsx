@@ -1,0 +1,105 @@
+import {h, FunctionalComponent} from '@stencil/core';
+import Checkmark from '../../images/checkmark.svg';
+import Cross from '../../images/cross.svg';
+import {i18n} from 'i18next';
+import {RadioButton} from '../common/radio-button';
+
+interface SmartSnippetFeedbackBannerProps {
+  i18n: i18n;
+  id: string;
+  liked: boolean;
+  disliked: boolean;
+  onLike(): void;
+  onDislike(): void;
+}
+
+export const SmartSnippetFeedbackBanner: FunctionalComponent<
+  SmartSnippetFeedbackBannerProps
+> = (props) => {
+  const inquiryId = 'feedback-inquiry-' + props.id;
+  const thankYouId = 'feedback-thank-you-' + props.id;
+  const radioGroupName = 'feedback-options-' + props.id;
+
+  const Inquiry = () => (
+    <span id={inquiryId} part="feedback-inquiry" class="shrink-0">
+      {props.i18n.t('smart-snippet-feedback-inquiry')}
+    </span>
+  );
+
+  const Buttons = () => (
+    <div part="feedback-buttons" class="flex gap-x-4">
+      <label
+        part="feedback-like-button"
+        class={
+          'flex items-center gap-x-1.5 ' +
+          (props.liked ? 'text-success' : 'cursor-pointer hover:underline')
+        }
+      >
+        <atomic-icon
+          icon={Checkmark}
+          aria-hidden={true}
+          class="w-3.5"
+        ></atomic-icon>
+        <RadioButton
+          groupName={radioGroupName}
+          text={props.i18n.t('yes')}
+          checked={props.liked}
+          onChecked={() => props.onLike()}
+          class="text-inherit cursor-inherit"
+        ></RadioButton>
+      </label>
+      <label
+        part="feedback-dislike-button"
+        class={
+          'flex items-center gap-x-1.5 ' +
+          (props.disliked ? 'text-error' : 'cursor-pointer hover:underline')
+        }
+      >
+        <atomic-icon
+          icon={Cross}
+          aria-hidden={true}
+          class="w-3.5"
+        ></atomic-icon>
+        <RadioButton
+          groupName={radioGroupName}
+          text={props.i18n.t('no')}
+          checked={props.disliked}
+          onChecked={() => props.onDislike()}
+          class="text-inherit cursor-inherit"
+        ></RadioButton>
+      </label>
+    </div>
+  );
+
+  const ThankYouMessage = ({visible}: {visible: boolean}) => (
+    <span
+      id={thankYouId}
+      part="feedback-thank-you"
+      class="inline-flex"
+      style={visible ? {} : {display: 'none'}}
+    >
+      {props.i18n.t('smart-snippet-feedback-thanks')}
+    </span>
+  );
+
+  return (
+    <div
+      part="feedback-banner"
+      class="flex flex-wrap items-center gap-x-4 text-sm leading-4 h-4 overflow-hidden"
+    >
+      <div
+        part="feedback-inquiry-and-buttons"
+        role="radiogroup"
+        aria-labelledby={inquiryId}
+        aria-controls={thankYouId}
+        class="inline-flex gap-x-4"
+      >
+        <Inquiry></Inquiry>
+        <Buttons></Buttons>
+      </div>
+      <ThankYouMessage
+        visible={props.liked || props.disliked}
+      ></ThankYouMessage>
+    </div>
+  );
+};
