@@ -15,7 +15,7 @@ export interface AdvancedSearchQueriesDefaultFiltersState {
   lq: string;
 
   /**
-   * The initial dq filter, or disjunction query expression filter
+   * The initial dq filter, or disjunction query expression filter (e.g., `((q AND aq) OR dq) AND cq).
    */
   dq: string;
 }
