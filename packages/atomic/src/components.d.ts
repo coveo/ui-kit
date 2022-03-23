@@ -12,7 +12,6 @@ import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } fro
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
-import { TemplateContent as TemplateContent1 } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -73,11 +72,8 @@ export namespace Components {
         "withSearch": boolean;
     }
     interface AtomicChildResult {
-        /**
-          * The result content to display.
-         */
-        "content": ParentNode;
-        "result": Result;
+        "result": FoldedResult;
+        "templateHTML": string;
     }
     interface AtomicColorFacet {
         /**
@@ -545,19 +541,7 @@ export namespace Components {
          */
         "label"?: string;
     }
-    interface AtomicResultChildTemplate {
-        "conditions": ResultTemplateCondition[];
-        /**
-          * Gets the appropriate result template based on conditions applied.
-         */
-        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
-    }
-    interface AtomicResultChildren {
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param render
-         */
-        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
+    interface AtomicResultChildrenTemplate {
     }
     interface AtomicResultDate {
         /**
@@ -666,6 +650,8 @@ export namespace Components {
     interface AtomicResultSectionBadges {
     }
     interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionChildren {
     }
     interface AtomicResultSectionEmphasized {
     }
@@ -1118,17 +1104,11 @@ declare global {
         prototype: HTMLAtomicResultBadgeElement;
         new (): HTMLAtomicResultBadgeElement;
     };
-    interface HTMLAtomicResultChildTemplateElement extends Components.AtomicResultChildTemplate, HTMLStencilElement {
+    interface HTMLAtomicResultChildrenTemplateElement extends Components.AtomicResultChildrenTemplate, HTMLStencilElement {
     }
-    var HTMLAtomicResultChildTemplateElement: {
-        prototype: HTMLAtomicResultChildTemplateElement;
-        new (): HTMLAtomicResultChildTemplateElement;
-    };
-    interface HTMLAtomicResultChildrenElement extends Components.AtomicResultChildren, HTMLStencilElement {
-    }
-    var HTMLAtomicResultChildrenElement: {
-        prototype: HTMLAtomicResultChildrenElement;
-        new (): HTMLAtomicResultChildrenElement;
+    var HTMLAtomicResultChildrenTemplateElement: {
+        prototype: HTMLAtomicResultChildrenTemplateElement;
+        new (): HTMLAtomicResultChildrenTemplateElement;
     };
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
     }
@@ -1213,6 +1193,12 @@ declare global {
     var HTMLAtomicResultSectionBottomMetadataElement: {
         prototype: HTMLAtomicResultSectionBottomMetadataElement;
         new (): HTMLAtomicResultSectionBottomMetadataElement;
+    };
+    interface HTMLAtomicResultSectionChildrenElement extends Components.AtomicResultSectionChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionChildrenElement: {
+        prototype: HTMLAtomicResultSectionChildrenElement;
+        new (): HTMLAtomicResultSectionChildrenElement;
     };
     interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
     }
@@ -1382,8 +1368,7 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
-        "atomic-result-child-template": HTMLAtomicResultChildTemplateElement;
-        "atomic-result-children": HTMLAtomicResultChildrenElement;
+        "atomic-result-children-template": HTMLAtomicResultChildrenTemplateElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
@@ -1398,6 +1383,7 @@ declare global {
         "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
         "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
         "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
+        "atomic-result-section-children": HTMLAtomicResultSectionChildrenElement;
         "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
         "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
         "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
@@ -1478,11 +1464,8 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     interface AtomicChildResult {
-        /**
-          * The result content to display.
-         */
-        "content": ParentNode;
-        "result": Result;
+        "result": FoldedResult;
+        "templateHTML": string;
     }
     interface AtomicColorFacet {
         /**
@@ -1948,10 +1931,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
     }
-    interface AtomicResultChildTemplate {
-        "conditions"?: ResultTemplateCondition[];
-    }
-    interface AtomicResultChildren {
+    interface AtomicResultChildrenTemplate {
     }
     interface AtomicResultDate {
         /**
@@ -2055,6 +2035,8 @@ declare namespace LocalJSX {
     interface AtomicResultSectionBadges {
     }
     interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionChildren {
     }
     interface AtomicResultSectionEmphasized {
     }
@@ -2315,8 +2297,7 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge": AtomicResultBadge;
-        "atomic-result-child-template": AtomicResultChildTemplate;
-        "atomic-result-children": AtomicResultChildren;
+        "atomic-result-children-template": AtomicResultChildrenTemplate;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
@@ -2331,6 +2312,7 @@ declare namespace LocalJSX {
         "atomic-result-section-actions": AtomicResultSectionActions;
         "atomic-result-section-badges": AtomicResultSectionBadges;
         "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
+        "atomic-result-section-children": AtomicResultSectionChildren;
         "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
         "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
         "atomic-result-section-title": AtomicResultSectionTitle;
@@ -2394,8 +2376,7 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
-            "atomic-result-child-template": LocalJSX.AtomicResultChildTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultChildTemplateElement>;
-            "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
+            "atomic-result-children-template": LocalJSX.AtomicResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenTemplateElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
@@ -2410,6 +2391,7 @@ declare module "@stencil/core" {
             "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
             "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
             "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
+            "atomic-result-section-children": LocalJSX.AtomicResultSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicResultSectionChildrenElement>;
             "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
             "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
             "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
