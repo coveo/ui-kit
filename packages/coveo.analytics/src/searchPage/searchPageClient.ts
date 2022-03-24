@@ -286,6 +286,10 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.collapseSmartSnippetSuggestion, {documentId});
     }
 
+    public logOpenSmartSnippetSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.logClickEvent(SearchPageEvents.openSmartSnippetSource, info, identifier);
+    }
+
     public logRecentQueryClick() {
         return this.logSearchEvent(SearchPageEvents.recentQueryClick);
     }

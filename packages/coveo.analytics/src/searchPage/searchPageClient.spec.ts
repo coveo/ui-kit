@@ -527,6 +527,11 @@ describe('SearchPageClient', () => {
         });
     });
 
+    it('should send proper payload for #logOpenSmartSnippetSource', async () => {
+        await client.logOpenSmartSnippetSource(fakeDocInfo, fakeDocID);
+        expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);
+    });
+
     it('should send proper payload for #logRecentQueryClick', async () => {
         await client.logRecentQueryClick();
         expectMatchPayload(SearchPageEvents.recentQueryClick);
