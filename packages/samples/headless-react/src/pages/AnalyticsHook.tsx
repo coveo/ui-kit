@@ -15,11 +15,9 @@ declare global {
 }
 
 /**
- * This no op is there to simulate the standard Google Tag Manager data layer
+ * This no op is meant to simulate the standard Google Tag Manager data layer.
  *
- * In a real life scenario, you would arrange for Google Tag Manager to be globally available, following Google documentation.
- *
- * https://developers.google.com/tag-platform/tag-manager/web/datalayer#datalayer
+ * In a real life scenario, you would arrange for Google Tag Manager to be globally available, following [Google documentation](https://developers.google.com/tag-platform/tag-manager/web/datalayer#datalayer).
  */
 const fakeDataLayer = {
   push: function () {},
@@ -47,11 +45,11 @@ export class AnalyticsHook extends Component<
         ...sampleConfig,
         analytics: {
           /**
-           * By using the analytics client middleware, you have access to all the standard search page analytics events data.
+           * The analytics client middleware lets you access all the standard search page analytics events data.
            *
-           * This can be used to either modify or augment the standard payload, and returning the modified object.
+           * This allows you to modify or augment the standard payload and return the modified object.
            *
-           * You can also use this hook to simply push data to an external system, such as Google Tag Manager
+           * You can also use this hook to simply push data to an external system, such as Google Tag Manager.
            *
            */
           analyticsClientMiddleware: (eventType, payload) => {
