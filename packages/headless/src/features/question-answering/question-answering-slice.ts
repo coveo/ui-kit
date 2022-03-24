@@ -3,7 +3,7 @@ import {
   QuestionAnswer,
   QuestionAnswerDocumentIdentifier,
 } from '../../api/search/search/question-answering';
-import {btoaHash} from '../../utils/utils';
+import {encodedBtoa} from '../../utils/utils';
 import {executeSearch} from '../search/search-actions';
 import {
   collapseSmartSnippet,
@@ -33,7 +33,7 @@ function hashQuestionAnswer({
   answerSnippet,
   documentId: {contentIdKey, contentIdValue},
 }: QuestionAnswer) {
-  return btoaHash(
+  return encodedBtoa(
     JSON.stringify({
       question,
       answerSnippet,
@@ -70,10 +70,10 @@ export const questionAnsweringReducer = createReducer(
               expanded: false,
             })
           );
-        const questionAnswerHash = hashQuestionAnswer(
+        const questionAnswerId = hashQuestionAnswer(
           action.payload.response.questionAnswer
         );
-        if (state.questionAnswerHash === questionAnswerHash) {
+        if (state.questionAnswerId === questionAnswerId) {
           return {
             ...state,
             relatedQuestions,
@@ -82,7 +82,7 @@ export const questionAnsweringReducer = createReducer(
         return {
           ...getQuestionAnsweringInitialState(),
           relatedQuestions,
-          questionAnswerHash,
+          questionAnswerId,
         };
       })
       .addCase(expandSmartSnippetRelatedQuestion, (state, action) => {

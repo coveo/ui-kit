@@ -29,7 +29,7 @@ export function removeDuplicates<T>(
   );
 }
 
-export function btoa(stringToEncode: string) {
+export function encodedBtoa(stringToEncode: string) {
   return (typeof btoa !== 'undefined' ? btoa : btoashim)(
     encodeURI(stringToEncode)
   )!;
