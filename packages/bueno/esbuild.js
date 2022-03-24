@@ -1,6 +1,6 @@
 const {build} = require('esbuild');
 const {apacheLicense} = require('../../scripts/license/apache');
-const {umdFooter} = require('../../scripts/bundle/umd');
+const {umdWrapper} = require('../../scripts/bundle/umd');
 
 const devMode = process.argv[2] === 'dev';
 
@@ -45,17 +45,19 @@ function browserEsm() {
 }
 
 function browserUmd() {
-  const footer = umdFooter('Bueno');
+  const umd = umdWrapper('Bueno');
 
   return build({
     ...base,
     platform: 'browser',
     outfile: 'dist/browser/bueno.js',
-    format: 'iife',
-    globalName: 'Bueno',
-    footer: {
-      js: footer.footer,
+    format: 'cjs',
+    banner: {
+      js: `${base.banner.js}\n${umd.header}`
     },
+    footer: {
+      js: umd.footer
+    }
   });
 }
 
