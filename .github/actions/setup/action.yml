@@ -37,13 +37,13 @@ runs:
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           !node_modules
           !**/node_modules
-        key: ${{ github.sha }}-foo2
+        key: ${{ github.sha }}-foo-4
     - uses: actions/cache@v2
       with:
         path: |
           node_modules
           **/node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}-foo
+        key: ${{ hashFiles('**/package-lock.json') }}-foo-3
     - run: |
         npm ci
         npx --no-install lerna bootstrap --ci
@@ -55,3 +55,4 @@ runs:
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run doc:generate
       shell: bash
+
