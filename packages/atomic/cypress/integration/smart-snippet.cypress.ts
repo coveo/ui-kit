@@ -1,5 +1,6 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
+import * as SmartSnippetAssertions from './smart-snippet-assertions';
 
 const question = 'Creating an In-Product Experience (IPX)';
 const sourceTitle = 'Manage the Coveo In-Product Experiences (IPX)';
@@ -78,6 +79,10 @@ describe('Smart Snippet Test Suites', () => {
       );
       SmartSnippetSelectors.sourceTitle().should('have.text', sourceTitle);
     });
+
+    SmartSnippetAssertions.assertLikeButtonChecked(false);
+    SmartSnippetAssertions.assertDislikeButtonChecked(false);
+    SmartSnippetAssertions.assertThankYouBanner(false);
   });
 
   describe('with a specific heading level', () => {
@@ -101,5 +106,27 @@ describe('Smart Snippet Test Suites', () => {
         'H' + (headingLevel + 1)
       );
     });
+  });
+
+  describe('after pressing the like button', () => {
+    before(() => {
+      new TestFixture().with(addSmartSnippet()).init();
+      SmartSnippetSelectors.feedbackLikeButton().click();
+    });
+
+    SmartSnippetAssertions.assertLikeButtonChecked(true);
+    SmartSnippetAssertions.assertDislikeButtonChecked(false);
+    SmartSnippetAssertions.assertThankYouBanner(true);
+  });
+
+  describe('after pressing the dislike button', () => {
+    before(() => {
+      new TestFixture().with(addSmartSnippet()).init();
+      SmartSnippetSelectors.feedbackDislikeButton().click();
+    });
+
+    SmartSnippetAssertions.assertLikeButtonChecked(false);
+    SmartSnippetAssertions.assertDislikeButtonChecked(true);
+    SmartSnippetAssertions.assertThankYouBanner(true);
   });
 });

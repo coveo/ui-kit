@@ -15,6 +15,8 @@ import {
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
+import {randomID} from '../../utils/utils';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -22,9 +24,16 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
  * @part smart-snippet - The wrapper of the entire smart snippet.
  * @part question - The header displaying the question that is answered by the found document excerpt.
  * @part answer - The found document excerpt.
+ * @part footer - The footer underneath the answer.
  * @part source-url - The URL to the document the excerpt is from.
  * @part source-title - The title of the document the excerpt is from.
- * @part footer - The footer underneath the answer.
+ * @part feedback-banner - The feedback banner underneath the source.
+ * @part feedback-inquiry-and-buttons - A wrapper around the feedback inquiry and the feedback buttons.
+ * @part feedback-inquiry - The message asking the end user to provide feedback on whether the excerpt was useful.
+ * @part feedback-buttons - The wrapper around the buttons after the inquiry.
+ * @part feedback-like-button - The button allowing the end user to signal that the excerpt was useful.
+ * @part feedback-dislike-button - The button allowing the end user to signal that the excerpt wasn't useful.
+ * @part feedback-thank-you - The message thanking the end user for providing feedback.
  */
 @Component({
   tag: 'atomic-smart-snippet',
@@ -38,6 +47,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @State()
   public smartSnippetState!: SmartSnippetState;
   public error!: Error;
+  private id = randomID();
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -103,7 +113,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
             {source.clickUri}
           </LinkWithResultAnalytics>
         </div>
-        <div part="source-title">
+        <div part="source-title" class="mb-6">
           <LinkWithResultAnalytics
             title={source.title}
             href={source.clickUri}
@@ -114,6 +124,19 @@ export class AtomicSmartSnippet implements InitializableComponent {
           </LinkWithResultAnalytics>
         </div>
       </section>
+    );
+  }
+
+  public renderFeedbackBanner() {
+    return (
+      <SmartSnippetFeedbackBanner
+        i18n={this.bindings.i18n}
+        id={this.id}
+        liked={this.smartSnippetState.liked}
+        disliked={this.smartSnippetState.disliked}
+        onLike={() => this.smartSnippet.like()}
+        onDislike={() => this.smartSnippet.dislike()}
+      ></SmartSnippetFeedbackBanner>
     );
   }
 
@@ -133,7 +156,10 @@ export class AtomicSmartSnippet implements InitializableComponent {
         >
           {this.renderQuestion()}
           {this.renderContent()}
-          <footer part="footer">{this.renderSource()}</footer>
+          <footer part="footer">
+            {this.renderSource()}
+            {this.renderFeedbackBanner()}
+          </footer>
         </article>
       </aside>
     );

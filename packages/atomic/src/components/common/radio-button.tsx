@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {JSXBase} from '@stencil/core/internal';
 import {createRipple} from '../../utils/ripple';
 import {
   ButtonStyle,
@@ -7,9 +8,9 @@ import {
 } from './button-style';
 
 export interface RadioButtonProps {
-  style: ButtonStyle;
   groupName: string;
   onChecked?(): void;
+  style?: ButtonStyle;
   key?: string | number;
   checked?: boolean;
   class?: string;
@@ -21,8 +22,16 @@ export interface RadioButtonProps {
 }
 
 export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
-  const rippleColor = getRippleColorForButtonStyle(props.style);
-  const classNames = ['btn-radio', getClassNameForButtonStyle(props.style)];
+  const classNames = ['btn-radio'];
+  let onMouseDown:
+    | JSXBase.DOMAttributes<HTMLInputElement>['onMouseDown']
+    | undefined;
+  if (props.style) {
+    const rippleColor = getRippleColorForButtonStyle(props.style);
+    classNames.push(getClassNameForButtonStyle(props.style));
+
+    onMouseDown = (e) => createRipple(e, {color: rippleColor});
+  }
   if (props.checked) {
     classNames.push('selected');
   }
@@ -36,7 +45,7 @@ export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
     checked: props.checked,
     class: classNames.join(' '),
     part: props.part,
-    'aria-label': props.ariaLabel,
+    'aria-label': props.ariaLabel ?? props.text,
     'aria-current': props.ariaCurrent,
     value: props.text,
     ref: props.ref,
@@ -49,7 +58,7 @@ export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
       onChange={(e) =>
         (e.currentTarget as HTMLInputElement).checked && props.onChecked?.()
       }
-      onMouseDown={(e) => createRipple(e, {color: rippleColor})}
+      onMouseDown={onMouseDown}
     />
   );
 };
