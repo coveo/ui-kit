@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.36.3...@coveo/atomic@1.37.0) (2022-03-24)
+
+
+### Features
+
+* **atomic:** added SmartSnippetFeedbackBanner ([#1848](https://github.com/coveo/ui-kit/issues/1848)) ([3d8a44d](https://github.com/coveo/ui-kit/commit/3d8a44d5d9f95306770990529397ac90bc6a0118))
+
+
+
+
+
 ## [1.36.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.36.2...@coveo/atomic@1.36.3) (2022-03-24)
 
 **Note:** Version bump only for package @coveo/atomic
