@@ -54,6 +54,7 @@ export interface SearchBoxProps {
 
 /**
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller
+ * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
  */
 export interface SearchBox extends Controller {
   /**
