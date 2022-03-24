@@ -6,7 +6,6 @@ import {
 import {BreadboxSelectors} from './breadbox-selectors';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
-import {CategoryFacetSelectors} from '../facets/category-facet/category-facet-selectors';
 import {label} from '../facets/facet/facet-actions';
 import {timeframeFacetLabel} from '../facets/timeframe-facet/timeframe-facet-action';
 import {colorFacetLabel} from '../facets/color-facet/color-facet-actions';

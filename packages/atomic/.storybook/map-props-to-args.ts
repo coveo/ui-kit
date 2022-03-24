@@ -21,6 +21,8 @@ const availableControlType = [
   'text',
 ] as const;
 
+const excludedPropType = ['ResultTemplateCondition'] as const;
+
 type ControlType = typeof availableControlType[number];
 
 export const getDocumentationFromTag = (componentTag: string) => {
@@ -37,15 +39,22 @@ export const mapPropsToArgTypes = (componentTag: string): ArgTypes => {
 
   const ret: ArgTypes = {};
 
-  componentDocumentation.props.forEach((prop) => {
-    ret[prop.name] = {
-      description: prop.docs,
-      table: {
-        defaultValue: {summary: prop.default},
-      },
-      control: determineControlTypeFromJsonValues(prop.values),
-    };
-  });
+  componentDocumentation.props
+    .filter(
+      (prop) =>
+        !excludedPropType.some((excludedProp) =>
+          prop.type.toLowerCase().includes(excludedProp.toLowerCase())
+        )
+    )
+    .forEach((prop) => {
+      ret[prop.name] = {
+        description: prop.docs,
+        table: {
+          defaultValue: {summary: prop.default},
+        },
+        control: determineControlTypeFromJsonValues(prop.values),
+      };
+    });
 
   return ret;
 };

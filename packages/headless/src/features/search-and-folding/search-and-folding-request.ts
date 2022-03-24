@@ -2,6 +2,7 @@ import {SearchAppState} from '../../state/search-app-state';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {ConfigurationSection} from '../../state/state-sections';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
+import {SearchRequest} from '../../api/search/search/search-request';
 import {isNullOrUndefined} from '@coveo/bueno';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
@@ -9,7 +10,7 @@ type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
 
 export const buildSearchAndFoldingLoadCollectionRequest = async (
   state: StateNeededByExecuteSearchAndFolding
-) => {
+): Promise<SearchRequest> => {
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -31,6 +32,9 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     }),
     ...(state.advancedSearchQueries?.lq && {
       lq: state.advancedSearchQueries.lq,
+    }),
+    ...(state.advancedSearchQueries?.dq && {
+      dq: state.advancedSearchQueries.dq,
     }),
     ...(state.context && {
       context: state.context.contextValues,
