@@ -129,6 +129,10 @@ import {
   DateFilter as HeadlessDateFilter,
   buildNumericFilter,
   buildDateFilter,
+  buildFieldSuggestions,
+  FieldSuggestions as HeadlessFieldSuggestions,
+  CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions,
+  buildCategoryFieldSuggestions,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -138,6 +142,10 @@ import {DictionaryFieldContext} from '../components/dictionary-field-context/dic
 import {Context} from '../components/context/context';
 import {StaticFilter as StaticFilterFn} from '../components/static-filter/static-filter.fn';
 import {StaticFilter} from '../components/static-filter/static-filter.class';
+import {FieldSuggestions as FieldSuggestionsFn} from '../components/field-suggestions/specific-field/field-suggestions.fn';
+import {FieldSuggestions} from '../components/field-suggestions/specific-field/field-suggestions.class';
+import {CategoryFieldSuggestions as CategorySuggestionsFn} from '../components/field-suggestions/category-field/category-suggestions.fn';
+import {CategoryFieldSuggestions} from '../components/field-suggestions/category-field/category-suggestions.class';
 
 declare global {
   interface Window {
@@ -200,6 +208,8 @@ export class SearchPage extends Component {
   private readonly notifyTrigger: HeadlessNotifyTrigger;
   private readonly smartSnippet: HeadlessSmartSnippet;
   private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
+  private readonly fieldSuggestionsAuthor: HeadlessFieldSuggestions;
+  private readonly categoryFieldSuggestions: HeadlessCategoryFieldSuggestions;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -341,6 +351,17 @@ export class SearchPage extends Component {
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.engine
     );
+
+    this.fieldSuggestionsAuthor = buildFieldSuggestions(this.engine, {
+      options: {field: 'author', facetId: 'author-2'},
+    });
+
+    this.categoryFieldSuggestions = buildCategoryFieldSuggestions(this.engine, {
+      options: {
+        field: 'geographicalhierarchy',
+        facetId: 'geographicalhierarchy-3',
+      },
+    });
   }
 
   initEngine(props: SearchPageProps) {
@@ -496,6 +517,17 @@ export class SearchPage extends Component {
           <Section title="search-box">
             <SearchBox />
             <SearchBoxFn controller={this.searchBox} />
+          </Section>
+          <Section title="field-suggestions">
+            <FieldSuggestions field="author" facetId="author-1" />
+            <FieldSuggestionsFn controller={this.fieldSuggestionsAuthor} />
+          </Section>
+          <Section title="category-field-suggestions">
+            <CategoryFieldSuggestions
+              field="geographicalhierarchy"
+              facetId="geographicalhierarchy-4"
+            />
+            <CategorySuggestionsFn controller={this.categoryFieldSuggestions} />
           </Section>
           <Section title="did-you-mean">
             <DidYouMean />
