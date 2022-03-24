@@ -53,7 +53,7 @@ export interface SearchBoxProps {
 }
 
 /**
- * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
+ * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller
  */
 export interface SearchBox extends Controller {
   /**
