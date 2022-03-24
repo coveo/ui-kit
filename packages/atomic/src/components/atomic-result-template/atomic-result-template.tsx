@@ -33,14 +33,14 @@ export class AtomicResultTemplate {
   @Prop() public conditions: ResultTemplateCondition[] = [];
 
   /**
-   * Fields and field values that results must match for the result template to apply.
+   * The field and values that define which result items the condition must be applied to.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
    */
   @MapProp({splitValues: true}) public mustMatch: Record<string, string[]> = {};
 
   /**
-   * Fields and field values that results must not match for the result template to apply.
+   * The field and values that define which result items the condition must not be applied to.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
    */
