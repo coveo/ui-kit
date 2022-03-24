@@ -29,7 +29,10 @@ export class AtomicFieldCondition {
    */
   @Prop({reflect: true}) ifNotDefined?: string;
   /**
-   * A list of conditions that must be fulfilled for this template to be selected.
+   * A function that must return true on results for the result template to apply.
+   *
+   * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
+   * `[(result) => /singapore/i.test(result.title)]`
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
 
