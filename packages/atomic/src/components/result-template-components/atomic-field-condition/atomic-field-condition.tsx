@@ -33,7 +33,6 @@ export class AtomicFieldCondition {
    *
    * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
    * `[(result) => /singapore/i.test(result.title)]`
-   * @disableStorybook
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
 
