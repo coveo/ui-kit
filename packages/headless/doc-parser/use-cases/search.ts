@@ -385,6 +385,28 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildFieldSuggestions',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/field-suggestions/specific-field/field-suggestions.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/field-suggestions/specific-field/field-suggestions.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildCategoryFieldSuggestions',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/field-suggestions/category-field/category-suggestions.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/field-suggestions/category-field/category-suggestions.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

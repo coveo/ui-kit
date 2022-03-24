@@ -1,4 +1,4 @@
-export type {Controller} from './controller/headless-controller';
+export type {Controller, Subscribable} from './controller/headless-controller';
 export {buildController} from './controller/headless-controller';
 
 export type {
@@ -366,3 +366,17 @@ export type {
   AnyFacetValuesCondition,
 } from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
 export {buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
+
+export type {
+  FieldSuggestions,
+  FieldSuggestionsOptions,
+  FieldSuggestionsProps,
+} from './field-suggestions/facet/headless-field-suggestions';
+export {buildFieldSuggestions} from './field-suggestions/facet/headless-field-suggestions';
+
+export type {
+  CategoryFieldSuggestions,
+  CategoryFieldSuggestionsOptions,
+  CategoryFieldSuggestionsProps,
+} from './field-suggestions/category-facet/headless-category-field-suggestions';
+export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
