@@ -1,23 +1,27 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import {toArray} from '../utils/arrayUtils';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 
 const question = 'Creating an In-Product Experience (IPX)';
 const sourceTitle = 'Manage the Coveo In-Product Experiences (IPX)';
 const sourceUrl = 'https://docs.coveo.com/en/3160';
 
-const addSmartSnippet = (headingLevel?: number) => (fixture: TestFixture) => {
-  fixture
-    .withElement(
-      generateComponentHTML(
-        'atomic-smart-snippet',
-        headingLevel !== undefined
-          ? {
-              'heading-level': headingLevel.toString(),
-            }
-          : {}
-      )
-    )
-    .withCustomResponse((response) => {
+interface AddSmartSnippetOptions {
+  props?: {
+    'heading-level'?: number;
+  };
+  content?: HTMLElement | HTMLElement[];
+}
+
+const addSmartSnippet =
+  (options: AddSmartSnippetOptions = {}) =>
+  (fixture: TestFixture) => {
+    const element = generateComponentHTML(
+      'atomic-smart-snippet',
+      options.props
+    );
+    element.append(...toArray(options.content ?? []));
+    fixture.withElement(element).withCustomResponse((response) => {
       const [result] = response.results;
       result.title = sourceTitle;
       result.clickUri = sourceUrl;
@@ -44,7 +48,7 @@ const addSmartSnippet = (headingLevel?: number) => (fixture: TestFixture) => {
         score: 1337,
       };
     });
-};
+  };
 
 describe('Smart Snippet Test Suites', () => {
   describe('with no heading level', () => {
@@ -83,7 +87,9 @@ describe('Smart Snippet Test Suites', () => {
   describe('with a specific heading level', () => {
     const headingLevel = 5;
     beforeEach(() => {
-      new TestFixture().with(addSmartSnippet(headingLevel)).init();
+      new TestFixture()
+        .with(addSmartSnippet({props: {'heading-level': headingLevel}}))
+        .init();
     });
 
     it('should use the correct heading level for the accessibility heading', () => {
@@ -100,6 +106,29 @@ describe('Smart Snippet Test Suites', () => {
         'tagName',
         'H' + (headingLevel + 1)
       );
+    });
+  });
+
+  describe('with custom styling', () => {
+    before(() => {
+      const styleEl = generateComponentHTML('style');
+      styleEl.innerHTML = `
+        b {
+          color: rgb(84, 170, 255);
+        }
+      `;
+      const templateEl = generateComponentHTML(
+        'template'
+      ) as HTMLTemplateElement;
+      templateEl.content.appendChild(styleEl);
+      new TestFixture().with(addSmartSnippet({content: templateEl})).init();
+    });
+
+    it('applies the styling to the rendered snippet', () => {
+      SmartSnippetSelectors.answer()
+        .find('b')
+        .invoke('css', 'color')
+        .should('equal', 'rgb(84, 170, 255)');
     });
   });
 });

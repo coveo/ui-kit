@@ -764,6 +764,7 @@ export namespace Components {
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+        "styleTag"?: HTMLStyleElement;
     }
     interface AtomicSortDropdown {
     }
@@ -2059,6 +2060,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+        "styleTag"?: HTMLStyleElement;
     }
     interface AtomicSortDropdown {
     }

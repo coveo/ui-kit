@@ -11,16 +11,28 @@ import {sanitize} from 'dompurify';
 })
 export class AtomicSmartSnippetAnswer {
   @Prop({reflect: true}) htmlContent!: string;
+  @Prop({reflect: true}) styleTag?: HTMLStyleElement;
+
+  private get style() {
+    if (!this.styleTag) {
+      return null;
+    }
+    // deepcode ignore ReactSetInnerHtml: Parsed from an existing style element
+    return <style innerHTML={this.styleTag.innerHTML}></style>;
+  }
 
   public render() {
     return (
-      // deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify
-      <div
-        innerHTML={sanitize(this.htmlContent, {
-          USE_PROFILES: {html: true},
-        })}
-        part="answer"
-      ></div>
+      <div>
+        {this.style}
+        {/* deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify */}
+        <div
+          innerHTML={sanitize(this.htmlContent, {
+            USE_PROFILES: {html: true},
+          })}
+          part="answer"
+        ></div>
+      </div>
     );
   }
 }

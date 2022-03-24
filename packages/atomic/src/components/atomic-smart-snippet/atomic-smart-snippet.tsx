@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -15,9 +15,21 @@ import {
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {findSmartSnippetStyleTag} from './smart-snippet-common';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
+ *
+ * The style of rendered answers can be customized by adding a style tag in a template tag like so:
+ * ```html
+ * <atomic-smart-snippet>
+ *   <template>
+ *     <style>
+ *       b { color: red; }
+ *     </style>
+ *   </template>
+ * </atomic-smart-snippet>
+ * ```
  *
  * @part smart-snippet - The wrapper of the entire smart snippet.
  * @part question - The header displaying the question that is answered by the found document excerpt.
@@ -32,6 +44,7 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
   shadow: true,
 })
 export class AtomicSmartSnippet implements InitializableComponent {
+  @Element() public host!: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   public smartSnippet!: SmartSnippet;
   @BindStateToController('smartSnippet')
@@ -79,6 +92,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return (
       <atomic-smart-snippet-answer
         htmlContent={this.smartSnippetState.answer}
+        styleTag={findSmartSnippetStyleTag(this.host)}
+        exportparts="answer"
       ></atomic-smart-snippet-answer>
     );
   }
