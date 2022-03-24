@@ -85,14 +85,14 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
   return (
     <div
       part="feedback-banner"
-      class="flex flex-wrap items-center gap-x-4 text-sm leading-4 h-4 overflow-hidden"
+      class="flex flex-wrap items-center gap-4 text-sm leading-4"
     >
       <div
         part="feedback-inquiry-and-buttons"
         role="radiogroup"
         aria-labelledby={inquiryId}
         aria-controls={thankYouId}
-        class="inline-flex gap-x-4"
+        class="inline-flex flex-wrap gap-4"
       >
         <Inquiry></Inquiry>
         <Buttons></Buttons>
