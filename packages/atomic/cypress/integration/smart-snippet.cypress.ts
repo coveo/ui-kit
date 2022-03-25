@@ -24,8 +24,8 @@ const defaultSourceUrl = 'https://docs.coveo.com/en/3160';
 interface AddSmartSnippetOptions {
   props?: {
     'heading-level'?: number;
-    'minimum-snippet-height-for-show-more'?: number;
-    'answer-height-when-collapsed'?: number;
+    'maximum-height'?: number;
+    'collapsed-height'?: number;
   };
   question?: string;
   answer?: string;
@@ -100,6 +100,10 @@ describe('Smart Snippet Test Suites', () => {
         defaultSourceTitle
       );
     });
+
+    SmartSnippetAssertions.assertLikeButtonChecked(false);
+    SmartSnippetAssertions.assertDislikeButtonChecked(false);
+    SmartSnippetAssertions.assertThankYouBanner(false);
   });
 
   describe('with a specific heading level', () => {
@@ -134,8 +138,8 @@ describe('Smart Snippet Test Suites', () => {
         .with(
           addSmartSnippet({
             props: {
-              'minimum-snippet-height-for-show-more': value - 1,
-              'answer-height-when-collapsed': value,
+              'maximum-height': value - 1,
+              'collapsed-height': value,
             },
           })
         )
@@ -154,8 +158,8 @@ describe('Smart Snippet Test Suites', () => {
           addSmartSnippet({
             answer: buildAnswerWithHeight(height),
             props: {
-              'minimum-snippet-height-for-show-more': height,
-              'answer-height-when-collapsed': 150,
+              'maximum-height': height,
+              'collapsed-height': 150,
             },
           })
         )
@@ -175,8 +179,8 @@ describe('Smart Snippet Test Suites', () => {
           addSmartSnippet({
             answer: buildAnswerWithHeight(height),
             props: {
-              'minimum-snippet-height-for-show-more': height - 1,
-              'answer-height-when-collapsed': heightWhenCollapsed,
+              'maximum-height': height - 1,
+              'collapsed-height': heightWhenCollapsed,
             },
           })
         )
@@ -215,8 +219,8 @@ describe('Smart Snippet Test Suites', () => {
           addSmartSnippet({
             answer: 'Abc<p>def</p>ghi',
             props: {
-              'minimum-snippet-height-for-show-more': 2 * remSize,
-              'answer-height-when-collapsed': 0,
+              'maximum-height': 2 * remSize,
+              'collapsed-height': 0,
             },
           })
         )
@@ -240,8 +244,8 @@ describe('Smart Snippet Test Suites', () => {
           addSmartSnippet({
             answer: '<p>Paragraph A</p><p>Paragraph B</p><p>Paragraph C</p>',
             props: {
-              'minimum-snippet-height-for-show-more': 2 * remSize,
-              'answer-height-when-collapsed': 0,
+              'maximum-height': 2 * remSize,
+              'collapsed-height': 0,
             },
           })
         )
@@ -265,8 +269,8 @@ describe('Smart Snippet Test Suites', () => {
           addSmartSnippet({
             answer: '<span><p>My parent has no margins, but I do!</p></span>',
             props: {
-              'minimum-snippet-height-for-show-more': 2 * remSize,
-              'answer-height-when-collapsed': 0,
+              'maximum-height': 2 * remSize,
+              'collapsed-height': 0,
             },
           })
         )
@@ -281,5 +285,27 @@ describe('Smart Snippet Test Suites', () => {
       SmartSnippetAssertions.assertAnswerTopMargin(remSize);
       SmartSnippetAssertions.assertAnswerBottomMargin(remSize);
     });
+  });
+
+  describe('after pressing the like button', () => {
+    before(() => {
+      new TestFixture().with(addSmartSnippet()).init();
+      SmartSnippetSelectors.feedbackLikeButton().click();
+    });
+
+    SmartSnippetAssertions.assertLikeButtonChecked(true);
+    SmartSnippetAssertions.assertDislikeButtonChecked(false);
+    SmartSnippetAssertions.assertThankYouBanner(true);
+  });
+
+  describe('after pressing the dislike button', () => {
+    before(() => {
+      new TestFixture().with(addSmartSnippet()).init();
+      SmartSnippetSelectors.feedbackDislikeButton().click();
+    });
+
+    SmartSnippetAssertions.assertLikeButtonChecked(false);
+    SmartSnippetAssertions.assertDislikeButtonChecked(true);
+    SmartSnippetAssertions.assertThankYouBanner(true);
   });
 });
