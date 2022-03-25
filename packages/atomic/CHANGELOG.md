@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.37.0...@coveo/atomic@1.38.0) (2022-03-25)
+
+
+### Features
+
+* **atomic:** added smart snippet expandable answer ([#1841](https://github.com/coveo/ui-kit/issues/1841)) ([d7169d9](https://github.com/coveo/ui-kit/commit/d7169d96abacecbccdcc9accc9199688f44cdd31))
+
+
+
+
+
 # [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.36.3...@coveo/atomic@1.37.0) (2022-03-24)
 
 
