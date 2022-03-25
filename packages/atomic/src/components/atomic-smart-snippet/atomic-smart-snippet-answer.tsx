@@ -1,4 +1,4 @@
-import {Component, h, Prop} from '@stencil/core';
+import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
 import {sanitize} from 'dompurify';
 
 /**
@@ -12,15 +12,28 @@ import {sanitize} from 'dompurify';
 export class AtomicSmartSnippetAnswer {
   @Prop({reflect: true}) htmlContent!: string;
 
+  @Event({
+    eventName: 'atomic/smartSnippet/answerRendered',
+  })
+  private answerRendered!: EventEmitter<{height: number}>;
+  private wrapperElement?: HTMLElement;
+
+  public componentDidRender() {
+    this.answerRendered.emit({height: this.wrapperElement!.scrollHeight});
+  }
+
   public render() {
     return (
-      // deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify
-      <div
-        innerHTML={sanitize(this.htmlContent, {
-          USE_PROFILES: {html: true},
-        })}
-        part="answer"
-      ></div>
+      <div class="wrapper" ref={(element) => (this.wrapperElement = element)}>
+        {/* deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify */}
+        <div
+          innerHTML={sanitize(this.htmlContent, {
+            USE_PROFILES: {html: true},
+          })}
+          part="answer"
+          class="margin"
+        ></div>
+      </div>
     );
   }
 }

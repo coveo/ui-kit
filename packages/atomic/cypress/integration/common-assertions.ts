@@ -3,7 +3,7 @@ import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
-  shadow: () => Cypress.Chainable<JQuery<unknown>>;
+  shadow: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
 export function should(should: boolean) {
@@ -37,7 +37,7 @@ export function assertContainsComponentError(
   it(`${should(display)} display an error component`, () => {
     componentSelector
       .shadow()
-      .find(ComponentErrorSelectors.component)
+      .find(ComponentErrorSelectors.component, {includeShadowDom: true})
       .should(display ? 'be.visible' : 'not.exist');
   });
 }

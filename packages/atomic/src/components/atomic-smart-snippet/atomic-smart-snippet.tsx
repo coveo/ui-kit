@@ -23,7 +23,11 @@ import {randomID} from '../../utils/utils';
  *
  * @part smart-snippet - The wrapper of the entire smart snippet.
  * @part question - The header displaying the question that is answered by the found document excerpt.
- * @part answer - The found document excerpt.
+ * @part answer - The container displaying the full document excerpt.
+ * @part truncated-answer - The container displaying only part of the answer.
+ * @part show-more-button - The show more button.
+ * @part show-less-button - The show less button.
+ * @part body - The body of the smart snippet, containing the truncated answer and the show more or show less button.
  * @part footer - The footer underneath the answer.
  * @part source-url - The URL to the document the excerpt is from.
  * @part source-title - The title of the document the excerpt is from.
@@ -56,6 +60,15 @@ export class AtomicSmartSnippet implements InitializableComponent {
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
+  /**
+   * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+   */
+  @Prop({reflect: true}) maximumHeight = 250;
+  /**
+   * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+   */
+  @Prop({reflect: true}) collapsedHeight = 180;
+
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
@@ -77,7 +90,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return (
       <Heading
         level={this.headingLevel ? this.headingLevel + 1 : 0}
-        class="mb-4 text-xl font-bold"
+        class="text-xl font-bold"
         part="question"
       >
         {this.smartSnippetState.question}
@@ -87,9 +100,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public renderContent() {
     return (
-      <atomic-smart-snippet-answer
-        htmlContent={this.smartSnippetState.answer}
-      ></atomic-smart-snippet-answer>
+      <atomic-smart-snippet-expandable-answer
+        exportparts="answer,show-more-button,show-less-button,truncated-answer"
+        part="body"
+        maximumHeight={this.maximumHeight}
+        collapsedHeight={this.collapsedHeight}
+      ></atomic-smart-snippet-expandable-answer>
     );
   }
 
