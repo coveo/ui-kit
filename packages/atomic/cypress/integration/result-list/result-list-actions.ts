@@ -54,10 +54,9 @@ export const addFieldValueInResponse =
   };
 
 export const addResultList =
-  (template?: HTMLElement) => (fixture: TestFixture) => {
+  (...children: HTMLElement[]) =>
+  (fixture: TestFixture) => {
     const resultList = generateComponentHTML(resultListComponent);
-    if (template) {
-      resultList.appendChild(template);
-    }
+    resultList.append(...children);
     fixture.withElement(resultList);
   };

@@ -1,5 +1,15 @@
 <script setup lang="ts">
+import {ref, onMounted, nextTick} from 'vue';
 import resultTemplate from '../templates/result-template.html';
+
+const resultList = ref<HTMLAtomicResultListElement | null>(null);
+
+onMounted(async () => {
+  await nextTick();
+  resultList.value!.setStyle(`
+    /* Some style here */
+  `);
+});
 </script>
 
 <template>
@@ -9,6 +19,7 @@ import resultTemplate from '../templates/result-template.html';
       fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
       display="grid"
       image-size="large"
+      ref="resultList"
     >
       <atomic-result-template v-html="resultTemplate"> </atomic-result-template>
     </atomic-result-list>

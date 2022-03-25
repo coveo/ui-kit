@@ -36,6 +36,7 @@ import {TemplateContent} from '../atomic-result-template/atomic-result-template'
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {updateBreakpoints} from './replace-breakpoint';
 import {once} from '../../utils/utils';
+import {StyleFromTemplate} from '../../utils/style-utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -103,6 +104,7 @@ export class AtomicResultList implements InitializableComponent {
   @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
 
   private renderingFunction?: (result: Result) => HTMLElement = undefined;
+  @State() private style?: string;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -116,6 +118,13 @@ export class AtomicResultList implements InitializableComponent {
     render: (result: Result) => HTMLElement
   ) {
     this.renderingFunction = render;
+  }
+
+  /**
+   * Sets the contents of a style tag to use inside the result list.
+   */
+  @Method() public setStyle(style: string) {
+    this.style = style;
   }
 
   private listWrapperRef?: HTMLDivElement;
@@ -389,6 +398,12 @@ export class AtomicResultList implements InitializableComponent {
 
     return (
       <Host>
+        {
+          <StyleFromTemplate
+            host={this.host}
+            fallback={this.style}
+          ></StyleFromTemplate>
+        }
         {this.templateHasError && <slot></slot>}
         {this.buildResultWrapper()}
       </Host>

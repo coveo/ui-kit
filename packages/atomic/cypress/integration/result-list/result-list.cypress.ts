@@ -7,6 +7,7 @@ import {
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {addResultList, buildTemplateWithSections} from './result-list-actions';
 import * as CommonAssertions from '../common-assertions';
+import {template} from 'lodash';
 
 describe('Result List Component', () => {
   it('should load', () => {
@@ -122,6 +123,7 @@ describe('Result List Component', () => {
   });
 
   describe('with a full result template', () => {
+    const wrapperOpacity = 0.95;
     function generateSimpleTextElement() {
       const element = generateComponentHTML('span');
       element.innerText =
@@ -129,22 +131,34 @@ describe('Result List Component', () => {
       return element;
     }
 
+    function generateResultTemplate() {
+      return buildTemplateWithSections({
+        visual: generateSimpleTextElement(),
+        badges: generateSimpleTextElement(),
+        actions: generateSimpleTextElement(),
+        title: generateSimpleTextElement(),
+        titleMetadata: generateSimpleTextElement(),
+        emphasized: generateSimpleTextElement(),
+        excerpt: generateSimpleTextElement(),
+        bottomMetadata: generateSimpleTextElement(),
+      });
+    }
+
+    function generateStyle() {
+      const styleTemplate = generateComponentHTML(
+        'template'
+      ) as HTMLTemplateElement;
+      const styleElement = generateComponentHTML('style');
+      styleElement.innerHTML = `
+        .list-wrapper { opacity: ${wrapperOpacity}; }
+      `;
+      styleTemplate.content.appendChild(styleElement);
+      return styleTemplate;
+    }
+
     before(() => {
       new TestFixture()
-        .with(
-          addResultList(
-            buildTemplateWithSections({
-              visual: generateSimpleTextElement(),
-              badges: generateSimpleTextElement(),
-              actions: generateSimpleTextElement(),
-              title: generateSimpleTextElement(),
-              titleMetadata: generateSimpleTextElement(),
-              emphasized: generateSimpleTextElement(),
-              excerpt: generateSimpleTextElement(),
-              bottomMetadata: generateSimpleTextElement(),
-            })
-          )
-        )
+        .with(addResultList(generateResultTemplate(), generateStyle()))
         .init();
     });
 
@@ -153,6 +167,22 @@ describe('Result List Component', () => {
         CommonAssertions.assertAccessibility(resultListComponent);
       },
       {densities: ['normal'], imageSizes: ['icon', 'small']}
+    );
+
+    withAnySectionnableResultList(
+      () => {
+        it('should be styleable', () => {
+          ResultListSelectors.wrapper()
+            .invoke('css', 'opacity')
+            .should('equal', wrapperOpacity.toString());
+        });
+      },
+      {
+        layouts: ['list', 'grid', 'table'],
+        densities: ['normal'],
+        imageSizes: ['none'],
+        viewports: {desktop: 1024},
+      }
     );
   });
 });

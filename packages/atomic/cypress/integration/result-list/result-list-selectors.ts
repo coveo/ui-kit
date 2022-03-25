@@ -23,6 +23,7 @@ export const resultListComponent = 'atomic-result-list';
 
 export const ResultListSelectors = {
   shadow: () => cy.get(resultListComponent).shadow(),
+  wrapper: () => ResultListSelectors.shadow().find('.list-wrapper'),
   root: () => ResultListSelectors.shadow().find('.list-root'),
   placeholder: () =>
     ResultListSelectors.shadow().find('atomic-result-placeholder'),

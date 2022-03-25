@@ -546,6 +546,10 @@ export namespace Components {
           * @param render
          */
         "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
+        /**
+          * Sets the contents of a style tag to use inside the result list.
+         */
+        "setStyle": (style: string) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**

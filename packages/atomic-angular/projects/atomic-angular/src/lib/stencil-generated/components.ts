@@ -737,7 +737,7 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 @ProxyCmp({
   defineCustomElementFn: undefined,
   inputs: ['density', 'display', 'fieldsToInclude', 'image', 'imageSize'],
-  methods: ['setRenderFunction']
+  methods: ['setRenderFunction', 'setStyle']
 })
 @Component({
   selector: 'atomic-result-list',
