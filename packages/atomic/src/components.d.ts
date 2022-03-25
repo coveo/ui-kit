@@ -5,14 +5,13 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, ResultTemplatesManager, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
-import { TemplateContent as TemplateContent1 } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -71,12 +70,6 @@ export namespace Components {
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
         "withSearch": boolean;
-    }
-    interface AtomicChildResult {
-        "child": Result;
-        "template": DocumentFragment;
-    }
-    interface AtomicChildrenResultList {
     }
     interface AtomicColorFacet {
         /**
@@ -514,10 +507,6 @@ export namespace Components {
          */
         "engine": SearchEngine;
         /**
-          * The folded result item.
-         */
-        "foldedResult"?: FoldedResult;
-        /**
           * @deprecated use `imageSize` instead.
          */
         "image": ResultDisplayImageSize;
@@ -528,7 +517,7 @@ export namespace Components {
         /**
           * The result item.
          */
-        "result": Result;
+        "result": Result | FoldedResult;
     }
     interface AtomicResultBadge {
         /**
@@ -545,11 +534,14 @@ export namespace Components {
         "label"?: string;
     }
     interface AtomicResultChildrenTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
         "conditions": ResultTemplateCondition[];
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -685,6 +677,10 @@ export namespace Components {
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions": ResultTemplateCondition[];
+        /**
+          * Gets all of the available result children templates.
+         */
+        "getChildrenTemplateManager": () => Promise<ResultTemplatesManager<DocumentFragment>>;
         /**
           * Gets the appropriate result template based on conditions applied.
          */
@@ -919,18 +915,6 @@ declare global {
     var HTMLAtomicCategoryFacetElement: {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
-    };
-    interface HTMLAtomicChildResultElement extends Components.AtomicChildResult, HTMLStencilElement {
-    }
-    var HTMLAtomicChildResultElement: {
-        prototype: HTMLAtomicChildResultElement;
-        new (): HTMLAtomicChildResultElement;
-    };
-    interface HTMLAtomicChildrenResultListElement extends Components.AtomicChildrenResultList, HTMLStencilElement {
-    }
-    var HTMLAtomicChildrenResultListElement: {
-        prototype: HTMLAtomicChildrenResultListElement;
-        new (): HTMLAtomicChildrenResultListElement;
     };
     interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
     }
@@ -1350,8 +1334,6 @@ declare global {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-breadbox": HTMLAtomicBreadboxElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
-        "atomic-child-result": HTMLAtomicChildResultElement;
-        "atomic-children-result-list": HTMLAtomicChildrenResultListElement;
         "atomic-color-facet": HTMLAtomicColorFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -1477,12 +1459,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
          */
         "withSearch"?: boolean;
-    }
-    interface AtomicChildResult {
-        "child": Result;
-        "template": DocumentFragment;
-    }
-    interface AtomicChildrenResultList {
     }
     interface AtomicColorFacet {
         /**
@@ -1918,10 +1894,6 @@ declare namespace LocalJSX {
          */
         "engine": SearchEngine;
         /**
-          * The folded result item.
-         */
-        "foldedResult"?: FoldedResult;
-        /**
           * @deprecated use `imageSize` instead.
          */
         "image"?: ResultDisplayImageSize;
@@ -1932,7 +1904,7 @@ declare namespace LocalJSX {
         /**
           * The result item.
          */
-        "result": Result;
+        "result": Result | FoldedResult;
     }
     interface AtomicResultBadge {
         /**
@@ -1949,6 +1921,9 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicResultChildrenTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
         "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultDate {
@@ -2283,8 +2258,6 @@ declare namespace LocalJSX {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-breadbox": AtomicBreadbox;
         "atomic-category-facet": AtomicCategoryFacet;
-        "atomic-child-result": AtomicChildResult;
-        "atomic-children-result-list": AtomicChildrenResultList;
         "atomic-color-facet": AtomicColorFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -2363,8 +2336,6 @@ declare module "@stencil/core" {
             "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
             "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
-            "atomic-child-result": LocalJSX.AtomicChildResult & JSXBase.HTMLAttributes<HTMLAtomicChildResultElement>;
-            "atomic-children-result-list": LocalJSX.AtomicChildrenResultList & JSXBase.HTMLAttributes<HTMLAtomicChildrenResultListElement>;
             "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;

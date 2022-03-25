@@ -3,9 +3,8 @@ import {
   ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {Component, Element, h, Method, Prop, State} from '@stencil/core';
+import {Component, Element, h, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../utils/props-utils';
-import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 
 @Component({
   tag: 'atomic-result-children-template',
@@ -14,11 +13,18 @@ import {TemplateContent} from '../atomic-result-template/atomic-result-template'
 export class AtomicResultChildrenTemplate {
   private matchConditions: ResultTemplateCondition[] = [];
 
-  @State() private error?: Error;
-
   @Element() private host!: HTMLDivElement;
 
+  @State() private error?: Error;
+
+  /**
+   * A function that must return true on results for the result template to apply.
+   *
+   * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
+   * `[(result) => /singapore/i.test(result.title)]`
+   */
   @Prop() public conditions: ResultTemplateCondition[] = [];
+
   /**
    * Fields and field values that results must match for the result template to apply.
    *
@@ -35,14 +41,26 @@ export class AtomicResultChildrenTemplate {
     {};
 
   constructor() {
-    const rootNode = this.host.parentElement?.getRootNode() as ShadowRoot;
-    const isParentResultTemplate = rootNode.host?.tagName === 'ATOMIC-RESULT';
-
-    if (!isParentResultTemplate) {
+    const isParentResultList =
+      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-TEMPLATE';
+    if (!isParentResultList) {
       this.error = new Error(
-        'The "atomic-result-child-template" component has to be the child of an "atomic-result" component.'
+        'The "atomic-result-children-template" component has to be the child of "atomic-result-template".'
       );
       return;
+    }
+
+    if (!this.host.querySelector('template')) {
+      this.error = new Error(
+        'The "atomic-result-children-template" component has to contain a "template" element as a child.'
+      );
+    }
+
+    if (this.host.querySelector('template')?.content.querySelector('script')) {
+      console.warn(
+        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered',
+        this.host
+      );
     }
   }
 
@@ -67,7 +85,7 @@ export class AtomicResultChildrenTemplate {
    * Gets the appropriate result template based on conditions applied.
    */
   @Method()
-  public async getTemplate(): Promise<ResultTemplate<TemplateContent> | null> {
+  public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
     if (this.error) {
       return null;
     }

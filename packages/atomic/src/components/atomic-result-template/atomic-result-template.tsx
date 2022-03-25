@@ -1,12 +1,16 @@
 import {Component, Element, Prop, Method, State, h} from '@stencil/core';
 import {
+  buildResultTemplatesManager,
   ResultTemplate,
   ResultTemplateCondition,
   ResultTemplatesHelpers,
+  ResultTemplatesManager,
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
+import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
+import {randomID} from '../../utils/utils';
 
-export type TemplateContent = DocumentFragment;
+export type TemplateContent = {fragment: DocumentFragment; id: string};
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
@@ -18,11 +22,15 @@ export type TemplateContent = DocumentFragment;
   shadow: true,
 })
 export class AtomicResultTemplate {
+  private childrenResultsTemplatesManager!: ResultTemplatesManager<DocumentFragment>;
+  private id: string = randomID();
+
+  @InitializeBindings() public bindings!: Bindings;
+  @State() public error!: Error;
+
   private matchConditions: ResultTemplateCondition[] = [];
 
   @Element() private host!: HTMLDivElement;
-
-  @State() private error?: Error;
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -102,9 +110,19 @@ export class AtomicResultTemplate {
 
     return {
       conditions: this.getConditions(),
-      content: this.getContent(),
+      content: {fragment: this.getContent(), id: this.id},
       priority: 1,
     };
+  }
+
+  /**
+   * Gets all of the available result children templates.
+   */
+  @Method()
+  public async getChildrenTemplateManager(): Promise<
+    ResultTemplatesManager<DocumentFragment>
+  > {
+    return this.childrenResultsTemplatesManager;
   }
 
   private getConditions() {
@@ -118,37 +136,25 @@ export class AtomicResultTemplate {
   }
 
   private getContent() {
-    // TODO: reorganise
-    const childTemplatesBySection: HTMLAtomicResultChildrenTemplateElement[][] =
-      [];
-    const content = this.getTemplateElement().content;
-    const childrenTemplates = content.querySelectorAll(
-      'atomic-result-children-template'
-    );
-    childrenTemplates.forEach((template) => {
-      // move contents of atomic-result-children-template into a template tag
-      const templateTag = document.createElement('template');
-      templateTag.innerHTML = template.innerHTML;
-      if (template.previousElementSibling?.tagName === template.tagName) {
-        childTemplatesBySection[childTemplatesBySection.length - 1].push(
-          template
-        );
-      } else {
-        childTemplatesBySection.push([template]);
-      }
-      template.innerHTML = templateTag.outerHTML;
-    });
+    return this.getTemplateElement().content;
+  }
 
-    childTemplatesBySection.forEach((childTemplateSection) => {
-      // add a list element at the beginning of each section
-      const childResult = document.createElement('atomic-children-result-list');
-      childTemplateSection[0].insertAdjacentElement('beforebegin', childResult);
-      childTemplateSection.forEach((template) => {
-        childResult.appendChild(template);
-      });
-      // childTemplateSection.forEach((template) => template.remove());
-    });
-    return content;
+  public async initialize() {
+    const content = this.getContent();
+    const childrenTemplates = Array.from(
+      content.querySelectorAll('atomic-result-children-template')
+    );
+    if (childrenTemplates.length) {
+      this.childrenResultsTemplatesManager = buildResultTemplatesManager(
+        this.bindings.engine
+      );
+      await Promise.all(
+        childrenTemplates.map(async (childTemplate) => {
+          const template = await childTemplate.getTemplate();
+          this.childrenResultsTemplatesManager.registerTemplates(template!);
+        })
+      );
+    }
   }
 
   public render() {

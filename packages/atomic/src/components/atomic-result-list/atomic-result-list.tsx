@@ -168,7 +168,7 @@ export class AtomicResultList implements InitializableComponent {
     const linkEl = document.createElement('atomic-result-link');
     content.appendChild(linkEl);
     this.resultTemplatesManager.registerTemplates({
-      content,
+      content: {fragment: content, id: ''},
       conditions: [],
     });
   }
@@ -310,7 +310,7 @@ export class AtomicResultList implements InitializableComponent {
   ): HTMLElement | DocumentFragment {
     return this.renderingFunction
       ? this.renderingFunction(result)
-      : this.getTemplate(result);
+      : this.getTemplate(result).fragment;
   }
 
   private buildList() {

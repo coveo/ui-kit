@@ -62,6 +62,10 @@ export class AtomicFoldedResultList implements InitializableComponent {
   private resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  private childrenTemplatesManagers: {
+    parentId: string;
+    manager: ResultTemplatesManager<DocumentFragment>;
+  }[] = [];
 
   @Element() private host!: HTMLDivElement;
 
@@ -190,11 +194,11 @@ export class AtomicFoldedResultList implements InitializableComponent {
   }
 
   private registerDefaultResultTemplates() {
-    const content = document.createDocumentFragment();
+    const fragment = document.createDocumentFragment();
     const linkEl = document.createElement('atomic-result-link');
-    content.appendChild(linkEl);
+    fragment.appendChild(linkEl);
     this.resultTemplatesManager.registerTemplates({
-      content,
+      content: {fragment, id: 'default'},
       conditions: [],
     });
   }
@@ -208,6 +212,11 @@ export class AtomicFoldedResultList implements InitializableComponent {
           this.templateHasError = true;
           return;
         }
+        this.childrenTemplatesManagers.push({
+          parentId: template.content.id,
+          manager: await resultTemplateElement.getChildrenTemplateManager(),
+        });
+
         this.resultTemplatesManager.registerTemplates(template);
       });
   }
@@ -238,16 +247,20 @@ export class AtomicFoldedResultList implements InitializableComponent {
     return this.resultListState.results.map((result) => {
       const content = this.getContentOfResultTemplate(result);
 
+      // TODO:
+      // const childrenTemplates = this.childrenTemplatesManagers.find(
+      //   (manager) => manager.parentId === content.id
+      // );
       const atomicResult = (
         <atomic-result
           key={this.getId(result.result)}
-          result={result.result}
-          foldedResult={result}
+          result={result}
           engine={this.bindings.engine}
           display={this.display}
           density={this.density}
           imageSize={this.imageSize ?? this.image}
-          content={content}
+          content={content.fragment}
+          // childrenTemplates={childrenTemplates}
         ></atomic-result>
       );
 
@@ -282,7 +295,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
     const fieldColumns = Array.from(
       this.getContentOfResultTemplate(
         this.resultListState.results[0]
-      ).querySelectorAll('atomic-table-element')
+      ).fragment.querySelectorAll('atomic-table-element')
     );
 
     if (fieldColumns.length === 0) {
@@ -318,8 +331,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
                   >
                     <atomic-result
                       engine={this.bindings.engine}
-                      result={result.result}
-                      foldedResult={result}
+                      result={result}
                       display={this.display}
                       density={this.density}
                       image-size={this.imageSize ?? this.image}
@@ -337,9 +349,10 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   private getContentOfResultTemplate(
     result: FoldedResult
-  ): HTMLElement | DocumentFragment {
+  ): {fragment: HTMLElement; id: ''} | TemplateContent {
+    // TODO: handle children for rendering functions too
     return this.renderingFunction
-      ? this.renderingFunction(result.result)
+      ? {fragment: this.renderingFunction(result.result), id: ''}
       : this.getTemplate(result);
   }
 

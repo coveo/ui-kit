@@ -37,12 +37,7 @@ export class AtomicResult {
   /**
    * The result item.
    */
-  @Prop() result!: Result;
-
-  /**
-   * The folded result item.
-   */
-  @Prop() foldedResult?: FoldedResult;
+  @Prop() result!: Result | FoldedResult;
 
   /**
    * The headless search engine.
@@ -80,13 +75,19 @@ export class AtomicResult {
   public resolveResult(event: ResultContextEvent) {
     event.preventDefault();
     event.stopPropagation();
-    event.detail(this.result);
+    if (isFolded(this.result)) {
+      event.detail(this.result.result);
+    } else {
+      event.detail(this.result);
+    }
   }
   @Listen('atomic/resolveFoldedResult')
   public resolveFoldedResult(event: FoldedResultContextEvent) {
     event.preventDefault();
     event.stopPropagation();
-    event.detail(this.foldedResult!);
+    if (isFolded(this.result)) {
+      event.detail(this.result);
+    }
   }
 
   private containsSections() {
@@ -144,4 +145,8 @@ export class AtomicResult {
   public componentDidLoad() {
     applyFocusVisiblePolyfill(this.host);
   }
+}
+
+function isFolded(result: Result | FoldedResult): result is FoldedResult {
+  return 'children' in result;
 }
