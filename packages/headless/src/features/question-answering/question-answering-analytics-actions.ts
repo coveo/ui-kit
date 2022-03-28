@@ -1,14 +1,9 @@
-import {CoveoSearchPageClient} from 'coveo.analytics';
 import {validatePayload} from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {
   documentIdentifierPayloadDefinition,
   QuestionAnsweringDocumentIdActionCreatorPayload,
 } from './question-answering-document-id';
-
-type AnalyticsSmartSnippetFeedbackReason = Parameters<
-  CoveoSearchPageClient['logSmartSnippetFeedbackReason']
->[0];
 
 export type SmartSnippetFeedback =
   | 'does_not_answer'
