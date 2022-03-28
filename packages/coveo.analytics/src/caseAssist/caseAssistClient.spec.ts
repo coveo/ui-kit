@@ -1,4 +1,4 @@
-import {CaseAssistClient} from './caseAssistClient';
+import {CaseAssistClient, CaseAssistClientProvider} from './caseAssistClient';
 import {
     CaseAssistActions,
     CaseAssistEvents,
@@ -13,7 +13,12 @@ import {TicketProperties} from '../plugins/svc';
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 
 describe('CaseAssistClient', () => {
+    const defaultSearchHub = 'origin-level-1';
     let client: CaseAssistClient;
+
+    const provider: CaseAssistClientProvider = {
+        getOriginLevel1: () => defaultSearchHub,
+    };
 
     beforeEach(() => {
         fetchMockBeforeEach();
@@ -29,9 +34,12 @@ describe('CaseAssistClient', () => {
     });
 
     const initClient = () => {
-        return new CaseAssistClient({
-            enableAnalytics: true,
-        });
+        return new CaseAssistClient(
+            {
+                enableAnalytics: true,
+            },
+            provider
+        );
     };
 
     const noTicket: Record<string, unknown> = undefined;
@@ -82,6 +90,7 @@ describe('CaseAssistClient', () => {
 
         expectMatchActionPayload(content, actionName, actionData);
         expectMatchTicketPayload(content, ticket);
+        expectMatchProperty(content, 'searchHub', defaultSearchHub);
     };
 
     const expectMatchActionPayload = (
