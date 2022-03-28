@@ -15,7 +15,6 @@ import {
   buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
-  buildInteractiveResult,
   buildFoldedResultList,
   FoldedResultList,
   FoldedResult,
@@ -29,13 +28,11 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {
-  ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 
@@ -62,10 +59,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
   private resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
-  private childrenTemplatesManagers: {
-    parentId: string;
-    manager: ResultTemplatesManager<DocumentFragment>;
-  }[] = [];
 
   @Element() private host!: HTMLDivElement;
 
@@ -105,10 +98,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**
-   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-   */
-  @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
-  /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
   @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
@@ -121,7 +110,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
    */
   @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
 
-  private renderingFunction?: (result: Result) => HTMLElement = undefined;
+  private renderingFunction?: (result: FoldedResult) => HTMLElement = undefined;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -132,7 +121,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
    * @param render
    */
   @Method() public async setRenderFunction(
-    render: (result: Result) => HTMLElement
+    render: (result: FoldedResult) => HTMLElement
   ) {
     this.renderingFunction = render;
   }
@@ -194,11 +183,11 @@ export class AtomicFoldedResultList implements InitializableComponent {
   }
 
   private registerDefaultResultTemplates() {
-    const fragment = document.createDocumentFragment();
+    const content = document.createDocumentFragment();
     const linkEl = document.createElement('atomic-result-link');
-    fragment.appendChild(linkEl);
+    content.appendChild(linkEl);
     this.resultTemplatesManager.registerTemplates({
-      content: {fragment, id: 'default'},
+      content,
       conditions: [],
     });
   }
@@ -212,11 +201,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
           this.templateHasError = true;
           return;
         }
-        this.childrenTemplatesManagers.push({
-          parentId: template.content.id,
-          manager: await resultTemplateElement.getChildrenTemplateManager(),
-        });
-
         this.resultTemplatesManager.registerTemplates(template);
       });
   }
@@ -235,8 +219,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
       (_, i) => (
         <atomic-result-placeholder
           key={`placeholder-${i}`}
-          display={this.display}
           density={this.density}
+          display="list"
           imageSize={this.imageSize ?? this.image}
         ></atomic-result-placeholder>
       )
@@ -244,136 +228,24 @@ export class AtomicFoldedResultList implements InitializableComponent {
   }
 
   private buildListResults() {
-    return this.resultListState.results.map((result) => {
-      const content = this.getContentOfResultTemplate(result);
-
-      // TODO:
-      // const childrenTemplates = this.childrenTemplatesManagers.find(
-      //   (manager) => manager.parentId === content.id
-      // );
-      const atomicResult = (
-        <atomic-result
-          key={this.getId(result.result)}
-          result={result}
-          engine={this.bindings.engine}
-          display={this.display}
-          density={this.density}
-          imageSize={this.imageSize ?? this.image}
-          content={content.fragment}
-          // childrenTemplates={childrenTemplates}
-        ></atomic-result>
-      );
-
-      return this.display === 'grid' ? (
-        <LinkWithResultAnalytics
-          part="result-list-grid-clickable"
-          interactiveResult={buildInteractiveResult(this.bindings.engine, {
-            options: {result: result.result},
-          })}
-          href={result.result.clickUri}
-          target="_self"
-        >
-          {atomicResult}
-        </LinkWithResultAnalytics>
-      ) : (
-        atomicResult
-      );
-    });
-  }
-
-  private buildTablePlaceholder() {
-    return (
-      <atomic-result-table-placeholder
+    return this.resultListState.results.map((result) => (
+      <atomic-result
+        key={this.getId(result.result)}
+        result={result}
+        engine={this.bindings.engine}
         density={this.density}
         imageSize={this.imageSize ?? this.image}
-        rows={this.resultsPerPageState.numberOfResults}
-      ></atomic-result-table-placeholder>
-    );
-  }
-
-  private buildTable() {
-    const fieldColumns = Array.from(
-      this.getContentOfResultTemplate(
-        this.resultListState.results[0]
-      ).fragment.querySelectorAll('atomic-table-element')
-    );
-
-    if (fieldColumns.length === 0) {
-      this.bindings.engine.logger.error(
-        'atomic-table-element elements missing in the result template to display columns.',
-        this.host
-      );
-    }
-
-    return (
-      <table class={`list-root ${this.classes}`} part="result-table">
-        <thead part="result-table-heading">
-          <tr part="result-table-heading-row">
-            {fieldColumns.map((column) => (
-              <th part="result-table-heading-cell">
-                <atomic-text
-                  value={column.getAttribute('label')!}
-                ></atomic-text>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody part="result-table-body">
-          {this.resultListState.results.map((result) => (
-            <tr key={this.getId(result.result)} part="result-table-row">
-              {fieldColumns.map((column) => {
-                return (
-                  <td
-                    key={
-                      column.getAttribute('label')! + this.getId(result.result)
-                    }
-                    part="result-table-cell"
-                  >
-                    <atomic-result
-                      engine={this.bindings.engine}
-                      result={result}
-                      display={this.display}
-                      density={this.density}
-                      image-size={this.imageSize ?? this.image}
-                      content={column}
-                    ></atomic-result>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
+        content={this.getContentOfResultTemplate(result)}
+      ></atomic-result>
+    ));
   }
 
   private getContentOfResultTemplate(
     result: FoldedResult
-  ): {fragment: HTMLElement; id: ''} | TemplateContent {
-    // TODO: handle children for rendering functions too
+  ): HTMLElement | DocumentFragment {
     return this.renderingFunction
-      ? {fragment: this.renderingFunction(result.result), id: ''}
+      ? this.renderingFunction(result)
       : this.getTemplate(result);
-  }
-
-  private buildList() {
-    return (
-      <div class={`list-root ${this.classes}`} part="result-list">
-        {this.buildListPlaceholders()}
-        {this.resultListState.results.length ? this.buildListResults() : null}
-      </div>
-    );
-  }
-
-  private buildResultRoot() {
-    if (this.display === 'table') {
-      return [
-        this.buildTablePlaceholder(),
-        this.resultListState.results.length ? this.buildTable() : null,
-      ];
-    }
-
-    return this.buildList();
   }
 
   private buildResultWrapper() {
@@ -382,14 +254,17 @@ export class AtomicFoldedResultList implements InitializableComponent {
         class={`list-wrapper placeholder ${this.classes}`}
         ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
       >
-        {this.buildResultRoot()}
+        <div class={`list-root ${this.classes}`} part="result-list">
+          {this.buildListPlaceholders()}
+          {this.resultListState.results.length ? this.buildListResults() : null}
+        </div>
       </div>
     );
   }
 
   private get classes() {
     const classes = getResultDisplayClasses(
-      this.display,
+      'list',
       this.density,
       this.imageSize ?? this.image
     );

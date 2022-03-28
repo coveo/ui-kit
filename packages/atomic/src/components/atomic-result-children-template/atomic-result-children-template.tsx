@@ -5,6 +5,7 @@ import {
 } from '@coveo/headless';
 import {Component, Element, h, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../utils/props-utils';
+import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 
 @Component({
   tag: 'atomic-result-children-template',
@@ -42,10 +43,10 @@ export class AtomicResultChildrenTemplate {
 
   constructor() {
     const isParentResultList =
-      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-TEMPLATE';
+      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-CHILDREN';
     if (!isParentResultList) {
       this.error = new Error(
-        'The "atomic-result-children-template" component has to be the child of "atomic-result-template".'
+        'The "atomic-result-children-template" component has to be the child of "atomic-result-children".'
       );
       return;
     }
@@ -54,6 +55,14 @@ export class AtomicResultChildrenTemplate {
       this.error = new Error(
         'The "atomic-result-children-template" component has to contain a "template" element as a child.'
       );
+      return;
+    }
+
+    if (!this.host.querySelector('template')?.innerHTML.trim()) {
+      this.error = new Error(
+        'The "template" tag insode "atomic-result-children-template" cannot be empty'
+      );
+      return;
     }
 
     if (this.host.querySelector('template')?.content.querySelector('script')) {
@@ -85,14 +94,14 @@ export class AtomicResultChildrenTemplate {
    * Gets the appropriate result template based on conditions applied.
    */
   @Method()
-  public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
+  public async getTemplate(): Promise<ResultTemplate<TemplateContent> | null> {
     if (this.error) {
       return null;
     }
 
     return {
       conditions: this.getConditions(),
-      content: this.getContent(),
+      content: this.getContent()!,
       priority: 1,
     };
   }
@@ -102,13 +111,11 @@ export class AtomicResultChildrenTemplate {
   }
 
   private getTemplateElement() {
-    return (
-      this.host.querySelector('template') ?? document.createElement('template')
-    );
+    return this.host.querySelector('template');
   }
 
   private getContent() {
-    return this.getTemplateElement().content;
+    return this.getTemplateElement()?.content;
   }
 
   public render() {

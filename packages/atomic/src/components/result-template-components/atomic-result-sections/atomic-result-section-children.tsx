@@ -8,7 +8,7 @@ import {hideEmptySection} from '../../../utils/result-section-utils';
   tag: 'atomic-result-section-children',
   shadow: false,
 })
-export class AtomicResultChildrenEmphasized {
+export class AtomicResultSectionChildren {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {

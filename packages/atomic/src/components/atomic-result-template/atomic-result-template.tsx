@@ -1,16 +1,13 @@
 import {Component, Element, Prop, Method, State, h} from '@stencil/core';
 import {
-  buildResultTemplatesManager,
   ResultTemplate,
   ResultTemplateCondition,
   ResultTemplatesHelpers,
-  ResultTemplatesManager,
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
-import {randomID} from '../../utils/utils';
 
-export type TemplateContent = {fragment: DocumentFragment; id: string};
+export type TemplateContent = DocumentFragment;
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
@@ -22,9 +19,6 @@ export type TemplateContent = {fragment: DocumentFragment; id: string};
   shadow: true,
 })
 export class AtomicResultTemplate {
-  private childrenResultsTemplatesManager!: ResultTemplatesManager<DocumentFragment>;
-  private id: string = randomID();
-
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
 
@@ -110,19 +104,9 @@ export class AtomicResultTemplate {
 
     return {
       conditions: this.getConditions(),
-      content: {fragment: this.getContent(), id: this.id},
+      content: this.getContent(),
       priority: 1,
     };
-  }
-
-  /**
-   * Gets all of the available result children templates.
-   */
-  @Method()
-  public async getChildrenTemplateManager(): Promise<
-    ResultTemplatesManager<DocumentFragment>
-  > {
-    return this.childrenResultsTemplatesManager;
   }
 
   private getConditions() {
@@ -137,24 +121,6 @@ export class AtomicResultTemplate {
 
   private getContent() {
     return this.getTemplateElement().content;
-  }
-
-  public async initialize() {
-    const content = this.getContent();
-    const childrenTemplates = Array.from(
-      content.querySelectorAll('atomic-result-children-template')
-    );
-    if (childrenTemplates.length) {
-      this.childrenResultsTemplatesManager = buildResultTemplatesManager(
-        this.bindings.engine
-      );
-      await Promise.all(
-        childrenTemplates.map(async (childTemplate) => {
-          const template = await childTemplate.getTemplate();
-          this.childrenResultsTemplatesManager.registerTemplates(template!);
-        })
-      );
-    }
   }
 
   public render() {

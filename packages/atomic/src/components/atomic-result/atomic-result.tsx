@@ -7,10 +7,7 @@ import {
   getResultDisplayClasses,
 } from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
-import {
-  FoldedResultContextEvent,
-  ResultContextEvent,
-} from '../result-template-components/result-template-decorators';
+import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -76,17 +73,9 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     if (isFolded(this.result)) {
-      event.detail(this.result.result);
+      event.detail(this.result);
     } else {
-      event.detail(this.result);
-    }
-  }
-  @Listen('atomic/resolveFoldedResult')
-  public resolveFoldedResult(event: FoldedResultContextEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (isFolded(this.result)) {
-      event.detail(this.result);
+      event.detail({children: [], result: this.result});
     }
   }
 
