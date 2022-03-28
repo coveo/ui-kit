@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.54.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.0...@coveo/headless@1.54.1) (2022-03-25)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.54.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.53.0...@coveo/headless@1.54.0) (2022-03-24)
+
+
+### Features
+
+* **headless:** add support for disjunctionQuery parameter ([#1845](https://github.com/coveo/ui-kit/issues/1845)) ([9301fa8](https://github.com/coveo/ui-kit/commit/9301fa807b5945da8330b2fb843e1513d35ddebb))
+
+
+
+
+
 # [1.53.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.52.1...@coveo/headless@1.53.0) (2022-03-22)
 
 

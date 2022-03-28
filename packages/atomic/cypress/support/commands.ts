@@ -14,6 +14,9 @@ declare global {
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
       expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
       expectCustomEvent(eventType: string): Chainable<SearchEventRequest>;
+      distanceTo(
+        getSubjectB: () => Chainable<JQuery<HTMLElement>>
+      ): Chainable<{horizontal: number; vertical: number}>;
     }
   }
 }
@@ -61,6 +64,27 @@ Cypress.Commands.add('shouldBeCalled', (urlPart, timesCalled) => {
     `Url containing "${urlPart}"" should have been called ${timesCalled} times`
   ).to.have.length(timesCalled);
 });
+
+Cypress.Commands.add(
+  'distanceTo',
+  {prevSubject: 'element'},
+  ($elementA, getSubjectB) =>
+    getSubjectB().then(([elementB]) => {
+      const [elementA] = $elementA;
+      return cy.wrap({
+        get horizontal() {
+          const rectA = elementA.getBoundingClientRect();
+          const rectB = elementB.getBoundingClientRect();
+          return rectB.left - rectA.right;
+        },
+        get vertical() {
+          const rectA = elementA.getBoundingClientRect();
+          const rectB = elementB.getBoundingClientRect();
+          return rectB.top - rectA.bottom;
+        },
+      });
+    })
+);
 
 // Convert this to a module instead of script (allows import/export)
 export {};

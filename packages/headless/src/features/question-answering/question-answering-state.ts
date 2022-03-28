@@ -21,6 +21,10 @@ export interface QuestionAnsweringState {
    * Determines if the feedback modal with the purpose of explaining why the end user disliked the snippet is currently opened.
    */
   feedbackModalOpened: boolean;
+  /**
+   * The unique identifier for this question & answer.
+   */
+  questionAnswerId?: string;
   relatedQuestions: QuestionAnsweringRelatedQuestionState[];
 }
 
