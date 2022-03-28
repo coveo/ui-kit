@@ -497,7 +497,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   * The event to log when a user wishes to provide feedback about why the smart snippet answer wasn't relevant.
    *
    * @returns A dispatchable action.
    */
@@ -510,7 +510,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   * The event to log when a user no longer wishes to provide feedback about why the smart snippet answer wasn't relevant.
    *
    * @returns A dispatchable action.
    */
@@ -523,7 +523,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   * The event to log when a user provides feedback about why the smart snippet answer wasn't relevant.
    *
    * @returns A dispatchable action.
    */
@@ -536,7 +536,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   * The event to log when a user provides detailed feedback about why the smart snippet answer wasn't relevant.
    *
    * @returns A dispatchable action.
    */
