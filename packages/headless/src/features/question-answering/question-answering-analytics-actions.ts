@@ -15,17 +15,6 @@ export type SmartSnippetFeedback =
   | 'partially_answers'
   | 'was_not_a_question';
 
-function parseSmartSnippetFeedbackReason(
-  feedback: SmartSnippetFeedback
-): AnalyticsSmartSnippetFeedbackReason {
-  switch (feedback) {
-    case 'does_not_answer':
-    case 'partially_answers':
-    case 'was_not_a_question':
-      return feedback as AnalyticsSmartSnippetFeedbackReason;
-  }
-}
-
 export const logExpandSmartSnippet = makeAnalyticsAction(
   'analytics/smartSnippet/expand',
   AnalyticsType.Custom,
@@ -66,21 +55,14 @@ export const logSmartSnippetFeedback = (feedback: SmartSnippetFeedback) =>
   makeAnalyticsAction(
     'analytics/smartSnippet/sendFeedback',
     AnalyticsType.Custom,
-    (client) =>
-      client.logSmartSnippetFeedbackReason(
-        parseSmartSnippetFeedbackReason(feedback)
-      )
+    (client) => client.logSmartSnippetFeedbackReason(feedback)
   )();
 
 export const logSmartSnippetDetailedFeedback = (details: string) =>
   makeAnalyticsAction(
     'analytics/smartSnippet/sendFeedback',
     AnalyticsType.Custom,
-    (client) =>
-      client.logSmartSnippetFeedbackReason(
-        'other' as AnalyticsSmartSnippetFeedbackReason,
-        details
-      )
+    (client) => client.logSmartSnippetFeedbackReason('other', details)
   )();
 
 export const logExpandSmartSnippetSuggestion = (
