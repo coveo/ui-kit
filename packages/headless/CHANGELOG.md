@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.54.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.1...@coveo/headless@1.54.2) (2022-03-28)
+
+
+### Bug Fixes
+
+* **headless:** made question answer reset its state when changed ([#1844](https://github.com/coveo/ui-kit/issues/1844)) ([8d13fa2](https://github.com/coveo/ui-kit/commit/8d13fa2f08da97223189d2eb0e06385e5bdb09eb))
+
+
+
+
+
 ## [1.54.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.0...@coveo/headless@1.54.1) (2022-03-25)
 
 **Note:** Version bump only for package @coveo/headless
