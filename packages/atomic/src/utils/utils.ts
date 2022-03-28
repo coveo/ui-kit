@@ -33,13 +33,14 @@ export function titleToKebab(value: string) {
   return value.replace(/\s/g, '-').toLowerCase();
 }
 
-export function randomID(prepend = '', length = 5) {
-  return (
-    prepend +
-    Math.random()
-      .toString(36)
-      .substr(2, 2 + length)
-  );
+export function randomID(prepend?: string, length = 5) {
+  const randomStr = Math.random()
+    .toString(36)
+    .substring(2, 2 + length);
+  if (!prepend) {
+    return randomStr;
+  }
+  return prepend + randomStr;
 }
 
 export function getRandomArbitrary(min: number, max: number) {

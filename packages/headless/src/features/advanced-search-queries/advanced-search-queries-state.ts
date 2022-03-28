@@ -13,6 +13,11 @@ export interface AdvancedSearchQueriesDefaultFiltersState {
    * The initial lq filter, or large query expression filter
    */
   lq: string;
+
+  /**
+   * The initial dq filter, or disjunction query expression filter (e.g., `((q AND aq) OR dq) AND cq).
+   */
+  dq: string;
 }
 
 export interface AdvancedSearchQueriesState {
@@ -56,6 +61,19 @@ export interface AdvancedSearchQueriesState {
   lqWasSet: boolean;
 
   /**
+   * The dq filter, or disjunction query expression.
+   *
+   * This is the disjunctive part of the query expression that is merged with the other expression parts using an OR boolean operator (e.g., `((q AND aq) OR dq) AND cq).
+   */
+  dq: string;
+  /**
+   * Whether the dq filter was manually set.
+   *
+   * If the dq was manually set and the dq is registered, the dq will not be overriden by the default filter.
+   */
+  dqWasSet: boolean;
+
+  /**
    * The initial filters meant to be used as default values for the cq filter and aq filter.
    */
   defaultFilters: AdvancedSearchQueriesDefaultFiltersState;
@@ -69,9 +87,12 @@ export const getAdvancedSearchQueriesInitialState: () => AdvancedSearchQueriesSt
     aqWasSet: false,
     lq: '',
     lqWasSet: false,
+    dq: '',
+    dqWasSet: false,
     defaultFilters: {
       cq: '',
       aq: '',
       lq: '',
+      dq: '',
     },
   });

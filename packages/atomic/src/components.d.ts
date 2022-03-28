@@ -189,7 +189,7 @@ export namespace Components {
     }
     interface AtomicFieldCondition {
         /**
-          * A list of conditions that must be fulfilled for this template to be selected.
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -808,12 +808,30 @@ export namespace Components {
     }
     interface AtomicSmartSnippet {
         /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+    }
+    interface AtomicSmartSnippetExpandableAnswer {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
     }
     interface AtomicSortDropdown {
     }
@@ -1295,6 +1313,12 @@ declare global {
         prototype: HTMLAtomicSmartSnippetAnswerElement;
         new (): HTMLAtomicSmartSnippetAnswerElement;
     };
+    interface HTMLAtomicSmartSnippetExpandableAnswerElement extends Components.AtomicSmartSnippetExpandableAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetExpandableAnswerElement: {
+        prototype: HTMLAtomicSmartSnippetExpandableAnswerElement;
+        new (): HTMLAtomicSmartSnippetExpandableAnswerElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1399,6 +1423,7 @@ declare global {
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
+        "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
@@ -1581,7 +1606,7 @@ declare namespace LocalJSX {
     }
     interface AtomicFieldCondition {
         /**
-          * A list of conditions that must be fulfilled for this template to be selected.
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions"?: ResultTemplateCondition[];
         /**
@@ -2171,12 +2196,31 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippet {
         /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+        "onAtomic/smartSnippet/answerRendered"?: (event: CustomEvent<{height: number}>) => void;
+    }
+    interface AtomicSmartSnippetExpandableAnswer {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
     }
     interface AtomicSortDropdown {
     }
@@ -2322,6 +2366,7 @@ declare namespace LocalJSX {
         "atomic-search-layout": AtomicSearchLayout;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
+        "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-element": AtomicTableElement;
@@ -2401,6 +2446,7 @@ declare module "@stencil/core" {
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
+            "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;

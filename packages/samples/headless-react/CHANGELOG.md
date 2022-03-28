@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.51.4](https://github.com/coveo/ui-kit/compare/headless-react@0.51.3...headless-react@0.51.4) (2022-03-28)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.51.3](https://github.com/coveo/ui-kit/compare/headless-react@0.51.2...headless-react@0.51.3) (2022-03-25)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.51.2](https://github.com/coveo/ui-kit/compare/headless-react@0.51.1...headless-react@0.51.2) (2022-03-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.51.1](https://github.com/coveo/ui-kit/compare/headless-react@0.51.0...headless-react@0.51.1) (2022-03-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.51.0](https://github.com/coveo/ui-kit/compare/headless-react@0.50.38...headless-react@0.51.0) (2022-03-22)
+
+
+### Features
+
+* **headless:** add field suggestions controller ([#1842](https://github.com/coveo/ui-kit/issues/1842)) ([73adff0](https://github.com/coveo/ui-kit/commit/73adff0608234c700771098c0de670c6a603289c))
+
+
+
+
+
 ## [0.50.38](https://github.com/coveo/ui-kit/compare/headless-react@0.50.37...headless-react@0.50.38) (2022-03-18)
 
 **Note:** Version bump only for package headless-react
