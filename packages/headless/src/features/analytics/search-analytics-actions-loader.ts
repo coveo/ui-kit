@@ -525,6 +525,7 @@ export interface SearchAnalyticsActionCreators {
   /**
    * The event to log when a user provides feedback about why the smart snippet answer wasn't relevant.
    *
+   * @param feedback - The generic feedback that the end user wishes to send.
    * @returns A dispatchable action.
    */
   logSmartSnippetFeedback(feedback: SmartSnippetFeedback): AsyncThunkAction<
@@ -538,6 +539,7 @@ export interface SearchAnalyticsActionCreators {
   /**
    * The event to log when a user provides detailed feedback about why the smart snippet answer wasn't relevant.
    *
+   * @param details - A personalized message from the end user about the relevance of the answer.
    * @returns A dispatchable action.
    */
   logSmartSnippetDetailedFeedback(details: string): AsyncThunkAction<
