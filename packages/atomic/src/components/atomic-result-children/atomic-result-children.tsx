@@ -11,8 +11,10 @@ import {ResultContext} from '../result-template-components/result-template-decor
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 
 const childTemplateComponent = 'atomic-result-children-template';
+
 /**
  * TODO:
+ * @internal
  */
 @Component({
   tag: 'atomic-result-children',

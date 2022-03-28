@@ -7,6 +7,10 @@ import {Component, Element, h, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../utils/props-utils';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 
+/**
+ * TODO:
+ * @internal
+ */
 @Component({
   tag: 'atomic-result-children-template',
   shadow: true,

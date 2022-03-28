@@ -37,8 +37,9 @@ import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 
 /**
- * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+ * The `atomic-folded-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
+ * @internal
  * @part result-list - The element containing every result of a result list
  * @part result-list-grid-clickable - The clickable result when results are displayed as a grid
  * @part result-table - The element of the result table containing a heading and a body
