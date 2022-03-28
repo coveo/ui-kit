@@ -57,8 +57,13 @@ import {
   logExpandSmartSnippet,
   logDislikeSmartSnippet,
   logLikeSmartSnippet,
+  logOpenSmartSnippetFeedbackModal,
+  logCloseSmartSnippetFeedbackModal,
+  logSmartSnippetFeedback,
+  logSmartSnippetDetailedFeedback,
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
+  SmartSnippetFeedback,
 } from '../question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
 import {SearchEngine} from '../../app/search-engine/search-engine';
@@ -492,6 +497,58 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
+   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   *
+   * @returns A dispatchable action.
+   */
+  logOpenSmartSnippetFeedbackModal(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   *
+   * @returns A dispatchable action.
+   */
+  logCloseSmartSnippetFeedbackModal(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   *
+   * @returns A dispatchable action.
+   */
+  logSmartSnippetFeedback(feedback: SmartSnippetFeedback): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user provides positive feedback for a given smart snippet answer.
+   *
+   * @returns A dispatchable action.
+   */
+  logSmartSnippetDetailedFeedback(details: string): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
    * The event to log when a query suggestion is selected.
    *
    * @param payload - The action creator payload.
@@ -625,6 +682,10 @@ export function loadSearchAnalyticsActions(
     logResultsSort,
     logDislikeSmartSnippet,
     logLikeSmartSnippet,
+    logOpenSmartSnippetFeedbackModal,
+    logCloseSmartSnippetFeedbackModal,
+    logSmartSnippetFeedback,
+    logSmartSnippetDetailedFeedback,
     logExpandSmartSnippet,
     logCollapseSmartSnippet,
     logExpandSmartSnippetSuggestion,
