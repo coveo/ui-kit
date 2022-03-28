@@ -34,10 +34,9 @@ export class AtomicResultChildren {
     ).filter((template) => {
       return !elementHasAncestorTag(template, childTemplateComponent);
     });
-
     if (!childrenTemplates.length) {
       this.error = new Error(
-        `The "atomic-result-children" component requires at least one ${childTemplateComponent} component.`
+        `The "atomic-result-children" component requires at least one "${childTemplateComponent}" component.`
       );
       return;
     }

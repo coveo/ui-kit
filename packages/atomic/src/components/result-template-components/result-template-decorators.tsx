@@ -27,11 +27,15 @@ export function ResultContext(opts: {folded: boolean} = {folded: false}) {
       const element = getElement(this);
       const event = buildCustomEvent(
         resultContextEventName,
-        (result: FoldedResult) => {
+        (result: FoldedResult | Result) => {
           if (opts.folded) {
-            this[resultVariable] = result;
+            if (isFolded(result)) {
+              this[resultVariable] = result;
+            } else {
+              this[resultVariable] = {children: [], result};
+            }
           } else {
-            this[resultVariable] = result.result;
+            this[resultVariable] = isFolded(result) ? result.result : result;
           }
         }
       );
@@ -91,3 +95,7 @@ export const resultContext = (element: Element) =>
       reject(new MissingResultParentError(element.nodeName.toLowerCase()));
     }
   });
+
+function isFolded(result: Result | FoldedResult): result is FoldedResult {
+  return 'children' in result;
+}

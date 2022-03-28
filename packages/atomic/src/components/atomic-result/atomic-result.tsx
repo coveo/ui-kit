@@ -72,11 +72,7 @@ export class AtomicResult {
   public resolveResult(event: ResultContextEvent) {
     event.preventDefault();
     event.stopPropagation();
-    if (isFolded(this.result)) {
-      event.detail(this.result);
-    } else {
-      event.detail({children: [], result: this.result});
-    }
+    event.detail(this.result);
   }
 
   private containsSections() {
@@ -134,8 +130,4 @@ export class AtomicResult {
   public componentDidLoad() {
     applyFocusVisiblePolyfill(this.host);
   }
-}
-
-function isFolded(result: Result | FoldedResult): result is FoldedResult {
-  return 'children' in result;
 }
