@@ -57,6 +57,9 @@
         "tsjs": "1.0.3",
         "typescript": "^3.8.3"
     },
+    "overrides": {
+        "plist": "3.0.5"
+    },
     "files": [
         "dist/**/*.d.ts",
         "dist/**/*.js",
