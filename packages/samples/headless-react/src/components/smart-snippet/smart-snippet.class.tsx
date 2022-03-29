@@ -6,7 +6,6 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
-import {filterProtocol} from '../../utils/filter-protocol';
 
 export class SmartSnippet extends Component<{}, SmartSnippetState> {
   static contextType = AppContext;
@@ -51,7 +50,7 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
       return null;
     }
 
-    const {answerFound, answer, question, liked, disliked, expanded, source} =
+    const {answerFound, answer, question, liked, disliked, expanded} =
       this.state;
 
     if (!answerFound) {
@@ -91,23 +90,6 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
             >
               Thumbs down
             </button>
-            {source ? (
-              <a
-                href={filterProtocol(source.clickUri)}
-                onClick={() => this.controller.source?.select()}
-                onContextMenu={() => this.controller.source?.select()}
-                onMouseDown={() => this.controller.source?.select()}
-                onMouseUp={() => this.controller.source?.select()}
-                onTouchStart={() =>
-                  this.controller.source?.beginDelayedSelect()
-                }
-                onTouchEnd={() => this.controller.source?.cancelPendingSelect()}
-              >
-                Source
-              </a>
-            ) : (
-              []
-            )}
           </dd>
         </dl>
       </div>
