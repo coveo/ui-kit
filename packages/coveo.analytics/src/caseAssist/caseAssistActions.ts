@@ -49,6 +49,7 @@ export interface RateDocumentSuggestionMetadata {
 
 export interface MoveToNextCaseStepMetadata {
     ticket: TicketProperties;
+    stage?: string;
 }
 
 export interface CaseCancelledMetadata {

@@ -80,7 +80,9 @@ export class CaseAssistClient {
     }
 
     public logMoveToNextCaseStep(meta: MoveToNextCaseStepMetadata) {
-        this.svc.setAction(CaseAssistActions.nextCaseStep);
+        this.svc.setAction(CaseAssistActions.nextCaseStep, {
+            stage: meta?.stage,
+        });
         this.svc.setTicket(meta.ticket);
         return this.sendClickEvent();
     }
