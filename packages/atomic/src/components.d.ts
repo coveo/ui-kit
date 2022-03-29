@@ -206,6 +206,14 @@ export namespace Components {
     }
     interface AtomicFoldedResultList {
         /**
+          * TODO:
+         */
+        "childField"?: string;
+        /**
+          * TODO:
+         */
+        "collectionField"?: string;
+        /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density": ResultDisplayDensity;
@@ -214,18 +222,6 @@ export namespace Components {
          */
         "fieldsToInclude": string;
         /**
-          * TODO:
-         */
-        "foldingChild"?: string;
-        /**
-          * TODO:
-         */
-        "foldingCollection"?: string;
-        /**
-          * TODO:
-         */
-        "foldingParent"?: string;
-        /**
           * @deprecated use `imageSize` instead.
          */
         "image": ResultDisplayImageSize;
@@ -233,6 +229,10 @@ export namespace Components {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * TODO:
+         */
+        "parentField"?: string;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
@@ -1623,6 +1623,14 @@ declare namespace LocalJSX {
     }
     interface AtomicFoldedResultList {
         /**
+          * TODO:
+         */
+        "childField"?: string;
+        /**
+          * TODO:
+         */
+        "collectionField"?: string;
+        /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density"?: ResultDisplayDensity;
@@ -1631,18 +1639,6 @@ declare namespace LocalJSX {
          */
         "fieldsToInclude"?: string;
         /**
-          * TODO:
-         */
-        "foldingChild"?: string;
-        /**
-          * TODO:
-         */
-        "foldingCollection"?: string;
-        /**
-          * TODO:
-         */
-        "foldingParent"?: string;
-        /**
           * @deprecated use `imageSize` instead.
          */
         "image"?: ResultDisplayImageSize;
@@ -1650,6 +1646,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * TODO:
+         */
+        "parentField"?: string;
     }
     interface AtomicFormatCurrency {
         /**
