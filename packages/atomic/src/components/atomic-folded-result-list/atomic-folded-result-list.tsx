@@ -77,15 +77,15 @@ export class AtomicFoldedResultList implements InitializableComponent {
   /**
    * TODO:
    */
-  @Prop({reflect: true}) public foldingCollection?: string;
+  @Prop({reflect: true}) public collectionField?: string;
   /**
    * TODO:
    */
-  @Prop({reflect: true}) public foldingParent?: string;
+  @Prop({reflect: true}) public parentField?: string;
   /**
    * TODO:
    */
-  @Prop({reflect: true}) public foldingChild?: string;
+  @Prop({reflect: true}) public childField?: string;
 
   /**
    * TODO: KIT-452 Infinite scroll feature
@@ -174,11 +174,15 @@ export class AtomicFoldedResultList implements InitializableComponent {
     const opts: FoldedResultListProps = {};
     opts.options = {...options};
     opts.options.folding = {};
-    if (this.foldingCollection)
-      opts.options.folding.collectionField = this.foldingCollection;
-    if (this.foldingParent)
-      opts.options.folding.parentField = this.foldingParent;
-    if (this.foldingChild) opts.options.folding.childField = this.foldingChild;
+    if (this.collectionField) {
+      opts.options.folding.collectionField = this.collectionField;
+    }
+    if (this.parentField) {
+      opts.options.folding.parentField = this.parentField;
+    }
+    if (this.childField) {
+      opts.options.folding.childField = this.childField;
+    }
 
     return buildFoldedResultList(this.bindings.engine, opts);
   }
