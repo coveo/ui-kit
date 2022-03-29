@@ -1,4 +1,4 @@
-import {useEffect, useState, FunctionComponent, useRef} from 'react';
+import {useEffect, useState, FunctionComponent} from 'react';
 import {SmartSnippet as HeadlessSmartSnippet} from '@coveo/headless';
 
 interface SmartSnippetProps {
@@ -8,7 +8,6 @@ interface SmartSnippetProps {
 export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
   const {controller} = props;
   const [state, setState] = useState(controller.state);
-  const detailedAnswerRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
@@ -28,66 +27,10 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
     };
   };
 
-  const {
-    answerFound,
-    answer,
-    question,
-    liked,
-    disliked,
-    expanded,
-    feedbackModalOpened,
-  } = state;
+  const {answerFound, answer, question, liked, disliked, expanded} = state;
 
   if (!answerFound) {
     return <div>Sorry, no answer has been found for this query.</div>;
-  }
-
-  if (feedbackModalOpened) {
-    return (
-      <div role="dialog">
-        <h1>What's wrong with this snippet?</h1>
-        <fieldset>
-          <legend>Give a simple answer</legend>
-          <ul>
-            <li>
-              <button
-                onClick={() => controller.sendFeedback('does_not_answer')}
-              >
-                It does not answer my question
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => controller.sendFeedback('partially_answers')}
-              >
-                It only partially answers my question
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => controller.sendFeedback('was_not_a_question')}
-              >
-                I was not asking a question
-              </button>
-            </li>
-          </ul>
-        </fieldset>
-        OR
-        <fieldset>
-          <legend>Give a detailed answer</legend>
-          <textarea ref={detailedAnswerRef}></textarea>
-          <button
-            onClick={() =>
-              detailedAnswerRef.current &&
-              controller.sendDetailedFeedback(detailedAnswerRef.current.value)
-            }
-          >
-            Send feedback
-          </button>
-        </fieldset>
-        <button onClick={() => controller.closeFeedbackModal()}>Cancel</button>
-      </div>
-    );
   }
 
   return (
@@ -123,13 +66,6 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
           >
             Thumbs down
           </button>
-          {disliked ? (
-            <button onClick={() => controller.openFeedbackModal()}>
-              Explain why
-            </button>
-          ) : (
-            []
-          )}
         </dd>
       </dl>
     </div>
