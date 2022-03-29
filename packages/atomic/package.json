@@ -82,6 +82,7 @@
     "@storybook/addon-viewport": "6.3.12",
     "@storybook/api": "6.3.12",
     "@storybook/html": "6.3.12",
+    "@tailwindcss/line-clamp": "^0.3.1",
     "@types/dompurify": "2.3.3",
     "@types/escape-html": "1.0.1",
     "@types/jest": "26.0.24",
