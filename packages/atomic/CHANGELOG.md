@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.2...@coveo/atomic@1.39.0) (2022-03-29)
+
+
+### Features
+
+* **atomic:** add folded results component ([#1853](https://github.com/coveo/ui-kit/issues/1853)) ([4197705](https://github.com/coveo/ui-kit/commit/419770513bc5a773b5a48c8e056431b45dae7c23))
+
+
+
+
+
 ## [1.38.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.1...@coveo/atomic@1.38.2) (2022-03-28)
 
 **Note:** Version bump only for package @coveo/atomic
