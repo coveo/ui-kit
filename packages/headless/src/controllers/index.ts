@@ -322,10 +322,14 @@ export {buildNotifyTrigger} from './triggers/headless-notify-trigger';
 
 export type {
   SmartSnippet,
+  SmartSnippetOptions,
+  SmartSnippetProps,
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
 } from './smart-snippet/headless-smart-snippet';
 export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
+
+export type {SmartSnippetSource} from './smart-snippet/headless-smart-snippet-source';
 
 export type {
   SmartSnippetQuestionsList,

@@ -2,6 +2,9 @@ import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 import * as CommonAssertions from './common-assertions';
 import * as SmartSnippetAssertions from './smart-snippet-assertions';
+import {AnalyticsTracker} from '../utils/analyticsUtils';
+import {addSearchBox} from './search-box-actions';
+import {SearchBoxSelectors} from './search-box-selectors';
 
 const remSize = 12;
 const defaultQuestion = 'Creating an In-Product Experience (IPX)';
@@ -307,5 +310,45 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertLikeButtonChecked(false);
     SmartSnippetAssertions.assertDislikeButtonChecked(true);
     SmartSnippetAssertions.assertThankYouBanner(true);
+  });
+
+  describe('after clicking on the title', () => {
+    let currentQuestion: string | undefined = undefined;
+    beforeEach(() => {
+      currentQuestion = undefined;
+      new TestFixture()
+        .with(
+          addSmartSnippet({
+            get question() {
+              return currentQuestion;
+            },
+          })
+        )
+        .with(addSearchBox())
+        .init();
+      SmartSnippetSelectors.sourceTitle().rightclick();
+    });
+
+    SmartSnippetAssertions.assertOpenSmartSnippetSourceAnalytics(true);
+
+    describe('then liking the snippet then clicking the title again', () => {
+      beforeEach(() => {
+        SmartSnippetSelectors.feedbackLikeButton().click();
+        AnalyticsTracker.reset();
+        SmartSnippetSelectors.sourceTitle().rightclick();
+      });
+
+      SmartSnippetAssertions.assertOpenSmartSnippetSourceAnalytics(false);
+    });
+
+    describe('then getting a new snippet and clicking on the title again', () => {
+      beforeEach(() => {
+        currentQuestion = 'Hello, World!';
+        SearchBoxSelectors.submitButton().click();
+        SmartSnippetSelectors.sourceTitle().rightclick();
+      });
+
+      SmartSnippetAssertions.assertOpenSmartSnippetSourceAnalytics(true);
+    });
   });
 });

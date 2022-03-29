@@ -9,8 +9,6 @@ import {
   buildSmartSnippet,
   SmartSnippet,
   SmartSnippetState,
-  ResultTemplatesHelpers,
-  buildInteractiveResult,
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
@@ -73,20 +71,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
 
-  public get source() {
-    if (!this.smartSnippetState.answerFound) {
-      return null;
-    }
-    const {contentIdKey, contentIdValue} = this.smartSnippetState.documentId;
-    const linkedDocument = this.bindings.engine.state.search.results.find(
-      (result) =>
-        ResultTemplatesHelpers.getResultProperty(result, contentIdKey) ===
-        contentIdValue
-    );
-    return linkedDocument ?? null;
-  }
-
-  public renderQuestion() {
+  private renderQuestion() {
     return (
       <Heading
         level={this.headingLevel ? this.headingLevel + 1 : 0}
@@ -98,7 +83,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  public renderContent() {
+  private renderContent() {
     return (
       <atomic-smart-snippet-expandable-answer
         exportparts="answer,show-more-button,show-less-button,truncated-answer"
@@ -109,21 +94,18 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  public renderSource() {
-    const source = this.source;
+  private renderSource() {
+    const {source} = this.smartSnippetState;
     if (!source) {
       return [];
     }
-    const interactiveResult = buildInteractiveResult(this.bindings.engine, {
-      options: {result: source},
-    });
     return (
       <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
         <div part="source-url">
           <LinkWithResultAnalytics
             title={source.clickUri}
             href={source.clickUri}
-            interactiveResult={interactiveResult}
+            interactiveResult={this.smartSnippet.source}
             target="_self"
           >
             {source.clickUri}
@@ -133,7 +115,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
           <LinkWithResultAnalytics
             title={source.title}
             href={source.clickUri}
-            interactiveResult={interactiveResult}
+            interactiveResult={this.smartSnippet.source}
             target="_self"
           >
             {source.title}

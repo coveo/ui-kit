@@ -1,4 +1,5 @@
 import {buildController, Controller} from '../controller/headless-controller';
+import {Result} from '../../api/search/search/result';
 import {search, questionAnswering} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
@@ -16,8 +17,29 @@ import {
   likeSmartSnippet,
 } from '../../features/question-answering/question-answering-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
+import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
+import {
+  buildSmartSnippetSource,
+  SmartSnippetSource,
+} from './headless-smart-snippet-source';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+
+export interface SmartSnippetOptions {
+  /**
+   * The amount of time to wait before selecting the source after calling `source.beginDelayedSelect`.
+   *
+   * @defaultValue `1000`
+   */
+  selectionDelay?: number;
+}
+
+export interface SmartSnippetProps {
+  /**
+   * The options for the `Tab` controller.
+   */
+  options?: SmartSnippetOptions;
+}
 
 /**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .
@@ -27,6 +49,10 @@ export interface SmartSnippet extends Controller {
    * The state of the SmartSnippet controller.
    * */
   state: SmartSnippetState;
+  /**
+   * Methods to interact with the source of the snippet.
+   */
+  source: SmartSnippetSource;
   /**
    * Expand the snippet.
    */
@@ -77,6 +103,10 @@ export interface SmartSnippetState {
    * Determines if the snippet was disliked, or downvoted by the end user.
    */
   disliked: boolean;
+  /**
+   * Provides the source of the smart snippet.
+   */
+  source?: Result;
 }
 
 /**
@@ -85,13 +115,42 @@ export interface SmartSnippetState {
  * @param engine - The headless engine.
  * @returns A `SmartSnippet` controller instance.
  * */
-export function buildSmartSnippet(engine: SearchEngine): SmartSnippet {
+export function buildSmartSnippet(
+  engine: SearchEngine,
+  props?: SmartSnippetProps
+): SmartSnippet {
   if (!loadSmartSnippetReducers(engine)) {
     throw loadReducerError;
   }
 
   const controller = buildController(engine);
   const getState = () => engine.state;
+
+  const getResult = () => {
+    const {contentIdKey, contentIdValue} =
+      getState().search.response.questionAnswer.documentId;
+    return engine.state.search.results.find(
+      (result) => getResultProperty(result, contentIdKey) === contentIdValue
+    );
+  };
+
+  let lastSearchResponseId: string | null = null;
+  let lastSource: SmartSnippetSource | null = null;
+  const getSource = () => {
+    const result = getResult();
+    if (!result) {
+      lastSearchResponseId = null;
+      return null;
+    }
+    const {searchResponseId} = getState().search;
+    if (searchResponseId === lastSearchResponseId) {
+      return lastSource;
+    }
+    lastSearchResponseId = searchResponseId;
+    return (lastSource = buildSmartSnippetSource(engine, {
+      options: {result, selectionDelay: props?.options?.selectionDelay},
+    }));
+  };
 
   return {
     ...controller,
@@ -106,7 +165,20 @@ export function buildSmartSnippet(engine: SearchEngine): SmartSnippet {
         question: state.search.response.questionAnswer.question,
         answer: state.search.response.questionAnswer.answerSnippet,
         documentId: state.search.response.questionAnswer.documentId,
+        source: getResult(),
       };
+    },
+
+    source: {
+      select() {
+        getSource()?.select();
+      },
+      beginDelayedSelect() {
+        getSource()?.beginDelayedSelect();
+      },
+      cancelPendingSelect() {
+        getSource()?.cancelPendingSelect();
+      },
     },
 
     expand() {

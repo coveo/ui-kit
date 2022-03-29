@@ -1,5 +1,6 @@
 import {useEffect, useState, FunctionComponent} from 'react';
 import {SmartSnippet as HeadlessSmartSnippet} from '@coveo/headless';
+import {filterProtocol} from '../../utils/filter-protocol';
 
 interface SmartSnippetProps {
   controller: HeadlessSmartSnippet;
@@ -27,7 +28,8 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
     };
   };
 
-  const {answerFound, answer, question, liked, disliked, expanded} = state;
+  const {answerFound, answer, question, liked, disliked, expanded, source} =
+    state;
 
   if (!answerFound) {
     return <div>Sorry, no answer has been found for this query.</div>;
@@ -66,6 +68,22 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
           >
             Thumbs down
           </button>
+
+          {source ? (
+            <a
+              href={filterProtocol(source.clickUri)}
+              onClick={() => controller.source?.select()}
+              onContextMenu={() => controller.source?.select()}
+              onMouseDown={() => controller.source?.select()}
+              onMouseUp={() => controller.source?.select()}
+              onTouchStart={() => controller.source?.beginDelayedSelect()}
+              onTouchEnd={() => controller.source?.cancelPendingSelect()}
+            >
+              Source
+            </a>
+          ) : (
+            []
+          )}
         </dd>
       </dl>
     </div>

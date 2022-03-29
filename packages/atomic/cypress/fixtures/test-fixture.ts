@@ -169,6 +169,7 @@ export class TestFixture {
           {
             method: 'POST',
             url: '**/rest/search/v2?*',
+            times: 9999,
           },
           (request) => {
             request.reply((response) => {

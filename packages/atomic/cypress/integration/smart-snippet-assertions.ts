@@ -1,3 +1,4 @@
+import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {should} from './common-assertions';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 
@@ -62,5 +63,16 @@ export function assertThankYouBanner(display: boolean) {
     SmartSnippetSelectors.feedbackThankYou().should(
       display ? 'be.visible' : 'be.hidden'
     );
+  });
+}
+
+export function assertOpenSmartSnippetSourceAnalytics(log: boolean) {
+  it(`${should(log)} log a openSmartSnippetSource click event`, () => {
+    if (log) {
+      cy.expectClickEvent('openSmartSnippetSource');
+    } else {
+      cy.wait(50);
+      cy.wrap(AnalyticsTracker).invoke('getLastClickEvent').should('not.exist');
+    }
   });
 }

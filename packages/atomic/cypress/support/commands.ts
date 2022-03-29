@@ -1,5 +1,8 @@
 // Must be declared global to be detected by typescript (allows import/export)
-import {SearchEventRequest} from '@coveo/headless/node_modules/coveo.analytics/src/events';
+import {
+  SearchEventRequest,
+  ClickEventRequest,
+} from '@coveo/headless/node_modules/coveo.analytics/src/events';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 // eslint-disable @typescript/interface-name
@@ -13,6 +16,7 @@ declare global {
       state(key: string): CypressRequest[];
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
       expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
+      expectClickEvent(actionCause: string): Chainable<ClickEventRequest>;
       expectCustomEvent(eventType: string): Chainable<SearchEventRequest>;
       distanceTo(
         getSubjectB: () => Chainable<JQuery<HTMLElement>>
@@ -24,6 +28,15 @@ declare global {
 Cypress.Commands.add('expectSearchEvent', (actionCause) => {
   cy.wrap(AnalyticsTracker)
     .invoke('getLastSearchEvent', actionCause)
+    .should('not.be.null')
+    .should((analyticsBody) => {
+      return analyticsBody;
+    });
+});
+
+Cypress.Commands.add('expectClickEvent', (actionCause) => {
+  cy.wrap(AnalyticsTracker)
+    .invoke('getLastClickEvent', actionCause)
     .should('not.be.null')
     .should((analyticsBody) => {
       return analyticsBody;
