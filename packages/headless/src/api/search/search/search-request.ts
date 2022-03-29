@@ -59,3 +59,26 @@ export type SearchRequest = BaseParam &
   AnalyticsParam &
   ExcerptLength &
   ActionsHistoryParam;
+
+// Change this list when changing the fields exposed by `FieldsToIncludeParam`
+export const SearchDefaultFieldsToInclude: string[] = [
+  'date',
+  'author',
+  'source',
+  'language',
+  'filetype',
+  'parents',
+  'ec_price',
+  'ec_name',
+  'ec_description',
+  'ec_brand',
+  'ec_category',
+  'ec_item_group_id',
+  'ec_shortdesc',
+  'ec_thumbnails',
+  'ec_images',
+  'ec_promo_price',
+  'ec_in_stock',
+  'ec_cogs',
+  'ec_rating',
+];
