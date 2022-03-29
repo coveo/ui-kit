@@ -8,6 +8,7 @@ import {
   logDislikeSmartSnippet,
   logExpandSmartSnippet,
   logLikeSmartSnippet,
+  logOpenSmartSnippetSource,
 } from '../../features/question-answering/question-answering-analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
@@ -18,10 +19,8 @@ import {
 } from '../../features/question-answering/question-answering-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
 import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
-import {
-  buildSmartSnippetSource,
-  SmartSnippetSource,
-} from './headless-smart-snippet-source';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
+import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
@@ -39,6 +38,36 @@ export interface SmartSnippetProps {
    * The options for the `Tab` controller.
    */
   options?: SmartSnippetOptions;
+}
+
+/**
+ * The `SmartSnippetSource` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects the source of a result.
+ */
+export interface SmartSnippetSource {
+  /**
+   * Selects the source, logging a UA event to the Coveo Platform if the source wasn't selected before.
+   *
+   * In a DOM context, it's recommended to call this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   */
+  select(): void;
+
+  /**
+   * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, it's recommended to call this method on the `touchstart` event.
+   */
+  beginDelayedSelect(): void;
+
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelect`.
+   *
+   * In a DOM context, it's recommended to call this method on the `touchend` event.
+   */
+  cancelPendingSelect(): void;
 }
 
 /**
@@ -113,6 +142,7 @@ export interface SmartSnippetState {
  * Creates a `SmartSnippet` controller instance.
  *
  * @param engine - The headless engine.
+ * @param props - The configurable `SmartSnippet` properties.
  * @returns A `SmartSnippet` controller instance.
  * */
 export function buildSmartSnippet(
@@ -135,22 +165,24 @@ export function buildSmartSnippet(
   };
 
   let lastSearchResponseId: string | null = null;
-  let lastSource: SmartSnippetSource | null = null;
-  const getSource = () => {
-    const result = getResult();
-    if (!result) {
-      lastSearchResponseId = null;
-      return null;
+  const interactiveResult = buildInteractiveResultCore(
+    engine,
+    {options: {selectionDelay: props?.options?.selectionDelay}},
+    () => {
+      const result = getResult();
+      if (!result) {
+        lastSearchResponseId = null;
+        return;
+      }
+      const {searchResponseId} = getState().search;
+      if (lastSearchResponseId === searchResponseId) {
+        return;
+      }
+      lastSearchResponseId = searchResponseId;
+      engine.dispatch(logOpenSmartSnippetSource(result));
+      engine.dispatch(pushRecentResult(result));
     }
-    const {searchResponseId} = getState().search;
-    if (searchResponseId === lastSearchResponseId) {
-      return lastSource;
-    }
-    lastSearchResponseId = searchResponseId;
-    return (lastSource = buildSmartSnippetSource(engine, {
-      options: {result, selectionDelay: props?.options?.selectionDelay},
-    }));
-  };
+  );
 
   return {
     ...controller,
@@ -171,13 +203,13 @@ export function buildSmartSnippet(
 
     source: {
       select() {
-        getSource()?.select();
+        interactiveResult.select();
       },
       beginDelayedSelect() {
-        getSource()?.beginDelayedSelect();
+        interactiveResult.beginDelayedSelect();
       },
       cancelPendingSelect() {
-        getSource()?.cancelPendingSelect();
+        interactiveResult.cancelPendingSelect();
       },
     },
 

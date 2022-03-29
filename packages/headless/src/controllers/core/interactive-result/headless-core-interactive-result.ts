@@ -1,16 +1,10 @@
 import {configuration} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
 import {ConfigurationSection} from '../../../state/state-sections';
-import {Result} from '../../../api/search/search/result';
 import {debounce} from 'ts-debounce';
 import {CoreEngine} from '../../..';
 
 export interface InteractiveResultCoreOptions {
-  /**
-   * The query result.
-   */
-  result: Result;
-
   /**
    * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
    *
