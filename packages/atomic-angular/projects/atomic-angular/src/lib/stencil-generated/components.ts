@@ -895,6 +895,25 @@ export class AtomicResultSectionBottomMetadata {
 }
 
 
+export declare interface AtomicResultSectionChildren extends Components.AtomicResultSectionChildren {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-result-section-children',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicResultSectionChildren {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicResultSectionEmphasized extends Components.AtomicResultSectionEmphasized {}
 
 @ProxyCmp({

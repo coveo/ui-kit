@@ -50,6 +50,7 @@ export const AtomicResultRating = /*@__PURE__*/createReactComponent<JSX.AtomicRe
 export const AtomicResultSectionActions = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionActions, HTMLAtomicResultSectionActionsElement>('atomic-result-section-actions');
 export const AtomicResultSectionBadges = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionBadges, HTMLAtomicResultSectionBadgesElement>('atomic-result-section-badges');
 export const AtomicResultSectionBottomMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionBottomMetadata, HTMLAtomicResultSectionBottomMetadataElement>('atomic-result-section-bottom-metadata');
+export const AtomicResultSectionChildren = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionChildren, HTMLAtomicResultSectionChildrenElement>('atomic-result-section-children');
 export const AtomicResultSectionEmphasized = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionEmphasized, HTMLAtomicResultSectionEmphasizedElement>('atomic-result-section-emphasized');
 export const AtomicResultSectionExcerpt = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionExcerpt, HTMLAtomicResultSectionExcerptElement>('atomic-result-section-excerpt');
 export const AtomicResultSectionTitle = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionTitle, HTMLAtomicResultSectionTitleElement>('atomic-result-section-title');
