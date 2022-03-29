@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.54.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.3...@coveo/headless@1.54.4) (2022-03-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.54.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.2...@coveo/headless@1.54.3) (2022-03-28)
 
 **Note:** Version bump only for package @coveo/headless
