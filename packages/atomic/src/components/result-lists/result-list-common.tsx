@@ -7,14 +7,24 @@ import {
   ResultList,
   ResultListState,
   ResultsPerPageState,
+  ResultTemplatesManager,
+  ResultTemplate,
+  buildResultTemplatesManager,
+  buildResultsPerPage,
+  SearchEngine,
+  ResultListProps,
+  FoldedResultListProps,
 } from '@coveo/headless';
 import {Bindings} from '../../utils/initialization-utils';
+import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 import {
   getResultDisplayClasses,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../atomic-result/atomic-result-display-options';
+import {AtomicFoldedResultList} from './atomic-folded-result-list/atomic-folded-result-list';
+import {AtomicResultList} from './atomic-result-list/atomic-result-list';
 
 export interface AtomicResultListBase {
   bindings: Bindings;
@@ -73,4 +83,128 @@ export function getId(
 
 export function unfolded(result: Result | FoldedResult): Result {
   return (result as FoldedResult).result || result;
+}
+
+const defaultFieldsToInclude = [
+  'date',
+  'author',
+  'source',
+  'language',
+  'filetype',
+  'parents',
+  'ec_price',
+  'ec_name',
+  'ec_description',
+  'ec_brand',
+  'ec_category',
+  'ec_item_group_id',
+  'ec_shortdesc',
+  'ec_thumbnails',
+  'ec_images',
+  'ec_promo_price',
+  'ec_in_stock',
+  'ec_cogs',
+  'ec_rating',
+];
+
+export function getFields(fieldsToInclude: string): string[] {
+  if (fieldsToInclude.trim() === '') return [...defaultFieldsToInclude];
+  return defaultFieldsToInclude.concat(
+    fieldsToInclude.split(',').map((field) => field.trim())
+  );
+}
+export function handleInfiniteScroll(
+  isEnabled: boolean,
+  host: HTMLElement,
+  resultList: ResultList | FoldedResultList
+) {
+  if (!isEnabled) {
+    return;
+  }
+
+  const hasReachedEndOfElement =
+    window.innerHeight + window.scrollY >= host.offsetHeight;
+
+  if (hasReachedEndOfElement) {
+    resultList.fetchMoreResults();
+  }
+}
+
+export async function registerResultTemplates(
+  resultTemplatesManager: ResultTemplatesManager<TemplateContent>,
+  host: HTMLDivElement
+): Promise<boolean> {
+  try {
+    const templates = await Promise.all(
+      Array.from(host.querySelectorAll('atomic-result-template')).map(
+        async (resultTemplateElement) => {
+          const template = await resultTemplateElement.getTemplate();
+          if (!template) {
+            throw new Error();
+          }
+          return template;
+        }
+      )
+    );
+
+    resultTemplatesManager.registerTemplates(
+      makeDefaultTemplate(),
+      ...(templates as ResultTemplate<DocumentFragment>[])
+    );
+    return false;
+  } catch (e) {
+    return true;
+  }
+}
+
+function makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
+  const content = document.createDocumentFragment();
+  const linkEl = document.createElement('atomic-result-link');
+  content.appendChild(linkEl);
+  return {
+    content,
+    conditions: [],
+  };
+}
+
+export async function initializeResultList(
+  this: AtomicFoldedResultList | AtomicResultList,
+  buildList: (
+    engine: SearchEngine<{}>,
+    props: ResultListProps | FoldedResultListProps
+  ) => ResultList | FoldedResultList
+) {
+  this.resultTemplatesManager = buildResultTemplatesManager(
+    this.bindings.engine
+  );
+  this.resultList = buildList(this.bindings.engine, {
+    options: {
+      fieldsToInclude: getFields(this.fieldsToInclude),
+    },
+  });
+
+  this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+  const error = await registerResultTemplates(
+    this.resultTemplatesManager,
+    this.host
+  );
+  if (error) {
+    this.templateHasError = true;
+  }
+  this.ready = true;
+}
+
+export function getTemplate(
+  resultTemplatesManager: ResultTemplatesManager<TemplateContent>,
+  result: Result
+): TemplateContent | null {
+  return resultTemplatesManager.selectTemplate(result);
+}
+
+export function postRenderCleanUp(
+  this: AtomicFoldedResultList | AtomicResultList
+) {
+  if (this.resultListState.firstSearchExecuted) {
+    this.listWrapperRef?.classList.remove('placeholder');
+  }
 }

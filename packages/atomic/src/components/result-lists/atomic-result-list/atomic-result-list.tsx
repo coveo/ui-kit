@@ -12,9 +12,7 @@ import {
   ResultListState,
   ResultTemplatesManager,
   buildResultList,
-  buildResultTemplatesManager,
   Result,
-  buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
 } from '@coveo/headless';
@@ -31,6 +29,12 @@ import {
 } from '../../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../../atomic-result-template/atomic-result-template';
 import {ResultList as ResultListComponent} from '../result-list';
+import {
+  getTemplate,
+  handleInfiniteScroll,
+  initializeResultList,
+  postRenderCleanUp,
+} from '../result-list-common';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -54,7 +58,16 @@ export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  public listWrapperRef?: HTMLDivElement;
+
+  /**
+   * TODO: KIT-452 Infinite scroll feature
+   * Whether to automatically retrieve an additional page of results and append it to the
+   * current results when the user scrolls down to the bottom of element
+   */
+  private enableInfiniteScroll = false;
+  private renderingFunction?: (result: Result) => HTMLElement = undefined;
 
   @Element() public host!: HTMLDivElement;
 
@@ -66,15 +79,11 @@ export class AtomicResultList implements InitializableComponent {
   @State()
   public resultsPerPageState!: ResultsPerPageState;
 
+  @State() public ready = false;
+
   @State() public error!: Error;
   @State() public templateHasError = false;
 
-  /**
-   * TODO: KIT-452 Infinite scroll feature
-   * Whether to automatically retrieve an additional page of results and append it to the
-   * current results when the user scrolls down to the bottom of element
-   */
-  private enableInfiniteScroll = false;
   /**
    * A list of non-default fields to include in the query results, separated by commas.
    * The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
@@ -97,8 +106,6 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
 
-  private renderingFunction?: (result: Result) => HTMLElement = undefined;
-
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
@@ -113,81 +120,18 @@ export class AtomicResultList implements InitializableComponent {
     this.renderingFunction = render;
   }
 
-  public listWrapperRef?: HTMLDivElement;
-
-  private get fields() {
-    if (this.fieldsToInclude.trim() === '') return [];
-    return this.fieldsToInclude.split(',').map((field) => field.trim());
+  @Listen('scroll', {target: 'window'})
+  handleInfiniteScroll() {
+    handleInfiniteScroll(this.enableInfiniteScroll, this.host, this.resultList);
   }
 
-  private get defaultFieldsToInclude() {
-    return [
-      'date',
-      'author',
-      'source',
-      'language',
-      'filetype',
-      'parents',
-      'ec_price',
-      'ec_name',
-      'ec_description',
-      'ec_brand',
-      'ec_category',
-      'ec_item_group_id',
-      'ec_shortdesc',
-      'ec_thumbnails',
-      'ec_images',
-      'ec_promo_price',
-      'ec_in_stock',
-      'ec_cogs',
-      'ec_rating',
-    ];
-  }
-
-  public initialize() {
+  public async initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
       console.warn(
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
-    this.resultTemplatesManager = buildResultTemplatesManager(
-      this.bindings.engine
-    );
-    this.resultList = buildResultList(this.bindings.engine, {
-      options: {
-        fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
-      },
-    });
-    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.registerDefaultResultTemplates();
-    this.registerChildrenResultTemplates();
-  }
-
-  private registerDefaultResultTemplates() {
-    const content = document.createDocumentFragment();
-    const linkEl = document.createElement('atomic-result-link');
-    content.appendChild(linkEl);
-    this.resultTemplatesManager.registerTemplates({
-      content,
-      conditions: [],
-    });
-  }
-
-  private registerChildrenResultTemplates() {
-    this.host
-      .querySelectorAll('atomic-result-template')
-      .forEach(async (resultTemplateElement) => {
-        const template = await resultTemplateElement.getTemplate();
-        if (!template) {
-          this.templateHasError = true;
-          return;
-        }
-        this.resultTemplatesManager.registerTemplates(template);
-      });
-  }
-
-  private getTemplate(result: Result): TemplateContent {
-    return this.resultTemplatesManager.selectTemplate(result)!;
+    await initializeResultList.call(this, buildResultList);
   }
 
   public getContentOfResultTemplate(
@@ -195,27 +139,11 @@ export class AtomicResultList implements InitializableComponent {
   ): HTMLElement | DocumentFragment {
     return this.renderingFunction
       ? this.renderingFunction(result)
-      : this.getTemplate(result);
-  }
-
-  @Listen('scroll', {target: 'window'})
-  handleInfiniteScroll() {
-    if (!this.enableInfiniteScroll) {
-      return;
-    }
-
-    const hasReachedEndOfElement =
-      window.innerHeight + window.scrollY >= this.host.offsetHeight;
-
-    if (hasReachedEndOfElement) {
-      this.resultList.fetchMoreResults();
-    }
+      : getTemplate(this.resultTemplatesManager, result)!;
   }
 
   public componentDidRender() {
-    if (this.resultListState.firstSearchExecuted) {
-      this.listWrapperRef?.classList.remove('placeholder');
-    }
+    postRenderCleanUp.call(this);
   }
 
   public render() {
