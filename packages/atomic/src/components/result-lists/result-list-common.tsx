@@ -15,6 +15,7 @@ import {
   ResultListProps,
   FoldedResultListProps,
 } from '@coveo/headless';
+import {identity} from 'lodash';
 import {Bindings} from '../../utils/initialization-utils';
 import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 import {
@@ -134,27 +135,24 @@ export async function registerResultTemplates(
   resultTemplatesManager: ResultTemplatesManager<TemplateContent>,
   host: HTMLDivElement
 ): Promise<boolean> {
-  try {
-    const templates = await Promise.all(
-      Array.from(host.querySelectorAll('atomic-result-template')).map(
-        async (resultTemplateElement) => {
-          const template = await resultTemplateElement.getTemplate();
-          if (!template) {
-            throw new Error();
-          }
-          return template;
+  let hasError = false;
+  const templates = await Promise.all(
+    Array.from(host.querySelectorAll('atomic-result-template')).map(
+      async (resultTemplateElement) => {
+        const template = await resultTemplateElement.getTemplate();
+        if (!template) {
+          hasError = true;
         }
-      )
-    );
+        return template;
+      }
+    )
+  );
 
-    resultTemplatesManager.registerTemplates(
-      makeDefaultTemplate(),
-      ...(templates as ResultTemplate<DocumentFragment>[])
-    );
-    return false;
-  } catch (e) {
-    return true;
-  }
+  resultTemplatesManager.registerTemplates(
+    makeDefaultTemplate(),
+    ...(templates.filter(identity) as ResultTemplate<DocumentFragment>[])
+  );
+  return hasError;
 }
 
 function makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
