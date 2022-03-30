@@ -5,14 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
-import { TemplateContent } from "./components/result-template/atomic-result-template/atomic-result-template";
-import { TemplateContent as TemplateContent1 } from "./components/result-template/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -540,7 +538,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
+        "getTemplate": () => Promise<import("/Users/liviarett/coveo/ui-kit/packages/headless/dist/definitions/index").ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -679,7 +677,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
+        "getTemplate": () => Promise<import("/Users/liviarett/coveo/ui-kit/packages/headless/dist/definitions/index").ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultText {
         /**

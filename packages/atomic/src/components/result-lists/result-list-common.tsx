@@ -17,7 +17,8 @@ import {
 } from '@coveo/headless';
 import {identity} from 'lodash';
 import {Bindings} from '../../utils/initialization-utils';
-import {TemplateContent} from '../atomic-result-template/atomic-result-template';
+import {AtomicResultChildren} from '../atomic-result-children/atomic-result-children';
+import {TemplateContent} from '../result-template/atomic-result-template/atomic-result-template';
 import {
   getResultDisplayClasses,
   ResultDisplayDensity,
@@ -132,27 +133,26 @@ export function handleInfiniteScroll(
 }
 
 export async function registerResultTemplates(
-  resultTemplatesManager: ResultTemplatesManager<TemplateContent>,
-  host: HTMLDivElement
-): Promise<boolean> {
-  let hasError = false;
+  this: AtomicFoldedResultList | AtomicResultList | AtomicResultChildren,
+  templateElements?: HTMLAtomicResultChildrenTemplateElement[]
+) {
+  const elements =
+    templateElements ||
+    Array.from(this.host.querySelectorAll('atomic-result-template'));
   const templates = await Promise.all(
-    Array.from(host.querySelectorAll('atomic-result-template')).map(
-      async (resultTemplateElement) => {
-        const template = await resultTemplateElement.getTemplate();
-        if (!template) {
-          hasError = true;
-        }
-        return template;
+    elements.map(async (resultTemplateElement) => {
+      const template = await resultTemplateElement.getTemplate();
+      if (!template) {
+        this.templateHasError = true;
       }
-    )
+      return template;
+    })
   );
 
-  resultTemplatesManager.registerTemplates(
+  this.resultTemplatesManager.registerTemplates(
     makeDefaultTemplate(),
     ...(templates.filter(identity) as ResultTemplate<DocumentFragment>[])
   );
-  return hasError;
 }
 
 function makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
@@ -182,13 +182,9 @@ export async function initializeResultList(
   });
 
   this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-  const error = await registerResultTemplates(
-    this.resultTemplatesManager,
-    this.host
-  );
-  if (error) {
-    this.templateHasError = true;
-  }
+  await registerResultTemplates.call(this);
+
+  // TODO: await for initialize method instead
   this.ready = true;
 }
 
