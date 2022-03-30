@@ -32,6 +32,13 @@ export default class QuanticCaseAssistInterface extends LightningElement {
    * @type {string}
    */
   @api caseAssistId;
+  /**
+   * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   * @api
+   * @type {string}
+   * @defaultValue 'default'
+   */
+  @api searchHub = 'default';
 
   /** @type {CaseAssistEngineOptions} */
   engineOptions;
@@ -47,6 +54,7 @@ export default class QuanticCaseAssistInterface extends LightningElement {
               configuration: {
                 ...JSON.parse(data),
                 caseAssistId: this.caseAssistId,
+                searchHub: this.searchHub,
               },
             };
             setEngineOptions(

@@ -2,6 +2,8 @@ import {LightningElement, track} from 'lwc';
 // @ts-ignore
 import {getCaseAssistId} from 'c/caseAssistUtils';
 
+const testOrigin = 'test origin';
+
 export default class ExampleQuanticDocumentSuggestion extends LightningElement {
   @track config = {};
   isConfigured = false;
@@ -16,6 +18,12 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
       label: 'Engine id',
       description: 'The id of the case assit engine associated.',
       defaultValue: 'case-assist-engine',
+    },
+    {
+      attribute: 'searchHub',
+      label: 'Search hub',
+      description: 'The first level of origin of the request.',
+      defaultValue: testOrigin,
     },
     {
       attribute: 'searchEngineId',
