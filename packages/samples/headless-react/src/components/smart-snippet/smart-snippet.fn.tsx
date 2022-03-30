@@ -72,12 +72,12 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
           {source ? (
             <a
               href={filterProtocol(source.clickUri)}
-              onClick={() => controller.source?.select()}
-              onContextMenu={() => controller.source?.select()}
-              onMouseDown={() => controller.source?.select()}
-              onMouseUp={() => controller.source?.select()}
-              onTouchStart={() => controller.source?.beginDelayedSelect()}
-              onTouchEnd={() => controller.source?.cancelPendingSelect()}
+              onClick={() => controller.selectSource()}
+              onContextMenu={() => controller.selectSource()}
+              onMouseDown={() => controller.selectSource()}
+              onMouseUp={() => controller.selectSource()}
+              onTouchStart={() => controller.beginDelayedSelectSource()}
+              onTouchEnd={() => controller.cancelPendingSelectSource()}
             >
               Source
             </a>

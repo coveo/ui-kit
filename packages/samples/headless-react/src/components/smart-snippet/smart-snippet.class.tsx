@@ -94,14 +94,12 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
             {source ? (
               <a
                 href={filterProtocol(source.clickUri)}
-                onClick={() => this.controller.source?.select()}
-                onContextMenu={() => this.controller.source?.select()}
-                onMouseDown={() => this.controller.source?.select()}
-                onMouseUp={() => this.controller.source?.select()}
-                onTouchStart={() =>
-                  this.controller.source?.beginDelayedSelect()
-                }
-                onTouchEnd={() => this.controller.source?.cancelPendingSelect()}
+                onClick={() => this.controller.selectSource()}
+                onContextMenu={() => this.controller.selectSource()}
+                onMouseDown={() => this.controller.selectSource()}
+                onMouseUp={() => this.controller.selectSource()}
+                onTouchStart={() => this.controller.beginDelayedSelectSource()}
+                onTouchEnd={() => this.controller.cancelPendingSelectSource()}
               >
                 Source
               </a>
