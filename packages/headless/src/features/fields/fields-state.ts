@@ -22,7 +22,7 @@ export interface FieldsState {
 /**
  * A list of the minimum fields required in a query.
  */
-export const MinimumFieldsToInclude: string[] = [
+export const MinimumFieldsToInclude = [
   'author',
   'language',
   'urihash',
@@ -35,7 +35,7 @@ export const MinimumFieldsToInclude: string[] = [
 /**
  * A list of the recommended fields to be used in a query.
  */
-export const DefaultFieldsToInclude: string[] = [
+export const DefaultFieldsToInclude = [
   ...MinimumFieldsToInclude,
   'date',
   'filetype',
@@ -45,7 +45,7 @@ export const DefaultFieldsToInclude: string[] = [
 /**
  * A list of the recommended fields to be used in a query for an e-commerce page.
  */
-export const EcommerceDefaultFieldsToInclude: string[] = [
+export const EcommerceDefaultFieldsToInclude = [
   ...DefaultFieldsToInclude,
   'ec_price',
   'ec_name',
