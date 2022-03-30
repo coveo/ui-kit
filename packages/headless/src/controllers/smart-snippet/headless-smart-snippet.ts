@@ -105,7 +105,7 @@ export interface SmartSnippetState {
   /**
    * Determines if the feedback modal with the purpose of explaining why the end user disliked the snippet is currently opened.
    */
-  feedbackModalOpened: boolean;
+  feedbackModalOpen: boolean;
 }
 
 /**
@@ -135,7 +135,7 @@ export function buildSmartSnippet(engine: SearchEngine): SmartSnippet {
         answerFound: state.search.response.questionAnswer.answerSnippet !== '',
         liked: state.questionAnswering.liked,
         disliked: state.questionAnswering.disliked,
-        feedbackModalOpened: state.questionAnswering.feedbackModalOpened,
+        feedbackModalOpen: state.questionAnswering.feedbackModalOpen,
       };
     },
 

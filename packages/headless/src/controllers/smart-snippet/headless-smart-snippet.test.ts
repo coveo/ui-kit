@@ -54,7 +54,7 @@ describe('smartSnippet', () => {
       answerFound: false,
       liked: false,
       disliked: false,
-      feedbackModalOpened: false,
+      feedbackModalOpen: false,
     });
   });
 

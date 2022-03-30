@@ -58,17 +58,17 @@ export const questionAnsweringReducer = createReducer(
       .addCase(likeSmartSnippet, (state) => {
         state.liked = true;
         state.disliked = false;
-        state.feedbackModalOpened = false;
+        state.feedbackModalOpen = false;
       })
       .addCase(dislikeSmartSnippet, (state) => {
         state.liked = false;
         state.disliked = true;
       })
       .addCase(openFeedbackModal, (state) => {
-        state.feedbackModalOpened = true;
+        state.feedbackModalOpen = true;
       })
       .addCase(closeFeedbackModal, (state) => {
-        state.feedbackModalOpened = false;
+        state.feedbackModalOpen = false;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const relatedQuestions =
