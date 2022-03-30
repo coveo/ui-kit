@@ -5,7 +5,6 @@ import {
   State,
   Prop,
   Listen,
-  Host,
   Method,
 } from '@stencil/core';
 import {
@@ -18,7 +17,6 @@ import {
   buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
-  buildInteractiveResult,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -30,12 +28,9 @@ import {
   ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-  getResultDisplayClasses,
 } from '../../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../../atomic-result-template/atomic-result-template';
-import {LinkWithResultAnalytics} from '../../result-link/result-link';
-import {once} from '../../../utils/utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {ResultList as ResultListComponent} from '../result-list';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -57,22 +52,22 @@ import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 })
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  private resultList!: ResultList;
+  public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
-  @Element() private host!: HTMLDivElement;
+  @Element() public host!: HTMLDivElement;
 
   @BindStateToController('resultList')
   @State()
-  private resultListState!: ResultListState;
+  public resultListState!: ResultListState;
 
   @BindStateToController('resultsPerPage')
   @State()
-  private resultsPerPageState!: ResultsPerPageState;
+  public resultsPerPageState!: ResultsPerPageState;
 
   @State() public error!: Error;
-  @State() private templateHasError = false;
+  @State() public templateHasError = false;
 
   /**
    * TODO: KIT-452 Infinite scroll feature
@@ -88,7 +83,7 @@ export class AtomicResultList implements InitializableComponent {
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
+  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -118,7 +113,7 @@ export class AtomicResultList implements InitializableComponent {
     this.renderingFunction = render;
   }
 
-  private listWrapperRef?: HTMLDivElement;
+  public listWrapperRef?: HTMLDivElement;
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
@@ -195,173 +190,12 @@ export class AtomicResultList implements InitializableComponent {
     return this.resultTemplatesManager.selectTemplate(result)!;
   }
 
-  private getId(result: Result) {
-    return result.uniqueId + this.resultListState.searchResponseId;
-  }
-
-  private buildListPlaceholders() {
-    return Array.from(
-      {length: this.resultsPerPageState.numberOfResults},
-      (_, i) => (
-        <atomic-result-placeholder
-          key={`placeholder-${i}`}
-          display={this.display}
-          density={this.density}
-          imageSize={this.imageSize ?? this.image}
-        ></atomic-result-placeholder>
-      )
-    );
-  }
-
-  private buildListResults() {
-    return this.resultListState.results.map((result) => {
-      const content = this.getContentOfResultTemplate(result);
-
-      const atomicResult = (
-        <atomic-result
-          key={this.getId(result)}
-          result={result}
-          engine={this.bindings.engine}
-          display={this.display}
-          density={this.density}
-          imageSize={this.imageSize ?? this.image}
-          content={content}
-        ></atomic-result>
-      );
-
-      return this.display === 'grid' ? (
-        <LinkWithResultAnalytics
-          part="result-list-grid-clickable"
-          interactiveResult={buildInteractiveResult(this.bindings.engine, {
-            options: {result},
-          })}
-          href={result.clickUri}
-          target="_self"
-        >
-          {atomicResult}
-        </LinkWithResultAnalytics>
-      ) : (
-        atomicResult
-      );
-    });
-  }
-
-  private buildTablePlaceholder() {
-    return (
-      <atomic-result-table-placeholder
-        density={this.density}
-        imageSize={this.imageSize ?? this.image}
-        rows={this.resultsPerPageState.numberOfResults}
-      ></atomic-result-table-placeholder>
-    );
-  }
-
-  private buildTable() {
-    const fieldColumns = Array.from(
-      this.getContentOfResultTemplate(
-        this.resultListState.results[0]
-      ).querySelectorAll('atomic-table-element')
-    );
-
-    if (fieldColumns.length === 0) {
-      this.bindings.engine.logger.error(
-        'atomic-table-element elements missing in the result template to display columns.',
-        this.host
-      );
-    }
-
-    return (
-      <table class={`list-root ${this.classes}`} part="result-table">
-        <thead part="result-table-heading">
-          <tr part="result-table-heading-row">
-            {fieldColumns.map((column) => (
-              <th part="result-table-heading-cell">
-                <atomic-text
-                  value={column.getAttribute('label')!}
-                ></atomic-text>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody part="result-table-body">
-          {this.resultListState.results.map((result) => (
-            <tr key={this.getId(result)} part="result-table-row">
-              {fieldColumns.map((column) => {
-                return (
-                  <td
-                    key={column.getAttribute('label')! + this.getId(result)}
-                    part="result-table-cell"
-                  >
-                    <atomic-result
-                      engine={this.bindings.engine}
-                      result={result}
-                      display={this.display}
-                      density={this.density}
-                      image-size={this.imageSize ?? this.image}
-                      content={column}
-                    ></atomic-result>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  }
-
-  private getContentOfResultTemplate(
+  public getContentOfResultTemplate(
     result: Result
   ): HTMLElement | DocumentFragment {
     return this.renderingFunction
       ? this.renderingFunction(result)
       : this.getTemplate(result);
-  }
-
-  private buildList() {
-    return (
-      <div class={`list-root ${this.classes}`} part="result-list">
-        {this.buildListPlaceholders()}
-        {this.resultListState.results.length ? this.buildListResults() : null}
-      </div>
-    );
-  }
-
-  private buildResultRoot() {
-    if (this.display === 'table') {
-      return [
-        this.buildTablePlaceholder(),
-        this.resultListState.results.length ? this.buildTable() : null,
-      ];
-    }
-
-    return this.buildList();
-  }
-
-  private buildResultWrapper() {
-    return (
-      <div
-        class={`list-wrapper placeholder ${this.classes}`}
-        ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
-      >
-        {this.buildResultRoot()}
-      </div>
-    );
-  }
-
-  private get classes() {
-    const classes = getResultDisplayClasses(
-      this.display,
-      this.density,
-      this.imageSize ?? this.image
-    );
-    if (
-      this.resultListState.firstSearchExecuted &&
-      this.resultList.state.isLoading
-    ) {
-      classes.push('loading');
-    }
-    return classes.join(' ');
   }
 
   @Listen('scroll', {target: 'window'})
@@ -384,19 +218,7 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
-  private updateBreakpoints = once(() => updateBreakpoints(this.host));
-
   public render() {
-    this.updateBreakpoints();
-    if (this.resultListState.hasError) {
-      return;
-    }
-
-    return (
-      <Host>
-        {this.templateHasError && <slot></slot>}
-        {this.buildResultWrapper()}
-      </Host>
-    );
+    return <ResultListComponent parent={this} />;
   }
 }

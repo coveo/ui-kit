@@ -5,13 +5,11 @@ import {
   State,
   Prop,
   Listen,
-  Host,
   Method,
 } from '@stencil/core';
 import {
   ResultTemplatesManager,
   buildResultTemplatesManager,
-  Result,
   buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
@@ -30,11 +28,9 @@ import {
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-  getResultDisplayClasses,
 } from '../../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../../atomic-result-template/atomic-result-template';
-import {once} from '../../../utils/utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {ResultList} from '../result-list';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -57,22 +53,22 @@ import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 })
 export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  private resultList!: FoldedResultList;
+  public resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
-  @Element() private host!: HTMLDivElement;
+  @Element() public host!: HTMLDivElement;
 
   @BindStateToController('resultList')
   @State()
-  private resultListState!: FoldedResultListState;
+  public resultListState!: FoldedResultListState;
 
   @BindStateToController('resultsPerPage')
   @State()
-  private resultsPerPageState!: ResultsPerPageState;
+  public resultsPerPageState!: ResultsPerPageState;
 
   @State() public error!: Error;
-  @State() private templateHasError = false;
+  @State() public templateHasError = false;
 
   /**
    * TODO:
@@ -127,7 +123,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.renderingFunction = render;
   }
 
-  private listWrapperRef?: HTMLDivElement;
+  public listWrapperRef?: HTMLDivElement;
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return [];
@@ -214,72 +210,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
     return this.resultTemplatesManager.selectTemplate(foldedResult.result)!;
   }
 
-  private getId(result: Result) {
-    return result.uniqueId + this.resultListState.searchResponseId;
-  }
-
-  private buildListPlaceholders() {
-    return Array.from(
-      {length: this.resultsPerPageState.numberOfResults},
-      (_, i) => (
-        <atomic-result-placeholder
-          key={`placeholder-${i}`}
-          density={this.density}
-          display="list"
-          imageSize={this.imageSize ?? this.image}
-        ></atomic-result-placeholder>
-      )
-    );
-  }
-
-  private buildListResults() {
-    return this.resultListState.results.map((result) => (
-      <atomic-result
-        key={this.getId(result.result)}
-        result={result}
-        engine={this.bindings.engine}
-        density={this.density}
-        imageSize={this.imageSize ?? this.image}
-        content={this.getContentOfResultTemplate(result)}
-      ></atomic-result>
-    ));
-  }
-
-  private getContentOfResultTemplate(
+  public getContentOfResultTemplate(
     result: FoldedResult
   ): HTMLElement | DocumentFragment {
     return this.renderingFunction
       ? this.renderingFunction(result)
       : this.getTemplate(result);
-  }
-
-  private buildResultWrapper() {
-    return (
-      <div
-        class={`list-wrapper placeholder ${this.classes}`}
-        ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
-      >
-        <div class={`list-root ${this.classes}`} part="result-list">
-          {this.buildListPlaceholders()}
-          {this.resultListState.results.length ? this.buildListResults() : null}
-        </div>
-      </div>
-    );
-  }
-
-  private get classes() {
-    const classes = getResultDisplayClasses(
-      'list',
-      this.density,
-      this.imageSize ?? this.image
-    );
-    if (
-      this.resultListState.firstSearchExecuted &&
-      this.resultList.state.isLoading
-    ) {
-      classes.push('loading');
-    }
-    return classes.join(' ');
   }
 
   @Listen('scroll', {target: 'window'})
@@ -302,19 +238,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
     }
   }
 
-  private updateBreakpoints = once(() => updateBreakpoints(this.host));
-
   public render() {
-    this.updateBreakpoints();
-    if (this.resultListState.hasError) {
-      return;
-    }
-
-    return (
-      <Host>
-        {this.templateHasError && <slot></slot>}
-        {this.buildResultWrapper()}
-      </Host>
-    );
+    return <ResultList parent={this} />;
   }
 }
