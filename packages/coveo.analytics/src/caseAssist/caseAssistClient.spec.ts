@@ -263,11 +263,14 @@ describe('CaseAssistClient', () => {
     });
 
     it('should send proper payload for #logMoveToNextCaseStep', async () => {
+        const stageName = 'stage 1';
+
         await client.logMoveToNextCaseStep({
             ticket: fakeTicket,
+            stage: stageName,
         });
 
-        expectMatchPayload(CaseAssistActions.nextCaseStep, noActionData, fakeTicket);
+        expectMatchPayload(CaseAssistActions.nextCaseStep, {stage: stageName}, fakeTicket);
     });
 
     it('should send proper payload for #logCaseCancelled', async () => {
