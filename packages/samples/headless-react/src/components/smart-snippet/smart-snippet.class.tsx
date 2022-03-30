@@ -58,14 +58,14 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
       liked,
       disliked,
       expanded,
-      feedbackModalOpened,
+      feedbackModalOpen,
     } = this.state;
 
     if (!answerFound) {
       return <div>Sorry, no answer has been found for this query.</div>;
     }
 
-    if (feedbackModalOpened) {
+    if (feedbackModalOpen) {
       return (
         <div role="dialog">
           <h1>What's wrong with this snippet?</h1>

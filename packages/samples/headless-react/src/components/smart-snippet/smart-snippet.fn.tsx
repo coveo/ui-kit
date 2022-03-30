@@ -35,14 +35,14 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
     liked,
     disliked,
     expanded,
-    feedbackModalOpened,
+    feedbackModalOpen,
   } = state;
 
   if (!answerFound) {
     return <div>Sorry, no answer has been found for this query.</div>;
   }
 
-  if (feedbackModalOpened) {
+  if (feedbackModalOpen) {
     return (
       <div role="dialog">
         <h1>What's wrong with this snippet?</h1>
