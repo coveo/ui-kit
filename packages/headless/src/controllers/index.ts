@@ -322,7 +322,6 @@ export {buildNotifyTrigger} from './triggers/headless-notify-trigger';
 
 export type {
   SmartSnippet,
-  SmartSnippetSource,
   SmartSnippetOptions,
   SmartSnippetProps,
   SmartSnippetState,
