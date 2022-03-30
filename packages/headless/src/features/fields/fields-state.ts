@@ -58,7 +58,6 @@ export const EcommerceDefaultFieldsToInclude = [
   'ec_images',
   'ec_promo_price',
   'ec_in_stock',
-  'ec_cogs',
   'ec_rating',
 ];
 
