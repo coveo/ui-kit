@@ -7,7 +7,7 @@ import {
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../utils/utils';
 import {ResultContext} from '../result-template/result-template-components/result-template-decorators';
-import {TemplateContent} from '../atomic-result-template/atomic-result-template';
+import {TemplateContent} from '../result-template/atomic-result-template/atomic-result-template';
 import {registerResultTemplates} from '../result-lists/result-list-common';
 
 const childTemplateComponent = 'atomic-result-children-template';

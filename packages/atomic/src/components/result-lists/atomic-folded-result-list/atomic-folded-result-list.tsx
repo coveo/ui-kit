@@ -28,7 +28,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../atomic-result/atomic-result-display-options';
-import {TemplateContent} from '../../atomic-result-template/atomic-result-template';
+import {TemplateContent} from '../../result-template/atomic-result-template/atomic-result-template';
 import {ResultList} from '../result-list';
 import {
   getTemplate,

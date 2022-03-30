@@ -11,8 +11,8 @@ import { NumberInputType } from "./components/facets/facet-number-input/number-i
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
-import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
-import { TemplateContent as TemplateContent1 } from "./components/atomic-result-template/atomic-result-template";
+import { TemplateContent } from "./components/result-template/atomic-result-template/atomic-result-template";
+import { TemplateContent as TemplateContent1 } from "./components/result-template/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";

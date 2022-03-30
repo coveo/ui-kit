@@ -7,7 +7,7 @@ import {
   getResultDisplayClasses,
 } from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
+import {ResultContextEvent} from '../result-template/result-template-components/result-template-decorators';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
