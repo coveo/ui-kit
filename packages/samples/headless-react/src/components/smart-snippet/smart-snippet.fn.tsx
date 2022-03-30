@@ -35,6 +35,25 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
     return <div>Sorry, no answer has been found for this query.</div>;
   }
 
+  function renderSource() {
+    if (!source) {
+      return;
+    }
+    return (
+      <a
+        href={filterProtocol(source.clickUri)}
+        onClick={() => controller.selectSource()}
+        onContextMenu={() => controller.selectSource()}
+        onMouseDown={() => controller.selectSource()}
+        onMouseUp={() => controller.selectSource()}
+        onTouchStart={() => controller.beginDelayedSelectSource()}
+        onTouchEnd={() => controller.cancelPendingSelectSource()}
+      >
+        Source
+      </a>
+    );
+  }
+
   return (
     <div style={{textAlign: 'left'}}>
       <dl>
@@ -68,22 +87,7 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
           >
             Thumbs down
           </button>
-
-          {source ? (
-            <a
-              href={filterProtocol(source.clickUri)}
-              onClick={() => controller.selectSource()}
-              onContextMenu={() => controller.selectSource()}
-              onMouseDown={() => controller.selectSource()}
-              onMouseUp={() => controller.selectSource()}
-              onTouchStart={() => controller.beginDelayedSelectSource()}
-              onTouchEnd={() => controller.cancelPendingSelectSource()}
-            >
-              Source
-            </a>
-          ) : (
-            []
-          )}
+          {renderSource()}
         </dd>
       </dl>
     </div>
