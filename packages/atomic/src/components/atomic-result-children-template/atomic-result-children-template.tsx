@@ -1,30 +1,26 @@
-import {Component, Element, Prop, Method, State, h} from '@stencil/core';
 import {
   ResultTemplate,
   ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
+import {Component, Element, h, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../utils/props-utils';
-import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
-
-export type TemplateContent = DocumentFragment;
+import {TemplateContent} from '../atomic-result-template/atomic-result-template';
 
 /**
- * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
- *
- * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+ * TODO:
+ * @internal
  */
 @Component({
-  tag: 'atomic-result-template',
+  tag: 'atomic-result-children-template',
   shadow: true,
 })
-export class AtomicResultTemplate {
-  @InitializeBindings() public bindings!: Bindings;
-  @State() public error!: Error;
-
+export class AtomicResultChildrenTemplate {
   private matchConditions: ResultTemplateCondition[] = [];
 
   @Element() private host!: HTMLDivElement;
+
+  @State() private error?: Error;
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -35,14 +31,14 @@ export class AtomicResultTemplate {
   @Prop() public conditions: ResultTemplateCondition[] = [];
 
   /**
-   * The field and values that define which result items the condition must be applied to.
+   * Fields and field values that results must match for the result template to apply.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
    */
   @MapProp({splitValues: true}) public mustMatch: Record<string, string[]> = {};
 
   /**
-   * The field and values that define which result items the condition must not be applied to.
+   * Fields and field values that results must not match for the result template to apply.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
    */
@@ -50,22 +46,27 @@ export class AtomicResultTemplate {
     {};
 
   constructor() {
-    const allowedParents = ['ATOMIC-RESULT-LIST', 'ATOMIC-FOLDED-RESULT-LIST'];
-    const isParentResultList = allowedParents.includes(
-      this.host.parentElement?.nodeName || ''
-    );
-
+    const isParentResultList =
+      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-CHILDREN';
     if (!isParentResultList) {
       this.error = new Error(
-        'The "atomic-result-template" component has to be the child of either an "atomic-result-list" or an "atomic-folded-result-list" component.'
+        'The "atomic-result-children-template" component has to be the child of "atomic-result-children".'
       );
       return;
     }
 
     if (!this.host.querySelector('template')) {
       this.error = new Error(
-        'The "atomic-result-template" component has to contain a "template" element as a child.'
+        'The "atomic-result-children-template" component has to contain a "template" element as a child.'
       );
+      return;
+    }
+
+    if (!this.host.querySelector('template')?.innerHTML.trim()) {
+      this.error = new Error(
+        'The "template" tag insode "atomic-result-children-template" cannot be empty'
+      );
+      return;
     }
 
     if (this.host.querySelector('template')?.content.querySelector('script')) {
@@ -104,7 +105,7 @@ export class AtomicResultTemplate {
 
     return {
       conditions: this.getConditions(),
-      content: this.getContent(),
+      content: this.getContent()!,
       priority: 1,
     };
   }
@@ -114,13 +115,11 @@ export class AtomicResultTemplate {
   }
 
   private getTemplateElement() {
-    return (
-      this.host.querySelector('template') ?? document.createElement('template')
-    );
+    return this.host.querySelector('template');
   }
 
   private getContent() {
-    return this.getTemplateElement().content;
+    return this.getTemplateElement()?.content;
   }
 
   public render() {

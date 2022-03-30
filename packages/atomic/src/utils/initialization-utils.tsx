@@ -90,7 +90,7 @@ export function applyFocusVisiblePolyfill(element: HTMLElement) {
 
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used on a property named `bindings`.
- * This will automatically fetch the `Bindings` from the parent `atomic-search-interface` or `atomic-extarnal` components.
+ * This will automatically fetch the `Bindings` from the parent `atomic-search-interface` or `atomic-external` components.
  *
  * Once a component is bound, the `initialize` method is called.
  * In the event of an initialization error, the `error` property will be set and an `atomic-component-error` will be rendered.

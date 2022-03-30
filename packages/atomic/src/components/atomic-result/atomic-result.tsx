@@ -1,5 +1,5 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {Result, SearchEngine} from '@coveo/headless';
+import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
@@ -34,7 +34,7 @@ export class AtomicResult {
   /**
    * The result item.
    */
-  @Prop() result!: Result;
+  @Prop() result!: Result | FoldedResult;
 
   /**
    * The headless search engine.

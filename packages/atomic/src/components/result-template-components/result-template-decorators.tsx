@@ -1,4 +1,4 @@
-import {Result} from '@coveo/headless';
+import {FoldedResult, Result} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
 
@@ -20,15 +20,23 @@ export class MissingResultParentError extends Error {
  *
  * For more information and examples, view the "Utilities" section of the readme.
  */
-export function ResultContext() {
+export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   return (component: ComponentInterface, resultVariable: string) => {
     const {connectedCallback, render} = component;
     component.connectedCallback = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
         resultContextEventName,
-        (result: Result) => {
-          this[resultVariable] = result;
+        (result: FoldedResult | Result) => {
+          if (opts.folded) {
+            if (isFolded(result)) {
+              this[resultVariable] = result;
+            } else {
+              this[resultVariable] = {children: [], result};
+            }
+          } else {
+            this[resultVariable] = isFolded(result) ? result.result : result;
+          }
         }
       );
 
@@ -59,7 +67,7 @@ export function ResultContext() {
   };
 }
 
-type ResultContextEventHandler = (result: Result) => void;
+type ResultContextEventHandler = (result: FoldedResult | Result) => void;
 export type ResultContextEvent = CustomEvent<ResultContextEventHandler>;
 const resultContextEventName = 'atomic/resolveResult';
 
@@ -74,10 +82,12 @@ const resultContextEventName = 'atomic/resolveResult';
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  */
 export const resultContext = (element: Element) =>
-  new Promise<Result>((resolve, reject) => {
+  new Promise<FoldedResult | Result>((resolve, reject) => {
     const event = buildCustomEvent<ResultContextEventHandler>(
       resultContextEventName,
-      (result: Result) => resolve(result)
+      (result: FoldedResult | Result) => {
+        return resolve(result);
+      }
     );
     element.dispatchEvent(event);
 
@@ -85,3 +95,7 @@ export const resultContext = (element: Element) =>
       reject(new MissingResultParentError(element.nodeName.toLowerCase()));
     }
   });
+
+function isFolded(result: Result | FoldedResult): result is FoldedResult {
+  return 'children' in result;
+}
