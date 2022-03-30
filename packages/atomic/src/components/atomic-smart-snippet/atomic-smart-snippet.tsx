@@ -105,7 +105,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
           <LinkWithResultAnalytics
             title={source.clickUri}
             href={source.clickUri}
-            interactiveResult={this.smartSnippet.source}
+            interactiveResult={this.smartSnippet}
             target="_self"
           >
             {source.clickUri}
@@ -115,7 +115,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
           <LinkWithResultAnalytics
             title={source.title}
             href={source.clickUri}
-            interactiveResult={this.smartSnippet.source}
+            interactiveResult={this.smartSnippet}
             target="_self"
           >
             {source.title}

@@ -1,9 +1,9 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../utils/xss-utils';
-import {InteractiveResult, SmartSnippetSource} from '@coveo/headless';
+import {InteractiveResult, SmartSnippet} from '@coveo/headless';
 
 export interface ResultLinkProps {
-  interactiveResult: InteractiveResult | SmartSnippetSource;
+  interactiveResult: InteractiveResult | SmartSnippet;
   href: string;
   target: string;
   part?: string;
