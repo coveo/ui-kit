@@ -16,6 +16,10 @@ import {
     UpdateCaseFieldMetadata,
 } from './caseAssistActions';
 
+export interface CaseAssistClientProvider {
+    getOriginLevel1: () => string;
+}
+
 export interface CaseAssistClientOptions extends ClientOptions {
     enableAnalytics?: boolean;
 }
@@ -24,7 +28,7 @@ export class CaseAssistClient {
     public coveoAnalyticsClient: AnalyticsClient;
     private svc: SVCPlugin;
 
-    constructor(private options: Partial<CaseAssistClientOptions>) {
+    constructor(private options: Partial<CaseAssistClientOptions>, private provider?: CaseAssistClientProvider) {
         const analyticsEnabled = options.enableAnalytics ?? true;
 
         this.coveoAnalyticsClient = analyticsEnabled ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
@@ -108,10 +112,28 @@ export class CaseAssistClient {
     }
 
     private sendFlowStartEvent() {
-        return this.coveoAnalyticsClient.sendEvent('event', 'svc', CaseAssistEvents.flowStart);
+        return this.coveoAnalyticsClient.sendEvent(
+            'event',
+            'svc',
+            CaseAssistEvents.flowStart,
+            this.provider
+                ? {
+                      searchHub: this.provider.getOriginLevel1(),
+                  }
+                : null
+        );
     }
 
     private sendClickEvent() {
-        return this.coveoAnalyticsClient.sendEvent('event', 'svc', CaseAssistEvents.click);
+        return this.coveoAnalyticsClient.sendEvent(
+            'event',
+            'svc',
+            CaseAssistEvents.click,
+            this.provider
+                ? {
+                      searchHub: this.provider.getOriginLevel1(),
+                  }
+                : null
+        );
     }
 }
