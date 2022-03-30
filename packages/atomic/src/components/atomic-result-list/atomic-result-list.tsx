@@ -224,20 +224,24 @@ export class AtomicResultList implements InitializableComponent {
         ></atomic-result>
       );
 
-      return this.display === 'grid' ? (
+      if (this.display === 'grid') {
+        const interactiveResult = buildInteractiveResult(this.bindings.engine, {
+          options: {result},
+        });
+
         <LinkWithResultAnalytics
           part="result-list-grid-clickable"
-          interactiveResult={buildInteractiveResult(this.bindings.engine, {
-            options: {result},
-          })}
           href={result.clickUri}
           target="_self"
+          onSelect={() => interactiveResult.select()}
+          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
         >
           {atomicResult}
-        </LinkWithResultAnalytics>
-      ) : (
-        atomicResult
-      );
+        </LinkWithResultAnalytics>;
+      }
+
+      return atomicResult;
     });
   }
 

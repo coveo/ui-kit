@@ -105,8 +105,14 @@ export class AtomicSmartSnippet implements InitializableComponent {
           <LinkWithResultAnalytics
             title={source.clickUri}
             href={source.clickUri}
-            interactiveResult={this.smartSnippet}
             target="_self"
+            onSelect={() => this.smartSnippet.selectSource()}
+            onBeginDelayedSelect={() =>
+              this.smartSnippet.beginDelayedSelectSource()
+            }
+            onCancelPendingSelect={() =>
+              this.smartSnippet.cancelPendingSelectSource()
+            }
           >
             {source.clickUri}
           </LinkWithResultAnalytics>
@@ -115,8 +121,14 @@ export class AtomicSmartSnippet implements InitializableComponent {
           <LinkWithResultAnalytics
             title={source.title}
             href={source.clickUri}
-            interactiveResult={this.smartSnippet}
             target="_self"
+            onSelect={() => this.smartSnippet.selectSource()}
+            onBeginDelayedSelect={() =>
+              this.smartSnippet.beginDelayedSelectSource()
+            }
+            onCancelPendingSelect={() =>
+              this.smartSnippet.cancelPendingSelectSource()
+            }
           >
             {source.title}
           </LinkWithResultAnalytics>
