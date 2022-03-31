@@ -1,11 +1,11 @@
 import {h} from '@stencil/core';
 import {ResultTemplate, ResultTemplatesHelpers} from '@coveo/headless';
 import {AtomicResultChildrenTemplate} from './atomic-result-children-template/atomic-result-children-template';
-import {
-  AtomicResultTemplate,
-  TemplateContent,
-} from './atomic-result-template/atomic-result-template';
+import {AtomicResultTemplate} from './atomic-result-template/atomic-result-template';
 
+export type TemplateContent = DocumentFragment;
+
+// TODO: once I remove the `this` param I expect the wrong path in components.d.s to disappear
 type TemplateComponent = AtomicResultTemplate | AtomicResultChildrenTemplate;
 
 export function validateTemplate(

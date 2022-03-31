@@ -8,7 +8,6 @@ import {
   Method,
 } from '@stencil/core';
 import {
-  ResultTemplatesManager,
   ResultsPerPageState,
   ResultsPerPage,
   buildFoldedResultList,
@@ -16,7 +15,7 @@ import {
   FoldedResult,
   FoldedResultListState,
   FoldedResultListProps,
-  SearchEngine,
+  buildResultsPerPage,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,13 +27,11 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../atomic-result/atomic-result-display-options';
-import {TemplateContent} from '../../result-template/atomic-result-template/atomic-result-template';
-import {ResultList} from '../result-list';
+import {BaseResultList} from '../result-list';
 import {
-  getTemplate,
   handleInfiniteScroll,
-  initializeResultList,
-  postRenderCleanUp,
+  ResultListCommon,
+  RenderingFunc,
 } from '../result-list-common';
 
 /**
@@ -52,7 +49,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
-  public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public listWrapperRef?: HTMLDivElement;
 
   @Element() public host!: HTMLDivElement;
@@ -70,13 +66,13 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
+  public resultListCommon!: ResultListCommon;
   /**
    * TODO: KIT-452 Infinite scroll feature
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
    */
   private enableInfiniteScroll = false;
-  private renderingFunction?: (result: FoldedResult) => HTMLElement = undefined;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -119,7 +115,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: FoldedResult) => HTMLElement
   ) {
-    this.renderingFunction = render;
+    this.resultListCommon.renderingFunction = render as RenderingFunc;
   }
 
   @Listen('scroll', {target: 'window'})
@@ -128,10 +124,23 @@ export class AtomicFoldedResultList implements InitializableComponent {
   }
 
   public async initialize() {
-    await initializeResultList.call(this, this.initFolding.bind(this));
+    this.resultListCommon = new ResultListCommon({
+      bindings: this.bindings,
+      fieldsToInclude: this.fieldsToInclude,
+      templateElements: this.host.querySelectorAll('atomic-result-template'),
+      onReady: () => {
+        this.ready = true;
+      },
+      onError: () => {
+        this.templateHasError = true;
+      },
+    });
+
+    this.resultList = this.initFolding(this.resultListCommon.listOpts);
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
   }
 
-  private initFolding(_: SearchEngine<{}>, options: FoldedResultListProps) {
+  private initFolding(options: FoldedResultListProps = {}): FoldedResultList {
     const opts = {...options};
 
     if (!opts.options) {
@@ -154,16 +163,17 @@ export class AtomicFoldedResultList implements InitializableComponent {
   public getContentOfResultTemplate(
     foldedResult: FoldedResult
   ): HTMLElement | DocumentFragment {
-    return this.renderingFunction
-      ? this.renderingFunction(foldedResult)
-      : getTemplate(this.resultTemplatesManager, foldedResult.result)!;
+    return this.resultListCommon.getContentOfResultTemplate(foldedResult);
   }
 
   public componentDidRender() {
-    postRenderCleanUp.call(this);
+    this.resultListCommon.componentDidRender(
+      this.resultListState,
+      this.listWrapperRef
+    );
   }
 
   public render() {
-    return <ResultList parent={this} />;
+    return <BaseResultList parent={this} />;
   }
 }

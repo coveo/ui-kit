@@ -8,8 +8,6 @@ import {
   validateTemplate,
 } from '../result-template-common';
 
-export type TemplateContent = DocumentFragment;
-
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
  *

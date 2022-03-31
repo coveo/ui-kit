@@ -29,10 +29,15 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
         </tr>
       </thead>
       <tbody part="result-table-body">
-        {props.resultListState.results.map((result) => (
+        {props.resultListState.results.map((result, rowIndex) => (
           <tr
             key={getId(result, props.resultListState)}
-            part="result-table-row"
+            part={
+              'result-table-row ' +
+              (rowIndex % 2 === 1
+                ? 'result-table-row-even'
+                : 'result-table-row-odd') /* Offset by 1 since the index starts at 0 */
+            }
           >
             {fieldColumns.map((column) => {
               return (

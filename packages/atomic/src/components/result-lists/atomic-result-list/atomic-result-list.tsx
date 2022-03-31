@@ -10,11 +10,11 @@ import {
 import {
   ResultList,
   ResultListState,
-  ResultTemplatesManager,
   buildResultList,
   Result,
   ResultsPerPageState,
   ResultsPerPage,
+  buildResultsPerPage,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -27,13 +27,11 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../atomic-result/atomic-result-display-options';
-import {TemplateContent} from '../../result-template/atomic-result-template/atomic-result-template';
-import {ResultList as ResultListComponent} from '../result-list';
+import {BaseResultList} from '../result-list';
 import {
-  getTemplate,
   handleInfiniteScroll,
-  initializeResultList,
-  postRenderCleanUp,
+  RenderingFunc,
+  ResultListCommon,
 } from '../result-list-common';
 
 /**
@@ -47,6 +45,8 @@ import {
  * @part result-table-heading-cell - The element representing a cell of the result table's heading
  * @part result-table-body - The element containing the rows of the result table's body
  * @part result-table-row - The element containing the cells of a row in the result table's body
+ * @part result-table-row-odd - The element containing the cells of an odd row in the result table's body
+ * @part result-table-row-even - The element containing the cells of an even row in the result table's body
  * @part result-table-cell - The element representing a cell of the result table's body
  */
 @Component({
@@ -58,8 +58,9 @@ export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
-  public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public listWrapperRef?: HTMLDivElement;
+
+  @Element() public host!: HTMLDivElement;
 
   /**
    * TODO: KIT-452 Infinite scroll feature
@@ -67,9 +68,6 @@ export class AtomicResultList implements InitializableComponent {
    * current results when the user scrolls down to the bottom of element
    */
   private enableInfiniteScroll = false;
-  private renderingFunction?: (result: Result) => HTMLElement = undefined;
-
-  @Element() public host!: HTMLDivElement;
 
   @BindStateToController('resultList')
   @State()
@@ -83,6 +81,8 @@ export class AtomicResultList implements InitializableComponent {
 
   @State() public error!: Error;
   @State() public templateHasError = false;
+
+  public resultListCommon!: ResultListCommon;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -117,7 +117,7 @@ export class AtomicResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: Result) => HTMLElement
   ) {
-    this.renderingFunction = render;
+    this.resultListCommon.renderingFunction = render as RenderingFunc;
   }
 
   @Listen('scroll', {target: 'window'})
@@ -131,22 +131,39 @@ export class AtomicResultList implements InitializableComponent {
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
-    await initializeResultList.call(this, buildResultList);
+    this.resultListCommon = new ResultListCommon({
+      bindings: this.bindings,
+      fieldsToInclude: this.fieldsToInclude,
+      templateElements: this.host.querySelectorAll('atomic-result-template'),
+      onReady: () => {
+        this.ready = true;
+      },
+      onError: () => {
+        this.templateHasError = true;
+      },
+    });
+
+    this.resultList = buildResultList(
+      this.bindings.engine,
+      this.resultListCommon.listOpts
+    );
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
   }
 
   public getContentOfResultTemplate(
     result: Result
   ): HTMLElement | DocumentFragment {
-    return this.renderingFunction
-      ? this.renderingFunction(result)
-      : getTemplate(this.resultTemplatesManager, result)!;
+    return this.resultListCommon.getContentOfResultTemplate(result);
   }
 
   public componentDidRender() {
-    postRenderCleanUp.call(this);
+    this.resultListCommon.componentDidRender(
+      this.resultListState,
+      this.listWrapperRef
+    );
   }
 
   public render() {
-    return <ResultListComponent parent={this} />;
+    return <BaseResultList parent={this} />;
   }
 }

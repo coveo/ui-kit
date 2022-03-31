@@ -10,23 +10,18 @@ import {
   ResultTemplatesManager,
   ResultTemplate,
   buildResultTemplatesManager,
-  buildResultsPerPage,
-  SearchEngine,
   ResultListProps,
   FoldedResultListProps,
+  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {identity} from 'lodash';
 import {Bindings} from '../../utils/initialization-utils';
-import {AtomicResultChildren} from '../atomic-result-children/atomic-result-children';
-import {TemplateContent} from '../result-template/atomic-result-template/atomic-result-template';
 import {
-  getResultDisplayClasses,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../atomic-result/atomic-result-display-options';
-import {AtomicFoldedResultList} from './atomic-folded-result-list/atomic-folded-result-list';
-import {AtomicResultList} from './atomic-result-list/atomic-result-list';
+import {TemplateContent} from '../result-template/result-template-common';
 
 export interface AtomicResultListBase {
   bindings: Bindings;
@@ -38,6 +33,8 @@ export interface AtomicResultListBase {
   image: ResultDisplayImageSize;
   listWrapperRef?: HTMLDivElement;
   resultsPerPageState: ResultsPerPageState;
+
+  resultListCommon?: ResultListCommon;
 
   resultList: FoldedResultList | ResultList;
   resultListState: FoldedResultListState | ResultListState;
@@ -59,21 +56,6 @@ export interface ResultsProps
     | 'getContentOfResultTemplate'
   > {
   classes: string;
-}
-
-export function getClasses({
-  display = 'list',
-  density,
-  imageSize,
-  image,
-  resultListState,
-  resultList,
-}: AtomicResultListBase): string {
-  const classes = getResultDisplayClasses(display, density, imageSize ?? image);
-  if (resultListState.firstSearchExecuted && resultList.state.isLoading) {
-    classes.push('loading');
-  }
-  return classes.join(' ');
 }
 
 export function getId(
@@ -110,11 +92,13 @@ const defaultFieldsToInclude = [
 ];
 
 export function getFields(fieldsToInclude: string): string[] {
-  if (fieldsToInclude.trim() === '') return [...defaultFieldsToInclude];
+  if (fieldsToInclude.trim() === '')
+    return [...EcommerceDefaultFieldsToInclude];
   return defaultFieldsToInclude.concat(
     fieldsToInclude.split(',').map((field) => field.trim())
   );
 }
+
 export function handleInfiniteScroll(
   isEnabled: boolean,
   host: HTMLElement,
@@ -132,29 +116,6 @@ export function handleInfiniteScroll(
   }
 }
 
-export async function registerResultTemplates(
-  this: AtomicFoldedResultList | AtomicResultList | AtomicResultChildren,
-  templateElements?: HTMLAtomicResultChildrenTemplateElement[]
-) {
-  const elements =
-    templateElements ||
-    Array.from(this.host.querySelectorAll('atomic-result-template'));
-  const templates = await Promise.all(
-    elements.map(async (resultTemplateElement) => {
-      const template = await resultTemplateElement.getTemplate();
-      if (!template) {
-        this.templateHasError = true;
-      }
-      return template;
-    })
-  );
-
-  this.resultTemplatesManager.registerTemplates(
-    makeDefaultTemplate(),
-    ...(templates.filter(identity) as ResultTemplate<DocumentFragment>[])
-  );
-}
-
 function makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
   const content = document.createDocumentFragment();
   const linkEl = document.createElement('atomic-result-link');
@@ -165,40 +126,97 @@ function makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
   };
 }
 
-export async function initializeResultList(
-  this: AtomicFoldedResultList | AtomicResultList,
-  buildList: (
-    engine: SearchEngine<{}>,
-    props: ResultListProps | FoldedResultListProps
-  ) => ResultList | FoldedResultList
-) {
-  this.resultTemplatesManager = buildResultTemplatesManager(
-    this.bindings.engine
-  );
-  this.resultList = buildList(this.bindings.engine, {
-    options: {
-      fieldsToInclude: getFields(this.fieldsToInclude),
-    },
-  });
-
-  this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-  await registerResultTemplates.call(this);
-
-  // TODO: await for initialize method instead
-  this.ready = true;
+interface TemplateElement extends HTMLElement {
+  getTemplate(): Promise<ResultTemplate<DocumentFragment> | null>;
 }
 
-export function getTemplate(
-  resultTemplatesManager: ResultTemplatesManager<TemplateContent>,
-  result: Result
-): TemplateContent | null {
-  return resultTemplatesManager.selectTemplate(result);
+interface ResultListCommonProps {
+  bindings: Bindings;
+  templateElements: NodeListOf<TemplateElement>;
+  fieldsToInclude?: string;
+  includeDefaultTemplate?: boolean;
+  onReady(): void;
+  onError(): void;
 }
 
-export function postRenderCleanUp(
-  this: AtomicFoldedResultList | AtomicResultList
-) {
-  if (this.resultListState.firstSearchExecuted) {
-    this.listWrapperRef?.classList.remove('placeholder');
+export class ResultListCommon {
+  private bindings: Bindings;
+  private render?: RenderingFunc;
+
+  public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  public listOpts?: ResultListProps | FoldedResultListProps;
+
+  constructor(props: ResultListCommonProps) {
+    this.bindings = props.bindings;
+
+    if (props.fieldsToInclude) {
+      this.listOpts = {
+        options: {
+          fieldsToInclude: getFields(props.fieldsToInclude),
+        },
+      };
+    }
+
+    this.registerResultTemplates(
+      props.templateElements,
+      props.includeDefaultTemplate,
+      props.onReady,
+      props.onError
+    );
+  }
+
+  set renderingFunction(render: RenderingFunc) {
+    this.render = render;
+  }
+
+  public getTemplate(result: Result) {
+    return this.resultTemplatesManager.selectTemplate(result);
+  }
+
+  public getContentOfResultTemplate(
+    resultOrFolded: Result | FoldedResult
+  ): HTMLElement | DocumentFragment {
+    const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
+    return this.render ? this.render(result) : this.getTemplate(result)!;
+  }
+
+  async registerResultTemplates(
+    elements: NodeListOf<TemplateElement>,
+    includeDefaultTemplate = true,
+    onReady: () => void,
+    onError: () => void
+  ) {
+    this.resultTemplatesManager = buildResultTemplatesManager(
+      this.bindings.engine
+    );
+
+    const customTemplates = await Promise.all(
+      Array.from(elements).map(async (resultTemplateElement) => {
+        const template = await resultTemplateElement.getTemplate();
+        if (!template) {
+          onError();
+        }
+        return template;
+      })
+    );
+    const templates = (
+      includeDefaultTemplate ? [makeDefaultTemplate()] : []
+    ).concat(
+      customTemplates.filter(identity) as ResultTemplate<DocumentFragment>[]
+    );
+
+    this.resultTemplatesManager.registerTemplates(...templates);
+    onReady();
+  }
+
+  componentDidRender(
+    resultListState: FoldedResultListState | ResultListState,
+    listWrapperRef?: HTMLDivElement
+  ) {
+    if (resultListState.firstSearchExecuted) {
+      listWrapperRef?.classList.remove('placeholder');
+    }
   }
 }
+
+export type RenderingFunc = (result: Result | FoldedResult) => HTMLElement;

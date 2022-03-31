@@ -1,14 +1,9 @@
 import {Component, Element, State, h} from '@stencil/core';
-import {
-  buildResultTemplatesManager,
-  FoldedResult,
-  ResultTemplatesManager,
-} from '@coveo/headless';
+import {FoldedResult} from '@coveo/headless';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../utils/utils';
 import {ResultContext} from '../result-template/result-template-components/result-template-decorators';
-import {TemplateContent} from '../result-template/atomic-result-template/atomic-result-template';
-import {registerResultTemplates} from '../result-lists/result-list-common';
+import {ResultListCommon} from '../result-lists/result-list-common';
 
 const childTemplateComponent = 'atomic-result-children-template';
 
@@ -24,7 +19,8 @@ export class AtomicResultChildren {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext({folded: true}) private result!: FoldedResult;
 
-  public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  public resultListCommon?: ResultListCommon;
+
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
   @State() public ready = false;
@@ -43,13 +39,17 @@ export class AtomicResultChildren {
       return;
     }
 
-    if (this.result.children) {
-      this.resultTemplatesManager = buildResultTemplatesManager(
-        this.bindings.engine
-      );
-      await registerResultTemplates.call(this, childrenTemplates);
-
-      this.ready = true;
+    if (this.result.children.length) {
+      this.resultListCommon = new ResultListCommon({
+        bindings: this.bindings,
+        templateElements: this.host.querySelectorAll(childTemplateComponent),
+        onReady: () => {
+          this.ready = true;
+        },
+        onError: () => {
+          this.templateHasError = true;
+        },
+      });
     }
   }
 
@@ -58,9 +58,10 @@ export class AtomicResultChildren {
     if (this.templateHasError) return <slot></slot>;
     if (this.result.children.length) {
       return this.result.children.map((child) => {
-        const content = this.resultTemplatesManager.selectTemplate(
-          child.result
-        );
+        const content =
+          this.resultListCommon!.resultTemplatesManager.selectTemplate(
+            child.result
+          );
         if (content) {
           return (
             <atomic-result

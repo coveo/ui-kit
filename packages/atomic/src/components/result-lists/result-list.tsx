@@ -1,12 +1,11 @@
 import {FunctionalComponent, h, Host} from '@stencil/core';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {once} from '../../utils/utils';
-import {ResultDisplayLayout} from '../atomic-result/atomic-result-display-options';
 import {
-  AtomicResultListBase,
-  getClasses,
-  ResultsProps,
-} from './result-list-common';
+  getResultDisplayClasses,
+  ResultDisplayLayout,
+} from '../atomic-result/atomic-result-display-options';
+import {AtomicResultListBase, ResultsProps} from './result-list-common';
 import {ResultsPlaceholder} from './results-placeholder';
 import {TableDisplayResults} from './table-display-results';
 import {ListDisplayResults} from './list-display-results';
@@ -14,7 +13,7 @@ interface ResultListProps {
   parent: AtomicResultListBase;
 }
 
-export const ResultList: FunctionalComponent<ResultListProps> = (props) => {
+export const BaseResultList: FunctionalComponent<ResultListProps> = (props) => {
   const parent = props.parent;
   const updateBreakpointsOnce = once(() => updateBreakpoints(parent.host));
   updateBreakpointsOnce();
@@ -80,3 +79,18 @@ const Results: FunctionalComponent<ResultsProps> = (props) => {
   }
   return <ListDisplayResults {...props} />;
 };
+
+export function getClasses({
+  display = 'list',
+  density,
+  imageSize,
+  image,
+  resultListState,
+  resultList,
+}: AtomicResultListBase): string {
+  const classes = getResultDisplayClasses(display, density, imageSize ?? image);
+  if (resultListState.firstSearchExecuted && resultList.state.isLoading) {
+    classes.push('loading');
+  }
+  return classes.join(' ');
+}
