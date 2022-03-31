@@ -819,9 +819,14 @@ export namespace Components {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```  Alternatively, you can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+        "innerStyle"?: string;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -832,6 +837,10 @@ export namespace Components {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
@@ -2207,9 +2216,14 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```  Alternatively, you can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+        "innerStyle"?: string;
         "onAtomic/smartSnippet/answerRendered"?: (event: CustomEvent<{height: number}>) => void;
     }
     interface AtomicSmartSnippetExpandableAnswer {
@@ -2221,6 +2235,10 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
