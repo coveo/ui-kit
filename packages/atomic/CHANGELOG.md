@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.40.0...@coveo/atomic@1.40.1) (2022-03-31)
+
+
+### Bug Fixes
+
+* **atomic:** query suggestion & recent queries, wrap long query up to 2 lines ([#1881](https://github.com/coveo/ui-kit/issues/1881)) ([aa18a44](https://github.com/coveo/ui-kit/commit/aa18a443d14da6c92fc654f984b83ae3dc8de92d))
+
+
+
+
+
 # [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.39.1...@coveo/atomic@1.40.0) (2022-03-31)
 
 
