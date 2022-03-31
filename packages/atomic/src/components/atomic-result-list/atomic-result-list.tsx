@@ -48,6 +48,8 @@ import {updateBreakpoints} from '../../utils/replace-breakpoint';
  * @part result-table-heading-cell - The element representing a cell of the result table's heading
  * @part result-table-body - The element containing the rows of the result table's body
  * @part result-table-row - The element containing the cells of a row in the result table's body
+ * @part result-table-row-odd - The element containing the cells of an odd row in the result table's body
+ * @part result-table-row-even - The element containing the cells of an even row in the result table's body
  * @part result-table-cell - The element representing a cell of the result table's body
  */
 @Component({
@@ -284,8 +286,16 @@ export class AtomicResultList implements InitializableComponent {
           </tr>
         </thead>
         <tbody part="result-table-body">
-          {this.resultListState.results.map((result) => (
-            <tr key={this.getId(result)} part="result-table-row">
+          {this.resultListState.results.map((result, rowIndex) => (
+            <tr
+              key={this.getId(result)}
+              part={
+                'result-table-row ' +
+                (rowIndex % 2 === 1
+                  ? 'result-table-row-even'
+                  : 'result-table-row-odd') /* Offset by 1 since the index starts at 0 */
+              }
+            >
               {fieldColumns.map((column) => {
                 return (
                   <td

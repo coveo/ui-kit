@@ -104,6 +104,11 @@ export type {
   RangeFacetSortCriterion,
   RangeFacetRangeAlgorithm,
 } from './features/facets/range-facets/generic/interfaces/request';
+export {
+  MinimumFieldsToInclude,
+  DefaultFieldsToInclude,
+  EcommerceDefaultFieldsToInclude,
+} from './features/fields/fields-state';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export type {HighlightKeyword} from './utils/highlight';
 export {VERSION} from './utils/version';
