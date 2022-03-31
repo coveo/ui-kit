@@ -1,18 +1,28 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../utils/xss-utils';
-import {InteractiveResult, SmartSnippetSource} from '@coveo/headless';
 
 export interface ResultLinkProps {
-  interactiveResult: InteractiveResult | SmartSnippetSource;
   href: string;
   target: string;
   part?: string;
   title?: string;
+  onSelect: () => void;
+  onBeginDelayedSelect: () => void;
+  onCancelPendingSelect: () => void;
   ref?: (elm?: HTMLAnchorElement) => void;
 }
 
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
-  {href, interactiveResult, target, part, title, ref},
+  {
+    href,
+    target,
+    part,
+    title,
+    onSelect,
+    onBeginDelayedSelect,
+    onCancelPendingSelect,
+    ref,
+  },
   children
 ) => {
   const stopPropagationAndProcess = (e: Event, process: () => void) => {
@@ -24,20 +34,12 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
       part={part}
       href={filterProtocol(href)}
       title={title}
-      onClick={(e) => stopPropagationAndProcess(e, interactiveResult.select)}
-      onContextMenu={(e) =>
-        stopPropagationAndProcess(e, interactiveResult.select)
-      }
-      onMouseDown={(e) =>
-        stopPropagationAndProcess(e, interactiveResult.select)
-      }
-      onMouseUp={(e) => stopPropagationAndProcess(e, interactiveResult.select)}
-      onTouchStart={(e) =>
-        stopPropagationAndProcess(e, interactiveResult.beginDelayedSelect)
-      }
-      onTouchEnd={(e) =>
-        stopPropagationAndProcess(e, interactiveResult.cancelPendingSelect)
-      }
+      onClick={(e) => stopPropagationAndProcess(e, onSelect)}
+      onContextMenu={(e) => stopPropagationAndProcess(e, onSelect)}
+      onMouseDown={(e) => stopPropagationAndProcess(e, onSelect)}
+      onMouseUp={(e) => stopPropagationAndProcess(e, onSelect)}
+      onTouchStart={(e) => stopPropagationAndProcess(e, onBeginDelayedSelect)}
+      onTouchEnd={(e) => stopPropagationAndProcess(e, onCancelPendingSelect)}
       target={target}
       ref={ref}
     >

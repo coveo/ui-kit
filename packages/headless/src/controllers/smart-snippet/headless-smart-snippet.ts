@@ -33,7 +33,7 @@ export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/que
 
 export interface SmartSnippetOptions {
   /**
-   * The amount of time to wait before selecting the source after calling `source.beginDelayedSelect`.
+   * The amount of time in milliseconds to wait before selecting the source after calling `source.beginDelayedSelect`.
    *
    * @defaultValue `1000`
    */
@@ -48,36 +48,6 @@ export interface SmartSnippetProps {
 }
 
 /**
- * The `SmartSnippetSource` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects the source of a result.
- */
-export interface SmartSnippetSource {
-  /**
-   * Selects the source, logging a UA event to the Coveo Platform if the source wasn't selected before.
-   *
-   * In a DOM context, it's recommended to call this method on all of the following events:
-   * * `contextmenu`
-   * * `click`
-   * * `mouseup`
-   * * `mousedown`
-   */
-  select(): void;
-
-  /**
-   * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
-   *
-   * In a DOM context, it's recommended to call this method on the `touchstart` event.
-   */
-  beginDelayedSelect(): void;
-
-  /**
-   * Cancels the pending selection caused by `beginDelayedSelect`.
-   *
-   * In a DOM context, it's recommended to call this method on the `touchend` event.
-   */
-  cancelPendingSelect(): void;
-}
-
-/**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .
  */
 export interface SmartSnippet extends Controller {
@@ -85,10 +55,6 @@ export interface SmartSnippet extends Controller {
    * The state of the SmartSnippet controller.
    * */
   state: SmartSnippetState;
-  /**
-   * Methods to interact with the source of the snippet.
-   */
-  source: SmartSnippetSource;
   /**
    * Expand the snippet.
    */
@@ -123,6 +89,28 @@ export interface SmartSnippet extends Controller {
    * @param details - A personalized message from the end user about the relevance of the answer.
    */
   sendDetailedFeedback(details: string): void;
+  /**
+   * Selects the source, logging a UA event to the Coveo Platform if the source wasn't already selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   */
+  selectSource(): void;
+  /**
+   * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   */
+  beginDelayedSelectSource(): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelect`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   */
+  cancelPendingSelectSource(): void;
 }
 
 /**
@@ -230,19 +218,6 @@ export function buildSmartSnippet(
         source: getResult(),
       };
     },
-
-    source: {
-      select() {
-        interactiveResult.select();
-      },
-      beginDelayedSelect() {
-        interactiveResult.beginDelayedSelect();
-      },
-      cancelPendingSelect() {
-        interactiveResult.cancelPendingSelect();
-      },
-    },
-
     expand() {
       engine.dispatch(logExpandSmartSnippet());
       engine.dispatch(expandSmartSnippet());
@@ -274,6 +249,15 @@ export function buildSmartSnippet(
     sendDetailedFeedback(details) {
       engine.dispatch(logSmartSnippetDetailedFeedback(details));
       engine.dispatch(closeFeedbackModal());
+    },
+    selectSource() {
+      interactiveResult.select();
+    },
+    beginDelayedSelectSource() {
+      interactiveResult.beginDelayedSelect();
+    },
+    cancelPendingSelectSource() {
+      interactiveResult.cancelPendingSelect();
     },
   };
 }
