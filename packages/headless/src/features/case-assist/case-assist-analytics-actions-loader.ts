@@ -13,6 +13,7 @@ import {
   logSolveCase,
   logUpdateCaseField,
   logQuickviewDocumentSuggestionClick,
+  nextStageOptions,
 } from './case-assist-analytics-actions';
 
 /**
@@ -33,11 +34,11 @@ export interface CaseAssistAnalyticsActionCreators {
   /**
    * Creates a Case Assist event for when the user moves to the next stage.
    *
-   * @param stageName - The current stage name.
+   * @param options - Options of the event.
    * @returns A dispatchable action.
    */
   logCaseNextStage(
-    stageName?: string
+    options?: nextStageOptions
   ): AsyncThunkAction<
     void,
     void,
