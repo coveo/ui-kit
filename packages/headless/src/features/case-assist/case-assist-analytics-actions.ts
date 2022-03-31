@@ -13,13 +13,15 @@ export const logCaseStart = makeCaseAssistAnalyticsAction(
     })
 );
 
-export const logCaseNextStage = makeCaseAssistAnalyticsAction(
-  'analytics/caseAssist/case/nextStage',
-  (client, state) =>
-    client.logMoveToNextCaseStep({
-      ticket: caseAssistCaseSelector(state),
-    })
-);
+export const logCaseNextStage = (stageName?: string) =>
+  makeCaseAssistAnalyticsAction(
+    'analytics/caseAssist/case/nextStage',
+    (client, state) =>
+      client.logMoveToNextCaseStep({
+        ticket: caseAssistCaseSelector(state),
+        stage: stageName,
+      })
+  )();
 
 export const logCreateCase = makeCaseAssistAnalyticsAction(
   'analytics/caseAssist/case/create',

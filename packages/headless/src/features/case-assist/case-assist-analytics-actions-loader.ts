@@ -33,9 +33,12 @@ export interface CaseAssistAnalyticsActionCreators {
   /**
    * Creates a Case Assist event for when the user moves to the next stage.
    *
+   * @param stageName - The current stage name.
    * @returns A dispatchable action.
    */
-  logCaseNextStage(): AsyncThunkAction<
+  logCaseNextStage(
+    stageName?: string
+  ): AsyncThunkAction<
     void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
