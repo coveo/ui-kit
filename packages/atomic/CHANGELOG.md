@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.39.1...@coveo/atomic@1.40.0) (2022-03-31)
+
+
+### Features
+
+* **atomic:** added table odd and even row parts ([#1877](https://github.com/coveo/ui-kit/issues/1877)) ([c4d6fd4](https://github.com/coveo/ui-kit/commit/c4d6fd48bb80bb801921793e7b97c801832b5ede))
+* **atomic:** display count as compact number for facet values box ([#1879](https://github.com/coveo/ui-kit/issues/1879)) ([3f568b0](https://github.com/coveo/ui-kit/commit/3f568b0e26a72c112609b254325bc72a2bc46ec8))
+
+
+
+
+
 ## [1.39.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.39.0...@coveo/atomic@1.39.1) (2022-03-29)
 
 **Note:** Version bump only for package @coveo/atomic
