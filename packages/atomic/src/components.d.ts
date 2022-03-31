@@ -217,13 +217,9 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
          */
         "fieldsToInclude": string;
-        /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image": ResultDisplayImageSize;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -577,7 +573,7 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
          */
         "fieldsToInclude": string;
         /**
@@ -617,7 +613,7 @@ export namespace Components {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -667,7 +663,7 @@ export namespace Components {
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {
@@ -1634,13 +1630,9 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
          */
         "fieldsToInclude"?: string;
-        /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image"?: ResultDisplayImageSize;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -1986,7 +1978,7 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
          */
         "fieldsToInclude"?: string;
         /**
@@ -2021,7 +2013,7 @@ declare namespace LocalJSX {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -2071,7 +2063,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {

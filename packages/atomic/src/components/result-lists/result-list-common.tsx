@@ -11,7 +11,6 @@ import {
   ResultTemplate,
   buildResultTemplatesManager,
   ResultListProps,
-  FoldedResultListProps,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {identity} from 'lodash';
@@ -23,39 +22,29 @@ import {
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../result-template/result-template-common';
 
-export interface AtomicResultListBase {
-  bindings: Bindings;
-  host: HTMLElement;
-  templateHasError: boolean;
+export interface ResultsProps {
   density: ResultDisplayDensity;
   display?: ResultDisplayLayout;
+  bindings: Bindings;
+  host: HTMLElement;
   imageSize?: ResultDisplayImageSize;
-  image: ResultDisplayImageSize;
+  image?: ResultDisplayImageSize;
+  resultListState: FoldedResultListState | ResultListState;
+  getContentOfResultTemplate(
+    result: Result | FoldedResult
+  ): HTMLElement | DocumentFragment;
+
+  classes: string;
+}
+
+export interface AtomicResultListBase extends Omit<ResultsProps, 'classes'> {
+  templateHasError: boolean;
   listWrapperRef?: HTMLDivElement;
   resultsPerPageState: ResultsPerPageState;
 
   resultListCommon?: ResultListCommon;
 
   resultList: FoldedResultList | ResultList;
-  resultListState: FoldedResultListState | ResultListState;
-  getContentOfResultTemplate(
-    result: Result | FoldedResult
-  ): HTMLElement | DocumentFragment;
-}
-
-export interface ResultsProps
-  extends Pick<
-    AtomicResultListBase,
-    | 'display'
-    | 'density'
-    | 'host'
-    | 'resultListState'
-    | 'bindings'
-    | 'imageSize'
-    | 'image'
-    | 'getContentOfResultTemplate'
-  > {
-  classes: string;
 }
 
 export function getId(
@@ -66,35 +55,13 @@ export function getId(
 }
 
 export function unfolded(result: Result | FoldedResult): Result {
-  return (result as FoldedResult).result || result;
+  return (result as FoldedResult).result ?? result;
 }
-
-const defaultFieldsToInclude = [
-  'date',
-  'author',
-  'source',
-  'language',
-  'filetype',
-  'parents',
-  'ec_price',
-  'ec_name',
-  'ec_description',
-  'ec_brand',
-  'ec_category',
-  'ec_item_group_id',
-  'ec_shortdesc',
-  'ec_thumbnails',
-  'ec_images',
-  'ec_promo_price',
-  'ec_in_stock',
-  'ec_cogs',
-  'ec_rating',
-];
 
 export function getFields(fieldsToInclude: string): string[] {
   if (fieldsToInclude.trim() === '')
     return [...EcommerceDefaultFieldsToInclude];
-  return defaultFieldsToInclude.concat(
+  return EcommerceDefaultFieldsToInclude.concat(
     fieldsToInclude.split(',').map((field) => field.trim())
   );
 }
@@ -144,7 +111,7 @@ export class ResultListCommon {
   private render?: RenderingFunc;
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
-  public listOpts?: ResultListProps | FoldedResultListProps;
+  public listOpts?: ResultListProps;
 
   constructor(props: ResultListCommonProps) {
     this.bindings = props.bindings;

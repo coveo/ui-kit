@@ -14,8 +14,8 @@ import {
   FoldedResultList,
   FoldedResult,
   FoldedResultListState,
-  FoldedResultListProps,
   buildResultsPerPage,
+  ResultListProps,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -76,7 +76,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
-   * The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+   * TODO: add a note about headless?.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**
@@ -87,10 +87,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
-  /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
   /**
    * TODO:
    */
@@ -140,24 +136,19 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
   }
 
-  private initFolding(options: FoldedResultListProps = {}): FoldedResultList {
-    const opts = {...options};
-
-    if (!opts.options) {
-      opts.options = {};
-    }
-    opts.options.folding = {};
-    if (this.collectionField) {
-      opts.options.folding.collectionField = this.collectionField;
-    }
-    if (this.parentField) {
-      opts.options.folding.parentField = this.parentField;
-    }
-    if (this.childField) {
-      opts.options.folding.childField = this.childField;
-    }
-
-    return buildFoldedResultList(this.bindings.engine, opts);
+  private initFolding(
+    props: ResultListProps = {options: {}}
+  ): FoldedResultList {
+    return buildFoldedResultList(this.bindings.engine, {
+      options: {
+        ...props.options,
+        folding: {
+          collectionField: this.collectionField ?? 'foldingcollection',
+          parentField: this.parentField ?? 'foldingparent',
+          childField: this.childField ?? 'foldingchild',
+        },
+      },
+    });
   }
 
   public getContentOfResultTemplate(
