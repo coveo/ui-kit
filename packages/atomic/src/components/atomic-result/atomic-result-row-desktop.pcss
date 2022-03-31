@@ -120,7 +120,8 @@
       'visual emphasized      emphasized      emphasized'
       'visual excerpt         excerpt         excerpt'
       'visual bottom-metadata bottom-metadata bottom-metadata'
-      'visual .               .               .';
+      'visual .               .               .'
+      '.      children               .               .';
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
     grid-template-rows: repeat(6, auto) minmax(0, 1fr);
   }
@@ -149,9 +150,10 @@
       'visual emphasized      emphasized      emphasized'
       'visual excerpt         excerpt         excerpt'
       'visual bottom-metadata bottom-metadata bottom-metadata'
-      'visual .               .               .';
+      'visual .               .               .'
+      '.      children               .               .';
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
-    grid-template-rows: repeat(6, auto) 1fr;
+    grid-template-rows: repeat(6, auto) 1fr minmax(0, min-content);
 
     atomic-result-section-visual {
       width: 2rem;

@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.8.2...@coveo/atomic-react@0.8.3) (2022-03-31)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [0.8.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.8.1...@coveo/atomic-react@0.8.2) (2022-03-31)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [0.8.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.8.0...@coveo/atomic-react@0.8.1) (2022-03-29)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+# [0.8.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.7.7...@coveo/atomic-react@0.8.0) (2022-03-29)
+
+
+### Features
+
+* **atomic:** add folded results component ([#1853](https://github.com/coveo/ui-kit/issues/1853)) ([4197705](https://github.com/coveo/ui-kit/commit/419770513bc5a773b5a48c8e056431b45dae7c23))
+
+
+
+
+
+## [0.7.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.7.6...@coveo/atomic-react@0.7.7) (2022-03-28)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
 ## [0.7.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@0.7.5...@coveo/atomic-react@0.7.6) (2022-03-28)
 
 **Note:** Version bump only for package @coveo/atomic-react

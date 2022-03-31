@@ -46,7 +46,7 @@ const searchboxType = (text: string) => {
     return cy;
   }
 
-  const head = text.substr(0, 1);
+  const head = text.substring(0, 1);
   const tail = text.substring(1);
 
   return cy

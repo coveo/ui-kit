@@ -19,16 +19,50 @@ export interface FieldsState {
   fieldsDescription: FieldDescription[];
 }
 
+/**
+ * A list of the minimum fields required in a query.
+ */
+export const MinimumFieldsToInclude = [
+  'author',
+  'language',
+  'urihash',
+  'objecttype',
+  'collection',
+  'source',
+  'permanentid',
+];
+
+/**
+ * A list of the recommended fields to be used in a query.
+ */
+export const DefaultFieldsToInclude = [
+  ...MinimumFieldsToInclude,
+  'date',
+  'filetype',
+  'parents',
+];
+
+/**
+ * A list of the recommended fields to be used in a query for an e-commerce page.
+ */
+export const EcommerceDefaultFieldsToInclude = [
+  ...DefaultFieldsToInclude,
+  'ec_price',
+  'ec_name',
+  'ec_description',
+  'ec_brand',
+  'ec_category',
+  'ec_item_group_id',
+  'ec_shortdesc',
+  'ec_thumbnails',
+  'ec_images',
+  'ec_promo_price',
+  'ec_in_stock',
+  'ec_rating',
+];
+
 export const getFieldsInitialState: () => FieldsState = () => ({
-  fieldsToInclude: [
-    'author',
-    'language',
-    'urihash',
-    'objecttype',
-    'collection',
-    'source',
-    'permanentid',
-  ],
+  fieldsToInclude: MinimumFieldsToInclude,
   fetchAllFields: false,
   fieldsDescription: [],
 });

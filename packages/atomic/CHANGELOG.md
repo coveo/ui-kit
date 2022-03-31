@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.40.0...@coveo/atomic@1.40.1) (2022-03-31)
+
+
+### Bug Fixes
+
+* **atomic:** query suggestion & recent queries, wrap long query up to 2 lines ([#1881](https://github.com/coveo/ui-kit/issues/1881)) ([aa18a44](https://github.com/coveo/ui-kit/commit/aa18a443d14da6c92fc654f984b83ae3dc8de92d))
+
+
+
+
+
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.39.1...@coveo/atomic@1.40.0) (2022-03-31)
+
+
+### Features
+
+* **atomic:** added table odd and even row parts ([#1877](https://github.com/coveo/ui-kit/issues/1877)) ([c4d6fd4](https://github.com/coveo/ui-kit/commit/c4d6fd48bb80bb801921793e7b97c801832b5ede))
+* **atomic:** display count as compact number for facet values box ([#1879](https://github.com/coveo/ui-kit/issues/1879)) ([3f568b0](https://github.com/coveo/ui-kit/commit/3f568b0e26a72c112609b254325bc72a2bc46ec8))
+
+
+
+
+
+## [1.39.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.39.0...@coveo/atomic@1.39.1) (2022-03-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.2...@coveo/atomic@1.39.0) (2022-03-29)
+
+
+### Features
+
+* **atomic:** add folded results component ([#1853](https://github.com/coveo/ui-kit/issues/1853)) ([4197705](https://github.com/coveo/ui-kit/commit/419770513bc5a773b5a48c8e056431b45dae7c23))
+
+
+
+
+
+## [1.38.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.1...@coveo/atomic@1.38.2) (2022-03-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.38.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.0...@coveo/atomic@1.38.1) (2022-03-28)
 
 **Note:** Version bump only for package @coveo/atomic

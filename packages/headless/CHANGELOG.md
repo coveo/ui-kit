@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.55.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.4...@coveo/headless@1.55.0) (2022-03-31)
+
+
+### Features
+
+* **headless:** export SearchDefaultFieldsToInclude ([#1874](https://github.com/coveo/ui-kit/issues/1874)) ([11b5a11](https://github.com/coveo/ui-kit/commit/11b5a1140c8b96104bc6cb4bfa29ebc098485248))
+
+
+
+
+
+## [1.54.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.3...@coveo/headless@1.54.4) (2022-03-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.54.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.2...@coveo/headless@1.54.3) (2022-03-28)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.54.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.1...@coveo/headless@1.54.2) (2022-03-28)
 
 

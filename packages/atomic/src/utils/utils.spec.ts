@@ -48,6 +48,10 @@ describe('randomID', () => {
   it('when a string to prepend is passed, it places it at the start of the id', () => {
     expect(randomID('prefix')).toMatch(/^prefix/);
   });
+  it('when a string to prepend is not passed, it prefixes id with nothing', () => {
+    expect(randomID()).not.toMatch(/^undefined/);
+    expect(randomID().length).toBe(5);
+  });
 
   it('when called twice, it returns two different ids', () => {
     expect(randomID()).not.toBe(randomID());

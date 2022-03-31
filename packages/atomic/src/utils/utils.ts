@@ -85,3 +85,14 @@ export function parseAssetURL(url: string, assetPath = './assets') {
   }
   return null;
 }
+
+// TODO: add tests
+export function elementHasAncestorTag(
+  el: HTMLElement,
+  tagName: string
+): boolean {
+  const parentElement = el.parentElement;
+  if (!parentElement) return false;
+  if (parentElement.tagName === tagName.toUpperCase()) return true;
+  return elementHasAncestorTag(parentElement, tagName);
+}

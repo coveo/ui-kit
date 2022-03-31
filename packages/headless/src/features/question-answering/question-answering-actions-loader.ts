@@ -6,6 +6,8 @@ import {
   dislikeSmartSnippet,
   likeSmartSnippet,
   expandSmartSnippet,
+  openFeedbackModal,
+  closeFeedbackModal,
 } from './question-answering-actions';
 
 /**
@@ -36,6 +38,18 @@ export interface QuestionAnsweringActionCreators {
    * @returns A dispatchable action.
    */
   likeSmartSnippet(): PayloadAction;
+  /**
+   * Opens the feedback modal of a smart snippet
+   *
+   * @returns A dispatchable action.
+   */
+  openFeedbackModal(): PayloadAction;
+  /**
+   * Closes the feedback modal of a smart snippet
+   *
+   * @returns A dispatchable action.
+   */
+  closeFeedbackModal(): PayloadAction;
 }
 
 /**
@@ -54,5 +68,7 @@ export function loadQuestionAnsweringActions(
     expandSmartSnippet,
     dislikeSmartSnippet,
     likeSmartSnippet,
+    openFeedbackModal,
+    closeFeedbackModal,
   };
 }
