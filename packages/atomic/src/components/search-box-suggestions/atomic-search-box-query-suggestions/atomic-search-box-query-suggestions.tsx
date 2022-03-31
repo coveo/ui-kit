@@ -83,13 +83,19 @@ export class AtomicSearchBoxQuerySuggestions {
       content: (
         <div class="flex items-center">
           {this.bindings.getSuggestions().length > 1 && (
-            <atomic-icon icon={SearchIcon} class="w-4 h-4 mr-2"></atomic-icon>
+            <atomic-icon
+              icon={SearchIcon}
+              class="w-4 h-4 mr-2 shrink-0"
+            ></atomic-icon>
           )}
           {hasQuery ? (
             // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
-            <span innerHTML={suggestion.highlightedValue}></span>
+            <span
+              class="break-all line-clamp-2"
+              innerHTML={suggestion.highlightedValue}
+            ></span>
           ) : (
-            <span>{suggestion.rawValue}</span>
+            <span class="break-all line-clamp-2">{suggestion.rawValue}</span>
           )}
         </div>
       ),
