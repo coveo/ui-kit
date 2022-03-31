@@ -9,4 +9,4 @@ export {
   MissingInterfaceParentError,
 } from './utils/initialization-utils';
 
-export {resultContext} from './components/result-template/result-template-components/result-template-decorators';
+export {resultContext} from './components/result-template-components/result-template-decorators';

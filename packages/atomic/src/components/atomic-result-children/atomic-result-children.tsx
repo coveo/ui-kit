@@ -2,7 +2,7 @@ import {Component, Element, State, h} from '@stencil/core';
 import {FoldedResult} from '@coveo/headless';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../utils/utils';
-import {ResultContext} from '../result-template/result-template-components/result-template-decorators';
+import {ResultContext} from '../result-template-components/result-template-decorators';
 import {ResultListCommon} from '../result-lists/result-list-common';
 
 const childTemplateComponent = 'atomic-result-children-template';

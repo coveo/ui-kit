@@ -20,7 +20,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../atomic-result/atomic-result-display-options';
-import {TemplateContent} from '../result-template/result-template-common';
+import {TemplateContent} from '../result-templates/result-template-common';
 
 export interface ResultsProps {
   density: ResultDisplayDensity;
