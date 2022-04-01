@@ -389,7 +389,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public componentDidRender() {
-    if (this.resultListState.firstSearchExecuted) {
+    if (this.resultListState?.firstSearchExecuted) {
       this.listWrapperRef?.classList.remove('placeholder');
     }
   }
