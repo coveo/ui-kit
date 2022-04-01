@@ -1,4 +1,5 @@
 import {makeCaseAssistAnalyticsAction} from '../analytics/analytics-utils';
+import {NextStageOptions} from './case-assist-analytics-actions-loader';
 import {
   caseAssistCaseSelector,
   caseAssistCaseClassificationSelector,
@@ -13,11 +14,7 @@ export const logCaseStart = makeCaseAssistAnalyticsAction(
     })
 );
 
-export interface nextStageOptions {
-  stageName?: string;
-}
-
-export const logCaseNextStage = (options?: nextStageOptions) =>
+export const logCaseNextStage = (options?: NextStageOptions) =>
   makeCaseAssistAnalyticsAction(
     'analytics/caseAssist/case/nextStage',
     (client, state) =>
