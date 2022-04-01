@@ -535,7 +535,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<import("/Users/liviarett/coveo/ui-kit/packages/headless/dist/definitions/index").ResultTemplate<DocumentFragment> | null>;
+        "getTemplate": () => Promise<import("/home/runner/work/ui-kit/ui-kit/packages/headless/dist/definitions/index").ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -674,7 +674,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<import("/Users/liviarett/coveo/ui-kit/packages/headless/dist/definitions/index").ResultTemplate<DocumentFragment> | null>;
+        "getTemplate": () => Promise<import("/home/runner/work/ui-kit/ui-kit/packages/headless/dist/definitions/index").ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultText {
         /**
