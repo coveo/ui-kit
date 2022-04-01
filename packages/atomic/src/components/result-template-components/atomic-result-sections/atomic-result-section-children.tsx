@@ -3,6 +3,7 @@ import {hideEmptySection} from '../../../utils/result-section-utils';
 
 /**
   TODO:
+  * @internal
  */
 @Component({
   tag: 'atomic-result-section-children',
