@@ -5,10 +5,17 @@ import {
   getResultDisplayClasses,
   ResultDisplayLayout,
 } from '../atomic-result/atomic-result-display-options';
-import {AtomicResultListBase, ResultsProps} from './result-list-common';
-import {ResultsPlaceholder} from './results-placeholder';
+import {
+  AtomicResultListBase,
+  ResultPlaceholderProps,
+  ResultsProps,
+} from './result-list-common';
+import {TableDisplayResultsPlaceholder} from './table-display-results-placeholder';
 import {TableDisplayResults} from './table-display-results';
 import {ListDisplayResults} from './list-display-results';
+import {GridDisplayResults} from './grid-display-results';
+import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
+import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
 interface ResultListProps {
   parent: AtomicResultListBase;
 }
@@ -70,14 +77,31 @@ const ResultDisplayWrapper: FunctionalComponent<{
   );
 };
 
+const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
+  props
+) => {
+  switch (props.display) {
+    case 'table':
+      return <TableDisplayResultsPlaceholder {...props} />;
+    case 'grid':
+      return <GridDisplayResultsPlaceholder {...props} />;
+    default:
+      return <ListDisplayResultsPlaceholder {...props} />;
+  }
+};
+
 const Results: FunctionalComponent<ResultsProps> = (props) => {
   if (!props.resultListState.results.length) {
     return null;
   }
-  if (props.display === 'table') {
-    return <TableDisplayResults {...props} />;
+  switch (props.display) {
+    case 'table':
+      return <TableDisplayResults {...props} />;
+    case 'grid':
+      return <GridDisplayResults {...props} />;
+    default:
+      return <ListDisplayResults {...props} />;
   }
-  return <ListDisplayResults {...props} />;
 };
 
 export function getClasses({

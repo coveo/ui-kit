@@ -22,14 +22,19 @@ import {
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
 
-export interface ResultsProps {
+interface DisplayProps {
   density: ResultDisplayDensity;
-  display?: ResultDisplayLayout;
-  bindings: Bindings;
-  host: HTMLElement;
   imageSize?: ResultDisplayImageSize;
   image?: ResultDisplayImageSize;
+  display?: ResultDisplayLayout;
+}
+export interface ResultPlaceholderProps extends DisplayProps {
+  resultsPerPageState: ResultsPerPageState;
+}
+export interface ResultsProps extends DisplayProps {
   resultListState: FoldedResultListState | ResultListState;
+  bindings: Bindings;
+  host: HTMLElement;
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
