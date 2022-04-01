@@ -52,12 +52,15 @@ node('linux && docker') {
 
         (headlessMinor, headlessMajor) = (headless.version =~ semanticVersionRegex)[0]
         (atomicMinor, atomicMajor) = (atomic.version =~ semanticVersionRegex)[0]
+
         
         sh "deployment-package package create --with-deploy \
         --resolve HEADLESS_MINOR_VERSION=${headlessMinor} \
         --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
         --resolve ATOMIC_MINOR_VERSION=${atomicMinor} \
         --resolve ATOMIC_MAJOR_VERSION=${atomicMajor} \
+        --resolve HEADLESS_PATCH_VERSION=${headless.version} \
+        --resolve ATOMIC_PATCH_VERSION=${atomic.version} \
         || true"
       }
     }
