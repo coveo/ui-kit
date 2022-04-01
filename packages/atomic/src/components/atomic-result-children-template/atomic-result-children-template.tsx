@@ -1,12 +1,7 @@
-import {ResultTemplateCondition} from '@coveo/headless';
+import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import {Component, Element, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../utils/props-utils';
-import {
-  addMatchConditions,
-  getTemplate,
-  renderIfError,
-  validateTemplate,
-} from '../result-templates/result-template-common';
+import {ResultTemplateCommon} from '../result-templates/result-template-common';
 
 /**
  * TODO:
@@ -17,11 +12,9 @@ import {
   shadow: true,
 })
 export class AtomicResultChildrenTemplate {
-  public matchConditions: ResultTemplateCondition[] = [];
-
   @Element() public host!: HTMLDivElement;
 
-  @State() public error?: Error;
+  @State() public error!: Error;
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -46,23 +39,34 @@ export class AtomicResultChildrenTemplate {
   @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
     {};
 
-  constructor() {
-    validateTemplate.call(this, ['atomic-result-children'], false);
-  }
+  public resultTemplateCommon: ResultTemplateCommon;
 
-  public componentWillLoad() {
-    addMatchConditions.call(this);
+  constructor() {
+    this.resultTemplateCommon = new ResultTemplateCommon({
+      host: this.host,
+      setError: (err) => {
+        this.error = err;
+      },
+      validParents: ['atomic-result-children'],
+    });
   }
 
   /**
    * Gets the appropriate result template based on conditions applied.
    */
   @Method()
-  public async getTemplate() {
-    return getTemplate.call(this);
+  public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
+    return this.resultTemplateCommon.getTemplate(this.conditions, this.error);
+  }
+
+  public componentWillLoad() {
+    this.resultTemplateCommon.addMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
+    );
   }
 
   public render() {
-    return renderIfError.call(this);
+    return this.resultTemplateCommon.renderIfError(this.error);
   }
 }

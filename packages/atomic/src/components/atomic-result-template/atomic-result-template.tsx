@@ -1,12 +1,7 @@
 import {Component, Element, Prop, Method, State} from '@stencil/core';
-import {ResultTemplateCondition} from '@coveo/headless';
+import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
-import {
-  addMatchConditions,
-  getTemplate,
-  renderIfError,
-  validateTemplate,
-} from '../result-templates/result-template-common';
+import {ResultTemplateCommon} from '../result-templates/result-template-common';
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
@@ -18,8 +13,6 @@ import {
   shadow: true,
 })
 export class AtomicResultTemplate {
-  public matchConditions: ResultTemplateCondition[] = [];
-
   @State() public error!: Error;
 
   @Element() public host!: HTMLDivElement;
@@ -47,26 +40,35 @@ export class AtomicResultTemplate {
   @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
     {};
 
-  constructor() {
-    validateTemplate.call(this, [
-      'atomic-result-list',
-      'atomic-folded-result-list',
-    ]);
-  }
+  public resultTemplateCommon: ResultTemplateCommon;
 
   public componentWillLoad() {
-    addMatchConditions.call(this);
+    this.resultTemplateCommon.addMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
+    );
+  }
+
+  constructor() {
+    this.resultTemplateCommon = new ResultTemplateCommon({
+      host: this.host,
+      setError: (err) => {
+        this.error = err;
+      },
+      validParents: ['atomic-result-list', 'atomic-folded-result-list'],
+      allowEmpty: true,
+    });
   }
 
   /**
    * Gets the appropriate result template based on conditions applied.
    */
   @Method()
-  public async getTemplate() {
-    return getTemplate.call(this);
+  public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
+    return this.resultTemplateCommon.getTemplate(this.conditions, this.error);
   }
 
   public render() {
-    return renderIfError.call(this);
+    return this.resultTemplateCommon.renderIfError(this.error);
   }
 }
