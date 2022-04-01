@@ -1,10 +1,10 @@
 {
   "name": "headless-react",
-  "version": "0.51.7",
+  "version": "0.51.13",
   "dependencies": {
-    "@coveo/atomic-react": "^0.8.1",
+    "@coveo/atomic-react": "0.8.7",
     "@coveo/auth": "^1.1.11",
-    "@coveo/headless": "^1.54.4",
+    "@coveo/headless": "^1.56.0",
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "11.2.7",
     "@testing-library/user-event": "13.5.0",

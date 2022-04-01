@@ -141,12 +141,14 @@ export class AtomicSearchBoxRecentQueries {
       key: `recent-${value}`,
       query: value,
       content: (
-        <div class="flex items-center">
-          <atomic-icon icon={Clock} class="w-5 h-5 mr-2 -ml-1"></atomic-icon>
+        <div class="flex items-center break-all">
+          <atomic-icon icon={Clock} class="w-4 h-4 mr-2 shrink-0"></atomic-icon>
           {query === '' ? (
-            <span>{value}</span>
+            <span class="break-all line-clamp-2">{value}</span>
           ) : (
+            // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
             <span
+              class="break-all line-clamp-2"
               // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
               innerHTML={HighlightUtils.highlightString({
                 content: value,
