@@ -39,6 +39,7 @@ const ELLIPSIS = '...';
  * @part breadcrumb-button - A single breadcrumb button.
  * @part breadcrumb-label - The breadcrumb label, associated with the facet.
  * @part breadcrumb-value - The breadcrumb formatted value.
+ * @part breadcrumb-clear - The button to clear individual filters.
  * @part show-more - The button to display all breadcrumbs.
  * @part show-less - The button to display less breadcrumbs.
  * @part label - The "Filters" label.
@@ -198,6 +199,7 @@ export class AtomicBreadbox implements InitializableComponent {
             {breadcrumb.content ?? value}
           </span>
           <atomic-icon
+            part="breadcrumb-clear"
             class="w-2.5 h-2.5 ml-2 mt-px"
             icon={CloseIcon}
           ></atomic-icon>
