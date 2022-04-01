@@ -15,9 +15,6 @@ import {
   logQuickviewDocumentSuggestionClick,
 } from './case-assist-analytics-actions';
 
-/**
- * The engine for powering case assist experiences.
- */
 export interface NextStageOptions {
   stageName?: string;
 }
