@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {getId, ResultsProps} from './result-list-common';
+import {ResultsProps} from './result-list-common';
 
 export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
   props
@@ -7,7 +7,7 @@ export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
   return props.resultListState.results.map((result) => {
     return (
       <atomic-result
-        key={getId(result, props.resultListState)}
+        key={props.resultListCommon.getResultId(result, props.resultListState)}
         result={result}
         engine={props.bindings.engine}
         display={props.display}

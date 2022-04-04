@@ -53,6 +53,7 @@ export const BaseResultList: FunctionalComponent<ResultListProps> = (props) => {
             density={parent.density}
             image={parent.image}
             resultListState={parent.resultListState}
+            resultListCommon={parent.resultListCommon}
             getContentOfResultTemplate={parent.getContentOfResultTemplate.bind(
               parent
             )}

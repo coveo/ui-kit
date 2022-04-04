@@ -29,7 +29,6 @@ import {
 } from '../atomic-result/atomic-result-display-options';
 import {BaseResultList} from '../result-lists/result-list';
 import {
-  handleInfiniteScroll,
   ResultListCommon,
   RenderingFunc,
 } from '../result-lists/result-list-common';
@@ -116,7 +115,11 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   @Listen('scroll', {target: 'window'})
   handleInfiniteScroll() {
-    handleInfiniteScroll(this.enableInfiniteScroll, this.host, this.resultList);
+    this.resultListCommon.handleInfiniteScroll(
+      this.enableInfiniteScroll,
+      this.host,
+      this.resultList
+    );
   }
 
   public async initialize() {

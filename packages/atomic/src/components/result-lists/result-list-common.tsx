@@ -33,6 +33,7 @@ export interface ResultPlaceholderProps extends DisplayProps {
 }
 export interface ResultsProps extends DisplayProps {
   resultListState: FoldedResultListState | ResultListState;
+  resultListCommon: ResultListCommon;
   bindings: Bindings;
   host: HTMLElement;
   getContentOfResultTemplate(
@@ -47,55 +48,9 @@ export interface AtomicResultListBase extends Omit<ResultsProps, 'classes'> {
   listWrapperRef?: HTMLDivElement;
   resultsPerPageState: ResultsPerPageState;
 
-  resultListCommon?: ResultListCommon;
+  resultListCommon: ResultListCommon;
 
   resultList: FoldedResultList | ResultList;
-}
-
-export function getId(
-  result: Result | FoldedCollection,
-  resultListState: FoldedResultListState | ResultListState
-) {
-  return unfolded(result).uniqueId + resultListState.searchResponseId;
-}
-
-export function unfolded(result: Result | FoldedResult): Result {
-  return (result as FoldedResult).result ?? result;
-}
-
-export function getFields(fieldsToInclude: string): string[] {
-  if (fieldsToInclude.trim() === '')
-    return [...EcommerceDefaultFieldsToInclude];
-  return EcommerceDefaultFieldsToInclude.concat(
-    fieldsToInclude.split(',').map((field) => field.trim())
-  );
-}
-
-export function handleInfiniteScroll(
-  isEnabled: boolean,
-  host: HTMLElement,
-  resultList: ResultList | FoldedResultList
-) {
-  if (!isEnabled) {
-    return;
-  }
-
-  const hasReachedEndOfElement =
-    window.innerHeight + window.scrollY >= host.offsetHeight;
-
-  if (hasReachedEndOfElement) {
-    resultList.fetchMoreResults();
-  }
-}
-
-function makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
-  const content = document.createDocumentFragment();
-  const linkEl = document.createElement('atomic-result-link');
-  content.appendChild(linkEl);
-  return {
-    content,
-    conditions: [],
-  };
 }
 
 interface TemplateElement extends HTMLElement {
@@ -124,7 +79,7 @@ export class ResultListCommon {
     if (props.fieldsToInclude) {
       this.listOpts = {
         options: {
-          fieldsToInclude: getFields(props.fieldsToInclude),
+          fieldsToInclude: this.getFields(props.fieldsToInclude),
         },
       };
     }
@@ -141,6 +96,14 @@ export class ResultListCommon {
     this.render = render;
   }
 
+  private getFields(fieldsToInclude: string): string[] {
+    if (fieldsToInclude.trim() === '')
+      return [...EcommerceDefaultFieldsToInclude];
+    return EcommerceDefaultFieldsToInclude.concat(
+      fieldsToInclude.split(',').map((field) => field.trim())
+    );
+  }
+
   public getTemplate(result: Result) {
     return this.resultTemplatesManager.selectTemplate(result);
   }
@@ -152,7 +115,17 @@ export class ResultListCommon {
     return this.render ? this.render(result) : this.getTemplate(result)!;
   }
 
-  async registerResultTemplates(
+  private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
+    const content = document.createDocumentFragment();
+    const linkEl = document.createElement('atomic-result-link');
+    content.appendChild(linkEl);
+    return {
+      content,
+      conditions: [],
+    };
+  }
+
+  public async registerResultTemplates(
     elements: NodeListOf<TemplateElement>,
     includeDefaultTemplate = true,
     onReady: () => void,
@@ -172,7 +145,7 @@ export class ResultListCommon {
       })
     );
     const templates = (
-      includeDefaultTemplate ? [makeDefaultTemplate()] : []
+      includeDefaultTemplate ? [this.makeDefaultTemplate()] : []
     ).concat(
       customTemplates.filter(identity) as ResultTemplate<DocumentFragment>[]
     );
@@ -181,7 +154,37 @@ export class ResultListCommon {
     onReady();
   }
 
-  componentDidRender(
+  public getResultId(
+    result: Result | FoldedCollection,
+    resultListState: FoldedResultListState | ResultListState
+  ) {
+    return (
+      this.asUnfoldedResult(result).uniqueId + resultListState.searchResponseId
+    );
+  }
+
+  public asUnfoldedResult(result: Result | FoldedResult): Result {
+    return (result as FoldedResult).result ?? result;
+  }
+
+  public handleInfiniteScroll(
+    isEnabled: boolean,
+    host: HTMLElement,
+    resultList: ResultList | FoldedResultList
+  ) {
+    if (!isEnabled) {
+      return;
+    }
+
+    const hasReachedEndOfElement =
+      window.innerHeight + window.scrollY >= host.offsetHeight;
+
+    if (hasReachedEndOfElement) {
+      resultList.fetchMoreResults();
+    }
+  }
+
+  public componentDidRender(
     resultListState: FoldedResultListState | ResultListState,
     listWrapperRef?: HTMLDivElement
   ) {

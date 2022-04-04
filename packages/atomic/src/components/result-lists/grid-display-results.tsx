@@ -1,7 +1,7 @@
 import {buildInteractiveResult} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
-import {getId, ResultsProps, unfolded} from './result-list-common';
+import {ResultsProps} from './result-list-common';
 
 export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
   props
@@ -10,13 +10,13 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
     <LinkWithResultAnalytics
       part="result-list-grid-clickable"
       interactiveResult={buildInteractiveResult(props.bindings.engine, {
-        options: {result: unfolded(result)},
+        options: {result: props.resultListCommon.asUnfoldedResult(result)},
       })}
-      href={unfolded(result).clickUri}
+      href={props.resultListCommon.asUnfoldedResult(result).clickUri}
       target="_self"
     >
       <atomic-result
-        key={getId(result, props.resultListState)}
+        key={props.resultListCommon.getResultId(result, props.resultListState)}
         result={result}
         engine={props.bindings.engine}
         display={props.display}

@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {getId, ResultsProps} from './result-list-common';
+import {ResultsProps} from './result-list-common';
 
 export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
   props
@@ -31,7 +31,10 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
       <tbody part="result-table-body">
         {props.resultListState.results.map((result, rowIndex) => (
           <tr
-            key={getId(result, props.resultListState)}
+            key={props.resultListCommon.getResultId(
+              result,
+              props.resultListState
+            )}
             part={
               'result-table-row ' +
               (rowIndex % 2 === 1
@@ -44,7 +47,10 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
                 <td
                   key={
                     column.getAttribute('label')! +
-                    getId(result, props.resultListState)
+                    props.resultListCommon.getResultId(
+                      result,
+                      props.resultListState
+                    )
                   }
                   part="result-table-cell"
                 >
