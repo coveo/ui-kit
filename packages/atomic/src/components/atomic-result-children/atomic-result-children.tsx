@@ -1,4 +1,4 @@
-import {Component, Element, State, h} from '@stencil/core';
+import {Component, Element, State, h, Host} from '@stencil/core';
 import {
   buildResultTemplatesManager,
   FoldedResult,
@@ -68,21 +68,28 @@ export class AtomicResultChildren {
     if (!this.ready) return null;
     if (this.templateHasError) return <slot></slot>;
     if (this.result.children.length) {
-      return this.result.children.map((child) => {
-        const content = this.childrenResultsTemplatesManager.selectTemplate(
-          child.result
-        );
-        if (content) {
-          return (
-            <atomic-result
-              content={content}
-              result={child}
-              engine={this.bindings.engine}
-            ></atomic-result>
-          );
-        }
-        return null;
-      });
+      // TODO: definitely document this in KIT-1519 amd KIT-1520
+      return (
+        <Host>
+          <slot name="before-children"></slot>
+          {this.result.children.map((child) => {
+            const content = this.childrenResultsTemplatesManager.selectTemplate(
+              child.result
+            );
+            if (content) {
+              return (
+                <atomic-result
+                  content={content}
+                  result={child}
+                  engine={this.bindings.engine}
+                ></atomic-result>
+              );
+            }
+            return null;
+          })}
+          <slot name="after-children"></slot>
+        </Host>
+      );
     }
     return null;
   }
