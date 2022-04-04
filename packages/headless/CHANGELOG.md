@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.57.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.56.0...@coveo/headless@1.57.0) (2022-04-04)
+
+
+### Features
+
+* **headless:** stageName parameter added to loadCaseNextStage case assist event ([#1886](https://github.com/coveo/ui-kit/issues/1886)) ([9d3f030](https://github.com/coveo/ui-kit/commit/9d3f03033cb6e35c64877134f46d80dd2f066c25))
+
+
+
+
+
 # [1.56.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.55.0...@coveo/headless@1.56.0) (2022-03-31)
 
 

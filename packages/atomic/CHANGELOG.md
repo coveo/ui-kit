@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.42.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.41.2...@coveo/atomic@1.42.0) (2022-04-04)
+
+
+### Bug Fixes
+
+* **atomic:** atomic-result-icon styling typo ([#1893](https://github.com/coveo/ui-kit/issues/1893)) ([f1f4707](https://github.com/coveo/ui-kit/commit/f1f4707685e6072f5e77565eca2e571f25f0f1ed))
+
+
+### Features
+
+* **atomic:** allow to add children inside atomic-result-children ([#1894](https://github.com/coveo/ui-kit/issues/1894)) ([28d4909](https://github.com/coveo/ui-kit/commit/28d490975231b5d4a6f59375942a9a00092d6675))
+
+
+
+
+
 ## [1.41.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.41.1...@coveo/atomic@1.41.2) (2022-04-01)
 
 **Note:** Version bump only for package @coveo/atomic
