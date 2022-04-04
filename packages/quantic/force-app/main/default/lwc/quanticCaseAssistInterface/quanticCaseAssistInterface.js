@@ -33,7 +33,7 @@ export default class QuanticCaseAssistInterface extends LightningElement {
    */
   @api caseAssistId;
   /**
-   * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   * The first level of origin of the request, typically the identifier of the graphical case assist interface from which the request originates.
    * @api
    * @type {string}
    * @defaultValue 'default'
