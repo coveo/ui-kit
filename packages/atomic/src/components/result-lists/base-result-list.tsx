@@ -16,12 +16,14 @@ import {ListDisplayResults} from './list-display-results';
 import {GridDisplayResults} from './grid-display-results';
 import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
-interface ResultListProps {
+
+interface BaseResultListProps {
   parent: AtomicResultListBase;
 }
 
-export const BaseResultList: FunctionalComponent<ResultListProps> = (props) => {
-  const parent = props.parent;
+export const BaseResultList: FunctionalComponent<BaseResultListProps> = ({
+  parent,
+}) => {
   const updateBreakpointsOnce = once(() => updateBreakpoints(parent.host));
   updateBreakpointsOnce();
 
@@ -29,7 +31,8 @@ export const BaseResultList: FunctionalComponent<ResultListProps> = (props) => {
     return;
   }
 
-  const classes = getClasses(props.parent);
+  const classes = getClasses(parent);
+  const imageSize = parent.imageSize ?? parent.image;
   return (
     <Host>
       {parent.templateHasError && <slot></slot>}
@@ -41,8 +44,7 @@ export const BaseResultList: FunctionalComponent<ResultListProps> = (props) => {
           <ResultsPlaceholder
             display={parent.display}
             density={parent.density}
-            imageSize={parent.imageSize}
-            image={parent.image}
+            imageSize={imageSize}
             resultsPerPageState={parent.resultsPerPageState}
           />
           <Results
@@ -51,7 +53,7 @@ export const BaseResultList: FunctionalComponent<ResultListProps> = (props) => {
             host={parent.host}
             display={parent.display}
             density={parent.density}
-            image={parent.image}
+            imageSize={imageSize}
             resultListState={parent.resultListState}
             resultListCommon={parent.resultListCommon}
             getContentOfResultTemplate={parent.getContentOfResultTemplate.bind(
@@ -113,7 +115,11 @@ export function getClasses({
   resultListState,
   resultList,
 }: AtomicResultListBase): string {
-  const classes = getResultDisplayClasses(display, density, imageSize ?? image);
+  const classes = getResultDisplayClasses(
+    display,
+    density,
+    (imageSize ?? image)!
+  );
   if (resultListState.firstSearchExecuted && resultList.state.isLoading) {
     classes.push('loading');
   }

@@ -26,7 +26,7 @@ function getDensityClass(density: ResultDisplayDensity) {
   }
 }
 
-function getImageClass(image?: ResultDisplayImageSize) {
+function getImageClass(image: ResultDisplayImageSize) {
   switch (image) {
     case 'large':
       return 'image-large';
@@ -43,7 +43,7 @@ function getImageClass(image?: ResultDisplayImageSize) {
 export function getResultDisplayClasses(
   display: ResultDisplayLayout,
   density: ResultDisplayDensity,
-  image?: ResultDisplayImageSize
+  image: ResultDisplayImageSize
 ) {
   const classes = [
     getDisplayClass(display),

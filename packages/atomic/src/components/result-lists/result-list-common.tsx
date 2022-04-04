@@ -28,7 +28,7 @@ interface DisplayProps {
   image?: ResultDisplayImageSize;
   display?: ResultDisplayLayout;
 }
-export interface ResultPlaceholderProps extends DisplayProps {
+export interface ResultPlaceholderProps extends Omit<DisplayProps, 'image'> {
   resultsPerPageState: ResultsPerPageState;
 }
 export interface ResultsProps extends DisplayProps {
@@ -68,18 +68,20 @@ interface ResultListCommonProps {
 
 export class ResultListCommon {
   private bindings: Bindings;
-  private render?: RenderingFunc;
+  private render?: ResultRenderingFunction;
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
-  public listOpts?: ResultListProps;
+  public resultListControllerProps?: ResultListProps;
 
   constructor(props: ResultListCommonProps) {
     this.bindings = props.bindings;
 
     if (props.fieldsToInclude) {
-      this.listOpts = {
+      this.resultListControllerProps = {
         options: {
-          fieldsToInclude: this.getFields(props.fieldsToInclude),
+          fieldsToInclude: this.determineAllFieldsToInclude(
+            props.fieldsToInclude
+          ),
         },
       };
     }
@@ -92,15 +94,17 @@ export class ResultListCommon {
     );
   }
 
-  set renderingFunction(render: RenderingFunc) {
+  set renderingFunction(render: ResultRenderingFunction) {
     this.render = render;
   }
 
-  private getFields(fieldsToInclude: string): string[] {
-    if (fieldsToInclude.trim() === '')
+  private determineAllFieldsToInclude(
+    configuredFieldsToInclude: string
+  ): string[] {
+    if (configuredFieldsToInclude.trim() === '')
       return [...EcommerceDefaultFieldsToInclude];
     return EcommerceDefaultFieldsToInclude.concat(
-      fieldsToInclude.split(',').map((field) => field.trim())
+      configuredFieldsToInclude.split(',').map((field) => field.trim())
     );
   }
 
@@ -159,11 +163,11 @@ export class ResultListCommon {
     resultListState: FoldedResultListState | ResultListState
   ) {
     return (
-      this.asUnfoldedResult(result).uniqueId + resultListState.searchResponseId
+      this.getUnfoldedResult(result).uniqueId + resultListState.searchResponseId
     );
   }
 
-  public asUnfoldedResult(result: Result | FoldedResult): Result {
+  public getUnfoldedResult(result: Result | FoldedResult): Result {
     return (result as FoldedResult).result ?? result;
   }
 
@@ -194,4 +198,6 @@ export class ResultListCommon {
   }
 }
 
-export type RenderingFunc = (result: Result | FoldedResult) => HTMLElement;
+export type ResultRenderingFunction = (
+  result: Result | FoldedResult
+) => HTMLElement;

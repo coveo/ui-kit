@@ -23,7 +23,7 @@ export class AtomicResultPlaceholder {
   @Prop() imageSize?: ResultDisplayImageSize;
 
   private getClasses() {
-    return getResultDisplayClasses(this.display, this.density, this.imageSize);
+    return getResultDisplayClasses(this.display, this.density, this.imageSize!);
   }
 
   private renderExcerptLine(width: string) {

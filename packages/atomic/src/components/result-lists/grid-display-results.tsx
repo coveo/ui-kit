@@ -10,9 +10,9 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
     <LinkWithResultAnalytics
       part="result-list-grid-clickable"
       interactiveResult={buildInteractiveResult(props.bindings.engine, {
-        options: {result: props.resultListCommon.asUnfoldedResult(result)},
+        options: {result: props.resultListCommon.getUnfoldedResult(result)},
       })}
-      href={props.resultListCommon.asUnfoldedResult(result).clickUri}
+      href={props.resultListCommon.getUnfoldedResult(result).clickUri}
       target="_self"
     >
       <atomic-result
@@ -21,7 +21,7 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
         engine={props.bindings.engine}
         display={props.display}
         density={props.density}
-        imageSize={props.imageSize ?? props.image}
+        imageSize={props.imageSize}
         content={props.getContentOfResultTemplate(result)}
       ></atomic-result>
     </LinkWithResultAnalytics>

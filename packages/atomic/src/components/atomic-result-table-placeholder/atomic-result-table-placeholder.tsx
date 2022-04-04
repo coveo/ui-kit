@@ -18,7 +18,7 @@ const placeholderClasses = 'block bg-neutral rounded';
 })
 export class AtomicResultTablePlaceholder {
   @Prop() density!: ResultDisplayDensity;
-  @Prop() imageSize?: ResultDisplayImageSize;
+  @Prop() imageSize!: ResultDisplayImageSize;
   @Prop() rows!: number;
 
   private getClasses() {

@@ -27,9 +27,10 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result-display-options';
-import {BaseResultList} from '../result-lists/result-list';
+import {BaseResultList} from '../result-lists/base-result-list';
 import {
-  RenderingFunc,
+  AtomicResultListBase,
+  ResultRenderingFunction,
   ResultListCommon,
 } from '../result-lists/result-list-common';
 
@@ -53,7 +54,9 @@ import {
   styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList implements InitializableComponent {
+export class AtomicResultList
+  implements InitializableComponent, AtomicResultListBase
+{
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -116,7 +119,7 @@ export class AtomicResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: Result) => HTMLElement
   ) {
-    this.resultListCommon.renderingFunction = render as RenderingFunc;
+    this.resultListCommon.renderingFunction = render as ResultRenderingFunction;
   }
 
   @Listen('scroll', {target: 'window'})
@@ -148,7 +151,7 @@ export class AtomicResultList implements InitializableComponent {
 
     this.resultList = buildResultList(
       this.bindings.engine,
-      this.resultListCommon.listOpts
+      this.resultListCommon.resultListControllerProps
     );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
   }

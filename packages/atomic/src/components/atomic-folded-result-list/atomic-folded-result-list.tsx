@@ -27,10 +27,11 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result-display-options';
-import {BaseResultList} from '../result-lists/result-list';
+import {BaseResultList} from '../result-lists/base-result-list';
 import {
   ResultListCommon,
-  RenderingFunc,
+  ResultRenderingFunction,
+  AtomicResultListBase,
 } from '../result-lists/result-list-common';
 
 /**
@@ -44,7 +45,9 @@ import {
   styleUrl: 'atomic-folded-result-list.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList implements InitializableComponent {
+export class AtomicFoldedResultList
+  implements InitializableComponent, AtomicResultListBase
+{
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -85,7 +88,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
+  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
   /**
    * TODO:
    */
@@ -110,7 +113,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: FoldedResult) => HTMLElement
   ) {
-    this.resultListCommon.renderingFunction = render as RenderingFunc;
+    this.resultListCommon.renderingFunction = render as ResultRenderingFunction;
   }
 
   @Listen('scroll', {target: 'window'})
@@ -135,7 +138,9 @@ export class AtomicFoldedResultList implements InitializableComponent {
       },
     });
 
-    this.resultList = this.initFolding(this.resultListCommon.listOpts);
+    this.resultList = this.initFolding(
+      this.resultListCommon.resultListControllerProps
+    );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
   }
 

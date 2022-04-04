@@ -11,7 +11,7 @@ export const ListDisplayResultsPlaceholder: FunctionalComponent<
         key={`placeholder-${i}`}
         density={props.density}
         display="list"
-        imageSize={props.imageSize ?? props.image}
+        imageSize={props.imageSize}
       ></atomic-result-placeholder>
     )
   );

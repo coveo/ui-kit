@@ -9,7 +9,7 @@ import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCrite
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
-import { RenderingFunc } from "./components/result-lists/result-list-common";
+import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { i18n } from "i18next";
@@ -223,7 +223,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         /**
           * TODO:
          */
@@ -663,7 +663,7 @@ export namespace Components {
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {
@@ -2063,7 +2063,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTablePlaceholder {
         "density": ResultDisplayDensity;
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         "rows": number;
     }
     interface AtomicResultTemplate {

@@ -7,7 +7,7 @@ export const TableDisplayResultsPlaceholder: FunctionalComponent<
   return (
     <atomic-result-table-placeholder
       density={props.density}
-      imageSize={props.imageSize ?? props.image}
+      imageSize={props.imageSize!}
       rows={props.resultsPerPageState.numberOfResults}
     ></atomic-result-table-placeholder>
   );

@@ -59,7 +59,7 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
                     result={result}
                     display={props.display}
                     density={props.density}
-                    image-size={props.imageSize ?? props.image}
+                    image-size={props.imageSize}
                     content={column}
                   ></atomic-result>
                 </td>

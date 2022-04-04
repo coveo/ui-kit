@@ -12,7 +12,7 @@ export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
         engine={props.bindings.engine}
         display={props.display}
         density={props.density}
-        imageSize={props.imageSize ?? props.image}
+        imageSize={props.imageSize}
         content={props.getContentOfResultTemplate(result)}
       ></atomic-result>
     );
