@@ -88,7 +88,6 @@ export class AtomicResultList
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
-   * TODO: add a note about headless?.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**

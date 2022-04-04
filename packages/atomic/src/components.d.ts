@@ -217,7 +217,7 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
         /**
@@ -573,7 +573,7 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
         /**
@@ -1630,7 +1630,7 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
         /**
@@ -1978,7 +1978,7 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. TODO: add a note about headless?.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
         /**
