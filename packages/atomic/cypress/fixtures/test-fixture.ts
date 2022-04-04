@@ -1,8 +1,25 @@
+import {Result} from '@coveo/headless';
 import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
+
+export interface ResultWithFolding extends Result {
+  parentResult: ResultWithFolding | null;
+  childResults: ResultWithFolding[];
+}
+
+export type SearchFoldedResponseSuccess = Omit<
+  SearchResponseSuccess,
+  'results'
+> & {
+  results: ResultWithFolding[];
+};
+
+export type FoldedSearchResponseModifierPredicate = (
+  response: SearchFoldedResponseSuccess
+) => SearchFoldedResponseSuccess | void;
 
 export type SearchResponseModifierPredicate = (
   response: SearchResponseSuccess
@@ -34,9 +51,13 @@ export class TestFixture {
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
   private translations: Record<string, string> = {};
-  private responseModifiers: SearchResponseModifierPredicate[] = [];
+  private responseModifiers: (
+    | SearchResponseModifierPredicate
+    | FoldedSearchResponseModifierPredicate
+  )[] = [];
   private returnError = false;
   private reflectStateInUrl = true;
+  private redirected = false;
 
   public with(feat: TestFeature) {
     feat(this);
@@ -102,6 +123,13 @@ export class TestFixture {
   }
 
   public withCustomResponse(predicate: SearchResponseModifierPredicate) {
+    this.responseModifiers.push(predicate);
+    return this;
+  }
+
+  public withCustomFoldedResponse(
+    predicate: FoldedSearchResponseModifierPredicate
+  ) {
     this.responseModifiers.push(predicate);
     return this;
   }

@@ -5,6 +5,7 @@ import {
 } from '../../fixtures/test-fixture';
 import {resultTemplateComponent} from './result-template-selectors';
 import {
+  foldedResultListComponent,
   resultListComponent,
   ResultSection,
   resultSectionTags,
@@ -60,4 +61,13 @@ export const addResultList =
       resultList.appendChild(template);
     }
     fixture.withElement(resultList);
+  };
+
+export const addFoldedResultList =
+  (template?: HTMLElement) => (fixture: TestFixture) => {
+    const foldedResultList = generateComponentHTML(foldedResultListComponent);
+    if (template) {
+      foldedResultList.appendChild(template);
+    }
+    fixture.withElement(foldedResultList);
   };
