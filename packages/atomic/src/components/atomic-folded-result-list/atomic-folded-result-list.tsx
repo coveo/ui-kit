@@ -150,9 +150,9 @@ export class AtomicFoldedResultList
       options: {
         ...props.options,
         folding: {
-          collectionField: this.collectionField ?? 'foldingcollection',
-          parentField: this.parentField ?? 'foldingparent',
-          childField: this.childField ?? 'foldingchild',
+          collectionField: this.collectionField,
+          parentField: this.parentField,
+          childField: this.childField,
         },
       },
     });

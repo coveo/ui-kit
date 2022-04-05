@@ -20,12 +20,14 @@ import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder'
 interface BaseResultListProps {
   parent: AtomicResultListBase;
 }
+const updateBreakpointsOnce = once((host: HTMLElement) =>
+  updateBreakpoints(host)
+);
 
 export const BaseResultList: FunctionalComponent<BaseResultListProps> = ({
   parent,
 }) => {
-  const updateBreakpointsOnce = once(() => updateBreakpoints(parent.host));
-  updateBreakpointsOnce();
+  updateBreakpointsOnce(parent.host);
 
   if (parent.resultListState.hasError) {
     return;
