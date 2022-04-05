@@ -15,6 +15,10 @@ import {
   logQuickviewDocumentSuggestionClick,
 } from './case-assist-analytics-actions';
 
+export interface NextStageOptions {
+  stageName?: string;
+}
+
 /**
  * The Case Assist analytics action creators.
  */
@@ -33,9 +37,12 @@ export interface CaseAssistAnalyticsActionCreators {
   /**
    * Creates a Case Assist event for when the user moves to the next stage.
    *
+   * @param options - Options of the event.
    * @returns A dispatchable action.
    */
-  logCaseNextStage(): AsyncThunkAction<
+  logCaseNextStage(
+    options?: NextStageOptions
+  ): AsyncThunkAction<
     void,
     void,
     AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
