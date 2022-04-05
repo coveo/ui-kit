@@ -7,14 +7,18 @@ import {
   addFoldedResultList,
   buildTemplateWithoutSections,
 } from './result-list-actions';
-import {
-  makeChildComponents,
-  withFoldedResult,
-} from './folded-result-list-utils';
+import {makeChildComponents} from './folded-result-list-utils';
+
+const setSource = () => {
+  cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
+    request.body.aq = '@source==("iNaturalistTaxons")';
+  });
+};
 
 describe('Folded Result List Component', () => {
   it('should show child results', () => {
     new TestFixture()
+      .with(setSource)
       .with(
         addFoldedResultList(
           buildTemplateWithoutSections([
@@ -23,7 +27,6 @@ describe('Folded Result List Component', () => {
           ])
         )
       )
-      .withCustomFoldedResponse(withFoldedResult)
       .init();
 
     FoldedResultListSelectors.firstResult()
@@ -40,6 +43,7 @@ describe('Folded Result List Component', () => {
 
   it('should show grandchild results', () => {
     new TestFixture()
+      .with(setSource)
       .with(
         addFoldedResultList(
           buildTemplateWithoutSections([
@@ -48,7 +52,6 @@ describe('Folded Result List Component', () => {
           ])
         )
       )
-      .withCustomFoldedResponse(withFoldedResult)
       .init();
 
     FoldedResultListSelectors.firstResult()
@@ -85,6 +88,7 @@ describe('Folded Result List Component', () => {
     components.insertAdjacentElement('beforeend', after);
 
     new TestFixture()
+      .with(setSource)
       .with(
         addFoldedResultList(
           buildTemplateWithoutSections([
@@ -93,7 +97,6 @@ describe('Folded Result List Component', () => {
           ])
         )
       )
-      .withCustomFoldedResponse(withFoldedResult)
       .init();
 
     FoldedResultListSelectors.firstResult()

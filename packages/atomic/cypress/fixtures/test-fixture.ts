@@ -17,10 +17,6 @@ export type SearchFoldedResponseSuccess = Omit<
   results: ResultWithFolding[];
 };
 
-export type FoldedSearchResponseModifierPredicate = (
-  response: SearchFoldedResponseSuccess
-) => SearchFoldedResponseSuccess | void;
-
 export type SearchResponseModifierPredicate = (
   response: SearchResponseSuccess
 ) => SearchResponseSuccess | void;
@@ -51,10 +47,7 @@ export class TestFixture {
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
   private translations: Record<string, string> = {};
-  private responseModifiers: (
-    | SearchResponseModifierPredicate
-    | FoldedSearchResponseModifierPredicate
-  )[] = [];
+  private responseModifiers: SearchResponseModifierPredicate[] = [];
   private returnError = false;
   private reflectStateInUrl = true;
   private redirected = false;
@@ -123,13 +116,6 @@ export class TestFixture {
   }
 
   public withCustomResponse(predicate: SearchResponseModifierPredicate) {
-    this.responseModifiers.push(predicate);
-    return this;
-  }
-
-  public withCustomFoldedResponse(
-    predicate: FoldedSearchResponseModifierPredicate
-  ) {
     this.responseModifiers.push(predicate);
     return this;
   }
