@@ -1,12 +1,4 @@
-import {
-  Component,
-  h,
-  Element,
-  State,
-  Prop,
-  Listen,
-  Method,
-} from '@stencil/core';
+import {Component, Element, State, Prop, Listen, Method} from '@stencil/core';
 import {
   ResultsPerPageState,
   ResultsPerPage,
