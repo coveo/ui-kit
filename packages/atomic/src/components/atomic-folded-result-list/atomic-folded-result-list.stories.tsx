@@ -2,7 +2,7 @@ import {html} from 'lit-html';
 import defaultStory from '../../../.storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/ResultList',
+  'Atomic/FoldedResultList',
   'atomic-folded-result-list',
   {},
   {
