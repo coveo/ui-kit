@@ -146,6 +146,7 @@ export class AtomicSearchBoxRecentQueries {
           {query === '' ? (
             <span class="break-all line-clamp-2">{value}</span>
           ) : (
+            // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
             <span
               class="break-all line-clamp-2"
               // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.

@@ -1,5 +1,5 @@
-import {Component, Element, State, h} from '@stencil/core';
 import {FoldedResult} from '@coveo/headless';
+import {Component, Element, State, h, Host} from '@stencil/core';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../utils/utils';
 import {ResultContext} from '../result-template-components/result-template-decorators';
@@ -57,22 +57,26 @@ export class AtomicResultChildren {
     if (!this.ready) return null;
     if (this.templateHasError) return <slot></slot>;
     if (this.result.children.length) {
-      return this.result.children.map((child) => {
-        const content =
-          this.resultListCommon!.resultTemplatesManager.selectTemplate(
-            child.result
-          );
-        if (content) {
-          return (
-            <atomic-result
-              content={content}
-              result={child}
-              engine={this.bindings.engine}
-            ></atomic-result>
-          );
-        }
-        return null;
-      });
+      return (
+        <Host>
+          {this.result.children.map((child) => {
+            const content =
+              this.resultListCommon!.resultTemplatesManager.selectTemplate(
+                child.result
+              );
+            if (content) {
+              return (
+                <atomic-result
+                  content={content}
+                  result={child}
+                  engine={this.bindings.engine}
+                ></atomic-result>
+              );
+            }
+            return null;
+          })}
+        </Host>
+      );
     }
     return null;
   }

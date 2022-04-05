@@ -49,7 +49,26 @@ The `template` function must then simply return a valid JSX Element.
 
 Here is an example of a fictitious search page, which defines some premade templates for YouTube videos, as well as Salesforce cases:
 
-```jsx
+```tsx
+import {
+  Result,
+  AtomicResultSectionVisual,
+  AtomicResultImage,
+  AtomicResultSectionTitle,
+  AtomicResultLink,
+  AtomicResultSectionBottomMetadata,
+  AtomicText,
+  AtomicResultNumber,
+  AtomicFormatUnit,
+  AtomicResultSectionExcerpt,
+  AtomicResultText,
+  AtomicResultSectionEmphasized,
+  AtomicSearchInterface,
+  AtomicResultList,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+} from '@coveo/atomic-react';
+
 const MyResultTemplateForYouTubeVideos: React.FC<{result: Result}> = ({
   result,
 }) => {
@@ -149,7 +168,15 @@ This option works well if you do not need to create any CSS rule that would need
 
 For example, if you want to modify the color of all result links in a template to `pink`, you could do so like this:
 
-```jsx
+```tsx
+import {
+  AtomicResultLink,
+  AtomicSearchInterface,
+  AtomicResultList,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+} from '@coveo/atomic-react';
+
 const MyStyledResultLink: React.FC<
   React.ComponentProps<typeof AtomicResultLink>
 > = (props) => {
@@ -187,7 +214,15 @@ This option works in all scenarios, and allows you to target any Shadow parts th
 
 The following is an example that makes the text of an `AtomicResultBadge` pink:
 
-```jsx
+```tsx
+import {
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+  AtomicSearchInterface,
+  AtomicResultList,
+  AtomicResultBadge,
+} from '@coveo/atomic-react';
+
 const myStyles = `
 atomic-result-badge::part(result-badge-element) {
     color: pink;
@@ -200,10 +235,14 @@ const MyPage = () => {
   });
   return (
     <AtomicSearchInterface engine={engine}>
-      <AtomicResultList template={(result)=> {
-          <style>{myStyles}</style>
-          <AtomicResultBadge />
-        }} />
+      <AtomicResultList
+        template={(result) => (
+          <>
+            <style>{myStyles}</style>
+            <AtomicResultBadge />
+          </>
+        )}
+      />
     </AtomicSearchInterface>
   );
 };
@@ -213,12 +252,14 @@ const MyPage = () => {
 
 The Atomic React search interface component exposes an optional `localization` option, which takes a callback function that lets you handle [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
 
-```jsx
+```tsx
+import {AtomicSearchInterface} from '@coveo/atomic-react';
+
 <AtomicSearchInterface
   localization={(i18n) => {
     i18n.addResourceBundle('en', 'translation', {
       search: "I'm feeling lucky!",
     });
   }}
-></AtomicSearchInterface>
+></AtomicSearchInterface>;
 ```
