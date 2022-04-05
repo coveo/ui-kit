@@ -27,7 +27,6 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result-display-options';
-import {BaseResultList} from '../result-lists/base-result-list';
 import {
   ResultListCommon,
   ResultRenderingFunction,
@@ -172,6 +171,6 @@ export class AtomicFoldedResultList
   }
 
   public render() {
-    return <BaseResultList parent={this} />;
+    return this.resultListCommon.renderList(this);
   }
 }

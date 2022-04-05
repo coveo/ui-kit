@@ -1,3 +1,4 @@
+import {FunctionalComponent, h, Host} from '@stencil/core';
 import {
   FoldedCollection,
   FoldedResult,
@@ -19,8 +20,17 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
+  getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
+import {TableDisplayResultsPlaceholder} from './table-display-results-placeholder';
+import {TableDisplayResults} from './table-display-results';
+import {ListDisplayResults} from './list-display-results';
+import {GridDisplayResults} from './grid-display-results';
+import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
+import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
+import {once} from '../../utils/utils';
+import {updateBreakpoints} from '../../utils/replace-breakpoint';
 
 interface DisplayProps {
   density: ResultDisplayDensity;
@@ -69,12 +79,16 @@ interface ResultListCommonProps {
 export class ResultListCommon {
   private bindings: Bindings;
   private render?: ResultRenderingFunction;
+  private updateBreakpoints?: (host: HTMLElement) => void;
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
 
   constructor(props: ResultListCommonProps) {
     this.bindings = props.bindings;
+    this.updateBreakpoints = once((host: HTMLElement) => {
+      updateBreakpoints(host);
+    });
 
     if (props.fieldsToInclude) {
       this.resultListControllerProps = {
@@ -196,8 +210,108 @@ export class ResultListCommon {
       listWrapperRef?.classList.remove('placeholder');
     }
   }
+
+  public renderList(props: AtomicResultListBase) {
+    this.updateBreakpoints?.(props.host);
+
+    if (props.resultListState.hasError) {
+      return;
+    }
+
+    const classes = getClasses(props);
+    const imageSize = props.imageSize ?? props.image;
+    return (
+      <Host>
+        {props.templateHasError && <slot></slot>}
+        <div
+          class={`list-wrapper placeholder ${classes}`}
+          ref={(el) => (props.listWrapperRef = el as HTMLDivElement)}
+        >
+          <ResultDisplayWrapper classes={classes} display={props.display}>
+            <ResultsPlaceholder
+              display={props.display}
+              density={props.density}
+              imageSize={imageSize}
+              resultsPerPageState={props.resultsPerPageState}
+            />
+            <Results
+              classes={classes}
+              bindings={this.bindings}
+              host={props.host}
+              display={props.display}
+              density={props.density}
+              imageSize={imageSize}
+              resultListState={props.resultListState}
+              resultListCommon={props.resultListCommon}
+              getContentOfResultTemplate={props.getContentOfResultTemplate}
+            />
+          </ResultDisplayWrapper>
+        </div>
+      </Host>
+    );
+  }
 }
 
 export type ResultRenderingFunction = (
   result: Result | FoldedResult
 ) => HTMLElement;
+
+const ResultDisplayWrapper: FunctionalComponent<{
+  display?: ResultDisplayLayout;
+  classes: string;
+}> = (props, children) => {
+  if (props.display === 'table') {
+    return children;
+  }
+  return (
+    <div class={`list-root ${props.classes}`} part="result-list">
+      {children}
+    </div>
+  );
+};
+
+const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
+  props
+) => {
+  switch (props.display) {
+    case 'table':
+      return <TableDisplayResultsPlaceholder {...props} />;
+    case 'grid':
+      return <GridDisplayResultsPlaceholder {...props} />;
+    default:
+      return <ListDisplayResultsPlaceholder {...props} />;
+  }
+};
+
+const Results: FunctionalComponent<ResultsProps> = (props) => {
+  if (!props.resultListState.results.length) {
+    return null;
+  }
+  switch (props.display) {
+    case 'table':
+      return <TableDisplayResults {...props} />;
+    case 'grid':
+      return <GridDisplayResults {...props} />;
+    default:
+      return <ListDisplayResults {...props} />;
+  }
+};
+
+export function getClasses({
+  display = 'list',
+  density,
+  imageSize,
+  image,
+  resultListState,
+  resultList,
+}: AtomicResultListBase): string {
+  const classes = getResultDisplayClasses(
+    display,
+    density,
+    (imageSize ?? image)!
+  );
+  if (resultListState.firstSearchExecuted && resultList.state.isLoading) {
+    classes.push('loading');
+  }
+  return classes.join(' ');
+}
