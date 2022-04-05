@@ -24,7 +24,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "1.42.0"
+    "@coveo/atomic": "1.42.2"
   },
   "devDependencies": {
     "@types/node": "15.14.9",

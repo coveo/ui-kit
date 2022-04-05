@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.42.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.1...@coveo/atomic@1.42.2) (2022-04-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.42.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.0...@coveo/atomic@1.42.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* **atomic:** add refine toggle part & make full width ([#1897](https://github.com/coveo/ui-kit/issues/1897)) ([8c7a799](https://github.com/coveo/ui-kit/commit/8c7a799a654be03d7f6dcf109a752f3022d57b06))
+
+
+
+
+
 # [1.42.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.41.2...@coveo/atomic@1.42.0) (2022-04-04)
 
 
