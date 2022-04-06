@@ -202,28 +202,23 @@ export class ResultListCommon {
   }
 
   public componentDidRender(
-    resultListState: FoldedResultListState | ResultListState,
+    firstSearchExecuted: boolean,
     listWrapperRef?: HTMLDivElement
   ) {
-    if (resultListState.firstSearchExecuted) {
+    if (firstSearchExecuted) {
       listWrapperRef?.classList.remove('placeholder');
     }
   }
 
-  private getClasses({
-    display = 'list',
-    density,
-    imageSize,
-    image,
-    resultListState,
-    resultList,
-  }: AtomicResultListBaseComponent): string {
-    const classes = getResultDisplayClasses(
-      display,
-      density,
-      (imageSize ?? image)!
-    );
-    if (resultListState.firstSearchExecuted && resultList.state.isLoading) {
+  private getClasses(
+    display: ResultDisplayLayout = 'list',
+    density: ResultDisplayDensity,
+    imageSize: ResultDisplayImageSize,
+    firstSearchExecuted: boolean,
+    isLoading: boolean
+  ): string {
+    const classes = getResultDisplayClasses(display, density, imageSize!);
+    if (firstSearchExecuted && isLoading) {
       classes.push('loading');
     }
     return classes.join(' ');
@@ -236,7 +231,13 @@ export class ResultListCommon {
       return;
     }
 
-    const classes = this.getClasses(props);
+    const classes = this.getClasses(
+      props.display,
+      props.density,
+      props.imageSize!,
+      props.resultListState.firstSearchExecuted,
+      props.resultListState.isLoading
+    );
     const imageSize = props.imageSize ?? props.image;
     return (
       <Host>

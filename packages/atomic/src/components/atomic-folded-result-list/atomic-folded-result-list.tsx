@@ -157,7 +157,7 @@ export class AtomicFoldedResultList
 
   public componentDidRender() {
     this.resultListCommon.componentDidRender(
-      this.resultListState,
+      this.resultListState.firstSearchExecuted,
       this.listWrapperRef
     );
   }

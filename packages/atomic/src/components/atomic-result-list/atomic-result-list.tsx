@@ -154,7 +154,7 @@ export class AtomicResultList
 
   public componentDidRender() {
     this.resultListCommon.componentDidRender(
-      this.resultListState,
+      this.resultListState.firstSearchExecuted,
       this.listWrapperRef
     );
   }
