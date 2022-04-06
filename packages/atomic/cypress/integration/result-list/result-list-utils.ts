@@ -3,10 +3,8 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../src/components/atomic-result/atomic-result-display-options';
-import {
-  foldedResultListComponent,
-  resultListComponent,
-} from './result-list-selectors';
+import {foldedResultListComponent} from './folded-result-list-selectors';
+import {resultListComponent} from './result-list-selectors';
 
 interface WithAnySectionnableResultListOptions {
   viewports?: Record<string, number>;

@@ -5,12 +5,12 @@ import {
 } from '../../fixtures/test-fixture';
 import {resultTemplateComponent} from './result-template-selectors';
 import {
-  foldedResultListComponent,
   resultListComponent,
   ResultSection,
   resultSectionTags,
 } from './result-list-selectors';
 import {toArray} from '../../utils/arrayUtils';
+import {foldedResultListComponent} from './folded-result-list-selectors';
 
 export function buildTemplateWithoutSections(
   elements: HTMLElement | HTMLElement[],

@@ -1,8 +1,6 @@
 import {pagerComponent, PagerSelectors} from '../pager-selectors';
 import {withAnySectionnableResultList} from './result-list-utils';
 import {
-  foldedResultListComponent,
-  FoldedResultListSelectors,
   resultListComponent,
   ResultListSelectors,
 } from './result-list-selectors';
@@ -13,6 +11,10 @@ import {
   buildTemplateWithSections,
 } from './result-list-actions';
 import * as CommonAssertions from '../common-assertions';
+import {
+  foldedResultListComponent,
+  FoldedResultListSelectors,
+} from './folded-result-list-selectors';
 
 const foldedResultListConfig = {
   componentSelectors: FoldedResultListSelectors,

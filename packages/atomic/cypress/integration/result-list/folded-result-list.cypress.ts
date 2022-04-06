@@ -1,13 +1,13 @@
-import {
-  FoldedResultListSelectors,
-  getAtomicResultAtIndex,
-} from './result-list-selectors';
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {
   addFoldedResultList,
   buildTemplateWithoutSections,
 } from './result-list-actions';
 import {makeChildComponents} from './folded-result-list-utils';
+import {
+  FoldedResultListSelectors,
+  getAtomicResultAtIndex,
+} from './folded-result-list-selectors';
 
 const setSource = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
