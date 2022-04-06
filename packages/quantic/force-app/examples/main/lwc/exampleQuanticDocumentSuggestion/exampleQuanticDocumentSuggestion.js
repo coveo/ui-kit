@@ -14,7 +14,7 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
     {
       attribute: 'engineId',
       label: 'Engine id',
-      description: 'The id of the case assit engine associated.',
+      description: 'The id of the case assist engine associated.',
       defaultValue: 'case-assist-engine',
     },
     {
