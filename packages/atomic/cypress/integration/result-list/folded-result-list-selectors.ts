@@ -1,4 +1,10 @@
-import {resultSectionTags} from './result-list-selectors';
+import {
+  listRoot,
+  resultComponent,
+  resultPlaceholderComponent,
+  resultRoot,
+  resultSectionTags,
+} from './result-list-selectors';
 
 export const foldedResultListComponent = 'atomic-folded-result-list';
 export const resultChildrenComponent = 'atomic-result-children';
@@ -10,15 +16,15 @@ export const afterChildrenSlotName = 'after-children';
 
 export const FoldedResultListSelectors = {
   shadow: () => cy.get(foldedResultListComponent).shadow(),
-  root: () => FoldedResultListSelectors.shadow().find('.list-root'),
+  root: () => FoldedResultListSelectors.shadow().find(listRoot),
   placeholder: () =>
-    FoldedResultListSelectors.shadow().find('atomic-result-placeholder'),
-  result: () => FoldedResultListSelectors.shadow().find('atomic-result'),
+    FoldedResultListSelectors.shadow().find(resultPlaceholderComponent),
+  result: () => FoldedResultListSelectors.shadow().find(resultComponent),
   resultAt: (index = 0) =>
     FoldedResultListSelectors.result().shadow().eq(index),
   firstResult: () => FoldedResultListSelectors.result().first().shadow(),
   firstResultRoot: () =>
-    FoldedResultListSelectors.firstResult().find('.result-root'),
+    FoldedResultListSelectors.firstResult().find(resultRoot),
   resultChildren: (resultIndex = 0) =>
     FoldedResultListSelectors.resultAt(resultIndex).find(
       resultChildrenComponent
@@ -26,7 +32,7 @@ export const FoldedResultListSelectors = {
   childResultAtIndex: (childResultIndex: number, resultIndex = 0) =>
     FoldedResultListSelectors.resultChildren(resultIndex)
       .shadow()
-      .find('atomic-result')
+      .find(resultComponent)
       .eq(childResultIndex)
       .shadow(),
   grandChildResultAtIndex: (
@@ -37,7 +43,7 @@ export const FoldedResultListSelectors = {
     FoldedResultListSelectors.childResultAtIndex(childResultIndex, resultIndex)
       .find(resultChildrenComponent)
       .shadow()
-      .find('atomic-result')
+      .find(resultComponent)
       .shadow()
       .eq(grandChildIndex),
   sections: {
