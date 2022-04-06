@@ -6,7 +6,9 @@ import {
 import {makeChildComponents} from './folded-result-list-utils';
 import {
   FoldedResultListSelectors,
-  getAtomicResultAtIndex,
+  getAtomicResultChildren,
+  getAtomicChildResultAtIndex,
+  getAtomicGrandChildResultAtIndex,
 } from './folded-result-list-selectors';
 
 const setSource = () => {
@@ -33,10 +35,10 @@ describe('Folded Result List Component', () => {
       .contains('Pyrenomycetes')
       .should('be.visible');
 
-    getAtomicResultAtIndex(FoldedResultListSelectors, 0)
+    getAtomicChildResultAtIndex(0)
       .find('atomic-result-link')
       .contains('Stubble Lichens');
-    getAtomicResultAtIndex(FoldedResultListSelectors, 1)
+    getAtomicChildResultAtIndex(1)
       .find('atomic-result-link')
       .contains('Opercs');
   });
@@ -58,18 +60,14 @@ describe('Folded Result List Component', () => {
       .contains('Pyrenomycetes')
       .should('be.visible');
 
-    getAtomicResultAtIndex(FoldedResultListSelectors, 0)
+    getAtomicChildResultAtIndex(0)
       .find('atomic-result-link')
       .contains('Stubble Lichens');
-    getAtomicResultAtIndex(FoldedResultListSelectors, 1)
+    getAtomicChildResultAtIndex(1)
       .find('atomic-result-link')
       .contains('Opercs');
 
-    getAtomicResultAtIndex(FoldedResultListSelectors, 1)
-      .find('atomic-result-children')
-      .shadow()
-      .find('atomic-result')
-      .shadow()
+    getAtomicGrandChildResultAtIndex(0, 1)
       .find('atomic-result-link')
       .contains('Elf Cups and Allies');
   });
@@ -99,35 +97,31 @@ describe('Folded Result List Component', () => {
       )
       .init();
 
-    FoldedResultListSelectors.firstResult()
-      .find('atomic-result-children')
+    getAtomicResultChildren()
       .children()
       .eq(0)
       .contains('Before children!')
       .should('have.attr', 'slot', 'before-children');
 
-    FoldedResultListSelectors.firstResult()
-      .find('atomic-result-children')
+    getAtomicResultChildren()
       .shadow()
       .find('slot')
       .eq(0)
       .should('have.attr', 'name', 'before-children');
 
-    FoldedResultListSelectors.firstResult()
-      .find('atomic-result-children')
+    getAtomicResultChildren()
       .children()
       .eq(2)
       .contains('After children!')
       .should('have.attr', 'slot', 'after-children');
 
-    FoldedResultListSelectors.firstResult()
-      .find('atomic-result-children')
+    getAtomicResultChildren()
       .shadow()
       .find('slot')
       .eq(1)
       .should('have.attr', 'name', 'after-children');
 
-    getAtomicResultAtIndex(FoldedResultListSelectors, 1)
+    getAtomicChildResultAtIndex(1)
       .find('atomic-result-children')
       .should('not.exist');
   });

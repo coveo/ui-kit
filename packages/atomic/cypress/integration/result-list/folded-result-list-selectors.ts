@@ -9,7 +9,7 @@ export const FoldedResultListSelectors = {
     FoldedResultListSelectors.shadow().find('atomic-result-placeholder'),
   result: () => FoldedResultListSelectors.shadow().find('atomic-result'),
   resultAt: (index = 0) =>
-    FoldedResultListSelectors.shadow().find('atomic-result').eq(index),
+    FoldedResultListSelectors.result().shadow().eq(index),
   firstResult: () => FoldedResultListSelectors.result().first().shadow(),
   firstResultRoot: () =>
     FoldedResultListSelectors.firstResult().find('.result-root'),
@@ -39,15 +39,32 @@ export const FoldedResultListSelectors = {
   },
 };
 
-export function getAtomicResultAtIndex(
-  selectors: typeof FoldedResultListSelectors,
-  index: number
+export function getAtomicResultChildren(resultIndex = 0) {
+  return FoldedResultListSelectors.resultAt(resultIndex).find(
+    'atomic-result-children'
+  );
+}
+
+export function getAtomicChildResultAtIndex(
+  childResultIndex: number,
+  resultIndex = 0
 ) {
-  return selectors
-    .firstResult()
+  return getAtomicResultChildren(resultIndex)
+    .shadow()
+    .find('atomic-result')
+    .eq(childResultIndex)
+    .shadow();
+}
+
+export function getAtomicGrandChildResultAtIndex(
+  grandChildIndex: number,
+  childResultIndex = 0,
+  resultIndex = 0
+) {
+  return getAtomicChildResultAtIndex(childResultIndex, resultIndex)
     .find('atomic-result-children')
     .shadow()
     .find('atomic-result')
-    .eq(index)
-    .shadow();
+    .shadow()
+    .eq(grandChildIndex);
 }
