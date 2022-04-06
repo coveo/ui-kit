@@ -31,16 +31,6 @@ import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder'
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
-export interface AtomicResultListBaseComponent
-  extends Omit<ResultsProps, 'classes'> {
-  templateHasError: boolean;
-  listWrapperRef?: HTMLDivElement;
-  resultsPerPageState: ResultsPerPageState;
-
-  resultListCommon: ResultListCommon;
-
-  resultList: FoldedResultList | ResultList;
-}
 interface DisplayOptions {
   density: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
@@ -51,10 +41,10 @@ export interface ResultPlaceholderProps extends Omit<DisplayOptions, 'image'> {
   resultsPerPageState: ResultsPerPageState;
 }
 export interface ResultsProps extends DisplayOptions {
+  host: HTMLElement;
+  bindings: Bindings;
   resultListState: FoldedResultListState | ResultListState;
   resultListCommon: ResultListCommon;
-  bindings: Bindings;
-  host: HTMLElement;
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
@@ -64,6 +54,17 @@ export interface ResultsProps extends DisplayOptions {
 
 interface TemplateElement extends HTMLElement {
   getTemplate(): Promise<ResultTemplate<DocumentFragment> | null>;
+}
+
+export interface RenderListOptions extends DisplayOptions {
+  host: HTMLElement;
+  templateHasError: boolean;
+  resultListState: FoldedResultListState | ResultListState;
+  resultsPerPageState: ResultsPerPageState;
+  setListWrapperRef(el: HTMLDivElement | undefined): void;
+  getContentOfResultTemplate(
+    result: Result | FoldedResult
+  ): HTMLElement | DocumentFragment;
 }
 
 interface ResultListCommonOptions {
@@ -215,45 +216,54 @@ export class ResultListCommon {
     return classes.join(' ');
   }
 
-  public renderList(props: AtomicResultListBaseComponent) {
-    this.updateBreakpoints?.(props.host);
+  public renderList({
+    host,
+    display,
+    density,
+    imageSize,
+    templateHasError,
+    resultListState,
+    resultsPerPageState,
+    setListWrapperRef,
+    getContentOfResultTemplate,
+  }: RenderListOptions) {
+    this.updateBreakpoints?.(host);
 
-    if (props.resultListState.hasError) {
+    if (resultListState.hasError) {
       return;
     }
 
     const classes = this.getClasses(
-      props.display,
-      props.density,
-      props.imageSize!,
-      props.resultListState.firstSearchExecuted,
-      props.resultListState.isLoading
+      display,
+      density,
+      imageSize!,
+      resultListState.firstSearchExecuted,
+      resultListState.isLoading
     );
-    const imageSize = props.imageSize ?? props.image;
     return (
       <Host>
-        {props.templateHasError && <slot></slot>}
+        {templateHasError && <slot></slot>}
         <div
           class={`list-wrapper placeholder ${classes}`}
-          ref={(el) => (props.listWrapperRef = el as HTMLDivElement)}
+          ref={setListWrapperRef}
         >
-          <ResultDisplayWrapper classes={classes} display={props.display}>
+          <ResultDisplayWrapper classes={classes} display={display}>
             <ResultsPlaceholder
-              display={props.display}
-              density={props.density}
+              display={display}
+              density={density}
               imageSize={imageSize}
-              resultsPerPageState={props.resultsPerPageState}
+              resultsPerPageState={resultsPerPageState}
             />
             <Results
               classes={classes}
               bindings={this.bindings}
-              host={props.host}
-              display={props.display}
-              density={props.density}
+              host={host}
+              display={display}
+              density={density}
               imageSize={imageSize}
-              resultListState={props.resultListState}
-              resultListCommon={props.resultListCommon}
-              getContentOfResultTemplate={props.getContentOfResultTemplate}
+              resultListState={resultListState}
+              resultListCommon={this}
+              getContentOfResultTemplate={getContentOfResultTemplate}
             />
           </ResultDisplayWrapper>
         </div>

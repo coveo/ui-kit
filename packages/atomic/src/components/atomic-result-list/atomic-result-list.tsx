@@ -20,7 +20,6 @@ import {
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result-display-options';
 import {
-  AtomicResultListBaseComponent,
   ResultRenderingFunction,
   ResultListCommon,
 } from '../result-lists/result-list-common';
@@ -45,9 +44,7 @@ import {
   styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList
-  implements InitializableComponent, AtomicResultListBaseComponent
-{
+export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -162,6 +159,18 @@ export class AtomicResultList
   }
 
   public render() {
-    return this.resultListCommon.renderList(this);
+    return this.resultListCommon.renderList({
+      host: this.host,
+      display: this.display,
+      density: this.density,
+      imageSize: this.imageSize,
+      templateHasError: this.templateHasError,
+      resultListState: this.resultListState,
+      resultsPerPageState: this.resultsPerPageState,
+      setListWrapperRef: (el) => {
+        this.listWrapperRef = el as HTMLDivElement;
+      },
+      getContentOfResultTemplate: this.getContentOfResultTemplate,
+    });
   }
 }

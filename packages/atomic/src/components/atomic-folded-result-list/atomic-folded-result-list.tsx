@@ -22,7 +22,6 @@ import {
 import {
   ResultListCommon,
   ResultRenderingFunction,
-  AtomicResultListBaseComponent,
 } from '../result-lists/result-list-common';
 
 /**
@@ -36,9 +35,7 @@ import {
   styleUrl: 'atomic-folded-result-list.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList
-  implements InitializableComponent, AtomicResultListBaseComponent
-{
+export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -165,6 +162,17 @@ export class AtomicFoldedResultList
   }
 
   public render() {
-    return this.resultListCommon.renderList(this);
+    return this.resultListCommon.renderList({
+      host: this.host,
+      density: this.density,
+      imageSize: this.imageSize,
+      templateHasError: this.templateHasError,
+      resultListState: this.resultListState,
+      resultsPerPageState: this.resultsPerPageState,
+      setListWrapperRef: (el) => {
+        this.listWrapperRef = el as HTMLDivElement;
+      },
+      getContentOfResultTemplate: this.getContentOfResultTemplate,
+    });
   }
 }
