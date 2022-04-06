@@ -10,6 +10,7 @@ import {
   resultSectionTags,
 } from './result-list-selectors';
 import {toArray} from '../../utils/arrayUtils';
+import {foldedResultListComponent} from './folded-result-list-selectors';
 
 export function buildTemplateWithoutSections(
   elements: HTMLElement | HTMLElement[],
@@ -60,4 +61,13 @@ export const addResultList =
       resultList.appendChild(template);
     }
     fixture.withElement(resultList);
+  };
+
+export const addFoldedResultList =
+  (template?: HTMLElement) => (fixture: TestFixture) => {
+    const foldedResultList = generateComponentHTML(foldedResultListComponent);
+    if (template) {
+      foldedResultList.appendChild(template);
+    }
+    fixture.withElement(foldedResultList);
   };
