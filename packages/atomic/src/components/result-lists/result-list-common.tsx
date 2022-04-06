@@ -31,17 +31,26 @@ import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder'
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
+export interface AtomicResultListBaseComponent
+  extends Omit<ResultsProps, 'classes'> {
+  templateHasError: boolean;
+  listWrapperRef?: HTMLDivElement;
+  resultsPerPageState: ResultsPerPageState;
 
-interface DisplayProps {
+  resultListCommon: ResultListCommon;
+
+  resultList: FoldedResultList | ResultList;
+}
+interface DisplayOptions {
   density: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
   image?: ResultDisplayImageSize;
   display?: ResultDisplayLayout;
 }
-export interface ResultPlaceholderProps extends Omit<DisplayProps, 'image'> {
+export interface ResultPlaceholderProps extends Omit<DisplayOptions, 'image'> {
   resultsPerPageState: ResultsPerPageState;
 }
-export interface ResultsProps extends DisplayProps {
+export interface ResultsProps extends DisplayOptions {
   resultListState: FoldedResultListState | ResultListState;
   resultListCommon: ResultListCommon;
   bindings: Bindings;
@@ -53,21 +62,11 @@ export interface ResultsProps extends DisplayProps {
   classes: string;
 }
 
-export interface AtomicResultListBase extends Omit<ResultsProps, 'classes'> {
-  templateHasError: boolean;
-  listWrapperRef?: HTMLDivElement;
-  resultsPerPageState: ResultsPerPageState;
-
-  resultListCommon: ResultListCommon;
-
-  resultList: FoldedResultList | ResultList;
-}
-
 interface TemplateElement extends HTMLElement {
   getTemplate(): Promise<ResultTemplate<DocumentFragment> | null>;
 }
 
-interface ResultListCommonProps {
+interface ResultListCommonOptions {
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
   fieldsToInclude?: string;
@@ -84,27 +83,27 @@ export class ResultListCommon {
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
 
-  constructor(props: ResultListCommonProps) {
-    this.bindings = props.bindings;
+  constructor(opts: ResultListCommonOptions) {
+    this.bindings = opts.bindings;
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
 
-    if (props.fieldsToInclude) {
+    if (opts.fieldsToInclude) {
       this.resultListControllerProps = {
         options: {
           fieldsToInclude: this.determineAllFieldsToInclude(
-            props.fieldsToInclude
+            opts.fieldsToInclude
           ),
         },
       };
     }
 
     this.registerResultTemplates(
-      props.templateElements,
-      props.includeDefaultTemplate,
-      props.onReady,
-      props.onError
+      opts.templateElements,
+      opts.includeDefaultTemplate,
+      opts.onReady,
+      opts.onError
     );
   }
 
@@ -211,14 +210,33 @@ export class ResultListCommon {
     }
   }
 
-  public renderList(props: AtomicResultListBase) {
+  private getClasses({
+    display = 'list',
+    density,
+    imageSize,
+    image,
+    resultListState,
+    resultList,
+  }: AtomicResultListBaseComponent): string {
+    const classes = getResultDisplayClasses(
+      display,
+      density,
+      (imageSize ?? image)!
+    );
+    if (resultListState.firstSearchExecuted && resultList.state.isLoading) {
+      classes.push('loading');
+    }
+    return classes.join(' ');
+  }
+
+  public renderList(props: AtomicResultListBaseComponent) {
     this.updateBreakpoints?.(props.host);
 
     if (props.resultListState.hasError) {
       return;
     }
 
-    const classes = getClasses(props);
+    const classes = this.getClasses(props);
     const imageSize = props.imageSize ?? props.image;
     return (
       <Host>
@@ -296,22 +314,3 @@ const Results: FunctionalComponent<ResultsProps> = (props) => {
       return <ListDisplayResults {...props} />;
   }
 };
-
-export function getClasses({
-  display = 'list',
-  density,
-  imageSize,
-  image,
-  resultListState,
-  resultList,
-}: AtomicResultListBase): string {
-  const classes = getResultDisplayClasses(
-    display,
-    density,
-    (imageSize ?? image)!
-  );
-  if (resultListState.firstSearchExecuted && resultList.state.isLoading) {
-    classes.push('loading');
-  }
-  return classes.join(' ');
-}

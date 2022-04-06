@@ -11,7 +11,7 @@ export const GridDisplayResultsPlaceholder: FunctionalComponent<
         key={`placeholder-${i}`}
         density={props.density}
         display="grid"
-        imageSize={props.imageSize}
+        imageSize={props.imageSize!}
       ></atomic-result-placeholder>
     )
   );

@@ -22,7 +22,7 @@ import {
 import {
   ResultListCommon,
   ResultRenderingFunction,
-  AtomicResultListBase,
+  AtomicResultListBaseComponent,
 } from '../result-lists/result-list-common';
 
 /**
@@ -37,7 +37,7 @@ import {
   shadow: true,
 })
 export class AtomicFoldedResultList
-  implements InitializableComponent, AtomicResultListBase
+  implements InitializableComponent, AtomicResultListBaseComponent
 {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: FoldedResultList;

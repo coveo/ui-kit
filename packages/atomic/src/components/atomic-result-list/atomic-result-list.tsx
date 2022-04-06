@@ -20,7 +20,7 @@ import {
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result-display-options';
 import {
-  AtomicResultListBase,
+  AtomicResultListBaseComponent,
   ResultRenderingFunction,
   ResultListCommon,
 } from '../result-lists/result-list-common';
@@ -46,7 +46,7 @@ import {
   shadow: true,
 })
 export class AtomicResultList
-  implements InitializableComponent, AtomicResultListBase
+  implements InitializableComponent, AtomicResultListBaseComponent
 {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
