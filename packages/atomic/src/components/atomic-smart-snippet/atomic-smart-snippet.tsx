@@ -58,6 +58,19 @@ export class AtomicSmartSnippet implements InitializableComponent {
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
    *
    * We recommend setting this property in order to improve accessibility.
+   *
+   * You can style the snippet by inserting a template element like this:
+   * ```html
+   * <atomic-smart-snippet>
+   *   <template>
+   *     <style>
+   *       b {
+   *         color: blue;
+   *       }
+   *     </style>
+   *   </template>
+   * </atomic-smart-snippet>
+   * ```
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
@@ -79,19 +92,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
    *     color: blue;
    *   }
    * `;
-   * ```
-   *
-   * Alternatively, you can style the snippet by inserting a template element like this:
-   * ```html
-   * <atomic-smart-snippet>
-   *   <template>
-   *     <style>
-   *       b {
-   *         color: blue;
-   *       }
-   *     </style>
-   *   </template>
-   * </atomic-smart-snippet>
    * ```
    */
   @Prop({reflect: true}) snippetStyle?: string;

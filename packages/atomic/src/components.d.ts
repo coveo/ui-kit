@@ -812,7 +812,7 @@ export namespace Components {
          */
         "collapsedHeight": number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.  You can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
          */
         "headingLevel": number;
         /**
@@ -820,7 +820,7 @@ export namespace Components {
          */
         "maximumHeight": number;
         /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```  Alternatively, you can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
@@ -2209,7 +2209,7 @@ declare namespace LocalJSX {
          */
         "collapsedHeight"?: number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.  You can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
          */
         "headingLevel"?: number;
         /**
@@ -2217,7 +2217,7 @@ declare namespace LocalJSX {
          */
         "maximumHeight"?: number;
         /**
-          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```  Alternatively, you can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
         "snippetStyle"?: string;
     }
