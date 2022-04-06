@@ -114,11 +114,12 @@ export class AtomicResultList
 
   @Listen('scroll', {target: 'window'})
   handleInfiniteScroll() {
-    this.resultListCommon.handleInfiniteScroll(
-      this.enableInfiniteScroll,
-      this.host,
-      this.resultList
-    );
+    if (
+      this.enableInfiniteScroll &&
+      this.resultListCommon.scrollHasReachedEndOfList
+    ) {
+      this.resultList.fetchMoreResults();
+    }
   }
 
   public async initialize() {
@@ -128,6 +129,7 @@ export class AtomicResultList
       );
     }
     this.resultListCommon = new ResultListCommon({
+      host: this.host,
       bindings: this.bindings,
       fieldsToInclude: this.fieldsToInclude,
       templateElements: this.host.querySelectorAll('atomic-result-template'),

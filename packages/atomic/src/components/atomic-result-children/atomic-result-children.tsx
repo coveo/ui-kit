@@ -41,6 +41,7 @@ export class AtomicResultChildren {
 
     if (this.result.children.length) {
       this.resultListCommon = new ResultListCommon({
+        host: this.host,
         bindings: this.bindings,
         templateElements: this.host.querySelectorAll(childTemplateComponent),
         onReady: () => {

@@ -108,15 +108,17 @@ export class AtomicFoldedResultList
 
   @Listen('scroll', {target: 'window'})
   handleInfiniteScroll() {
-    this.resultListCommon.handleInfiniteScroll(
-      this.enableInfiniteScroll,
-      this.host,
-      this.resultList
-    );
+    if (
+      this.enableInfiniteScroll &&
+      this.resultListCommon.scrollHasReachedEndOfList
+    ) {
+      this.resultList.fetchMoreResults();
+    }
   }
 
   public async initialize() {
     this.resultListCommon = new ResultListCommon({
+      host: this.host,
       bindings: this.bindings,
       fieldsToInclude: this.fieldsToInclude,
       templateElements: this.host.querySelectorAll('atomic-result-template'),

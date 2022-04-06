@@ -67,6 +67,7 @@ interface TemplateElement extends HTMLElement {
 }
 
 interface ResultListCommonOptions {
+  host: HTMLElement;
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
   fieldsToInclude?: string;
@@ -76,6 +77,7 @@ interface ResultListCommonOptions {
 }
 
 export class ResultListCommon {
+  private host: HTMLElement;
   private bindings: Bindings;
   private render?: ResultRenderingFunction;
   private updateBreakpoints?: (host: HTMLElement) => void;
@@ -84,6 +86,7 @@ export class ResultListCommon {
   public resultListControllerProps?: ResultListProps;
 
   constructor(opts: ResultListCommonOptions) {
+    this.host = opts.host;
     this.bindings = opts.bindings;
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
@@ -184,21 +187,9 @@ export class ResultListCommon {
     return (result as FoldedResult).result ?? result;
   }
 
-  public handleInfiniteScroll(
-    isEnabled: boolean,
-    host: HTMLElement,
-    resultList: ResultList | FoldedResultList
-  ) {
-    if (!isEnabled) {
-      return;
-    }
-
-    const hasReachedEndOfElement =
-      window.innerHeight + window.scrollY >= host.offsetHeight;
-
-    if (hasReachedEndOfElement) {
-      resultList.fetchMoreResults();
-    }
+  public get scrollHasReachedEndOfList() {
+    const childEl = this.host.shadowRoot?.firstElementChild as HTMLElement;
+    return window.innerHeight + window.scrollY >= childEl?.offsetHeight;
   }
 
   public componentDidRender(
