@@ -3,13 +3,14 @@ import {
   addFoldedResultList,
   buildTemplateWithoutSections,
 } from './result-list-actions';
-import {makeChildComponents} from './folded-result-list-utils';
+import {buildResultChildren} from './folded-result-list-actions';
 import {
   FoldedResultListSelectors,
-  getAtomicResultChildren,
-  getAtomicChildResultAtIndex,
-  getAtomicGrandChildResultAtIndex,
+  beforeChildrenSlotName,
+  afterChildrenSlotName,
+  resultChildrenComponent,
 } from './folded-result-list-selectors';
+import {resultLinkComponent} from './result-components/result-link-selectors';
 
 const setSource = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
@@ -24,8 +25,8 @@ describe('Folded Result List Component', () => {
       .with(
         addFoldedResultList(
           buildTemplateWithoutSections([
-            generateComponentHTML('atomic-result-link'),
-            makeChildComponents(),
+            generateComponentHTML(resultLinkComponent),
+            buildResultChildren(),
           ])
         )
       )
@@ -35,11 +36,11 @@ describe('Folded Result List Component', () => {
       .contains('Pyrenomycetes')
       .should('be.visible');
 
-    getAtomicChildResultAtIndex(0)
-      .find('atomic-result-link')
+    FoldedResultListSelectors.childResultAtIndex(0)
+      .find(resultLinkComponent)
       .contains('Stubble Lichens');
-    getAtomicChildResultAtIndex(1)
-      .find('atomic-result-link')
+    FoldedResultListSelectors.childResultAtIndex(1)
+      .find(resultLinkComponent)
       .contains('Opercs');
   });
 
@@ -49,8 +50,8 @@ describe('Folded Result List Component', () => {
       .with(
         addFoldedResultList(
           buildTemplateWithoutSections([
-            generateComponentHTML('atomic-result-link'),
-            makeChildComponents(makeChildComponents()),
+            generateComponentHTML(resultLinkComponent),
+            buildResultChildren(buildResultChildren()),
           ])
         )
       )
@@ -60,28 +61,28 @@ describe('Folded Result List Component', () => {
       .contains('Pyrenomycetes')
       .should('be.visible');
 
-    getAtomicChildResultAtIndex(0)
-      .find('atomic-result-link')
+    FoldedResultListSelectors.childResultAtIndex(0)
+      .find(resultLinkComponent)
       .contains('Stubble Lichens');
-    getAtomicChildResultAtIndex(1)
-      .find('atomic-result-link')
+    FoldedResultListSelectors.childResultAtIndex(1)
+      .find(resultLinkComponent)
       .contains('Opercs');
 
-    getAtomicGrandChildResultAtIndex(0, 1)
-      .find('atomic-result-link')
+    FoldedResultListSelectors.grandChildResultAtIndex(0, 1)
+      .find(resultLinkComponent)
       .contains('Elf Cups and Allies');
   });
 
   it('renders content before and after children only when there are children', () => {
-    const components = makeChildComponents();
+    const components = buildResultChildren();
 
     const before = generateComponentHTML('p');
-    before.slot = 'before-children';
+    before.slot = beforeChildrenSlotName;
     before.textContent = 'Before children!';
     components.insertAdjacentElement('afterbegin', before);
 
     const after = generateComponentHTML('p');
-    after.slot = 'after-children';
+    after.slot = afterChildrenSlotName;
     after.textContent = 'After children!';
     components.insertAdjacentElement('beforeend', after);
 
@@ -90,39 +91,39 @@ describe('Folded Result List Component', () => {
       .with(
         addFoldedResultList(
           buildTemplateWithoutSections([
-            generateComponentHTML('atomic-result-link'),
+            generateComponentHTML(resultLinkComponent),
             components,
           ])
         )
       )
       .init();
 
-    getAtomicResultChildren()
+    FoldedResultListSelectors.resultChildren()
       .children()
       .eq(0)
       .contains('Before children!')
-      .should('have.attr', 'slot', 'before-children');
+      .should('have.attr', 'slot', beforeChildrenSlotName);
 
-    getAtomicResultChildren()
+    FoldedResultListSelectors.resultChildren()
       .shadow()
       .find('slot')
       .eq(0)
-      .should('have.attr', 'name', 'before-children');
+      .should('have.attr', 'name', beforeChildrenSlotName);
 
-    getAtomicResultChildren()
+    FoldedResultListSelectors.resultChildren()
       .children()
       .eq(2)
       .contains('After children!')
-      .should('have.attr', 'slot', 'after-children');
+      .should('have.attr', 'slot', afterChildrenSlotName);
 
-    getAtomicResultChildren()
+    FoldedResultListSelectors.resultChildren()
       .shadow()
       .find('slot')
       .eq(1)
-      .should('have.attr', 'name', 'after-children');
+      .should('have.attr', 'name', afterChildrenSlotName);
 
-    getAtomicChildResultAtIndex(1)
-      .find('atomic-result-children')
+    FoldedResultListSelectors.childResultAtIndex(1)
+      .find(resultChildrenComponent)
       .should('not.exist');
   });
 });

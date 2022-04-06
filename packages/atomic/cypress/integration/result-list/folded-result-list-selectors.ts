@@ -1,6 +1,12 @@
 import {resultSectionTags} from './result-list-selectors';
 
 export const foldedResultListComponent = 'atomic-folded-result-list';
+export const resultChildrenComponent = 'atomic-result-children';
+export const resultChildrenTemplateComponent =
+  'atomic-result-children-template';
+
+export const beforeChildrenSlotName = 'before-children';
+export const afterChildrenSlotName = 'after-children';
 
 export const FoldedResultListSelectors = {
   shadow: () => cy.get(foldedResultListComponent).shadow(),
@@ -13,6 +19,27 @@ export const FoldedResultListSelectors = {
   firstResult: () => FoldedResultListSelectors.result().first().shadow(),
   firstResultRoot: () =>
     FoldedResultListSelectors.firstResult().find('.result-root'),
+  resultChildren: (resultIndex = 0) =>
+    FoldedResultListSelectors.resultAt(resultIndex).find(
+      resultChildrenComponent
+    ),
+  childResultAtIndex: (childResultIndex: number, resultIndex = 0) =>
+    FoldedResultListSelectors.resultChildren(resultIndex)
+      .shadow()
+      .find('atomic-result')
+      .eq(childResultIndex)
+      .shadow(),
+  grandChildResultAtIndex: (
+    grandChildIndex: number,
+    childResultIndex = 0,
+    resultIndex = 0
+  ) =>
+    FoldedResultListSelectors.childResultAtIndex(childResultIndex, resultIndex)
+      .find(resultChildrenComponent)
+      .shadow()
+      .find('atomic-result')
+      .shadow()
+      .eq(grandChildIndex),
   sections: {
     visual: () =>
       FoldedResultListSelectors.firstResult().find(resultSectionTags.visual),
@@ -38,33 +65,3 @@ export const FoldedResultListSelectors = {
       ),
   },
 };
-
-export function getAtomicResultChildren(resultIndex = 0) {
-  return FoldedResultListSelectors.resultAt(resultIndex).find(
-    'atomic-result-children'
-  );
-}
-
-export function getAtomicChildResultAtIndex(
-  childResultIndex: number,
-  resultIndex = 0
-) {
-  return getAtomicResultChildren(resultIndex)
-    .shadow()
-    .find('atomic-result')
-    .eq(childResultIndex)
-    .shadow();
-}
-
-export function getAtomicGrandChildResultAtIndex(
-  grandChildIndex: number,
-  childResultIndex = 0,
-  resultIndex = 0
-) {
-  return getAtomicChildResultAtIndex(childResultIndex, resultIndex)
-    .find('atomic-result-children')
-    .shadow()
-    .find('atomic-result')
-    .shadow()
-    .eq(grandChildIndex);
-}
