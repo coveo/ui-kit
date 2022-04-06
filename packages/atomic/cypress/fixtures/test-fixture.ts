@@ -5,7 +5,7 @@ import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/sear
 import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
 
-export interface ResultWithFolding extends Result {
+interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
   childResults: ResultWithFolding[];
 }

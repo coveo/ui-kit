@@ -30,10 +30,7 @@ const resultListConfig = {
   title: 'Result List Component',
 };
 
-const configs: Array<typeof foldedResultListConfig> = [
-  foldedResultListConfig,
-  resultListConfig,
-];
+const configs = [foldedResultListConfig, resultListConfig] as const;
 
 configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
   describe(title, () => {
