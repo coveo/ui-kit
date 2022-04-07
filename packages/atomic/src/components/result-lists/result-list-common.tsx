@@ -2,10 +2,8 @@ import {FunctionalComponent, h, Host} from '@stencil/core';
 import {
   FoldedCollection,
   FoldedResult,
-  FoldedResultList,
   FoldedResultListState,
   Result,
-  ResultList,
   ResultListState,
   ResultsPerPageState,
   ResultTemplatesManager,
