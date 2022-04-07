@@ -1,5 +1,6 @@
 import {getAssetPath} from '@stencil/core';
 import {NODE_TYPES} from '@stencil/core/mock-doc';
+import {sanitize} from 'dompurify';
 
 /**
  * Returns a function that can be executed only once
@@ -95,4 +96,16 @@ export function elementHasAncestorTag(
   if (!parentElement) return false;
   if (parentElement.tagName === tagName.toUpperCase()) return true;
   return elementHasAncestorTag(parentElement, tagName);
+}
+
+export function sanitizeStyle(style: string) {
+  const purifiedOuterHTML = sanitize(`<style>${style}</style>`, {
+    ALLOWED_TAGS: ['style'],
+    ALLOWED_ATTR: [],
+    FORCE_BODY: true,
+  });
+  const wrapperEl = document.createElement('div');
+  // deepcode ignore ReactSetInnerHtml: sanitized by dompurify
+  wrapperEl.innerHTML = purifiedOuterHTML;
+  return wrapperEl.querySelector('style')?.innerHTML;
 }

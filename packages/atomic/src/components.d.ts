@@ -807,16 +807,21 @@ export namespace Components {
          */
         "collapsedHeight": number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.  You can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
          */
         "headingLevel": number;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+        "innerStyle"?: string;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -827,6 +832,10 @@ export namespace Components {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
@@ -2191,16 +2200,21 @@ declare namespace LocalJSX {
          */
         "collapsedHeight"?: number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.  You can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
          */
         "headingLevel"?: number;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
+        "innerStyle"?: string;
         "onAtomic/smartSnippet/answerRendered"?: (event: CustomEvent<{height: number}>) => void;
     }
     interface AtomicSmartSnippetExpandableAnswer {
@@ -2212,6 +2226,10 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
