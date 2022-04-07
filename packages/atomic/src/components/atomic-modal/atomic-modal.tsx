@@ -17,17 +17,15 @@ import {
 import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
 
 /**
- * The `atomic-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
- *
- * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing further customization.
- *
- * @part container - The container of the modal's content.
- * @part header - The header of the modal, containing the title.
- * @part close-button - The button in the header that closes the modal.
- * @part section-title - The title for each section.
- * @part select - The `<select>` element of the drop-down list.
- * @part filter-clear-all - The button that resets all actively selected facet values.
- * @part footer-button - The button in the footer that closes the modal.
+ * @part container - The modal's outermost container with the outline and background.
+ * @part header - The header at the top of the modal.
+ * @part header-wrapper - The wrapper around the header.
+ * @part header-ruler - The horizontal ruler underneath the header.
+ * @part body - The body of the modal, between the header and the footer.
+ * @part body-wrapper - The wrapper around the body.
+ * @part footer - The footer at the bottom of the modal.
+ * @part footer-wrapper - The wrapper with a shadow around the footer.
+ * @internal
  */
 @Component({
   tag: 'atomic-modal',
@@ -45,11 +43,14 @@ export class AtomicRefineModal implements InitializableComponent {
 
   @Event() animationEnded!: EventEmitter<never>;
 
+  private wasEverOpened = false;
+
   @Watch('isOpen')
   watchToggleOpen(isOpen: boolean) {
     const modalOpenedClass = 'atomic-modal-opened';
 
     if (isOpen) {
+      this.wasEverOpened = true;
       document.body.classList.add(modalOpenedClass);
       this.focusOnFirstElement();
     } else {
@@ -69,6 +70,10 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   public render() {
+    if (!this.wasEverOpened) {
+      return;
+    }
+
     return (
       <atomic-focus-trap active={this.isOpen}>
         <article
@@ -79,18 +84,30 @@ export class AtomicRefineModal implements InitializableComponent {
           aria-modal={this.isOpen.toString()}
           onAnimationEnd={() => this.animationEnded.emit()}
         >
-          <header part="header" class="w-full p-6">
-            <slot name="header"></slot>
+          <header part="header-wrapper" class="flex flex-col items-center px-6">
+            <div
+              part="header"
+              class="flex justify-between text-xl py-6 w-full max-w-lg"
+            >
+              <slot name="header"></slot>
+            </div>
           </header>
-          <hr part="header-border" class="border-neutral"></hr>
-          <div part="body" class="overflow-auto px-6 grow">
-            <slot name="body"></slot>
+          <hr part="header-ruler" class="border-neutral"></hr>
+          <div
+            part="body-wrapper"
+            class="overflow-auto grow px-6 flex flex-col items-center w-full"
+          >
+            <div part="body" class="w-full max-w-lg">
+              <slot name="body"></slot>
+            </div>
           </div>
           <footer
-            part="footer"
-            class="px-6 py-4 w-full border-neutral border-t bg-background z-10"
+            part="footer-wrapper"
+            class="px-6 border-neutral border-t bg-background z-10 shadow-lg flex flex-col items-center w-full"
           >
-            <slot name="footer"></slot>
+            <div part="footer" class="py-4 w-full max-w-lg">
+              <slot name="footer"></slot>
+            </div>
           </footer>
         </article>
       </atomic-focus-trap>

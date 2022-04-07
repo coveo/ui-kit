@@ -29,13 +29,17 @@ import {Button} from '../common/button';
  *
  * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing further customization.
  *
- * @part container - The container of the modal's content.
+ * @part container - The modal's outermost container with the outline and background.
  * @part header - The header of the modal, containing the title.
- * @part close-button - The button in the header that closes the modal.
  * @part section-title - The title for each section.
+ * @part close-button - The button in the header that closes the modal.
+ * @part header-ruler - The horizontal ruler underneath the header.
+ * @part body - The body of the modal, between the header and the footer.
  * @part select - The `<select>` element of the drop-down list.
  * @part filter-clear-all - The button that resets all actively selected facet values.
+ * @part footer - The footer of the modal, containing the clear all button.
  * @part footer-button - The button in the footer that closes the modal.
+ * @part footer-wrapper - The wrapper with a shadow around the footer.
  */
 @Component({
   tag: 'atomic-refine-modal',
@@ -206,7 +210,7 @@ export class AtomicRefineModal implements InitializableComponent {
       <Button
         style="primary"
         part="footer-button"
-        class="centered p-3 flex text-lg justify-center"
+        class="w-full p-3 flex text-lg justify-center"
         onClick={() => (this.isOpen = false)}
       >
         <span class="truncate mr-1">
@@ -229,17 +233,16 @@ export class AtomicRefineModal implements InitializableComponent {
         isOpen={this.isOpen}
         source={this.openButton}
         onAnimationEnded={() => this.onAnimationEnded()}
+        exportparts="container,header,header-ruler,body,footer,footer-wrapper"
       >
-        <div slot="header" class="flex justify-between text-xl centered">
+        <div slot="header" class="contents">
           {this.renderTitle()}
           {this.renderCloseButton()}
         </div>
-        <div slot="body" class="adjust-for-scroll-bar">
-          <aside class="centered">
-            {this.renderSort()}
-            {this.renderFilters()}
-          </aside>
-        </div>
+        <aside slot="body" class="w-full adjust-for-scroll-bar">
+          {this.renderSort()}
+          {this.renderFilters()}
+        </aside>
         <div slot="footer">{this.renderViewResultsButton()}</div>
       </atomic-modal>
     );

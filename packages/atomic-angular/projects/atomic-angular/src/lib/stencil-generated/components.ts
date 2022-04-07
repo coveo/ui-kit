@@ -355,34 +355,6 @@ export class AtomicLoadMoreResults {
 }
 
 
-export declare interface AtomicModal extends Components.AtomicModal {
-  /**
-   *  
-   */
-  'animationEnded': EventEmitter<CustomEvent<never>>;
-
-}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['isOpen', 'source']
-})
-@Component({
-  selector: 'atomic-modal',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['isOpen', 'source']
-})
-export class AtomicModal {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['animationEnded']);
-  }
-}
-
-
 export declare interface AtomicNoResults extends Components.AtomicNoResults {}
 
 @ProxyCmp({
