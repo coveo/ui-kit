@@ -32,7 +32,7 @@ import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
   styleUrl: 'atomic-modal.pcss',
   shadow: true,
 })
-export class AtomicRefineModal implements InitializableComponent {
+export class AtomicModal implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
