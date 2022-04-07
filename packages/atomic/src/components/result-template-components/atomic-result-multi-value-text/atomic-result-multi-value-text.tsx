@@ -5,7 +5,7 @@ import {
   Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {ResultContext} from '../../result-template-components/result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
   Bindings,

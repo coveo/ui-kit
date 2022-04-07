@@ -4,7 +4,7 @@ import {
   InteractiveResult,
   Result,
 } from '@coveo/headless';
-import {ResultContext} from '../../result-template-components/result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 import {
   Bindings,
   InitializableComponent,

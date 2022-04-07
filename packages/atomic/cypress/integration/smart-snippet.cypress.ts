@@ -1,4 +1,5 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import {toArray} from '../utils/arrayUtils';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 import * as CommonAssertions from './common-assertions';
 import * as SmartSnippetAssertions from './smart-snippet-assertions';
@@ -29,7 +30,9 @@ interface AddSmartSnippetOptions {
     'heading-level'?: number;
     'maximum-height'?: number;
     'collapsed-height'?: number;
+    'snippet-style'?: string;
   };
+  content?: HTMLElement | HTMLElement[];
   question?: string;
   answer?: string;
   sourceTitle?: string;
@@ -39,9 +42,14 @@ interface AddSmartSnippetOptions {
 const addSmartSnippet =
   (options: AddSmartSnippetOptions = {}) =>
   (fixture: TestFixture) => {
+    const element = generateComponentHTML(
+      'atomic-smart-snippet',
+      options.props
+    );
+    element.append(...toArray(options.content ?? []));
     fixture
       .withStyle(`html { font-size: ${remSize}px; }`)
-      .withElement(generateComponentHTML('atomic-smart-snippet', options.props))
+      .withElement(element)
       .withCustomResponse((response) => {
         const [result] = response.results;
         result.title = options.sourceTitle ?? defaultSourceTitle;
@@ -349,6 +357,53 @@ describe('Smart Snippet Test Suites', () => {
       });
 
       SmartSnippetAssertions.assertOpenSmartSnippetSourceAnalytics(true);
+    });
+  });
+
+  describe('with custom styling in a template element', () => {
+    before(() => {
+      const styleEl = generateComponentHTML('style');
+      styleEl.innerHTML = `
+        b {
+          color: rgb(84, 170, 255);
+        }
+      `;
+      const templateEl = generateComponentHTML(
+        'template'
+      ) as HTMLTemplateElement;
+      templateEl.content.appendChild(styleEl);
+      new TestFixture().with(addSmartSnippet({content: templateEl})).init();
+    });
+
+    it('applies the styling to the rendered snippet', () => {
+      SmartSnippetSelectors.answer()
+        .find('b')
+        .invoke('css', 'color')
+        .should('equal', 'rgb(84, 170, 255)');
+    });
+  });
+
+  describe('with custom styling in an attribute', () => {
+    before(() => {
+      const style = `
+        b {
+          color: rgb(84, 170, 255);
+        }
+      `;
+      new TestFixture()
+        .with(
+          addSmartSnippet({
+            props: {'snippet-style': style},
+          })
+        )
+        .init();
+    });
+
+    it('applies the styling to the rendered snippet', () => {
+      SmartSnippetSelectors.answer()
+        .find('b')
+        .invoke('css', 'color')
+        .should('equal', 'rgb(84, 170, 255)');
     });
   });
 });

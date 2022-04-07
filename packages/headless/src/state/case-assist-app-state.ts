@@ -7,6 +7,7 @@ import {
   DocumentSuggestionSection,
   VersionSection,
   ResultPreviewSection,
+  SearchHubSection,
 } from './state-sections';
 
 export type CaseAssistAppState = ConfigurationSection &
@@ -16,4 +17,5 @@ export type CaseAssistAppState = ConfigurationSection &
   DocumentSuggestionSection &
   VersionSection &
   DebugSection &
-  ResultPreviewSection;
+  ResultPreviewSection &
+  SearchHubSection;

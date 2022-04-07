@@ -1,11 +1,7 @@
-import {
-  ResultTemplate,
-  ResultTemplateCondition,
-  ResultTemplatesHelpers,
-} from '@coveo/headless';
-import {Component, Element, h, Prop, State, Method} from '@stencil/core';
+import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
+import {Component, Element, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../utils/props-utils';
-import {TemplateContent} from '../atomic-result-template/atomic-result-template';
+import {ResultTemplateCommon} from '../result-templates/result-template-common';
 
 /**
  * TODO:
@@ -16,11 +12,9 @@ import {TemplateContent} from '../atomic-result-template/atomic-result-template'
   shadow: true,
 })
 export class AtomicResultChildrenTemplate {
-  private matchConditions: ResultTemplateCondition[] = [];
+  @Element() public host!: HTMLDivElement;
 
-  @Element() private host!: HTMLDivElement;
-
-  @State() private error?: Error;
+  @State() public error!: Error;
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -45,91 +39,34 @@ export class AtomicResultChildrenTemplate {
   @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
     {};
 
+  public resultTemplateCommon: ResultTemplateCommon;
+
   constructor() {
-    const isParentResultList =
-      this.host.parentElement?.nodeName === 'ATOMIC-RESULT-CHILDREN';
-    if (!isParentResultList) {
-      this.error = new Error(
-        'The "atomic-result-children-template" component has to be the child of "atomic-result-children".'
-      );
-      return;
-    }
-
-    if (!this.host.querySelector('template')) {
-      this.error = new Error(
-        'The "atomic-result-children-template" component has to contain a "template" element as a child.'
-      );
-      return;
-    }
-
-    if (!this.host.querySelector('template')?.innerHTML.trim()) {
-      this.error = new Error(
-        'The "template" tag insode "atomic-result-children-template" cannot be empty'
-      );
-      return;
-    }
-
-    if (this.host.querySelector('template')?.content.querySelector('script')) {
-      console.warn(
-        'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered',
-        this.host
-      );
-    }
-  }
-
-  public componentWillLoad() {
-    for (const field in this.mustMatch) {
-      this.matchConditions.push(
-        ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
-      );
-    }
-
-    for (const field in this.mustNotMatch) {
-      this.matchConditions.push(
-        ResultTemplatesHelpers.fieldMustNotMatch(
-          field,
-          this.mustNotMatch[field]
-        )
-      );
-    }
+    this.resultTemplateCommon = new ResultTemplateCommon({
+      host: this.host,
+      setError: (err) => {
+        this.error = err;
+      },
+      validParents: ['atomic-result-children'],
+    });
   }
 
   /**
    * Gets the appropriate result template based on conditions applied.
    */
   @Method()
-  public async getTemplate(): Promise<ResultTemplate<TemplateContent> | null> {
-    if (this.error) {
-      return null;
-    }
-
-    return {
-      conditions: this.getConditions(),
-      content: this.getContent()!,
-      priority: 1,
-    };
+  public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
+    return this.resultTemplateCommon.getTemplate(this.conditions, this.error);
   }
 
-  private getConditions() {
-    return this.conditions.concat(this.matchConditions);
-  }
-
-  private getTemplateElement() {
-    return this.host.querySelector('template');
-  }
-
-  private getContent() {
-    return this.getTemplateElement()?.content;
+  public componentWillLoad() {
+    this.resultTemplateCommon.addMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
+    );
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+    return this.resultTemplateCommon.renderIfError(this.error);
   }
 }

@@ -3,6 +3,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../src/components/atomic-result/atomic-result-display-options';
+import {foldedResultListComponent} from './folded-result-list-selectors';
 import {resultListComponent} from './result-list-selectors';
 
 interface WithAnySectionnableResultListOptions {
@@ -10,6 +11,7 @@ interface WithAnySectionnableResultListOptions {
   layouts?: ResultDisplayLayout[];
   imageSizes?: ResultDisplayImageSize[];
   densities?: ResultDisplayDensity[];
+  folded?: boolean;
 }
 
 export function withAnySectionnableResultList(
@@ -35,7 +37,11 @@ export function withAnySectionnableResultList(
                   before(() => {
                     const aspectRatio = 16 / 9;
                     cy.viewport(width, width / aspectRatio);
-                    cy.get(resultListComponent).then((comp) => {
+                    cy.get(
+                      options?.folded
+                        ? foldedResultListComponent
+                        : resultListComponent
+                    ).then((comp) => {
                       const resultList = comp.get()[0];
                       resultList.setAttribute('display', display);
                       resultList.setAttribute('image-size', image);

@@ -19,16 +19,21 @@ export const resultSectionTags: Record<ResultSection, string> = {
   bottomMetadata: 'atomic-result-section-bottom-metadata',
 };
 
+export const resultComponent = 'atomic-result';
+export const resultPlaceholderComponent = 'atomic-result-placeholder';
 export const resultListComponent = 'atomic-result-list';
+
+export const listRoot = '.list-root';
+export const resultRoot = '.result-root';
 
 export const ResultListSelectors = {
   shadow: () => cy.get(resultListComponent).shadow(),
-  root: () => ResultListSelectors.shadow().find('.list-root'),
+  root: () => ResultListSelectors.shadow().find(listRoot),
   placeholder: () =>
-    ResultListSelectors.shadow().find('atomic-result-placeholder'),
-  result: () => ResultListSelectors.shadow().find('atomic-result'),
+    ResultListSelectors.shadow().find(resultPlaceholderComponent),
+  result: () => ResultListSelectors.shadow().find(resultComponent),
   firstResult: () => ResultListSelectors.result().first().shadow(),
-  firstResultRoot: () => ResultListSelectors.firstResult().find('.result-root'),
+  firstResultRoot: () => ResultListSelectors.firstResult().find(resultRoot),
   sections: {
     visual: () =>
       ResultListSelectors.firstResult().find(resultSectionTags.visual),

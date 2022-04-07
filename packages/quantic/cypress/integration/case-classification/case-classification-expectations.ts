@@ -7,6 +7,8 @@ import {
 } from './case-classification-selectors';
 import {ConsoleExpectations} from '../console-expectations';
 
+const testOrigin = 'test origin';
+
 function caseClassificationExpectations(selector: CaseClassificationSelector) {
   return {
     displayLabel: (display: boolean) => {
@@ -100,6 +102,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .suggestedOptionInput(index)
             .invoke('attr', 'value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -113,6 +116,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             field
           );
           expect(analyticsBody.svc_ticket_custom).not.to.have.property(field);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -128,6 +132,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .selectOption(index)
             .invoke('attr', 'data-value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -143,6 +148,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .inlineOptionInput(index)
             .invoke('attr', 'value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -155,6 +161,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .suggestedOptionInput(index)
             .invoke('attr', 'data-suggestion-id')
             .should('eq', analyticsBody.svc_action_data.classificationId);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
           if (autoSelection) {
             expect(analyticsBody.svc_action_data).to.have.property(
               'autoSelection',
