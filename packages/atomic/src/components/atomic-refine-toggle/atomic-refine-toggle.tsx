@@ -16,6 +16,7 @@ import {Button} from '../common/button';
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
  *
  * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
+ * @part button - The refine toggle button.
  */
 @Component({
   tag: 'atomic-refine-toggle',
@@ -64,10 +65,11 @@ export class AtomicRefineToggle implements InitializableComponent {
     return (
       <Button
         style="outline-primary"
-        class="p-3"
+        class="p-3 w-full"
         onClick={() => this.enableModal()}
         text={this.bindings.i18n.t('sort-and-filter')}
         ref={(button) => (this.modalRef!.openButton = button)}
+        part="button"
       ></Button>
     );
   }
