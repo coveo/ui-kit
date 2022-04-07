@@ -6,7 +6,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {debug, caseAssistConfiguration} from '../reducers';
+import {debug, caseAssistConfiguration, searchHub} from '../reducers';
 import {
   CaseAssistEngineConfiguration,
   caseAssistEngineConfigurationSchema,
@@ -18,12 +18,15 @@ import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {CaseAssistAPIClient} from '../../api/service/case-assist/case-assist-api-client';
 import {CaseAssistThunkExtraArguments} from '../case-assist-thunk-extra-arguments';
 import {setCaseAssistConfiguration} from '../../features/case-assist-configuration/case-assist-configuration-actions';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 export type {CaseAssistEngineConfiguration};
 
 const caseassistEngineReducers = {
   debug,
   caseAssistConfiguration,
+  searchHub,
 };
 type CaseAssistEngineReducers = typeof caseassistEngineReducers;
 type CaseAssistEngineState =
@@ -79,7 +82,7 @@ export function buildCaseAssistEngine(
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
 
-  const {caseAssistId, locale} = options.configuration;
+  const {caseAssistId, locale, searchHub} = options.configuration;
 
   engine.dispatch(
     setCaseAssistConfiguration({
@@ -87,6 +90,10 @@ export function buildCaseAssistEngine(
       locale,
     })
   );
+
+  if (!isNullOrUndefined(searchHub)) {
+    engine.dispatch(setSearchHub(searchHub));
+  }
 
   return {
     ...engine,

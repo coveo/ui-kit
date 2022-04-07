@@ -6,7 +6,7 @@
     "@angular/core": "^13.1.0"
   },
   "dependencies": {
-    "@coveo/atomic": "1.42.3",
+    "@coveo/atomic": "1.42.4",
     "tslib": "2.3.1"
   }
 }

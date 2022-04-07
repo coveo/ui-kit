@@ -24,6 +24,11 @@ export interface CaseAssistEngineConfiguration extends EngineConfiguration {
    *  Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
    */
   locale?: string;
+  /**
+   * The first level of origin of the request, typically the identifier of the graphical case assist interface from which the request originates.
+   * This value is used for analytics reporting purposes.
+   */
+  searchHub?: string;
 }
 
 export const caseAssistEngineConfigurationSchema =

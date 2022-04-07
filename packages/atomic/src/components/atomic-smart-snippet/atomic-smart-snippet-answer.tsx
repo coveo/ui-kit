@@ -1,5 +1,6 @@
-import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
+import {Component, h, Prop, Event, EventEmitter, Host} from '@stencil/core';
 import {sanitize} from 'dompurify';
+import {sanitizeStyle} from '../../utils/utils';
 
 /**
  * @internal
@@ -11,6 +12,7 @@ import {sanitize} from 'dompurify';
 })
 export class AtomicSmartSnippetAnswer {
   @Prop({reflect: true}) htmlContent!: string;
+  @Prop({reflect: true}) innerStyle?: string;
 
   @Event({
     eventName: 'atomic/smartSnippet/answerRendered',
@@ -22,7 +24,23 @@ export class AtomicSmartSnippetAnswer {
     this.answerRendered.emit({height: this.wrapperElement!.scrollHeight});
   }
 
-  public render() {
+  private get sanitizedStyle() {
+    if (!this.innerStyle) {
+      return undefined;
+    }
+    return sanitizeStyle(this.innerStyle);
+  }
+
+  private renderStyle() {
+    const style = this.sanitizedStyle;
+    if (!style) {
+      return;
+    }
+    // deepcode ignore ReactSetInnerHtml: Defined by implementer and sanitized by dompurify
+    return <style innerHTML={style}></style>;
+  }
+
+  private renderContent() {
     return (
       <div class="wrapper" ref={(element) => (this.wrapperElement = element)}>
         {/* deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify */}
@@ -34,6 +52,15 @@ export class AtomicSmartSnippetAnswer {
           class="margin"
         ></div>
       </div>
+    );
+  }
+
+  public render() {
+    return (
+      <Host>
+        {this.renderStyle()}
+        {this.renderContent()}
+      </Host>
     );
   }
 }

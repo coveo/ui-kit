@@ -37,6 +37,19 @@ export class AtomicSmartSnippetExpandableAnswer {
    * When the answer is partly hidden, how much of its height (in pixels) should be visible.
    */
   @Prop({reflect: true}) collapsedHeight = 180;
+  /**
+   * Sets the style of the snippet.
+   *
+   * Example:
+   * ```ts
+   * expandableAnswer.snippetStyle = `
+   *   b {
+   *     color: blue;
+   *   }
+   * `;
+   * ```
+   */
+  @Prop({reflect: true}) snippetStyle?: string;
 
   @State() showButton = true;
 
@@ -72,6 +85,7 @@ export class AtomicSmartSnippetExpandableAnswer {
         <atomic-smart-snippet-answer
           exportparts="answer"
           htmlContent={this.smartSnippetState.answer}
+          innerStyle={this.snippetStyle}
         ></atomic-smart-snippet-answer>
       </div>
     );

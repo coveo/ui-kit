@@ -12,7 +12,7 @@ import {TestUtils} from '@coveo/headless';
 describe('ResultContext decorator', () => {
   let page: SpecPage;
 
-  it(`when the result template component is not the child of an atomic-result component 
+  it(`when the result template component is not the child of an atomic-result component
   should log an error`, async () => {
     console.error = jest.fn();
     await newSpecPage({
