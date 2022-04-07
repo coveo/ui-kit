@@ -31,10 +31,12 @@ import {Button} from '../common/button';
  *
  * @part container - The modal's outermost container with the outline and background.
  * @part header - The header of the modal, containing the title.
+ * @part header-wrapper - The wrapper around the header.
  * @part section-title - The title for each section.
  * @part close-button - The button in the header that closes the modal.
  * @part header-ruler - The horizontal ruler underneath the header.
  * @part body - The body of the modal, between the header and the footer.
+ * @part body-wrapper - The wrapper around the body.
  * @part select - The `<select>` element of the drop-down list.
  * @part filter-clear-all - The button that resets all actively selected facet values.
  * @part footer - The footer of the modal, containing the clear all button.
@@ -233,7 +235,7 @@ export class AtomicRefineModal implements InitializableComponent {
         isOpen={this.isOpen}
         source={this.openButton}
         onAnimationEnded={() => this.onAnimationEnded()}
-        exportparts="container,header,header-ruler,body,footer,footer-wrapper"
+        exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
       >
         <div slot="header" class="contents">
           {this.renderTitle()}
