@@ -9,10 +9,9 @@ import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCrite
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
+import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
-import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
-import { TemplateContent as TemplateContent1 } from "./components/atomic-result-template/atomic-result-template";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -218,17 +217,13 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
         /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image": ResultDisplayImageSize;
-        /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         /**
           * TODO:
          */
@@ -540,7 +535,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -578,7 +573,7 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
         /**
@@ -618,7 +613,7 @@ export namespace Components {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -679,7 +674,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultText {
         /**
@@ -1635,13 +1630,9 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
-        /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image"?: ResultDisplayImageSize;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -1987,7 +1978,7 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
         /**
@@ -2022,7 +2013,7 @@ declare namespace LocalJSX {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicResultPrintableUri {
         /**

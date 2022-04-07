@@ -1,14 +1,9 @@
+import {FoldedResult} from '@coveo/headless';
 import {Component, Element, State, h, Host} from '@stencil/core';
-import {
-  buildResultTemplatesManager,
-  FoldedResult,
-  ResultTemplate,
-  ResultTemplatesManager,
-} from '@coveo/headless';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../utils/utils';
 import {ResultContext} from '../result-template-components/result-template-decorators';
-import {TemplateContent} from '../atomic-result-template/atomic-result-template';
+import {ResultListCommon} from '../result-lists/result-list-common';
 
 const childTemplateComponent = 'atomic-result-children-template';
 
@@ -24,11 +19,12 @@ export class AtomicResultChildren {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext({folded: true}) private result!: FoldedResult;
 
-  private childrenResultsTemplatesManager!: ResultTemplatesManager<TemplateContent>;
-  @Element() private host!: HTMLDivElement;
+  public resultListCommon?: ResultListCommon;
+
+  @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
   @State() public ready = false;
-  @State() private templateHasError = false;
+  @State() public templateHasError = false;
 
   public async initialize() {
     const childrenTemplates = Array.from(
@@ -43,24 +39,18 @@ export class AtomicResultChildren {
       return;
     }
 
-    if (this.result.children) {
-      this.childrenResultsTemplatesManager = buildResultTemplatesManager(
-        this.bindings.engine
-      );
-      const templates = (await Promise.all(
-        childrenTemplates.map(async (childTemplate) => {
-          const template = await childTemplate.getTemplate();
-          if (!template) {
-            this.templateHasError = true;
-          }
-          return template;
-        })
-      )) as ResultTemplate<DocumentFragment>[];
-
-      if (!this.templateHasError) {
-        this.childrenResultsTemplatesManager.registerTemplates(...templates);
-      }
-      this.ready = true;
+    if (this.result.children.length) {
+      this.resultListCommon = new ResultListCommon({
+        host: this.host,
+        bindings: this.bindings,
+        templateElements: this.host.querySelectorAll(childTemplateComponent),
+        onReady: () => {
+          this.ready = true;
+        },
+        onError: () => {
+          this.templateHasError = true;
+        },
+      });
     }
   }
 
@@ -68,14 +58,15 @@ export class AtomicResultChildren {
     if (!this.ready) return null;
     if (this.templateHasError) return <slot></slot>;
     if (this.result.children.length) {
-      // TODO: definitely document this in KIT-1519 amd KIT-1520
+      // TODO: document this in KIT-1519 amd KIT-1520
       return (
         <Host>
           <slot name="before-children"></slot>
           {this.result.children.map((child) => {
-            const content = this.childrenResultsTemplatesManager.selectTemplate(
-              child.result
-            );
+            const content =
+              this.resultListCommon!.resultTemplatesManager.selectTemplate(
+                child.result
+              );
             if (content) {
               return (
                 <atomic-result
