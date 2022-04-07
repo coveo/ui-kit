@@ -18,14 +18,11 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-  DeferUntilRender,
 } from '../../utils/initialization-utils';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFacetElements, SortDropdownOption} from '../../utils/store';
 import SortIcon from '../../images/sort.svg';
 import {Button} from '../common/button';
-
-export type ModalStatus = 'closed' | 'opened' | 'beingClosed';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -50,7 +47,6 @@ export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   private facetManager!: FacetManager;
-  private closeButton?: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -68,37 +64,15 @@ export class AtomicRefineModal implements InitializableComponent {
 
   @Prop({mutable: true}) openButton?: HTMLElement;
 
-  @Prop({reflect: true, mutable: true}) modalStatus!: ModalStatus;
-  @Watch('modalStatus')
-  watchEnabled(modalStatus: ModalStatus) {
-    const modalOpenedClass = 'atomic-modal-opened';
-
-    switch (modalStatus) {
-      case 'opened':
-        document.body.classList.add(modalOpenedClass);
-        this.duplicateFacetElements();
-        this.focusOnCloseButton();
-        break;
-      case 'closed':
-        document.body.classList.remove(modalOpenedClass);
-        this.flushFacetElements();
-        this.focusOnOpenButton();
-        break;
+  @Prop({reflect: true, mutable: true}) isOpen = false;
+  @Watch('isOpen')
+  watchEnabled(isOpen: boolean) {
+    if (isOpen) {
+      this.duplicateFacetElements();
     }
   }
 
-  @DeferUntilRender()
-  private focusOnCloseButton() {
-    this.closeButton?.focus();
-  }
-
-  @DeferUntilRender()
-  private focusOnOpenButton() {
-    this.openButton?.focus();
-  }
-
   public initialize() {
-    this.modalStatus = 'closed';
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
@@ -106,6 +80,10 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private duplicateFacetElements() {
+    if (this.host.querySelector('div[slot="facets"]')) {
+      return;
+    }
+
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
 
@@ -131,23 +109,26 @@ export class AtomicRefineModal implements InitializableComponent {
     this.host.querySelector('div[slot="facets"]')?.remove();
   }
 
-  private renderHeader() {
+  private onAnimationEnded() {
+    if (!this.isOpen) {
+      this.flushFacetElements();
+    }
+  }
+
+  private renderTitle() {
+    return <h1 class="truncate">{this.bindings.i18n.t('sort-and-filter')}</h1>;
+  }
+
+  private renderCloseButton() {
     return (
-      <div
-        part="header"
-        class="w-full flex justify-between text-xl centered py-6"
+      <Button
+        style="text-transparent"
+        class="grid place-items-center"
+        part="close-button"
+        onClick={() => (this.isOpen = false)}
       >
-        <span class="truncate">{this.bindings.i18n.t('sort-and-filter')}</span>
-        <Button
-          style="text-transparent"
-          class="grid place-items-center"
-          part="close-button"
-          onClick={() => this.dismiss()}
-          ref={(closeButton) => (this.closeButton = closeButton)}
-        >
-          <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
-        </Button>
-      </div>
+        <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
+      </Button>
     );
   }
 
@@ -220,68 +201,47 @@ export class AtomicRefineModal implements InitializableComponent {
     ];
   }
 
-  private renderFooter() {
+  private renderViewResultsButton() {
     return (
-      <div class="px-6 py-4 w-full border-neutral border-t bg-background z-10 shadow-lg">
-        <Button
-          style="primary"
-          part="footer-button"
-          class="centered p-3 flex text-lg justify-center"
-          onClick={() => this.dismiss()}
-        >
-          <span class="truncate mr-1">
-            {this.bindings.i18n.t('view-results')}
-          </span>
-          <span>
-            {this.bindings.i18n.t('between-parentheses', {
-              text: this.querySummaryState.total.toLocaleString(
-                this.bindings.i18n.language
-              ),
-            })}
-          </span>
-        </Button>
-      </div>
+      <Button
+        style="primary"
+        part="footer-button"
+        class="centered p-3 flex text-lg justify-center"
+        onClick={() => (this.isOpen = false)}
+      >
+        <span class="truncate mr-1">
+          {this.bindings.i18n.t('view-results')}
+        </span>
+        <span>
+          {this.bindings.i18n.t('between-parentheses', {
+            text: this.querySummaryState.total.toLocaleString(
+              this.bindings.i18n.language
+            ),
+          })}
+        </span>
+      </Button>
     );
   }
 
-  private dismiss() {
-    setTimeout(() => {
-      this.modalStatus = 'closed';
-    }, 500);
-    this.modalStatus = 'beingClosed';
-  }
-
   public render() {
-    if (this.modalStatus === 'closed') {
-      return;
-    }
-
-    const isOpened = this.modalStatus === 'opened';
-
     return (
-      <atomic-focus-trap active={isOpened}>
-        <div
-          part="container"
-          class={`fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 right-0 bottom-0 z-10 ${
-            isOpened
-              ? 'animate-scaleUpRefineModal'
-              : 'animate-slideDownRefineModal'
-          }`}
-          aria-modal={isOpened.toString()}
-        >
-          <div class="px-6">{this.renderHeader()}</div>
-          <hr class="border-neutral"></hr>
-          <div class="overflow-auto px-6 grow">
-            <div class="adjust-for-scroll-bar">
-              <aside class="centered">
-                {this.renderSort()}
-                {this.renderFilters()}
-              </aside>
-            </div>
-          </div>
-          {this.renderFooter()}
+      <atomic-modal
+        isOpen={this.isOpen}
+        source={this.openButton}
+        onAnimationEnded={() => this.onAnimationEnded()}
+      >
+        <div slot="header" class="flex justify-between text-xl centered">
+          {this.renderTitle()}
+          {this.renderCloseButton()}
         </div>
-      </atomic-focus-trap>
+        <div slot="body" class="adjust-for-scroll-bar">
+          <aside class="centered">
+            {this.renderSort()}
+            {this.renderFilters()}
+          </aside>
+        </div>
+        <div slot="footer">{this.renderViewResultsButton()}</div>
+      </atomic-modal>
     );
   }
 }

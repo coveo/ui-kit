@@ -1,4 +1,5 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
+import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
 
 function getParent(element: Element | ShadowRoot) {
   if (element.parentNode) {
@@ -26,24 +27,6 @@ function contains(
   }
   const parent = getParent(element);
   return parent === null ? false : contains(ancestor, parent);
-}
-
-function getFirstFocusableDescendant(element: Element) {
-  // Source: https://stackoverflow.com/a/30753870
-  const focusableSelectors = [
-    'a[href]',
-    'area[href]',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    'button:not([disabled])',
-    'iframe',
-    '[tabindex]',
-    '[contentEditable=true]',
-  ].map((selector) => `${selector}:not([tabindex='-1'])`);
-  return element.querySelector(
-    focusableSelectors.join(',')
-  ) as HTMLElement | null;
 }
 
 /**
