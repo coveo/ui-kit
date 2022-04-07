@@ -1,6 +1,7 @@
-import {FoldedResult, Result} from '@coveo/headless';
+import {FoldedResult, Result, ResultTemplatesManager} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
+import {TemplateContent} from '../result-templates/result-template-common';
 
 export class MissingResultParentError extends Error {
   constructor(elementName: string) {
@@ -98,4 +99,35 @@ export const resultContext = (element: Element) =>
 
 function isFolded(result: Result | FoldedResult): result is FoldedResult {
   return 'children' in result;
+}
+
+type ChildTemplatesContextEventHandler = (
+  result: ResultTemplatesManager<TemplateContent> | undefined
+) => void;
+export type ChildTemplatesContextEvent =
+  CustomEvent<ChildTemplatesContextEventHandler>;
+const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
+
+export function ChildTemplatesContext() {
+  return (component: ComponentInterface, resultVariable: string) => {
+    const {componentWillRender} = component;
+    component.componentWillRender = function () {
+      const element = getElement(this);
+      const event = buildCustomEvent(
+        childTemplatesContextEventName,
+        (result: ResultTemplatesManager<TemplateContent> | undefined) => {
+          const resultListManager = (this as any).resultListCommon
+            ?.resultTemplatesManager;
+          this[resultVariable] = resultListManager !== result ? result : null;
+        }
+      );
+
+      const canceled = element.dispatchEvent(event);
+      if (canceled) {
+        this[resultVariable] = null;
+        return;
+      }
+      return componentWillRender && componentWillRender.call(this);
+    };
+  };
 }

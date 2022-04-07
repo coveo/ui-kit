@@ -526,6 +526,7 @@ export namespace Components {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        "inheritTemplates": boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -1944,6 +1945,7 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        "inheritTemplates"?: boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
