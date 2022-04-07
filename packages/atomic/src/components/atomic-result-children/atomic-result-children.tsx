@@ -58,8 +58,10 @@ export class AtomicResultChildren {
     if (!this.ready) return null;
     if (this.templateHasError) return <slot></slot>;
     if (this.result.children.length) {
+      // TODO: document this in KIT-1519 amd KIT-1520
       return (
         <Host>
+          <slot name="before-children"></slot>
           {this.result.children.map((child) => {
             const content =
               this.resultListCommon!.resultTemplatesManager.selectTemplate(
@@ -76,6 +78,7 @@ export class AtomicResultChildren {
             }
             return null;
           })}
+          <slot name="after-children"></slot>
         </Host>
       );
     }
