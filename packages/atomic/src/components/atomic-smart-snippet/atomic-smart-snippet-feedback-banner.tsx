@@ -3,6 +3,7 @@ import Checkmark from '../../images/checkmark.svg';
 import Cross from '../../images/cross.svg';
 import {i18n} from 'i18next';
 import {RadioButton} from '../common/radio-button';
+import {Button} from '../common/button';
 
 interface SmartSnippetFeedbackBannerProps {
   i18n: i18n;
@@ -11,6 +12,7 @@ interface SmartSnippetFeedbackBannerProps {
   disliked: boolean;
   onLike(): void;
   onDislike(): void;
+  onPressExplainWhy(): void;
 }
 
 export const SmartSnippetFeedbackBanner: FunctionalComponent<
@@ -24,6 +26,12 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
     <span id={inquiryId} part="feedback-inquiry" class="shrink-0">
       {props.i18n.t('smart-snippet-feedback-inquiry')}
     </span>
+  );
+
+  const ExplainWhyButton = () => (
+    <Button style="text-primary" onClick={() => props.onPressExplainWhy()}>
+      {props.i18n.t('smart-snippet-feedback-explain-why')}
+    </Button>
   );
 
   const Buttons = () => (
@@ -68,6 +76,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
           class="text-inherit cursor-inherit"
         ></RadioButton>
       </label>
+      {props.disliked ? <ExplainWhyButton></ExplainWhyButton> : []}
     </div>
   );
 

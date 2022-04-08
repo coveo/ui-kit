@@ -52,6 +52,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   public smartSnippetState!: SmartSnippetState;
   public error!: Error;
   private id = randomID();
+  private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -152,6 +153,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
         disliked={this.smartSnippetState.disliked}
         onLike={() => this.smartSnippet.like()}
         onDislike={() => this.smartSnippet.dislike()}
+        onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
       ></SmartSnippetFeedbackBanner>
     );
   }
@@ -177,6 +179,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
             {this.renderFeedbackBanner()}
           </footer>
         </article>
+        <atomic-smart-snippet-feedback-modal
+          ref={(modal) => (this.modalRef = modal)}
+        ></atomic-smart-snippet-feedback-modal>
       </aside>
     );
   }
