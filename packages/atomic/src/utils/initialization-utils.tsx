@@ -41,7 +41,7 @@ const initializableElements = ['atomic-search-interface', 'atomic-external'];
 
 /**
  * Retrieves `Bindings` on a configured parent search interface.
- * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
+ * @param element Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
  * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element, and rejects when it's not the case.
  */
 export const initializeBindings = (element: Element) =>
@@ -112,6 +112,7 @@ export function InitializeBindings() {
       componentDidLoad,
       disconnectedCallback,
     } = component;
+    // console.log('element:', element);
     let unsubscribeLanguage = () => {};
 
     if (bindingsProperty !== 'bindings') {
@@ -122,36 +123,36 @@ export function InitializeBindings() {
     }
 
     component.componentWillLoad = function () {
-      const element = getElement(this);
-      const event = buildCustomEvent(
-        initializeEventName,
-        (bindings: Bindings) => {
-          this.bindings = bindings;
+      return new Promise((resolve) => {
+        const element = getElement(this);
+        const event = buildCustomEvent(
+          initializeEventName,
+          async (bindings: Bindings) => {
+            this.bindings = bindings;
 
-          const updateLanguage = () => forceUpdate(this);
-          this.bindings.i18n.on('languageChanged', updateLanguage);
-          unsubscribeLanguage = () =>
-            this.bindings.i18n.off('languageChanged', updateLanguage);
+            const updateLanguage = () => forceUpdate(this);
+            this.bindings.i18n.on('languageChanged', updateLanguage);
+            unsubscribeLanguage = () =>
+              this.bindings.i18n.off('languageChanged', updateLanguage);
 
-          try {
-            // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
-            // In this case, we have to manually trigger it.
-            this.initialize ? this.initialize() : forceUpdate(this);
-          } catch (e) {
-            this.error = e as Error;
+            try {
+              // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
+              // In this case, we have to manually trigger it.
+              await (this.initialize ? this.initialize() : forceUpdate(this));
+              resolve(componentWillLoad && componentWillLoad.call(this));
+            } catch (e) {
+              this.error = e as Error;
+            }
           }
-        }
-      );
-
-      const canceled = element.dispatchEvent(event);
-      if (canceled) {
-        this.error = new MissingInterfaceParentError(
-          element.nodeName.toLowerCase()
         );
-        return;
-      }
-
-      return componentWillLoad && componentWillLoad.call(this);
+        const canceled = element.dispatchEvent(event);
+        if (canceled) {
+          this.error = new MissingInterfaceParentError(
+            element.nodeName.toLowerCase()
+          );
+        }
+        resolve();
+      });
     };
 
     component['hasRendered'] = false;
@@ -183,6 +184,7 @@ export function InitializeBindings() {
     };
 
     component.componentDidRender = function () {
+      // console.log('componentDidRender:');
       if (!component['hasRendered']) {
         return;
       }

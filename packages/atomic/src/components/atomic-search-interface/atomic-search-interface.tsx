@@ -195,12 +195,12 @@ export class AtomicSearchInterface {
   }
 
   @Listen('atomic/initializeComponent')
-  public handleInitialization(event: InitializeEvent) {
+  public async handleInitialization(event: InitializeEvent) {
     event.preventDefault();
     event.stopPropagation();
 
     if (this.engine) {
-      event.detail(this.bindings);
+      await event.detail(this.bindings);
       return;
     }
 
