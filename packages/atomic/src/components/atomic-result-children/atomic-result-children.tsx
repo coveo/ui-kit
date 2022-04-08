@@ -11,7 +11,6 @@ import {ResultListCommon} from '../result-lists/result-list-common';
 import {TemplateContent} from '../result-templates/result-template-common';
 
 const childTemplateComponent = 'atomic-result-children-template';
-
 const componentTag = 'atomic-result-children';
 
 /**
@@ -74,17 +73,16 @@ export class AtomicResultChildren {
 
   private selectInheritedTemplate(result: Result) {
     const content = this.templatesManager?.selectTemplate(result);
-    if (content) {
-      const fragment = document.createDocumentFragment();
-      const children = Array.from(content.children).filter(
-        (el) =>
-          el.tagName.toLowerCase() !== componentTag &&
-          !el.querySelector(componentTag)
-      );
-      fragment.append(...children);
-      return fragment;
-    }
-    return;
+    if (!content) return;
+
+    const fragment = document.createDocumentFragment();
+    const children = Array.from(content.children).filter(
+      (el) =>
+        el.tagName.toLowerCase() !== componentTag &&
+        !el.querySelector(componentTag)
+    );
+    fragment.append(...children);
+    return fragment;
   }
 
   private getContent(result: Result) {
@@ -96,16 +94,14 @@ export class AtomicResultChildren {
 
   private renderChild(child: FoldedResult) {
     const content = this.getContent(child.result);
-    if (content) {
-      return (
-        <atomic-result
-          content={content}
-          result={child}
-          engine={this.bindings.engine}
-        ></atomic-result>
-      );
-    }
-    return null;
+    if (!content) return null;
+    return (
+      <atomic-result
+        content={content}
+        result={child}
+        engine={this.bindings.engine}
+      ></atomic-result>
+    );
   }
 
   public render() {
