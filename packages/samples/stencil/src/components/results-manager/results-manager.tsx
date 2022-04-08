@@ -8,11 +8,7 @@ import template from './template.html';
 export class ResultsManager {
   public render() {
     return (
-      <atomic-result-list
-        fields-to-include="source,filetype,date,source,author,sourcetype,language,filetype"
-        display="list"
-        density="comfortable"
-      >
+      <atomic-result-list>
         <atomic-result-template>
           <template innerHTML={template}></template>
         </atomic-result-template>

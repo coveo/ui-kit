@@ -20,9 +20,6 @@ export const config: Config = {
       ],
     },
   ],
-  devServer: {
-    port: 3666,
-  },
   rollupPlugins: {
     before: [
       html({
