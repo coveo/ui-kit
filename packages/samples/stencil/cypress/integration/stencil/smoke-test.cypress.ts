@@ -1,11 +1,14 @@
 describe('smoke test', () => {
-  it('should load', () => {
+  beforeEach(() => {
     cy.intercept({
       method: 'POST',
       path: '**/rest/ua/v15/analytics/*',
     }).as('analytics');
 
     cy.visit('http://localhost:3666').wait('@analytics');
+  });
+
+  it('should load', () => {
     cy.get('atomic-search-box')
       .should('exist')
       .shadow()
@@ -26,4 +29,31 @@ describe('smoke test', () => {
       .find('atomic-result')
       .should('exist');
   });
+
+  it('should load custom components', () => {
+    cy.get('sample-component')
+      .should('exist')
+      .shadow()
+      .find('button')
+      .first()
+      .click();
+
+    cy.get('atomic-result-list')
+      .shadow()
+      .find('atomic-result')
+      .shadow()
+      .find('sample-result-component')
+      .should('exist')
+      .shadow()
+      .contains('Written by:');
+  });
+
+  it(
+    'should load the facets inside the refine modal properly',
+    {viewportWidth: 720},
+    () => {
+      cy.get('atomic-refine-toggle').should('exist').click();
+      cy.get('atomic-refine-modal atomic-facet').should('have.length', 2);
+    }
+  );
 });
