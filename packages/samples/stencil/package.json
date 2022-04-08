@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run build && npx serve www --port 3666",
-    "build": "stencil build"
+    "start": "npm run build && npx serve www -l 3666",
+    "build": "stencil build",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@coveo/atomic": "^1.42.4",

@@ -1,4 +1,4 @@
-describe('smoke test', {viewportHeight: 2000, viewportWidth: 2000}, () => {
+describe('smoke test', () => {
   it('should load', () => {
     cy.intercept({
       method: 'POST',
