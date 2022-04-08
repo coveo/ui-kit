@@ -16,6 +16,7 @@ export const config: Config = {
         {
           src: '../node_modules/@coveo/atomic/dist/atomic',
           dest: 'build/atomic',
+          keepDirStructure: false,
         },
       ],
     },
