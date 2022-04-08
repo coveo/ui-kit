@@ -53,7 +53,6 @@ export class AtomicResultList implements InitializableComponent {
   @Element() public host!: HTMLDivElement;
 
   /**
-   * TODO: KIT-452 Infinite scroll feature
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
    */
