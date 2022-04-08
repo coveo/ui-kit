@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Watch} from '@stencil/core';
+import {Component, h, State, Prop, Watch, Element} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -10,7 +10,8 @@ import {
   SmartSnippetFeedback,
 } from '@coveo/headless';
 import {Button} from '../common/button';
-import {randomID} from '../../utils/utils';
+import {once, randomID} from '../../utils/utils';
+import {updateBreakpoints} from '../../utils/replace-breakpoint';
 
 /**
  * @part container - The modal's outermost container with the outline and background.
@@ -30,6 +31,7 @@ import {randomID} from '../../utils/utils';
 })
 export class AtomicRefineModal implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
+  @Element() public host!: HTMLElement;
   public smartSnippet!: SmartSnippet;
 
   @State() public error!: Error;
@@ -112,8 +114,8 @@ export class AtomicRefineModal implements InitializableComponent {
     ];
 
     return (
-      <fieldset class="mt-8">
-        <legend class="text-2xl font-bold text-on-background">
+      <fieldset>
+        <legend part="reason-title" class="font-bold text-on-background">
           {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
         </legend>
         {options.map(({id, label, isChecked, onCheck}) => (
@@ -143,14 +145,14 @@ export class AtomicRefineModal implements InitializableComponent {
     }
 
     return (
-      <fieldset class="mt-8">
-        <legend class="text-2xl font-bold text-on-background">
+      <fieldset>
+        <legend part="details-title" class="font-bold text-on-background">
           {this.bindings.i18n.t('smart-snippet-feedback-details')}
         </legend>
         <textarea
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
-          class="mt-2 w-full text-base leading-4 border border-neutral-dark resize-none rounded"
+          class="mt-2 p-2 w-full text-base leading-5 border border-neutral resize-none rounded"
           rows={4}
           required
         ></textarea>
@@ -167,6 +169,7 @@ export class AtomicRefineModal implements InitializableComponent {
           e.preventDefault();
           this.sendFeedback();
         }}
+        class="flex flex-col gap-8"
       >
         {this.renderOptions()}
         {this.renderDetails()}
@@ -199,9 +202,17 @@ export class AtomicRefineModal implements InitializableComponent {
     );
   }
 
+  private updateBreakpoints = once(() => updateBreakpoints(this.host));
+
   public render() {
+    this.updateBreakpoints();
+
     return (
-      <atomic-modal source={this.source} is-open={this.isOpen}>
+      <atomic-modal
+        source={this.source}
+        isOpen={this.isOpen}
+        close={() => (this.isOpen = false)}
+      >
         {this.renderHeader()}
         {this.renderBody()}
         {this.renderFooter()}

@@ -1,1 +1,12 @@
 @import '../../global/global.pcss';
+
+[part='reason-title'],
+[part='details-title'] {
+  @screen mobile-only {
+    font-size: var(--atomic-text-2xl);
+  }
+
+  @screen desktop-only {
+    font-size: var(--atomic-text-lg);
+  }
+}

@@ -28,12 +28,6 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
     </span>
   );
 
-  const ExplainWhyButton = () => (
-    <Button style="text-primary" onClick={() => props.onPressExplainWhy()}>
-      {props.i18n.t('smart-snippet-feedback-explain-why')}
-    </Button>
-  );
-
   const Buttons = () => (
     <div part="feedback-buttons" class="flex gap-x-4">
       <label
@@ -76,7 +70,6 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
           class="text-inherit cursor-inherit"
         ></RadioButton>
       </label>
-      {props.disliked ? <ExplainWhyButton></ExplainWhyButton> : []}
     </div>
   );
 
@@ -89,6 +82,12 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
     >
       {props.i18n.t('smart-snippet-feedback-thanks')}
     </span>
+  );
+
+  const ExplainWhyButton = () => (
+    <Button style="text-primary" onClick={() => props.onPressExplainWhy()}>
+      {props.i18n.t('smart-snippet-feedback-explain-why')}
+    </Button>
   );
 
   return (
@@ -109,6 +108,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
       <ThankYouMessage
         visible={props.liked || props.disliked}
       ></ThankYouMessage>
+      {props.disliked ? <ExplainWhyButton></ExplainWhyButton> : []}
     </div>
   );
 };

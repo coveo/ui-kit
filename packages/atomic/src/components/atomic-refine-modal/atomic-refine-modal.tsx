@@ -92,6 +92,9 @@ export class AtomicRefineModal implements InitializableComponent {
 
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
+    divSlot.style.display = 'flex';
+    divSlot.style.flexDirection = 'column';
+    divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
     const facetElementsPayload = getFacetElements(this.bindings.store).map(
       (f) => ({facetId: f.getAttribute('facet-id')!, payload: f})
@@ -102,8 +105,6 @@ export class AtomicRefineModal implements InitializableComponent {
 
     sortedFacetsElements.forEach((facetElement) => {
       const clone = facetElement.cloneNode(true) as HTMLElement;
-      clone.style.marginBottom =
-        'var(--atomic-refine-modal-facet-margin, 20px)';
       clone.setAttribute('is-collapsed', 'true');
       divSlot.append(clone);
     });
@@ -163,24 +164,26 @@ export class AtomicRefineModal implements InitializableComponent {
       return;
     }
 
-    return [
-      <h1 part="section-title" class="text-2xl font-bold truncate mb-3 mt-8">
-        {this.bindings.i18n.t('sort')}
-      </h1>,
-      <div class="relative">
-        <select
-          class="btn-outline-neutral w-full cursor-pointer text-lg font-bold grow appearance-none rounded-lg px-6 py-5"
-          part="select"
-          aria-label={this.bindings.i18n.t('sort-by')}
-          onChange={(option) => this.select(option)}
-        >
-          {this.options.map((option) => this.buildOption(option))}
-        </select>
-        <div class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6">
-          <atomic-icon icon={SortIcon} class="w-6 h-6"></atomic-icon>
+    return (
+      <div>
+        <h1 part="section-title" class="text-2xl font-bold truncate mb-3">
+          {this.bindings.i18n.t('sort')}
+        </h1>
+        <div class="relative">
+          <select
+            class="btn-outline-neutral w-full cursor-pointer text-lg font-bold grow appearance-none rounded-lg px-6 py-5"
+            part="select"
+            aria-label={this.bindings.i18n.t('sort-by')}
+            onChange={(option) => this.select(option)}
+          >
+            {this.options.map((option) => this.buildOption(option))}
+          </select>
+          <div class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6">
+            <atomic-icon icon={SortIcon} class="w-6 h-6"></atomic-icon>
+          </div>
         </div>
-      </div>,
-    ];
+      </div>
+    );
   }
 
   private renderFilters() {
@@ -188,23 +191,25 @@ export class AtomicRefineModal implements InitializableComponent {
       return;
     }
 
-    return [
-      <div class="w-full flex justify-between mt-8 mb-3">
-        <h1 part="section-title" class="text-2xl font-bold truncate">
-          {this.bindings.i18n.t('filters')}
-        </h1>
-        {this.breadcrumbManagerState.hasBreadcrumbs && (
-          <Button
-            onClick={() => this.breadcrumbManager.deselectAll()}
-            style="text-primary"
-            text={this.bindings.i18n.t('clear')}
-            class="px-2 py-1"
-            part="filter-clear-all"
-          ></Button>
-        )}
-      </div>,
-      <slot name="facets"></slot>,
-    ];
+    return (
+      <div>
+        <div class="w-full flex justify-between mb-3">
+          <h1 part="section-title" class="text-2xl font-bold truncate">
+            {this.bindings.i18n.t('filters')}
+          </h1>
+          {this.breadcrumbManagerState.hasBreadcrumbs && (
+            <Button
+              onClick={() => this.breadcrumbManager.deselectAll()}
+              style="text-primary"
+              text={this.bindings.i18n.t('clear')}
+              class="px-2 py-1"
+              part="filter-clear-all"
+            ></Button>
+          )}
+        </div>
+        <slot name="facets"></slot>
+      </div>
+    );
   }
 
   private renderViewResultsButton() {
@@ -234,6 +239,7 @@ export class AtomicRefineModal implements InitializableComponent {
       <atomic-modal
         isOpen={this.isOpen}
         source={this.openButton}
+        close={() => (this.isOpen = false)}
         onAnimationEnded={() => this.onAnimationEnded()}
         exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
       >
@@ -241,7 +247,10 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.renderTitle()}
           {this.renderCloseButton()}
         </div>
-        <aside slot="body" class="w-full adjust-for-scroll-bar">
+        <aside
+          slot="body"
+          class="flex flex-col gap-8 w-full adjust-for-scroll-bar"
+        >
           {this.renderSort()}
           {this.renderFilters()}
         </aside>
