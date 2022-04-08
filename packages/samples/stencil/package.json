@@ -1,0 +1,16 @@
+{
+  "name": "stencil",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npm run build && npx serve www",
+    "build": "stencil build"
+  },
+  "dependencies": {
+    "@coveo/atomic": "^1.42.4",
+    "@stencil/core": "^2.15.0"
+  },
+  "devDependencies": {
+    "rollup-plugin-html": "0.2.1"
+  }
+}
