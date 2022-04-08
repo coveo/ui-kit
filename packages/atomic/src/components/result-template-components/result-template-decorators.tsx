@@ -108,6 +108,15 @@ export type ChildTemplatesContextEvent =
   CustomEvent<ChildTemplatesContextEventHandler>;
 const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
 
+interface AtomicResultChildren {
+  resultListCommon?: {
+    resultTemplatesManager?: ResultTemplatesManager<TemplateContent>;
+  };
+}
+/**
+ * A [StencilJS property decorator](https://stenciljs.com/) to be used for children result templates.
+ * This allows the Stencil component to fetch children templates defined a level above.
+ */
 export function ChildTemplatesContext() {
   return (component: ComponentInterface, resultVariable: string) => {
     const {componentWillRender} = component;
@@ -116,8 +125,8 @@ export function ChildTemplatesContext() {
       const event = buildCustomEvent(
         childTemplatesContextEventName,
         (result: ResultTemplatesManager<TemplateContent> | undefined) => {
-          const resultListManager = (this as any).resultListCommon
-            ?.resultTemplatesManager;
+          const resultListManager = (this as AtomicResultChildren)
+            .resultListCommon?.resultTemplatesManager;
           this[resultVariable] = resultListManager !== result ? result : null;
         }
       );

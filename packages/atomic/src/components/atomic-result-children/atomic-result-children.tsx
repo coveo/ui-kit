@@ -34,6 +34,9 @@ export class AtomicResultChildren {
   @State() public ready = false;
   @State() public templateHasError = false;
 
+  /**
+   * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+   */
   @Prop() inheritTemplates = false;
 
   @Listen('atomic/resolveChildTemplates')
