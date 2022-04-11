@@ -206,7 +206,7 @@ export namespace Components {
     interface AtomicFoldedResultList {
         /**
           * The name of the field that uniquely identifies a result within a collection.
-          * @defaultValue `foldingchild`:
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**
@@ -1631,7 +1631,7 @@ declare namespace LocalJSX {
     interface AtomicFoldedResultList {
         /**
           * The name of the field that uniquely identifies a result within a collection.
-          * @defaultValue `foldingchild`:
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**

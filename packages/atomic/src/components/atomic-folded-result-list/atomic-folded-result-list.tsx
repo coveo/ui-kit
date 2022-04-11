@@ -90,7 +90,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   /**
    * The name of the field that uniquely identifies a result within a collection.
    *
-   * @defaultValue `foldingchild`:
+   * @defaultValue `foldingchild`
    */
   @Prop({reflect: true}) public childField?: string;
 
