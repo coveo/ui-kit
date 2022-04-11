@@ -72,7 +72,7 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
-  public resultListCommon!: ResultListCommon;
+  private commonResultList: ResultListCommon | undefined;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -125,18 +125,6 @@ export class AtomicResultList implements InitializableComponent {
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
-    this.resultListCommon = new ResultListCommon({
-      host: this.host,
-      bindings: this.bindings,
-      fieldsToInclude: this.fieldsToInclude,
-      templateElements: this.host.querySelectorAll('atomic-result-template'),
-      onReady: () => {
-        this.ready = true;
-      },
-      onError: () => {
-        this.templateHasError = true;
-      },
-    });
 
     this.resultList = buildResultList(
       this.bindings.engine,
@@ -172,5 +160,23 @@ export class AtomicResultList implements InitializableComponent {
       },
       getContentOfResultTemplate: this.getContentOfResultTemplate,
     });
+  }
+
+  public get resultListCommon(): ResultListCommon {
+    if (!this.commonResultList) {
+      this.commonResultList = new ResultListCommon({
+        host: this.host,
+        bindings: this.bindings,
+        fieldsToInclude: this.fieldsToInclude,
+        templateElements: this.host.querySelectorAll('atomic-result-template'),
+        onReady: () => {
+          this.ready = true;
+        },
+        onError: () => {
+          this.templateHasError = true;
+        },
+      });
+    }
+    return this.commonResultList;
   }
 }
