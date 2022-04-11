@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.0...@coveo/atomic@1.43.1) (2022-04-11)
+
+
+### Bug Fixes
+
+* **atomic:** fix set renderingFunction for atomic-react ([#1910](https://github.com/coveo/ui-kit/issues/1910)) ([c2a6630](https://github.com/coveo/ui-kit/commit/c2a66300f0b37ca9a486a5ae8b9c029420873bcc))
+
+
+
+
+
 # [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.4...@coveo/atomic@1.43.0) (2022-04-11)
 
 
