@@ -28,8 +28,9 @@
     "clean": "rimraf -rf dist/* headless/*",
     "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
     "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
-    "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
+    "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build && npm run edit:headless:type:import",
     "copy:headless": "node scripts/copy-headless.js",
+    "edit:headless:type:import": "node scripts/edit-headless-type-import.js",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
     "start:prod": "npx serve www -l 3333",
     "test": "stencil test --spec",
@@ -111,6 +112,7 @@
     "postcss-nested": "5.0.6",
     "puppeteer": "9.1.1",
     "react": "16.14.0",
+    "replace-in-file": "^6.3.2",
     "rollup-plugin-html": "0.2.1",
     "tailwindcss": "3.0.23"
   },
