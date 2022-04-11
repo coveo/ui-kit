@@ -83,7 +83,9 @@ const resultContextEventName = 'atomic/resolveResult';
  * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result".
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  */
-export function resultContext<T extends Result | FoldedResult = Result>(element: Element) {
+export function resultContext<T extends Result | FoldedResult = Result>(
+  element: Element
+) {
   return new Promise<T>((resolve, reject) => {
     const event = buildCustomEvent<ResultContextEventHandler<T>>(
       resultContextEventName,
