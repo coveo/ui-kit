@@ -25,7 +25,7 @@ import {
 } from '../result-lists/result-list-common';
 
 /**
- * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates up to two levels nested (i.e. result, child and grandchild)
+ * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
  *
  * @internal
  * @part result-list - The element containing every result of a result list
