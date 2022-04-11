@@ -17,7 +17,6 @@ import {Heading} from '../common/heading';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../utils/utils';
-
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
  *
@@ -72,6 +71,11 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+    this.bindings.interfaceElement.prepend(
+      (this.modalRef = document.createElement(
+        'atomic-smart-snippet-feedback-modal'
+      ))
+    );
   }
 
   public get source() {
@@ -179,9 +183,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
             {this.renderFeedbackBanner()}
           </footer>
         </article>
-        <atomic-smart-snippet-feedback-modal
-          ref={(modal) => (this.modalRef = modal)}
-        ></atomic-smart-snippet-feedback-modal>
       </aside>
     );
   }

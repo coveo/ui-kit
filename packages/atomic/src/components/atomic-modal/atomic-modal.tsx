@@ -19,15 +19,17 @@ import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {once} from '../../utils/utils';
 
 /**
- * @part container - The modal's outermost container with the outline and background.
- * @part header - The header at the top of the modal.
- * @part header-wrapper - The wrapper around the header.
- * @part header-ruler - The horizontal ruler underneath the header.
- * @part body - The body of the modal, between the header and the footer.
- * @part body-wrapper - The wrapper around the body.
- * @part footer - The footer at the bottom of the modal.
- * @part footer-wrapper - The wrapper with a shadow around the footer.
+ * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing further customization.
+ *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
+ * @part container - The modal's outermost container with the outline and background.
+ * @part header-wrapper - The wrapper around the header.
+ * @part header - The header at the top of the modal.
+ * @part header-ruler - The horizontal ruler underneath the header.
+ * @part body-wrapper - The wrapper around the body.
+ * @part body - The body of the modal, between the header and the footer.
+ * @part footer-wrapper - The wrapper with a shadow around the footer.
+ * @part footer - The footer at the bottom of the modal.
  * @internal
  */
 @Component({
@@ -43,7 +45,7 @@ export class AtomicModal implements InitializableComponent {
 
   @Prop({mutable: true}) source?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
-  @Prop() close = () => (this.isOpen = false);
+  @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
 
   @Event() animationEnded!: EventEmitter<never>;
 
@@ -74,6 +76,10 @@ export class AtomicModal implements InitializableComponent {
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
+
+  public componentWillLoad() {
+    this.wasEverOpened ||= this.isOpen;
+  }
 
   public render() {
     if (!this.wasEverOpened) {

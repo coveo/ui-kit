@@ -14,22 +14,35 @@ import {once, randomID} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 
 /**
+ * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
+ *
+ * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing further customization.
+ *
+ * @part backdrop - The transparent backdrop hiding the content behind the modal.
  * @part container - The modal's outermost container with the outline and background.
- * @part header - The header at the top of the modal.
  * @part header-wrapper - The wrapper around the header.
+ * @part header - The header at the top of the modal.
  * @part header-ruler - The horizontal ruler underneath the header.
- * @part body - The body of the modal, between the header and the footer.
  * @part body-wrapper - The wrapper around the body.
- * @part footer - The footer at the bottom of the modal.
+ * @part body - The body of the modal, between the header and the footer.
+ * @part form - The wrapper around the reason and details.
+ * @part reason-title - The title above the reason radio buttons.
+ * @part reason-radio - A radio button representing a reason.
+ * @part reason-label - A label linked to a radio button representing a reason.
+ * @part details-title - The title above the details input.
+ * @part details-input - The input to specify additional details.
  * @part footer-wrapper - The wrapper with a shadow around the footer.
- * @internal
+ * @part footer - The footer at the bottom of the modal.
+ * @part buttons - The wrapper around the cancel and submit buttons.
+ * @part cancel-button - The cancel button.
+ * @part submit-button - The submit button.
  */
 @Component({
   tag: 'atomic-smart-snippet-feedback-modal',
   styleUrl: 'atomic-smart-snippet-feedback-modal.pcss',
   shadow: true,
 })
-export class AtomicRefineModal implements InitializableComponent {
+export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
   public smartSnippet!: SmartSnippet;
@@ -64,6 +77,11 @@ export class AtomicRefineModal implements InitializableComponent {
       this.smartSnippet.sendFeedback(this.currentAnswer!);
     }
     this.isOpen = false;
+  }
+
+  private close() {
+    this.isOpen = false;
+    this.smartSnippet.closeFeedbackModal();
   }
 
   private renderHeader() {
@@ -121,6 +139,7 @@ export class AtomicRefineModal implements InitializableComponent {
         {options.map(({id, label, isChecked, onCheck}) => (
           <div key={id} class="text-base leading-4 text-neutral-dark mt-2">
             <input
+              part="reason-radio"
               type="radio"
               name="answer"
               id={id}
@@ -132,7 +151,9 @@ export class AtomicRefineModal implements InitializableComponent {
               class="mr-2 w-4 h-4"
               required
             />
-            <label htmlFor={id}>{label}</label>
+            <label part="reason-label" htmlFor={id}>
+              {label}
+            </label>
           </div>
         ))}
       </fieldset>
@@ -150,6 +171,7 @@ export class AtomicRefineModal implements InitializableComponent {
           {this.bindings.i18n.t('smart-snippet-feedback-details')}
         </legend>
         <textarea
+          part="details-input"
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
           class="mt-2 p-2 w-full text-base leading-5 border border-neutral resize-none rounded"
@@ -163,6 +185,7 @@ export class AtomicRefineModal implements InitializableComponent {
   private renderBody() {
     return (
       <form
+        part="form"
         id={this.formId}
         slot="body"
         onSubmit={(e) => {
@@ -179,18 +202,17 @@ export class AtomicRefineModal implements InitializableComponent {
 
   private renderFooter() {
     return (
-      <div slot="footer" class="flex justify-end gap-2">
+      <div part="buttons" slot="footer" class="flex justify-end gap-2">
         <Button
+          part="cancel-button"
           style="outline-neutral"
           class="p-3 flex text-lg justify-center"
-          onClick={() => {
-            this.isOpen = false;
-            this.smartSnippet.closeFeedbackModal();
-          }}
+          onClick={() => this.close()}
         >
           {this.bindings.i18n.t('cancel')}
         </Button>
         <Button
+          part="submit-button"
           style="primary"
           class="p-3 flex text-lg justify-center"
           type="submit"
@@ -211,7 +233,8 @@ export class AtomicRefineModal implements InitializableComponent {
       <atomic-modal
         source={this.source}
         isOpen={this.isOpen}
-        close={() => (this.isOpen = false)}
+        close={() => this.close()}
+        exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
       >
         {this.renderHeader()}
         {this.renderBody()}

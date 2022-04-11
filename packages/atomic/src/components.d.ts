@@ -301,7 +301,7 @@ export namespace Components {
     interface AtomicLoadMoreResults {
     }
     interface AtomicModal {
-        "close": () => boolean;
+        "close": () => void;
         "isOpen": boolean;
         "source"?: HTMLElement;
     }
@@ -1736,7 +1736,7 @@ declare namespace LocalJSX {
     interface AtomicLoadMoreResults {
     }
     interface AtomicModal {
-        "close"?: () => boolean;
+        "close"?: () => void;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: CustomEvent<never>) => void;
         "source"?: HTMLElement;
