@@ -60,6 +60,14 @@
       } */
 
       /* Example on how to customize the color facet */
+      atomic-color-facet::part(default-color-value) {
+        background-image: url('/build/assets/document.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: rgb(144, 144, 144);
+      }
+
       atomic-color-facet::part(value-dynamicscrmitem) {
         background-image: url('/build/assets/email.svg');
         background-position: center;
@@ -97,7 +105,7 @@
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
-        background-image: rgb(101, 202, 228);
+        background-color: rgb(101, 202, 228);
       }
 
       atomic-color-facet::part(value-html) {

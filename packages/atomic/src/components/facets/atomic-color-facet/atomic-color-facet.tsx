@@ -67,6 +67,7 @@ import {MapProp} from '../../../utils/props-utils';
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
+ * @part default-color-value - The default part name used to customize color facet values. Should be defined before dynamic parts.
  * @part value-* - The dynamic part name used to customize a facet value. The `*` is a syntactical placeholder for a specific facet value. For example, if the component's `field` property is set to 'filetype' and your source has a `YouTubeVideo` file type, the part would be targeted like this: `atomic-color-facet::part(value-YouTubeVideo)...`.
  *
  * @part value-box - The facet value when display is 'box'.
@@ -325,7 +326,7 @@ export class AtomicColorFacet
             searchQuery={this.facetState.facetSearch.query}
           >
             <div
-              part={`value-${partValue}`}
+              part={`value-${partValue} default-color-value`}
               class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
             ></div>
             <FacetValueLabelHighlight
