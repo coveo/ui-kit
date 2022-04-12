@@ -5,7 +5,6 @@ import {RecommendationPage} from './pages/RecommendationPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 import {SamlPage} from './pages/SamlPage';
 import {DependentFacetPage} from './pages/DependentFacetPage';
-import {AtomicReactPage} from './pages/AtomicReactPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
 
 function App(props: SearchPageProps) {
