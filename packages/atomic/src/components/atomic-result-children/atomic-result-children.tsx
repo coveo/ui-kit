@@ -14,7 +14,9 @@ const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
 
 /**
- * TODO:
+ * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
+ * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
+ * only when children exist.
  * @internal
  */
 @Component({
@@ -111,7 +113,6 @@ export class AtomicResultChildren {
     if (!this.ready) return null;
     if (this.templateHasError) return <slot></slot>;
     if (this.result.children.length) {
-      // TODO: document this in KIT-1519 and KIT-1520
       return (
         <Host>
           <slot name="before-children"></slot>
