@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.1...@coveo/atomic@1.44.0) (2022-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** make resultContext function generic ([#1905](https://github.com/coveo/ui-kit/issues/1905)) ([f150717](https://github.com/coveo/ui-kit/commit/f150717a63c70373bee0e2326fd230390021cfb8))
+
+
+### Features
+
+* **atomic:** allow grandchild children to inherit templates from chi… ([#1902](https://github.com/coveo/ui-kit/issues/1902)) ([7a61b5f](https://github.com/coveo/ui-kit/commit/7a61b5f03ffaa3a336682cd7e7cda2b6a85a1e96))
+
+
+
+
+
 ## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.0...@coveo/atomic@1.43.1) (2022-04-11)
 
 
