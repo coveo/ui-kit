@@ -13,16 +13,13 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
-import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../result-lists/result-list-common';
+} from '../../atomic-result/atomic-result-display-options';
+import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.

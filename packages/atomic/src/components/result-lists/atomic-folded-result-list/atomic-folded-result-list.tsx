@@ -14,15 +14,12 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
-import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../result-lists/result-list-common';
+} from '../../atomic-result/atomic-result-display-options';
+import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
