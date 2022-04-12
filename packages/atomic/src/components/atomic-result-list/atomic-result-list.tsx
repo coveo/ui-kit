@@ -20,8 +20,8 @@ import {
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result-display-options';
 import {
-  ResultRenderingFunction,
   ResultListCommon,
+  ResultRenderingFunction,
 } from '../result-lists/result-list-common';
 
 /**
@@ -71,7 +71,8 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
-  public resultListCommon!: ResultListCommon;
+  private resultListCommon!: ResultListCommon;
+  private renderingFunction: ((res: Result) => HTMLElement) | null = null;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -105,7 +106,8 @@ export class AtomicResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: Result) => HTMLElement
   ) {
-    this.resultListCommon.renderingFunction = render as ResultRenderingFunction;
+    this.renderingFunction = render;
+    this.assignRenderingFunctionIfPossible();
   }
 
   @Listen('scroll', {target: 'window'})
@@ -131,6 +133,7 @@ export class AtomicResultList implements InitializableComponent {
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
+        this.assignRenderingFunctionIfPossible();
       },
       onError: () => {
         this.templateHasError = true;
@@ -171,5 +174,12 @@ export class AtomicResultList implements InitializableComponent {
       },
       getContentOfResultTemplate: this.getContentOfResultTemplate,
     });
+  }
+
+  private assignRenderingFunctionIfPossible() {
+    if (this.resultListCommon && this.renderingFunction) {
+      this.resultListCommon.renderingFunction = this
+        .renderingFunction as ResultRenderingFunction;
+    }
   }
 }
