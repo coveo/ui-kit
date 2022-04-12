@@ -26,4 +26,5 @@ module.exports = {
     static: './public',
     port: '3000',
   },
+  mode: "development"
 };
