@@ -20,8 +20,8 @@ import {
   ResultDisplayImageSize,
 } from '../atomic-result/atomic-result-display-options';
 import {
-  ResultRenderingFunction,
   ResultListCommon,
+  ResultRenderingFunction,
 } from '../result-lists/result-list-common';
 
 /**
@@ -72,7 +72,8 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
-  private commonResultList: ResultListCommon | undefined;
+  private resultListCommon!: ResultListCommon;
+  private renderingFunction: ((res: Result) => HTMLElement) | null = null;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -106,7 +107,8 @@ export class AtomicResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: Result) => HTMLElement
   ) {
-    this.resultListCommon.renderingFunction = render as ResultRenderingFunction;
+    this.renderingFunction = render;
+    this.assignRenderingFunctionIfPossible();
   }
 
   @Listen('scroll', {target: 'window'})
@@ -125,6 +127,19 @@ export class AtomicResultList implements InitializableComponent {
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
+    this.resultListCommon = new ResultListCommon({
+      host: this.host,
+      bindings: this.bindings,
+      fieldsToInclude: this.fieldsToInclude,
+      templateElements: this.host.querySelectorAll('atomic-result-template'),
+      onReady: () => {
+        this.ready = true;
+        this.assignRenderingFunctionIfPossible();
+      },
+      onError: () => {
+        this.templateHasError = true;
+      },
+    });
 
     this.resultList = buildResultList(
       this.bindings.engine,
@@ -162,21 +177,10 @@ export class AtomicResultList implements InitializableComponent {
     });
   }
 
-  public get resultListCommon(): ResultListCommon {
-    if (!this.commonResultList) {
-      this.commonResultList = new ResultListCommon({
-        host: this.host,
-        bindings: this.bindings,
-        fieldsToInclude: this.fieldsToInclude,
-        templateElements: this.host.querySelectorAll('atomic-result-template'),
-        onReady: () => {
-          this.ready = true;
-        },
-        onError: () => {
-          this.templateHasError = true;
-        },
-      });
+  private assignRenderingFunctionIfPossible() {
+    if (this.resultListCommon && this.renderingFunction) {
+      this.resultListCommon.renderingFunction = this
+        .renderingFunction as ResultRenderingFunction;
     }
-    return this.commonResultList;
   }
 }
