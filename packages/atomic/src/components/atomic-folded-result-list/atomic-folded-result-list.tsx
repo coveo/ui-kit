@@ -25,7 +25,7 @@ import {
 } from '../result-lists/result-list-common';
 
 /**
- * The `atomic-folded-result-list` component is responsible for displaying query results by applying one or more result templates.
+ * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
  *
  * @internal
  * @part result-list - The element containing every result of a result list
@@ -58,7 +58,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   public resultListCommon!: ResultListCommon;
   /**
-   * TODO: KIT-452 Infinite scroll feature
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
    */
@@ -77,15 +76,21 @@ export class AtomicFoldedResultList implements InitializableComponent {
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
   /**
-   * TODO:
+   * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+   *
+   * @defaultValue `foldingcollection`
    */
   @Prop({reflect: true}) public collectionField?: string;
   /**
-   * TODO:
+   * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+   *
+   * @defaultValue `foldingparent`
    */
   @Prop({reflect: true}) public parentField?: string;
   /**
-   * TODO:
+   * The name of the field that uniquely identifies a result within a collection.
+   *
+   * @defaultValue `foldingchild`
    */
   @Prop({reflect: true}) public childField?: string;
 

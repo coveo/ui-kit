@@ -3,7 +3,10 @@ import {
   addFoldedResultList,
   buildTemplateWithoutSections,
 } from './result-list-actions';
-import {buildResultChildren} from './folded-result-list-actions';
+import {
+  buildResultChildren,
+  buildResultTopChild,
+} from './folded-result-list-actions';
 import {
   FoldedResultListSelectors,
   beforeChildrenSlotName,
@@ -11,6 +14,7 @@ import {
   resultChildrenComponent,
 } from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
+import {assertRendersGrandchildren} from './folded-result-list-assertions';
 
 const setSource = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
@@ -23,12 +27,7 @@ describe('Folded Result List Component', () => {
     new TestFixture()
       .with(setSource)
       .with(
-        addFoldedResultList(
-          buildTemplateWithoutSections([
-            generateComponentHTML(resultLinkComponent),
-            buildResultChildren(),
-          ])
-        )
+        addFoldedResultList(buildTemplateWithoutSections(buildResultTopChild()))
       )
       .init();
 
@@ -42,60 +41,24 @@ describe('Folded Result List Component', () => {
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
       .contains('Opercs');
-  });
-
-  it('should show grandchild results', () => {
-    new TestFixture()
-      .with(setSource)
-      .with(
-        addFoldedResultList(
-          buildTemplateWithoutSections([
-            generateComponentHTML(resultLinkComponent),
-            buildResultChildren(buildResultChildren()),
-          ])
-        )
-      )
-      .init();
-
-    FoldedResultListSelectors.firstResult()
-      .contains('Pyrenomycetes')
-      .should('be.visible');
-
-    FoldedResultListSelectors.childResultAtIndex(0)
-      .find(resultLinkComponent)
-      .contains('Stubble Lichens');
-    FoldedResultListSelectors.childResultAtIndex(1)
-      .find(resultLinkComponent)
-      .contains('Opercs');
-
-    FoldedResultListSelectors.grandChildResultAtIndex(0, 1)
-      .find(resultLinkComponent)
-      .contains('Elf Cups and Allies');
   });
 
   it('renders content before and after children only when there are children', () => {
-    const components = buildResultChildren();
+    const components = buildResultTopChild();
 
     const before = generateComponentHTML('p');
     before.slot = beforeChildrenSlotName;
     before.textContent = 'Before children!';
-    components.insertAdjacentElement('afterbegin', before);
+    components[1].insertAdjacentElement('afterbegin', before);
 
     const after = generateComponentHTML('p');
     after.slot = afterChildrenSlotName;
     after.textContent = 'After children!';
-    components.insertAdjacentElement('beforeend', after);
+    components[1].insertAdjacentElement('beforeend', after);
 
     new TestFixture()
       .with(setSource)
-      .with(
-        addFoldedResultList(
-          buildTemplateWithoutSections([
-            generateComponentHTML(resultLinkComponent),
-            components,
-          ])
-        )
-      )
+      .with(addFoldedResultList(buildTemplateWithoutSections(components)))
       .init();
 
     FoldedResultListSelectors.resultChildren()
@@ -125,5 +88,39 @@ describe('Folded Result List Component', () => {
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultChildrenComponent)
       .should('not.exist');
+  });
+
+  describe('when grandchildren templates are specified', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(setSource)
+        .with(
+          addFoldedResultList(
+            buildTemplateWithoutSections(
+              buildResultTopChild(buildResultChildren())
+            )
+          )
+        )
+        .init();
+    });
+
+    assertRendersGrandchildren();
+  });
+
+  describe('when result children component is set to inherit templates and no template is passed', () => {
+    beforeEach(() => {
+      const resultChildren = generateComponentHTML(resultChildrenComponent);
+      resultChildren.setAttribute('inherit-templates', 'true');
+      new TestFixture()
+        .with(setSource)
+        .with(
+          addFoldedResultList(
+            buildTemplateWithoutSections(buildResultTopChild(resultChildren))
+          )
+        )
+        .init();
+    });
+
+    assertRendersGrandchildren();
   });
 });

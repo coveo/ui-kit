@@ -205,11 +205,13 @@ export namespace Components {
     }
     interface AtomicFoldedResultList {
         /**
-          * TODO:
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**
-          * TODO:
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
          */
         "collectionField"?: string;
         /**
@@ -225,7 +227,8 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
-          * TODO:
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
          */
         "parentField"?: string;
         /**
@@ -526,6 +529,10 @@ export namespace Components {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates": boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -1627,11 +1634,13 @@ declare namespace LocalJSX {
     }
     interface AtomicFoldedResultList {
         /**
-          * TODO:
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**
-          * TODO:
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
          */
         "collectionField"?: string;
         /**
@@ -1647,7 +1656,8 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
-          * TODO:
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
          */
         "parentField"?: string;
     }
@@ -1944,6 +1954,10 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates"?: boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
