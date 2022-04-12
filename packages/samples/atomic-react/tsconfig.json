@@ -8,7 +8,8 @@
     "lib": ["DOM"],
     "moduleResolution": "node",
     "outDir": "dist",
-    "types": ["cypress"]
+    "types": ["cypress"],
+    "jsx": "react"
   },
   "include": ["src"]
 }
