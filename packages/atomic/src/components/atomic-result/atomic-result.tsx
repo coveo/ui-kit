@@ -69,7 +69,7 @@ export class AtomicResult {
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent) {
+  public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);

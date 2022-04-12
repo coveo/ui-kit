@@ -68,8 +68,10 @@ export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   };
 }
 
-type ResultContextEventHandler = (result: FoldedResult | Result) => void;
-export type ResultContextEvent = CustomEvent<ResultContextEventHandler>;
+type ResultContextEventHandler<T = Result> = (result: T) => void;
+export type ResultContextEvent<T = Result> = CustomEvent<
+  ResultContextEventHandler<T>
+>;
 const resultContextEventName = 'atomic/resolveResult';
 
 /**
@@ -82,11 +84,13 @@ const resultContextEventName = 'atomic/resolveResult';
  * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result".
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  */
-export const resultContext = (element: Element) =>
-  new Promise<FoldedResult | Result>((resolve, reject) => {
-    const event = buildCustomEvent<ResultContextEventHandler>(
+export function resultContext<T extends Result | FoldedResult = Result>(
+  element: Element
+) {
+  return new Promise<T>((resolve, reject) => {
+    const event = buildCustomEvent<ResultContextEventHandler<T>>(
       resultContextEventName,
-      (result: FoldedResult | Result) => {
+      (result: T) => {
         return resolve(result);
       }
     );
@@ -96,7 +100,7 @@ export const resultContext = (element: Element) =>
       reject(new MissingResultParentError(element.nodeName.toLowerCase()));
     }
   });
-
+}
 function isFolded(result: Result | FoldedResult): result is FoldedResult {
   return 'children' in result;
 }
