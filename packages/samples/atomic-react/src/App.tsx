@@ -1,3 +1,6 @@
+import React, {FunctionComponent} from 'react';
+import ReactDOM from 'react-dom';
+
 import {
   AtomicBreadbox,
   AtomicCategoryFacet,
@@ -42,9 +45,8 @@ import {
   buildSearchEngine,
   Result,
 } from '@coveo/atomic-react';
-import './AtomicReactPage.css';
 
-export function AtomicReactPage() {
+const App: FunctionComponent = () => {
   const engine = buildSearchEngine({
     configuration: {
       accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
@@ -136,7 +138,7 @@ export function AtomicReactPage() {
       </div>
     </AtomicSearchInterface>
   );
-}
+};
 
 function MyTemplate(result: Result) {
   return (
@@ -193,3 +195,4 @@ function MyTemplate(result: Result) {
     </>
   );
 }
+ReactDOM.hydrate(<App />, document.getElementById('root'));

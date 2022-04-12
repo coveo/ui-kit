@@ -50,11 +50,6 @@ function App(props: SearchPageProps) {
               Analytics hook (Google Tag Manager)
             </NavLink>
           </button>
-          <button>
-            <NavLink to="/atomic-react" activeStyle={activeNavLink}>
-              Atomic React
-            </NavLink>
-          </button>
         </nav>
         <Switch>
           <Route path="/recommendation">
@@ -74,9 +69,6 @@ function App(props: SearchPageProps) {
           </Route>
           <Route path="/analyticshooks">
             <AnalyticsHook />
-          </Route>
-          <Route path="/atomic-react">
-            <AtomicReactPage />
           </Route>
           <Route path="/search-page">
             <SearchPage {...props} />

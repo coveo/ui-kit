@@ -2,7 +2,6 @@
   "name": "headless-react",
   "version": "0.51.22",
   "dependencies": {
-    "@coveo/atomic-react": "1.0.2",
     "@coveo/auth": "^1.1.11",
     "@coveo/headless": "1.58.0",
     "@testing-library/jest-dom": "5.16.2",
@@ -34,10 +33,7 @@
     "test": "react-scripts test --env=./jest.setup.js",
     "eject": "react-scripts eject",
     "ssr:build": "npm run build && npm run build:server",
-    "ssr:start": "node ./build/server/server/server.js",
-    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang",
-    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/headless-react/node_modules/react/",
-    "cypress:open": "cypress open"
+    "ssr:start": "node ./build/server/server/server.js"
   },
   "browserslist": {
     "production": [
@@ -52,14 +48,6 @@
     ]
   },
   "devDependencies": {
-    "cypress": "9.3.1",
-    "eslint-plugin-cypress": "2.12.1",
-    "ncp": "2.0.0",
     "patch-package": "6.4.7"
-  },
-  "jest": {
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(@coveo/atomic-react)/)"
-    ]
   }
 }

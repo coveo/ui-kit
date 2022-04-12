@@ -1,3 +1,6 @@
 {
+  "compilerOptions": {
+      "jsx": "react"
+  },
   "extends": "./node_modules/gts/tsconfig-google.json"
 }
