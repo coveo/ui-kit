@@ -29,7 +29,7 @@ import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
  */
 @Component({
   tag: 'atomic-folded-result-list',
-  styleUrl: 'atomic-folded-result-list.pcss',
+  styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
 export class AtomicFoldedResultList implements InitializableComponent {

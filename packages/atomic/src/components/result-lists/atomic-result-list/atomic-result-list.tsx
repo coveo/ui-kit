@@ -38,7 +38,7 @@ import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.pcss',
+  styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
 export class AtomicResultList implements InitializableComponent {

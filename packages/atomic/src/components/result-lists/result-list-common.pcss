@@ -1,6 +1,77 @@
-@import './atomic-result-list-dividers.pcss';
-@import './atomic-result-list-cards.pcss';
-@import './atomic-result-table.pcss';
+@import './table-display.pcss';
+
+@define-mixin atomic-list-with-cards {
+  > * {
+    border: 1px solid var(--atomic-neutral);
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  atomic-result-placeholder {
+    border-color: transparent;
+  }
+}
+
+@define-mixin atomic-list-with-dividers {
+  &.density-comfortable {
+    > * {
+      &::before {
+        margin: 2rem 0;
+      }
+    }
+  }
+
+  &.density-normal {
+    > * {
+      &::before {
+        margin: 1.5rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      > * {
+        &::before {
+          margin: 1.75rem 0;
+        }
+      }
+    }
+  }
+
+  &.density-compact {
+    > * {
+      &::before {
+        margin: 1rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      > * {
+        &::before {
+          margin: 1.5rem 0;
+        }
+      }
+    }
+  }
+
+  > * {
+    &::before {
+      display: block;
+      content: ' ';
+      height: 1px;
+      background-color: var(--atomic-neutral);
+    }
+
+    &:first-of-type::before {
+      display: none;
+    }
+  }
+
+  atomic-result-placeholder {
+    &::before {
+      background-color: transparent;
+    }
+  }
+}
 
 a[part='result-list-grid-clickable'] {
   display: grid;
