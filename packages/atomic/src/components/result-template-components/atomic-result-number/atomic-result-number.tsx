@@ -1,6 +1,6 @@
 import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../../result-template-components/result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 import {
   Bindings,
   InitializeBindings,

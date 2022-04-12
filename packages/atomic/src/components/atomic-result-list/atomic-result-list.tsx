@@ -1,24 +1,12 @@
-import {
-  Component,
-  h,
-  Element,
-  State,
-  Prop,
-  Listen,
-  Host,
-  Method,
-} from '@stencil/core';
+import {Component, Element, State, Prop, Listen, Method} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
-  ResultTemplatesManager,
   buildResultList,
-  buildResultTemplatesManager,
   Result,
-  buildResultsPerPage,
   ResultsPerPageState,
   ResultsPerPage,
-  buildInteractiveResult,
+  buildResultsPerPage,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -30,12 +18,11 @@ import {
   ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-  getResultDisplayClasses,
 } from '../atomic-result/atomic-result-display-options';
-import {TemplateContent} from '../atomic-result-template/atomic-result-template';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
-import {once} from '../../utils/utils';
-import {updateBreakpoints} from '../../utils/replace-breakpoint';
+import {
+  ResultListCommon,
+  ResultRenderingFunction,
+} from '../result-lists/result-list-common';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -59,22 +46,11 @@ import {updateBreakpoints} from '../../utils/replace-breakpoint';
 })
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  private resultList!: ResultList;
+  public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  public listWrapperRef?: HTMLDivElement;
 
-  @Element() private host!: HTMLDivElement;
-
-  @BindStateToController('resultList')
-  @State()
-  private resultListState!: ResultListState;
-
-  @BindStateToController('resultsPerPage')
-  @State()
-  private resultsPerPageState!: ResultsPerPageState;
-
-  @State() public error!: Error;
-  @State() private templateHasError = false;
+  @Element() public host!: HTMLDivElement;
 
   /**
    * TODO: KIT-452 Infinite scroll feature
@@ -82,15 +58,31 @@ export class AtomicResultList implements InitializableComponent {
    * current results when the user scrolls down to the bottom of element
    */
   private enableInfiniteScroll = false;
+
+  @BindStateToController('resultList')
+  @State()
+  public resultListState!: ResultListState;
+
+  @BindStateToController('resultsPerPage')
+  @State()
+  public resultsPerPageState!: ResultsPerPageState;
+
+  @State() public ready = false;
+
+  @State() public error!: Error;
+  @State() public templateHasError = false;
+
+  private resultListCommon!: ResultListCommon;
+  private renderingFunction: ((res: Result) => HTMLElement) | null = null;
+
   /**
    * A list of non-default fields to include in the query results, separated by commas.
-   * The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
+  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -104,8 +96,6 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
 
-  private renderingFunction?: (result: Result) => HTMLElement = undefined;
-
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
@@ -118,295 +108,79 @@ export class AtomicResultList implements InitializableComponent {
     render: (result: Result) => HTMLElement
   ) {
     this.renderingFunction = render;
+    this.assignRenderingFunctionIfPossible();
   }
 
-  private listWrapperRef?: HTMLDivElement;
-
-  private get fields() {
-    if (this.fieldsToInclude.trim() === '') return [];
-    return this.fieldsToInclude.split(',').map((field) => field.trim());
+  @Listen('scroll', {target: 'window'})
+  handleInfiniteScroll() {
+    if (
+      this.enableInfiniteScroll &&
+      this.resultListCommon.scrollHasReachedEndOfList
+    ) {
+      this.resultList.fetchMoreResults();
+    }
   }
 
-  private get defaultFieldsToInclude() {
-    return [
-      'date',
-      'author',
-      'source',
-      'language',
-      'filetype',
-      'parents',
-      'ec_price',
-      'ec_name',
-      'ec_description',
-      'ec_brand',
-      'ec_category',
-      'ec_item_group_id',
-      'ec_shortdesc',
-      'ec_thumbnails',
-      'ec_images',
-      'ec_promo_price',
-      'ec_in_stock',
-      'ec_cogs',
-      'ec_rating',
-    ];
-  }
-
-  public initialize() {
+  public async initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
       console.warn(
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
-    this.resultTemplatesManager = buildResultTemplatesManager(
-      this.bindings.engine
-    );
-    this.resultList = buildResultList(this.bindings.engine, {
-      options: {
-        fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
+    this.resultListCommon = new ResultListCommon({
+      host: this.host,
+      bindings: this.bindings,
+      fieldsToInclude: this.fieldsToInclude,
+      templateElements: this.host.querySelectorAll('atomic-result-template'),
+      onReady: () => {
+        this.ready = true;
+        this.assignRenderingFunctionIfPossible();
+      },
+      onError: () => {
+        this.templateHasError = true;
       },
     });
+
+    this.resultList = buildResultList(
+      this.bindings.engine,
+      this.resultListCommon.resultListControllerProps
+    );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.registerDefaultResultTemplates();
-    this.registerChildrenResultTemplates();
   }
 
-  private registerDefaultResultTemplates() {
-    const content = document.createDocumentFragment();
-    const linkEl = document.createElement('atomic-result-link');
-    content.appendChild(linkEl);
-    this.resultTemplatesManager.registerTemplates({
-      content,
-      conditions: [],
-    });
-  }
-
-  private registerChildrenResultTemplates() {
-    this.host
-      .querySelectorAll('atomic-result-template')
-      .forEach(async (resultTemplateElement) => {
-        const template = await resultTemplateElement.getTemplate();
-        if (!template) {
-          this.templateHasError = true;
-          return;
-        }
-        this.resultTemplatesManager.registerTemplates(template);
-      });
-  }
-
-  private getTemplate(result: Result): TemplateContent {
-    return this.resultTemplatesManager.selectTemplate(result)!;
-  }
-
-  private getId(result: Result) {
-    return result.uniqueId + this.resultListState.searchResponseId;
-  }
-
-  private buildListPlaceholders() {
-    return Array.from(
-      {length: this.resultsPerPageState.numberOfResults},
-      (_, i) => (
-        <atomic-result-placeholder
-          key={`placeholder-${i}`}
-          display={this.display}
-          density={this.density}
-          imageSize={this.imageSize ?? this.image}
-        ></atomic-result-placeholder>
-      )
-    );
-  }
-
-  private buildListResults() {
-    return this.resultListState.results.map((result) => {
-      const content = this.getContentOfResultTemplate(result);
-
-      const atomicResult = (
-        <atomic-result
-          key={this.getId(result)}
-          result={result}
-          engine={this.bindings.engine}
-          display={this.display}
-          density={this.density}
-          imageSize={this.imageSize ?? this.image}
-          content={content}
-        ></atomic-result>
-      );
-
-      return this.display === 'grid' ? (
-        <LinkWithResultAnalytics
-          part="result-list-grid-clickable"
-          interactiveResult={buildInteractiveResult(this.bindings.engine, {
-            options: {result},
-          })}
-          href={result.clickUri}
-          target="_self"
-        >
-          {atomicResult}
-        </LinkWithResultAnalytics>
-      ) : (
-        atomicResult
-      );
-    });
-  }
-
-  private buildTablePlaceholder() {
-    return (
-      <atomic-result-table-placeholder
-        density={this.density}
-        imageSize={this.imageSize ?? this.image}
-        rows={this.resultsPerPageState.numberOfResults}
-      ></atomic-result-table-placeholder>
-    );
-  }
-
-  private buildTable() {
-    const fieldColumns = Array.from(
-      this.getContentOfResultTemplate(
-        this.resultListState.results[0]
-      ).querySelectorAll('atomic-table-element')
-    );
-
-    if (fieldColumns.length === 0) {
-      this.bindings.engine.logger.error(
-        'atomic-table-element elements missing in the result template to display columns.',
-        this.host
-      );
-    }
-
-    return (
-      <table class={`list-root ${this.classes}`} part="result-table">
-        <thead part="result-table-heading">
-          <tr part="result-table-heading-row">
-            {fieldColumns.map((column) => (
-              <th part="result-table-heading-cell">
-                <atomic-text
-                  value={column.getAttribute('label')!}
-                ></atomic-text>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody part="result-table-body">
-          {this.resultListState.results.map((result, rowIndex) => (
-            <tr
-              key={this.getId(result)}
-              part={
-                'result-table-row ' +
-                (rowIndex % 2 === 1
-                  ? 'result-table-row-even'
-                  : 'result-table-row-odd') /* Offset by 1 since the index starts at 0 */
-              }
-            >
-              {fieldColumns.map((column) => {
-                return (
-                  <td
-                    key={column.getAttribute('label')! + this.getId(result)}
-                    part="result-table-cell"
-                  >
-                    <atomic-result
-                      engine={this.bindings.engine}
-                      result={result}
-                      display={this.display}
-                      density={this.density}
-                      image-size={this.imageSize ?? this.image}
-                      content={column}
-                    ></atomic-result>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  }
-
-  private getContentOfResultTemplate(
+  public getContentOfResultTemplate(
     result: Result
   ): HTMLElement | DocumentFragment {
-    return this.renderingFunction
-      ? this.renderingFunction(result)
-      : this.getTemplate(result);
-  }
-
-  private buildList() {
-    return (
-      <div class={`list-root ${this.classes}`} part="result-list">
-        {this.buildListPlaceholders()}
-        {this.resultListState.results.length ? this.buildListResults() : null}
-      </div>
-    );
-  }
-
-  private buildResultRoot() {
-    if (this.display === 'table') {
-      return [
-        this.buildTablePlaceholder(),
-        this.resultListState.results.length ? this.buildTable() : null,
-      ];
-    }
-
-    return this.buildList();
-  }
-
-  private buildResultWrapper() {
-    return (
-      <div
-        class={`list-wrapper placeholder ${this.classes}`}
-        ref={(el) => (this.listWrapperRef = el as HTMLDivElement)}
-      >
-        {this.buildResultRoot()}
-      </div>
-    );
-  }
-
-  private get classes() {
-    const classes = getResultDisplayClasses(
-      this.display,
-      this.density,
-      this.imageSize ?? this.image
-    );
-    if (
-      this.resultListState.firstSearchExecuted &&
-      this.resultList.state.isLoading
-    ) {
-      classes.push('loading');
-    }
-    return classes.join(' ');
-  }
-
-  @Listen('scroll', {target: 'window'})
-  handleInfiniteScroll() {
-    if (!this.enableInfiniteScroll) {
-      return;
-    }
-
-    const hasReachedEndOfElement =
-      window.innerHeight + window.scrollY >= this.host.offsetHeight;
-
-    if (hasReachedEndOfElement) {
-      this.resultList.fetchMoreResults();
-    }
+    return this.resultListCommon.getContentOfResultTemplate(result);
   }
 
   public componentDidRender() {
-    if (this.resultListState.firstSearchExecuted) {
-      this.listWrapperRef?.classList.remove('placeholder');
-    }
+    this.resultListCommon.componentDidRender(
+      this.resultListState.firstSearchExecuted,
+      this.listWrapperRef
+    );
   }
 
-  private updateBreakpoints = once(() => updateBreakpoints(this.host));
-
   public render() {
-    this.updateBreakpoints();
-    if (this.resultListState.hasError) {
-      return;
-    }
+    return this.resultListCommon.renderList({
+      host: this.host,
+      display: this.display,
+      density: this.density,
+      imageSize: this.imageSize,
+      templateHasError: this.templateHasError,
+      resultListState: this.resultListState,
+      resultsPerPageState: this.resultsPerPageState,
+      setListWrapperRef: (el) => {
+        this.listWrapperRef = el as HTMLDivElement;
+      },
+      getContentOfResultTemplate: this.getContentOfResultTemplate,
+    });
+  }
 
-    return (
-      <Host>
-        {this.templateHasError && <slot></slot>}
-        {this.buildResultWrapper()}
-      </Host>
-    );
+  private assignRenderingFunctionIfPossible() {
+    if (this.resultListCommon && this.renderingFunction) {
+      this.resultListCommon.renderingFunction = this
+        .renderingFunction as ResultRenderingFunction;
+    }
   }
 }

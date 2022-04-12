@@ -1,0 +1,8 @@
+:root {
+  --atomic-primary: orange;
+  --atomic-primary-light: magenta;
+}
+
+body {
+  margin: 0;
+}

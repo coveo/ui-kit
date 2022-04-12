@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -50,6 +50,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @State()
   public smartSnippetState!: SmartSnippetState;
   public error!: Error;
+  @Element() public host!: HTMLElement;
   private id = randomID();
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
 
@@ -57,6 +58,19 @@ export class AtomicSmartSnippet implements InitializableComponent {
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
    *
    * We recommend setting this property in order to improve accessibility.
+   *
+   * You can style the snippet by inserting a template element like this:
+   * ```html
+   * <atomic-smart-snippet>
+   *   <template>
+   *     <style>
+   *       b {
+   *         color: blue;
+   *       }
+   *     </style>
+   *   </template>
+   * </atomic-smart-snippet>
+   * ```
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
@@ -68,6 +82,19 @@ export class AtomicSmartSnippet implements InitializableComponent {
    * When the answer is partly hidden, how much of its height (in pixels) should be visible.
    */
   @Prop({reflect: true}) collapsedHeight = 180;
+  /**
+   * Sets the style of the snippet.
+   *
+   * Example:
+   * ```ts
+   * smartSnippet.snippetStyle = `
+   *   b {
+   *     color: blue;
+   *   }
+   * `;
+   * ```
+   */
+  @Prop({reflect: true}) snippetStyle?: string;
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
@@ -78,7 +105,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  public get source() {
+  private get source() {
     if (!this.smartSnippetState.answerFound) {
       return null;
     }
@@ -91,7 +118,17 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return linkedDocument ?? null;
   }
 
-  public renderQuestion() {
+  private get style() {
+    const styleTag = this.host
+      .querySelector('template')
+      ?.content.querySelector('style');
+    if (!styleTag) {
+      return this.snippetStyle;
+    }
+    return styleTag.innerHTML;
+  }
+
+  private renderQuestion() {
     return (
       <Heading
         level={this.headingLevel ? this.headingLevel + 1 : 0}
@@ -103,18 +140,19 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  public renderContent() {
+  private renderContent() {
     return (
       <atomic-smart-snippet-expandable-answer
         exportparts="answer,show-more-button,show-less-button,truncated-answer"
         part="body"
         maximumHeight={this.maximumHeight}
         collapsedHeight={this.collapsedHeight}
+        snippetStyle={this.style}
       ></atomic-smart-snippet-expandable-answer>
     );
   }
 
-  public renderSource() {
+  private renderSource() {
     const source = this.source;
     if (!source) {
       return [];
@@ -148,7 +186,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  public renderFeedbackBanner() {
+  private renderFeedbackBanner() {
     return (
       <SmartSnippetFeedbackBanner
         i18n={this.bindings.i18n}
