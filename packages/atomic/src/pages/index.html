@@ -143,6 +143,7 @@
           <atomic-facet-manager>
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
+            <atomic-facet field="source" label="Source"></atomic-facet>
             <atomic-facet field="author" label="Authors"></atomic-facet>
             <atomic-facet field="language" label="Language"></atomic-facet>
             <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
@@ -355,16 +356,14 @@
                   </atomic-table-element>
                   <atomic-result-section-children>
                     <atomic-result-children>
+                      <!-- CHILD -->
                       <atomic-result-children-template>
+                        <!-- CHILD TEMPLATE -->
                         <template>
                           <atomic-result-link></atomic-result-link>
-                          <atomic-result-children>
-                            <atomic-result-children-template>
-                              <template>
-                                <atomic-result-link></atomic-result-link>
-                              </template>
-                            </atomic-result-children-template>
-                          </atomic-result-children>
+                          <div style="padding-left: 15px">
+                            <atomic-result-children inherit-templates> <!-- GRANDCHILD --> </atomic-result-children>
+                          </div>
                         </template>
                       </atomic-result-children-template>
                     </atomic-result-children>
