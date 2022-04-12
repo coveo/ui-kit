@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "npm run copy:assets && webpack",
-    "dev": "npm run copy:assets && npm run link:atomic-react && webpack serve --open",
+    "dev": "npm run copy:assets && npm run link:atomic-react && webpack serve",
     "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang public/assets && ncp node_modules/@coveo/atomic/dist/atomic/themes public/themes",
     "link:atomic-react": "cd ../../atomic-react && npm link ../samples/atomic-react/node_modules/react/",
     "cypress:open": "cypress open"
