@@ -526,6 +526,10 @@ export namespace Components {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates": boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -1944,6 +1948,10 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates"?: boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
