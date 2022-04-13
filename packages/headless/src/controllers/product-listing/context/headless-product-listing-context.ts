@@ -1,13 +1,13 @@
 import {
   ContextPayload,
   ContextValue,
-} from '../../features/context/context-state';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+} from '../../../features/context/context-state';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 import {
   buildCoreContext,
   Context,
   ContextState,
-} from '../core/context/headless-core-context';
+} from '../../core/context/headless-core-context';
 
 export type {Context, ContextState, ContextPayload, ContextValue};
 
@@ -17,7 +17,7 @@ export type {Context, ContextState, ContextPayload, ContextValue};
  * @param engine - The headless engine.
  * @returns A `Context` controller instance.
  */
-export function buildContext(engine: SearchEngine): Context {
+export function buildContext(engine: ProductListingEngine): Context {
   const context = buildCoreContext(engine);
 
   return {

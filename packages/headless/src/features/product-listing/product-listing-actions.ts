@@ -3,6 +3,7 @@ import {isErrorResponse} from '../../api/search/search-api-client';
 import {
   CategoryFacetSection,
   ConfigurationSection,
+  ContextSection,
   DateFacetSection,
   FacetOptionsSection,
   FacetOrderSection,
@@ -76,7 +77,8 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
       CategoryFacetSection &
       DateFacetSection &
       FacetOptionsSection &
-      FacetOrderSection
+      FacetOrderSection &
+      ContextSection
   >;
 
 export interface FetchProductListingThunkReturn {
@@ -150,6 +152,9 @@ export const buildProductListingRequest = async (
     }),
     ...((state.sort?.by || SortBy.Relevance) !== SortBy.Relevance && {
       sort: state.sort,
+    }),
+    ...(state.context && {
+      userContext: state.context.contextValues,
     }),
   };
 };
