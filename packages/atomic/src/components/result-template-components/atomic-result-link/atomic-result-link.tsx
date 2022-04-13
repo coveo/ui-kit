@@ -11,10 +11,13 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LinkWithResultAnalytics} from '../../result-link/result-link';
+import {isUndefined} from '@coveo/bueno';
+import {buildStringTemplateFromResult} from '../../../utils/result-utils';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
  * @slot default - Allow to display alternative content inside the link
+ * @slot attributes - Allows to pass attributes down to the link element, overriding other attributes, to be used exclusively with "a" tags.
  */
 @Component({
   tag: 'atomic-result-link',
@@ -41,6 +44,18 @@ export class AtomicResultLink implements InitializableComponent {
    */
   @Prop({reflect: true}) target = '_self';
 
+  /**
+   * Specifies a template literal from which to generate the `href` attribute value (see
+   * [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).
+   *
+   * The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+   *
+   * @example
+   * The following markup generates an `href` value such as `http://uri.com?id=itemTitle`:
+   * <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+   */
+  @Prop({reflect: true}) hrefTemplate?: string;
+
   private interactiveResult!: InteractiveResult;
   private hasSlot!: boolean;
 
@@ -55,10 +70,18 @@ export class AtomicResultLink implements InitializableComponent {
   }
 
   public render() {
+    const href = isUndefined(this.hrefTemplate)
+      ? this.result.clickUri
+      : buildStringTemplateFromResult(
+          this.hrefTemplate,
+          this.result,
+          this.bindings
+        );
+
     return (
       <LinkWithResultAnalytics
         interactiveResult={this.interactiveResult}
-        href={this.result.clickUri}
+        href={href}
         target={this.target}
       >
         {this.hasSlot ? (
