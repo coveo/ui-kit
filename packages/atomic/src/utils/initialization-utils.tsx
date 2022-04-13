@@ -139,10 +139,11 @@ export function InitializeBindings() {
               // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
               // In this case, we have to manually trigger it.
               await (this.initialize ? this.initialize() : forceUpdate(this));
-              resolve(componentWillLoad && componentWillLoad.call(this));
             } catch (e) {
               this.error = e as Error;
             }
+            await (componentWillLoad && componentWillLoad.call(this));
+            resolve();
           }
         );
         const canceled = element.dispatchEvent(event);
@@ -150,6 +151,7 @@ export function InitializeBindings() {
           this.error = new MissingInterfaceParentError(
             element.nodeName.toLowerCase()
           );
+          resolve();
         }
         resolve();
       });

@@ -63,8 +63,6 @@ export class AtomicResultList implements InitializableComponent {
   @State()
   public resultsPerPageState!: ResultsPerPageState;
 
-  @State() public ready = false;
-
   @State() public error!: Error;
   @State() public templateHasError = false;
 
@@ -129,7 +127,6 @@ export class AtomicResultList implements InitializableComponent {
       fieldsToInclude: this.fieldsToInclude,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
-        this.ready = true;
         this.assignRenderingFunctionIfPossible();
       },
       onError: () => {
