@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.0.0",
     "css-loader": "^6.7.1",
     "cypress": "9.3",
+    "ncp": "^2.0.0",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.2.8",
     "typescript": "^4.6.3",
@@ -22,8 +23,8 @@
     "webpack-dev-server": "^4.8.1"
   },
   "scripts": {
-    "build": "npm run link:atomic-react && npm run copy:assets && webpack",
-    "dev": "npm run build && webpack serve",
+    "build": "tsc --noEmit",
+    "dev": "npm run copy:assets && npm run link:atomic-react && webpack serve",
     "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang public/assets && ncp node_modules/@coveo/atomic/dist/atomic/themes public/themes",
     "link:atomic-react": "cd ../../atomic-react && npm link ../samples/atomic-react/node_modules/react/",
     "cypress:open": "cypress open"
