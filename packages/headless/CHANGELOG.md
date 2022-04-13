@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.59.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.58.0...@coveo/headless@1.59.0) (2022-04-13)
+
+
+### Features
+
+* **commerce:** add a context controller for the product listings engine ([#1917](https://github.com/coveo/ui-kit/issues/1917)) ([0c4083d](https://github.com/coveo/ui-kit/commit/0c4083da66fd05e8ee6f795b9a3978499b00accf))
+
+
+
+
+
 # [1.58.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.57.0...@coveo/headless@1.58.0) (2022-04-07)
 
 

@@ -1,14 +1,17 @@
 import {FoldedResult, Result, ResultTemplatesManager} from '@coveo/headless';
 import {Component, Element, State, h, Host, Listen, Prop} from '@stencil/core';
-import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
-import {elementHasAncestorTag} from '../../utils/utils';
+import {
+  Bindings,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {elementHasAncestorTag} from '../../../utils/utils';
 import {
   ResultContext,
   ChildTemplatesContext,
   ChildTemplatesContextEvent,
-} from '../result-template-components/result-template-decorators';
-import {ResultListCommon} from '../result-lists/result-list-common';
-import {TemplateContent} from '../result-templates/result-template-common';
+} from '../../result-template-components/result-template-decorators';
+import {ResultListCommon} from '../result-list-common';
+import {TemplateContent} from '../../result-templates/result-template-common';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';

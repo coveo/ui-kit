@@ -1,66 +1,48 @@
 import {Component, Element, State, Prop, Listen, Method} from '@stencil/core';
 import {
-  ResultList,
-  ResultListState,
-  buildResultList,
-  Result,
   ResultsPerPageState,
   ResultsPerPage,
+  buildFoldedResultList,
+  FoldedResultList,
+  FoldedResult,
+  FoldedResultListState,
   buildResultsPerPage,
+  ResultListProps,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {
-  ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
-import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../result-lists/result-list-common';
+} from '../../atomic-result/atomic-result-display-options';
+import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 
 /**
- * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+ * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
  *
+ * @internal
  * @part result-list - The element containing every result of a result list
- * @part result-list-grid-clickable - The clickable result when results are displayed as a grid
- * @part result-table - The element of the result table containing a heading and a body
- * @part result-table-heading - The element containing the row of cells in the result table's heading
- * @part result-table-heading-row - The element containing cells of the result table's heading
- * @part result-table-heading-cell - The element representing a cell of the result table's heading
- * @part result-table-body - The element containing the rows of the result table's body
- * @part result-table-row - The element containing the cells of a row in the result table's body
- * @part result-table-row-odd - The element containing the cells of an odd row in the result table's body
- * @part result-table-row-even - The element containing the cells of an even row in the result table's body
- * @part result-table-cell - The element representing a cell of the result table's body
  */
 @Component({
-  tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.pcss',
+  tag: 'atomic-folded-result-list',
+  styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicResultList implements InitializableComponent {
+export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public resultList!: ResultList;
+  public resultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   public listWrapperRef?: HTMLDivElement;
 
   @Element() public host!: HTMLDivElement;
 
-  /**
-   * Whether to automatically retrieve an additional page of results and append it to the
-   * current results when the user scrolls down to the bottom of element
-   */
-  private enableInfiniteScroll = false;
-
   @BindStateToController('resultList')
   @State()
-  public resultListState!: ResultListState;
+  public resultListState!: FoldedResultListState;
 
   @BindStateToController('resultsPerPage')
   @State()
@@ -71,17 +53,17 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
-  private resultListCommon!: ResultListCommon;
-  private renderingFunction: ((res: Result) => HTMLElement) | null = null;
+  public resultListCommon!: ResultListCommon;
+  /**
+   * Whether to automatically retrieve an additional page of results and append it to the
+   * current results when the user scrolls down to the bottom of element
+   */
+  private enableInfiniteScroll = false;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
-  /**
-   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-   */
-  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
@@ -89,11 +71,25 @@ export class AtomicResultList implements InitializableComponent {
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
+  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
   /**
-   * @deprecated use `imageSize` instead.
+   * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+   *
+   * @defaultValue `foldingcollection`
    */
-  @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) public collectionField?: string;
+  /**
+   * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+   *
+   * @defaultValue `foldingparent`
+   */
+  @Prop({reflect: true}) public parentField?: string;
+  /**
+   * The name of the field that uniquely identifies a result within a collection.
+   *
+   * @defaultValue `foldingchild`
+   */
+  @Prop({reflect: true}) public childField?: string;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -104,10 +100,9 @@ export class AtomicResultList implements InitializableComponent {
    * @param render
    */
   @Method() public async setRenderFunction(
-    render: (result: Result) => HTMLElement
+    render: (result: FoldedResult) => HTMLElement
   ) {
-    this.renderingFunction = render;
-    this.assignRenderingFunctionIfPossible();
+    this.resultListCommon.renderingFunction = render as ResultRenderingFunction;
   }
 
   @Listen('scroll', {target: 'window'})
@@ -121,11 +116,6 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public async initialize() {
-    if (this.host.innerHTML.includes('<atomic-result-children')) {
-      console.warn(
-        'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
-      );
-    }
     this.resultListCommon = new ResultListCommon({
       host: this.host,
       bindings: this.bindings,
@@ -133,24 +123,37 @@ export class AtomicResultList implements InitializableComponent {
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
-        this.assignRenderingFunctionIfPossible();
       },
       onError: () => {
         this.templateHasError = true;
       },
     });
 
-    this.resultList = buildResultList(
-      this.bindings.engine,
+    this.resultList = this.initFolding(
       this.resultListCommon.resultListControllerProps
     );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
   }
 
+  private initFolding(
+    props: ResultListProps = {options: {}}
+  ): FoldedResultList {
+    return buildFoldedResultList(this.bindings.engine, {
+      options: {
+        ...props.options,
+        folding: {
+          collectionField: this.collectionField,
+          parentField: this.parentField,
+          childField: this.childField,
+        },
+      },
+    });
+  }
+
   public getContentOfResultTemplate(
-    result: Result
+    foldedResult: FoldedResult
   ): HTMLElement | DocumentFragment {
-    return this.resultListCommon.getContentOfResultTemplate(result);
+    return this.resultListCommon.getContentOfResultTemplate(foldedResult);
   }
 
   public componentDidRender() {
@@ -163,7 +166,6 @@ export class AtomicResultList implements InitializableComponent {
   public render() {
     return this.resultListCommon.renderList({
       host: this.host,
-      display: this.display,
       density: this.density,
       imageSize: this.imageSize,
       templateHasError: this.templateHasError,
@@ -174,12 +176,5 @@ export class AtomicResultList implements InitializableComponent {
       },
       getContentOfResultTemplate: this.getContentOfResultTemplate,
     });
-  }
-
-  private assignRenderingFunctionIfPossible() {
-    if (this.resultListCommon && this.renderingFunction) {
-      this.resultListCommon.renderingFunction = this
-        .renderingFunction as ResultRenderingFunction;
-    }
   }
 }
