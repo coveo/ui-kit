@@ -18,25 +18,5 @@ export type {Context, ContextState, ContextPayload, ContextValue};
  * @returns A `Context` controller instance.
  */
 export function buildContext(engine: ProductListingEngine): Context {
-  const context = buildCoreContext(engine);
-
-  return {
-    ...context,
-
-    get state() {
-      return context.state;
-    },
-
-    set(contextPayload: ContextPayload) {
-      context.set(contextPayload);
-    },
-
-    add(contextKey: string, contextValue: ContextValue) {
-      context.add(contextKey, contextValue);
-    },
-
-    remove(key: string) {
-      context.remove(key);
-    },
-  };
+  return buildCoreContext(engine);
 }
