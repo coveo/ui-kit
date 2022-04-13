@@ -58,7 +58,7 @@ export function buildStringTemplateFromResult(
 
     if (!newValue) {
       bindings.engine.logger.warn(
-        `${key} used in the href template is undefined for this result: ${result.title}`
+        `${key} used in the href template is undefined for this result: ${result.uniqueId}`
       );
       return '';
     }

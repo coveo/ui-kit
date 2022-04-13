@@ -21,24 +21,19 @@ describe('buildStringTemplateFromResult', () => {
   });
 
   it('should create string templates', () => {
-    expect(buildStringTemplateFromResult('abc', result, bindings)).toBe('abc');
-    expect(buildStringTemplateFromResult('${title}bar', result, bindings)).toBe(
-      'foobar'
-    );
-    expect(
-      buildStringTemplateFromResult('${raw.source}', result, bindings)
-    ).toBe('the source');
-    expect(buildStringTemplateFromResult('${uri}/abc', result, bindings)).toBe(
-      'http://uri.foo.com/abc'
-    );
+    const templates = [
+      {in: 'abc', out: 'abc'},
+      {in: '${title}bar', out: 'foobar'},
+      {in: '${raw.source}', out: 'the source'},
+      {in: '${uri}/abc', out: 'http://uri.foo.com/abc'},
+      {in: '${window.location.hostname}', out: 'testing.stenciljs.com'},
+    ];
 
-    expect(
-      buildStringTemplateFromResult(
-        '${window.location.hostname}',
-        result,
-        bindings
+    templates.forEach((template) =>
+      expect(buildStringTemplateFromResult(template.in, result, bindings)).toBe(
+        template.out
       )
-    ).toBe('testing.stenciljs.com');
+    );
   });
 
   it('should snip out objects that cannot be evaluated properly and log a warning', () => {
