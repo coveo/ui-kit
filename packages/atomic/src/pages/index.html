@@ -60,6 +60,14 @@
       } */
 
       /* Example on how to customize the color facet */
+      atomic-color-facet::part(default-color-value) {
+        background-image: url('/build/assets/document.svg');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: rgb(144, 144, 144);
+      }
+
       atomic-color-facet::part(value-dynamicscrmitem) {
         background-image: url('/build/assets/email.svg');
         background-position: center;
@@ -97,7 +105,7 @@
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
-        background-image: rgb(101, 202, 228);
+        background-color: rgb(101, 202, 228);
       }
 
       atomic-color-facet::part(value-html) {
@@ -135,6 +143,7 @@
           <atomic-facet-manager>
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
+            <atomic-facet field="source" label="Source"></atomic-facet>
             <atomic-facet field="author" label="Authors"></atomic-facet>
             <atomic-facet field="language" label="Language"></atomic-facet>
             <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
@@ -347,20 +356,15 @@
                   </atomic-table-element>
                   <atomic-result-section-children>
                     <atomic-result-children>
+                      <!-- CHILD -->
                       <atomic-result-children-template>
+                        <!-- CHILD TEMPLATE -->
                         <template>
                           <atomic-result-link></atomic-result-link>
-                          <atomic-result-children>
-                            <atomic-result-children-template>
-                              <template>
-                                <atomic-result-link></atomic-result-link>
-                              </template>
-                            </atomic-result-children-template>
-                          </atomic-result-children>
+                          <div style="padding-left: 15px">
+                            <atomic-result-children inherit-templates> <!-- GRANDCHILD --> </atomic-result-children>
+                          </div>
                         </template>
-                      </atomic-result-children-template>
-                      <atomic-result-children-template>
-                        <template> <p>testing</p> </template>
                       </atomic-result-children-template>
                     </atomic-result-children>
                   </atomic-result-section-children>

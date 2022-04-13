@@ -1,6 +1,7 @@
-import {FoldedResult, Result} from '@coveo/headless';
+import {FoldedResult, Result, ResultTemplatesManager} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
+import {TemplateContent} from '../result-templates/result-template-common';
 
 export class MissingResultParentError extends Error {
   constructor(elementName: string) {
@@ -67,8 +68,10 @@ export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   };
 }
 
-type ResultContextEventHandler = (result: FoldedResult | Result) => void;
-export type ResultContextEvent = CustomEvent<ResultContextEventHandler>;
+type ResultContextEventHandler<T = Result> = (result: T) => void;
+export type ResultContextEvent<T = Result> = CustomEvent<
+  ResultContextEventHandler<T>
+>;
 const resultContextEventName = 'atomic/resolveResult';
 
 /**
@@ -81,11 +84,13 @@ const resultContextEventName = 'atomic/resolveResult';
  * @param element The element that the event is dispatched to, which must be the child of a rendered "atomic-result".
  * @returns A promise that resolves on initialization of the parent "atomic-result" element, or rejects when there is no parent "atomic-result" element.
  */
-export const resultContext = (element: Element) =>
-  new Promise<FoldedResult | Result>((resolve, reject) => {
-    const event = buildCustomEvent<ResultContextEventHandler>(
+export function resultContext<T extends Result | FoldedResult = Result>(
+  element: Element
+) {
+  return new Promise<T>((resolve, reject) => {
+    const event = buildCustomEvent<ResultContextEventHandler<T>>(
       resultContextEventName,
-      (result: FoldedResult | Result) => {
+      (result: T) => {
         return resolve(result);
       }
     );
@@ -95,7 +100,47 @@ export const resultContext = (element: Element) =>
       reject(new MissingResultParentError(element.nodeName.toLowerCase()));
     }
   });
-
+}
 function isFolded(result: Result | FoldedResult): result is FoldedResult {
   return 'children' in result;
+}
+
+type ChildTemplatesContextEventHandler = (
+  result: ResultTemplatesManager<TemplateContent> | undefined
+) => void;
+export type ChildTemplatesContextEvent =
+  CustomEvent<ChildTemplatesContextEventHandler>;
+const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
+
+interface AtomicResultChildren {
+  resultListCommon?: {
+    resultTemplatesManager?: ResultTemplatesManager<TemplateContent>;
+  };
+}
+/**
+ * A [StencilJS property decorator](https://stenciljs.com/) to be used for children result templates.
+ * This allows the Stencil component to fetch children templates defined a level above.
+ */
+export function ChildTemplatesContext() {
+  return (component: ComponentInterface, resultVariable: string) => {
+    const {componentWillRender} = component;
+    component.componentWillRender = function () {
+      const element = getElement(this);
+      const event = buildCustomEvent(
+        childTemplatesContextEventName,
+        (result: ResultTemplatesManager<TemplateContent> | undefined) => {
+          const resultListManager = (this as AtomicResultChildren)
+            .resultListCommon?.resultTemplatesManager;
+          this[resultVariable] = resultListManager !== result ? result : null;
+        }
+      );
+
+      const canceled = element.dispatchEvent(event);
+      if (canceled) {
+        this[resultVariable] = null;
+        return;
+      }
+      return componentWillRender && componentWillRender.call(this);
+    };
+  };
 }

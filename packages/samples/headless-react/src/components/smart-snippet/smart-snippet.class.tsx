@@ -1,4 +1,4 @@
-import {Component, ContextType} from 'react';
+import {Component, ContextType, createRef} from 'react';
 import {
   buildSmartSnippet,
   SmartSnippet as HeadlessSmartSnippet,
@@ -13,6 +13,7 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
 
   private controller!: HeadlessSmartSnippet;
   private unsubscribe: Unsubscribe = () => {};
+  private detailedAnswerRef = createRef<HTMLTextAreaElement>();
 
   componentDidMount() {
     this.controller = buildSmartSnippet(this.context.engine!);
@@ -50,11 +51,76 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
       return null;
     }
 
-    const {answerFound, answer, question, liked, disliked, expanded} =
-      this.state;
+    const {
+      answerFound,
+      answer,
+      question,
+      liked,
+      disliked,
+      expanded,
+      feedbackModalOpen,
+    } = this.state;
 
     if (!answerFound) {
       return <div>Sorry, no answer has been found for this query.</div>;
+    }
+
+    if (feedbackModalOpen) {
+      return (
+        <div role="dialog">
+          <h1>What's wrong with this snippet?</h1>
+          <fieldset>
+            <legend>Give a simple answer</legend>
+            <ul>
+              <li>
+                <button
+                  onClick={() =>
+                    this.controller.sendFeedback('does_not_answer')
+                  }
+                >
+                  It does not answer my question
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() =>
+                    this.controller.sendFeedback('partially_answers')
+                  }
+                >
+                  It only partially answers my question
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() =>
+                    this.controller.sendFeedback('was_not_a_question')
+                  }
+                >
+                  I was not asking a question
+                </button>
+              </li>
+            </ul>
+          </fieldset>
+          OR
+          <fieldset>
+            <legend>Give a detailed answer</legend>
+            <textarea ref={this.detailedAnswerRef}></textarea>
+            <button
+              onClick={() =>
+                this.detailedAnswerRef.current &&
+                this.controller.sendDetailedFeedback(
+                  this.detailedAnswerRef.current.value
+                )
+              }
+            >
+              Send feedback
+            </button>
+          </fieldset>
+          <button onClick={() => this.controller.closeFeedbackModal()}>
+            Cancel
+          </button>
+        </div>
+      );
     }
 
     return (
@@ -90,6 +156,13 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
             >
               Thumbs down
             </button>
+            {disliked ? (
+              <button onClick={() => this.controller.openFeedbackModal()}>
+                Explain why
+              </button>
+            ) : (
+              []
+            )}
           </dd>
         </dl>
       </div>
