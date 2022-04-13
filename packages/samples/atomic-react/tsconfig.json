@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "lib": ["DOM"],
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "./public/dist",
     "types": ["cypress"],
     "jsx": "react"
   },

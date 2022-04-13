@@ -25,6 +25,9 @@ module.exports = {
   devServer: {
     static: './public',
     port: '3000',
+    devMiddleware: {
+      writeToDisk: true,
+    },
   },
-  mode: "development"
+  mode: 'development',
 };
