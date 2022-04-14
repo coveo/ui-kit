@@ -34,15 +34,15 @@ import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 })
 export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public resultList!: FoldedResultList;
+  public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   public listWrapperRef?: HTMLDivElement;
 
   @Element() public host!: HTMLDivElement;
 
-  @BindStateToController('resultList')
+  @BindStateToController('foldedResultList')
   @State()
-  public resultListState!: FoldedResultListState;
+  public foldedResultListState!: FoldedResultListState;
 
   @BindStateToController('resultsPerPage')
   @State()
@@ -111,7 +111,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       this.enableInfiniteScroll &&
       this.resultListCommon.scrollHasReachedEndOfList
     ) {
-      this.resultList.fetchMoreResults();
+      this.foldedResultList.fetchMoreResults();
     }
   }
 
@@ -129,7 +129,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       },
     });
 
-    this.resultList = this.initFolding(
+    this.foldedResultList = this.initFolding(
       this.resultListCommon.resultListControllerProps
     );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
@@ -158,7 +158,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   public componentDidRender() {
     this.resultListCommon.componentDidRender(
-      this.resultListState.firstSearchExecuted,
+      this.foldedResultListState.firstSearchExecuted,
       this.listWrapperRef
     );
   }
@@ -169,7 +169,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       density: this.density,
       imageSize: this.imageSize,
       templateHasError: this.templateHasError,
-      resultListState: this.resultListState,
+      resultListState: this.foldedResultListState,
       resultsPerPageState: this.resultsPerPageState,
       setListWrapperRef: (el) => {
         this.listWrapperRef = el as HTMLDivElement;
