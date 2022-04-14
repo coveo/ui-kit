@@ -8,6 +8,7 @@ import {
   FoldedResultListState,
   buildResultsPerPage,
   ResultListProps,
+  FoldedCollection,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -20,6 +21,7 @@ import {
   ResultDisplayImageSize,
 } from '../../atomic-result/atomic-result-display-options';
 import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
+import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -113,6 +115,20 @@ export class AtomicFoldedResultList implements InitializableComponent {
     ) {
       this.foldedResultList.fetchMoreResults();
     }
+  }
+
+  @Listen('atomic/resolveFoldedResultList')
+  resolveFoldedResultList(event: FoldedResultListStateContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.detail(this.foldedResultList);
+  }
+
+  @Listen('atomic/loadCollection')
+  loadCollection(event: CustomEvent<FoldedCollection>) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.foldedResultList.loadCollection(event.detail);
   }
 
   public async initialize() {
