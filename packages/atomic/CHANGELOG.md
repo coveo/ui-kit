@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.2...@coveo/atomic@1.45.0) (2022-04-14)
+
+
+### Features
+
+* **atomic:** add hrefTemplate prop to atomic-result-link ([#1918](https://github.com/coveo/ui-kit/issues/1918)) ([04f7c0c](https://github.com/coveo/ui-kit/commit/04f7c0cc808c525beaf61367a6dfcd7bf3d0c991))
+
+
+
+
+
 ## [1.44.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.1...@coveo/atomic@1.44.2) (2022-04-14)
 
 **Note:** Version bump only for package @coveo/atomic
