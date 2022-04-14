@@ -3,12 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Coveo Atomic</title>
+    <title>Coveo Atomic With Folding</title>
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
-    <script>
+    <script type="module">
+      import {loadAdvancedSearchQueryActions} from 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js';
+
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('atomic-search-interface');
@@ -19,103 +21,19 @@
           organizationId: 'searchuisamples',
         });
 
+        const engine = searchInterface.engine;
+
+        const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
+          aq: '@source=iNaturalistTaxons',
+        });
+
+        engine.dispatch(action);
+
         // Trigger a first search
         searchInterface.executeFirstSearch();
-
-        // Add/modify a translation
-        // searchInterface.i18n.addResourceBundle('en', 'translation', {
-        //   search: 'Make me feel lucky!'
-        // });
-
-        // Change the language of the interface dynamically
-        // searchInterface.language = 'fr';
-
-        // Interact with the engine
-        // searchInterface.engine.dispatch(...);
-
-        // Get all translated strings for a language/namespace
-        // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
-
-        // Add field value captions, using caption-[field]
-        // searchInterface.i18n.addResourceBundle('en', 'caption-author', {
-        //   'BBC News': 'The BBC',
-        //   amoreau: 'Alexandre Moreau',
-        // });
-
-        searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
-          '.html': 'html',
-        });
       })();
     </script>
     <style>
-      /* Example on how to customize CSS variables */
-      /* :root {
-        --atomic-primary: red;
-        --atomic-font-family: "Comic Sans MS", "Comic Sans", cursive;
-      } */
-
-      /* Example on how to customize result templates CSS parts */
-      /* atomic-result::part(result-link):hover {
-        color: orange;
-      } */
-
-      /* Example on how to customize the color facet */
-      atomic-color-facet::part(default-color-value) {
-        background-image: url('/build/assets/document.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(144, 144, 144);
-      }
-
-      atomic-color-facet::part(value-dynamicscrmitem) {
-        background-image: url('/build/assets/email.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(149, 174, 197);
-      }
-
-      atomic-color-facet::part(value-lithiumuser) {
-        background-image: url('/build/assets/folder.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(139, 154, 227);
-      }
-
-      atomic-color-facet::part(value-YouTubeVideo) {
-        background-image: url('build/assets/video.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(176, 112, 230);
-      }
-
-      atomic-color-facet::part(value-lithiummessage) {
-        background-image: url('build/assets/knowledge.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(236, 148, 237);
-      }
-
-      atomic-color-facet::part(value-lithiumthread) {
-        background-image: url('build/assets/post.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(101, 202, 228);
-      }
-
-      atomic-color-facet::part(value-html) {
-        background-image: url('build/assets/html.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: transparent;
-      }
-
       body {
         margin: 0;
       }
@@ -144,47 +62,7 @@
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
             <atomic-facet field="source" label="Source"></atomic-facet>
-            <atomic-facet field="author" label="Authors"></atomic-facet>
-            <atomic-facet field="language" label="Language"></atomic-facet>
             <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
-            <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
-            <atomic-numeric-facet
-              field="ytviewcount"
-              label="Youtube Views"
-              depends-on-filetype="YouTubeVideo"
-              with-input="integer"
-            ></atomic-numeric-facet>
-            <atomic-numeric-facet
-              field="ytlikecount"
-              label="Youtube Likes"
-              depends-on-filetype="YouTubeVideo"
-              display-values-as="link"
-            >
-              <atomic-numeric-range start="0" end="1000" label="Unpopular"></atomic-numeric-range>
-              <atomic-numeric-range start="1000" end="8000" label="Well liked"></atomic-numeric-range>
-              <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
-              <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
-            </atomic-numeric-facet>
-            <atomic-numeric-facet field="sncost" label="Cost">
-              <atomic-format-currency currency="CAD"></atomic-format-currency>
-            </atomic-numeric-facet>
-            <atomic-timeframe-facet label="Timeframe" with-date-picker>
-              <atomic-timeframe unit="hour"></atomic-timeframe>
-              <atomic-timeframe unit="day"></atomic-timeframe>
-              <atomic-timeframe unit="week"></atomic-timeframe>
-              <atomic-timeframe unit="month"></atomic-timeframe>
-              <atomic-timeframe unit="quarter"></atomic-timeframe>
-              <atomic-timeframe unit="year"></atomic-timeframe>
-              <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
-            </atomic-timeframe-facet>
-            <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet>
-            <atomic-rating-range-facet
-              facet-id="snrating_range"
-              field="snrating"
-              label="Rating Range"
-              number-of-intervals="5"
-            >
-            </atomic-rating-range-facet>
             <atomic-color-facet
               field="filetype"
               label="Files"
@@ -206,19 +84,7 @@
           </atomic-layout-section>
           <atomic-layout-section section="results">
             <atomic-smart-snippet></atomic-smart-snippet>
-            <atomic-result-list fields-to-include="snrating,sncost">
-              <atomic-result-template must-match-sourcetype="YouTube">
-                <template>
-                  <atomic-result-section-visual image-size="small">
-                    <img src="https://picsum.photos/350" class="thumbnail" />
-                  </atomic-result-section-visual>
-                  <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-                  <atomic-result-section-excerpt
-                    ><atomic-result-text field="excerpt"></atomic-result-text
-                  ></atomic-result-section-excerpt>
-                </template>
-              </atomic-result-template>
-
+            <atomic-folded-result-list fields-to-include="snrating,sncost">
               <atomic-result-template>
                 <template>
                   <style>
@@ -354,9 +220,23 @@
                   <atomic-table-element label="file-type">
                     <atomic-result-text field="filetype"></atomic-result-text>
                   </atomic-table-element>
+                  <atomic-result-section-children>
+                    <atomic-result-children>
+                      <!-- CHILD -->
+                      <atomic-result-children-template>
+                        <!-- CHILD TEMPLATE -->
+                        <template>
+                          <atomic-result-link></atomic-result-link>
+                          <div style="padding-left: 15px">
+                            <atomic-result-children inherit-templates> <!-- GRANDCHILD --> </atomic-result-children>
+                          </div>
+                        </template>
+                      </atomic-result-children-template>
+                    </atomic-result-children>
+                  </atomic-result-section-children>
                 </template>
               </atomic-result-template>
-            </atomic-result-list>
+            </atomic-folded-result-list>
             <atomic-query-error></atomic-query-error>
             <atomic-no-results></atomic-no-results>
           </atomic-layout-section>
