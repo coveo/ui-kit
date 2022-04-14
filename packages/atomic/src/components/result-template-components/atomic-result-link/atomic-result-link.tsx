@@ -17,7 +17,6 @@ import {buildStringTemplateFromResult} from '../../../utils/result-utils';
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
  * @slot default - Allow to display alternative content inside the link
- * @slot attributes - Allows to pass attributes down to the link element, overriding other attributes, to be used exclusively with "a" tags.
  */
 @Component({
   tag: 'atomic-result-link',
