@@ -9,10 +9,7 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {
-        buildRedirectionTrigger,
-        loadAdvancedSearchQueryActions,
-      } from 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js';
+      import {loadAdvancedSearchQueryActions} from 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js';
 
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -34,10 +31,6 @@
 
         // Trigger a first search
         searchInterface.executeFirstSearch();
-
-        searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
-          '.html': 'html',
-        });
       })();
     </script>
     <style>
