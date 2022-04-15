@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.2...@coveo/atomic@1.45.0) (2022-04-14)
+
+
+### Features
+
+* **atomic:** add hrefTemplate prop to atomic-result-link ([#1918](https://github.com/coveo/ui-kit/issues/1918)) ([04f7c0c](https://github.com/coveo/ui-kit/commit/04f7c0cc808c525beaf61367a6dfcd7bf3d0c991))
+
+
+
+
+
+## [1.44.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.1...@coveo/atomic@1.44.2) (2022-04-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.44.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.0...@coveo/atomic@1.44.1) (2022-04-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.1...@coveo/atomic@1.44.0) (2022-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** make resultContext function generic ([#1905](https://github.com/coveo/ui-kit/issues/1905)) ([f150717](https://github.com/coveo/ui-kit/commit/f150717a63c70373bee0e2326fd230390021cfb8))
+
+
+### Features
+
+* **atomic:** allow grandchild children to inherit templates from chi… ([#1902](https://github.com/coveo/ui-kit/issues/1902)) ([7a61b5f](https://github.com/coveo/ui-kit/commit/7a61b5f03ffaa3a336682cd7e7cda2b6a85a1e96))
+
+
+
+
+
+## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.0...@coveo/atomic@1.43.1) (2022-04-11)
+
+
+### Bug Fixes
+
+* **atomic:** fix set renderingFunction for atomic-react ([#1910](https://github.com/coveo/ui-kit/issues/1910)) ([c2a6630](https://github.com/coveo/ui-kit/commit/c2a66300f0b37ca9a486a5ae8b9c029420873bcc))
+
+
+
+
+
+# [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.4...@coveo/atomic@1.43.0) (2022-04-11)
+
+
+### Bug Fixes
+
+* **atomic:** fix atomic react rendering function ([#1909](https://github.com/coveo/ui-kit/issues/1909)) ([28217bf](https://github.com/coveo/ui-kit/commit/28217bfc4b1dc130592cbc7749ee76c4ce437bce))
+
+
+### Features
+
+* **atomic:** add default part for color facet values  ([#1901](https://github.com/coveo/ui-kit/issues/1901)) ([7335114](https://github.com/coveo/ui-kit/commit/733511487d9271396438e2955c4bdcb43480b354))
+* **atomic:** added custom styling to smart snippet answer ([#1887](https://github.com/coveo/ui-kit/issues/1887)) ([3932de3](https://github.com/coveo/ui-kit/commit/3932de3d10b67f539b9aa2d5f7d8a4e1cc08c2b4))
+
+
+
+
+
 ## [1.42.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.3...@coveo/atomic@1.42.4) (2022-04-07)
 
 **Note:** Version bump only for package @coveo/atomic

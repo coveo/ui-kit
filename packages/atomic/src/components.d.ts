@@ -205,11 +205,13 @@ export namespace Components {
     }
     interface AtomicFoldedResultList {
         /**
-          * TODO:
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**
-          * TODO:
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
          */
         "collectionField"?: string;
         /**
@@ -225,7 +227,8 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
-          * TODO:
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
          */
         "parentField"?: string;
         /**
@@ -526,6 +529,10 @@ export namespace Components {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates": boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -558,6 +565,11 @@ export namespace Components {
         "field": string;
     }
     interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
         /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
@@ -1627,11 +1639,13 @@ declare namespace LocalJSX {
     }
     interface AtomicFoldedResultList {
         /**
-          * TODO:
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**
-          * TODO:
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
          */
         "collectionField"?: string;
         /**
@@ -1647,7 +1661,8 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
-          * TODO:
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
          */
         "parentField"?: string;
     }
@@ -1944,6 +1959,10 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates"?: boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -1972,6 +1991,11 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
         /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */

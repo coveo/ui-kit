@@ -1,4 +1,5 @@
 import {buildInteractiveResult, SearchEngine, Result} from '@coveo/headless';
+import {Bindings} from './initialization-utils';
 
 /**
  * Binds the logging of document
@@ -41,4 +42,37 @@ export function bindLogDocumentOpenOnResult(
       );
     });
   };
+}
+
+export function buildStringTemplateFromResult(
+  template: string,
+  result: Result,
+  bindings: Bindings
+) {
+  return template.replace(/\${(.*?)}/g, (value: string) => {
+    const key = value.substring(2, value.length - 1);
+    let newValue = readFromObject(result, key);
+    if (!newValue) {
+      newValue = readFromObject(window, key);
+    }
+
+    if (!newValue) {
+      bindings.engine.logger.warn(
+        `${key} used in the href template is undefined for this result: ${result.uniqueId}`
+      );
+      return '';
+    }
+
+    return newValue;
+  });
+}
+
+function readFromObject(object: any, key: string): string {
+  const firstPeriodIndex = key.indexOf('.');
+  if (object && firstPeriodIndex !== -1) {
+    const newKey = key.substring(firstPeriodIndex + 1);
+    key = key.substring(0, firstPeriodIndex);
+    return readFromObject(object[key], newKey);
+  }
+  return object ? object[key] : undefined;
 }

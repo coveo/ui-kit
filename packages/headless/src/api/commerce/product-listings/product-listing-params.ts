@@ -6,6 +6,7 @@ import {
   PlatformClientCallOptions,
 } from '../../platform-client';
 import {SortCriterion} from '../../../features/sort/sort';
+import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
 export interface ProductListingsParam
   extends ProductListingBaseParam,
     ProductListingRequestParam {}
@@ -29,6 +30,7 @@ export interface ProductListingRequestParam {
     options?: FacetOptions;
   };
   sort?: SortCriterion;
+  userContext?: ContextPayload;
 }
 
 /**
