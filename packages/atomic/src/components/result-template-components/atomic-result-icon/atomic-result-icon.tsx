@@ -1,6 +1,6 @@
 import {Component, Element, h} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../../result-template-components/result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 import {objectTypeIcons} from './object-type-icons';
 import {fileTypeIcons} from './file-type-icons';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';

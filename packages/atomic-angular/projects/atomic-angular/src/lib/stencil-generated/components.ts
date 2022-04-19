@@ -715,13 +715,13 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['target']
+  inputs: ['hrefTemplate', 'target']
 })
 @Component({
   selector: 'atomic-result-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['target']
+  inputs: ['hrefTemplate', 'target']
 })
 export class AtomicResultLink {
   protected el: HTMLElement;
@@ -887,25 +887,6 @@ export declare interface AtomicResultSectionBottomMetadata extends Components.At
   template: '<ng-content></ng-content>'
 })
 export class AtomicResultSectionBottomMetadata {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicResultSectionChildren extends Components.AtomicResultSectionChildren {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined
-})
-@Component({
-  selector: 'atomic-result-section-children',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>'
-})
-export class AtomicResultSectionChildren {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -1185,13 +1166,13 @@ export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippe
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight']
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetStyle']
 })
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight']
+  inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetStyle']
 })
 export class AtomicSmartSnippet {
   protected el: HTMLElement;

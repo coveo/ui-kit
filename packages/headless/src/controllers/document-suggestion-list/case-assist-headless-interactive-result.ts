@@ -1,4 +1,4 @@
-import {CaseAssistEngine} from '../../case-assist.index';
+import {CaseAssistEngine, Result} from '../../case-assist.index';
 import {logDocumentSuggestionOpen} from '../../features/case-assist/case-assist-analytics-actions';
 import {
   buildInteractiveResultCore,
@@ -8,7 +8,12 @@ import {
 } from '../core/interactive-result/headless-core-interactive-result';
 
 export interface CaseAssistInteractiveResultOptions
-  extends InteractiveResultCoreOptions {}
+  extends InteractiveResultCoreOptions {
+  /**
+   * The query result.
+   */
+  result: Result;
+}
 
 export interface CaseAssistInteractiveResultProps
   extends InteractiveResultCoreProps {

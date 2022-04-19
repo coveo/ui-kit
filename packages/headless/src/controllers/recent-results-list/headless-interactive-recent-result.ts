@@ -1,3 +1,4 @@
+import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logRecentResultClick} from '../../features/recent-results/recent-results-analytics-actions';
 import {
@@ -8,7 +9,12 @@ import {
 } from '../core/interactive-result/headless-core-interactive-result';
 
 export interface InteractiveRecentResultOptions
-  extends InteractiveResultCoreOptions {}
+  extends InteractiveResultCoreOptions {
+  /**
+   * The query result.
+   */
+  result: Result;
+}
 
 export interface InteractiveRecentResultProps
   extends InteractiveResultCoreProps {

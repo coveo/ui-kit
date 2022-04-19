@@ -1,8 +1,21 @@
+import {Result} from '@coveo/headless';
 import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
+
+interface ResultWithFolding extends Result {
+  parentResult: ResultWithFolding | null;
+  childResults: ResultWithFolding[];
+}
+
+export type SearchFoldedResponseSuccess = Omit<
+  SearchResponseSuccess,
+  'results'
+> & {
+  results: ResultWithFolding[];
+};
 
 export type SearchResponseModifierPredicate = (
   response: SearchResponseSuccess
@@ -37,6 +50,7 @@ export class TestFixture {
   private responseModifiers: SearchResponseModifierPredicate[] = [];
   private returnError = false;
   private reflectStateInUrl = true;
+  private redirected = false;
 
   public with(feat: TestFeature) {
     feat(this);
@@ -169,6 +183,7 @@ export class TestFixture {
           {
             method: 'POST',
             url: '**/rest/search/v2?*',
+            times: 9999,
           },
           (request) => {
             request.reply((response) => {

@@ -5,7 +5,6 @@ import {RecommendationPage} from './pages/RecommendationPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 import {SamlPage} from './pages/SamlPage';
 import {DependentFacetPage} from './pages/DependentFacetPage';
-import {AtomicReactPage} from './pages/AtomicReactPage';
 import {AnalyticsHook} from './pages/AnalyticsHook';
 
 function App(props: SearchPageProps) {
@@ -50,11 +49,6 @@ function App(props: SearchPageProps) {
               Analytics hook (Google Tag Manager)
             </NavLink>
           </button>
-          <button>
-            <NavLink to="/atomic-react" activeStyle={activeNavLink}>
-              Atomic React
-            </NavLink>
-          </button>
         </nav>
         <Switch>
           <Route path="/recommendation">
@@ -74,9 +68,6 @@ function App(props: SearchPageProps) {
           </Route>
           <Route path="/analyticshooks">
             <AnalyticsHook />
-          </Route>
-          <Route path="/atomic-react">
-            <AtomicReactPage />
           </Route>
           <Route path="/search-page">
             <SearchPage {...props} />

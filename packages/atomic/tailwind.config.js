@@ -52,8 +52,7 @@ module.exports = {
       animation: {
         scaleUpRefineModal:
           'scaleUp .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
-        slideDownRefineModal:
-          'slideDown .5s linear forwards',
+        slideDownRefineModal: 'slideDown .5s linear forwards',
       },
       keyframes: {
         scaleUp: {
@@ -63,7 +62,7 @@ module.exports = {
         slideDown: {
           '0%': {transform: 'translateY(0px)', opacity: '1'},
           '100%': {transform: 'translateY(150vh)', opacity: '0.7'},
-        }
+        },
       },
     },
     backgroundColor: (theme) => ({
@@ -84,5 +83,6 @@ module.exports = {
         variants('outlineColor')
       );
     }),
+    require('@tailwindcss/line-clamp'),
   ],
 };
