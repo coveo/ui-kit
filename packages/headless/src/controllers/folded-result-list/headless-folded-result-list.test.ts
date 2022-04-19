@@ -51,10 +51,12 @@ describe('FoldedResultList', () => {
   describe('with a result and two collections', () => {
     beforeEach(() => {
       const threadResult = buildMockResult({
+        uniqueId: 'thread-result',
         title: 'thread-result',
         raw: {urihash: '', foldingcollection: 'thread'},
       });
       const peopleResult = buildMockResult({
+        uniqueId: 'people-result',
         title: 'people-result',
         raw: {urihash: '', foldingcollection: 'people'},
       });
@@ -105,6 +107,22 @@ describe('FoldedResultList', () => {
       expect(engine.actions.pop()?.type).toEqual(
         'folding/loadCollection/pending'
       );
+    });
+
+    it('finds a result by unique id', () => {
+      const expected = foldedResultList.state.results[2];
+      const result = foldedResultList.findResultByUniqueID(
+        expected.result.uniqueId
+      );
+      expect(result).toEqual(expected);
+    });
+
+    it('finds a result by collection', () => {
+      const expected = foldedResultList.state.results[2];
+      const result = foldedResultList.findResultByCollection(
+        expected.result.raw.foldingcollection as string
+      );
+      expect(result).toEqual(expected);
     });
   });
 });

@@ -87,6 +87,18 @@ export interface FoldedResultList extends Controller {
    */
   loadCollection(collection: FoldedCollection): void;
   /**
+   * Finds a folded result by its unique id.
+   *
+   * @param id - The unique ID of the folded result.
+   */
+  findResultByUniqueID(id: string): FoldedCollection | undefined;
+  /**
+   * Finds a folded result by its collection.
+   *
+   * @param collection - The name of the collection, usually found in the path `foldedResult.raw[foldingCollection]`.
+   */
+  findResultByCollection(collection: string): FoldedCollection | undefined;
+  /**
    * The state of the `FoldedResultList` controller.
    */
   state: FoldedResultListState;
@@ -157,6 +169,16 @@ export function buildFoldedResultList(
             engine.state.folding.fields.collection
           ] as string
         )
+      );
+    },
+
+    findResultByUniqueID(id) {
+      return this.state.results.find((r) => r.result.uniqueId === id);
+    },
+
+    findResultByCollection(collection) {
+      return this.state.results.find(
+        (r) => r.result.raw.foldingcollection === collection
       );
     },
 
