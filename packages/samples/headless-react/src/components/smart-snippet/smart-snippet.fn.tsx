@@ -1,5 +1,6 @@
 import {useEffect, useState, FunctionComponent, useRef} from 'react';
 import {SmartSnippet as HeadlessSmartSnippet} from '@coveo/headless';
+import {filterProtocol} from '../../utils/filter-protocol';
 
 interface SmartSnippetProps {
   controller: HeadlessSmartSnippet;
@@ -35,11 +36,31 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
     liked,
     disliked,
     expanded,
+    source,
     feedbackModalOpen,
   } = state;
 
   if (!answerFound) {
     return <div>Sorry, no answer has been found for this query.</div>;
+  }
+
+  function renderSource() {
+    if (!source) {
+      return;
+    }
+    return (
+      <a
+        href={filterProtocol(source.clickUri)}
+        onClick={() => controller.selectSource()}
+        onContextMenu={() => controller.selectSource()}
+        onMouseDown={() => controller.selectSource()}
+        onMouseUp={() => controller.selectSource()}
+        onTouchStart={() => controller.beginDelayedSelectSource()}
+        onTouchEnd={() => controller.cancelPendingSelectSource()}
+      >
+        Source
+      </a>
+    );
   }
 
   if (feedbackModalOpen) {
@@ -123,6 +144,7 @@ export const SmartSnippet: FunctionComponent<SmartSnippetProps> = (props) => {
           >
             Thumbs down
           </button>
+          {renderSource()}
           {disliked ? (
             <button onClick={() => controller.openFeedbackModal()}>
               Explain why

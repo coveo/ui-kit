@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.60.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.59.0...@coveo/headless@1.60.0) (2022-04-19)
+
+
+### Features
+
+* **headless,atomic:** added smart snippet source analytics ([#1876](https://github.com/coveo/ui-kit/issues/1876)) ([8e7ec24](https://github.com/coveo/ui-kit/commit/8e7ec2490615b346aac692aa1c970a6d6b536a27))
+
+
+
+
+
 # [1.59.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.58.0...@coveo/headless@1.59.0) (2022-04-13)
 
 
