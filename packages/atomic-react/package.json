@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "1.0.4",
+  "version": "1.1.1",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -24,18 +24,18 @@
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "1.44.1"
+    "@coveo/atomic": "1.45.1"
   },
   "devDependencies": {
     "@types/node": "15.14.9",
     "@types/react": "17.0.37",
     "@types/react-dom": "17.0.11",
     "ncp": "2.0.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react": "18.0.0",
+    "react-dom": "18.0.0"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^17.0.2 || ^18.0.0",
+    "react-dom": "^17.0.2 || ^18.0.0"
   }
 }
