@@ -6,6 +6,7 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
+import {filterProtocol} from '../../utils/filter-protocol';
 
 export class SmartSnippet extends Component<{}, SmartSnippetState> {
   static contextType = AppContext;
@@ -46,6 +47,26 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
     };
   }
 
+  renderSource() {
+    const {source} = this.state;
+    if (!source) {
+      return;
+    }
+    return (
+      <a
+        href={filterProtocol(source.clickUri)}
+        onClick={() => this.controller.selectSource()}
+        onContextMenu={() => this.controller.selectSource()}
+        onMouseDown={() => this.controller.selectSource()}
+        onMouseUp={() => this.controller.selectSource()}
+        onTouchStart={() => this.controller.beginDelayedSelectSource()}
+        onTouchEnd={() => this.controller.cancelPendingSelectSource()}
+      >
+        Source
+      </a>
+    );
+  }
+
   render() {
     if (!this.state) {
       return null;
@@ -58,6 +79,7 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
       liked,
       disliked,
       expanded,
+      source,
       feedbackModalOpen,
     } = this.state;
 
@@ -156,6 +178,7 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
             >
               Thumbs down
             </button>
+            {this.renderSource()}
             {disliked ? (
               <button onClick={() => this.controller.openFeedbackModal()}>
                 Explain why
