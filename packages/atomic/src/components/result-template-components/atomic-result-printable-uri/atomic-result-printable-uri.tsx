@@ -141,10 +141,14 @@ export class AtomicResultPrintableUri {
   ) {
     return (
       <LinkWithResultAnalytics
-        interactiveResult={this.interactiveResult}
         href={uri}
         title={typeof content === 'string' ? content : undefined}
         target={this.target}
+        onSelect={() => this.interactiveResult.select()}
+        onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
+        onCancelPendingSelect={() =>
+          this.interactiveResult.cancelPendingSelect()
+        }
         ref={shouldSetTarget ? this.expandedPartFocus.setTarget : undefined}
       >
         {content}
