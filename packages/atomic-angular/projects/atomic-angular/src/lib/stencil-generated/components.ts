@@ -336,6 +336,25 @@ export class AtomicLayoutSection {
 }
 
 
+export declare interface AtomicLoadCollection extends Components.AtomicLoadCollection {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-load-collection',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicLoadCollection {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicLoadMoreResults extends Components.AtomicLoadMoreResults {}
 
 @ProxyCmp({

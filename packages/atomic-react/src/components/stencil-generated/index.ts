@@ -23,6 +23,7 @@ export const AtomicFormatUnit = /*@__PURE__*/createReactComponent<JSX.AtomicForm
 export const AtomicFrequentlyBoughtTogether = /*@__PURE__*/createReactComponent<JSX.AtomicFrequentlyBoughtTogether, HTMLAtomicFrequentlyBoughtTogetherElement>('atomic-frequently-bought-together');
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
+export const AtomicLoadCollection = /*@__PURE__*/createReactComponent<JSX.AtomicLoadCollection, HTMLAtomicLoadCollectionElement>('atomic-load-collection');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
 export const AtomicNoResults = /*@__PURE__*/createReactComponent<JSX.AtomicNoResults, HTMLAtomicNoResultsElement>('atomic-no-results');
 export const AtomicNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicNumericFacet, HTMLAtomicNumericFacetElement>('atomic-numeric-facet');
