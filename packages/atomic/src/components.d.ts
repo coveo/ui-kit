@@ -11,7 +11,6 @@ import { NumberInputType } from "./components/facets/facet-number-input/number-i
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { Section } from "./components/atomic-layout-section/sections";
-import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -296,6 +295,11 @@ export namespace Components {
     }
     interface AtomicLoadMoreResults {
     }
+    interface AtomicModal {
+        "close": () => void;
+        "isOpen": boolean;
+        "source"?: HTMLElement;
+    }
     interface AtomicNoResults {
         /**
           * Whether to display a button which cancels the last available action.
@@ -470,7 +474,7 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRefineModal {
-        "modalStatus": ModalStatus;
+        "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
@@ -1041,6 +1045,12 @@ declare global {
         prototype: HTMLAtomicLoadMoreResultsElement;
         new (): HTMLAtomicLoadMoreResultsElement;
     };
+    interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
+    }
+    var HTMLAtomicModalElement: {
+        prototype: HTMLAtomicModalElement;
+        new (): HTMLAtomicModalElement;
+    };
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
     }
     var HTMLAtomicNoResultsElement: {
@@ -1381,6 +1391,7 @@ declare global {
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
+        "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -1713,6 +1724,12 @@ declare namespace LocalJSX {
     }
     interface AtomicLoadMoreResults {
     }
+    interface AtomicModal {
+        "close"?: () => void;
+        "isOpen"?: boolean;
+        "onAnimationEnded"?: (event: CustomEvent<never>) => void;
+        "source"?: HTMLElement;
+    }
     interface AtomicNoResults {
         /**
           * Whether to display a button which cancels the last available action.
@@ -1888,7 +1905,7 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRefineModal {
-        "modalStatus": ModalStatus;
+        "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
@@ -2329,6 +2346,7 @@ declare namespace LocalJSX {
         "atomic-icon": AtomicIcon;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-results": AtomicLoadMoreResults;
+        "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
@@ -2409,6 +2427,7 @@ declare module "@stencil/core" {
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
+            "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;

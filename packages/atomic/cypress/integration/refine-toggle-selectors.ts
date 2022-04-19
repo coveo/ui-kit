@@ -9,7 +9,10 @@ export const RefineToggleSelectors = {
 
 export const RefineModalSelectors = {
   shadow: () => cy.get(refineModalComponent).shadow(),
-  focusTrap: () => RefineModalSelectors.shadow().find(focusTrapComponent),
+  focusTrap: () =>
+    RefineModalSelectors.shadow().find(focusTrapComponent, {
+      includeShadowDom: true,
+    }),
   focusTrapContainer: () =>
     RefineModalSelectors.focusTrap().shadow().find('[part="container"]'),
   closeButton: () =>
