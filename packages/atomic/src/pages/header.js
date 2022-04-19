@@ -17,7 +17,7 @@ const makeLinks = () => {
     .filter((link) => link.href !== window.location.pathname)
     .map(
       (link) =>
-        `<li>
+        `<li style="display: inline-block; list-decoration: none;">
            <a href="${link.href}" style="margin-right: 10px; color: var(--atomic-primary); text-decoration: none;">${link.label}</a>
          </li>`
     )
