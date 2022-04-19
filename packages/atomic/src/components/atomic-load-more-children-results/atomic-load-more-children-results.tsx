@@ -1,5 +1,5 @@
 import {Result, FoldedResultListState} from '@coveo/headless';
-import {Component, Element, h, State} from '@stencil/core';
+import {Component, Element, h, Prop, State} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {Button} from '../common/button';
@@ -7,12 +7,14 @@ import {FoldedResultListStateContext} from '../result-lists/result-list-decorato
 import {ResultContext} from '../result-template-components/result-template-decorators';
 
 /**
- * The `atomic-load-collection` component allows to load the full collection for a folded result.
+ * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
+ * @internal
+ * @part button - The wrapper for the entire facet.
  */
 @Component({
-  tag: 'atomic-load-collection',
+  tag: 'atomic-load-more-children-results',
 })
-export class AtomicLoadMoreResults {
+export class AtomicLoadMoreChildrenResults {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() public result!: Result;
   @State() public error!: Error;
@@ -21,6 +23,13 @@ export class AtomicLoadMoreResults {
   @FoldedResultListStateContext()
   @State()
   private foldedResultListState!: FoldedResultListState;
+
+  /**
+   * The label for the button used to load more results.
+   *
+   * @defaultValue `Load all results`
+   */
+  @Prop() public label = '';
 
   private getCollection() {
     return this.foldedResultListState.results.find(
@@ -39,10 +48,6 @@ export class AtomicLoadMoreResults {
     return this.getCollection().moreResultsAvailable;
   }
 
-  private hasResults() {
-    return Boolean(this.getCollection().children.length);
-  }
-
   private isLoading() {
     return Boolean(this.getCollection().isLoadingMoreResults);
   }
@@ -51,14 +56,16 @@ export class AtomicLoadMoreResults {
     if (!this.foldedResultListState) {
       return null;
     }
+
     return (
       <div>
         {this.hasMoreResults() && !this.isLoading() && (
           <Button
             style="text-primary"
             onClick={() => this.loadFullCollection()}
+            part="button"
           >
-            {this.hasResults() ? 'Load more' : 'Load collection'}
+            {this.label || this.bindings.i18n.t('load-all-results')}
           </Button>
         )}
       </div>

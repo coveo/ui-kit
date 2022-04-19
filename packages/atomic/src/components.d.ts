@@ -297,7 +297,12 @@ export namespace Components {
          */
         "section": Section;
     }
-    interface AtomicLoadCollection {
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label": string;
     }
     interface AtomicLoadMoreResults {
     }
@@ -1044,11 +1049,11 @@ declare global {
         prototype: HTMLAtomicLayoutSectionElement;
         new (): HTMLAtomicLayoutSectionElement;
     };
-    interface HTMLAtomicLoadCollectionElement extends Components.AtomicLoadCollection, HTMLStencilElement {
+    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
     }
-    var HTMLAtomicLoadCollectionElement: {
-        prototype: HTMLAtomicLoadCollectionElement;
-        new (): HTMLAtomicLoadCollectionElement;
+    var HTMLAtomicLoadMoreChildrenResultsElement: {
+        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
+        new (): HTMLAtomicLoadMoreChildrenResultsElement;
     };
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
     }
@@ -1395,7 +1400,7 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
-        "atomic-load-collection": HTMLAtomicLoadCollectionElement;
+        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
@@ -1730,7 +1735,12 @@ declare namespace LocalJSX {
          */
         "section": Section;
     }
-    interface AtomicLoadCollection {
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label"?: string;
     }
     interface AtomicLoadMoreResults {
     }
@@ -2353,7 +2363,7 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
         "atomic-layout-section": AtomicLayoutSection;
-        "atomic-load-collection": AtomicLoadCollection;
+        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
@@ -2434,7 +2444,7 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
-            "atomic-load-collection": LocalJSX.AtomicLoadCollection & JSXBase.HTMLAttributes<HTMLAtomicLoadCollectionElement>;
+            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
