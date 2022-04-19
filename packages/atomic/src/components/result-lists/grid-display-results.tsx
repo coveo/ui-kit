@@ -14,13 +14,9 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
     return (
       <LinkWithResultAnalytics
         part="result-list-grid-clickable"
-        onSelect={() => interactiveResult.selectSource()}
-        onBeginDelayedSelect={() =>
-          interactiveResult.beginDelayedSelectSource()
-        }
-        onCancelPendingSelect={() =>
-          interactiveResult.cancelPendingSelectSource()
-        }
+        onSelect={() => interactiveResult.select()}
+        onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+        onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
         href={props.resultListCommon.getUnfoldedResult(result).clickUri}
         target="_self"
       >
