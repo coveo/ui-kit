@@ -11,8 +11,10 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LinkWithResultAnalytics} from '../../result-link/result-link';
+import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
 import {isUndefined} from '@coveo/bueno';
 import {buildStringTemplateFromResult} from '../../../utils/result-utils';
+import {getSlotFromHost} from '../../../utils/slot-utils';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -68,39 +70,9 @@ export class AtomicResultLink implements InitializableComponent {
     });
   }
 
-  private isAttributeSlot(element: Element): element is HTMLAnchorElement {
-    return element.slot === 'attributes' && element.nodeName === 'A';
-  }
-
-  private assignAttributes(linkElement: HTMLAnchorElement) {
-    if (!this.linkAttributes) {
-      return;
-    }
-
-    [...this.linkAttributes].forEach(({nodeName, nodeValue}) => {
-      if (nodeName === 'slot') {
-        return;
-      }
-
-      if (nodeName === 'href') {
-        this.bindings.engine.logger.warn(
-          'The "href" attribute set on the "attributes" slot element is ignore. Please use the "href-template" property on the "atomic-result-link" instead.'
-        );
-        return;
-      }
-
-      linkElement.setAttribute(nodeName, nodeValue!);
-    });
-  }
-
   public connectedCallback() {
-    const children = Array.from(this.host.children);
-    const attributesSlots = children.filter(this.isAttributeSlot.bind(this));
-    this.hasDefaultSlot = !!(children.length - attributesSlots.length);
-
-    if (attributesSlots.length) {
-      this.linkAttributes = Array.from(attributesSlots[0].attributes);
-    }
+    this.hasDefaultSlot = !!getSlotFromHost(this.host);
+    this.linkAttributes = getAttributesFromLinkSlot(this.host);
   }
 
   public render() {
@@ -116,12 +88,12 @@ export class AtomicResultLink implements InitializableComponent {
       <LinkWithResultAnalytics
         href={href}
         target={this.target}
-        ref={(linkElement) => linkElement && this.assignAttributes(linkElement)}
         onSelect={() => this.interactiveResult.select()}
         onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
         onCancelPendingSelect={() =>
           this.interactiveResult.cancelPendingSelect()
         }
+        attributes={this.linkAttributes}
       >
         {this.hasDefaultSlot ? (
           <slot></slot>
