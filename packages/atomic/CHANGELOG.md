@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.46.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.45.1...@coveo/atomic@1.46.0) (2022-04-19)
+
+
+### Features
+
+* **atomic:** add load collection component ([#1921](https://github.com/coveo/ui-kit/issues/1921)) ([1702778](https://github.com/coveo/ui-kit/commit/170277893b829ab03187ee793798273aa2fa5a51))
+* **headless,atomic:** added smart snippet source analytics ([#1876](https://github.com/coveo/ui-kit/issues/1876)) ([8e7ec24](https://github.com/coveo/ui-kit/commit/8e7ec2490615b346aac692aa1c970a6d6b536a27))
+
+
+
+
+
 ## [1.45.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.45.0...@coveo/atomic@1.45.1) (2022-04-18)
 
 **Note:** Version bump only for package @coveo/atomic

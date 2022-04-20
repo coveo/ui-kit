@@ -420,6 +420,10 @@
     "en": "Load more results",
     "fr": "Afficher plus de résultats"
   },
+  "load-all-results": {
+    "en": "Load all results",
+    "fr": "Afficher tous les résultats"
+  },
   "in-seconds": {
     "en": "in {{count}} second",
     "fr": "en {{count}} seconde",

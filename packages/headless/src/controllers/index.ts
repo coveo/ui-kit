@@ -322,6 +322,8 @@ export {buildNotifyTrigger} from './triggers/headless-notify-trigger';
 
 export type {
   SmartSnippet,
+  SmartSnippetOptions,
+  SmartSnippetProps,
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
 } from './smart-snippet/headless-smart-snippet';

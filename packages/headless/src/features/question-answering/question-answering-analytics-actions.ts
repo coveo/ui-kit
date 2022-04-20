@@ -1,5 +1,12 @@
+import {Result} from '../../api/search/search/result';
 import {validatePayload} from '../../utils/validate-payload';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  documentIdentifier,
+  makeAnalyticsAction,
+  partialDocumentInformation,
+  validateResultPayload,
+} from '../analytics/analytics-utils';
 import {
   documentIdentifierPayloadDefinition,
   QuestionAnsweringDocumentIdActionCreatorPayload,
@@ -33,6 +40,19 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
   AnalyticsType.Custom,
   (client) => client.logDislikeSmartSnippet()
 );
+
+export const logOpenSmartSnippetSource = (source: Result) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(source);
+      return client.logOpenSmartSnippetSource(
+        partialDocumentInformation(source, state),
+        documentIdentifier(source)
+      );
+    }
+  )();
 
 export const logOpenSmartSnippetFeedbackModal = makeAnalyticsAction(
   'analytics/smartSnippet/feedbackModal/open',
