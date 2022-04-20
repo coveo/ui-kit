@@ -23,11 +23,11 @@ const makeLinks = () => {
     )
     .join('');
 };
-
+const example = getCurrentExample();
 header.innerHTML = `
   <nav style="padding: 10px 20px; font-family: var(--atomic-font-family);">
     <span style="font-weight: var(--atomic-font-bold);">${
-      getCurrentExample().label
+      example ? example.label : ''
     } example</span>
     <ul style="display: inline-block; font-size: var(--atomic-text-sm);">
       ${makeLinks()}
