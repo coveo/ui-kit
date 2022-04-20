@@ -18,8 +18,8 @@ import {getSlotFromHost} from '../../../utils/slot-utils';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
- * @slot default - Allow to display alternative content inside the link
- * @slot attributes - Allows to pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
+ * @slot default - Lets you display alternative content inside the link
+ * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
  */
 @Component({
   tag: 'atomic-result-link',
