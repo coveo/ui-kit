@@ -114,10 +114,14 @@ export class AtomicResultLink implements InitializableComponent {
 
     return (
       <LinkWithResultAnalytics
-        interactiveResult={this.interactiveResult}
         href={href}
         target={this.target}
         ref={(linkElement) => linkElement && this.assignAttributes(linkElement)}
+        onSelect={() => this.interactiveResult.select()}
+        onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
+        onCancelPendingSelect={() =>
+          this.interactiveResult.cancelPendingSelect()
+        }
       >
         {this.hasDefaultSlot ? (
           <slot></slot>
