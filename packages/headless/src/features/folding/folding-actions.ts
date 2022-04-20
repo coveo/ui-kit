@@ -12,7 +12,6 @@ import {
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
-import {ResultWithFolding} from './folding-slice';
 import {CollectionId} from './folding-state';
 
 export interface RegisterFoldingActionCreatorPayload {
@@ -45,7 +44,6 @@ export interface RegisterFoldingActionCreatorPayload {
 export interface LoadCollectionFulfilledReturn {
   results: Result[];
   collectionId: CollectionId;
-  rootResult: ResultWithFolding;
 }
 
 export const foldingOptionsSchemaDefinition: SchemaDefinition<
@@ -69,19 +67,17 @@ export type StateNeededByLoadCollection = ConfigurationSection &
 
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
-  ResultWithFolding,
+  CollectionId,
   AsyncThunkSearchOptions<StateNeededByLoadCollection>
 >(
   'folding/loadCollection',
   async (
-    result: ResultWithFolding,
+    collectionId: CollectionId,
     {getState, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
     const sharedWithSearchRequest =
       await buildSearchAndFoldingLoadCollectionRequest(state);
-
-    const collectionId = result.raw[state.folding.fields.collection] as string;
 
     const response = await apiClient.search({
       ...sharedWithSearchRequest,
@@ -98,11 +94,7 @@ export const loadCollection = createAsyncThunk<
       return rejectWithValue(response.error);
     }
 
-    return {
-      collectionId,
-      results: response.success.results,
-      rootResult: result,
-    };
+    return {collectionId, results: response.success.results};
   }
 );
 
