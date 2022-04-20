@@ -6,6 +6,7 @@ import {
   loadCollection,
   registerFolding,
 } from '../../features/folding/folding-actions';
+import {ResultWithFolding} from '../../features/folding/folding-slice';
 import {
   FoldedCollection,
   FoldedResult,
@@ -151,13 +152,7 @@ export function buildFoldedResultList(
     ...controller,
 
     loadCollection: (collection) => {
-      dispatch(
-        loadCollection(
-          collection.result.raw[
-            engine.state.folding.fields.collection
-          ] as string
-        )
-      );
+      dispatch(loadCollection(collection.result as ResultWithFolding));
     },
 
     get state() {

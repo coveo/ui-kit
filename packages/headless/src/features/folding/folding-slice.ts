@@ -86,20 +86,22 @@ function resolveRootFromFields(
 
 function createCollectionFromResult(
   relevantResult: ResultWithFolding,
-  fields: FoldingFields
+  fields: FoldingFields,
+  rootResult?: ResultWithFolding
 ): FoldedCollection {
   const resultsInCollection = getAllIncludedResultsFrom(relevantResult);
 
-  const rootResult =
+  const resolvedRoot =
     resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
 
+  const children = resolveChildrenFromFields(
+    resolvedRoot,
+    resultsInCollection,
+    fields
+  );
   return {
-    result: rootResult,
-    children: resolveChildrenFromFields(
-      rootResult,
-      resultsInCollection,
-      fields
-    ),
+    result: rootResult || resolvedRoot,
+    children,
     moreResultsAvailable: true,
     isLoadingMoreResults: false,
   };
@@ -107,7 +109,8 @@ function createCollectionFromResult(
 
 function createCollections(
   results: ResultWithFolding[],
-  fields: FoldingFields
+  fields: FoldingFields,
+  rootResult?: ResultWithFolding
 ) {
   const collections: Record<CollectionId, FoldedCollection> = {};
   results.forEach((result) => {
@@ -118,7 +121,11 @@ function createCollections(
     if (!getChildField(result, fields)) {
       return;
     }
-    collections[collectionId] = createCollectionFromResult(result, fields);
+    collections[collectionId] = createCollectionFromResult(
+      result,
+      fields,
+      rootResult
+    );
   });
   return collections;
 }
@@ -162,19 +169,20 @@ export const foldingReducer = createReducer(
             }
       )
       .addCase(loadCollection.pending, (state, {meta}) => {
-        const collectionId = meta.arg;
+        const collectionId = meta.arg.raw[state.fields.collection] as string;
         state.collections[collectionId].isLoadingMoreResults = true;
       })
       .addCase(loadCollection.rejected, (state, {meta}) => {
-        const collectionId = meta.arg;
+        const collectionId = meta.arg.raw[state.fields.collection] as string;
         state.collections[collectionId].isLoadingMoreResults = false;
       })
       .addCase(
         loadCollection.fulfilled,
-        (state, {payload: {collectionId, results}}) => {
+        (state, {payload: {collectionId, results, rootResult}}) => {
           const newCollections = createCollections(
             results as ResultWithFolding[],
-            state.fields
+            state.fields,
+            rootResult
           );
           state.collections[collectionId] = newCollections[collectionId];
           state.collections[collectionId].moreResultsAvailable = false;
