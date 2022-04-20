@@ -89,15 +89,17 @@ export interface FoldedResultList extends Controller {
   /**
    * Finds a folded result by its unique id.
    *
-   * @param id - The unique ID of the folded result.
+   * @param collection - The folded collection whose id will be used to find a collection in the results.
    */
-  findResultByUniqueID(id: string): FoldedCollection | undefined;
+  findResultById(collection: FoldedCollection): FoldedCollection | undefined;
   /**
    * Finds a folded result by its collection.
    *
-   * @param collection - The name of the collection, usually found in the path `foldedResult.raw[foldingCollection]`.
+   * @param collection - The folded collection whose collection name will be used to find a collection in the results
    */
-  findResultByCollection(collection: string): FoldedCollection | undefined;
+  findResultByCollection(
+    collection: FoldedCollection
+  ): FoldedCollection | undefined;
   /**
    * The state of the `FoldedResultList` controller.
    */
@@ -172,13 +174,17 @@ export function buildFoldedResultList(
       );
     },
 
-    findResultByUniqueID(id) {
-      return this.state.results.find((r) => r.result.uniqueId === id);
+    findResultById(collection) {
+      return this.state.results.find(
+        (r) => r.result.uniqueId === collection.result.uniqueId
+      );
     },
 
     findResultByCollection(collection) {
       return this.state.results.find(
-        (r) => r.result.raw.foldingcollection === collection
+        (r) =>
+          r.result.raw.foldingcollection ===
+          collection.result.raw.foldingcollection
       );
     },
 

@@ -109,19 +109,15 @@ describe('FoldedResultList', () => {
       );
     });
 
-    it('finds a result by unique id', () => {
+    it('finds a result by id', () => {
       const expected = foldedResultList.state.results[2];
-      const result = foldedResultList.findResultByUniqueID(
-        expected.result.uniqueId
-      );
+      const result = foldedResultList.findResultById(expected);
       expect(result).toEqual(expected);
     });
 
     it('finds a result by collection', () => {
       const expected = foldedResultList.state.results[2];
-      const result = foldedResultList.findResultByCollection(
-        expected.result.raw.foldingcollection as string
-      );
+      const result = foldedResultList.findResultByCollection(expected);
       expect(result).toEqual(expected);
     });
   });
