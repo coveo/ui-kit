@@ -42,6 +42,9 @@ export class AtomicLoadMoreChildrenResults {
   @Prop() public label = '';
 
   private getCollection() {
+    if (!this.result.raw.foldingcollection) {
+      return null;
+    }
     return this.foldedResultListState.results.find(
       (r) =>
         r.result.raw.foldingcollection === this.result.raw.foldingcollection
@@ -55,15 +58,15 @@ export class AtomicLoadMoreChildrenResults {
   }
 
   private hasMoreResults() {
-    return this.getCollection().moreResultsAvailable;
+    return this.getCollection()?.moreResultsAvailable;
   }
 
   private isLoading() {
-    return Boolean(this.getCollection().isLoadingMoreResults);
+    return Boolean(this.getCollection()?.isLoadingMoreResults);
   }
 
   private hasResults() {
-    return Boolean(this.getCollection().children.length);
+    return Boolean(this.getCollection()?.children.length);
   }
 
   private getButtonClass() {
@@ -81,7 +84,7 @@ export class AtomicLoadMoreChildrenResults {
   }
 
   public render() {
-    if (!this.foldedResultListState) {
+    if (!this.foldedResultListState || !this.getCollection()) {
       return null;
     }
 
