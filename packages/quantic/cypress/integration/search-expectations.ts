@@ -1,4 +1,4 @@
-import {InterceptAliases} from '../page-objects/search';
+import {baselineAlias, InterceptAliases} from '../page-objects/search';
 
 export const SearchExpectations = {
   sortedBy: (sortCriteria: string) => {
@@ -22,6 +22,14 @@ export const SearchExpectations = {
         expression,
         `search request constant query expression should be '${expression}'`
       );
+    });
+  },
+
+  numberOfSearchRequests: (expected: number) => {
+    cy.get(baselineAlias).then((baseline) => {
+      cy.get(`${InterceptAliases.Search}.all`)
+        .should('have.length', Number(baseline) + expected)
+        .logDetail(`should send ${expected} search requests`);
     });
   },
 };
