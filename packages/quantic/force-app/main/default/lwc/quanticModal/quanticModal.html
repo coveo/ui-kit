@@ -1,0 +1,17 @@
+<template>
+  <div class={modalCssClass}>
+    <div
+      class="slds-var-p-horizontal_large modal__header"
+    >
+      <slot name="header"></slot>
+    </div>
+    <div class="modal__container">
+      <div class="slds-var-p-around_large modal__content">
+        <slot name="content"></slot>
+      </div>
+      <div class="slds-var-p-horizontal_large modal__footer">
+        <slot name="footer"></slot>
+      </div>
+    </div>
+  </div>
+</template>
