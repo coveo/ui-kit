@@ -425,11 +425,11 @@
     "fr": "Afficher tous les résultats"
   },
   "show-all-results": {
-    "en": "Show all results",
+    "en": "Expand results",
     "fr": "Afficher tous les résultats"
   },
   "hide-all-results": {
-    "en": "Hide all results",
+    "en": "Collapse results",
     "fr": "Cacher tous les résultats"
   },
   "no-documents-related": {

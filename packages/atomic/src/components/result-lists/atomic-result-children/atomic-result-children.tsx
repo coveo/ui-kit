@@ -82,6 +82,8 @@ export class AtomicResultChildren {
    */
   @Prop() public noResultText = '';
 
+  private initialChildren!: FoldedResult[];
+
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
     event.preventDefault();
@@ -171,15 +173,18 @@ export class AtomicResultChildren {
 
   private showChildrenWrapper() {
     const result = this.getResult();
+    if (!this.initialChildren.length && this.hideResults) return false;
     return (
-      !this.hideResults &&
-      (Boolean(result.children.length) ||
-        result.isLoadingMoreResults ||
-        this.showAllResults)
+      Boolean(result.children.length) ||
+      result.isLoadingMoreResults ||
+      this.showAllResults
     );
   }
 
   public componentWillUpdate() {
+    if (this.getResult().children && !this.initialChildren) {
+      this.initialChildren = this.getResult().children;
+    }
     if (this.getResult().isLoadingMoreResults && !this.showAllResults) {
       this.showAllResults = true;
     }
@@ -204,7 +209,10 @@ export class AtomicResultChildren {
         />
       );
     } else if (hasResults) {
-      components.push(result.children.map((child) => this.renderChild(child)));
+      const children = this.hideResults
+        ? this.initialChildren
+        : result.children;
+      components.push(children.map((child) => this.renderChild(child)));
     } else if (this.showAllResults) {
       components.push(
         <p part="no-result-root" class="no-result-root">
