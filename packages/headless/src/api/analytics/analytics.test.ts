@@ -138,7 +138,22 @@ describe('analytics', () => {
       );
     });
 
-    it('when search is provided, #getSearchUID returns the correct id', () => {
+    it('when #searchResponseId is provided, #getSearchUID returns the correct id', () => {
+      const searchUid = 'test';
+      const state = {
+        ...baseState,
+        search: buildMockSearchState({
+          searchResponseId: searchUid,
+          response: buildMockSearchResponse({
+            searchUid: 'another_id',
+          }),
+        }),
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getSearchUID()).toEqual(searchUid);
+    });
+
+    it('when #searchResponseId is not provided, #getSearchUID returns the correct id', () => {
       const searchUid = 'test';
       const state = {
         ...baseState,
