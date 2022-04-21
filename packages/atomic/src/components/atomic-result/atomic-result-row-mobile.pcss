@@ -1,6 +1,34 @@
 @import '../../global/polyfills.pcss';
 
+@define-mixin atomic-children-mobile $max, $min {
+  atomic-result-section-children {
+    atomic-result-children::part(children-root) {
+      padding-top: $max;
+      margin-top: 1rem;
+      margin-left: -1rem;
+      margin-right: -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    atomic-result-children::part(show-hide-button) {
+      margin-top: $min;
+      margin-bottom: $min;
+    }
+  }
+
+  atomic-result-placeholder {
+    margin-bottom: $max;
+  }
+}
+
 @define-mixin row-result-mobile {
+  atomic-result-section-children {
+    atomic-result-children::part(children-root) {
+      border-top: 1px solid var(--atomic-neutral);
+    }
+  }
+
   &.image-large.density-compact atomic-result-section-visual {
     width: 10.25rem;
     height: 10.25rem;
@@ -44,6 +72,8 @@
     atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
+
+    @mixin atomic-children-mobile 1.75rem, 1.25rem;
   }
 
   &.density-normal {
@@ -83,6 +113,8 @@
     atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
+
+    @mixin atomic-children-mobile 1.5rem, 0.875rem;
   }
 
   &.density-compact {
@@ -122,6 +154,8 @@
     atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
+
+    @mixin atomic-children-mobile 1rem, 0.475rem;
   }
 
   /* == Image styles == */
@@ -134,7 +168,8 @@
       'emphasized'
       'excerpt'
       'bottom-metadata'
-      'actions';
+      'actions'
+      'children';
     grid-template-columns: 100%;
     grid-template-rows: repeat(8, auto);
 
@@ -155,7 +190,8 @@
       'visual          .'
       'excerpt         excerpt'
       'bottom-metadata bottom-metadata'
-      'actions         actions';
+      'actions         actions'
+      'children        children';
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(4, auto) 1fr repeat(3, auto);
 
@@ -175,7 +211,7 @@
       'visual          excerpt'
       'visual          bottom-metadata'
       'visual          actions'
-      'visual          .';
+      'visual          children';
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(7, auto) 1fr;
 
@@ -194,7 +230,8 @@
       'emphasized'
       'excerpt'
       'bottom-metadata'
-      'actions';
+      'actions'
+      'children';
     grid-template-columns: 100%;
     grid-template-rows: repeat(7, auto);
 

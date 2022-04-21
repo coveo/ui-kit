@@ -12,6 +12,7 @@ export const ListDisplayResultsPlaceholder: FunctionalComponent<
         density={props.density}
         display="list"
         imageSize={props.imageSize!}
+        classes={props.classes}
       ></atomic-result-placeholder>
     )
   );

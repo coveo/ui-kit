@@ -21,9 +21,14 @@ export class AtomicResultPlaceholder {
   @Prop() display!: ResultDisplayLayout;
   @Prop() density!: ResultDisplayDensity;
   @Prop() imageSize?: ResultDisplayImageSize;
+  @Prop() classes = '';
 
   private getClasses() {
-    return getResultDisplayClasses(this.display, this.density, this.imageSize!);
+    return getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.imageSize!
+    ).concat(this.classes);
   }
 
   private renderExcerptLine(width: string) {
@@ -45,9 +50,9 @@ export class AtomicResultPlaceholder {
   public render() {
     return (
       <div
-        class={`result-root with-sections animate-pulse ${this.getClasses().join(
-          ' '
-        )}`}
+        class={`result-root with-sections animate-pulse ${this.getClasses()
+          .join(' ')
+          .trim()}`}
       >
         <atomic-result-section-visual>
           <div class={placeholderClasses}></div>

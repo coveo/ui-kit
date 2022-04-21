@@ -2,9 +2,14 @@ import {Result, FoldedResultListState} from '@coveo/headless';
 import {Component, Element, h, Prop, State} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
+import {getResultDisplayClasses} from '../atomic-result/atomic-result-display-options';
 import {Button} from '../common/button';
 import {FoldedResultListStateContext} from '../result-lists/result-list-decorators';
-import {ResultContext} from '../result-template-components/result-template-decorators';
+import {
+  DisplayConfig,
+  ResultContext,
+  ResultDisplayConfigContext,
+} from '../result-template-components/result-template-decorators';
 
 /**
  * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
@@ -13,6 +18,8 @@ import {ResultContext} from '../result-template-components/result-template-decor
  */
 @Component({
   tag: 'atomic-load-more-children-results',
+  styleUrl: 'atomic-load-more-children-results.pcss',
+  shadow: true,
 })
 export class AtomicLoadMoreChildrenResults {
   @InitializeBindings() public bindings!: Bindings;
@@ -23,6 +30,9 @@ export class AtomicLoadMoreChildrenResults {
   @FoldedResultListStateContext()
   @State()
   private foldedResultListState!: FoldedResultListState;
+
+  @ResultDisplayConfigContext()
+  private displayConfig!: DisplayConfig;
 
   /**
    * The label for the button used to load more results.
@@ -52,18 +62,38 @@ export class AtomicLoadMoreChildrenResults {
     return Boolean(this.getCollection().isLoadingMoreResults);
   }
 
+  private hasResults() {
+    return Boolean(this.getCollection().children.length);
+  }
+
+  private getButtonClass() {
+    if (this.hasResults()) {
+      return 'has-children';
+    }
+    return '';
+  }
+  private getWrapperClass() {
+    return getResultDisplayClasses(
+      'list',
+      this.displayConfig.density,
+      this.displayConfig.imageSize
+    ).join(' ');
+  }
+
   public render() {
     if (!this.foldedResultListState) {
       return null;
     }
 
     return (
-      <div>
-        {this.hasMoreResults() && !this.isLoading() && (
+      <div class={this.getWrapperClass()}>
+        {this.hasMoreResults() && (
           <Button
+            part="button"
             style="text-primary"
             onClick={() => this.loadFullCollection()}
-            part="button"
+            class={this.getButtonClass()}
+            disabled={this.isLoading()}
           >
             {this.label || this.bindings.i18n.t('load-all-results')}
           </Button>

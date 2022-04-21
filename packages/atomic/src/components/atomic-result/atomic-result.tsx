@@ -7,7 +7,10 @@ import {
   getResultDisplayClasses,
 } from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
+import {
+  DisplayConfig,
+  ResultContextEvent,
+} from '../result-template-components/result-template-decorators';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -68,11 +71,23 @@ export class AtomicResult {
    */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
+  @Prop() classes = '';
+
   @Listen('atomic/resolveResult')
   public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveResultDisplayConfig')
+  public resolveResultDisplayConfig(event: ResultContextEvent<DisplayConfig>) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.detail({
+      density: this.density,
+      imageSize: this.imageSize!,
+    });
   }
 
   private containsSections() {
@@ -107,6 +122,9 @@ export class AtomicResult {
     );
     if (this.containsSections()) {
       classes.push('with-sections');
+    }
+    if (this.classes) {
+      classes.push(this.classes);
     }
     return classes;
   }
