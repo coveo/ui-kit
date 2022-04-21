@@ -1,5 +1,11 @@
 import {LightningElement, track} from 'lwc';
 
+/**
+ * @typedef {Object} QuanticModalElement
+ * @method openModal
+ * @method closeModal
+ */
+
 export default class ExampleQuanticModal extends LightningElement {
   @track config = {};
   isConfigured = false;
@@ -28,11 +34,13 @@ export default class ExampleQuanticModal extends LightningElement {
   }
 
   openModal = () => {
+    /** @type {QuanticModalElement} */
     const modal = this.template.querySelector('c-quantic-modal');
     modal.openModal();
   };
 
   closeModal = () => {
+    /** @type {QuanticModalElement} */
     const modal = this.template.querySelector('c-quantic-modal');
     modal.closeModal();
   };
