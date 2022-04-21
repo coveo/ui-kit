@@ -77,7 +77,7 @@ export class AtomicModal implements InitializableComponent {
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
-  public componentWillLoad() {
+  public componentWillRender() {
     this.wasEverOpened ||= this.isOpen;
   }
 
