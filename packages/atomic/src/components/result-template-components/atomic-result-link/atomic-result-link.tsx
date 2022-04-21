@@ -71,8 +71,9 @@ export class AtomicResultLink implements InitializableComponent {
   }
 
   public connectedCallback() {
-    this.hasDefaultSlot = !!getSlotFromHost(this.host);
-    this.linkAttributes = getAttributesFromLinkSlot(this.host);
+    const slotName = 'attributes';
+    this.hasDefaultSlot = !!getSlotFromHost(this.host, slotName);
+    this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
   }
 
   public render() {

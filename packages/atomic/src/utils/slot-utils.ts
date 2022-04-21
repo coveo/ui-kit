@@ -1,11 +1,11 @@
-export function getSlotFromHost(host: HTMLElement, slotName?: string) {
+export function getSlotFromHost(host: HTMLElement, slotName: string) {
   const children = Array.from(host.children);
   const slots = children.filter((child) => {
     if (slotName) {
-      return child.slot === slotName;
+      return child.getAttribute('slot') === slotName;
     }
 
-    return child.slot === '';
+    return child.setAttribute('slot', '');
   });
 
   if (!slots.length) {

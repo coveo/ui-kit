@@ -1,9 +1,6 @@
 import {getSlotFromHost} from '../../utils/slot-utils';
 
-export function getAttributesFromLinkSlot(
-  host: HTMLElement,
-  slotName = 'attributes'
-) {
+export function getAttributesFromLinkSlot(host: HTMLElement, slotName: string) {
   const attributesSlot = getSlotFromHost(host, slotName);
   if (!attributesSlot) {
     return;
@@ -14,6 +11,7 @@ export function getAttributesFromLinkSlot(
       `Slot named "${slotName}" should be an "a" tag`,
       attributesSlot
     );
+    return;
   }
 
   return Array.from(attributesSlot.attributes).filter(({nodeName}) => {
