@@ -1,6 +1,10 @@
 @import '../../global/polyfills.pcss';
 
 @define-mixin atomic-children-mobile $max, $min {
+  &.child-result {
+    margin-bottom: $max;
+  }
+
   atomic-result-section-children {
     atomic-result-children::part(children-root) {
       padding-top: $max;
@@ -193,7 +197,7 @@
       'actions         actions'
       'children        children';
     grid-template-columns: auto minmax(0, 1fr);
-    grid-template-rows: repeat(4, auto) 1fr repeat(3, auto);
+    grid-template-rows: repeat(4, auto) minmax(0, 1fr) repeat(3, auto);
 
     atomic-result-section-visual {
       width: 24vw;
