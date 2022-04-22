@@ -76,6 +76,9 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {Function} */
   unsubscribeUrlManager;
 
+  /** @type {boolean} */
+  initialized = false;
+
   connectedCallback() {
     loadDependencies(this).then(() => {
       if (!getHeadlessBindings(this.engineId)?.engine) {
@@ -116,25 +119,29 @@ export default class QuanticSearchInterface extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
+    if (!this.initialized) {
+      const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
 
-    if (!this.disableStateInUrl) {
-      this.initUrlManager(engine);
-    }
-
-    if (!this.skipFirstSearch) {
-      const redirectData = window.localStorage.getItem(
-        STANDALONE_SEARCH_BOX_STORAGE_KEY
-      );
-      if (!redirectData) {
-        engine.executeFirstSearch();
-        return;
+      if (!this.disableStateInUrl) {
+        this.initUrlManager(engine);
       }
-      window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-      const {value, analytics} = JSON.parse(redirectData);
+  
+      if (!this.skipFirstSearch) {
+        const redirectData = window.localStorage.getItem(
+          STANDALONE_SEARCH_BOX_STORAGE_KEY
+        );
+        if (!redirectData) {
+          engine.executeFirstSearch();
+          return;
+        }
+        window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+        const {value, analytics} = JSON.parse(redirectData);
+  
+        engine.dispatch(updateQuery({q: value}));
+        engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
 
-      engine.dispatch(updateQuery({q: value}));
-      engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+        this.initialized = true;
+      }
     }
   };
 
