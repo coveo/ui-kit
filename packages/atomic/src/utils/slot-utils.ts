@@ -5,7 +5,7 @@ export function getSlotFromHost(host: HTMLElement, slotName: string) {
       return child.getAttribute('slot') === slotName;
     }
 
-    return child.setAttribute('slot', '');
+    return child.getAttribute('slot') === '';
   });
 
   if (!slots.length) {
