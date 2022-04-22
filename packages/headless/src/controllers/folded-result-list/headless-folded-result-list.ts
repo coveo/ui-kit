@@ -87,15 +87,15 @@ export interface FoldedResultList extends Controller {
    */
   loadCollection(collection: FoldedCollection): void;
   /**
-   * Finds a folded result by its unique id.
+   * Finds a folded result by its unique ID.
    *
-   * @param collection - The folded collection whose id will be used to find a collection in the results.
+   * @param collection - The folded collection whose ID will be used to find a collection in the results.
    */
   findResultById(collection: FoldedCollection): FoldedCollection | undefined;
   /**
    * Finds a folded result by its collection.
    *
-   * @param collection - The folded collection whose collection name will be used to find a collection in the results
+   * @param collection - The folded collection whose collection name will be used to find a collection in the results.
    */
   findResultByCollection(
     collection: FoldedCollection
