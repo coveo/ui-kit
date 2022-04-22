@@ -47,14 +47,10 @@ export default class QuanticModal extends LightningElement {
    * @returns {string}
    */
   get modalCssClass() {
-    return `modal ${this.fullScreen ? 'full-screen' : 'part-screen'} ${
-      this.visible
-        ? ''
-        : `modal_hidden ${
-            this.animation === 'slideToLeft'
-              ? 'hidden-modal_slide-to-left'
-              : 'hidden-modal_slide-to-top'
-          }`
-    }`;
+    const displayAreaClass = this.fullScreen ? 'full-screen' : 'part-screen';
+    const animationClass = this.animation === 'slideToLeft' ? 'hidden-modal_slide-to-left' : 'hidden-modal_slide-to-top';
+    const visibilityClass = this.visible ? '' : `modal_hidden ${animationClass}`;
+  
+    return `modal ${displayAreaClass} ${visibilityClass}`;
   }
 }
