@@ -1,12 +1,11 @@
 <template>
-  <div class={modalCssClass}>
-    <div
-      class="slds-var-p-horizontal_large modal__header"
-    >
+  <div role="dialog" aria-labelledby="modal-heading" aria-modal="true" aria-describedby="modal-content"
+    class={modalCssClass}>
+    <div id="modal-heading" class="slds-var-p-horizontal_large modal__header">
       <slot name="header"></slot>
     </div>
     <div class="modal__container">
-      <div class="slds-var-p-around_large modal__content">
+      <div id="modal-content" class="slds-var-p-around_large modal__content">
         <slot name="content"></slot>
       </div>
       <div class="slds-var-p-horizontal_large modal__footer">
