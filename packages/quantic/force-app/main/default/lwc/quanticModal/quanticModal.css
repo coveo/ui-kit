@@ -1,5 +1,5 @@
 .modal {
-  background-color: white;
+  background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
   top: 0;
   left: 0;
   display: flex;
@@ -26,7 +26,7 @@
 }
 
 .modal__header {
-  background-color: #F3F3F3;
+  background-color: var(--lwc-colorBackground, rgb(243, 243, 243));
 }
 
 .modal__container {
@@ -42,7 +42,7 @@
 }
 
 .modal__footer {
-  background-color: #F3F3F3;
+  background-color: var(--lwc-colorBackground, rgb(243, 243, 243));
 }
 
 .part-screen {
