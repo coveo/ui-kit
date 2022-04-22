@@ -8,8 +8,6 @@ import {
 } from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
 import {ResultContextEvent} from '../result-template-components/result-template-decorators';
-import {once} from '../../utils/utils';
-import {updateBreakpoints} from '../../utils/replace-breakpoint';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -119,10 +117,7 @@ export class AtomicResult {
       .join('');
   }
 
-  private updateBreakpoints = once(() => updateBreakpoints(this.host));
-
   public render() {
-    this.updateBreakpoints();
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
