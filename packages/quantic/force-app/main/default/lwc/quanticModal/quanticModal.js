@@ -35,7 +35,7 @@ export default class QuanticModal extends LightningElement {
   }
 
   /**
-   * Set the visible attribute to false to close the modal.
+   * Closes the modal.
    * @returns {void}
    */
   @api closeModal() {
