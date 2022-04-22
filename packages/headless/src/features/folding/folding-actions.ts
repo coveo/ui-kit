@@ -69,19 +69,17 @@ export type StateNeededByLoadCollection = ConfigurationSection &
 
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
-  ResultWithFolding,
+  CollectionId,
   AsyncThunkSearchOptions<StateNeededByLoadCollection>
 >(
   'folding/loadCollection',
   async (
-    result: ResultWithFolding,
+    collectionId: CollectionId,
     {getState, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
     const sharedWithSearchRequest =
       await buildSearchAndFoldingLoadCollectionRequest(state);
-
-    const collectionId = result.raw[state.folding.fields.collection] as string;
 
     const response = await apiClient.search({
       ...sharedWithSearchRequest,
@@ -101,7 +99,8 @@ export const loadCollection = createAsyncThunk<
     return {
       collectionId,
       results: response.success.results,
-      rootResult: result,
+      rootResult: state.folding.collections[collectionId]!
+        .result as ResultWithFolding,
     };
   }
 );

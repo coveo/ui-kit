@@ -9,7 +9,6 @@ import {
   LoadCollectionFulfilledReturn,
   StateNeededByLoadCollection,
 } from './folding-actions';
-import {ResultWithFolding} from './folding-slice';
 
 export type {RegisterFoldingActionCreatorPayload};
 
@@ -34,10 +33,10 @@ export interface FoldingActionCreators {
    * @returns A dispatchable action.
    */
   loadCollection(
-    result: ResultWithFolding
+    collectionId: string
   ): AsyncThunkAction<
     LoadCollectionFulfilledReturn,
-    ResultWithFolding,
+    string,
     AsyncThunkSearchOptions<StateNeededByLoadCollection>
   >;
 }

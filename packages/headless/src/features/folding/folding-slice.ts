@@ -95,7 +95,7 @@ function createCollectionFromResult(
     resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
 
   const children = resolveChildrenFromFields(
-    resolvedRoot,
+    rootResult ?? resolvedRoot,
     resultsInCollection,
     fields
   );
@@ -169,11 +169,11 @@ export const foldingReducer = createReducer(
             }
       )
       .addCase(loadCollection.pending, (state, {meta}) => {
-        const collectionId = meta.arg.raw[state.fields.collection] as string;
+        const collectionId = meta.arg;
         state.collections[collectionId].isLoadingMoreResults = true;
       })
       .addCase(loadCollection.rejected, (state, {meta}) => {
-        const collectionId = meta.arg.raw[state.fields.collection] as string;
+        const collectionId = meta.arg;
         state.collections[collectionId].isLoadingMoreResults = false;
       })
       .addCase(
