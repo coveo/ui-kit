@@ -91,17 +91,18 @@ function createCollectionFromResult(
 ): FoldedCollection {
   const resultsInCollection = getAllIncludedResultsFrom(relevantResult);
 
-  const resolvedRoot =
-    resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
+  const resultToUseAsRoot =
+    rootResult ??
+    resolveRootFromFields(resultsInCollection, fields) ??
+    relevantResult;
 
-  const children = resolveChildrenFromFields(
-    rootResult ?? resolvedRoot,
-    resultsInCollection,
-    fields
-  );
   return {
-    result: rootResult || resolvedRoot,
-    children,
+    result: resultToUseAsRoot,
+    children: resolveChildrenFromFields(
+      resultToUseAsRoot,
+      resultsInCollection,
+      fields
+    ),
     moreResultsAvailable: true,
     isLoadingMoreResults: false,
   };
