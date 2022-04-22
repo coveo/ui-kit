@@ -224,20 +224,20 @@ export class AtomicResultChildren {
       !result.isLoadingMoreResults &&
       !result.moreResultsAvailable
     ) {
-      return null;
+      return (
+        <Button
+          part="show-hide-button"
+          class="show-hide-button"
+          style="text-primary"
+          onClick={() => (this.hideResults = !this.hideResults)}
+        >
+          {this.bindings.i18n.t(
+            this.hideResults ? 'show-all-results' : 'hide-all-results'
+          )}
+        </Button>
+      );
     }
-    return (
-      <Button
-        part="show-hide-button"
-        class="show-hide-button"
-        style="text-primary"
-        onClick={() => (this.hideResults = !this.hideResults)}
-      >
-        {this.bindings.i18n.t(
-          this.hideResults ? 'show-all-results' : 'hide-all-results'
-        )}
-      </Button>
-    );
+    return null;
   }
 
   public render() {
