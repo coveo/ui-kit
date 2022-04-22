@@ -86,17 +86,20 @@ function resolveRootFromFields(
 
 function createCollectionFromResult(
   relevantResult: ResultWithFolding,
-  fields: FoldingFields
+  fields: FoldingFields,
+  rootResult?: ResultWithFolding
 ): FoldedCollection {
   const resultsInCollection = getAllIncludedResultsFrom(relevantResult);
 
-  const rootResult =
-    resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
+  const resultToUseAsRoot =
+    rootResult ??
+    resolveRootFromFields(resultsInCollection, fields) ??
+    relevantResult;
 
   return {
-    result: rootResult,
+    result: resultToUseAsRoot,
     children: resolveChildrenFromFields(
-      rootResult,
+      resultToUseAsRoot,
       resultsInCollection,
       fields
     ),
@@ -107,7 +110,8 @@ function createCollectionFromResult(
 
 function createCollections(
   results: ResultWithFolding[],
-  fields: FoldingFields
+  fields: FoldingFields,
+  rootResult?: ResultWithFolding
 ) {
   const collections: Record<CollectionId, FoldedCollection> = {};
   results.forEach((result) => {
@@ -118,7 +122,11 @@ function createCollections(
     if (!getChildField(result, fields)) {
       return;
     }
-    collections[collectionId] = createCollectionFromResult(result, fields);
+    collections[collectionId] = createCollectionFromResult(
+      result,
+      fields,
+      rootResult
+    );
   });
   return collections;
 }
@@ -171,10 +179,11 @@ export const foldingReducer = createReducer(
       })
       .addCase(
         loadCollection.fulfilled,
-        (state, {payload: {collectionId, results}}) => {
+        (state, {payload: {collectionId, results, rootResult}}) => {
           const newCollections = createCollections(
             results as ResultWithFolding[],
-            state.fields
+            state.fields,
+            rootResult
           );
           state.collections[collectionId] = newCollections[collectionId];
           state.collections[collectionId].moreResultsAvailable = false;
