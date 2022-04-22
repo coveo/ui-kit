@@ -90,12 +90,14 @@ export interface FoldedResultList extends Controller {
    * Finds a folded result by its unique ID.
    *
    * @param collection - The folded collection whose ID will be used to find a collection in the results.
+   * @returns The `FoldedResult` associated with the collection's ID.
    */
   findResultById(collection: FoldedCollection): FoldedResult | null;
   /**
    * Finds a folded result by its collection.
    *
    * @param collection - The folded collection whose collection name will be used to find a collection in the results.
+   * @returns The `FoldedResult` associated with the collection's name.
    */
   findResultByCollection(collection: FoldedCollection): FoldedResult | null;
   /**
