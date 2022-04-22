@@ -1,8 +1,8 @@
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 // @ts-ignore
-import {loadScript} from 'lightning/platformResourceLoader';
+import { loadScript } from 'lightning/platformResourceLoader';
 // @ts-ignore
-import {Debouncer, Deferred, Store} from 'c/quanticUtils';
+import { Debouncer, Deferred, Store } from 'c/quanticUtils';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
@@ -35,7 +35,7 @@ const loadDependencies = async (element, headlessUseCase) => {
     ...dependencyPromises,
     loadScript(element, HeadlessPath + bundleInfo.libPath),
   ];
-    
+
   await Promise.all(dependencyPromises);
   return bundleInfo.bundle();
 }
@@ -140,9 +140,9 @@ async function initEngine(engineId) {
  */
 const initQuanticStore = (engineId) => {
   try {
-     if(!window.coveoHeadless[engineId].bindings.store) {
-       window.coveoHeadless[engineId].bindings.store = Store.initialize();
-     }
+    if (!window.coveoHeadless[engineId].bindings.store) {
+      window.coveoHeadless[engineId].bindings.store = Store.initialize();
+    }
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Quantic store: ' + error);
   }
@@ -231,7 +231,7 @@ function getHeadlessBindings(engineId) {
  * @param {string} engineId The engine ID.
  */
 function getQuanticStore(engineId) {
- return window.coveoHeadless?.[engineId]?.bindings?.store;
+  return window.coveoHeadless?.[engineId]?.bindings?.store;
 }
 
 /**
@@ -267,7 +267,7 @@ function destroyEngine(engineId) {
  * Register a facet in the store.
  * @param {string} engineId The engine ID.
  * @param {string} facetType
- * @param {{ label: string; facetId: string; format?: function}} data
+ * @param {{ label: string; facetId: string; format?: function, element?: Element}} data
  */
 function registerToStore(engineId, facetType, data) {
   const store = getQuanticStore(engineId);
@@ -293,6 +293,20 @@ function getFromStore(engineId, facetType) {
   }
 }
 
+/**
+ * Get all facets data from store.
+ * @param {string} engineId The engine ID.
+ */
+function getAllFacetsFromStore(engineId) {
+  const store = getQuanticStore(engineId);
+  try {
+    return Store.getAllFacetsFromStore(store)
+  } catch (error) {
+    console.error('Fatal error: unable to get data from store', error);
+    return undefined;
+  }
+}
+
 export {
   loadDependencies,
   setInitializedCallback,
@@ -306,4 +320,5 @@ export {
   registerToStore,
   getFromStore,
   HeadlessBundleNames,
+  getAllFacetsFromStore
 }
