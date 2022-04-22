@@ -200,12 +200,14 @@ export class AtomicResultChildren {
           isChild
         />
       );
-    } else if (this.hasResults) {
+    }
+    if (this.hasResults) {
       const children = this.hideResults
         ? this.initialChildren
         : result.children;
       return children.map((child) => this.renderChild(child));
-    } else if (this.showAllResults) {
+    }
+    if (this.showAllResults) {
       return (
         <p part="no-result-root" class="no-result-root">
           {this.noResultText || this.bindings.i18n.t('no-documents-related')}
