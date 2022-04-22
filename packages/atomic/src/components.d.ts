@@ -640,10 +640,10 @@ export namespace Components {
         "field": string;
     }
     interface AtomicResultPlaceholder {
-        "classes": string;
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
+        "isChild": boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -2086,10 +2086,10 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicResultPlaceholder {
-        "classes"?: string;
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
+        "isChild"?: boolean;
     }
     interface AtomicResultPrintableUri {
         /**

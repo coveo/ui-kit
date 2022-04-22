@@ -1,22 +1,22 @@
-@define-mixin atomic-children-desktop $max, $min {
+@define-mixin atomic-children-desktop $margin-small, $margin-small {
   &.child-result {
-    margin-bottom: $max;
+    margin-bottom: $margin-small;
   }
 
   atomic-result-section-children {
     atomic-result-children::part(children-root) {
-      margin-top: $min;
-      padding: $max;
+      margin-top: $margin-small;
+      padding: $margin-small;
     }
 
     atomic-result-children::part(show-hide-button) {
-      margin-top: $min;
-      margin-bottom: $min;
+      margin-top: $margin-small;
+      margin-bottom: $margin-small;
     }
   }
 
   atomic-result-placeholder {
-    margin-bottom: $max;
+    margin-bottom: $margin-small;
   }
 }
 

@@ -21,14 +21,14 @@ export class AtomicResultPlaceholder {
   @Prop() display!: ResultDisplayLayout;
   @Prop() density!: ResultDisplayDensity;
   @Prop() imageSize?: ResultDisplayImageSize;
-  @Prop() classes = '';
+  @Prop() isChild = false;
 
   private getClasses() {
     return getResultDisplayClasses(
       this.display,
       this.density,
       this.imageSize!
-    ).concat(this.classes);
+    ).concat(this.isChild ? 'child-result' : '');
   }
 
   private renderExcerptLine(width: string) {

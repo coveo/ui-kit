@@ -162,16 +162,7 @@ export class AtomicResultChildren {
     );
   }
 
-  private showCollapseButton() {
-    const result = this.getResult();
-    return (
-      Boolean(result.children.length) &&
-      !result.isLoadingMoreResults &&
-      !result.moreResultsAvailable
-    );
-  }
-
-  private showChildrenWrapper() {
+  private shouldShowChildrenWrapper() {
     const result = this.getResult();
     if (!this.initialChildren.length && this.hideResults) return false;
     return (
@@ -200,12 +191,12 @@ export class AtomicResultChildren {
     if (result.isLoadingMoreResults) {
       components.push(
         <ListDisplayResultsPlaceholder
-          classes="child-result"
           resultsPerPageState={{
             numberOfResults: result.children.length || 2,
           }}
           density={this.displayConfig.density}
           imageSize={this.imageSize || this.displayConfig.imageSize}
+          isChild
         />
       );
     } else if (hasResults) {
@@ -226,24 +217,36 @@ export class AtomicResultChildren {
     return components;
   }
 
+  private renderCollapseButton() {
+    const result = this.getResult();
+    if (
+      Boolean(result.children.length) &&
+      !result.isLoadingMoreResults &&
+      !result.moreResultsAvailable
+    ) {
+      return null;
+    }
+    return (
+      <Button
+        part="show-hide-button"
+        class="show-hide-button"
+        style="text-primary"
+        onClick={() => (this.hideResults = !this.hideResults)}
+      >
+        {this.bindings.i18n.t(
+          this.hideResults ? 'show-all-results' : 'hide-all-results'
+        )}
+      </Button>
+    );
+  }
+
   public render() {
     if (!this.ready) return null;
     if (this.templateHasError) return <slot></slot>;
     return (
       <Host>
-        {this.showCollapseButton() && (
-          <Button
-            part="show-hide-button"
-            class="show-hide-button"
-            style="text-primary"
-            onClick={() => (this.hideResults = !this.hideResults)}
-          >
-            {this.bindings.i18n.t(
-              this.hideResults ? 'show-all-results' : 'hide-all-results'
-            )}
-          </Button>
-        )}
-        {this.showChildrenWrapper() && (
+        {this.renderCollapseButton()}
+        {this.shouldShowChildrenWrapper() && (
           <div part="children-root">{this.getComponents()}</div>
         )}
       </Host>
