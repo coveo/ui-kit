@@ -186,7 +186,7 @@ export class AtomicResultChildren {
   private getComponents() {
     const components = [];
     const result = this.getResult();
-    const hasResults = Boolean(result.children.length);
+    const hasResults = result.children.length !== 0;
     if (hasResults) {
       components.push(<slot name="before-children"></slot>);
     }
