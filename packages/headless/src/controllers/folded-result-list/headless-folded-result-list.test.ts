@@ -180,7 +180,7 @@ describe('FoldedResultList', () => {
   });
 });
 
-function makeFoldedResult(result: any, children: any[] = []) {
+function makeFoldedResult(result: Result, children: Result[] = []) {
   return {
     isLoadingMoreResults: true,
     moreResultsAvailable: true,

@@ -225,7 +225,7 @@ function loadFoldingReducer(
 
 function searchForResult(
   results: FoldedCollection[] | FoldedResult[],
-  compareCb: (result: FoldedResult) => Boolean
+  compareCb: (result: FoldedResult) => boolean
 ): FoldedResult | null {
   for (let i = 0; i < results.length; i++) {
     const result = results[i];
