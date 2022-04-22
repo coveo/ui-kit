@@ -139,9 +139,8 @@ export default class QuanticSearchInterface extends LightningElement {
   
         engine.dispatch(updateQuery({q: value}));
         engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
-
-        this.initialized = true;
       }
+      this.initialized = true;
     }
   };
 
