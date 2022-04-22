@@ -75,18 +75,18 @@ export class AtomicModal implements InitializableComponent {
     this.source?.focus();
   }
 
-  private updateBreakpoints = once(() => updateBreakpoints(this.host));
-
   public componentWillRender() {
     this.wasEverOpened ||= this.isOpen;
   }
 
+  private updateBreakpoints = once(() => updateBreakpoints(this.host));
+
   public render() {
+    this.updateBreakpoints();
+
     if (!this.wasEverOpened) {
       return;
     }
-
-    this.updateBreakpoints();
 
     return (
       <div
