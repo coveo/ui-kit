@@ -1,4 +1,4 @@
-import {executeSearch} from '../../features/search/search-actions';
+import {fetchPage} from '../../features/search/search-actions';
 import {
   logPageNumber,
   logPageNext,
@@ -39,17 +39,17 @@ export function buildPager(
 
     selectPage(page: number) {
       pager.selectPage(page);
-      dispatch(executeSearch(logPageNumber()));
+      dispatch(fetchPage(logPageNumber()));
     },
 
     nextPage() {
       pager.nextPage();
-      dispatch(executeSearch(logPageNext()));
+      dispatch(fetchPage(logPageNext()));
     },
 
     previousPage() {
       pager.previousPage();
-      dispatch(executeSearch(logPagePrevious()));
+      dispatch(fetchPage(logPagePrevious()));
     },
   };
 }
