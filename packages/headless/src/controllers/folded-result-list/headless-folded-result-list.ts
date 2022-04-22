@@ -91,15 +91,13 @@ export interface FoldedResultList extends Controller {
    *
    * @param collection - The folded collection whose ID will be used to find a collection in the results.
    */
-  findResultById(collection: FoldedCollection): FoldedCollection | undefined;
+  findResultById(collection: FoldedCollection): FoldedResult | null;
   /**
    * Finds a folded result by its collection.
    *
    * @param collection - The folded collection whose collection name will be used to find a collection in the results.
    */
-  findResultByCollection(
-    collection: FoldedCollection
-  ): FoldedCollection | undefined;
+  findResultByCollection(collection: FoldedCollection): FoldedResult | null;
   /**
    * The state of the `FoldedResultList` controller.
    */
@@ -175,13 +173,15 @@ export function buildFoldedResultList(
     },
 
     findResultById(collection) {
-      return this.state.results.find(
+      return searchForResult(
+        this.state.results,
         (r) => r.result.uniqueId === collection.result.uniqueId
       );
     },
 
     findResultByCollection(collection) {
-      return this.state.results.find(
+      return searchForResult(
+        this.state.results,
         (r) =>
           r.result.raw.foldingcollection ===
           collection.result.raw.foldingcollection
@@ -219,4 +219,23 @@ function loadFoldingReducer(
 > {
   engine.addReducers({search, configuration, folding, query});
   return true;
+}
+
+function searchForResult(
+  results: FoldedCollection[] | FoldedResult[],
+  compareCb: (result: FoldedResult) => Boolean
+): FoldedResult | null {
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
+    if (compareCb(result)) {
+      return result;
+    }
+    if (result.children.length) {
+      const childResult = searchForResult(result.children, compareCb);
+      if (childResult) {
+        return childResult;
+      }
+    }
+  }
+  return null;
 }
