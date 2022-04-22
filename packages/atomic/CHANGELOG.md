@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.1...@coveo/atomic@1.46.2) (2022-04-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.46.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.0...@coveo/atomic@1.46.1) (2022-04-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.46.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.45.1...@coveo/atomic@1.46.0) (2022-04-19)
+
+
+### Features
+
+* **atomic:** add load collection component ([#1921](https://github.com/coveo/ui-kit/issues/1921)) ([1702778](https://github.com/coveo/ui-kit/commit/170277893b829ab03187ee793798273aa2fa5a51))
+* **headless,atomic:** added smart snippet source analytics ([#1876](https://github.com/coveo/ui-kit/issues/1876)) ([8e7ec24](https://github.com/coveo/ui-kit/commit/8e7ec2490615b346aac692aa1c970a6d6b536a27))
+
+
+
+
+
+## [1.45.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.45.0...@coveo/atomic@1.45.1) (2022-04-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.2...@coveo/atomic@1.45.0) (2022-04-14)
+
+
+### Features
+
+* **atomic:** add hrefTemplate prop to atomic-result-link ([#1918](https://github.com/coveo/ui-kit/issues/1918)) ([04f7c0c](https://github.com/coveo/ui-kit/commit/04f7c0cc808c525beaf61367a6dfcd7bf3d0c991))
+
+
+
+
+
+## [1.44.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.1...@coveo/atomic@1.44.2) (2022-04-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.44.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.0...@coveo/atomic@1.44.1) (2022-04-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.1...@coveo/atomic@1.44.0) (2022-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** make resultContext function generic ([#1905](https://github.com/coveo/ui-kit/issues/1905)) ([f150717](https://github.com/coveo/ui-kit/commit/f150717a63c70373bee0e2326fd230390021cfb8))
+
+
+### Features
+
+* **atomic:** allow grandchild children to inherit templates from chi… ([#1902](https://github.com/coveo/ui-kit/issues/1902)) ([7a61b5f](https://github.com/coveo/ui-kit/commit/7a61b5f03ffaa3a336682cd7e7cda2b6a85a1e96))
+
+
+
+
+
 ## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.0...@coveo/atomic@1.43.1) (2022-04-11)
 
 

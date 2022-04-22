@@ -204,11 +204,13 @@ export namespace Components {
     }
     interface AtomicFoldedResultList {
         /**
-          * TODO:
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**
-          * TODO:
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
          */
         "collectionField"?: string;
         /**
@@ -224,7 +226,8 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
-          * TODO:
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
          */
         "parentField"?: string;
         /**
@@ -292,6 +295,13 @@ export namespace Components {
           * The name of the layout section.
          */
         "section": Section;
+    }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label": string;
     }
     interface AtomicLoadMoreResults {
     }
@@ -530,6 +540,10 @@ export namespace Components {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates": boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -562,6 +576,11 @@ export namespace Components {
         "field": string;
     }
     interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
         /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
@@ -1039,6 +1058,12 @@ declare global {
         prototype: HTMLAtomicLayoutSectionElement;
         new (): HTMLAtomicLayoutSectionElement;
     };
+    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
+    }
+    var HTMLAtomicLoadMoreChildrenResultsElement: {
+        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
+        new (): HTMLAtomicLoadMoreChildrenResultsElement;
+    };
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
     }
     var HTMLAtomicLoadMoreResultsElement: {
@@ -1390,6 +1415,7 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
+        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
@@ -1638,11 +1664,13 @@ declare namespace LocalJSX {
     }
     interface AtomicFoldedResultList {
         /**
-          * TODO:
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
          */
         "childField"?: string;
         /**
-          * TODO:
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
          */
         "collectionField"?: string;
         /**
@@ -1658,7 +1686,8 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
-          * TODO:
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
          */
         "parentField"?: string;
     }
@@ -1721,6 +1750,13 @@ declare namespace LocalJSX {
           * The name of the layout section.
          */
         "section": Section;
+    }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label"?: string;
     }
     interface AtomicLoadMoreResults {
     }
@@ -1961,6 +1997,10 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicResultChildren {
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates"?: boolean;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -1989,6 +2029,11 @@ declare namespace LocalJSX {
         "field": string;
     }
     interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
         /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
@@ -2345,6 +2390,7 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
         "atomic-layout-section": AtomicLayoutSection;
+        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
@@ -2426,6 +2472,7 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
+            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;

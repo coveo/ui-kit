@@ -11,6 +11,7 @@ import {
   fetchMoreResults,
   StateNeededByExecuteSearch,
   fetchFacetValues,
+  fetchPage,
 } from './search-actions';
 
 /**
@@ -73,6 +74,32 @@ export interface SearchActionCreators {
       ClientThunkExtraArguments<SearchAPIClient>
     >
   >;
+
+  /**
+   * Creates an action that executes a search query to fetch a new page of results.
+   *
+   * @example
+   *
+   * ```js
+   * const {logPagerNext} = loadSearchAnalyticsActions(engine);
+   * const {fetchPage} = loadSearchActions(engine);
+   *
+   * engine.dispatch(fetchPage(logPagerNext()));
+   * ```
+   *
+   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
+   * @returns A dispatchable action.
+   */
+  fetchPage(
+    analyticsSearchAction: SearchAction
+  ): AsyncThunkAction<
+    ExecuteSearchThunkReturn,
+    SearchAction,
+    AsyncThunkOptions<
+      StateNeededByExecuteSearch,
+      ClientThunkExtraArguments<SearchAPIClient>
+    >
+  >;
 }
 
 /**
@@ -87,5 +114,6 @@ export function loadSearchActions(engine: SearchEngine): SearchActionCreators {
     executeSearch,
     fetchMoreResults,
     fetchFacetValues,
+    fetchPage,
   };
 }

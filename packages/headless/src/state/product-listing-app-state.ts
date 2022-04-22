@@ -2,6 +2,7 @@ import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
+  ContextSection,
   DateFacetSection,
   FacetOptionsSection,
   FacetOrderSection,
@@ -26,4 +27,5 @@ export type ProductListingAppState = ConfigurationSection &
   FacetOrderSection &
   StructuredSortSection &
   PaginationSection &
-  VersionSection;
+  VersionSection &
+  ContextSection;

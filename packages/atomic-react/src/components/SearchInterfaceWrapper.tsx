@@ -18,15 +18,10 @@ interface WrapperProps extends Omit<JSX.AtomicSearchInterface, 'i18n'> {
    */
   onReady?: (executeFirstSearch: ExecuteSearch) => Promise<void>;
   /**
-   * An optional `theme` property can be set in order to load one of the premade Coveo themes.
-   *
-   * Possible values are:
-   *
-   * - `coveo`: the default theme, used if no value is provided. It consists of a set of colors that match the Coveo brand.
-   * - `accessible`: a high contrast theme, best suited for implementations where web accessibility is important.
-   * - `none`: no premade theme will be loaded. You will have to provide the theme yourself.
+   * @deprecated
    *
    * Read more about theming and visual customization here : https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/
+   *
    */
   theme?: string | 'none';
   /**
@@ -62,21 +57,21 @@ export const SearchInterfaceWrapper = (
       configuration: getSampleSearchEngineConfiguration(),
     });
   }
-  const {engine, theme, localization, onReady, ...allOtherProps} = mergedProps;
+  const {engine, localization, onReady, ...allOtherProps} = mergedProps;
   const searchInterfaceRef = useRef<HTMLAtomicSearchInterfaceElement>(null);
-  if (theme !== 'none') {
-    import(`@coveo/atomic/dist/atomic/themes/${theme}.css`);
-  }
+  let initialization: Promise<void> | null = null;
 
   useEffect(() => {
     const searchInterfaceAtomic = searchInterfaceRef.current!;
-
-    searchInterfaceAtomic.initializeWithSearchEngine(engine).then(() => {
-      localization(searchInterfaceAtomic.i18n);
-      onReady(
-        searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
-      );
-    });
+    if (!initialization) {
+      initialization = searchInterfaceAtomic.initializeWithSearchEngine(engine);
+      initialization.then(() => {
+        localization(searchInterfaceAtomic.i18n);
+        onReady(
+          searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
+        );
+      });
+    }
   }, [searchInterfaceRef]);
 
   return (

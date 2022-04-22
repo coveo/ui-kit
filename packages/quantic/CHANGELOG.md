@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.6...@coveo/quantic@1.13.7) (2022-04-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.13.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.5...@coveo/quantic@1.13.6) (2022-04-22)
+
+
+### Bug Fixes
+
+* **quantic:** added optional chaining to searchbox ([#1941](https://github.com/coveo/ui-kit/issues/1941)) ([ffdcfb9](https://github.com/coveo/ui-kit/commit/ffdcfb9d0ff645638a4f152b9b736d7ba51308c2))
+
+
+
+
+
+## [1.13.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.4...@coveo/quantic@1.13.5) (2022-04-21)
+
+
+### Bug Fixes
+
+* **quantic:** fixed double search on timeframe facet clear ([#1940](https://github.com/coveo/ui-kit/issues/1940)) ([a212ef1](https://github.com/coveo/ui-kit/commit/a212ef1ba9a07af1c9b604232770e6d25bd78500))
+
+
+
+
+
+## [1.13.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.3...@coveo/quantic@1.13.4) (2022-04-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.13.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.2...@coveo/quantic@1.13.3) (2022-04-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.13.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.1...@coveo/quantic@1.13.2) (2022-04-13)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.13.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.0...@coveo/quantic@1.13.1) (2022-04-11)
 
 **Note:** Version bump only for package @coveo/quantic

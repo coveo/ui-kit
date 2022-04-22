@@ -13,16 +13,13 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
-import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../result-lists/result-list-common';
+} from '../../atomic-result/atomic-result-display-options';
+import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -41,7 +38,7 @@ import {
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.pcss',
+  styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
 export class AtomicResultList implements InitializableComponent {
@@ -53,7 +50,6 @@ export class AtomicResultList implements InitializableComponent {
   @Element() public host!: HTMLDivElement;
 
   /**
-   * TODO: KIT-452 Infinite scroll feature
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
    */

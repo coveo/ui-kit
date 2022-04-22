@@ -162,3 +162,11 @@ export type {
   NumericFilterInitialState,
 } from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-filter';
 export {buildNumericFilter} from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-filter';
+
+export type {
+  Context,
+  ContextState,
+  ContextPayload,
+  ContextValue,
+} from './controllers/product-listing/context/headless-product-listing-context';
+export {buildContext} from './controllers/product-listing/context/headless-product-listing-context';

@@ -143,6 +143,7 @@
           <atomic-facet-manager>
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
+            <atomic-facet field="source" label="Source"></atomic-facet>
             <atomic-facet field="author" label="Authors"></atomic-facet>
             <atomic-facet field="language" label="Language"></atomic-facet>
             <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
@@ -205,7 +206,7 @@
           </atomic-layout-section>
           <atomic-layout-section section="results">
             <atomic-smart-snippet></atomic-smart-snippet>
-            <atomic-folded-result-list fields-to-include="snrating,sncost">
+            <atomic-result-list fields-to-include="snrating,sncost">
               <atomic-result-template must-match-sourcetype="YouTube">
                 <template>
                   <atomic-result-section-visual image-size="small">
@@ -353,25 +354,9 @@
                   <atomic-table-element label="file-type">
                     <atomic-result-text field="filetype"></atomic-result-text>
                   </atomic-table-element>
-                  <atomic-result-section-children>
-                    <atomic-result-children>
-                      <atomic-result-children-template>
-                        <template>
-                          <atomic-result-link></atomic-result-link>
-                          <atomic-result-children>
-                            <atomic-result-children-template>
-                              <template>
-                                <atomic-result-link></atomic-result-link>
-                              </template>
-                            </atomic-result-children-template>
-                          </atomic-result-children>
-                        </template>
-                      </atomic-result-children-template>
-                    </atomic-result-children>
-                  </atomic-result-section-children>
                 </template>
               </atomic-result-template>
-            </atomic-folded-result-list>
+            </atomic-result-list>
             <atomic-query-error></atomic-query-error>
             <atomic-no-results></atomic-no-results>
           </atomic-layout-section>
@@ -385,5 +370,6 @@
         </atomic-layout-section>
       </atomic-search-layout>
     </atomic-search-interface>
+    <script src="./header.js" type="text/javascript"></script>
   </body>
 </html>

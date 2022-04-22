@@ -1,20 +1,21 @@
+import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
-import {Component, Element, Prop, State, Method} from '@stencil/core';
-import {MapProp} from '../../utils/props-utils';
-import {ResultTemplateCommon} from '../result-templates/result-template-common';
+import {MapProp} from '../../../utils/props-utils';
+import {ResultTemplateCommon} from '../result-template-common';
 
 /**
- * TODO:
- * @internal
+ * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+ *
+ * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
  */
 @Component({
-  tag: 'atomic-result-children-template',
+  tag: 'atomic-result-template',
   shadow: true,
 })
-export class AtomicResultChildrenTemplate {
-  @Element() public host!: HTMLDivElement;
-
+export class AtomicResultTemplate {
   @State() public error!: Error;
+
+  @Element() public host!: HTMLDivElement;
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -25,14 +26,14 @@ export class AtomicResultChildrenTemplate {
   @Prop() public conditions: ResultTemplateCondition[] = [];
 
   /**
-   * Fields and field values that results must match for the result template to apply.
+   * The field and values that define which result items the condition must be applied to.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
    */
   @MapProp({splitValues: true}) public mustMatch: Record<string, string[]> = {};
 
   /**
-   * Fields and field values that results must not match for the result template to apply.
+   * The field and values that define which result items the condition must not be applied to.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
    */
@@ -41,13 +42,21 @@ export class AtomicResultChildrenTemplate {
 
   public resultTemplateCommon: ResultTemplateCommon;
 
+  public componentWillLoad() {
+    this.resultTemplateCommon.addMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
+    );
+  }
+
   constructor() {
     this.resultTemplateCommon = new ResultTemplateCommon({
       host: this.host,
       setError: (err) => {
         this.error = err;
       },
-      validParents: ['atomic-result-children'],
+      validParents: ['atomic-result-list', 'atomic-folded-result-list'],
+      allowEmpty: true,
     });
   }
 
@@ -57,13 +66,6 @@ export class AtomicResultChildrenTemplate {
   @Method()
   public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
     return this.resultTemplateCommon.getTemplate(this.conditions, this.error);
-  }
-
-  public componentWillLoad() {
-    this.resultTemplateCommon.addMatchConditions(
-      this.mustMatch,
-      this.mustNotMatch
-    );
   }
 
   public render() {

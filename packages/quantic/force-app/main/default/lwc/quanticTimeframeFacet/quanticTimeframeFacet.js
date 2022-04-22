@@ -483,13 +483,14 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   clearSelections() {
-    if (this.withDatePicker) {
+    this._showValues = true;
+
+    if (this.withDatePicker && this.dateFilter?.state.range) {
       this.dateFilter.clear();
       this.disableRangeValidation();
+      return;
     }
     this.facet.deselectAll();
-
-    this._showValues = true;
   }
 
   /**

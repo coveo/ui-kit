@@ -77,6 +77,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
 
   public getSearchUID() {
     return (
+      this.state.search?.searchResponseId ||
       this.state.search?.response.searchUid ||
       this.state.recommendation?.searchUid ||
       this.state.productListing?.responseId ||
