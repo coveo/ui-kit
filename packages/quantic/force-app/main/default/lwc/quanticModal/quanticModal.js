@@ -27,7 +27,7 @@ export default class QuanticModal extends LightningElement {
   visible = false;
 
   /**
-   * Set the visible attribute to true to open the modal.
+   * Opens the modal.
    * @returns {void}
    */
   @api openModal() {
