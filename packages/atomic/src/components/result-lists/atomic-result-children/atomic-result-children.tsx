@@ -165,7 +165,7 @@ export class AtomicResultChildren {
   private shouldShowChildrenWrapper() {
     const result = this.getResult();
     if (!this.initialChildren.length && this.hideResults) {
-        return false;
+      return false;
     }
     return (
       Boolean(result.children.length) ||
@@ -183,15 +183,14 @@ export class AtomicResultChildren {
     }
   }
 
+  private get hasResults() {
+    return this.getResult().children.length !== 0;
+  }
+
   private getComponents() {
-    const components = [];
     const result = this.getResult();
-    const hasResults = result.children.length !== 0;
-    if (hasResults) {
-      components.push(<slot name="before-children"></slot>);
-    }
     if (result.isLoadingMoreResults) {
-      components.push(
+      return (
         <ListDisplayResultsPlaceholder
           resultsPerPageState={{
             numberOfResults: result.children.length || 2,
@@ -201,28 +200,26 @@ export class AtomicResultChildren {
           isChild
         />
       );
-    } else if (hasResults) {
+    } else if (this.hasResults) {
       const children = this.hideResults
         ? this.initialChildren
         : result.children;
-      components.push(children.map((child) => this.renderChild(child)));
+      return children.map((child) => this.renderChild(child));
     } else if (this.showAllResults) {
-      components.push(
+      return (
         <p part="no-result-root" class="no-result-root">
           {this.noResultText || this.bindings.i18n.t('no-documents-related')}
         </p>
       );
     }
-    if (hasResults) {
-      components.push(<slot name="after-children"></slot>);
-    }
-    return components;
+    return null;
   }
 
   private renderCollapseButton() {
     const result = this.getResult();
     if (
       Boolean(result.children.length) &&
+      result.children.length !== this.initialChildren.length &&
       !result.isLoadingMoreResults &&
       !result.moreResultsAvailable
     ) {
@@ -234,7 +231,7 @@ export class AtomicResultChildren {
           onClick={() => (this.hideResults = !this.hideResults)}
         >
           {this.bindings.i18n.t(
-            this.hideResults ? 'show-all-results' : 'hide-all-results'
+            this.hideResults ? 'expand-results' : 'collapse-results'
           )}
         </Button>
       );
@@ -249,7 +246,11 @@ export class AtomicResultChildren {
       <Host>
         {this.renderCollapseButton()}
         {this.shouldShowChildrenWrapper() && (
-          <div part="children-root">{this.getComponents()}</div>
+          <div part="children-root">
+            {this.hasResults && <slot name="before-children"></slot>}
+            {this.getComponents()}
+            {this.hasResults && <slot name="after-children"></slot>}
+          </div>
         )}
       </Host>
     );
