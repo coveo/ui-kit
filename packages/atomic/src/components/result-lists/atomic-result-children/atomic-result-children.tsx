@@ -164,7 +164,9 @@ export class AtomicResultChildren {
 
   private shouldShowChildrenWrapper() {
     const result = this.getResult();
-    if (!this.initialChildren.length && this.hideResults) return false;
+    if (!this.initialChildren.length && this.hideResults) {
+        return false;
+    }
     return (
       Boolean(result.children.length) ||
       result.isLoadingMoreResults ||
