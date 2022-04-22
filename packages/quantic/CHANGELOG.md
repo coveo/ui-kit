@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.5...@coveo/quantic@1.13.6) (2022-04-22)
+
+
+### Bug Fixes
+
+* **quantic:** added optional chaining to searchbox ([#1941](https://github.com/coveo/ui-kit/issues/1941)) ([ffdcfb9](https://github.com/coveo/ui-kit/commit/ffdcfb9d0ff645638a4f152b9b736d7ba51308c2))
+
+
+
+
+
 ## [1.13.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.4...@coveo/quantic@1.13.5) (2022-04-21)
 
 
