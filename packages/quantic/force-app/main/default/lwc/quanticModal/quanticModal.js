@@ -43,7 +43,7 @@ export default class QuanticModal extends LightningElement {
   }
 
   /**
-   * Returns the CSS class of the modal.
+   * Returns the modal CSS classes.
    * @returns {string}
    */
   get modalCssClass() {
