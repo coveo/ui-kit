@@ -237,6 +237,14 @@ export enum SearchPageEvents {
      * Identifies the search event that gets logged when a user clicks the Cancel last action link when no results are returned following their last action.
      */
     noResultsBack = 'noResultsBack',
+    /**
+     * Identifies the click event that gets logged when a user clicks the Show More link under a search result that support the folding component.
+     */
+    showMoreFoldedResults = 'showMoreFoldedResults',
+    /**
+     * Identifies the custom event that gets logged when a user clicks the Show Less link under a search result that support the folding component.
+     */
+    showLessFoldedResults = 'showLessFoldedResults',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
@@ -269,6 +277,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.clearRecentQueries]: 'recentQueries',
     [SearchPageEvents.recentResultClick]: 'recentlyClickedDocuments',
     [SearchPageEvents.clearRecentResults]: 'recentlyClickedDocuments',
+    [SearchPageEvents.showLessFoldedResults]: 'folding',
 };
 
 export interface StaticFilterMetadata {

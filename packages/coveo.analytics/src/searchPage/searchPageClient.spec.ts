@@ -205,6 +205,16 @@ describe('SearchPageClient', () => {
         expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
     });
 
+    it('should send proper payload for #showMoreFoldedResults', async () => {
+        await client.logShowMoreFoldedResults(fakeDocInfo, fakeDocID);
+        expectMatchDocumentPayload(SearchPageEvents.showMoreFoldedResults, fakeDocInfo, fakeDocID);
+    });
+
+    it('should send proper payload for #showLessFoldedResults', async () => {
+        await client.logShowLessFoldedResults();
+        expectMatchCustomEventPayload(SearchPageEvents.showLessFoldedResults);
+    });
+
     it('should send proper payload for #omniboxAnalytics', async () => {
         const meta: OmniboxSuggestionsMetadata = {
             partialQueries: 'a;b;c',

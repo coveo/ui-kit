@@ -310,6 +310,14 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.noResultsBack);
     }
 
+    public logShowMoreFoldedResults(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.logClickEvent(SearchPageEvents.showMoreFoldedResults, info, identifier);
+    }
+
+    public logShowLessFoldedResults() {
+        return this.logCustomEvent(SearchPageEvents.showLessFoldedResults);
+    }
+
     public async logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
