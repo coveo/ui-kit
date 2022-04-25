@@ -1,11 +1,15 @@
 import {LightningElement, api} from 'lwc';
 
 /**
- * The `QuanticModal` component provides the logic to easily implement a modal in Quantic. This component handles the animation logic, exposes methods to open and close the modal, offers the option to open the modal in full screen or just to cover the search interface, and exposes a set of slots to fully customize the modal content.
+ * The `QuanticModal` is a container component that displays slotted content in a modal. This component handles the animation logic, exposes methods to open and close the modal, offers the option to open the modal in full screen or just to cover the search interface, and exposes a set of slots to fully customize the modal content.
  *
  * @category Search
  * @example
- * <c-quantic-modal full-screen animation="slideToLeft"></c-quantic-modal>
+ * <c-quantic-modal full-screen animation="slideToLeft">
+ *   <div slot="header">Modal Header</div>
+ *   <div slot="content">Modal Content</div>
+ *   <div slot="footer">Modal Footer</div>
+ * </c-quantic-modal>
  */
 export default class QuanticModal extends LightningElement {
   /**
