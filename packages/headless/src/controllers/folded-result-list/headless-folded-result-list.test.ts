@@ -2,6 +2,7 @@ import {
   FoldedResultList,
   FoldedResultListOptions,
   buildFoldedResultList,
+  FoldedCollection,
 } from './headless-folded-result-list';
 import {
   buildMockSearchAppEngine,
@@ -180,11 +181,14 @@ describe('FoldedResultList', () => {
   });
 });
 
-function makeFoldedResult(result: Result, children: Result[] = []) {
+function makeFoldedResult(
+  result: Partial<Result>,
+  children: FoldedCollection[] = []
+) {
   return {
     isLoadingMoreResults: true,
     moreResultsAvailable: true,
     result: result as Result,
-    children,
-  };
+    children: children as FoldedCollection[],
+  } as FoldedCollection;
 }
