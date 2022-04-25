@@ -24,14 +24,14 @@ export default class QuanticModal extends LightningElement {
   @api animation = 'slideToTop';
 
   /** @type {boolean} */
-  visible = false;
+  isVisible = false;
 
   /**
    * Opens the modal.
    * @returns {void}
    */
   @api openModal() {
-    this.visible = true;
+    this.isVisible = true;
   }
 
   /**
@@ -39,7 +39,7 @@ export default class QuanticModal extends LightningElement {
    * @returns {void}
    */
   @api closeModal() {
-    this.visible = false;
+    this.isVisible = false;
   }
 
   /**
@@ -49,7 +49,7 @@ export default class QuanticModal extends LightningElement {
   get modalCssClass() {
     const displayAreaClass = this.fullScreen ? 'full-screen' : 'part-screen';
     const animationClass = this.animation === 'slideToLeft' ? 'hidden-modal_slide-to-left' : 'hidden-modal_slide-to-top';
-    const visibilityClass = this.visible ? '' : `modal_hidden ${animationClass}`;
+    const visibilityClass = this.isVisible ? '' : `modal_hidden ${animationClass}`;
   
     return `modal ${displayAreaClass} ${visibilityClass}`;
   }
