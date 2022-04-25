@@ -1,3 +1,5 @@
+import {closest} from './utils';
+
 const DEFAULT_MOBILE_BREAKPOINT = '1024px';
 
 function replaceMediaQuery(style: string, mobileBreakpoint: string) {
@@ -33,7 +35,7 @@ function replateStyleContent(element: HTMLElement, breakpoint: string) {
 }
 
 export function updateBreakpoints(element: HTMLElement) {
-  const layout = element.closest('atomic-search-layout');
+  const layout = closest(element, 'atomic-search-layout');
   if (!layout) {
     return;
   }

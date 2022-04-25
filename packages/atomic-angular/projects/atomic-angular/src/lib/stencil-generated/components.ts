@@ -532,13 +532,13 @@ export declare interface AtomicRefineModal extends Components.AtomicRefineModal 
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['modalStatus', 'openButton']
+  inputs: ['isOpen', 'openButton']
 })
 @Component({
   selector: 'atomic-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['modalStatus', 'openButton']
+  inputs: ['isOpen', 'openButton']
 })
 export class AtomicRefineModal {
   protected el: HTMLElement;
