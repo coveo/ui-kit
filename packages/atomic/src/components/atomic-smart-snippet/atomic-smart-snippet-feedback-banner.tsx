@@ -3,6 +3,7 @@ import Checkmark from '../../images/checkmark.svg';
 import Cross from '../../images/cross.svg';
 import {i18n} from 'i18next';
 import {RadioButton} from '../common/radio-button';
+import {Button} from '../common/button';
 
 interface SmartSnippetFeedbackBannerProps {
   i18n: i18n;
@@ -11,6 +12,8 @@ interface SmartSnippetFeedbackBannerProps {
   disliked: boolean;
   onLike(): void;
   onDislike(): void;
+  onPressExplainWhy(): void;
+  explainWhyRef?(element?: HTMLButtonElement): void;
 }
 
 export const SmartSnippetFeedbackBanner: FunctionalComponent<
@@ -71,16 +74,32 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
     </div>
   );
 
-  const ThankYouMessage = ({visible}: {visible: boolean}) => (
-    <span
-      id={thankYouId}
-      part="feedback-thank-you"
-      class="inline-flex"
-      style={visible ? {} : {display: 'none'}}
-    >
+  const ThankYouMessage = () => (
+    <span id={thankYouId} part="feedback-thank-you" class="inline-flex">
       {props.i18n.t('smart-snippet-feedback-thanks')}
     </span>
   );
+
+  const ExplainWhyButton = () => (
+    <Button
+      part="feedback-explain-why-button"
+      style="text-primary"
+      onClick={() => props.onPressExplainWhy()}
+      ref={(element) => props.explainWhyRef?.(element)}
+    >
+      {props.i18n.t('smart-snippet-feedback-explain-why')}
+    </Button>
+  );
+
+  const ThankYouContainer = ({visible}: {visible: boolean}) =>
+    visible ? (
+      <div part="feedback-thank-you-wrapper" class="flex flex-wrap gap-1">
+        <ThankYouMessage></ThankYouMessage>
+        {props.disliked ? <ExplainWhyButton></ExplainWhyButton> : []}
+      </div>
+    ) : (
+      []
+    );
 
   return (
     <div
@@ -97,9 +116,9 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
         <Inquiry></Inquiry>
         <Buttons></Buttons>
       </div>
-      <ThankYouMessage
+      <ThankYouContainer
         visible={props.liked || props.disliked}
-      ></ThankYouMessage>
+      ></ThankYouContainer>
     </div>
   );
 };

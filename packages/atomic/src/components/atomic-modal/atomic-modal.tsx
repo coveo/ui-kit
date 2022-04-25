@@ -28,7 +28,7 @@ import {once} from '../../utils/utils';
  * @part header-ruler - The horizontal ruler underneath the header.
  * @part body-wrapper - The wrapper around the body.
  * @part body - The body of the modal, between the header and the footer.
- * @part footer-wrapper - The wrapper with a shadow around the footer.
+ * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer at the bottom of the modal.
  * @internal
  */

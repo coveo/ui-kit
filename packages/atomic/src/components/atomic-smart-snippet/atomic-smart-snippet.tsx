@@ -35,7 +35,9 @@ import {randomID} from '../../utils/utils';
  * @part feedback-buttons - The wrapper around the buttons after the inquiry.
  * @part feedback-like-button - The button allowing the end user to signal that the excerpt was useful.
  * @part feedback-dislike-button - The button allowing the end user to signal that the excerpt wasn't useful.
+ * @part feedback-thank-you-container - The wrapper around the feedback thank you message and button
  * @part feedback-thank-you - The message thanking the end user for providing feedback.
+ * @part feedback-explain-why-button - The button the user can press to provide detailed feedback.
  */
 @Component({
   tag: 'atomic-smart-snippet',
@@ -51,6 +53,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   public error!: Error;
   @Element() public host!: HTMLElement;
   private id = randomID();
+  private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -96,6 +99,10 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+    this.modalRef = document.createElement(
+      'atomic-smart-snippet-feedback-modal'
+    );
+    this.host.insertAdjacentElement('beforebegin', this.modalRef);
   }
 
   private get style() {
@@ -184,6 +191,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
         disliked={this.smartSnippetState.disliked}
         onLike={() => this.smartSnippet.like()}
         onDislike={() => this.smartSnippet.dislike()}
+        onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
+        explainWhyRef={(button) => (this.modalRef!.source = button)}
       ></SmartSnippetFeedbackBanner>
     );
   }
