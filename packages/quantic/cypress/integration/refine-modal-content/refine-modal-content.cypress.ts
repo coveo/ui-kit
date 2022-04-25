@@ -9,7 +9,7 @@ interface RefineContentOptions {
 }
 
 describe('quantic-refine-content', () => {
-  const pageUrl = 's/quantic-refine-content';
+  const pageUrl = 's/quantic-refine-modal-content';
 
   function visitRefineContent(
     options: Partial<RefineContentOptions> = {},
