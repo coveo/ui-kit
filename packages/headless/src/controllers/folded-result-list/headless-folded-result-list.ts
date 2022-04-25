@@ -94,7 +94,7 @@ export interface FoldedResultList extends Controller {
    *
    * @param result - The result for which to send analytics.
    */
-  logShowMoreFoldedResults(collection: Result): void;
+  logShowMoreFoldedResults(result: Result): void;
   /**
    * Logs a Custom Event for when user shows less folded results.
    *   */
