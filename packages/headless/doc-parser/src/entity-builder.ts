@@ -141,8 +141,8 @@ function getParamDescription(param: Parameter) {
       param.parameterTypeExcerpt.tokens[0].text
     )?.[0];
     throw new Error(
-      `No description found for param: ${param.name}${
-        location ? ` missing in ${location}` : ''
+      `No description found for param: ${
+        location ? `'${param.name}' in ${location}` : param.name
       }`
     );
   }
