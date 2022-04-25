@@ -137,7 +137,14 @@ function getParamDescription(param: Parameter) {
   const description = emitAsTsDoc(nodes as unknown as readonly DocNode[]);
 
   if (!description) {
-    throw new Error(`No description found for param: ${param.name}`);
+    const location = /(^\w+)/.exec(
+      param.parameterTypeExcerpt.tokens[0].text
+    )?.[0];
+    throw new Error(
+      `No description found for param: ${param.name}${
+        location ? ` missing in ${location}` : ''
+      }`
+    );
   }
 
   return description;
