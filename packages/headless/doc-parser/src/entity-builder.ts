@@ -138,7 +138,7 @@ function getParamDescription(param: Parameter) {
 
   if (!description) {
     const location = /(^\w+)/.exec(
-      param.parameterTypeExcerpt.tokens[0].text
+      param.parameterTypeExcerpt.tokens?.[0].text
     )?.[0];
     throw new Error(
       `No description found for param: ${
