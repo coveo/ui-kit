@@ -1,6 +1,7 @@
 import {
   FoldedCollection,
   FoldedResult,
+  FoldedResultList,
   FoldedResultListState,
   Result,
   ResultTemplatesManager,
@@ -20,7 +21,10 @@ import {
 } from '../../result-template-components/result-template-decorators';
 import {ResultListCommon} from '../result-list-common';
 import {TemplateContent} from '../../result-templates/result-template-common';
-import {FoldedResultListStateContext} from '../result-list-decorators';
+import {
+  FoldedResultListContext,
+  FoldedResultListStateContext,
+} from '../result-list-decorators';
 import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
 import {ListDisplayResultsPlaceholder} from '../list-display-results-placeholder';
 import {Button} from '../../common/button';
@@ -56,6 +60,9 @@ export class AtomicResultChildren {
   @State() public error!: Error;
   @State() public ready = false;
   @State() public templateHasError = false;
+
+  @FoldedResultListContext()
+  private foldedResultList!: FoldedResultList;
 
   @FoldedResultListStateContext()
   @State()
@@ -230,7 +237,16 @@ export class AtomicResultChildren {
           part="show-hide-button"
           class="show-hide-button"
           style="text-primary"
-          onClick={() => (this.hideResults = !this.hideResults)}
+          onClick={() => {
+            if (this.hideResults) {
+              this.foldedResultList.logShowMoreFoldedResults(
+                this.result.result
+              );
+            } else {
+              this.foldedResultList.logShowLessFoldedResults();
+            }
+            this.hideResults = !this.hideResults;
+          }}
         >
           {this.bindings.i18n.t(
             this.hideResults ? 'expand-results' : 'collapse-results'

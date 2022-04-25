@@ -1,15 +1,18 @@
-import {Result, FoldedResultListState} from '@coveo/headless';
+import {Result, FoldedResultListState, FoldedResultList} from '@coveo/headless';
 import {Component, Element, h, Prop, State} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {getResultDisplayClasses} from '../atomic-result/atomic-result-display-options';
 import {Button} from '../common/button';
-import {FoldedResultListStateContext} from '../result-lists/result-list-decorators';
 import {
   DisplayConfig,
   ResultContext,
   ResultDisplayConfigContext,
 } from '../result-template-components/result-template-decorators';
+import {
+  FoldedResultListContext,
+  FoldedResultListStateContext,
+} from '../result-lists/result-list-decorators';
 
 /**
  * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
@@ -26,6 +29,9 @@ export class AtomicLoadMoreChildrenResults {
   @ResultContext() public result!: Result;
   @State() public error!: Error;
   @Element() host!: HTMLElement;
+
+  @FoldedResultListContext()
+  private foldedResultList!: FoldedResultList;
 
   @FoldedResultListStateContext()
   @State()
@@ -52,6 +58,7 @@ export class AtomicLoadMoreChildrenResults {
   }
 
   private loadFullCollection() {
+    this.foldedResultList.logShowMoreFoldedResults(this.result);
     this.host.dispatchEvent(
       buildCustomEvent('atomic/loadCollection', this.getCollection())
     );
