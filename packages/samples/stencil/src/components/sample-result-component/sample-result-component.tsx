@@ -13,7 +13,7 @@ export class SampleResultComponent {
 
   public async connectedCallback() {
     try {
-      // If your component was used in an `atomic-folded-result-list`, you would use `await resultContext<FoldedResult>(this.host)` instead.
+      // If your component was used in `atomic-folded-result-list`, you would use `await resultContext<FoldedResult>(this.host)` instead.
       this.result = await resultContext<Result>(this.host);
     } catch (error) {
       console.error(error);
