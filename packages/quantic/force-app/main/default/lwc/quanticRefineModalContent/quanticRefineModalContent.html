@@ -1,22 +1,23 @@
 <template>
-  <div class="slds-var-m-bottom_small" style="display: flex;justify-content:flex-start">
-    <c-quantic-sort
-      class="slds-var-m-bottom_medium"
-      engine-id={engineId}
-    ></c-quantic-sort>
-  </div>
-
-  <template if:true={showFacets}>
-    <div class="facet-title slds-var-m-bottom_medium">
-      <div class="slds-text-heading_small">Filters</div>
+  <template if:false={hideSort}>
+    <div class="slds-var-m-bottom_small slds-clearfix">
+      <c-quantic-sort
+        class="slds-float_left"
+        engine-id={engineId}
+      ></c-quantic-sort>
+    </div>
+  </template>
+  <template if:true={facetsAreAvailable}>
+    <div class="filters-header slds-var-m-bottom_small">
+      <div class="slds-text-heading_small">{labels.filters}</div>
       <lightning-button
         variant="base"
-        label="Clear All Filters"
-        title="Clear All Filters"
+        label={labels.clearAllFilters}
+        title={labels.clearAllFilters}
         onclick={clearAllFilters}
       ></lightning-button>
     </div>
-    <c-quantic-facet-manager zest="refineModal" engine-id={engineId}>
+    <c-quantic-facet-manager engine-id={engineId}>
       <template for:each={facets} for:item="facet">
         <template if:true={facet.isNumeric}>
           <c-quantic-numeric-facet
