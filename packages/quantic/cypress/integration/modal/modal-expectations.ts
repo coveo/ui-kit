@@ -4,12 +4,12 @@ import {ModalSelector, ModalSelectors} from './modal-selectors';
 
 function modalExpectations(selector: ModalSelector) {
   return {
-    openModal: (opened: boolean) => {
+    displayModal: (display: boolean) => {
       selector
         .modal()
         .should('exist')
-        .should(opened ? 'not.have.class' : 'have.class', 'modal_hidden')
-        .logDetail(`${should(opened)} display the modal.`);
+        .should(display ? 'not.have.class' : 'have.class', 'modal_hidden')
+        .logDetail(`${should(display)} display the modal.`);
     },
 
     displayHeader: (display: boolean) => {

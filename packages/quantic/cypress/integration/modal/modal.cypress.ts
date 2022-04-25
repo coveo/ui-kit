@@ -23,13 +23,13 @@ describe('quantic-modal', () => {
       visitModal({});
 
       scope('when loading the page', () => {
-        Expect.openModal(false);
+        Expect.displayModal(false);
         Expect.haveSlideToTopAnimation(true);
       });
 
       scope('when opening the modal', () => {
         openModal();
-        Expect.openModal(true);
+        Expect.displayModal(true);
         Expect.displayHeader(true);
         Expect.displayContent(true);
         Expect.displayFooter(true);
@@ -38,7 +38,7 @@ describe('quantic-modal', () => {
 
       scope('when closing the modal', () => {
         closeModal();
-        Expect.openModal(false);
+        Expect.displayModal(false);
       });
     });
   });
@@ -50,13 +50,13 @@ describe('quantic-modal', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.openModal(false);
+        Expect.displayModal(false);
         Expect.haveSlideToLeftAnimation(true);
       });
 
       scope('when opening the modal', () => {
         openModal();
-        Expect.openModal(true);
+        Expect.displayModal(true);
         Expect.displayHeader(true);
         Expect.displayContent(true);
         Expect.displayFooter(true);
@@ -65,7 +65,7 @@ describe('quantic-modal', () => {
 
       scope('when closing the modal', () => {
         closeModal();
-        Expect.openModal(false);
+        Expect.displayModal(false);
       });
     });
   });
@@ -77,13 +77,13 @@ describe('quantic-modal', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.openModal(false);
+        Expect.displayModal(false);
         Expect.haveSlideToTopAnimation(true);
       });
 
       scope('when opening the modal', () => {
         openModal();
-        Expect.openModal(true);
+        Expect.displayModal(true);
         Expect.displayHeader(true);
         Expect.displayContent(true);
         Expect.displayFooter(true);
@@ -92,7 +92,7 @@ describe('quantic-modal', () => {
 
       scope('when closing the modal', () => {
         closeModal();
-        Expect.openModal(false);
+        Expect.displayModal(false);
       });
     });
   });
