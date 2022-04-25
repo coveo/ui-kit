@@ -52,9 +52,22 @@ export default class QuanticModal extends LightningElement {
    */
   get modalCssClass() {
     const displayAreaClass = this.fullScreen ? 'full-screen' : 'part-screen';
-    const animationClass = this.animation === 'slideToLeft' ? 'hidden-modal_slide-to-left' : 'hidden-modal_slide-to-top';
-    const visibilityClass = this.isVisible ? '' : `modal_hidden ${animationClass}`;
-  
+    const animationClass =
+      this.animation === 'slideToLeft'
+        ? 'hidden-modal_slide-to-left'
+        : 'hidden-modal_slide-to-top';
+    const visibilityClass = this.isVisible
+      ? ''
+      : `modal_hidden ${animationClass}`;
+
     return `modal ${displayAreaClass} ${visibilityClass}`;
+  }
+
+  /**
+   * Returns the tabindex value of the modal.
+   * @returns {number}
+   */
+  get tabindex() {
+    return this.isVisible ? 0 : -1;
   }
 }
