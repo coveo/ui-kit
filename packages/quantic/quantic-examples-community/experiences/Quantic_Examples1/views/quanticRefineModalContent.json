@@ -1,0 +1,67 @@
+{
+  "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "ee786e81-ab9d-4765-8c78-f27198c8a60b",
+  "label" : "Quantic Refine Modal Content",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "200c2418-d3e4-456b-b10a-5d00eb661939",
+          "columns" : [ {
+            "UUID" : "c14089f5-3610-437a-be52-bde127775018",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "200c2418-d3e4-456b-b10a-5d00eb661939",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : { },
+          "componentName" : "c:exampleQuanticRefineModalContent",
+          "id" : "95c0848c-e761-4dc8-b4eb-338acc05fc69",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "c14089f5-3610-437a-be52-bde127775018",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "8738ccf5-b722-4d40-affb-afc32129251b",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Quantic Refine Modal Content"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "d215e9c8-83cf-4c37-9dc5-5fd446b2ab46",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "e3c0a6f8-d856-481b-894e-098f513fb708",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "custom-quantic-refine-modal-content"
+}
