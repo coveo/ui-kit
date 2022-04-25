@@ -185,6 +185,7 @@ export function buildFoldedResultList(
           ] as string
         )
       );
+      dispatch(logShowMoreFoldedResults(collection.result));
     },
     logShowMoreFoldedResults: (result) => {
       dispatch(logShowMoreFoldedResults(result));
