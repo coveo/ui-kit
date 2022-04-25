@@ -100,6 +100,20 @@ export interface FoldedResultList extends Controller {
    *   */
   logShowLessFoldedResults(): void;
   /**
+   * Finds a folded result by its unique ID.
+   *
+   * @param collection - The folded collection whose ID will be used to find a collection in the results.
+   * @returns The `FoldedResult` associated with the collection's ID.
+   */
+  findResultById(collection: FoldedCollection): FoldedResult | null;
+  /**
+   * Finds a folded result by its collection.
+   *
+   * @param collection - The folded collection whose collection name will be used to find a collection in the results.
+   * @returns The `FoldedResult` associated with the collection's name.
+   */
+  findResultByCollection(collection: FoldedCollection): FoldedResult | null;
+  /**
    * The state of the `FoldedResultList` controller.
    */
   state: FoldedResultListState;
@@ -179,6 +193,22 @@ export function buildFoldedResultList(
       dispatch(logShowLessFoldedResults());
     },
 
+    findResultById(collection) {
+      return searchForResult(
+        this.state.results,
+        (r) => r.result.uniqueId === collection.result.uniqueId
+      );
+    },
+
+    findResultByCollection(collection) {
+      return searchForResult(
+        this.state.results,
+        (r) =>
+          r.result.raw.foldingcollection ===
+          collection.result.raw.foldingcollection
+      );
+    },
+
     get state() {
       const state = getState();
 
@@ -210,4 +240,23 @@ function loadFoldingReducer(
 > {
   engine.addReducers({search, configuration, folding, query});
   return true;
+}
+
+function searchForResult(
+  results: FoldedCollection[] | FoldedResult[],
+  compareCb: (result: FoldedResult) => boolean
+): FoldedResult | null {
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
+    if (compareCb(result)) {
+      return result;
+    }
+    if (result.children.length) {
+      const childResult = searchForResult(result.children, compareCb);
+      if (childResult) {
+        return childResult;
+      }
+    }
+  }
+  return null;
 }
