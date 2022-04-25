@@ -119,29 +119,30 @@ export default class QuanticSearchInterface extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    if (!this.initialized) {
-      const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
-
-      if (!this.disableStateInUrl) {
-        this.initUrlManager(engine);
-      }
-  
-      if (!this.skipFirstSearch) {
-        const redirectData = window.localStorage.getItem(
-          STANDALONE_SEARCH_BOX_STORAGE_KEY
-        );
-        if (!redirectData) {
-          engine.executeFirstSearch();
-        } else {
-          window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-          const {value, analytics} = JSON.parse(redirectData);
-  
-          engine.dispatch(updateQuery({q: value}));
-          engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
-        }
-      }
-      this.initialized = true;
+    if (this.initialized) {
+      return;
     }
+    const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
+
+    if (!this.disableStateInUrl) {
+      this.initUrlManager(engine);
+    }
+
+    if (!this.skipFirstSearch) {
+      const redirectData = window.localStorage.getItem(
+        STANDALONE_SEARCH_BOX_STORAGE_KEY
+      );
+      if (!redirectData) {
+        engine.executeFirstSearch();
+      } else {
+        window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+        const {value, analytics} = JSON.parse(redirectData);
+
+        engine.dispatch(updateQuery({q: value}));
+        engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+      }
+    }
+    this.initialized = true;
   };
 
   get fragment() {
