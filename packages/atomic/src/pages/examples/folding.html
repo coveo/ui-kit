@@ -21,14 +21,6 @@
           organizationId: 'searchuisamples',
         });
 
-        const engine = searchInterface.engine;
-
-        const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
-          aq: '@source=iNaturalistTaxons',
-        });
-
-        engine.dispatch(action);
-
         // Trigger a first search
         searchInterface.executeFirstSearch();
       })();
@@ -84,7 +76,7 @@
           </atomic-layout-section>
           <atomic-layout-section section="results">
             <atomic-smart-snippet></atomic-smart-snippet>
-            <atomic-folded-result-list fields-to-include="snrating,sncost">
+            <atomic-folded-result-list fields-to-include="snrating,sncost" image-size="small">
               <atomic-result-template>
                 <template>
                   <style>
@@ -99,13 +91,8 @@
                     }
 
                     .thumbnail {
-                      display: none;
                       width: 100%;
                       height: 100%;
-                    }
-
-                    .icon {
-                      display: none;
                     }
 
                     .result-root.image-small .thumbnail,
@@ -128,7 +115,7 @@
                     }
                   </style>
                   <atomic-result-section-visual>
-                    <atomic-result-icon class="icon"></atomic-result-icon>
+                    <atomic-result-image class="icon"></atomic-result-image>
                     <img src="https://picsum.photos/350" class="thumbnail" />
                   </atomic-result-section-visual>
                   <atomic-result-section-badges>
@@ -221,24 +208,88 @@
                     <atomic-result-text field="filetype"></atomic-result-text>
                   </atomic-table-element>
                   <atomic-result-section-children>
-                    <atomic-result-children>
-                      <div style="margin-top: 15px; margin-bottom: 15px; font-weight: bold" slot="before-children">
-                        In this collection:
-                      </div>
+                    <atomic-load-more-children-results></atomic-load-more-children-results>
+                    <atomic-result-children image-size="icon">
                       <!-- CHILD -->
                       <atomic-result-children-template>
                         <!-- CHILD TEMPLATE -->
                         <template>
-                          <atomic-result-link></atomic-result-link>
-                          <div style="padding-left: 15px">
-                            <atomic-result-children inherit-templates> <!-- GRANDCHILD --> </atomic-result-children>
-                          </div>
+                          <style>
+                            .field {
+                              display: inline-flex;
+                              align-items: center;
+                            }
+
+                            .field-label {
+                              font-weight: bold;
+                              margin-right: 0.25rem;
+                            }
+
+                            .thumbnail {
+                              width: 100%;
+                              height: 100%;
+                            }
+
+                            .result-root.image-small .thumbnail,
+                            .result-root.image-large .thumbnail {
+                              display: inline-block;
+                            }
+
+                            .result-root.image-icon .icon {
+                              display: inline-block;
+                            }
+
+                            .result-root.image-small atomic-result-section-visual,
+                            .result-root.image-large atomic-result-section-visual {
+                              border-radius: var(--atomic-border-radius-xl);
+                            }
+
+                            .salesforce-badge::part(result-badge-element) {
+                              background-color: #44a1da;
+                              color: white;
+                            }
+                          </style>
+                          <atomic-result-section-visual>
+                            <atomic-result-image class="icon"></atomic-result-image>
+                            <img src="https://picsum.photos/350" class="thumbnail" />
+                          </atomic-result-section-visual>
+                          <atomic-result-section-title
+                            ><atomic-result-link></atomic-result-link
+                          ></atomic-result-section-title>
+                          <atomic-result-section-excerpt
+                            ><atomic-result-text field="excerpt"></atomic-result-text
+                          ></atomic-result-section-excerpt>
+                          <atomic-table-element label="Description">
+                            <atomic-result-section-title
+                              ><atomic-result-link></atomic-result-link
+                            ></atomic-result-section-title>
+                            <atomic-result-section-title-metadata>
+                              <atomic-field-condition class="field" if-defined="snrating">
+                                <atomic-result-rating field="snrating"></atomic-result-rating>
+                              </atomic-field-condition>
+                              <atomic-field-condition class="field" if-not-defined="snrating">
+                                <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+                              </atomic-field-condition>
+                            </atomic-result-section-title-metadata>
+                            <atomic-result-section-excerpt>
+                              <atomic-result-text field="excerpt"></atomic-result-text>
+                            </atomic-result-section-excerpt>
+                          </atomic-table-element>
+                          <atomic-table-element label="author">
+                            <atomic-result-text field="author"></atomic-result-text>
+                          </atomic-table-element>
+                          <atomic-table-element label="source">
+                            <atomic-result-text field="source"></atomic-result-text>
+                          </atomic-table-element>
+                          <atomic-table-element label="language">
+                            <atomic-result-text field="language"></atomic-result-text>
+                          </atomic-table-element>
+                          <atomic-table-element label="file-type">
+                            <atomic-result-text field="filetype"></atomic-result-text>
+                          </atomic-table-element>
                         </template>
                       </atomic-result-children-template>
                     </atomic-result-children>
-                    <div style="margin-top: 15px">
-                      <atomic-load-more-children-results></atomic-load-more-children-results>
-                    </div>
                   </atomic-result-section-children>
                 </template>
               </atomic-result-template>

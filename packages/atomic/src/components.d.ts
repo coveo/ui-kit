@@ -492,6 +492,7 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "classes": string;
         /**
           * The result content to display.
          */
@@ -537,9 +538,18 @@ export namespace Components {
     }
     interface AtomicResultChildren {
         /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize": ResultDisplayImageSize | null;
+        /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
         "inheritTemplates": boolean;
+        /**
+          * The copy for an empty result state.
+          * @defaultValue `No documents are related to this one.`
+         */
+        "noResultText": string;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -633,6 +643,7 @@ export namespace Components {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
+        "isChild": boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -1936,6 +1947,7 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "classes"?: string;
         /**
           * The result content to display.
          */
@@ -1981,9 +1993,18 @@ declare namespace LocalJSX {
     }
     interface AtomicResultChildren {
         /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize"?: ResultDisplayImageSize | null;
+        /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
         "inheritTemplates"?: boolean;
+        /**
+          * The copy for an empty result state.
+          * @defaultValue `No documents are related to this one.`
+         */
+        "noResultText"?: string;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -2068,6 +2089,7 @@ declare namespace LocalJSX {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
+        "isChild"?: boolean;
     }
     interface AtomicResultPrintableUri {
         /**
