@@ -73,9 +73,18 @@
   }
 }
 
-a[part='result-list-grid-clickable'] {
-  display: grid;
-  text-decoration: none;
+[part='result-list-grid-parent'] {
+  position: relative;
+  cursor: pointer;
+}
+
+[part='result-list-grid-clickable'] {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  pointer-events: none;
 }
 
 .list-wrapper.placeholder {
@@ -160,6 +169,8 @@ a[part='result-list-grid-clickable'] {
     grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 
     atomic-result {
+      height: 100%;
+      box-sizing: border-box;
       border: 1px solid transparent;
       padding: 1rem;
       border-radius: 1rem;
