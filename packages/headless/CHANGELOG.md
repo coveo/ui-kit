@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.61.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.60.1...@coveo/headless@1.61.0) (2022-04-25)
+
+
+### Features
+
+* **headless:** add methods for finding results by id and by collection ([#1933](https://github.com/coveo/ui-kit/issues/1933)) ([80eb892](https://github.com/coveo/ui-kit/commit/80eb892c1e87da1f2c123091aff2df0bc2d43115))
+
+
+
+
+
 ## [1.60.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.60.0...@coveo/headless@1.60.1) (2022-04-22)
 
 

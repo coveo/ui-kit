@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.47.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.2...@coveo/atomic@1.47.0) (2022-04-25)
+
+
+### Features
+
+* **atomic:** add "attributes" slot for the atomic-result-link to allow copying attributes ([#1922](https://github.com/coveo/ui-kit/issues/1922)) ([e61c6c6](https://github.com/coveo/ui-kit/commit/e61c6c65bcea2d4eb0eb135fb5c00f76b45b1937))
+* **atomic:** add styling and states for children results and loading ([#1939](https://github.com/coveo/ui-kit/issues/1939)) ([687595c](https://github.com/coveo/ui-kit/commit/687595c0d10dcaf368540c60238e17b0725eba1c))
+
+
+
+
+
 ## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.1...@coveo/atomic@1.46.2) (2022-04-22)
 
 **Note:** Version bump only for package @coveo/atomic
