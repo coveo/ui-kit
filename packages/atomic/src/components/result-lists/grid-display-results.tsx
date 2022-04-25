@@ -12,7 +12,7 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
     });
 
     return (
-      <div part="result-list-grid-parent">
+      <div part="result-list-grid-clickable-container">
         <LinkWithResultAnalytics
           part="result-list-grid-clickable"
           onSelect={() => interactiveResult.select()}
