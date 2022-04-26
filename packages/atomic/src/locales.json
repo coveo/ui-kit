@@ -1184,7 +1184,7 @@
   },
   "smart-snippet-feedback-explain-why": {
     "en": "Explain why",
-    "fr": "Expliquer pourquoi"
+    "fr": "Expliquez pourquoi"
   },
   "smart-snippet-feedback-select-reason": {
     "en": "Select the reason",
@@ -1200,15 +1200,15 @@
   },
   "smart-snippet-feedback-reason-does-not-answer": {
     "en": "This didn't answer my question at all",
-    "fr": "Ceci n'a pas du tout répondu à ma question"
+    "fr": "Ceci n'a pas répondu à ma question du tout"
   },
   "smart-snippet-feedback-reason-partially-answers": {
-    "en": "This only partially answered by question",
-    "fr": "Ceci à partiellement répondu à ma question"
+    "en": "This only partially answered my question",
+    "fr": "Ceci a seulement partiellement répondu à ma question"
   },
   "smart-snippet-feedback-reason-was-not-a-question": {
     "en": "My request wasn't meant to be perceived as a question",
-    "fr": "Ma requête n'était pas supposé être perçu comme une question"
+    "fr": "Ma requête n'était pas sensée être perçue comme une question"
   },
   "smart-snippet-feedback-reason-other": {
     "en": "Other",
