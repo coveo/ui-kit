@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.48.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.48.0...@coveo/atomic@1.48.1) (2022-04-26)
+
+
+### Bug Fixes
+
+* **atomic:** change default icon for atomic-result-icon & make it full-width ([#1951](https://github.com/coveo/ui-kit/issues/1951)) ([9060461](https://github.com/coveo/ui-kit/commit/9060461857a5d5a2beecdb8364f301c506f03430))
+
+
+
+
+
 # [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.47.0...@coveo/atomic@1.48.0) (2022-04-26)
 
 
