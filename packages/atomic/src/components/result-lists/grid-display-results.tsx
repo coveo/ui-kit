@@ -12,14 +12,16 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
     });
 
     return (
-      <LinkWithResultAnalytics
-        part="result-list-grid-clickable"
-        onSelect={() => interactiveResult.select()}
-        onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-        onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        href={props.resultListCommon.getUnfoldedResult(result).clickUri}
-        target="_self"
-      >
+      <div part="result-list-grid-clickable-container">
+        <LinkWithResultAnalytics
+          part="result-list-grid-clickable"
+          onSelect={() => interactiveResult.select()}
+          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
+          href={props.resultListCommon.getUnfoldedResult(result).clickUri}
+          target="_self"
+          title={props.resultListCommon.getUnfoldedResult(result).title}
+        />
         <atomic-result
           key={props.resultListCommon.getResultId(
             result,
@@ -32,7 +34,7 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
           imageSize={props.imageSize}
           content={props.getContentOfResultTemplate(result)}
         ></atomic-result>
-      </LinkWithResultAnalytics>
+      </div>
     );
   });
 };
