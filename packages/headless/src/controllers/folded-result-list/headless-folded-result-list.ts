@@ -90,13 +90,13 @@ export interface FoldedResultList extends Controller {
    */
   loadCollection(collection: FoldedCollection): void;
   /**
-   * Logs a Click Event for when user loads/shows more folded results.
+   * Logs a click event when a user loads/shows more folded results.
    *
-   * @param result - The result for which to send analytics.
+   * @param result - The result to send analytics for.
    */
   logShowMoreFoldedResults(result: Result): void;
   /**
-   * Logs a Custom Event for when user shows less folded results.
+   * Logs a custom event when a user shows less folded results.
    *   */
   logShowLessFoldedResults(): void;
   /**
