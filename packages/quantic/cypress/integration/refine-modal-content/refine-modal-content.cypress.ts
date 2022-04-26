@@ -40,23 +40,23 @@ describe('quantic-refine-content', () => {
       });
 
       scope('when selecting values from the duplicated facets', () => {
-        Actions.clickTimeframeFacetCollapseButton();
-        Actions.clickTimeframeFacetFirstOption();
-        Expect.displayDuplicatedTimeframeFacetClearFilterButton(true);
-        Expect.displayTimeframeFacetClearFilterButton(true);
-        Actions.clickFacetCollapseButton();
-        Actions.clickFacetFirstOption();
-        Expect.displayDuplicatedFacetClearFilterButton(true);
-        Expect.displayFacetClearFilterButton(true);
+        Actions.clickDuplicatedTimeframeFacetExpandButton();
+        Actions.clickDuplicatedTimeframeFacetFirstOption();
+        Expect.displayDuplicatedTimeframeFacetClearFiltersButton(true);
+        Expect.displayTimeframeFacetClearFiltersButton(true);
+        Actions.clickDuplicatedFacetExpandButton();
+        Actions.clickDuplicatedFacetFirstOption();
+        Expect.displayDuplicatedFacetClearFiltersButton(true);
+        Expect.displayFacetClearFiltersButton(true);
         Expect.correctFacetsOrder();
       });
 
       scope('when clearing all filters', () => {
         Actions.clickClearAllFilters();
-        Expect.displayDuplicatedTimeframeFacetClearFilterButton(false);
-        Expect.displayTimeframeFacetClearFilterButton(false);
-        Expect.displayDuplicatedFacetClearFilterButton(false);
-        Expect.displayFacetClearFilterButton(false);
+        Expect.displayDuplicatedTimeframeFacetClearFiltersButton(false);
+        Expect.displayTimeframeFacetClearFiltersButton(false);
+        Expect.displayDuplicatedFacetClearFiltersButton(false);
+        Expect.displayFacetClearFiltersButton(false);
         Expect.correctFacetsOrder();
       });
     });

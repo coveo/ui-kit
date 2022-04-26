@@ -11,29 +11,37 @@ function defineContentActions(selector: RefineContentSelector) {
         .click()
         .logAction('when clicking "Clear All Filters"');
     },
-    clickTimeframeFacetCollapseButton: () => {
+    clickDuplicatedTimeframeFacetExpandButton: () => {
       selector
-        .timeframeFacetCollapseButton()
+        .duplicatedTimeframeFacetExpandButton()
         .click()
-        .logAction('when clicking expand button of the timeframe facet');
+        .logAction(
+          'when clicking the expand button of the duplicated timeframe facet'
+        );
     },
-    clickFacetCollapseButton: () => {
+    clickDuplicatedFacetExpandButton: () => {
       selector
-        .facetCollapseButton()
+        .duplicatedFacetExpandButton()
         .click()
-        .logAction('when clicking expand button of the default facet');
+        .logAction(
+          'when clicking the expand button of the duplicated default facet'
+        );
     },
-    clickFacetFirstOption: () => {
+    clickDuplicatedFacetFirstOption: () => {
       selector
-        .facetFirstOption()
+        .duplicatedFacetFirstOption()
         .click()
-        .logAction('when clicking first option of the default facet');
+        .logAction(
+          'when clicking the first option of the duplicated default facet'
+        );
     },
-    clickTimeframeFacetFirstOption: () => {
+    clickDuplicatedTimeframeFacetFirstOption: () => {
       selector
-        .timeframeFacetFirstOption()
+        .duplicatedTimeframeFacetFirstOption()
         .click()
-        .logAction('when clicking first option of the timeframe facet');
+        .logAction(
+          'when clicking the first option of the duplicated timeframe facet'
+        );
     },
   };
 }

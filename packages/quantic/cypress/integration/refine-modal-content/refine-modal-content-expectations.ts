@@ -41,14 +41,14 @@ function refineContentExpectations(selector: RefineContentSelector) {
       selector
         .filtersTitle()
         .should('exist')
-        .logDetail('should display the filters title.');
+        .logDetail('should display the filters title');
     },
 
     displayClearAllFiltersButton: () => {
       selector
         .clearAllFiltersButton()
         .should('exist')
-        .logDetail('should display the clear all filters button.');
+        .logDetail('should display the clear all filters button');
     },
 
     displayFacetManager: () => {
@@ -78,7 +78,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
             expect(duplicatedFacet[0]).to.have.property('isCollapsed', true);
           });
         })
-        .logDetail('should display the duplicated numeric facet.');
+        .logDetail('should display the duplicated numeric facet');
     },
 
     displayDuplicatedFacet: () => {
@@ -98,7 +98,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
             expect(duplicatedFacet[0]).to.have.property('isCollapsed', true);
           });
         })
-        .logDetail('should display the duplicated facet.');
+        .logDetail('should display the duplicated facet');
     },
 
     displayDuplicatedCategoryFacet: () => {
@@ -118,7 +118,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
             expect(duplicatedFacet[0]).to.have.property('isCollapsed', true);
           });
         })
-        .logDetail('should display the duplicated category facet.');
+        .logDetail('should display the duplicated category facet');
     },
 
     displayDuplicatedTimeframeFacet: () => {
@@ -138,55 +138,55 @@ function refineContentExpectations(selector: RefineContentSelector) {
             expect(duplicatedFacet[0]).to.have.property('isCollapsed', true);
           });
         })
-        .logDetail('should display the duplicated timeframe facet.');
+        .logDetail('should display the duplicated timeframe facet');
     },
 
     displaySort: (display: boolean) => {
       selector
         .sort()
         .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the Quantic Sort component.`);
+        .logDetail(`${should(display)} display the Quantic Sort component`);
     },
 
-    displayDuplicatedTimeframeFacetClearFilterButton: (display: boolean) => {
+    displayDuplicatedTimeframeFacetClearFiltersButton: (display: boolean) => {
       selector
         .duplicatedTimeframeFacetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
           `${should(
             display
-          )} display the clear filters button in the duplicated timeframe facet.`
+          )} display the clear filters button in the duplicated timeframe facet`
         );
     },
 
-    displayDuplicatedFacetClearFilterButton: (display: boolean) => {
+    displayDuplicatedFacetClearFiltersButton: (display: boolean) => {
       selector
         .duplicatedFacetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
           `${should(
             display
-          )} display the clear filters button in the duplicated facet.`
+          )} display the clear filters button in the duplicated facet`
         );
     },
 
-    displayTimeframeFacetClearFilterButton: (display: boolean) => {
+    displayTimeframeFacetClearFiltersButton: (display: boolean) => {
       selector
         .timeframeFacetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
           `${should(
             display
-          )} display the clear filters button in the timeframe facet.`
+          )} display the clear filters button in the timeframe facet`
         );
     },
 
-    displayFacetClearFilterButton: (display: boolean) => {
+    displayFacetClearFiltersButton: (display: boolean) => {
       selector
-        .duplicatedFacetClearFiltersButton()
+        .facetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
-          `${should(display)} display the clear filters button in the facet.`
+          `${should(display)} display the clear filters button in the facet`
         );
     },
 
@@ -213,7 +213,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
               }
             });
         })
-        .logDetail('should order the facets correctly.');
+        .logDetail('should order the facets correctly');
     },
   };
 }

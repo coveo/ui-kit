@@ -20,14 +20,14 @@ export interface RefineContentSelector extends ComponentSelector {
   sort: () => CypressSelector;
   clearAllFiltersButton: () => CypressSelector;
   filtersTitle: () => CypressSelector;
-  timeframeFacetCollapseButton: () => CypressSelector;
-  facetCollapseButton: () => CypressSelector;
+  duplicatedTimeframeFacetExpandButton: () => CypressSelector;
+  duplicatedFacetExpandButton: () => CypressSelector;
   duplicatedTimeframeFacetClearFiltersButton: () => CypressSelector;
   duplicatedFacetClearFiltersButton: () => CypressSelector;
   timeframeFacetClearFiltersButton: () => CypressSelector;
   facetClearFiltersButton: () => CypressSelector;
-  timeframeFacetFirstOption: () => CypressSelector;
-  facetFirstOption: () => CypressSelector;
+  duplicatedTimeframeFacetFirstOption: () => CypressSelector;
+  duplicatedFacetFirstOption: () => CypressSelector;
 }
 
 export const RefineContentSelectors: RefineContentSelector = {
@@ -62,10 +62,10 @@ export const RefineContentSelectors: RefineContentSelector = {
   duplicatedTimeframeFacet: () =>
     RefineContentSelectors.get().find('c-quantic-timeframe-facet'),
 
-  duplicatedFacetManagerItems: () =>
+  facetManagerItems: () =>
     RefineContentSelectors.facetManager().find('.facet-manager__item'),
 
-  facetManagerItems: () =>
+  duplicatedFacetManagerItems: () =>
     RefineContentSelectors.duplicatedFacetManager().find(
       '.facet-manager__item'
     ),
@@ -80,10 +80,10 @@ export const RefineContentSelectors: RefineContentSelector = {
       '.filters-header .slds-text-heading_small'
     ),
 
-  timeframeFacetCollapseButton: () =>
+  duplicatedTimeframeFacetExpandButton: () =>
     RefineContentSelectors.duplicatedTimeframeFacet().find('.facet__expand'),
 
-  facetCollapseButton: () =>
+  duplicatedFacetExpandButton: () =>
     RefineContentSelectors.duplicatedFacet().find('.facet__expand'),
 
   duplicatedTimeframeFacetClearFiltersButton: () =>
@@ -100,11 +100,11 @@ export const RefineContentSelectors: RefineContentSelector = {
   facetClearFiltersButton: () =>
     RefineContentSelectors.facet().find('.facet__clear-filter'),
 
-  timeframeFacetFirstOption: () =>
+  duplicatedTimeframeFacetFirstOption: () =>
     RefineContentSelectors.duplicatedTimeframeFacet()
       .find('.facet__value-option')
       .eq(0),
 
-  facetFirstOption: () =>
+  duplicatedFacetFirstOption: () =>
     RefineContentSelectors.duplicatedFacet().find('.facet__value-option').eq(0),
 };
