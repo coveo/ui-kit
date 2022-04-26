@@ -466,15 +466,4 @@ export class Store {
   static getFromStore(store, facetType) {
     return store.state[facetType];
   }
-
-  /**
-   * @param {Record<String, unknown>} store
-   */
-  static getAllFacetsFromStore(store) {
-    let allFacets = {};
-    for (const [, facetType] of Object.entries(Store.facetTypes)) {
-      allFacets = {...allFacets, ...store.state[facetType]}
-    }
-    return allFacets
-  }
 }

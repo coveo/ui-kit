@@ -298,13 +298,11 @@ function getFromStore(engineId, facetType) {
  * @param {string} engineId The engine ID.
  */
 function getAllFacetsFromStore(engineId) {
-  const store = getQuanticStore(engineId);
-  try {
-    return Store.getAllFacetsFromStore(store)
-  } catch (error) {
-    console.error('Fatal error: unable to get data from store', error);
-    return undefined;
-  }
+  let allFacets = {};
+  Object.values(Store.facetTypes).forEach(facetType => {
+    allFacets = { ...allFacets, ...getFromStore(engineId, facetType) }
+  })
+  return allFacets
 }
 
 export {
