@@ -7,7 +7,7 @@ export default class ExampleQuanticRefineModalContent extends LightningElement {
 
   pageTitle = 'Quantic Refine Modal Content';
   pageDescription =
-    'The QuanticRefineModalContent` component duplicates and displays the facets present in the search interface in addition to the sort component. This components is primarly made to be displayed inside a modal to assure the responsivness when the search interface is displayed in smaller screens.';
+    'The QuanticRefineModalContent component duplicates and displays the facets present in the search interface in addition to the sort component. This component is primarily  made to be displayed inside a modal to assure the responsiveness  when the search interface is displayed in smaller screens.';
   options = [
     {
       attribute: 'hideSort',
