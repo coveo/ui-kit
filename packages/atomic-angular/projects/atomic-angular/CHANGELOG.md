@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.3.0...@coveo/atomic-angular@1.3.1) (2022-04-26)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.2.4...@coveo/atomic-angular@1.3.0) (2022-04-25)
+
+
+### Features
+
+* **atomic:** add styling and states for children results and loading ([#1939](https://github.com/coveo/ui-kit/issues/1939)) ([687595c](https://github.com/coveo/ui-kit/commit/687595c0d10dcaf368540c60238e17b0725eba1c))
+
+
+
+
+
 ## [1.2.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.2.3...@coveo/atomic-angular@1.2.4) (2022-04-22)
 
 **Note:** Version bump only for package @coveo/atomic-angular

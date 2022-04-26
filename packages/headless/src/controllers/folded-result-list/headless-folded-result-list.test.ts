@@ -2,13 +2,16 @@ import {
   FoldedResultList,
   FoldedResultListOptions,
   buildFoldedResultList,
+  FoldedCollection,
 } from './headless-folded-result-list';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
+import {Result} from '../../api/search/search/result';
 import {search, folding, configuration, query} from '../../app/reducers';
 import {buildMockResult} from '../../test';
+import {Raw} from '../../case-assist.index';
 
 describe('FoldedResultList', () => {
   let engine: MockSearchEngine;
@@ -51,10 +54,12 @@ describe('FoldedResultList', () => {
   describe('with a result and two collections', () => {
     beforeEach(() => {
       const threadResult = buildMockResult({
+        uniqueId: 'thread-result',
         title: 'thread-result',
         raw: {urihash: '', foldingcollection: 'thread'},
       });
       const peopleResult = buildMockResult({
+        uniqueId: 'people-result',
         title: 'people-result',
         raw: {urihash: '', foldingcollection: 'people'},
       });
@@ -106,5 +111,84 @@ describe('FoldedResultList', () => {
         'folding/loadCollection/pending'
       );
     });
+
+    it('finds a result by id', () => {
+      const expected = foldedResultList.state.results[2];
+      const result = foldedResultList.findResultById(expected);
+      expect(result).toEqual(expected);
+    });
+
+    it('finds a result nested one level by id', () => {
+      const expected = makeFoldedResult({
+        uniqueId: 'unique_id_to_look_for',
+      });
+      foldedResultList.state.results[2].children.push(expected);
+      const result = foldedResultList.findResultById(expected);
+      expect(result).toEqual(expected);
+    });
+
+    it('finds a result nested two levels by id', () => {
+      const expected = makeFoldedResult({uniqueId: 'unique_id_to_look_for'});
+      const firstChild = makeFoldedResult(
+        {
+          uniqueId: 'first_child',
+        },
+        [expected]
+      );
+      foldedResultList.state.results[2].children.push(firstChild);
+      const result = foldedResultList.findResultById(expected);
+      expect(result).toEqual(expected);
+    });
+
+    it('finds a result by collection', () => {
+      const expected = foldedResultList.state.results[2];
+      const result = foldedResultList.findResultByCollection(expected);
+      expect(result).toEqual(expected);
+    });
+
+    it('finds a result nested one level by collection', () => {
+      const expected = makeFoldedResult({
+        raw: {
+          foldingcollection: 'collection_to_look_for',
+          urihash: '',
+        } as Raw,
+      });
+      foldedResultList.state.results[0].children.push(expected);
+      const result = foldedResultList.findResultByCollection(expected);
+      expect(result).toEqual(expected);
+    });
+
+    it('finds a result nested two levels by collection', () => {
+      const expected = makeFoldedResult({
+        raw: {
+          foldingcollection: 'collection_to_look_for',
+          urihash: '',
+        } as Raw,
+      });
+      const firstChild = makeFoldedResult(
+        {
+          raw: {
+            foldingcollection: 'first_child',
+            urihash: '',
+          } as Raw,
+        },
+        [expected]
+      );
+      foldedResultList.state.results[2].children.push(firstChild);
+      const result = foldedResultList.findResultByCollection(expected);
+      expect(result).toEqual(expected);
+    });
   });
 });
+
+function makeFoldedResult(
+  result: Partial<Result>,
+  children: FoldedCollection[] = []
+) {
+  return {
+    isLoadingMoreResults: true,
+    moreResultsAvailable: true,
+    result: result as Result,
+    children: children as FoldedCollection[],
+  } as FoldedCollection;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Modal example</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        const openModalButton = document.getElementById('btn-open-modal');
+        const closeModalButton = document.getElementById('btn-done');
+        const modal = document.getElementById('modal');
+        modal.source = openModalButton;
+
+        openModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'true'));
+        closeModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'false'));
+      })();
+    </script>
+  </head>
+
+  <body>
+    <atomic-search-interface>
+      <button id="btn-open-modal">Open modal</button>
+      <atomic-modal id="modal">
+        <div slot="header">This is a title</div>
+        <div slot="body">This is the body</div>
+        <div slot="footer"><button id="btn-done">Done</button></div>
+      </atomic-modal>
+    </atomic-search-interface>
+    <script src="../header.js" type="text/javascript"></script>
+  </body>
+</html>

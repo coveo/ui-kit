@@ -532,13 +532,13 @@ export declare interface AtomicRefineModal extends Components.AtomicRefineModal 
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['modalStatus', 'openButton']
+  inputs: ['isOpen', 'openButton']
 })
 @Component({
   selector: 'atomic-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['modalStatus', 'openButton']
+  inputs: ['isOpen', 'openButton']
 })
 export class AtomicRefineModal {
   protected el: HTMLElement;
@@ -593,13 +593,13 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
 })
 export class AtomicResult {
   protected el: HTMLElement;

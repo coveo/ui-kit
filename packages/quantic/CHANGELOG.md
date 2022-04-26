@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.8...@coveo/quantic@1.13.9) (2022-04-26)
+
+
+### Bug Fixes
+
+* **quantic:** initialized callback executing more than once fixed ([#1943](https://github.com/coveo/ui-kit/issues/1943)) ([6674b95](https://github.com/coveo/ui-kit/commit/6674b95fdbbde78319ecf0e17440ac29b5a7c98a))
+
+
+
+
+
+## [1.13.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.7...@coveo/quantic@1.13.8) (2022-04-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.13.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.6...@coveo/quantic@1.13.7) (2022-04-22)
 
 **Note:** Version bump only for package @coveo/quantic

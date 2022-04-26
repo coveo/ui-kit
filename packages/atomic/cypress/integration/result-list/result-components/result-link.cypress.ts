@@ -86,7 +86,7 @@ describe('Result Link Component', () => {
 
     CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
 
-    describe('when there is a slot', () => {
+    describe('when there is a default slot', () => {
       const slottedComponent = 'canvas';
       beforeEach(() => {
         setupResultLink({slot: generateComponentHTML(slottedComponent)});
@@ -99,13 +99,27 @@ describe('Result Link Component', () => {
       });
     });
 
-    describe('when there is no slot', () => {
+    describe('when there is no default slot', () => {
       beforeEach(() => {
         setupResultLink();
       });
 
       it('should render an "atomic-result-text" component containing the title', () => {
         ResultLinkSelectors.firstInResult().should('have.text', title);
+      });
+    });
+
+    describe('when there is a valid slot named "attributes"', () => {
+      it('copies the attributes properly', () => {
+        const slot = generateComponentHTML('a', {
+          download: '',
+          target: '_self',
+        });
+        setupResultLink({slot});
+        ResultLinkSelectors.firstInResult()
+          .find('a')
+          .should('have.attr', 'download', '')
+          .and('have.attr', 'target', '_self');
       });
     });
 

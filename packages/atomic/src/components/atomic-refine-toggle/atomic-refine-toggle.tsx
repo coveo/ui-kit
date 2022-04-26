@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   buildSearchStatus,
   SearchStatusState,
@@ -24,6 +24,7 @@ import {Button} from '../common/button';
   shadow: true,
 })
 export class AtomicRefineToggle implements InitializableComponent {
+  @Element() public host!: HTMLElement;
   public searchStatus!: SearchStatus;
   private modalRef?: HTMLAtomicRefineModalElement;
 
@@ -36,11 +37,11 @@ export class AtomicRefineToggle implements InitializableComponent {
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.modalRef = document.createElement('atomic-refine-modal');
-    this.bindings.interfaceElement.prepend(this.modalRef);
+    this.host.insertAdjacentElement('beforebegin', this.modalRef);
   }
 
   private enableModal() {
-    this.modalRef && (this.modalRef.modalStatus = 'opened');
+    this.modalRef && (this.modalRef.isOpen = true);
   }
 
   public render() {

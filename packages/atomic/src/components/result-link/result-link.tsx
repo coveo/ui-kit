@@ -10,6 +10,7 @@ export interface ResultLinkProps {
   onBeginDelayedSelect: () => void;
   onCancelPendingSelect: () => void;
   ref?: (elm?: HTMLAnchorElement) => void;
+  attributes?: Attr[];
 }
 
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
@@ -22,6 +23,7 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
     onBeginDelayedSelect,
     onCancelPendingSelect,
     ref,
+    attributes,
   },
   children
 ) => {
@@ -41,7 +43,17 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
       onTouchStart={(e) => stopPropagationAndProcess(e, onBeginDelayedSelect)}
       onTouchEnd={(e) => stopPropagationAndProcess(e, onCancelPendingSelect)}
       target={target}
-      ref={ref}
+      ref={(el) => {
+        if (ref) {
+          ref(el);
+        }
+
+        if (attributes?.length) {
+          [...attributes].forEach(({nodeName, nodeValue}) => {
+            el?.setAttribute(nodeName, nodeValue!);
+          });
+        }
+      }}
     >
       {children}
     </a>
