@@ -16,7 +16,7 @@ import {updateBreakpoints} from '../../utils/replace-breakpoint';
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
  *
- * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
  *
  * @part backdrop - The transparent backdrop hiding the content behind the modal.
  * @part container - The modal's outermost container with the outline and background.
