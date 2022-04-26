@@ -42,7 +42,7 @@ export class AtomicResultIcon {
   }
 
   private renderIcon() {
-    const icon = this.icon || 'custom';
+    const icon = this.icon || 'document';
     const backgroundColor = bgIcons[snakeToCamel(icon)] || 'transparent';
     return (
       <atomic-icon
