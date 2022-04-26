@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.47.0...@coveo/atomic@1.48.0) (2022-04-26)
+
+
+### Features
+
+* **atomic:** make grid result <a> a sibling instead of parent ([#1947](https://github.com/coveo/ui-kit/issues/1947)) ([85df6af](https://github.com/coveo/ui-kit/commit/85df6afff82efb86fee2400af67e42018c6fb092))
+
+
+
+
+
 # [1.47.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.2...@coveo/atomic@1.47.0) (2022-04-25)
 
 
