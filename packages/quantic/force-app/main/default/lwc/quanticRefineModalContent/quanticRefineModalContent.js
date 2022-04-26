@@ -7,7 +7,6 @@ import {
 import filters from '@salesforce/label/c.quantic_Filters';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 
-
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
@@ -44,7 +43,7 @@ const TIMEFRAME_FACET_PROPERTIES = [
 ];
 
 /**
- * The `QuanticRefineModalContent` component duplicates and displays the facets present in the search interface in addition to the sort component. This components is primarly made to be displayed inside a modal to assure the responsivness when the search interface is displayed in smaller screens.
+ * The `QuanticRefineModalContent` component duplicates and displays the facets present in the search interface in addition to the sort component. This component is primarly made to be displayed inside a modal to assure the responsivness when the search interface is displayed in smaller screens.
  *
  * @category Search
  * @example
@@ -183,8 +182,8 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   /**
    * Extracts properties of a given HTML element.
-   * @param {HTMLElement} element 
-   * @param {Array<string>} properties 
+   * @param {HTMLElement} element
+   * @param {Array<string>} properties
    * @returns {object}
    */
   extractFacetDataFromElement(element, properties) {
@@ -195,7 +194,11 @@ export default class QuanticRefineModalContent extends LightningElement {
     return data;
   }
 
+  /**
+   * Indicates whether the facets are available.
+   * @returns {boolean}
+   */
   get facetsAreAvailable() {
-    return this.data && Object.keys(this.data).length;
+    return this.data && !!Object.keys(this.data).length;
   }
 }
