@@ -7,7 +7,6 @@ import {
   smartSnippetFeedbackModalComponent,
   SmartSnippetFeedbackModalSelectors,
 } from './smart-snippet-feedback-modal-selectors';
-import _ from 'lodash';
 
 describe('Smart Snippet Feedback Modal Test Suites', () => {
   function setupOpenModal() {
