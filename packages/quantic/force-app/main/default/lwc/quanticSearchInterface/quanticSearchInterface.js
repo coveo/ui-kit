@@ -76,6 +76,9 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {Function} */
   unsubscribeUrlManager;
 
+  /** @type {boolean} */
+  initialized = false;
+
   connectedCallback() {
     loadDependencies(this).then(() => {
       if (!getHeadlessBindings(this.engineId)?.engine) {
@@ -116,6 +119,9 @@ export default class QuanticSearchInterface extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    if (this.initialized) {
+      return;
+    }
     const {updateQuery} = CoveoHeadless.loadQueryActions(engine);
 
     if (!this.disableStateInUrl) {
@@ -128,14 +134,15 @@ export default class QuanticSearchInterface extends LightningElement {
       );
       if (!redirectData) {
         engine.executeFirstSearch();
-        return;
-      }
-      window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
-      const {value, analytics} = JSON.parse(redirectData);
+      } else {
+        window.localStorage.removeItem(STANDALONE_SEARCH_BOX_STORAGE_KEY);
+        const {value, analytics} = JSON.parse(redirectData);
 
-      engine.dispatch(updateQuery({q: value}));
-      engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+        engine.dispatch(updateQuery({q: value}));
+        engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+      }
     }
+    this.initialized = true;
   };
 
   get fragment() {
