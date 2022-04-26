@@ -416,8 +416,13 @@ export class AtomicSearchBox {
         }`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => suggestion.onSelect()}
+        ref={(e) => {
+          if (suggestion.content instanceof HTMLElement) {
+            e?.appendChild(suggestion.content);
+          }
+        }}
       >
-        {suggestion.content}
+        {!(suggestion.content instanceof HTMLElement) && suggestion.content}
       </li>
     );
   }

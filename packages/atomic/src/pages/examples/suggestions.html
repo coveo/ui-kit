@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Custom suggestions example</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script type="module">
+      import {dispatchSearchBoxSuggestionsEvent} from '/build/index.esm.js';
+      // CDN example: 'https://static.cloud.coveo.com/atomic/v1/index.esm.js'
+
+      function resisterCustomSuggestions() {
+        class CustomSuggestions extends HTMLElement {
+          constructor() {
+            super();
+          }
+
+          bindings;
+
+          // TODO: improve suggestions example
+          renderSuggestions(bindings) {
+            const query = 'Try this query instead!';
+            const content = document.createElement('div');
+            content.innerText = query;
+
+            return [
+              {
+                key: query,
+                query,
+                onSelect: () => {
+                  bindings.searchBoxController.updateText(query);
+                  bindings.searchBoxController.submit();
+                },
+                content,
+              },
+            ];
+          }
+
+          async connectedCallback() {
+            dispatchSearchBoxSuggestionsEvent(
+              (bindings) => ({
+                position: 0,
+                onInput: () => {
+                  // TODO: fetch 3rd party query suggests
+                  console.log('QUERY CHANGED!');
+                },
+                renderItems: () => this.renderSuggestions(bindings),
+              }),
+              this
+            );
+          }
+        }
+        window.customElements.define('custom-suggestions', CustomSuggestions);
+      }
+
+      async function main() {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        const engine = searchInterface.engine;
+        searchInterface.executeFirstSearch();
+      }
+
+      main();
+      resisterCustomSuggestions();
+    </script>
+  </head>
+  <body>
+    <atomic-search-interface>
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box>
+            <custom-suggestions></custom-suggestions>
+          </atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-query-summary></atomic-query-summary>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-result-list></atomic-result-list>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+    <script src="../header.js" type="text/javascript"></script>
+  </body>
+</html>
