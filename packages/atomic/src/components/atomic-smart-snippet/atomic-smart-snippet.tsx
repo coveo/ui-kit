@@ -35,9 +35,9 @@ import {randomID} from '../../utils/utils';
  * @part feedback-buttons - The wrapper around the buttons after the inquiry.
  * @part feedback-like-button - The button allowing the end user to signal that the excerpt was useful.
  * @part feedback-dislike-button - The button allowing the end user to signal that the excerpt wasn't useful.
- * @part feedback-thank-you-container - The wrapper around the feedback thank you message and button
+ * @part feedback-thank-you-container - The wrapper around the 'thank you' message and feedback button.
  * @part feedback-thank-you - The message thanking the end user for providing feedback.
- * @part feedback-explain-why-button - The button the user can press to provide detailed feedback.
+ * @part feedback-explain-why-button - The button a user can press to provide detailed feedback.
  */
 @Component({
   tag: 'atomic-smart-snippet',
