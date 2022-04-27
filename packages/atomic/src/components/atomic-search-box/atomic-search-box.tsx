@@ -1,6 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen, Watch} from '@stencil/core';
+import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -415,14 +415,17 @@ export class AtomicSearchBox {
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => suggestion.onSelect()}
-        ref={(e) => {
-          if (suggestion.content instanceof HTMLElement) {
-            e?.appendChild(suggestion.content);
+        onClick={() => {
+          suggestion.onSelect();
+          this.clearSuggestions();
+        }}
+        ref={(el) => {
+          if (isHTMLElement(suggestion.content)) {
+            el?.replaceChildren(suggestion.content);
           }
         }}
       >
-        {!(suggestion.content instanceof HTMLElement) && suggestion.content}
+        {!isHTMLElement(suggestion.content) && suggestion.content}
       </li>
     );
   }
@@ -485,4 +488,8 @@ export class AtomicSearchBox {
       ),
     ];
   }
+}
+
+function isHTMLElement(el: VNode | Element): el is HTMLElement {
+  return el instanceof HTMLElement;
 }

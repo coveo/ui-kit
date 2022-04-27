@@ -35,7 +35,7 @@ export const dispatchSearchBoxSuggestionsEvent = (
   event: SearchBoxSuggestionsEvent,
   element: HTMLElement
 ) => {
-  element.dispatchEvent(
+  const canceled = element.dispatchEvent(
     buildCustomEvent('atomic/searchBoxSuggestion/register', event)
   );
 
@@ -43,7 +43,8 @@ export const dispatchSearchBoxSuggestionsEvent = (
     element,
     'atomic-search-box'
   );
-  if (!hasParentSearchBox) {
+
+  if (canceled && !hasParentSearchBox) {
     throw new Error(
       `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of an "atomic-search-box" component`
     );

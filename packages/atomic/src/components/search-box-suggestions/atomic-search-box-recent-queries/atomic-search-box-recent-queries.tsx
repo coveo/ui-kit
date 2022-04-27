@@ -175,7 +175,6 @@ export class AtomicSearchBoxRecentQueries {
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );
-        this.bindings.clearSuggestions();
       },
     };
   }

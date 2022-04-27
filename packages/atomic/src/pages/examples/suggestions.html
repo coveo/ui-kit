@@ -18,39 +18,43 @@
             super();
           }
 
-          bindings;
+          suggestions = [];
 
-          // TODO: improve suggestions example
           renderSuggestions(bindings) {
-            const query = 'Try this query instead!';
-            const content = document.createElement('div');
-            content.innerText = query;
-
-            return [
-              {
-                key: query,
-                query,
+            return this.suggestions.map((suggestion) => {
+              const content = document.createElement('div');
+              content.innerText = suggestion;
+              return {
+                key: suggestion,
+                query: suggestion,
                 onSelect: () => {
-                  bindings.searchBoxController.updateText(query);
+                  bindings.searchBoxController.updateText(suggestion);
                   bindings.searchBoxController.submit();
                 },
                 content,
-              },
-            ];
+              };
+            });
+          }
+
+          onInput(bindings) {
+            const query = bindings.searchBoxController.state.value;
+
+            return fetch('https://pokeapi.co/api/v2/pokemon')
+              .then((res) => res.json())
+              .then((res) => {
+                const results = res.results.map((r) => r.name);
+                this.suggestions = query ? results.filter((r) => r.includes(query[0])) : results;
+              });
           }
 
           async connectedCallback() {
-            dispatchSearchBoxSuggestionsEvent(
-              (bindings) => ({
+            dispatchSearchBoxSuggestionsEvent((bindings) => {
+              return {
                 position: 0,
-                onInput: () => {
-                  // TODO: fetch 3rd party query suggests
-                  console.log('QUERY CHANGED!');
-                },
+                onInput: () => this.onInput(bindings),
                 renderItems: () => this.renderSuggestions(bindings),
-              }),
-              this
-            );
+              };
+            }, this);
           }
         }
         window.customElements.define('custom-suggestions', CustomSuggestions);
@@ -78,6 +82,7 @@
         <atomic-layout-section section="search">
           <atomic-search-box>
             <custom-suggestions></custom-suggestions>
+            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
           </atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="main">
