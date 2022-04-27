@@ -27,6 +27,7 @@ import {
 } from '../search-box-suggestions/suggestions-common';
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
+import {promiseTimeout} from '../../utils/promise-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -258,10 +259,13 @@ export class AtomicSearchBox {
   }
 
   private async triggerSuggestions() {
-    await Promise.all(
-      this.suggestions.map((suggestion) => suggestion.onInput())
+    // eslint-disable-next-line node/no-unsupported-features/es-builtins
+    const settled = await Promise.allSettled(
+      this.suggestions.map((suggestion) => promiseTimeout(suggestion.onInput()))
     );
+
     const suggestionElements = this.suggestions
+      .filter((_, i) => settled[i].status === 'fulfilled')
       .sort((a, b) => a.position - b.position)
       .map((suggestion) => suggestion.renderItems())
       .flat();
