@@ -259,7 +259,6 @@ export class AtomicSearchBox {
   }
 
   private async triggerSuggestions() {
-    // eslint-disable-next-line node/no-unsupported-features/es-builtins
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) => promiseTimeout(suggestion.onInput()))
     );
