@@ -5,7 +5,7 @@ import {
   RefineContentSelectors,
 } from './refine-modal-content-selectors';
 
-const CUMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
+const COMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
 const DEFAULT_FACET_PROPERTIES = [
   'numberOfValues',
   'sortCriteria',
