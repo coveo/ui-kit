@@ -13,7 +13,6 @@ import {FoldedResultListStateContext} from '../result-lists/result-list-decorato
 
 /**
  * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
- * @internal
  * @part button - The wrapper for the entire facet.
  */
 @Component({
