@@ -11,7 +11,7 @@ import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
 
-const CUMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
+const COMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
 const DEFAULT_FACET_PROPERTIES = [
   'numberOfValues',
   'sortCriteria',
