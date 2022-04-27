@@ -2,7 +2,7 @@ import {SearchBox} from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings} from '../../utils/initialization-utils';
-import {elementHasAncestorTag} from '../../utils/utils';
+import {closest, elementHasAncestorTag} from '../../utils/utils';
 
 export interface SearchBoxSuggestionElement {
   key: string;
@@ -35,16 +35,13 @@ export const dispatchSearchBoxSuggestionsEvent = (
   event: SearchBoxSuggestionsEvent,
   element: HTMLElement
 ) => {
-  const canceled = element.dispatchEvent(
+  element.dispatchEvent(
     buildCustomEvent('atomic/searchBoxSuggestion/register', event)
   );
 
-  const hasParentSearchBox = elementHasAncestorTag(
-    element,
-    'atomic-search-box'
-  );
+  const hasParentSearchBox = closest(element, 'atomic-search-box');
 
-  if (canceled && !hasParentSearchBox) {
+  if (!hasParentSearchBox) {
     throw new Error(
       `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of an "atomic-search-box" component`
     );
