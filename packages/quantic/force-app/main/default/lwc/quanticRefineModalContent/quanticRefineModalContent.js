@@ -43,7 +43,7 @@ const TIMEFRAME_FACET_PROPERTIES = [
 ];
 
 /**
- * The `QuanticRefineModalContent` component duplicates and displays the facets present in the search interface in addition to the sort component. This component is primarily  made to be displayed inside a modal to assure the responsiveness  when the search interface is displayed in smaller screens.
+ * The `QuanticRefineModalContent` component displays a copy of the search interface facets and sort components. This component is intended to be displayed inside a modal to assure the responsiveness when the search interface is displayed on smaller screens.
  *
  * @category Search
  * @example
@@ -99,7 +99,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @returns {void}
    */
   gatherFacets() {
-    if (!this.facetsAreAvailable) {
+    if (!this.hasFacets) {
       this.data = getAllFacetsFromStore(this.engineId);
     }
   }
@@ -112,6 +112,53 @@ export default class QuanticRefineModalContent extends LightningElement {
     this.breadcrumbManager.deselectAll();
   }
 
+  toNumericFacet(facetElement) {
+    return {
+      isNumeric: true,
+      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+        ...COMMON_FACET_PROPERTIES,
+        ...NUMERIC_FACET_PROPERTIES,
+      ]),
+    };
+  }
+
+  toDefaultFacet(facetElement) {
+    return {
+      isDefault: true,
+      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+        ...COMMON_FACET_PROPERTIES,
+        ...DEFAULT_FACET_PROPERTIES,
+      ]),
+    };
+  }
+
+  toCategoryFacet(facetElement) {
+    return {
+      isCategory: true,
+      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+        ...COMMON_FACET_PROPERTIES,
+        ...CATEGORY_FACET_PROPERTIES,
+      ]),
+    };
+  }
+
+  toTimeframeFacet(facetElement) {
+    return {
+      isTimeframe: true,
+      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+        ...COMMON_FACET_PROPERTIES,
+        ...TIMEFRAME_FACET_PROPERTIES,
+      ]),
+    };
+  }
+
+  selectors = {
+    'c-quantic-numeric-facet': this.toNumericFacet,
+    'c-quantic-category-facet': this.toCategoryFacet,
+    'c-quantic-timeframe-facet': this.toTimeframeFacet,
+    'c-quantic-facet': this.toDefaultFacet,
+  };
+
   /**
    * Returns facet data.
    * @returns {Array<object>}
@@ -121,60 +168,9 @@ export default class QuanticRefineModalContent extends LightningElement {
       return [];
     }
     const facetData = Object.keys(this.data).map((facetId) => {
-      if (this.data[facetId].element.localName === 'c-quantic-numeric-facet') {
-        return {
-          isNumeric: true,
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            CUMMON_FACET_PROPERTIES
-          ),
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            NUMERIC_FACET_PROPERTIES
-          ),
-        };
-      } else if (this.data[facetId].element.localName === 'c-quantic-facet') {
-        return {
-          isDefault: true,
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            CUMMON_FACET_PROPERTIES
-          ),
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            DEFAULT_FACET_PROPERTIES
-          ),
-        };
-      } else if (
-        this.data[facetId].element.localName === 'c-quantic-category-facet'
-      ) {
-        return {
-          isCategory: true,
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            CUMMON_FACET_PROPERTIES
-          ),
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            CATEGORY_FACET_PROPERTIES
-          ),
-        };
-      } else if (
-        this.data[facetId].element.localName === 'c-quantic-timeframe-facet'
-      ) {
-        return {
-          isTimeframe: true,
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            CUMMON_FACET_PROPERTIES
-          ),
-          ...this.extractFacetDataFromElement(
-            this.data[facetId].element,
-            TIMEFRAME_FACET_PROPERTIES
-          ),
-        };
-      }
-      return null;
+      const facetElement = this.data[facetId].element;
+      const selector = this.selectors[facetElement.localName];
+      return selector ? selector(facetElement) : null;
     });
 
     return facetData;
@@ -186,19 +182,18 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @param {Array<string>} properties
    * @returns {object}
    */
-  extractFacetDataFromElement(element, properties) {
-    const data = {};
-    properties.forEach((property) => {
+  static extractFacetDataFromElement(element, properties) {
+    return properties.reduce((data, property) => {
       data[property] = element[property];
-    });
-    return data;
+      return data;
+    }, {});
   }
 
   /**
    * Indicates whether the facets are available.
    * @returns {boolean}
    */
-  get facetsAreAvailable() {
+  get hasFacets() {
     return this.data && !!Object.keys(this.data).length;
   }
 }

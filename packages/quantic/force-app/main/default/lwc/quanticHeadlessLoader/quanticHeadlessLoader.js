@@ -298,11 +298,9 @@ function getFromStore(engineId, facetType) {
  * @param {string} engineId The engine ID.
  */
  function getAllFacetsFromStore(engineId) {
-  let allFacets = {};
-  Object.values(Store.facetTypes).forEach(facetType => {
-    allFacets = { ...allFacets, ...getFromStore(engineId, facetType) }
-  })
-  return allFacets;
+  return Object.values(Store.facetTypes).reduce((allFacets, facetType) => ({
+    ...allFacets, ...getFromStore(engineId, facetType)
+  }), {})
 }
 
 

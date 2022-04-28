@@ -1,4 +1,4 @@
-import { api, LightningElement, track } from 'lwc';
+import {api, LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticRefineModalContent extends LightningElement {
   @api engineId = 'quantic-refine-modal-engine';

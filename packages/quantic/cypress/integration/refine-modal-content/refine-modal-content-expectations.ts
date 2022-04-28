@@ -53,18 +53,18 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     displayFacetManager: () => {
       selector
-        .duplicatedFacetManager()
+        .facetManager()
         .should('exist')
         .logDetail('should display the facet manager.');
     },
 
     displayDuplicatedNumericFacet: () => {
       selector
-        .duplicatedNumericFacet()
+        .numericFacet()
         .should('exist')
         .then((duplicatedFacet) => {
-          selector.numericFacet().then((facet) => {
-            [...CUMMON_FACET_PROPERTIES, ...NUMERIC_FACET_PROPERTIES].forEach(
+          selector.container.numericFacet().then((facet) => {
+            [...COMMON_FACET_PROPERTIES, ...NUMERIC_FACET_PROPERTIES].forEach(
               (property) => {
                 expect(duplicatedFacet[0]).to.have.property(
                   property,
@@ -83,11 +83,11 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     displayDuplicatedFacet: () => {
       selector
-        .duplicatedFacet()
+        .facet()
         .should('exist')
         .then((duplicatedFacet) => {
-          selector.facet().then((facet) => {
-            [...CUMMON_FACET_PROPERTIES, ...DEFAULT_FACET_PROPERTIES].forEach(
+          selector.container.facet().then((facet) => {
+            [...COMMON_FACET_PROPERTIES, ...DEFAULT_FACET_PROPERTIES].forEach(
               (property) => {
                 expect(duplicatedFacet[0]).to.have.property(
                   property,
@@ -103,11 +103,11 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     displayDuplicatedCategoryFacet: () => {
       selector
-        .duplicatedCategoryFacet()
+        .categoryFacet()
         .should('exist')
         .then((duplicatedFacet) => {
-          selector.categoryFacet().then((facet) => {
-            [...CUMMON_FACET_PROPERTIES, ...CATEGORY_FACET_PROPERTIES].forEach(
+          selector.container.categoryFacet().then((facet) => {
+            [...COMMON_FACET_PROPERTIES, ...CATEGORY_FACET_PROPERTIES].forEach(
               (property) => {
                 expect(duplicatedFacet[0]).to.have.property(
                   property,
@@ -123,11 +123,11 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     displayDuplicatedTimeframeFacet: () => {
       selector
-        .duplicatedTimeframeFacet()
+        .timeframeFacet()
         .should('exist')
         .then((duplicatedFacet) => {
-          selector.timeframeFacet().then((facet) => {
-            [...CUMMON_FACET_PROPERTIES, ...TIMEFRAME_FACET_PROPERTIES].forEach(
+          selector.container.timeframeFacet().then((facet) => {
+            [...COMMON_FACET_PROPERTIES, ...TIMEFRAME_FACET_PROPERTIES].forEach(
               (property) => {
                 expect(duplicatedFacet[0]).to.have.property(
                   property,
@@ -150,7 +150,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     displayDuplicatedTimeframeFacetClearFiltersButton: (display: boolean) => {
       selector
-        .duplicatedTimeframeFacetClearFiltersButton()
+        .timeframeFacetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
           `${should(
@@ -161,7 +161,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     displayDuplicatedFacetClearFiltersButton: (display: boolean) => {
       selector
-        .duplicatedFacetClearFiltersButton()
+        .facetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
           `${should(
@@ -171,7 +171,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
     },
 
     displayTimeframeFacetClearFiltersButton: (display: boolean) => {
-      selector
+      selector.container
         .timeframeFacetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
@@ -182,7 +182,7 @@ function refineContentExpectations(selector: RefineContentSelector) {
     },
 
     displayFacetClearFiltersButton: (display: boolean) => {
-      selector
+      selector.container
         .facetClearFiltersButton()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(
@@ -192,25 +192,28 @@ function refineContentExpectations(selector: RefineContentSelector) {
 
     correctFacetsOrder: () => {
       selector
-        .duplicatedFacetManagerItems()
+        .facetManagerItems()
         .should('exist')
         .then((duplicatedFacetManagerItems) => {
-          const duplicatedFacetsOrder = duplicatedFacetManagerItems.map(
-            (index) => duplicatedFacetManagerItems[index].firstChild.tagName
-          );
-          selector
+          const duplicatedFacetsOrder = [];
+          for (
+            let index = 0;
+            index < duplicatedFacetManagerItems.length;
+            index++
+          ) {
+            duplicatedFacetsOrder.push(
+              duplicatedFacetManagerItems[index].firstChild.tagName
+            );
+          }
+          selector.container
             .facetManagerItems()
             .should('exist')
             .then((facetManagerItems) => {
-              const facetsOrder = facetManagerItems.map(
-                (index) => facetManagerItems[index].firstChild.tagName
-              );
-              expect(facetsOrder.length).to.be.eq(duplicatedFacetsOrder.length);
-              for (let index = 0; index < facetsOrder.length; index++) {
-                expect(facetsOrder[index]).to.be.eq(
-                  duplicatedFacetsOrder[index]
-                );
+              const facetsOrder = [];
+              for (let index = 0; index < facetManagerItems.length; index++) {
+                facetsOrder.push(facetManagerItems[index].firstChild.tagName);
               }
+              expect(facetsOrder).to.eql(duplicatedFacetsOrder);
             });
         })
         .logDetail('should order the facets correctly');

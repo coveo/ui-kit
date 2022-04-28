@@ -13,7 +13,7 @@ function defineContentActions(selector: RefineContentSelector) {
     },
     clickDuplicatedTimeframeFacetExpandButton: () => {
       selector
-        .duplicatedTimeframeFacetExpandButton()
+        .timeframeFacetExpandButton()
         .click()
         .logAction(
           'when clicking the expand button of the duplicated timeframe facet'
@@ -21,7 +21,7 @@ function defineContentActions(selector: RefineContentSelector) {
     },
     clickDuplicatedFacetExpandButton: () => {
       selector
-        .duplicatedFacetExpandButton()
+        .facetExpandButton()
         .click()
         .logAction(
           'when clicking the expand button of the duplicated default facet'
@@ -29,7 +29,7 @@ function defineContentActions(selector: RefineContentSelector) {
     },
     clickDuplicatedFacetFirstOption: () => {
       selector
-        .duplicatedFacetFirstOption()
+        .facetFirstOption()
         .click()
         .logAction(
           'when clicking the first option of the duplicated default facet'
@@ -37,7 +37,7 @@ function defineContentActions(selector: RefineContentSelector) {
     },
     clickDuplicatedTimeframeFacetFirstOption: () => {
       selector
-        .duplicatedTimeframeFacetFirstOption()
+        .timeframeFacetFirstOption()
         .click()
         .logAction(
           'when clicking the first option of the duplicated timeframe facet'
