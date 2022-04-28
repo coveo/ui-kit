@@ -8,7 +8,7 @@
     "cypress:open": "cypress open"
   },
   "dependencies": {
-    "@coveo/atomic": "^1.42.4",
+    "@coveo/atomic": "^1.44.0",
     "@stencil/core": "^2.15.0"
   },
   "devDependencies": {
