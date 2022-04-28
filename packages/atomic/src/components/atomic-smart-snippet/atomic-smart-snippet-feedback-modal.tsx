@@ -95,39 +95,28 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
   private renderOptions() {
     const options: {
       id: string;
-      label: string;
-      isChecked: boolean;
-      onCheck: () => void;
+      localeKey: string;
+      correspondingAnswer: SmartSnippetFeedback | 'other';
     }[] = [
       {
         id: 'does-not-answer',
-        label: this.bindings.i18n.t(
-          'smart-snippet-feedback-reason-does-not-answer'
-        ),
-        isChecked: this.currentAnswer === 'does_not_answer',
-        onCheck: () => (this.currentAnswer = 'does_not_answer'),
+        localeKey: 'smart-snippet-feedback-reason-does-not-answer',
+        correspondingAnswer: 'does_not_answer',
       },
       {
         id: 'partially-answers',
-        label: this.bindings.i18n.t(
-          'smart-snippet-feedback-reason-partially-answers'
-        ),
-        isChecked: this.currentAnswer === 'partially_answers',
-        onCheck: () => (this.currentAnswer = 'partially_answers'),
+        localeKey: 'smart-snippet-feedback-reason-partially-answers',
+        correspondingAnswer: 'partially_answers',
       },
       {
         id: 'was-not-a-question',
-        label: this.bindings.i18n.t(
-          'smart-snippet-feedback-reason-was-not-a-question'
-        ),
-        isChecked: this.currentAnswer === 'was_not_a_question',
-        onCheck: () => (this.currentAnswer = 'was_not_a_question'),
+        localeKey: 'smart-snippet-feedback-reason-was-not-a-question',
+        correspondingAnswer: 'was_not_a_question',
       },
       {
         id: 'other',
-        label: this.bindings.i18n.t('smart-snippet-feedback-reason-other'),
-        isChecked: this.currentAnswer === 'other',
-        onCheck: () => (this.currentAnswer = 'other'),
+        localeKey: 'smart-snippet-feedback-reason-other',
+        correspondingAnswer: 'other',
       },
     ];
 
@@ -136,23 +125,23 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
         <legend part="reason-title" class="font-bold text-on-background">
           {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
         </legend>
-        {options.map(({id, label, isChecked, onCheck}) => (
+        {options.map(({id, localeKey, correspondingAnswer}) => (
           <div key={id} class="text-base leading-4 text-neutral-dark mt-2">
             <input
               part="reason-radio"
               type="radio"
               name="answer"
               id={id}
-              checked={isChecked}
+              checked={this.currentAnswer === correspondingAnswer}
               onChange={(e) =>
                 (e.currentTarget as HTMLInputElement | null)?.checked &&
-                onCheck()
+                (this.currentAnswer = correspondingAnswer)
               }
               class="mr-2 w-4 h-4"
               required
             />
             <label part="reason-label" htmlFor={id}>
-              {label}
+              {this.bindings.i18n.t(localeKey)}
             </label>
           </div>
         ))}
