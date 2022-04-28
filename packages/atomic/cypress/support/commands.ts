@@ -17,7 +17,10 @@ declare global {
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
       expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
       expectClickEvent(actionCause: string): Chainable<ClickEventRequest>;
-      expectCustomEvent(eventType: string): Chainable<SearchEventRequest>;
+      expectCustomEvent(
+        eventType: string,
+        eventValue?: string
+      ): Chainable<SearchEventRequest>;
       distanceTo(
         getSubjectB: () => Chainable<JQuery<HTMLElement>>
       ): Chainable<{horizontal: number; vertical: number}>;
@@ -43,11 +46,14 @@ Cypress.Commands.add('expectClickEvent', (actionCause) => {
     });
 });
 
-Cypress.Commands.add('expectCustomEvent', (eventType) => {
+Cypress.Commands.add('expectCustomEvent', (eventType, eventValue) => {
   cy.wrap(AnalyticsTracker)
     .invoke('getLastCustomEvent', eventType)
     .should('not.be.null')
     .should((analyticsBody) => {
+      if (eventValue) {
+        expect(analyticsBody).to.haveOwnProperty('eventValue', eventValue);
+      }
       return analyticsBody;
     });
 });

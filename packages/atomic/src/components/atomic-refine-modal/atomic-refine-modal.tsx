@@ -30,18 +30,18 @@ import {Button} from '../common/button';
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
  *
  * @part container - The modal's outermost container.
- * @part header - The header of the modal, containing the title.
  * @part header-wrapper - The wrapper around the header.
+ * @part header - The header of the modal, containing the title.
  * @part section-title - The title for each section.
  * @part close-button - The button in the header that closes the modal.
  * @part header-ruler - The horizontal ruler underneath the header.
- * @part body - The body of the modal, between the header and the footer.
  * @part body-wrapper - The wrapper around the body.
+ * @part body - The body of the modal, between the header and the footer.
  * @part select - The `<select>` element of the drop-down list.
  * @part filter-clear-all - The button that resets all actively selected facet values.
+ * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer of the modal, containing the clear all button.
  * @part footer-button - The button in the footer that closes the modal.
- * @part footer-wrapper - The wrapper with a shadow around the footer.
  */
 @Component({
   tag: 'atomic-refine-modal',

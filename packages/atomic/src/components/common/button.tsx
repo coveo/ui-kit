@@ -13,6 +13,7 @@ export interface ButtonProps {
   text?: string;
   part?: string;
   type?: string;
+  form?: string;
   role?: string;
   disabled?: boolean;
   ariaLabel?: string;
@@ -43,7 +44,12 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     'aria-current': props.ariaCurrent,
     'aria-controls': props.ariaControls,
     disabled: props.disabled,
-    ref: props.ref,
+    ref(buttonEl?: HTMLButtonElement) {
+      if (props.form) {
+        buttonEl?.setAttribute('form', props.form);
+      }
+      props.ref?.(buttonEl);
+    },
   };
 
   return (

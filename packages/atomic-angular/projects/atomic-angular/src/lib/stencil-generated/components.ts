@@ -1288,6 +1288,34 @@ export class AtomicSmartSnippet {
 }
 
 
+export declare interface AtomicSmartSnippetFeedbackModal extends Components.AtomicSmartSnippetFeedbackModal {
+  /**
+   *  
+   */
+  'feedbackSent': EventEmitter<CustomEvent<any>>;
+
+}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['isOpen', 'source']
+})
+@Component({
+  selector: 'atomic-smart-snippet-feedback-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['isOpen', 'source']
+})
+export class AtomicSmartSnippetFeedbackModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['feedbackSent']);
+  }
+}
+
+
 export declare interface AtomicSortDropdown extends Components.AtomicSortDropdown {}
 
 @ProxyCmp({

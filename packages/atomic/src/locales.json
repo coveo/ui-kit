@@ -557,6 +557,10 @@
     "zh-cn": "取消最后一个动作",
     "zh-tw": "取消最後一個動作"
   },
+  "cancel": {
+    "en": "Cancel",
+    "fr": "Annuler"
+  },
   "check-spelling": {
     "en": "Check the spelling of your keywords.",
     "fr": "Vérifiez l'orthographe de vos mots-clés.",
@@ -1177,6 +1181,38 @@
   "smart-snippet-feedback-thanks": {
     "en": "Thank you for your feedback!",
     "fr": "Merci pour votre réponse\u00A0!"
+  },
+  "smart-snippet-feedback-explain-why": {
+    "en": "Explain why",
+    "fr": "Expliquez pourquoi"
+  },
+  "smart-snippet-feedback-select-reason": {
+    "en": "Select the reason",
+    "fr": "Sélectionnez la raison"
+  },
+  "smart-snippet-feedback-details": {
+    "en": "Details",
+    "fr": "Détails"
+  },
+  "smart-snippet-feedback-send": {
+    "en": "Send feedback",
+    "fr": "Envoyer la réponse"
+  },
+  "smart-snippet-feedback-reason-does-not-answer": {
+    "en": "This didn't answer my question at all",
+    "fr": "Ceci n'a pas répondu à ma question du tout"
+  },
+  "smart-snippet-feedback-reason-partially-answers": {
+    "en": "This only partially answered my question",
+    "fr": "Ceci a seulement partiellement répondu à ma question"
+  },
+  "smart-snippet-feedback-reason-was-not-a-question": {
+    "en": "My request wasn't meant to be perceived as a question",
+    "fr": "Ma requête n'était pas sensée être perçue comme une question"
+  },
+  "smart-snippet-feedback-reason-other": {
+    "en": "Other",
+    "fr": "Autre"
   },
   "smart-snippet-people-also-ask": {
     "en": "People also ask",
