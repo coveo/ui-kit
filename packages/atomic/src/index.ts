@@ -10,3 +10,10 @@ export {
 } from './utils/initialization-utils';
 
 export {resultContext} from './components/result-template-components/result-template-decorators';
+export {
+  dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+  SearchBoxSuggestionsEvent,
+} from './components/search-box-suggestions/suggestions-common';

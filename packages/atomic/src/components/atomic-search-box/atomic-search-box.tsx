@@ -1,6 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen, Watch} from '@stencil/core';
+import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -27,6 +27,7 @@ import {
 } from '../search-box-suggestions/suggestions-common';
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
+import {promiseTimeout} from '../../utils/promise-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -80,6 +81,12 @@ export class AtomicSearchBox {
    * (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
    */
   @Prop({reflect: true}) public redirectionUrl?: string;
+
+  /**
+   * This option controls the timeout for suggestion queries.
+   * If a query times out, only the suggestions from that particular query won't be shown.
+   */
+  @Prop() public suggestionTimeout = 400;
 
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
@@ -258,10 +265,25 @@ export class AtomicSearchBox {
   }
 
   private async triggerSuggestions() {
-    await Promise.all(
-      this.suggestions.map((suggestion) => suggestion.onInput())
+    const settled = await Promise.allSettled(
+      this.suggestions.map((suggestion) =>
+        promiseTimeout(suggestion.onInput(), this.suggestionTimeout)
+      )
     );
-    const suggestionElements = this.suggestions
+
+    const fulfilledSuggestions: SearchBoxSuggestions[] = [];
+
+    settled.forEach((prom, j) => {
+      if (prom.status === 'fulfilled') {
+        fulfilledSuggestions.push(this.suggestions[j]);
+      } else {
+        console.error(
+          'Some query suggestions are not being shown because the promise timed out.'
+        );
+      }
+    });
+
+    const suggestionElements = fulfilledSuggestions
       .sort((a, b) => a.position - b.position)
       .map((suggestion) => suggestion.renderItems())
       .flat();
@@ -415,9 +437,17 @@ export class AtomicSearchBox {
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => suggestion.onSelect()}
+        onClick={() => {
+          suggestion.onSelect();
+          this.clearSuggestions();
+        }}
+        ref={(el) => {
+          if (isHTMLElement(suggestion.content)) {
+            el?.replaceChildren(suggestion.content);
+          }
+        }}
       >
-        {suggestion.content}
+        {!isHTMLElement(suggestion.content) && suggestion.content}
       </li>
     );
   }
@@ -480,4 +510,8 @@ export class AtomicSearchBox {
       ),
     ];
   }
+}
+
+function isHTMLElement(el: VNode | Element): el is HTMLElement {
+  return el instanceof HTMLElement;
 }

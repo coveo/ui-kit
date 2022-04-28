@@ -104,7 +104,6 @@ export class AtomicSearchBoxQuerySuggestions {
       query: suggestion.rawValue,
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
-        this.bindings.clearSuggestions();
       },
     };
   }

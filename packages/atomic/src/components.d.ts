@@ -744,6 +744,10 @@ export namespace Components {
           * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
+        /**
+          * This option controls the timeout for suggestion queries. If a query times out, only the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout": number;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -2200,6 +2204,10 @@ declare namespace LocalJSX {
           * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
+        /**
+          * This option controls the timeout for suggestion queries. If a query times out, only the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout"?: number;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**

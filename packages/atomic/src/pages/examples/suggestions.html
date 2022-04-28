@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Custom suggestions example</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script type="module">
+      import {dispatchSearchBoxSuggestionsEvent} from '/build/index.esm.js';
+      // CDN example: 'https://static.cloud.coveo.com/atomic/v1/index.esm.js'
+
+      function resisterCustomSuggestions() {
+        class CustomSuggestions extends HTMLElement {
+          constructor() {
+            super();
+          }
+
+          suggestions = [];
+
+          renderSuggestions(bindings) {
+            return this.suggestions.map((suggestion) => {
+              const content = document.createElement('div');
+              content.innerText = suggestion;
+              return {
+                key: suggestion,
+                query: suggestion,
+                onSelect: () => {
+                  bindings.searchBoxController.updateText(suggestion);
+                  bindings.searchBoxController.submit();
+                },
+                content,
+              };
+            });
+          }
+
+          onInput(bindings) {
+            const query = bindings.searchBoxController.state.value;
+
+            return fetch('https://pokeapi.co/api/v2/pokemon')
+              .then((res) => res.json())
+              .then((res) => {
+                const results = res.results.map((r) => r.name);
+                this.suggestions = query ? results.filter((r) => r.includes(query[0])) : results;
+              });
+          }
+
+          async connectedCallback() {
+            dispatchSearchBoxSuggestionsEvent((bindings) => {
+              return {
+                position: 0,
+                onInput: () => this.onInput(bindings),
+                renderItems: () => this.renderSuggestions(bindings),
+              };
+            }, this);
+          }
+        }
+        window.customElements.define('custom-suggestions', CustomSuggestions);
+      }
+
+      async function main() {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        const engine = searchInterface.engine;
+        searchInterface.executeFirstSearch();
+      }
+
+      main();
+      resisterCustomSuggestions();
+    </script>
+  </head>
+  <body>
+    <atomic-search-interface>
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box suggestion-timeout="1000">
+            <custom-suggestions></custom-suggestions>
+            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+          </atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-query-summary></atomic-query-summary>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-result-list></atomic-result-list>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+    <script src="../header.js" type="text/javascript"></script>
+  </body>
+</html>
