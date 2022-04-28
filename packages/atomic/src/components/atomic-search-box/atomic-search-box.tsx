@@ -82,6 +82,12 @@ export class AtomicSearchBox {
    */
   @Prop({reflect: true}) public redirectionUrl?: string;
 
+  /**
+   * This option controls the timeout for suggestion queries.
+   * If a query times out, only the suggestions from that particular query won't be shown.
+   */
+  @Prop() public suggestionTimeout = 400;
+
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
 
@@ -260,11 +266,24 @@ export class AtomicSearchBox {
 
   private async triggerSuggestions() {
     const settled = await Promise.allSettled(
-      this.suggestions.map((suggestion) => promiseTimeout(suggestion.onInput()))
+      this.suggestions.map((suggestion) =>
+        promiseTimeout(suggestion.onInput(), this.suggestionTimeout)
+      )
     );
 
-    const suggestionElements = this.suggestions
-      .filter((_, i) => settled[i].status === 'fulfilled')
+    const fulfilledSuggestions: SearchBoxSuggestions[] = [];
+
+    settled.forEach((prom, j) => {
+      if (prom.status === 'fulfilled') {
+        fulfilledSuggestions.push(this.suggestions[j]);
+      } else {
+        console.error(
+          'Some query suggestions are not being shown because the promise timed out.'
+        );
+      }
+    });
+
+    const suggestionElements = fulfilledSuggestions
       .sort((a, b) => a.position - b.position)
       .map((suggestion) => suggestion.renderItems())
       .flat();

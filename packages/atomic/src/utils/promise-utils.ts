@@ -1,4 +1,4 @@
-export function promiseTimeout<T>(prom: T | Promise<T>, ms = 700) {
+export function promiseTimeout<T>(prom: T | Promise<T>, ms: number) {
   let id: NodeJS.Timeout;
   const timeout = new Promise((_, reject) => {
     id = setTimeout(() => {
