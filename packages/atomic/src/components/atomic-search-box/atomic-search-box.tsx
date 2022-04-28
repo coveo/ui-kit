@@ -83,8 +83,8 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public redirectionUrl?: string;
 
   /**
-   * This option controls the timeout for suggestion queries.
-   * If a query times out, only the suggestions from that particular query won't be shown.
+   * The timeout for suggestion queries, in milliseconds.
+   * If a suggestion query times out, the suggestions from that particular query won't be shown.
    */
   @Prop() public suggestionTimeout = 400;
 
