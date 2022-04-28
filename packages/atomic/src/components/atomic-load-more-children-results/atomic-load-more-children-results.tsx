@@ -4,16 +4,15 @@ import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings, InitializeBindings} from '../../utils/initialization-utils';
 import {getResultDisplayClasses} from '../atomic-result/atomic-result-display-options';
 import {Button} from '../common/button';
-import {FoldedResultListStateContext} from '../result-lists/result-list-decorators';
 import {
   DisplayConfig,
   ResultContext,
   ResultDisplayConfigContext,
 } from '../result-template-components/result-template-decorators';
+import {FoldedResultListStateContext} from '../result-lists/result-list-decorators';
 
 /**
  * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
- * @internal
  * @part button - The wrapper for the entire facet.
  */
 @Component({

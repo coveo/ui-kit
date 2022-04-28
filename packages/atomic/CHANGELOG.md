@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.49.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.48.1...@coveo/atomic@1.49.0) (2022-04-28)
+
+
+### Features
+
+* **atomic,headless:** add analytics to the show more/show less button ([#1945](https://github.com/coveo/ui-kit/issues/1945)) ([be9c694](https://github.com/coveo/ui-kit/commit/be9c6940c279014cdffeeebd50723d6de01e979b))
+* **atomic:** allow for custom query suggestions + example ([#1949](https://github.com/coveo/ui-kit/issues/1949)) ([cd5c605](https://github.com/coveo/ui-kit/commit/cd5c60539a86ab16a3d0d592526b2af22f9ba20a))
+* **atomic:** release folding-related components ([#1952](https://github.com/coveo/ui-kit/issues/1952)) ([7140887](https://github.com/coveo/ui-kit/commit/7140887004c83d810d2e02478b9693dd71c06e6b))
+
+
+
+
+
+## [1.48.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.48.0...@coveo/atomic@1.48.1) (2022-04-26)
+
+
+### Bug Fixes
+
+* **atomic:** change default icon for atomic-result-icon & make it full-width ([#1951](https://github.com/coveo/ui-kit/issues/1951)) ([9060461](https://github.com/coveo/ui-kit/commit/9060461857a5d5a2beecdb8364f301c506f03430))
+
+
+
+
+
 # [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.47.0...@coveo/atomic@1.48.0) (2022-04-26)
 
 

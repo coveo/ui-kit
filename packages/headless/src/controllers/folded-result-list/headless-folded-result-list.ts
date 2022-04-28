@@ -1,9 +1,12 @@
 import {Schema} from '@coveo/bueno';
 import {search, configuration, folding, query} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {Result} from '../../api/search/search/result';
 import {
   foldingOptionsSchemaDefinition,
   loadCollection,
+  logShowLessFoldedResults,
+  logShowMoreFoldedResults,
   registerFolding,
 } from '../../features/folding/folding-actions';
 import {
@@ -86,6 +89,16 @@ export interface FoldedResultList extends Controller {
    * @param collection - The collection for which to load more results.
    */
   loadCollection(collection: FoldedCollection): void;
+  /**
+   * Logs a click event when a user loads/shows more folded results.
+   *
+   * @param result - The result to send analytics for.
+   */
+  logShowMoreFoldedResults(result: Result): void;
+  /**
+   * Logs a custom event when a user shows less folded results.
+   *   */
+  logShowLessFoldedResults(): void;
   /**
    * Finds a folded result by its unique ID.
    *
@@ -172,6 +185,13 @@ export function buildFoldedResultList(
           ] as string
         )
       );
+      dispatch(logShowMoreFoldedResults(collection.result));
+    },
+    logShowMoreFoldedResults: (result) => {
+      dispatch(logShowMoreFoldedResults(result));
+    },
+    logShowLessFoldedResults: () => {
+      dispatch(logShowLessFoldedResults());
     },
 
     findResultById(collection) {

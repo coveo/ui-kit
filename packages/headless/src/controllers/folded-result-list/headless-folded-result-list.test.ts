@@ -105,8 +105,11 @@ describe('FoldedResultList', () => {
       ).toBeFalsy();
     });
 
-    it('dispatches folding/loadCollection when calling loadCollection', () => {
+    it('dispatches analytics and folding/loadCollection when calling loadCollection', () => {
       foldedResultList.loadCollection(foldedResultList.state.results[0]);
+      expect(engine.actions.pop()?.type).toEqual(
+        'analytics/folding/showMore/pending'
+      );
       expect(engine.actions.pop()?.type).toEqual(
         'folding/loadCollection/pending'
       );

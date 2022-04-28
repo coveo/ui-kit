@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.62.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.61.1...@coveo/headless@1.62.0) (2022-04-28)
+
+
+### Features
+
+* **atomic,headless:** add analytics to the show more/show less button ([#1945](https://github.com/coveo/ui-kit/issues/1945)) ([be9c694](https://github.com/coveo/ui-kit/commit/be9c6940c279014cdffeeebd50723d6de01e979b))
+
+
+
+
+
 ## [1.61.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.61.0...@coveo/headless@1.61.1) (2022-04-26)
 
 **Note:** Version bump only for package @coveo/headless
