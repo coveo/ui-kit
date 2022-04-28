@@ -89,6 +89,7 @@ export type {
   LogStaticFilterToggleValueActionCreatorPayload,
   LogStaticFilterClearAllActionCreatorPayload,
   StaticFilterValueMetadata,
+  SmartSnippetFeedback,
 };
 
 /**

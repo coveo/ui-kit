@@ -16,7 +16,7 @@ import {
 } from '../../utils/initialization-utils';
 import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
-import {once} from '../../utils/utils';
+import {once, randomID} from '../../utils/utils';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -28,7 +28,7 @@ import {once} from '../../utils/utils';
  * @part header-ruler - The horizontal ruler underneath the header.
  * @part body-wrapper - The wrapper around the body.
  * @part body - The body of the modal, between the header and the footer.
- * @part footer-wrapper - The wrapper with a shadow around the footer.
+ * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer at the bottom of the modal.
  * @internal
  */
@@ -50,6 +50,7 @@ export class AtomicModal implements InitializableComponent {
   @Event() animationEnded!: EventEmitter<never>;
 
   private wasEverOpened = false;
+  private headerId = randomID('atomic-modal-header-');
 
   @Watch('isOpen')
   watchToggleOpen(isOpen: boolean) {
@@ -96,19 +97,24 @@ export class AtomicModal implements InitializableComponent {
         }`}
         onClick={(e) => e.target === e.currentTarget && this.close()}
       >
-        <atomic-focus-trap active={this.isOpen}>
+        <atomic-focus-trap
+          active={this.isOpen}
+          role="dialog"
+          aria-modal={this.isOpen.toString()}
+          aria-labelledby={this.headerId}
+        >
           <article
             part="container"
             class={`flex flex-col justify-between bg-background text-on-background ${
               this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
             }`}
-            aria-modal={this.isOpen.toString()}
             onAnimationEnd={() => this.animationEnded.emit()}
           >
             <header part="header-wrapper" class="flex flex-col items-center">
               <div
                 part="header"
                 class="flex justify-between text-xl w-full max-w-lg"
+                id={this.headerId}
               >
                 <slot name="header"></slot>
               </div>

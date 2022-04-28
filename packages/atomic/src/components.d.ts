@@ -876,6 +876,10 @@ export namespace Components {
          */
         "snippetStyle"?: string;
     }
+    interface AtomicSmartSnippetFeedbackModal {
+        "isOpen": boolean;
+        "source"?: HTMLElement;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -1374,6 +1378,12 @@ declare global {
         prototype: HTMLAtomicSmartSnippetExpandableAnswerElement;
         new (): HTMLAtomicSmartSnippetExpandableAnswerElement;
     };
+    interface HTMLAtomicSmartSnippetFeedbackModalElement extends Components.AtomicSmartSnippetFeedbackModal, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetFeedbackModalElement: {
+        prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
+        new (): HTMLAtomicSmartSnippetFeedbackModalElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1481,6 +1491,7 @@ declare global {
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
+        "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
@@ -2325,6 +2336,11 @@ declare namespace LocalJSX {
          */
         "snippetStyle"?: string;
     }
+    interface AtomicSmartSnippetFeedbackModal {
+        "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: CustomEvent<any>) => void;
+        "source"?: HTMLElement;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicSortExpression {
@@ -2472,6 +2488,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
+        "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-element": AtomicTableElement;
@@ -2554,6 +2571,7 @@ declare module "@stencil/core" {
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
+            "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;

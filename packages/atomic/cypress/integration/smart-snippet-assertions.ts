@@ -59,14 +59,26 @@ export function assertDislikeButtonChecked(checked: boolean) {
 }
 
 export function assertThankYouBanner(display: boolean) {
-  it(`${should(display)} display the like button`, () => {
+  it(`${should(display)} display the thank you banner`, () => {
     SmartSnippetSelectors.feedbackThankYou().should(
-      display ? 'be.visible' : 'be.hidden'
+      display ? 'exist' : 'not.exist'
     );
   });
 }
 
-export function assertOpenSmartSnippetSourceAnalytics(log: boolean) {
+export function assertLogLikeSmartSnippet() {
+  it('should log a likeSmartSnippet custom event', () => {
+    cy.expectCustomEvent('smartSnippet', 'likeSmartSnippet');
+  });
+}
+
+export function assertLogDislikeSmartSnippet() {
+  it('should log a dislikeSmartSnippet custom event', () => {
+    cy.expectCustomEvent('smartSnippet', 'dislikeSmartSnippet');
+  });
+}
+
+export function assertlogOpenSmartSnippetSource(log: boolean) {
   it(`${should(log)} log a openSmartSnippetSource click event`, () => {
     if (log) {
       cy.expectClickEvent('openSmartSnippetSource');

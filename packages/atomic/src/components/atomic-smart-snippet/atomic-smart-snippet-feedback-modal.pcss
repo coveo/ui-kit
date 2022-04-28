@@ -1,0 +1,29 @@
+@import '../../global/global.pcss';
+
+[part='reason-title'],
+[part='details-title'] {
+  @screen mobile-only {
+    @apply text-2xl;
+  }
+
+  @screen desktop-only {
+    @apply text-lg;
+  }
+}
+
+[part='cancel-button'] {
+  @apply text-primary;
+}
+
+[part='cancel-button'],
+[part='submit-button'] {
+  @apply flex justify-center;
+
+  @screen mobile-only {
+    @apply text-lg leading-6 p-3;
+  }
+
+  @screen desktop-only {
+    @apply text-sm leading-4 p-2;
+  }
+}
