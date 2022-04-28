@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.3.2...@coveo/atomic-angular@1.4.0) (2022-04-28)
+
+
+### Features
+
+* **atomic:** allow for custom query suggestions + example ([#1949](https://github.com/coveo/ui-kit/issues/1949)) ([cd5c605](https://github.com/coveo/ui-kit/commit/cd5c60539a86ab16a3d0d592526b2af22f9ba20a))
+* **atomic:** release folding-related components ([#1952](https://github.com/coveo/ui-kit/issues/1952)) ([7140887](https://github.com/coveo/ui-kit/commit/7140887004c83d810d2e02478b9693dd71c06e6b))
+
+
+
+
+
 ## [1.3.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.3.1...@coveo/atomic-angular@1.3.2) (2022-04-26)
 
 **Note:** Version bump only for package @coveo/atomic-angular

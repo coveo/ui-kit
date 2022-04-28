@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.52.0](https://github.com/coveo/ui-kit/compare/headless-react@0.51.31...headless-react@0.52.0) (2022-04-28)
+
+
+### Features
+
+* **atomic-react:** add folded result list to atomic react ([#1916](https://github.com/coveo/ui-kit/issues/1916)) ([c8f2fde](https://github.com/coveo/ui-kit/commit/c8f2fde2be487929fbef143350fe0805aa6ac783))
+
+
+
+
+
 ## [0.51.31](https://github.com/coveo/ui-kit/compare/headless-react@0.51.30...headless-react@0.51.31) (2022-04-26)
 
 **Note:** Version bump only for package headless-react
