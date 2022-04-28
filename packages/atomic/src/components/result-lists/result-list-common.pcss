@@ -1,10 +1,76 @@
-@import './atomic-result-list-dividers.pcss';
-@import './atomic-result-list-cards.pcss';
-@import './atomic-result-table.pcss';
+@import './table-display.pcss';
 
-a[part='result-list-grid-clickable'] {
-  display: grid;
-  text-decoration: none;
+@define-mixin atomic-list-with-cards {
+  > * {
+    border: 1px solid var(--atomic-neutral);
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  atomic-result-placeholder {
+    border-color: transparent;
+  }
+}
+
+@define-mixin atomic-list-with-dividers {
+  &.density-comfortable {
+    > * {
+      &::before {
+        margin: 2rem 0;
+      }
+    }
+  }
+
+  &.density-normal {
+    > * {
+      &::before {
+        margin: 1.5rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      > * {
+        &::before {
+          margin: 1.75rem 0;
+        }
+      }
+    }
+  }
+
+  &.density-compact {
+    > * {
+      &::before {
+        margin: 1rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      > * {
+        &::before {
+          margin: 1.5rem 0;
+        }
+      }
+    }
+  }
+
+  > * {
+    &::before {
+      display: block;
+      content: ' ';
+      height: 1px;
+      background-color: var(--atomic-neutral);
+    }
+
+    &:first-of-type::before {
+      display: none;
+    }
+  }
+
+  atomic-result-placeholder {
+    &::before {
+      background-color: transparent;
+    }
+  }
 }
 
 .list-wrapper.placeholder {
@@ -81,14 +147,11 @@ a[part='result-list-grid-clickable'] {
   }
 }
 
-.list-root.display-grid {
-  display: grid;
-  justify-content: space-evenly;
+[part='result-list-grid-clickable-container'] {
+  position: relative;
 
   @screen desktop-only {
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-
-    atomic-result {
+    & {
       border: 1px solid transparent;
       padding: 1rem;
       border-radius: 1rem;
@@ -98,6 +161,29 @@ a[part='result-list-grid-clickable'] {
         box-shadow: 0px 10px 25px var(--atomic-neutral);
       }
     }
+  }
+}
+
+[part='result-list-grid-clickable'] {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.list-root.display-grid {
+  display: grid;
+  justify-content: space-evenly;
+
+  atomic-result {
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  @screen desktop-only {
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 
     &.density-comfortable {
       grid-row-gap: 4rem;

@@ -164,7 +164,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   showSuggestions() {
-    this.searchBox.showSuggestions();
+    this.searchBox?.showSuggestions();
     this.combobox?.classList.add('slds-is-open');
     this.combobox?.setAttribute('aria-expanded', 'true');
   }

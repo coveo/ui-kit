@@ -4,8 +4,10 @@ import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
 import {
   executeSearch,
+  ExecuteSearchThunkReturn,
   fetchFacetValues,
   fetchMoreResults,
+  fetchPage,
 } from './search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
@@ -22,6 +24,7 @@ import {Response} from 'cross-fetch';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
+import {logPageNext} from '../pagination/pagination-analytics-actions';
 
 jest.mock('../../api/platform-client');
 
@@ -68,12 +71,14 @@ describe('search-slice', () => {
   });
 
   it('when a fetchMoreResults fulfilled is received, it updates the state to the received payload', () => {
+    state.searchResponseId = 'the_initial_id';
     const result = buildMockResult();
     const response = buildMockSearchResponse({results: [result]});
     const searchState = buildMockSearch({
       response,
       duration: 123,
       queryExecuted: 'foo',
+      searchResponseId: 'a_new_id',
     });
 
     const action = fetchMoreResults.fulfilled(searchState, '');
@@ -83,6 +88,28 @@ describe('search-slice', () => {
     expect(finalState.duration).toEqual(123);
     expect(finalState.queryExecuted).toEqual('foo');
     expect(finalState.isLoading).toBe(false);
+    expect(finalState.searchResponseId).toBe('the_initial_id');
+  });
+
+  it('when a fetchPage fulfilled is received, it updates the state to the received payload', () => {
+    state.searchResponseId = 'the_initial_id';
+    const result = buildMockResult();
+    const response = buildMockSearchResponse({results: [result]});
+    const searchState = buildMockSearch({
+      response,
+      duration: 123,
+      queryExecuted: 'foo',
+      searchResponseId: 'a_new_id',
+    });
+
+    const action = fetchPage.fulfilled(searchState, '', logPageNext());
+    const finalState = searchReducer(state, action);
+
+    expect(finalState.response).toEqual(response);
+    expect(finalState.duration).toEqual(123);
+    expect(finalState.queryExecuted).toEqual('foo');
+    expect(finalState.isLoading).toBe(false);
+    expect(finalState.searchResponseId).toBe('the_initial_id');
   });
 
   describe('with an existing result', () => {
@@ -109,6 +136,22 @@ describe('search-slice', () => {
       expect(finalState.results).toEqual([newResult]);
     });
 
+    it('when a executeSearch fulfilled is received, it overwrites the #searchResponseId', () => {
+      state.searchResponseId = 'an_initial_id';
+      const response = buildMockSearchResponse({results: [newResult]});
+      response.searchUid = 'a_new_id';
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        executeSearch.fulfilled(search, '', logSearchboxSubmit())
+      );
+
+      expect(finalState.searchResponseId).toBe('a_new_id');
+    });
+
     it('when a fetchMoreResults fulfilled is received, it appends the new search results', () => {
       const finalState = searchReducer(
         state,
@@ -121,6 +164,22 @@ describe('search-slice', () => {
       );
 
       expect(finalState.results).toEqual([initialResult, newResult]);
+    });
+
+    it('when a fetchMoreResults fulfilled is received, keeps the previous #searchResponseId', () => {
+      state.searchResponseId = 'an_initial_id';
+      const response = buildMockSearchResponse({results: [newResult]});
+      response.searchUid = 'a_new_id';
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        fetchMoreResults.fulfilled(search, '')
+      );
+
+      expect(finalState.searchResponseId).toBe('an_initial_id');
     });
   });
 
@@ -164,6 +223,21 @@ describe('search-slice', () => {
       expect(finalState.error).toEqual(err);
     });
 
+    it('when a fetchPage rejected is received with an error', () => {
+      const err = {
+        message: 'message',
+        statusCode: 500,
+        type: 'type',
+      };
+      const action = {type: 'search/fetchPage/rejected', payload: err};
+      const finalState = searchReducer(state, action);
+
+      expect(finalState.response).toEqual(getSearchInitialState().response);
+      expect(finalState.results).toEqual([]);
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.error).toEqual(err);
+    });
+
     it('when a executeSearch rejected is received without an error', () => {
       const action = {type: 'search/executeSearch/rejected', payload: null};
       const finalState = searchReducer(state, action);
@@ -183,27 +257,54 @@ describe('search-slice', () => {
       expect(finalState.isLoading).toBe(false);
       expect(finalState.error).toEqual(null);
     });
+
+    it('when a fetchPage rejected is received without an error', () => {
+      const action = {type: 'search/fetchPage/rejected', payload: null};
+      const finalState = searchReducer(state, action);
+
+      expect(finalState.response).toEqual(initialMockState().response);
+      expect(finalState.results).toEqual(initialMockState().results);
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.error).toEqual(null);
+    });
   });
 
-  it('when a executeSearch fulfilled is received, set the error to null', () => {
-    const err = {message: 'message', statusCode: 500, type: 'type'};
-    state.error = err;
+  describe('reset error to null', () => {
+    let searchState: ExecuteSearchThunkReturn;
+    beforeEach(() => {
+      const err = {message: 'message', statusCode: 500, type: 'type'};
+      state.error = err;
 
-    const result = buildMockResult();
-    const response = buildMockSearchResponse({results: [result]});
-    const searchState = buildMockSearch({
-      response,
-      duration: 123,
-      queryExecuted: 'foo',
+      const result = buildMockResult();
+      const response = buildMockSearchResponse({results: [result]});
+      searchState = buildMockSearch({
+        response,
+        duration: 123,
+        queryExecuted: 'foo',
+      });
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
-    const finalState = searchReducer(state, action);
-    expect(finalState.error).toBeNull();
+    it('when a executeSearch fulfilled is received', () => {
+      const action = executeSearch.fulfilled(
+        searchState,
+        '',
+        logSearchboxSubmit()
+      );
+      const finalState = searchReducer(state, action);
+      expect(finalState.error).toBeNull();
+    });
+
+    it('when a fetchMore fulfilled is received', () => {
+      const action = fetchMoreResults.fulfilled(searchState, '');
+      const finalState = searchReducer(state, action);
+      expect(finalState.error).toBeNull();
+    });
+
+    it('when a fetchPage fulfilled is received', () => {
+      const action = fetchPage.fulfilled(searchState, '', logPageNext());
+      const finalState = searchReducer(state, action);
+      expect(finalState.error).toBeNull();
+    });
   });
 
   describe('should dispatch a logQueryError action', () => {
@@ -239,23 +340,15 @@ describe('search-slice', () => {
         })
       );
     });
-  });
 
-  it('when a fetchMoreResults fulfilled is received, set the error to null', () => {
-    const err = {message: 'message', statusCode: 500, type: 'type'};
-    state.error = err;
-
-    const result = buildMockResult();
-    const response = buildMockSearchResponse({results: [result]});
-    const searchState = buildMockSearch({
-      response,
-      duration: 123,
-      queryExecuted: 'foo',
+    it('on a fetchPage error', async () => {
+      await e.dispatch(fetchPage(logPageNext()));
+      expect(e.actions).toContainEqual(
+        expect.objectContaining({
+          type: 'search/queryError/pending',
+        })
+      );
     });
-
-    const action = fetchMoreResults.fulfilled(searchState, '');
-    const finalState = searchReducer(state, action);
-    expect(finalState.error).toBeNull();
   });
 
   it('set the isloading state to true during executeSearch.pending', () => {
@@ -270,6 +363,12 @@ describe('search-slice', () => {
     expect(finalState.isLoading).toBe(true);
   });
 
+  it('set the isloading state to true during fetchPage.pending', () => {
+    const pendingAction = fetchPage.pending('asd', logPageNext());
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.isLoading).toBe(true);
+  });
+
   it('update the requestId during executeSearch.pending', () => {
     const pendingAction = executeSearch.pending('asd', logSearchboxSubmit());
     const finalState = searchReducer(state, pendingAction);
@@ -278,6 +377,12 @@ describe('search-slice', () => {
 
   it('update the requestId during fetchMoreResults.pending', () => {
     const pendingAction = fetchMoreResults.pending('asd');
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.requestId).toBe(pendingAction.meta.requestId);
+  });
+
+  it('update the requestId during fetchPage.pending', () => {
+    const pendingAction = fetchPage.pending('asd', logPageNext());
     const finalState = searchReducer(state, pendingAction);
     expect(finalState.requestId).toBe(pendingAction.meta.requestId);
   });

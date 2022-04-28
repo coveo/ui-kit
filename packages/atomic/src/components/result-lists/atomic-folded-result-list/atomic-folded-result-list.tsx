@@ -8,44 +8,42 @@ import {
   FoldedResultListState,
   buildResultsPerPage,
   ResultListProps,
+  FoldedCollection,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
-import {
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../result-lists/result-list-common';
+} from '../../atomic-result/atomic-result-display-options';
+import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
+import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
  *
- * @internal
  * @part result-list - The element containing every result of a result list
  */
 @Component({
   tag: 'atomic-folded-result-list',
-  styleUrl: 'atomic-folded-result-list.pcss',
+  styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
 export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public resultList!: FoldedResultList;
+  public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   public listWrapperRef?: HTMLDivElement;
 
   @Element() public host!: HTMLDivElement;
 
-  @BindStateToController('resultList')
+  @BindStateToController('foldedResultList')
   @State()
-  public resultListState!: FoldedResultListState;
+  public foldedResultListState!: FoldedResultListState;
 
   @BindStateToController('resultsPerPage')
   @State()
@@ -114,8 +112,22 @@ export class AtomicFoldedResultList implements InitializableComponent {
       this.enableInfiniteScroll &&
       this.resultListCommon.scrollHasReachedEndOfList
     ) {
-      this.resultList.fetchMoreResults();
+      this.foldedResultList.fetchMoreResults();
     }
+  }
+
+  @Listen('atomic/resolveFoldedResultList')
+  resolveFoldedResultList(event: FoldedResultListStateContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.detail(this.foldedResultList);
+  }
+
+  @Listen('atomic/loadCollection')
+  loadCollection(event: CustomEvent<FoldedCollection>) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.foldedResultList.loadCollection(event.detail);
   }
 
   public async initialize() {
@@ -132,7 +144,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       },
     });
 
-    this.resultList = this.initFolding(
+    this.foldedResultList = this.initFolding(
       this.resultListCommon.resultListControllerProps
     );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
@@ -161,7 +173,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   public componentDidRender() {
     this.resultListCommon.componentDidRender(
-      this.resultListState.firstSearchExecuted,
+      this.foldedResultListState.firstSearchExecuted,
       this.listWrapperRef
     );
   }
@@ -172,7 +184,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       density: this.density,
       imageSize: this.imageSize,
       templateHasError: this.templateHasError,
-      resultListState: this.resultListState,
+      resultListState: this.foldedResultListState,
       resultsPerPageState: this.resultsPerPageState,
       setListWrapperRef: (el) => {
         this.listWrapperRef = el as HTMLDivElement;

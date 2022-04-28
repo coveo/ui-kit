@@ -11,7 +11,15 @@ import {
   QuerySection,
 } from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
+import {
+  AnalyticsType,
+  documentIdentifier,
+  makeAnalyticsAction,
+  partialDocumentInformation,
+  validateResultPayload,
+} from '../analytics/analytics-utils';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+import {ResultWithFolding} from './folding-slice';
 import {CollectionId} from './folding-state';
 
 export interface RegisterFoldingActionCreatorPayload {
@@ -44,6 +52,7 @@ export interface RegisterFoldingActionCreatorPayload {
 export interface LoadCollectionFulfilledReturn {
   results: Result[];
   collectionId: CollectionId;
+  rootResult: ResultWithFolding;
 }
 
 export const foldingOptionsSchemaDefinition: SchemaDefinition<
@@ -94,7 +103,12 @@ export const loadCollection = createAsyncThunk<
       return rejectWithValue(response.error);
     }
 
-    return {collectionId, results: response.success.results};
+    return {
+      collectionId,
+      results: response.success.results,
+      rootResult: state.folding.collections[collectionId]!
+        .result as ResultWithFolding,
+    };
   }
 );
 
@@ -112,3 +126,25 @@ function getQForHighlighting(state: StateNeededByLoadCollection) {
     ? `${state.query.q} OR @uri`
     : `( <@- ${state.query.q} -@> ) OR @uri`;
 }
+
+export const logShowMoreFoldedResults = (result: Result) =>
+  makeAnalyticsAction(
+    'analytics/folding/showMore',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(result);
+
+      return client.logShowMoreFoldedResults(
+        partialDocumentInformation(result, state),
+        documentIdentifier(result)
+      );
+    }
+  )();
+
+export const logShowLessFoldedResults = makeAnalyticsAction(
+  'analytics/folding/showLess',
+  AnalyticsType.Custom,
+  (client) => {
+    return client.logShowLessFoldedResults();
+  }
+);

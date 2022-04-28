@@ -157,10 +157,14 @@ describe('folding slice', () => {
       );
     }
 
-    function dispatchLoadCollection(results: ResultWithFolding[]) {
+    function dispatchLoadCollection(
+      results: ResultWithFolding[],
+      rootResult = results[0]
+    ) {
       dispatchAsync(loadCollection.fulfilled, {
         collectionId: results[0].raw.collection!,
         results,
+        rootResult,
       });
     }
 

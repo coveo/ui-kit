@@ -37,6 +37,7 @@ interface DisplayOptions {
 }
 export interface ResultPlaceholderProps extends Omit<DisplayOptions, 'image'> {
   resultsPerPageState: ResultsPerPageState;
+  isChild?: boolean;
 }
 export interface ResultsProps extends DisplayOptions {
   host: HTMLElement;

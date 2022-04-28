@@ -11,7 +11,6 @@ import { NumberInputType } from "./components/facets/facet-number-input/number-i
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { Section } from "./components/atomic-layout-section/sections";
-import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -297,7 +296,19 @@ export namespace Components {
          */
         "section": Section;
     }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label": string;
+    }
     interface AtomicLoadMoreResults {
+    }
+    interface AtomicModal {
+        "close": () => void;
+        "isOpen": boolean;
+        "source"?: HTMLElement;
     }
     interface AtomicNoResults {
         /**
@@ -473,7 +484,7 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRefineModal {
-        "modalStatus": ModalStatus;
+        "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
@@ -485,6 +496,7 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "classes": string;
         /**
           * The result content to display.
          */
@@ -530,9 +542,18 @@ export namespace Components {
     }
     interface AtomicResultChildren {
         /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize": ResultDisplayImageSize | null;
+        /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
         "inheritTemplates": boolean;
+        /**
+          * The copy for an empty result state.
+          * @defaultValue `No documents are related to this one.`
+         */
+        "noResultText": string;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -566,7 +587,13 @@ export namespace Components {
     }
     interface AtomicResultLink {
         /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
+        /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * @deprecated Use the "attributes" slot instead to pass down attributes to the link.
          */
         "target": string;
     }
@@ -621,6 +648,7 @@ export namespace Components {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
+        "isChild": boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -1042,11 +1070,23 @@ declare global {
         prototype: HTMLAtomicLayoutSectionElement;
         new (): HTMLAtomicLayoutSectionElement;
     };
+    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
+    }
+    var HTMLAtomicLoadMoreChildrenResultsElement: {
+        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
+        new (): HTMLAtomicLoadMoreChildrenResultsElement;
+    };
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
     }
     var HTMLAtomicLoadMoreResultsElement: {
         prototype: HTMLAtomicLoadMoreResultsElement;
         new (): HTMLAtomicLoadMoreResultsElement;
+    };
+    interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
+    }
+    var HTMLAtomicModalElement: {
+        prototype: HTMLAtomicModalElement;
+        new (): HTMLAtomicModalElement;
     };
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
     }
@@ -1387,7 +1427,9 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
+        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
+        "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -1721,7 +1763,20 @@ declare namespace LocalJSX {
          */
         "section": Section;
     }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label"?: string;
+    }
     interface AtomicLoadMoreResults {
+    }
+    interface AtomicModal {
+        "close"?: () => void;
+        "isOpen"?: boolean;
+        "onAnimationEnded"?: (event: CustomEvent<never>) => void;
+        "source"?: HTMLElement;
     }
     interface AtomicNoResults {
         /**
@@ -1898,7 +1953,7 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRefineModal {
-        "modalStatus": ModalStatus;
+        "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
@@ -1910,6 +1965,7 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "classes"?: string;
         /**
           * The result content to display.
          */
@@ -1955,9 +2011,18 @@ declare namespace LocalJSX {
     }
     interface AtomicResultChildren {
         /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize"?: ResultDisplayImageSize | null;
+        /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
         "inheritTemplates"?: boolean;
+        /**
+          * The copy for an empty result state.
+          * @defaultValue `No documents are related to this one.`
+         */
+        "noResultText"?: string;
     }
     interface AtomicResultChildrenTemplate {
         /**
@@ -1987,7 +2052,13 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLink {
         /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
+        /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * @deprecated Use the "attributes" slot instead to pass down attributes to the link.
          */
         "target"?: string;
     }
@@ -2037,6 +2108,7 @@ declare namespace LocalJSX {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
+        "isChild"?: boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -2342,7 +2414,9 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
         "atomic-layout-section": AtomicLayoutSection;
+        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
+        "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
@@ -2422,7 +2496,9 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
+            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
+            "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;

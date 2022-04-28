@@ -1,5 +1,4 @@
 import {configuration} from '../../../app/reducers';
-import {buildMockResult} from '../../../test';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
@@ -14,23 +13,11 @@ describe('InteractiveResultCore', () => {
   let interactiveResultCore: InteractiveResultCore;
   let actionSpy: jest.Mock;
 
-  const resultStringParams = {
-    title: 'title',
-    uri: 'uri',
-    printableUri: 'printable-uri',
-    clickUri: 'click-uri',
-    uniqueId: 'unique-id',
-    excerpt: 'exceprt',
-    firstSentences: 'first-sentences',
-    flags: 'flags',
-  };
-
   function initializeInteractiveResultCore(delay?: number) {
-    const result = buildMockResult(resultStringParams);
     interactiveResultCore = buildInteractiveResultCore(
       engine,
       {
-        options: {result, selectionDelay: delay},
+        options: {selectionDelay: delay},
       },
       actionSpy
     );

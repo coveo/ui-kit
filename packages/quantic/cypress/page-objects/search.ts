@@ -18,6 +18,8 @@ function paramsInclude(superset: RequestParams, subset: RequestParams) {
   }, true);
 }
 
+export const baselineAlias = '@baseline';
+
 export const InterceptAliases = {
   UA: {
     Facet: {
@@ -181,4 +183,10 @@ export function interceptQuerySuggestWithParam(
       req.alias = alias.substring(1);
     }
   });
+}
+
+export function captureBaselineNumberOfRequests(interceptAlias: string) {
+  cy.get(`${interceptAlias}.all`).then((calls) =>
+    cy.wrap(calls.length).as(baselineAlias.substring(1))
+  );
 }

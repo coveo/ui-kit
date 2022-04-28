@@ -1,5 +1,6 @@
 import {configure} from '../../../page-objects/configurator';
 import {
+  captureBaselineNumberOfRequests,
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
@@ -9,6 +10,7 @@ import {scope} from '../../../reporters/detailed-collector';
 
 import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
 import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
+import {SearchExpectations} from '../../search-expectations';
 
 interface TimeframeFacetOptions {
   field: string;
@@ -100,8 +102,13 @@ describe('quantic-timeframe-facet', () => {
       });
 
       scope('when clearing filter', () => {
+        captureBaselineNumberOfRequests(InterceptAliases.Search);
+
         Actions.clearFilter();
 
+        cy.wait(InterceptAliases.Search);
+
+        SearchExpectations.numberOfSearchRequests(1);
         Expect.numberOfSelectedValues(0);
         Expect.urlHashIsEmpty();
         Expect.displayClearButton(false);
@@ -268,10 +275,13 @@ describe('quantic-timeframe-facet', () => {
       });
 
       scope('when clearing filter', () => {
+        captureBaselineNumberOfRequests(InterceptAliases.Search);
+
         Actions.clearFilter();
 
         cy.wait(InterceptAliases.Search);
 
+        SearchExpectations.numberOfSearchRequests(1);
         Expect.displayClearButton(false);
         Expect.displayValues(true);
         Expect.urlHashIsEmpty();
@@ -299,8 +309,12 @@ describe('quantic-timeframe-facet', () => {
 
           Expect.numberOfValidationErrors(0);
 
+          captureBaselineNumberOfRequests(InterceptAliases.Search);
+
           Actions.clearFilter();
           cy.wait(InterceptAliases.Search);
+
+          SearchExpectations.numberOfSearchRequests(1);
         });
 
         scope('invalid start date format', () => {

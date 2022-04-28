@@ -13,7 +13,7 @@ export type AnyEventRequest =
 function isSearchEventRequest(
   request: AnyEventRequest
 ): request is SearchEventRequest {
-  return 'actionCause' in request;
+  return 'results' in request;
 }
 
 function isClickEventRequest(

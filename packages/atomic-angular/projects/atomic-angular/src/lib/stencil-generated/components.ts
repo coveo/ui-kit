@@ -212,6 +212,28 @@ export class AtomicFieldCondition {
 }
 
 
+export declare interface AtomicFoldedResultList extends Components.AtomicFoldedResultList {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['childField', 'collectionField', 'density', 'fieldsToInclude', 'imageSize', 'parentField'],
+  methods: ['setRenderFunction']
+})
+@Component({
+  selector: 'atomic-folded-result-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['childField', 'collectionField', 'density', 'fieldsToInclude', 'imageSize', 'parentField']
+})
+export class AtomicFoldedResultList {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicFormatCurrency extends Components.AtomicFormatCurrency {}
 
 @ProxyCmp({
@@ -328,6 +350,27 @@ export declare interface AtomicLayoutSection extends Components.AtomicLayoutSect
   inputs: ['maxWidth', 'minWidth', 'section']
 })
 export class AtomicLayoutSection {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicLoadMoreChildrenResults extends Components.AtomicLoadMoreChildrenResults {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['label']
+})
+@Component({
+  selector: 'atomic-load-more-children-results',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['label']
+})
+export class AtomicLoadMoreChildrenResults {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -532,13 +575,13 @@ export declare interface AtomicRefineModal extends Components.AtomicRefineModal 
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['modalStatus', 'openButton']
+  inputs: ['isOpen', 'openButton']
 })
 @Component({
   selector: 'atomic-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['modalStatus', 'openButton']
+  inputs: ['isOpen', 'openButton']
 })
 export class AtomicRefineModal {
   protected el: HTMLElement;
@@ -593,13 +636,13 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
 })
 export class AtomicResult {
   protected el: HTMLElement;
@@ -623,6 +666,49 @@ export declare interface AtomicResultBadge extends Components.AtomicResultBadge 
   inputs: ['field', 'icon', 'label']
 })
 export class AtomicResultBadge {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultChildren extends Components.AtomicResultChildren {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['imageSize', 'inheritTemplates', 'noResultText']
+})
+@Component({
+  selector: 'atomic-result-children',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['imageSize', 'inheritTemplates', 'noResultText']
+})
+export class AtomicResultChildren {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultChildrenTemplate extends Components.AtomicResultChildrenTemplate {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['conditions'],
+  methods: ['getTemplate']
+})
+@Component({
+  selector: 'atomic-result-children-template',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['conditions']
+})
+export class AtomicResultChildrenTemplate {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -715,13 +801,13 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['target']
+  inputs: ['hrefTemplate', 'target']
 })
 @Component({
   selector: 'atomic-result-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['target']
+  inputs: ['hrefTemplate', 'target']
 })
 export class AtomicResultLink {
   protected el: HTMLElement;
@@ -887,6 +973,25 @@ export declare interface AtomicResultSectionBottomMetadata extends Components.At
   template: '<ng-content></ng-content>'
 })
 export class AtomicResultSectionBottomMetadata {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultSectionChildren extends Components.AtomicResultSectionChildren {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-result-section-children',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicResultSectionChildren {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();

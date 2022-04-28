@@ -9,8 +9,6 @@ import {
   buildSmartSnippet,
   SmartSnippet,
   SmartSnippetState,
-  ResultTemplatesHelpers,
-  buildInteractiveResult,
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
@@ -100,19 +98,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
 
-  private get source() {
-    if (!this.smartSnippetState.answerFound) {
-      return null;
-    }
-    const {contentIdKey, contentIdValue} = this.smartSnippetState.documentId;
-    const linkedDocument = this.bindings.engine.state.search.results.find(
-      (result) =>
-        ResultTemplatesHelpers.getResultProperty(result, contentIdKey) ===
-        contentIdValue
-    );
-    return linkedDocument ?? null;
-  }
-
   private get style() {
     const styleTag = this.host
       .querySelector('template')
@@ -148,21 +133,24 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   private renderSource() {
-    const source = this.source;
+    const {source} = this.smartSnippetState;
     if (!source) {
       return [];
     }
-    const interactiveResult = buildInteractiveResult(this.bindings.engine, {
-      options: {result: source},
-    });
     return (
       <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
         <div part="source-url">
           <LinkWithResultAnalytics
             title={source.clickUri}
             href={source.clickUri}
-            interactiveResult={interactiveResult}
             target="_self"
+            onSelect={() => this.smartSnippet.selectSource()}
+            onBeginDelayedSelect={() =>
+              this.smartSnippet.beginDelayedSelectSource()
+            }
+            onCancelPendingSelect={() =>
+              this.smartSnippet.cancelPendingSelectSource()
+            }
           >
             {source.clickUri}
           </LinkWithResultAnalytics>
@@ -171,8 +159,14 @@ export class AtomicSmartSnippet implements InitializableComponent {
           <LinkWithResultAnalytics
             title={source.title}
             href={source.clickUri}
-            interactiveResult={interactiveResult}
             target="_self"
+            onSelect={() => this.smartSnippet.selectSource()}
+            onBeginDelayedSelect={() =>
+              this.smartSnippet.beginDelayedSelectSource()
+            }
+            onCancelPendingSelect={() =>
+              this.smartSnippet.cancelPendingSelectSource()
+            }
           >
             {source.title}
           </LinkWithResultAnalytics>
