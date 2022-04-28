@@ -3,6 +3,7 @@ import {sanitize} from 'dompurify';
 import {sanitizeStyle} from '../../utils/utils';
 
 /**
+ * @part answer - The container displaying the full document excerpt.
  * @internal
  */
 @Component({

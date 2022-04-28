@@ -1177,5 +1177,9 @@
   "smart-snippet-feedback-thanks": {
     "en": "Thank you for your feedback!",
     "fr": "Merci pour votre réponse\u00A0!"
+  },
+  "smart-snippet-people-also-ask": {
+    "en": "People also ask",
+    "fr": "Autres questions posées"
   }
 }
