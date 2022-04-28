@@ -2,7 +2,7 @@ import {SearchBox} from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings} from '../../utils/initialization-utils';
-import {closest, elementHasAncestorTag} from '../../utils/utils';
+import {closest} from '../../utils/utils';
 
 export interface SearchBoxSuggestionElement {
   key: string;
