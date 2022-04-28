@@ -72,7 +72,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
   private sendFeedback() {
     if (this.currentAnswer === 'other') {
-      this.smartSnippet.sendDetailedFeedback(this.detailsInputRef!.value); // TODO: Add textarea
+      this.smartSnippet.sendDetailedFeedback(this.detailsInputRef!.value);
     } else {
       this.smartSnippet.sendFeedback(this.currentAnswer!);
     }
