@@ -1183,7 +1183,13 @@ export class AtomicSmartSnippet {
 }
 
 
-export declare interface AtomicSmartSnippetFeedbackModal extends Components.AtomicSmartSnippetFeedbackModal {}
+export declare interface AtomicSmartSnippetFeedbackModal extends Components.AtomicSmartSnippetFeedbackModal {
+  /**
+   *  
+   */
+  'feedbackSent': EventEmitter<CustomEvent<any>>;
+
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -1200,6 +1206,7 @@ export class AtomicSmartSnippetFeedbackModal {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['feedbackSent']);
   }
 }
 

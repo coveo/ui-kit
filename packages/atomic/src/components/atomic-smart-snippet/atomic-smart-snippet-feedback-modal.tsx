@@ -1,4 +1,13 @@
-import {Component, h, State, Prop, Watch, Element} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Watch,
+  Element,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -58,6 +67,8 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
     'atomic-smart-snippet-feedback-modal-form-'
   );
 
+  @Event() feedbackSent!: EventEmitter;
+
   @Watch('isOpen')
   watchToggleOpen(isOpen: boolean) {
     if (isOpen) {
@@ -76,6 +87,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
     } else {
       this.smartSnippet.sendFeedback(this.currentAnswer!);
     }
+    this.feedbackSent.emit();
     this.isOpen = false;
   }
 

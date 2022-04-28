@@ -2330,6 +2330,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippetFeedbackModal {
         "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: CustomEvent<any>) => void;
         "source"?: HTMLElement;
     }
     interface AtomicSortDropdown {

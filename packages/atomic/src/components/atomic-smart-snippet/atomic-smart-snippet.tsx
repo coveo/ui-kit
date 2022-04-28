@@ -97,11 +97,16 @@ export class AtomicSmartSnippet implements InitializableComponent {
    */
   @Prop({reflect: true}) snippetStyle?: string;
 
+  @State() feedbackSent = false;
+
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.modalRef = document.createElement(
       'atomic-smart-snippet-feedback-modal'
     );
+    this.modalRef.addEventListener('feedbackSent', () => {
+      this.feedbackSent = true;
+    });
     this.host.insertAdjacentElement('beforebegin', this.modalRef);
   }
 
@@ -189,12 +194,19 @@ export class AtomicSmartSnippet implements InitializableComponent {
         id={this.id}
         liked={this.smartSnippetState.liked}
         disliked={this.smartSnippetState.disliked}
+        feedbackSent={this.feedbackSent}
         onLike={() => this.smartSnippet.like()}
         onDislike={() => this.smartSnippet.dislike()}
         onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
         explainWhyRef={(button) => (this.modalRef!.source = button)}
       ></SmartSnippetFeedbackBanner>
     );
+  }
+
+  public componentWillUpdate() {
+    if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
+      this.feedbackSent = false;
+    }
   }
 
   public render() {

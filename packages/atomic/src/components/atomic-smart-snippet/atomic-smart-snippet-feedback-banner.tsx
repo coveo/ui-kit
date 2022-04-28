@@ -10,6 +10,7 @@ interface SmartSnippetFeedbackBannerProps {
   id: string;
   liked: boolean;
   disliked: boolean;
+  feedbackSent: boolean;
   onLike(): void;
   onDislike(): void;
   onPressExplainWhy(): void;
@@ -95,7 +96,11 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
     visible ? (
       <div part="feedback-thank-you-wrapper" class="flex flex-wrap gap-1">
         <ThankYouMessage></ThankYouMessage>
-        {props.disliked ? <ExplainWhyButton></ExplainWhyButton> : []}
+        {props.disliked && !props.feedbackSent ? (
+          <ExplainWhyButton></ExplainWhyButton>
+        ) : (
+          []
+        )}
       </div>
     ) : (
       []
