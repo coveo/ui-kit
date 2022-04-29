@@ -1,6 +1,6 @@
 import {configure} from '../../page-objects/configurator';
 
-import {CaseClassificationExpectations as Expect} from './modal-expectations';
+import {ModalExpectations as Expect} from './modal-expectations';
 import {scope} from '../../reporters/detailed-collector';
 import {openModal} from '../../page-objects/actions/action-open-modal';
 import {closeModal} from '../../page-objects/actions/action-close-modal';

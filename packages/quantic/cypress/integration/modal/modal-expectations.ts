@@ -78,6 +78,6 @@ function modalExpectations(selector: ModalSelector) {
   };
 }
 
-export const CaseClassificationExpectations = {
+export const ModalExpectations = {
   ...modalExpectations(ModalSelectors),
 };
