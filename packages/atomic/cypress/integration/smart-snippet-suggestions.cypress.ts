@@ -1,6 +1,10 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {SmartSnippetSuggestionsSelectors} from './smart-snippet-suggestions-selectors';
+import {
+  smartSnippetSuggestionsComponent,
+  SmartSnippetSuggestionsSelectors,
+} from './smart-snippet-suggestions-selectors';
 import * as SmartSnippetSuggestionsAssertions from './smart-snippet-suggestions-assertions';
+import * as CommonAssertions from './common-assertions';
 import {addSearchBox} from './search-box-actions';
 import {SearchBoxSelectors} from './search-box-selectors';
 import {
@@ -54,6 +58,8 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .its('length')
         .should('eq', expectedNumberOfCollapsedSections);
     });
+
+    CommonAssertions.assertAccessibility(smartSnippetSuggestionsComponent);
   });
 
   describe('with no heading level and no expanded section', () => {
