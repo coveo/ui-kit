@@ -112,7 +112,12 @@ export default class QuanticRefineModalContent extends LightningElement {
     this.breadcrumbManager.deselectAll();
   }
 
-  toNumericFacet(facetElement) {
+  /**
+   * Returns the data needed to create a copy of the numeric facet.
+   * @param {HTMLElement} facetElement
+   * @returns {object}
+   */
+  static toNumericFacet(facetElement) {
     return {
       isNumeric: true,
       ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
@@ -122,7 +127,12 @@ export default class QuanticRefineModalContent extends LightningElement {
     };
   }
 
-  toDefaultFacet(facetElement) {
+  /**
+   * Returns the data needed to create a copy of the default facet.
+   * @param {HTMLElement} facetElement
+   * @returns {object}
+   */
+  static toDefaultFacet(facetElement) {
     return {
       isDefault: true,
       ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
@@ -132,7 +142,12 @@ export default class QuanticRefineModalContent extends LightningElement {
     };
   }
 
-  toCategoryFacet(facetElement) {
+  /**
+   * Returns the data needed to create a copy of the category facet.
+   * @param {HTMLElement} facetElement
+   * @returns {object}
+   */
+  static toCategoryFacet(facetElement) {
     return {
       isCategory: true,
       ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
@@ -142,7 +157,12 @@ export default class QuanticRefineModalContent extends LightningElement {
     };
   }
 
-  toTimeframeFacet(facetElement) {
+  /**
+   * Returns the data needed to create a copy of the timeframe facet.
+   * @param {HTMLElement} facetElement
+   * @returns {object}
+   */
+  static toTimeframeFacet(facetElement) {
     return {
       isTimeframe: true,
       ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
@@ -153,10 +173,10 @@ export default class QuanticRefineModalContent extends LightningElement {
   }
 
   selectors = {
-    'c-quantic-numeric-facet': this.toNumericFacet,
-    'c-quantic-category-facet': this.toCategoryFacet,
-    'c-quantic-timeframe-facet': this.toTimeframeFacet,
-    'c-quantic-facet': this.toDefaultFacet,
+    'c-quantic-numeric-facet': QuanticRefineModalContent.toNumericFacet,
+    'c-quantic-category-facet': QuanticRefineModalContent.toCategoryFacet,
+    'c-quantic-timeframe-facet': QuanticRefineModalContent.toTimeframeFacet,
+    'c-quantic-facet': QuanticRefineModalContent.toDefaultFacet,
   };
 
   /**
