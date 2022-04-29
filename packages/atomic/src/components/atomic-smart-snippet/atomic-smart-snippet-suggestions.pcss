@@ -9,14 +9,16 @@
   margin-top: -0.5rem;
 }
 
-[part='source-url'] a {
+[part='source-url'] {
   @mixin link-style;
   @mixin set-font-size var(--atomic-text-base);
+  display: block;
 }
 
-[part='source-title'] a {
+[part='source-title'] {
   @mixin link-style;
   @mixin set-font-size var(--atomic-text-2xl);
+  display: block;
 }
 
 footer {

@@ -11,6 +11,9 @@ declare global {
   namespace Cypress {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
+      map<T>(
+        predicate: (subject: Subject, i: number, subjects: Subject[]) => T
+      ): Chainable<T>;
       getTextOfAllElements(selector: string): Chainable<unknown>;
       // https://github.com/cypress-io/cypress-documentation/issues/108
       state(key: string): CypressRequest[];
@@ -56,6 +59,11 @@ Cypress.Commands.add('expectCustomEvent', (eventType, eventValue) => {
       }
       return analyticsBody;
     });
+});
+
+Cypress.Commands.add('map', {prevSubject: 'element'}, ($element, predicate) => {
+  const elements = $element.toArray().map((element) => Cypress.$(element));
+  cy.wrap(elements.map(predicate));
 });
 
 Cypress.Commands.add('getTextOfAllElements', (selector: string) => {

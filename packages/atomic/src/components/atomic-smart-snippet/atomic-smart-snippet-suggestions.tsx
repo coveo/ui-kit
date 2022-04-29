@@ -180,34 +180,28 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     });
     return (
       <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
-        <div part="source-url">
-          <LinkWithResultAnalytics
-            title={source.clickUri}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => interactiveResult.select()}
-            onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-            onCancelPendingSelect={() =>
-              interactiveResult.cancelPendingSelect()
-            }
-          >
-            {source.clickUri}
-          </LinkWithResultAnalytics>
-        </div>
-        <div part="source-title">
-          <LinkWithResultAnalytics
-            title={source.title}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => interactiveResult.select()}
-            onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-            onCancelPendingSelect={() =>
-              interactiveResult.cancelPendingSelect()
-            }
-          >
-            {source.title}
-          </LinkWithResultAnalytics>
-        </div>
+        <LinkWithResultAnalytics
+          title={source.clickUri}
+          href={source.clickUri}
+          target="_self"
+          part="source-url"
+          onSelect={() => interactiveResult.select()}
+          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
+        >
+          {source.clickUri}
+        </LinkWithResultAnalytics>
+        <LinkWithResultAnalytics
+          title={source.title}
+          href={source.clickUri}
+          target="_self"
+          part="source-title"
+          onSelect={() => interactiveResult.select()}
+          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
+          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
+        >
+          {source.title}
+        </LinkWithResultAnalytics>
       </section>
     );
   }
