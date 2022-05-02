@@ -19,7 +19,7 @@ import {randomID} from '../../utils/utils';
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
  *
- * You can style the snippet by inserting a template element like this:
+ * You can style the snippet by inserting a template element as follows:
  * ```html
  * <atomic-smart-snippet>
  *   <template>
