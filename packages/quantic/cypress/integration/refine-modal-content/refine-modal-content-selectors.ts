@@ -26,66 +26,38 @@ export interface FacetSelector extends ComponentSelector {
   facetFirstOption: () => CypressSelector;
 }
 
-const getCommonFacetSelectors = (container: boolean): FacetSelector => {
+const getCommonFacetSelectors = (
+  rootSelector: () => CypressSelector
+): FacetSelector => {
   return {
-    get: () =>
-      cy.get(container ? refineContentContainer : refineContentComponent),
-    facet: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-facet'),
-    numericFacet: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-numeric-facet'),
-    categoryFacet: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-category-facet'),
-    timeframeFacet: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-timeframe-facet'),
-    facetManager: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-facet-manager'),
+    get: rootSelector,
+    facet: () => rootSelector().find('c-quantic-facet'),
+    numericFacet: () => rootSelector().find('c-quantic-numeric-facet'),
+    categoryFacet: () => rootSelector().find('c-quantic-category-facet'),
+    timeframeFacet: () => rootSelector().find('c-quantic-timeframe-facet'),
+    facetManager: () => rootSelector().find('c-quantic-facet-manager'),
     facetManagerItems: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-facet-manager .facet-manager__item'),
+      rootSelector().find('c-quantic-facet-manager .facet-manager__item'),
     timeframeFacetExpandButton: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-timeframe-facet .facet__expand'),
+      rootSelector().find('c-quantic-timeframe-facet .facet__expand'),
     facetExpandButton: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-facet .facet__expand'),
+      rootSelector().find('c-quantic-facet .facet__expand'),
     timeframeFacetClearFiltersButton: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-timeframe-facet .facet__clear-filter'),
+      rootSelector().find('c-quantic-timeframe-facet .facet__clear-filter'),
     facetClearFiltersButton: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-facet .facet__clear-filter'),
+      rootSelector().find('c-quantic-facet .facet__clear-filter'),
     timeframeFacetFirstOption: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
+      rootSelector()
         .find('c-quantic-timeframe-facet .facet__value-option')
         .eq(0),
     facetFirstOption: () =>
-      cy
-        .get(container ? refineContentContainer : refineContentComponent)
-        .find('c-quantic-facet .facet__value-option')
-        .eq(0),
+      rootSelector().find('c-quantic-facet .facet__value-option').eq(0),
   };
 };
 
 export const RefineContentSelectors: RefineContentSelector = {
-  container: getCommonFacetSelectors(true),
-  ...getCommonFacetSelectors(false),
+  container: getCommonFacetSelectors(() => cy.get(refineContentContainer)),
+  ...getCommonFacetSelectors(() => cy.get(refineContentComponent)),
   sort: () => RefineContentSelectors.get().find('c-quantic-sort'),
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
