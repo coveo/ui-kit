@@ -44,7 +44,7 @@ export class AtomicModal implements InitializableComponent {
 
   @State() public error!: Error;
 
-  @Prop({mutable: true}) fullscreen = false;
+  @Prop({reflect: true, mutable: true}) fullscreen = false;
   @Prop({mutable: true}) source?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
   @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
