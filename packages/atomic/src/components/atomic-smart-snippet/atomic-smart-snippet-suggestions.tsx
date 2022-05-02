@@ -37,7 +37,7 @@ import {randomID} from '../../utils/utils';
  * ```
  *
  * @part container - The wrapper with a border around the entire component.
- * @part heading - The heading above the list of related question.
+ * @part heading - The heading above the list of related questions.
  * @part questions - The list of related questions.
  * @part question-answer-expanded - An expanded related question.
  * @part question-answer-collapsed - A collapsed related question.
@@ -73,7 +73,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
    *
    * We recommend setting this property in order to improve accessibility.
-   * ```
+   * 
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
