@@ -1,9 +1,9 @@
 {
-  "activeViewId" : "ee786e81-ab9d-4765-8c78-f27198c8a60b",
+  "activeViewId" : "2aa6410d-481c-43f5-b495-63e504c130ff",
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "configurationTags" : [ ],
-  "id" : "5bcd17e3-c2a4-466a-8040-89fbd0cb22f0",
-  "label" : "Quantic Refine Modal Content",
+  "id" : "e33ee658-8a31-4a0c-a554-0923578308b3",
+  "label" : "quantic-refine-modal-content",
   "pageAccess" : "UseParent",
   "routeType" : "custom-quantic-refine-modal-content",
   "type" : "route",

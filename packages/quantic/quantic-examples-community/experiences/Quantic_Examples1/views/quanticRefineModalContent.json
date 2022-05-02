@@ -1,8 +1,8 @@
 {
   "appPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "componentName" : "siteforce:dynamicLayout",
-  "id" : "ee786e81-ab9d-4765-8c78-f27198c8a60b",
-  "label" : "Quantic Refine Modal Content",
+  "id" : "2aa6410d-481c-43f5-b495-63e504c130ff",
+  "label" : "quantic-refine-modal-content",
   "regions" : [ {
     "components" : [ {
       "componentAttributes" : {
@@ -10,9 +10,9 @@
         "backgroundOverlay" : "rgba(0,0,0,0.5)",
         "contentAreaWidth" : 100,
         "sectionConfig" : {
-          "UUID" : "200c2418-d3e4-456b-b10a-5d00eb661939",
+          "UUID" : "b0c35469-4e54-4873-b03f-a2308974bc6c",
           "columns" : [ {
-            "UUID" : "c14089f5-3610-437a-be52-bde127775018",
+            "UUID" : "a6b58d9f-a7c9-4521-b711-b416a21c9fe2",
             "columnKey" : "1",
             "columnName" : "Column 1",
             "columnWidth" : "12",
@@ -22,17 +22,17 @@
         "sectionHeight" : 300
       },
       "componentName" : "forceCommunity:section",
-      "id" : "200c2418-d3e4-456b-b10a-5d00eb661939",
+      "id" : "b0c35469-4e54-4873-b03f-a2308974bc6c",
       "regions" : [ {
         "components" : [ {
           "componentAttributes" : { },
           "componentName" : "c:exampleQuanticRefineModalContent",
-          "id" : "95c0848c-e761-4dc8-b4eb-338acc05fc69",
+          "id" : "71bf242f-06ec-4e57-be9c-215173ad6b18",
           "renderPriority" : "NEUTRAL",
           "renditionMap" : { },
           "type" : "component"
         } ],
-        "id" : "c14089f5-3610-437a-be52-bde127775018",
+        "id" : "a6b58d9f-a7c9-4521-b711-b416a21c9fe2",
         "regionLabel" : "Column 1",
         "regionName" : "1",
         "renditionMap" : { },
@@ -42,7 +42,7 @@
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "8738ccf5-b722-4d40-affb-afc32129251b",
+    "id" : "01b36d18-da68-4104-bef0-c56a9017e115",
     "regionName" : "content",
     "type" : "region"
   }, {
@@ -50,14 +50,14 @@
       "componentAttributes" : {
         "customHeadTags" : "",
         "description" : "",
-        "title" : "Quantic Refine Modal Content"
+        "title" : "quantic-refine-modal-content"
       },
       "componentName" : "forceCommunity:seoAssistant",
-      "id" : "d215e9c8-83cf-4c37-9dc5-5fd446b2ab46",
+      "id" : "0c7fde0e-041e-4448-8a72-2b20a17ed2e2",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "e3c0a6f8-d856-481b-894e-098f513fb708",
+    "id" : "f055cc1a-b9f8-46d2-8707-8ff0e72e8c96",
     "regionName" : "sfdcHiddenRegion",
     "type" : "region"
   } ],
