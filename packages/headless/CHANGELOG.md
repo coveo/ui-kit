@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.62.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.61.1...@coveo/headless@1.62.0) (2022-04-28)
+
+
+### Features
+
+* **atomic,headless:** add analytics to the show more/show less button ([#1945](https://github.com/coveo/ui-kit/issues/1945)) ([be9c694](https://github.com/coveo/ui-kit/commit/be9c6940c279014cdffeeebd50723d6de01e979b))
+
+
+
+
+
+## [1.61.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.61.0...@coveo/headless@1.61.1) (2022-04-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.61.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.60.1...@coveo/headless@1.61.0) (2022-04-25)
+
+
+### Features
+
+* **headless:** add methods for finding results by id and by collection ([#1933](https://github.com/coveo/ui-kit/issues/1933)) ([80eb892](https://github.com/coveo/ui-kit/commit/80eb892c1e87da1f2c123091aff2df0bc2d43115))
+
+
+
+
+
+## [1.60.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.60.0...@coveo/headless@1.60.1) (2022-04-22)
+
+
+### Bug Fixes
+
+* **headless:** rework pagination logic to reuse existing searchResponseId ([#1938](https://github.com/coveo/ui-kit/issues/1938)) ([8a1b299](https://github.com/coveo/ui-kit/commit/8a1b29932cd0ed9469754e1424687c68030832e8))
+* **headless:** set root result as main result instead of collection p… ([#1936](https://github.com/coveo/ui-kit/issues/1936)) ([6d7c194](https://github.com/coveo/ui-kit/commit/6d7c1940bb628bbb813960654e27c97ac3df1b99))
+
+
+
+
+
 # [1.60.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.59.0...@coveo/headless@1.60.0) (2022-04-19)
 
 

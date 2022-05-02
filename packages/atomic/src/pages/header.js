@@ -5,6 +5,8 @@ const links = [
   {href: '/examples/folding.html', label: 'Folding'},
   {href: '/examples/headless.html', label: 'Headless'},
   {href: '/examples/standalone.html', label: 'Standalone'},
+  {href: '/examples/modal.html', label: 'Modal'},
+  {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
 ];
 
 const header = document.createElement('header');

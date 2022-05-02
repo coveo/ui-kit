@@ -1,20 +1,12 @@
 import {
   FoldedCollection,
   FoldedResult,
+  FoldedResultList,
   FoldedResultListState,
   Result,
   ResultTemplatesManager,
 } from '@coveo/headless';
-import {
-  Component,
-  Element,
-  State,
-  h,
-  Host,
-  Listen,
-  Prop,
-  FunctionalComponent,
-} from '@stencil/core';
+import {Component, Element, State, h, Listen, Prop, Host} from '@stencil/core';
 import {
   Bindings,
   InitializeBindings,
@@ -24,10 +16,18 @@ import {
   ResultContext,
   ChildTemplatesContext,
   ChildTemplatesContextEvent,
+  ResultDisplayConfigContext,
+  DisplayConfig,
 } from '../../result-template-components/result-template-decorators';
 import {ResultListCommon} from '../result-list-common';
 import {TemplateContent} from '../../result-templates/result-template-common';
-import {FoldedResultListStateContext} from '../result-list-decorators';
+import {
+  FoldedResultListContext,
+  FoldedResultListStateContext,
+} from '../result-list-decorators';
+import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
+import {ListDisplayResultsPlaceholder} from '../list-display-results-placeholder';
+import {Button} from '../../common/button';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -36,10 +36,12 @@ const componentTag = 'atomic-result-children';
  * The `atomic-result-children` component is responsible for displaying child results by applying one or more child result templates.
  * Includes two slots, "before-children" and "after-children", which allow for rendering content before and after the list of children,
  * only when children exist.
- * @internal
+ * @part no-result-root - The wrapper for the message when there are no results.
+ * @part show-hide-button - The button that allows to collapse or show all child results.
  */
 @Component({
   tag: 'atomic-result-children',
+  styleUrl: 'atomic-result-children.pcss',
   shadow: true,
 })
 export class AtomicResultChildren {
@@ -48,6 +50,8 @@ export class AtomicResultChildren {
   public templatesManager!: ResultTemplatesManager<TemplateContent>;
   @ResultContext({folded: true})
   private result!: FoldedResult;
+  @ResultDisplayConfigContext()
+  private displayConfig!: DisplayConfig;
 
   public resultListCommon?: ResultListCommon;
 
@@ -56,14 +60,35 @@ export class AtomicResultChildren {
   @State() public ready = false;
   @State() public templateHasError = false;
 
+  @FoldedResultListContext()
+  private foldedResultList!: FoldedResultList;
+
   @FoldedResultListStateContext()
   @State()
   private foldedResultListState!: FoldedResultListState;
+
+  @State()
+  private hideResults = false;
+
+  @State()
+  private showAllResults = false;
 
   /**
    * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
    */
   @Prop() inheritTemplates = false;
+  /**
+   * The expected size of the image displayed in the children results.
+   */
+  @Prop({reflect: true}) imageSize: ResultDisplayImageSize | null = null;
+  /**
+   * The copy for an empty result state.
+   *
+   * @defaultValue `No documents are related to this one.`
+   */
+  @Prop() public noResultText = '';
+
+  private initialChildren!: FoldedResult[];
 
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
@@ -128,6 +153,9 @@ export class AtomicResultChildren {
         content={content}
         result={child}
         engine={this.bindings.engine}
+        density={this.displayConfig.density}
+        imageSize={this.imageSize || this.displayConfig.imageSize}
+        classes="child-result"
       ></atomic-result>
     );
   }
@@ -140,31 +168,108 @@ export class AtomicResultChildren {
     );
   }
 
-  public render() {
-    if (!this.ready) return null;
-    if (this.templateHasError) return <slot></slot>;
+  private shouldShowChildrenWrapper() {
     const result = this.getResult();
-    if (result.children.length) {
+    if (!this.initialChildren.length && this.hideResults) {
+      return false;
+    }
+    return (
+      Boolean(result.children.length) ||
+      result.isLoadingMoreResults ||
+      this.showAllResults
+    );
+  }
+
+  public componentWillUpdate() {
+    if (this.getResult().children && !this.initialChildren) {
+      this.initialChildren = this.getResult().children;
+    }
+    if (this.getResult().isLoadingMoreResults && !this.showAllResults) {
+      this.showAllResults = true;
+    }
+  }
+
+  private get hasResults() {
+    return this.getResult().children.length !== 0;
+  }
+
+  private getComponents() {
+    const result = this.getResult();
+    if (result.isLoadingMoreResults) {
       return (
-        <Host>
-          <slot name="before-children"></slot>
-          {result.isLoadingMoreResults ? (
-            <Loading></Loading>
-          ) : (
-            result.children.map((child) => this.renderChild(child))
-          )}
-          <slot name="after-children"></slot>
-        </Host>
+        <ListDisplayResultsPlaceholder
+          resultsPerPageState={{
+            numberOfResults: result.children.length || 2,
+          }}
+          density={this.displayConfig.density}
+          imageSize={this.imageSize || this.displayConfig.imageSize}
+          isChild
+        />
       );
     }
-    if (result.isLoadingMoreResults) {
-      return <Loading></Loading>;
+    if (this.hasResults) {
+      const children = this.hideResults
+        ? this.initialChildren
+        : result.children;
+      return children.map((child) => this.renderChild(child));
+    }
+    if (this.showAllResults) {
+      return (
+        <p part="no-result-root" class="no-result-root">
+          {this.noResultText || this.bindings.i18n.t('no-documents-related')}
+        </p>
+      );
     }
     return null;
   }
-}
 
-const Loading: FunctionalComponent = () => {
-  // TODO:
-  return <p>Loading...</p>;
-};
+  private renderCollapseButton() {
+    const result = this.getResult();
+    if (
+      Boolean(result.children.length) &&
+      result.children.length !== this.initialChildren.length &&
+      !result.isLoadingMoreResults &&
+      !result.moreResultsAvailable
+    ) {
+      return (
+        <Button
+          part="show-hide-button"
+          class="show-hide-button"
+          style="text-primary"
+          onClick={() => {
+            if (this.hideResults) {
+              this.foldedResultList.logShowMoreFoldedResults(
+                this.result.result
+              );
+            } else {
+              this.foldedResultList.logShowLessFoldedResults();
+            }
+            this.hideResults = !this.hideResults;
+          }}
+        >
+          {this.bindings.i18n.t(
+            this.hideResults ? 'expand-results' : 'collapse-results'
+          )}
+        </Button>
+      );
+    }
+    return null;
+  }
+
+  public render() {
+    if (!this.ready) return null;
+    if (this.templateHasError) return <slot></slot>;
+    return (
+      <Host>
+        {this.renderCollapseButton()}
+        {this.shouldShowChildrenWrapper() && (
+          <div part="children-root">
+            {this.hasResults && <slot name="before-children"></slot>}
+            {this.getComponents()}
+            {this.hasResults && <slot name="after-children"></slot>}
+          </div>
+        )}
+      </Host>
+    );
+  }
+}

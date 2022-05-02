@@ -18,26 +18,29 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-  DeferUntilRender,
 } from '../../utils/initialization-utils';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFacetElements, SortDropdownOption} from '../../utils/store';
 import SortIcon from '../../images/sort.svg';
 import {Button} from '../common/button';
 
-export type ModalStatus = 'closed' | 'opened' | 'beingClosed';
-
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
  *
- * When the modal is opened, the class `atomic-modal-open` is added to the body, allowing further customization.
+ * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
  *
- * @part container - The container of the modal's content.
+ * @part container - The modal's outermost container.
+ * @part header-wrapper - The wrapper around the header.
  * @part header - The header of the modal, containing the title.
- * @part close-button - The button in the header that closes the modal.
  * @part section-title - The title for each section.
+ * @part close-button - The button in the header that closes the modal.
+ * @part header-ruler - The horizontal ruler underneath the header.
+ * @part body-wrapper - The wrapper around the body.
+ * @part body - The body of the modal, between the header and the footer.
  * @part select - The `<select>` element of the drop-down list.
  * @part filter-clear-all - The button that resets all actively selected facet values.
+ * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
+ * @part footer - The footer of the modal, containing the clear all button.
  * @part footer-button - The button in the footer that closes the modal.
  */
 @Component({
@@ -50,7 +53,6 @@ export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   private facetManager!: FacetManager;
-  private closeButton?: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   @Element() public host!: HTMLElement;
 
@@ -68,46 +70,37 @@ export class AtomicRefineModal implements InitializableComponent {
 
   @Prop({mutable: true}) openButton?: HTMLElement;
 
-  @Prop({reflect: true, mutable: true}) modalStatus!: ModalStatus;
-  @Watch('modalStatus')
-  watchEnabled(modalStatus: ModalStatus) {
-    const modalOpenedClass = 'atomic-modal-opened';
-
-    switch (modalStatus) {
-      case 'opened':
-        document.body.classList.add(modalOpenedClass);
-        this.duplicateFacetElements();
-        this.focusOnCloseButton();
-        break;
-      case 'closed':
-        document.body.classList.remove(modalOpenedClass);
-        this.flushFacetElements();
-        this.focusOnOpenButton();
-        break;
+  @Prop({reflect: true, mutable: true}) isOpen = false;
+  @Watch('isOpen')
+  watchEnabled(isOpen: boolean) {
+    if (isOpen) {
+      this.duplicateFacetElements();
     }
   }
 
-  @DeferUntilRender()
-  private focusOnCloseButton() {
-    this.closeButton?.focus();
-  }
-
-  @DeferUntilRender()
-  private focusOnOpenButton() {
-    this.openButton?.focus();
-  }
-
   public initialize() {
-    this.modalStatus = 'closed';
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
   }
 
+  private onAnimationEnded() {
+    if (!this.isOpen) {
+      this.flushFacetElements();
+    }
+  }
+
   private duplicateFacetElements() {
+    if (this.host.querySelector('div[slot="facets"]')) {
+      return;
+    }
+
     const divSlot = document.createElement('div');
     divSlot.setAttribute('slot', 'facets');
+    divSlot.style.display = 'flex';
+    divSlot.style.flexDirection = 'column';
+    divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
     const facetElementsPayload = getFacetElements(this.bindings.store).map(
       (f) => ({facetId: f.getAttribute('facet-id')!, payload: f})
@@ -118,8 +111,6 @@ export class AtomicRefineModal implements InitializableComponent {
 
     sortedFacetsElements.forEach((facetElement) => {
       const clone = facetElement.cloneNode(true) as HTMLElement;
-      clone.style.marginBottom =
-        'var(--atomic-refine-modal-facet-margin, 20px)';
       clone.setAttribute('is-collapsed', 'true');
       divSlot.append(clone);
     });
@@ -133,17 +124,13 @@ export class AtomicRefineModal implements InitializableComponent {
 
   private renderHeader() {
     return (
-      <div
-        part="header"
-        class="w-full flex justify-between text-xl centered py-6"
-      >
-        <span class="truncate">{this.bindings.i18n.t('sort-and-filter')}</span>
+      <div slot="header" class="contents">
+        <h1 class="truncate">{this.bindings.i18n.t('sort-and-filter')}</h1>
         <Button
           style="text-transparent"
           class="grid place-items-center"
           part="close-button"
-          onClick={() => this.dismiss()}
-          ref={(closeButton) => (this.closeButton = closeButton)}
+          onClick={() => (this.isOpen = false)}
         >
           <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
         </Button>
@@ -177,7 +164,7 @@ export class AtomicRefineModal implements InitializableComponent {
     }
 
     return [
-      <h1 part="section-title" class="text-2xl font-bold truncate mb-3 mt-8">
+      <h1 part="section-title" class="text-2xl font-bold truncate mb-3">
         {this.bindings.i18n.t('sort')}
       </h1>,
       <div class="relative">
@@ -220,14 +207,23 @@ export class AtomicRefineModal implements InitializableComponent {
     ];
   }
 
+  private renderBody() {
+    return (
+      <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+        {this.renderSort()}
+        {this.renderFilters()}
+      </aside>
+    );
+  }
+
   private renderFooter() {
     return (
-      <div class="px-6 py-4 w-full border-neutral border-t bg-background z-10 shadow-lg">
+      <div slot="footer">
         <Button
           style="primary"
           part="footer-button"
-          class="centered p-3 flex text-lg justify-center"
-          onClick={() => this.dismiss()}
+          class="w-full p-3 flex text-lg justify-center"
+          onClick={() => (this.isOpen = false)}
         >
           <span class="truncate mr-1">
             {this.bindings.i18n.t('view-results')}
@@ -244,44 +240,19 @@ export class AtomicRefineModal implements InitializableComponent {
     );
   }
 
-  private dismiss() {
-    setTimeout(() => {
-      this.modalStatus = 'closed';
-    }, 500);
-    this.modalStatus = 'beingClosed';
-  }
-
   public render() {
-    if (this.modalStatus === 'closed') {
-      return;
-    }
-
-    const isOpened = this.modalStatus === 'opened';
-
     return (
-      <atomic-focus-trap active={isOpened}>
-        <div
-          part="container"
-          class={`fixed flex flex-col justify-between bg-background text-on-background left-0 top-0 right-0 bottom-0 z-10 ${
-            isOpened
-              ? 'animate-scaleUpRefineModal'
-              : 'animate-slideDownRefineModal'
-          }`}
-          aria-modal={isOpened.toString()}
-        >
-          <div class="px-6">{this.renderHeader()}</div>
-          <hr class="border-neutral"></hr>
-          <div class="overflow-auto px-6 grow">
-            <div class="adjust-for-scroll-bar">
-              <aside class="centered">
-                {this.renderSort()}
-                {this.renderFilters()}
-              </aside>
-            </div>
-          </div>
-          {this.renderFooter()}
-        </div>
-      </atomic-focus-trap>
+      <atomic-modal
+        isOpen={this.isOpen}
+        source={this.openButton}
+        close={() => (this.isOpen = false)}
+        onAnimationEnded={() => this.onAnimationEnded()}
+        exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
+      >
+        {this.renderHeader()}
+        {this.renderBody()}
+        {this.renderFooter()}
+      </atomic-modal>
     );
   }
 }

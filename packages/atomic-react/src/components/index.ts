@@ -5,3 +5,4 @@ export * from '@coveo/atomic/headless';
 // and should wrap it nicely for users of the library
 export {SearchInterfaceWrapper as AtomicSearchInterface} from './SearchInterfaceWrapper';
 export {ResultListWrapper as AtomicResultList} from './ResultListWrapper';
+export {FoldedResultListWrapper as AtomicFoldedResultList} from './FoldedResultListWrapper';

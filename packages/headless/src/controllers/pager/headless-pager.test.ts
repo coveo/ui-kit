@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Pager,
   PagerOptions,
@@ -8,7 +9,7 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {executeSearch} from '../../features/search/search-actions';
+import {fetchPage} from '../../features/search/search-actions';
 
 describe('Pager', () => {
   let engine: MockSearchEngine;
@@ -41,21 +42,21 @@ describe('Pager', () => {
     expect(pager.state.currentPages.length).toBe(5);
   });
 
-  it('#selectPage dispatches #executeSearch', () => {
+  it('#selectPage dispatches #fetchPage', () => {
     pager.selectPage(2);
-    const action = engine.findAsyncAction(executeSearch.pending);
+    const action = engine.findAsyncAction(fetchPage.pending);
     expect(action).toBeTruthy();
   });
 
-  it('#nextPage dispatches #executeSearch', () => {
+  it('#nextPage dispatches #fetchPage', () => {
     pager.nextPage();
-    const action = engine.findAsyncAction(executeSearch.pending);
+    const action = engine.findAsyncAction(fetchPage.pending);
     expect(action).toBeTruthy();
   });
 
-  it('#previousPage dispatches #executeSearch', () => {
+  it('#previousPage dispatches #fetchPage', () => {
     pager.previousPage();
-    const action = engine.findAsyncAction(executeSearch.pending);
+    const action = engine.findAsyncAction(fetchPage.pending);
     expect(engine.actions).toContainEqual(action);
   });
 });

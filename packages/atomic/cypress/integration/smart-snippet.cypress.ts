@@ -1,71 +1,21 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {toArray} from '../utils/arrayUtils';
 import {SmartSnippetSelectors} from './smart-snippet-selectors';
 import * as CommonAssertions from './common-assertions';
 import * as SmartSnippetAssertions from './smart-snippet-assertions';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {addSearchBox} from './search-box-actions';
 import {SearchBoxSelectors} from './search-box-selectors';
+import {
+  addSmartSnippet,
+  addSmartSnippetDefaultOptions,
+} from './smart-snippet-actions';
 
-const remSize = 12;
-const defaultQuestion = 'Creating an In-Product Experience (IPX)';
-const defaultAnswer = `
-  <ol>
-    <li>On the <b>In-Product Experiences</b> page, click Add <b>In-Product Experience</b>.</li>
-    <li>In the Configuration tab, fill the Basic settings section.</li>
-    <li>(Optional) Use the Design and Content access tabs to customize your <b>IPX</b> interface.</li>
-    <li>Click Save.</li>
-    <li>In the Loader snippet panel that appears, you may click Copy to save the loader snippet for your <b>IPX</b> to your clipboard, and then click Save.  You can Always retrieve the loader snippet later.</li>
-  </ol>
-
-  <p>
-    You're now ready to load your IPX interface in the desired web site or application. However, we recommend that you configure query pipelines for your IPX interface before.
-  </p>
-`;
-const defaultSourceTitle = 'Manage the Coveo In-Product Experiences (IPX)';
-const defaultSourceUrl = 'https://docs.coveo.com/en/3160';
-
-interface AddSmartSnippetOptions {
-  props?: {
-    'heading-level'?: number;
-    'maximum-height'?: number;
-    'collapsed-height'?: number;
-    'snippet-style'?: string;
-  };
-  content?: HTMLElement | HTMLElement[];
-  question?: string;
-  answer?: string;
-  sourceTitle?: string;
-  sourceUrl?: string;
-}
-
-const addSmartSnippet =
-  (options: AddSmartSnippetOptions = {}) =>
-  (fixture: TestFixture) => {
-    const element = generateComponentHTML(
-      'atomic-smart-snippet',
-      options.props
-    );
-    element.append(...toArray(options.content ?? []));
-    fixture
-      .withStyle(`html { font-size: ${remSize}px; }`)
-      .withElement(element)
-      .withCustomResponse((response) => {
-        const [result] = response.results;
-        result.title = options.sourceTitle ?? defaultSourceTitle;
-        result.clickUri = options.sourceUrl ?? defaultSourceUrl;
-        response.questionAnswer = {
-          documentId: {
-            contentIdKey: 'permanentid',
-            contentIdValue: result.raw.permanentid!,
-          },
-          question: options.question ?? defaultQuestion,
-          answerSnippet: options.answer ?? defaultAnswer,
-          relatedQuestions: [],
-          score: 1337,
-        };
-      });
-  };
+const {
+  remSize,
+  question: defaultQuestion,
+  sourceTitle: defaultSourceTitle,
+  sourceUrl: defaultSourceUrl,
+} = addSmartSnippetDefaultOptions;
 
 function buildAnswerWithHeight(height: number) {
   const heightWithoutMargins = height - remSize * 2;
@@ -307,6 +257,7 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertLikeButtonChecked(true);
     SmartSnippetAssertions.assertDislikeButtonChecked(false);
     SmartSnippetAssertions.assertThankYouBanner(true);
+    SmartSnippetAssertions.assertLogLikeSmartSnippet();
   });
 
   describe('after pressing the dislike button', () => {
@@ -318,6 +269,7 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertLikeButtonChecked(false);
     SmartSnippetAssertions.assertDislikeButtonChecked(true);
     SmartSnippetAssertions.assertThankYouBanner(true);
+    SmartSnippetAssertions.assertLogDislikeSmartSnippet();
   });
 
   describe('after clicking on the title', () => {
@@ -337,7 +289,7 @@ describe('Smart Snippet Test Suites', () => {
       SmartSnippetSelectors.sourceTitle().rightclick();
     });
 
-    SmartSnippetAssertions.assertOpenSmartSnippetSourceAnalytics(true);
+    SmartSnippetAssertions.assertlogOpenSmartSnippetSource(true);
 
     describe('then liking the snippet then clicking the title again', () => {
       beforeEach(() => {
@@ -346,7 +298,7 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetSelectors.sourceTitle().rightclick();
       });
 
-      SmartSnippetAssertions.assertOpenSmartSnippetSourceAnalytics(false);
+      SmartSnippetAssertions.assertlogOpenSmartSnippetSource(false);
     });
 
     describe('then getting a new snippet and clicking on the title again', () => {
@@ -356,7 +308,7 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetSelectors.sourceTitle().rightclick();
       });
 
-      SmartSnippetAssertions.assertOpenSmartSnippetSourceAnalytics(true);
+      SmartSnippetAssertions.assertlogOpenSmartSnippetSource(true);
     });
   });
 

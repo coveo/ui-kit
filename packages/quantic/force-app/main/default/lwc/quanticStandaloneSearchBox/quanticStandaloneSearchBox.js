@@ -217,7 +217,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   }
 
   showSuggestions() {
-    this.standaloneSearchBox.showSuggestions();
+    this.standaloneSearchBox?.showSuggestions();
     this.combobox?.classList.add('slds-is-open');
     this.combobox?.setAttribute('aria-expanded', 'true');
   }

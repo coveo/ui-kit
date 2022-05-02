@@ -56,4 +56,9 @@ export const SmartSnippetSelectors = {
     SmartSnippetSelectors.shadow().find('[part="feedback-thank-you"]', {
       includeShadowDom: true,
     }),
+  feedbackExplainWhy: () =>
+    SmartSnippetSelectors.shadow().find(
+      '[part="feedback-explain-why-button"]',
+      {includeShadowDom: true}
+    ),
 };
