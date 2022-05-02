@@ -36,6 +36,7 @@ import {updateBreakpoints} from '../../utils/replace-breakpoint';
  * @part body - The body of the modal, between the header and the footer.
  * @part form - The wrapper around the reason and details.
  * @part reason-title - The title above the reason radio buttons.
+ * @part reason - A wrapper around the radio button and the label of a reason.
  * @part reason-radio - A radio button representing a reason.
  * @part reason-label - A label linked to a radio button representing a reason.
  * @part details-title - The title above the details input.
@@ -141,7 +142,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
           {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
         </legend>
         {options.map(({id, localeKey, correspondingAnswer}) => (
-          <div key={id} class="text-base leading-4 text-neutral-dark mt-2">
+          <div key={id} part="reason">
             <input
               part="reason-radio"
               type="radio"
@@ -209,7 +210,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
   private renderFooter() {
     return (
-      <div part="buttons" slot="footer">
+      <div part="buttons" slot="footer" class="flex justify-end gap-2">
         <Button
           part="cancel-button"
           style="outline-neutral"
