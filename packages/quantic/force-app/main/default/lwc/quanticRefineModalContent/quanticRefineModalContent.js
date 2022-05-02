@@ -117,66 +117,66 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @param {HTMLElement} facetElement
    * @returns {object}
    */
-  static toNumericFacet(facetElement) {
+  toNumericFacet = (facetElement) => {
     return {
       isNumeric: true,
-      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+      ...this.extractFacetDataFromElement(facetElement, [
         ...COMMON_FACET_PROPERTIES,
         ...NUMERIC_FACET_PROPERTIES,
       ]),
     };
-  }
+  };
 
   /**
    * Returns the data needed to create a copy of the default facet.
    * @param {HTMLElement} facetElement
    * @returns {object}
    */
-  static toDefaultFacet(facetElement) {
+  toDefaultFacet = (facetElement) => {
     return {
       isDefault: true,
-      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+      ...this.extractFacetDataFromElement(facetElement, [
         ...COMMON_FACET_PROPERTIES,
         ...DEFAULT_FACET_PROPERTIES,
       ]),
     };
-  }
+  };
 
   /**
    * Returns the data needed to create a copy of the category facet.
    * @param {HTMLElement} facetElement
    * @returns {object}
    */
-  static toCategoryFacet(facetElement) {
+  toCategoryFacet = (facetElement) => {
     return {
       isCategory: true,
-      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+      ...this.extractFacetDataFromElement(facetElement, [
         ...COMMON_FACET_PROPERTIES,
         ...CATEGORY_FACET_PROPERTIES,
       ]),
     };
-  }
+  };
 
   /**
    * Returns the data needed to create a copy of the timeframe facet.
    * @param {HTMLElement} facetElement
    * @returns {object}
    */
-  static toTimeframeFacet(facetElement) {
+  toTimeframeFacet = (facetElement) => {
     return {
       isTimeframe: true,
-      ...QuanticRefineModalContent.extractFacetDataFromElement(facetElement, [
+      ...this.extractFacetDataFromElement(facetElement, [
         ...COMMON_FACET_PROPERTIES,
         ...TIMEFRAME_FACET_PROPERTIES,
       ]),
     };
-  }
+  };
 
   selectors = {
-    'c-quantic-numeric-facet': QuanticRefineModalContent.toNumericFacet,
-    'c-quantic-category-facet': QuanticRefineModalContent.toCategoryFacet,
-    'c-quantic-timeframe-facet': QuanticRefineModalContent.toTimeframeFacet,
-    'c-quantic-facet': QuanticRefineModalContent.toDefaultFacet,
+    'c-quantic-numeric-facet': this.toNumericFacet,
+    'c-quantic-category-facet': this.toCategoryFacet,
+    'c-quantic-timeframe-facet': this.toTimeframeFacet,
+    'c-quantic-facet': this.toDefaultFacet,
   };
 
   /**
@@ -202,7 +202,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @param {Array<string>} properties
    * @returns {object}
    */
-  static extractFacetDataFromElement(element, properties) {
+  extractFacetDataFromElement(element, properties) {
     return properties.reduce((data, property) => {
       data[property] = element[property];
       return data;
