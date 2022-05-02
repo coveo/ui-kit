@@ -134,7 +134,10 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
     return (
       <fieldset>
-        <legend part="reason-title" class="font-bold text-on-background">
+        <legend
+          part="reason-title"
+          class="font-bold text-on-background text-lg"
+        >
           {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
         </legend>
         {options.map(({id, localeKey, correspondingAnswer}) => (
@@ -168,7 +171,10 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
     return (
       <fieldset>
-        <legend part="details-title" class="font-bold text-on-background">
+        <legend
+          part="details-title"
+          class="font-bold text-on-background text-lg"
+        >
           {this.bindings.i18n.t('smart-snippet-feedback-details')}
         </legend>
         <textarea
@@ -203,10 +209,11 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
   private renderFooter() {
     return (
-      <div part="buttons" slot="footer" class="flex justify-end gap-2">
+      <div part="buttons" slot="footer">
         <Button
           part="cancel-button"
           style="outline-neutral"
+          class="text-primary"
           onClick={() => this.close()}
         >
           {this.bindings.i18n.t('cancel')}
