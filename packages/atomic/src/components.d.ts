@@ -882,7 +882,7 @@ export namespace Components {
     }
     interface AtomicSmartSnippetSuggestions {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility. ```
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel": number;
         /**
@@ -2360,7 +2360,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippetSuggestions {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility. ```
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel"?: number;
         /**
