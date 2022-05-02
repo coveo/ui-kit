@@ -243,6 +243,7 @@ export class AtomicRefineModal implements InitializableComponent {
   public render() {
     return (
       <atomic-modal
+        fullscreen={true}
         isOpen={this.isOpen}
         source={this.openButton}
         close={() => (this.isOpen = false)}

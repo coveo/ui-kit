@@ -230,6 +230,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
     return (
       <atomic-modal
+        fullscreen={false}
         source={this.source}
         isOpen={this.isOpen}
         close={() => this.close()}
