@@ -177,7 +177,10 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       options: {result: source},
     });
     return (
-      <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
+      <footer
+        part="footer"
+        aria-label={this.bindings.i18n.t('smart-snippet-source')}
+      >
         <LinkWithResultAnalytics
           title={source.clickUri}
           href={source.clickUri}
@@ -200,7 +203,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         >
           {source.title}
         </LinkWithResultAnalytics>
-      </section>
+      </footer>
     );
   }
 
@@ -211,15 +214,17 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         part={this.getQuestionPart('question-answer', relatedQuestion)}
         class="flex flex-col"
       >
-        {this.renderQuestion(relatedQuestion)}
-        <div
-          part={relatedQuestion.expanded ? 'answer-and-source' : ''}
-          class={relatedQuestion.expanded ? 'pl-10 pr-6 pb-6' : 'hidden'}
-          id={this.getRelatedQuestionId(relatedQuestion)}
-        >
-          {this.renderContent(relatedQuestion)}
-          <footer part="footer">{this.renderSource(relatedQuestion)}</footer>
-        </div>
+        <article class="contents">
+          {this.renderQuestion(relatedQuestion)}
+          <div
+            part={relatedQuestion.expanded ? 'answer-and-source' : ''}
+            class={relatedQuestion.expanded ? 'pl-10 pr-6 pb-6' : 'hidden'}
+            id={this.getRelatedQuestionId(relatedQuestion)}
+          >
+            {this.renderContent(relatedQuestion)}
+            {this.renderSource(relatedQuestion)}
+          </div>
+        </article>
       </li>
     );
   }
