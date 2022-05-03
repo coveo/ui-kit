@@ -135,10 +135,18 @@ export class AtomicSearchInterface {
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
+    if (!this.engine) {
+      console.warn(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the "searchHub" or "pipeline" props.',
+        this.host
+      );
+      return;
+    }
+
     const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine!
+      this.engine
     );
-    this.engine?.dispatch(
+    this.engine.dispatch(
       updateSearchConfiguration({
         pipeline: this.pipeline,
         searchHub: this.searchHub,
@@ -148,20 +156,36 @@ export class AtomicSearchInterface {
 
   @Watch('analytics')
   public toggleAnalytics() {
-    if (!this.analytics) {
-      this.engine?.disableAnalytics();
+    if (!this.engine) {
+      console.warn(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the "analytics" prop.',
+        this.host
+      );
       return;
     }
 
-    this.engine?.enableAnalytics();
+    if (!this.analytics) {
+      this.engine.disableAnalytics();
+      return;
+    }
+
+    this.engine.enableAnalytics();
   }
 
   @Watch('language')
   public updateLanguage() {
+    if (!this.engine) {
+      console.warn(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the "language" prop.',
+        this.host
+      );
+      return;
+    }
+
     const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine!
+      this.engine
     );
-    this.engine?.dispatch(
+    this.engine.dispatch(
       updateSearchConfiguration({
         locale: this.language,
       })
