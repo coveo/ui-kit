@@ -21,6 +21,7 @@ export interface ButtonProps {
   ariaPressed?: string;
   ariaChecked?: string;
   ariaCurrent?: string;
+  ariaControls?: string;
   title?: string;
   ref?(element?: HTMLButtonElement): void;
 }
@@ -41,6 +42,7 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     'aria-pressed': props.ariaPressed,
     'aria-checked': props.ariaChecked,
     'aria-current': props.ariaCurrent,
+    'aria-controls': props.ariaControls,
     disabled: props.disabled,
     ref(buttonEl?: HTMLButtonElement) {
       if (props.form) {
