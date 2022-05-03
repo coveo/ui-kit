@@ -31,42 +31,42 @@ export const SmartSnippetSuggestionsSelectors = {
     ),
   questionExpandedButton: () =>
     SmartSnippetSuggestionsSelectors.shadow().find(
-      '[part="question-expanded-button"]',
+      '[part="question-button-expanded"]',
       {
         includeShadowDom: true,
       }
     ),
   questionCollapsedButton: () =>
     SmartSnippetSuggestionsSelectors.shadow().find(
-      '[part="question-collapsed-button"]',
+      '[part="question-button-collapsed"]',
       {
         includeShadowDom: true,
       }
     ),
   questionExpandedIcon: () =>
     SmartSnippetSuggestionsSelectors.shadow().find(
-      '[part="question-expanded-icon"]',
+      '[part="question-icon-expanded"]',
       {
         includeShadowDom: true,
       }
     ),
   questionCollapsedIcon: () =>
     SmartSnippetSuggestionsSelectors.shadow().find(
-      '[part="question-collapsed-icon"]',
+      '[part="question-icon-collapsed"]',
       {
         includeShadowDom: true,
       }
     ),
   questionExpandedText: () =>
     SmartSnippetSuggestionsSelectors.shadow().find(
-      '[part="question-expanded-text"]',
+      '[part="question-text-expanded"]',
       {
         includeShadowDom: true,
       }
     ),
   questionCollapsedText: () =>
     SmartSnippetSuggestionsSelectors.shadow().find(
-      '[part="question-collapsed-text"]',
+      '[part="question-text-collapsed"]',
       {
         includeShadowDom: true,
       }

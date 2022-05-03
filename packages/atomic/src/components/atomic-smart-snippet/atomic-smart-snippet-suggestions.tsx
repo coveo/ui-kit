@@ -41,12 +41,12 @@ import {randomID} from '../../utils/utils';
  * @part questions - The list of related questions.
  * @part question-answer-expanded - An expanded related question.
  * @part question-answer-collapsed - A collapsed related question.
- * @part question-expanded-button - The button to collapse a related question.
- * @part question-collapsed-button - The button to expand a related question.
- * @part question-expanded-icon - The caret of an expanded related question.
- * @part question-collapsed-icon - The caret of a collapsed related question.
- * @part question-expanded-text - The title of an expanded related question.
- * @part question-collapsed-text - The title of a collapsed related question.
+ * @part question-button-expanded - The button to collapse a related question.
+ * @part question-button-collapsed - The button to expand a related question.
+ * @part question-icon-expanded - The caret of an expanded related question.
+ * @part question-icon-collapsed - The caret of a collapsed related question.
+ * @part question-text-expanded - The title of an expanded related question.
+ * @part question-text-collapsed - The title of a collapsed related question.
  * @part answer-and-source - The wrapper around the answer and source of a related question.
  * @part answer - The container displaying the full document excerpt of a related question's answer.
  * @part footer - The wrapper around the source of a related question's answer.
@@ -107,6 +107,13 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       .replace(/[^a-z-]/g, '')}`;
   }
 
+  private getQuestionPart(
+    prefix: string,
+    relatedQuestion: SmartSnippetRelatedQuestion
+  ) {
+    return prefix + (relatedQuestion.expanded ? '-expanded' : '-collapsed');
+  }
+
   private get style() {
     const styleTag = this.host
       .querySelector('template')
@@ -126,33 +133,21 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     return (
       <Button
         style="text-neutral"
-        part={
-          relatedQuestion.expanded
-            ? 'question-expanded-button'
-            : 'question-collapsed-button'
-        }
+        part={this.getQuestionPart('question-button', relatedQuestion)}
         onClick={toggleRelatedQuestion}
         class="flex items-center px-4"
-        ariaExpanded={`${relatedQuestion.expanded}`}
+        ariaExpanded={relatedQuestion.expanded}
         ariaControls={this.getRelatedQuestionId(relatedQuestion)}
       >
         <atomic-icon
           icon={relatedQuestion.expanded ? ArrowDown : ArrowRight}
-          part={
-            relatedQuestion.expanded
-              ? 'question-expanded-icon'
-              : 'question-collapsed-icon'
-          }
+          part={this.getQuestionPart('question-icon', relatedQuestion)}
           class="w-2.5 mr-3 stroke-[1.25]"
         ></atomic-icon>
         <Heading
           level={this.headingLevel ? this.headingLevel + 1 : 0}
           class="text-left text-xl font-bold py-4"
-          part={
-            relatedQuestion.expanded
-              ? 'question-expanded-text'
-              : 'question-collapsed-text'
-          }
+          part={this.getQuestionPart('question-text', relatedQuestion)}
         >
           {relatedQuestion.question}
         </Heading>
@@ -210,11 +205,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     return (
       <li
         key={this.getRelatedQuestionId(relatedQuestion)}
-        part={
-          relatedQuestion.expanded
-            ? 'question-answer-expanded'
-            : 'question-answer-collapsed'
-        }
+        part={this.getQuestionPart('question-answer', relatedQuestion)}
         class="flex flex-col"
       >
         {this.renderQuestion(relatedQuestion)}
