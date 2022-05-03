@@ -386,6 +386,12 @@ export interface QueryErrorMeta {
 export type SmartSnippetFeedbackReason = 'does_not_answer' | 'partially_answers' | 'was_not_a_question' | 'other';
 
 export interface SmartSnippetSuggestionMeta {
+    question: string;
+    answerSnippet: string;
+    documentId: SmartSnippetDocumentIdentifier;
+}
+
+export interface SmartSnippetDocumentIdentifier {
     contentIdKey: string;
     contentIdValue: string;
 }

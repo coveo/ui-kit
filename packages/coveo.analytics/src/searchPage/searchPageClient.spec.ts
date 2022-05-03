@@ -524,13 +524,39 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #logExpandSmartSnippetSuggestion', async () => {
+        await client.logExpandSmartSnippetSuggestion({
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+        expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, {
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+    });
+
+    it('should send proper payload for #logCollapseSmartSnippetSuggestion', async () => {
+        await client.logCollapseSmartSnippetSuggestion({
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+        expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, {
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+    });
+
+    it('should send proper payload for #logExpandSmartSnippetSuggestion when called with only the documentId', async () => {
         await client.logExpandSmartSnippetSuggestion({contentIdKey: 'permanentid', contentIdValue: 'foo'});
         expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, {
             documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
         });
     });
 
-    it('should send proper payload for #logCollapseSmartSnippetSuggestion', async () => {
+    it('should send proper payload for #logCollapseSmartSnippetSuggestion when called with only the documentId', async () => {
         await client.logCollapseSmartSnippetSuggestion({contentIdKey: 'permanentid', contentIdValue: 'foo'});
         expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, {
             documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},

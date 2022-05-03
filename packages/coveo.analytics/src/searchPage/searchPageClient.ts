@@ -22,6 +22,7 @@ import {
     FacetStateMetadata,
     SmartSnippetFeedbackReason,
     SmartSnippetSuggestionMeta,
+    SmartSnippetDocumentIdentifier,
     StaticFilterMetadata,
     StaticFilterToggleValueMetadata,
 } from './searchPageEvents';
@@ -278,12 +279,18 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.sendSmartSnippetReason, {reason, details});
     }
 
-    public logExpandSmartSnippetSuggestion(documentId: SmartSnippetSuggestionMeta) {
-        return this.logCustomEvent(SearchPageEvents.expandSmartSnippetSuggestion, {documentId});
+    public logExpandSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
+        return this.logCustomEvent(
+            SearchPageEvents.expandSmartSnippetSuggestion,
+            'documentId' in snippet ? snippet : {documentId: snippet}
+        );
     }
 
-    public logCollapseSmartSnippetSuggestion(documentId: SmartSnippetSuggestionMeta) {
-        return this.logCustomEvent(SearchPageEvents.collapseSmartSnippetSuggestion, {documentId});
+    public logCollapseSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta | SmartSnippetDocumentIdentifier) {
+        return this.logCustomEvent(
+            SearchPageEvents.collapseSmartSnippetSuggestion,
+            'documentId' in snippet ? snippet : {documentId: snippet}
+        );
     }
 
     public logOpenSmartSnippetSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
