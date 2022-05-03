@@ -1,7 +1,7 @@
 import {configuration, pagination} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
+import {fetchPage} from '../../features/search/search-actions';
 import {
   ConfigurationSection,
   PaginationSection,
@@ -51,7 +51,7 @@ export function buildResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(executeSearch(logPagerResize()));
+      dispatch(fetchPage(logPagerResize()));
     },
   };
 }

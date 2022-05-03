@@ -11,7 +11,7 @@ import {
   registerNumberOfResults,
   updateNumberOfResults,
 } from '../../features/pagination/pagination-actions';
-import {executeSearch} from '../../features/search/search-actions';
+import {fetchPage} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
 import {buildMockPagination} from '../../test/mock-pagination';
 import {configuration, pagination} from '../../app/reducers';
@@ -80,11 +80,11 @@ describe('ResultsPerPage', () => {
     expect(engine.actions).toContainEqual(updateNumberOfResults(num));
   });
 
-  it('calling #set executes a search', () => {
+  it('calling #set executes a fetchPage', () => {
     resultsPerPage.set(10);
 
     const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
+      (a) => a.type === fetchPage.pending.type
     );
     expect(action).toBeTruthy();
   });
