@@ -99,6 +99,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     );
   }
 
+  private get style() {
+    const styleTag = this.host
+      .querySelector('template')
+      ?.content.querySelector('style');
+    if (!styleTag) {
+      return this.snippetStyle;
+    }
+    return styleTag.innerHTML;
+  }
+
   private getRelatedQuestionId(relatedQuestion: SmartSnippetRelatedQuestion) {
     // TODO: Change to the snippet's unique ID
     return `${this.id}-${relatedQuestion.question
@@ -114,27 +124,20 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     return prefix + (relatedQuestion.expanded ? '-expanded' : '-collapsed');
   }
 
-  private get style() {
-    const styleTag = this.host
-      .querySelector('template')
-      ?.content.querySelector('style');
-    if (!styleTag) {
-      return this.snippetStyle;
+  private toggleQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
+    if (relatedQuestion.expanded) {
+      this.smartSnippetQuestionsList.collapse(relatedQuestion.documentId);
+    } else {
+      this.smartSnippetQuestionsList.expand(relatedQuestion.documentId);
     }
-    return styleTag.innerHTML;
   }
 
   private renderQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
-    const toggleRelatedQuestion = () =>
-      relatedQuestion.expanded
-        ? this.smartSnippetQuestionsList.collapse(relatedQuestion.documentId)
-        : this.smartSnippetQuestionsList.expand(relatedQuestion.documentId);
-
     return (
       <Button
         style="text-neutral"
         part={this.getQuestionPart('question-button', relatedQuestion)}
-        onClick={toggleRelatedQuestion}
+        onClick={() => this.toggleQuestion(relatedQuestion)}
         class="flex items-center px-4"
         ariaExpanded={relatedQuestion.expanded}
         ariaControls={this.getRelatedQuestionId(relatedQuestion)}
