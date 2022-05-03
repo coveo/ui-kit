@@ -148,7 +148,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
           class="w-2.5 mr-3 stroke-[1.25]"
         ></atomic-icon>
         <Heading
-          level={this.headingLevel ? this.headingLevel + 1 : 0}
+          level={this.headingLevel ? this.headingLevel + 1 : this.headingLevel}
           class="text-left text-xl font-bold py-4"
           part={this.getQuestionPart('question-text', relatedQuestion)}
         >
@@ -235,7 +235,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         class="bg-background border border-neutral rounded-lg text-on-background mb-6 overflow-hidden"
       >
         <Heading
-          level={this.headingLevel ?? 0}
+          level={this.headingLevel}
           part="heading"
           class="px-6 py-4 text-2xl leading-8 border-b border-neutral"
         >
