@@ -237,7 +237,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     return (
       <aside
         part="container"
-        class="bg-background border border-neutral rounded-lg text-on-background mb-6 overflow-hidden"
+        class="bg-background border border-neutral rounded-lg text-on-background overflow-hidden"
       >
         <Heading
           level={this.headingLevel}

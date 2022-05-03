@@ -221,7 +221,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
           {this.bindings.i18n.t('smart-snippet')}
         </Heading>
         <article
-          class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background mb-6"
+          class="bg-background border border-neutral rounded-lg p-6 pb-4 text-on-background"
           part="smart-snippet"
         >
           {this.renderQuestion()}
