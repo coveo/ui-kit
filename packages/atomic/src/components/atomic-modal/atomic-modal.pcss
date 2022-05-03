@@ -13,13 +13,13 @@ atomic-focus-trap {
   grid-area: modal;
 }
 
-:host(.opened) {
+:host(.open) {
   [part='backdrop'] {
     @apply pointer-events-auto;
   }
 }
 
-:host(.opened.dialog) {
+:host(.open.dialog) {
   [part='backdrop'] {
     background-color: rgba(40, 40, 40, 0.8);
   }

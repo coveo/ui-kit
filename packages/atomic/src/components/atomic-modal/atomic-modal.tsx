@@ -81,7 +81,7 @@ export class AtomicModal implements InitializableComponent {
   private getClasses() {
     const classes: string[] = [];
     if (this.isOpen) {
-      classes.push('opened');
+      classes.push('open');
     }
     if (this.fullscreen) {
       classes.push('fullscreen');
