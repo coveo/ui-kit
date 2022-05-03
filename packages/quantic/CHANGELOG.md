@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.14.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.10...@coveo/quantic@1.14.0) (2022-05-03)
+
+
+### Features
+
+* **quantic:** new Quantic Modal component created ([#1942](https://github.com/coveo/ui-kit/issues/1942)) ([440f69c](https://github.com/coveo/ui-kit/commit/440f69ced037feb217b7a89a8b628dee251f8fb0))
+
+
+
+
+
 ## [1.13.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.13.9...@coveo/quantic@1.13.10) (2022-04-28)
 
 **Note:** Version bump only for package @coveo/quantic
