@@ -139,7 +139,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         part={this.getQuestionPart('question-button', relatedQuestion)}
         onClick={() => this.toggleQuestion(relatedQuestion)}
         class="flex items-center px-4"
-        ariaExpanded={relatedQuestion.expanded}
+        ariaExpanded={`${relatedQuestion.expanded}`}
         ariaControls={this.getRelatedQuestionId(relatedQuestion)}
       >
         <atomic-icon
