@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.4.0...@coveo/atomic-angular@1.5.0) (2022-05-03)
+
+
+### Features
+
+* **atomic:** added smart snippet feedback modal ([#1950](https://github.com/coveo/ui-kit/issues/1950)) ([3fd232f](https://github.com/coveo/ui-kit/commit/3fd232f9a72865df528813b49e4808e780d5c3c5))
+
+
+
+
+
 # [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.3.2...@coveo/atomic-angular@1.4.0) (2022-04-28)
 
 
