@@ -50,6 +50,12 @@ export function assertConsoleError(error = true) {
   });
 }
 
+export function assertConsoleErrorMessage(msg: string) {
+  it('should log an error containing the appropriate message to the console', () => {
+    cy.get(TestFixture.consoleAliases.error).should('be.calledWithMatch', msg);
+  });
+}
+
 export function assertRemovesComponent(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>
 ) {

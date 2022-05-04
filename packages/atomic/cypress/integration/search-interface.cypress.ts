@@ -1,4 +1,5 @@
 import {TestFixture} from '../fixtures/test-fixture';
+import {assertConsoleErrorMessage} from './common-assertions';
 import {addQuerySummary} from './query-summary-actions';
 import {QuerySummarySelectors} from './query-summary-selectors';
 import {getSearchInterface, setLanguage} from './search-interface-utils';
@@ -9,6 +10,33 @@ describe('Search Interface Component', () => {
       searchInterface.i18n.addResource(lang, 'translation', key, value);
     });
   };
+
+  const execSearch = () =>
+    getSearchInterface(($si) => $si.executeFirstSearch());
+
+  const engineError =
+    'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.';
+
+  describe('before being initialized', () => {
+    beforeEach(() => {
+      new TestFixture().withoutInterfaceInitialization().init();
+    });
+
+    describe('when calling "executeFirstSearch"', () => {
+      beforeEach(() => {
+        execSearch();
+      });
+      assertConsoleErrorMessage(engineError);
+    });
+
+    describe('when changing a prop', () => {
+      beforeEach(() => {
+        cy.wait(300);
+        setLanguage('fr');
+      });
+      assertConsoleErrorMessage(engineError);
+    });
+  });
 
   describe('with an automatic search', () => {
     beforeEach(() => {
@@ -49,9 +77,6 @@ describe('Search Interface Component', () => {
         .withoutFirstAutomaticSearch()
         .init();
     });
-
-    const execSearch = () =>
-      getSearchInterface(($si) => $si.executeFirstSearch());
 
     it('should set locale for search request', async () => {
       setLanguage('fr');
