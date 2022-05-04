@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Element} from '@stencil/core';
+import {Component, h, Prop, State, Element, Listen} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -10,6 +10,7 @@ import ArrowDown from '../../images/arrow-down.svg';
 import {
   buildInteractiveResult,
   buildSmartSnippetQuestionsList,
+  Result,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
@@ -19,6 +20,7 @@ import {Heading} from '../common/heading';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
+import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -90,6 +92,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
    * ```
    */
   @Prop({reflect: true}) snippetStyle?: string;
+
+  @Listen('atomic/resolveResult')
+  public resolveResult(event: ResultContextEvent<Result>) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.smartSnippetQuestionsListState.questions.forEach((question) => {
+      if (question.source !== undefined) event.detail(question.source);
+    });
+  }
 
   private id = randomID('atomic-smart-snippet-suggestions-');
 
@@ -201,7 +213,10 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
           onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
           onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
         >
-          {source.title}
+          <atomic-result-text
+            field="title"
+            default="no-title"
+          ></atomic-result-text>
         </LinkWithResultAnalytics>
       </footer>
     );

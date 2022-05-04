@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Element} from '@stencil/core';
+import {Component, h, Prop, State, Element, Listen} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -7,6 +7,7 @@ import {
 } from '../../utils/initialization-utils';
 import {
   buildSmartSnippet,
+  Result,
   SmartSnippet,
   SmartSnippetState,
 } from '@coveo/headless';
@@ -15,6 +16,7 @@ import {Heading} from '../common/heading';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../utils/utils';
+import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -100,6 +102,14 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   @State() feedbackSent = false;
 
+  @Listen('atomic/resolveResult')
+  public resolveResult(event: ResultContextEvent<Result>) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.smartSnippetState.source !== undefined)
+      event.detail(this.smartSnippetState.source);
+  }
+
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.modalRef = document.createElement(
@@ -181,7 +191,10 @@ export class AtomicSmartSnippet implements InitializableComponent {
               this.smartSnippet.cancelPendingSelectSource()
             }
           >
-            {source.title}
+            <atomic-result-text
+              field="title"
+              default="no-title"
+            ></atomic-result-text>
           </LinkWithResultAnalytics>
         </div>
       </section>
