@@ -69,6 +69,7 @@ export const AtomicSearchInterface = /*@__PURE__*/createReactComponent<JSX.Atomi
 export const AtomicSearchLayout = /*@__PURE__*/createReactComponent<JSX.AtomicSearchLayout, HTMLAtomicSearchLayoutElement>('atomic-search-layout');
 export const AtomicSmartSnippet = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippet, HTMLAtomicSmartSnippetElement>('atomic-smart-snippet');
 export const AtomicSmartSnippetFeedbackModal = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetFeedbackModal, HTMLAtomicSmartSnippetFeedbackModalElement>('atomic-smart-snippet-feedback-modal');
+export const AtomicSmartSnippetSource = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetSource, HTMLAtomicSmartSnippetSourceElement>('atomic-smart-snippet-source');
 export const AtomicSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicSortDropdown, HTMLAtomicSortDropdownElement>('atomic-sort-dropdown');
 export const AtomicSortExpression = /*@__PURE__*/createReactComponent<JSX.AtomicSortExpression, HTMLAtomicSortExpressionElement>('atomic-sort-expression');
 export const AtomicTableElement = /*@__PURE__*/createReactComponent<JSX.AtomicTableElement, HTMLAtomicTableElementElement>('atomic-table-element');
