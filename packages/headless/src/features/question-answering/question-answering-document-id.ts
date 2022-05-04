@@ -2,7 +2,6 @@ import {RecordValue} from '@coveo/bueno';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   requiredNonEmptyString,
-  requiredEmptyAllowedString,
   validatePayload,
 } from '../../utils/validate-payload';
 
@@ -36,15 +35,7 @@ export const documentIdentifierPayloadDefinition = () =>
 export const uniqueIdentifierPayloadDefinition = () =>
   new RecordValue({
     values: {
-      question: requiredNonEmptyString,
-      answerSnippet: requiredEmptyAllowedString,
-      documentId: new RecordValue({
-        values: {
-          contentIdKey: requiredNonEmptyString,
-          contentIdValue: requiredNonEmptyString,
-        },
-        options: {required: true},
-      }),
+      questionAnswerId: requiredNonEmptyString,
     },
     options: {required: true},
   });

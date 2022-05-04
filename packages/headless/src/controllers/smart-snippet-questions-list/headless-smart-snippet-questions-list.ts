@@ -2,17 +2,12 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {search, questionAnswering} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {
-  QuestionAnswer,
-  QuestionAnswerDocumentIdentifier,
-} from '../../api/search/search/question-answering';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
 } from '../../features/question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
-import {QuestionAnsweringRelatedQuestionState} from '../../features/question-answering/question-answering-state';
-import {findRelatedQuestionIdx} from '../../features/question-answering/question-answering-slice';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
@@ -89,6 +84,10 @@ export interface SmartSnippetRelatedQuestion {
    */
   documentId: QuestionAnswerDocumentIdentifier;
   /**
+   * The unique identifier for this question & answer.
+   */
+  questionAnswerId: string;
+  /**
    * Determines if the snippet is currently expanded.
    */
   expanded: boolean;
@@ -121,20 +120,6 @@ export function buildSmartSnippetQuestionsList(
     );
   };
 
-  const getIsExpanded = (
-    questionAndAnswer: QuestionAnswer,
-    relatedQuestions: QuestionAnsweringRelatedQuestionState[]
-  ) => {
-    const idx = findRelatedQuestionIdx(
-      relatedQuestions,
-      questionAndAnswer.documentId
-    );
-    if (idx === -1) {
-      return false;
-    }
-    return relatedQuestions[idx].expanded;
-  };
-
   const getPayloadFromIdentifier = (
     identifier: string | QuestionAnswerDocumentIdentifier
   ) =>
@@ -150,14 +135,13 @@ export function buildSmartSnippetQuestionsList(
 
       return {
         questions: state.search.response.questionAnswer.relatedQuestions.map(
-          (relatedQuestion) => ({
+          (relatedQuestion, i) => ({
             question: relatedQuestion.question,
             answer: relatedQuestion.answerSnippet,
             documentId: relatedQuestion.documentId,
-            expanded: getIsExpanded(
-              relatedQuestion,
-              state.questionAnswering.relatedQuestions
-            ),
+            questionAnswerId:
+              state.questionAnswering.relatedQuestions[i].questionAnswerId,
+            expanded: state.questionAnswering.relatedQuestions[i].expanded,
             source: getResult(relatedQuestion.documentId),
           })
         ),

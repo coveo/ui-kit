@@ -105,7 +105,11 @@ export const logExpandSmartSnippetSuggestion = (
         return;
       }
 
-      return client.logExpandSmartSnippetSuggestion(relatedQuestion);
+      return client.logExpandSmartSnippetSuggestion({
+        question: relatedQuestion.question,
+        answerSnippet: relatedQuestion.answerSnippet,
+        documentId: relatedQuestion.documentId,
+      });
     }
   )();
 
@@ -132,6 +136,10 @@ export const logCollapseSmartSnippetSuggestion = (
         return;
       }
 
-      return client.logCollapseSmartSnippetSuggestion(relatedQuestion);
+      return client.logCollapseSmartSnippetSuggestion({
+        question: relatedQuestion.question,
+        answerSnippet: relatedQuestion.answerSnippet,
+        documentId: relatedQuestion.documentId,
+      });
     }
   )();

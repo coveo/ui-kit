@@ -296,7 +296,7 @@ describe('question answering slice', () => {
           questionAnsweringReducer(
             state,
             expandSmartSnippetRelatedQuestion({
-              questionAnswerId: questionAnswerId!,
+              questionAnswerId: questionAnswerId,
             })
           ),
         firstResponseState

@@ -22,7 +22,7 @@ import {
   QuestionAnsweringRelatedQuestionState,
 } from './question-answering-state';
 
-export const findRelatedQuestionIdx = (
+const findRelatedQuestionIdx = (
   relatedQuestions: QuestionAnsweringRelatedQuestionState[],
   identifier:
     | QuestionAnsweringUniqueIdentifierActionCreatorPayload

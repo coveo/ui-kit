@@ -6,7 +6,7 @@ export interface QuestionAnsweringRelatedQuestionState
   /**
    * The unique identifier for this question & answer.
    */
-  questionAnswerId?: string;
+  questionAnswerId: string;
 }
 export interface QuestionAnsweringState {
   /**
