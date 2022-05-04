@@ -40,7 +40,7 @@ atomic-focus-trap {
   }
 
   [part='container'] {
-    @apply rounded;
+    @apply rounded shadow;
   }
 
   [part='header-wrapper'] {
@@ -64,7 +64,6 @@ atomic-focus-trap {
 :host(.fullscreen) {
   [part='container'] {
     @apply absolute inset-0;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
   }
 
   [part='header-wrapper'] {
@@ -76,6 +75,6 @@ atomic-focus-trap {
   }
 
   [part='footer-wrapper'] {
-    @apply shadow-lg px-6 py-4;
+    @apply shadow-t-lg px-6 py-4;
   }
 }
