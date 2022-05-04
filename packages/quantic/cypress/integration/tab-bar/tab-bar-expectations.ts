@@ -59,7 +59,7 @@ function tabBarExpectations(selector: TabBarSelector) {
         .dropdown()
         .should('exist')
         .should(display ? 'have.class' : 'not.have.class', 'slds-is-open')
-        .logDetail(`${should(display)} display the dropdown LIST`);
+        .logDetail(`${should(display)} display the dropdown list`);
     },
 
     displayMoreButtonLabel(text: string) {

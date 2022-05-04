@@ -98,7 +98,6 @@ export default class QuanticTab extends LightningElement {
 
   @api select() {
     this.tab.select();
-    this.dispatchEvent(new CustomEvent('tab_selected', {bubbles: true}));
   }
 
   get tabClass() {

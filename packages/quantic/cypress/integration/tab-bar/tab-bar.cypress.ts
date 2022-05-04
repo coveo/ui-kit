@@ -4,7 +4,7 @@ import {TabBarExpectations as Expect} from './tab-bar-expectations';
 import {TabBarActions as Actions} from './tab-bar-actions';
 import {scope} from '../../reporters/detailed-collector';
 
-describe('quantic-tab', () => {
+describe('quantic-tab-bar', () => {
   const pageUrl = 's/quantic-tab-bar';
   const extraSmallViewportWidth = 200;
   const smallViewportWidth = 260;
@@ -33,6 +33,7 @@ describe('quantic-tab', () => {
         Expect.displayedTabsEqual([TAB_1, TAB_2, TAB_3, TAB_4]);
         Expect.activeTabContains(TAB_1);
         Expect.displayMoreButton(false);
+        Expect.displayDropdown(false);
       });
 
       scope('when selecting a new tab', () => {

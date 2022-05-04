@@ -186,17 +186,17 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {Array<Element>}
    */
   get overflowingTabs() {
-    const containerRight = this.container.getBoundingClientRect().right;
-    const selectedTabRight = this.selectedTab.getBoundingClientRect().right;
+    const containerRelativeRightPosition = this.container.getBoundingClientRect().right;
+    const selectedTabRelativeRightPosition = this.selectedTab.getBoundingClientRect().right;
 
     return this.getTabsFromSlot().filter((element) => {
-      const currentTabBeforeSelectedTab =
-        selectedTabRight > element.getBoundingClientRect().right;
+      const tabPositionedBeforeSelectedTab =
+        selectedTabRelativeRightPosition > element.getBoundingClientRect().right;
       const rightPositionLimit = !this.isOverflow
-        ? containerRight
-        : currentTabBeforeSelectedTab
-        ? containerRight - this.moreButtonWidth - this.selectedTabWidth
-        : containerRight - this.moreButtonWidth;
+        ? containerRelativeRightPosition
+        : tabPositionedBeforeSelectedTab
+        ? containerRelativeRightPosition - this.moreButtonWidth - this.selectedTabWidth
+        : containerRelativeRightPosition - this.moreButtonWidth;
       return (
         element.getBoundingClientRect().right > rightPositionLimit &&
         // @ts-ignore
