@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.50.0...@coveo/atomic@1.50.1) (2022-05-04)
+
+
+### Bug Fixes
+
+* **atomic:** graciously handle prop changes before initialization and log warning ([#1957](https://github.com/coveo/ui-kit/issues/1957)) ([008d22e](https://github.com/coveo/ui-kit/commit/008d22e082c9ce9e0dff6f95cf15a24126a7743b))
+* **atomic:** hid atomic-did-you-mean when there's no correction ([#1958](https://github.com/coveo/ui-kit/issues/1958)) ([02f018a](https://github.com/coveo/ui-kit/commit/02f018a8c8cfc591ac30d6b37f1cc310b7b2aaf4))
+
+
+
+
+
 # [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.49.0...@coveo/atomic@1.50.0) (2022-05-03)
 
 
