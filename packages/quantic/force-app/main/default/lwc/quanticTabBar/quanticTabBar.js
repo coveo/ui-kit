@@ -216,7 +216,7 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Returns the CSS classes of the dropdown.
+   * Returns the CSS classes of the dropdown list.
    * @returns {string}
    */
   get dropdownClasses() {
@@ -294,14 +294,6 @@ export default class QuanticTabBar extends LightningElement {
       this.lastVisibleTab.getBoundingClientRect().right -
       this.tabBarListContainer.getBoundingClientRect().left
     );
-  }
-
-  /**
-   * Handles slot change.
-   * @returns {void}
-   */
-  handleSlotChange() {
-    this.updateTabsDisplay();
   }
 
   /**
