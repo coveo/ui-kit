@@ -4,6 +4,16 @@ import more from '@salesforce/label/c.quantic_More';
 import tabs from '@salesforce/label/c.quantic_Tabs';
 import moreTabs from '@salesforce/label/c.quantic_MoreTabs';
 
+/**
+ *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner by showing a drop-down list that will display overflowing tabs on smaller screens.
+ * @category Search
+ * @example
+ * <c-quantic-tab-bar>
+ *   <c-quantic-tab engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
+ *   <c-quantic-tab engine-id={engineId} label="Tab 2" expression={expressionTwo}></c-quantic-tab>
+ *   <c-quantic-tab engine-id={engineId} label="Tab 3" expression={expressionThree}></c-quantic-tab>
+ * </quantic-tab-bar>
+ */
 export default class QuanticTabBar extends LightningElement {
   labels = {
     more,
@@ -11,16 +21,20 @@ export default class QuanticTabBar extends LightningElement {
     moreTabs,
   };
 
+  /** @type {boolean} */
   hasRendered = false;
+  /** @type {boolean} */
   isComboboxOpen = false;
+  /** @type {Array<{value: string, label: string}>} */
   options = [];
-
-  /** Lifecycle */
+  /** @type {number} */
+  maxMoreButtonWidth = 0;
+  /** @type {boolean} */
+  expandedMoreButton = true;
 
   connectedCallback() {
-    window.addEventListener('resize', this.updateTabVisibility);
-    this.addEventListener('tab_selected', this.handleTabSelected);
-    this.addEventListener('tab_rendered', this.updateTabVisibility);
+    window.addEventListener('resize', this.updateTabsDisplay);
+    this.addEventListener('tab_rendered', this.updateTabsDisplay);
   }
 
   renderedCallback() {
@@ -30,35 +44,40 @@ export default class QuanticTabBar extends LightningElement {
     }
   }
 
-  /** Helpers */
-
-  updateTabVisibility = () => {
+  /**
+   * Updates the display of the tabs.
+   * @returns {void}
+   */
+  updateTabsDisplay = () => {
     if (this.isOverflow) {
       this.showMoreButton();
-      this.setTabVisibility(this.overflowingTabs, false);
-      this.updateComboboxOptions();
-      this.updateMoreButtonPosition();
     } else {
       this.hideMoreButton();
-      this.isComboboxOpen = false;
-      this.options = [];
-      this.setTabVisibility(this.getTabsFromSlot(), true);
     }
-    this.setTabVisibility(this.displayedTabs, true);
+    this.updateTabVisibility(this.overflowingTabs, false);
+    this.updateTabVisibility(this.displayedTabs, true);
+    this.updateComboboxOptions();
+    this.updateMoreButtonPosition();
+    this.isComboboxOpen = false;
   };
 
+  /**
+   * Updates the combobox options.
+   * @returns {void}
+   */
   updateComboboxOptions() {
     this.options = this.overflowingTabs.map((el) => ({
+      // @ts-ignore
       label: el.label,
+      // @ts-ignore
       value: el.expression,
-      selected:
-        el.isActive ||
-        this.options.find((option) => option.value === el.expression)
-          ?.selected ||
-        false,
     }));
   }
 
+  /**
+   * Updates the position of the more button element.
+   * @returns {void}
+   */
   updateMoreButtonPosition() {
     this.moreButton?.style.setProperty(
       'left',
@@ -66,137 +85,256 @@ export default class QuanticTabBar extends LightningElement {
     );
   }
 
+  /**
+   * Updates the state of the more button element.
+   * @returns {void}
+   */
+  updateMoreButtonState() {
+    if (this.hasRendered) {
+      if (this.maxMoreButtonWidth < this.moreButtonWidth) {
+        this.maxMoreButtonWidth = this.moreButtonWidth;
+      }
+
+      this.expandedMoreButton =
+        this.containerWidth > this.maxMoreButtonWidth + this.selectedTabWidth;
+    }
+  }
+
+  /**
+   * Shows the more button.
+   * @returns {void}
+   */
   showMoreButton() {
     this.moreButton?.style.setProperty('display', 'block');
   }
 
+  /**
+   * Hides the more button.
+   * @returns {void}
+   */
   hideMoreButton() {
     this.moreButton?.style.setProperty('display', 'none');
   }
 
-  setTabVisibility(tabElements, isVisible) {
-    tabElements.forEach((tab) =>
-      tab.style.setProperty('visibility', isVisible ? 'visible' : 'hidden')
-    );
+  /**
+   * Updates the tabs visibility.
+   * @param {Array<Element>} tabElements
+   * @param {boolean} isVisible
+   */
+  updateTabVisibility(tabElements, isVisible) {
+    tabElements.forEach((tab, index) => {
+      const tabsCount = this.getTabsFromSlot().length;
+      // @ts-ignore
+      tab.style.setProperty(
+        'order',
+        isVisible ? index + 1 : tabsCount - tabElements.length + index + 1
+      );
+      // @ts-ignore
+      tab.style.setProperty('visibility', isVisible ? 'visible' : 'hidden');
+    });
   }
 
-  /** Getters */
-
+  /**
+   * Indicates whether the tabs are causing an overflow.
+   * @returns {boolean}
+   */
   get isOverflow() {
-    return this.slottedWidth >= this.containerWidth;
+    return this.slotContentWidth >= this.containerWidth;
   }
 
+  /**
+   * Returns the tab bar container element.
+   * @returns {Element}
+   */
   get container() {
     return this.template.querySelector('.tab-bar_container');
   }
 
+  /**
+   * Returns the container's width.
+   * @returns {number}
+   */
   get containerWidth() {
     return this.getAbsoluteWidth(this.container);
   }
 
-  get slottedWidth() {
+  /**
+   * returns the width of the content of the slot.
+   * @returns {number}
+   */
+  get slotContentWidth() {
     return this.getTabsFromSlot()?.reduce(
       (total, el) => total + this.getAbsoluteWidth(el),
       0
     );
   }
 
+  /**
+   * returns the width of the more button.
+   * @returns {number}
+   */
   get moreButtonWidth() {
     return this.moreButton ? this.getAbsoluteWidth(this.moreButton) : 0;
   }
 
+  /**
+   * returns the width of the currently selected tab.
+   * @returns {number}
+   */
+  get selectedTabWidth() {
+    return this.getAbsoluteWidth(this.selectedTab);
+  }
+
+  /**
+   * Returns the overflowing tabs.
+   * @returns {Array<Element>}
+   */
   get overflowingTabs() {
-    return this.getTabsFromSlot().filter((el) => {
-      const containerRight = this.container.getBoundingClientRect().right;
+    const containerRight = this.container.getBoundingClientRect().right;
+    const selectedTabRight = this.selectedTab.getBoundingClientRect().right;
+
+    return this.getTabsFromSlot().filter((element) => {
+      const currentTabBeforeSelectedTab =
+        selectedTabRight > element.getBoundingClientRect().right;
+      const rightPositionLimit = !this.isOverflow
+        ? containerRight
+        : currentTabBeforeSelectedTab
+        ? containerRight - this.moreButtonWidth - this.selectedTabWidth
+        : containerRight - this.moreButtonWidth;
       return (
-        el.getBoundingClientRect().right >
-        (this.isOverflow
-          ? containerRight - this.moreButtonWidth
-          : containerRight)
+        element.getBoundingClientRect().right > rightPositionLimit &&
+        // @ts-ignore
+        !element.isActive
       );
     });
   }
 
+  /**
+   * Returns the displayed tabs.
+   * @returns {Array<Element>}
+   */
   get displayedTabs() {
     return this.getTabsFromSlot().filter(
       (el) => !this.overflowingTabs.includes(el)
     );
   }
 
+  /**
+   * Returns the CSS classes of the dropdown.
+   * @returns {string}
+   */
   get dropdownClasses() {
     return `slds-dropdown-trigger slds-dropdown-trigger_click ${
       this.isComboboxOpen && 'slds-is-open'
     }`;
   }
 
+  /**
+   * Returns the name of the icon displayed inside the more button.
+   * @returns {string}
+   */
   get arrowIconName() {
     return this.isComboboxOpen ? 'utility:up' : 'utility:down';
   }
 
+  /**
+   * Returns the CSS classes of the icon displayed inside the more button.
+   * @returns {string}
+   */
+  get moreButtonIconClasses() {
+    return `slds-button__icon slds-button__icon_x-small slds-var-m-bottom_x-small ${
+      this.expandedMoreButton ? 'slds-button__icon_right' : ''
+    }`;
+  }
+
+  /**
+   * Returns the more button element.
+   * @returns {HTMLElement}
+   */
   get moreButton() {
     return this.template.querySelector('.tab-bar_more-button');
   }
 
+  /**
+   * Returns the label displayed inside the more button.
+   * @returns {string}
+   */
   get moreButtonLabel() {
-    return this.displayedTabs.length ? this.labels.more : this.labels.tabs;
+    this.updateMoreButtonState();
+    return this.expandedMoreButton ? this.labels.more : '';
   }
 
+  /**
+   * Returns the last visible tab element.
+   * @returns {Element}
+   */
   get lastVisibleTab() {
     return this.displayedTabs[this.displayedTabs.length - 1];
   }
 
-  get tabContainerRelativePosition() {
-    return this.template
-      .querySelector('.tab-bar_list-container')
-      ?.getBoundingClientRect();
+  /**
+   * Returns the currently selected tab element.
+   * @returns {Element}
+   */
+  get selectedTab() {
+    // @ts-ignore
+    return this.getTabsFromSlot().find((el) => el.isActive);
   }
 
+  /**
+   * Returns the tab bar list container element.
+   * @returns {Element}
+   */
+  get tabBarListContainer() {
+    return this.template.querySelector('.tab-bar_list-container');
+  }
+
+  /**
+   * Returns the right position of the last visible tab.
+   * @returns {number}
+   */
   get lastVisibleTabRightPosition() {
     return (
       this.lastVisibleTab.getBoundingClientRect().right -
-      this.tabContainerRelativePosition.left
+      this.tabBarListContainer.getBoundingClientRect().left
     );
   }
 
-  get lastVisibleTabLeftPosition() {
-    return (
-      this.lastVisibleTab.getBoundingClientRect().left -
-      this.tabContainerRelativePosition.left
-    );
-  }
-
-  /** Event Handlers */
-
+  /**
+   * Handles slot change.
+   * @returns {void}
+   */
   handleSlotChange() {
-    this.updateTabVisibility();
+    this.updateTabsDisplay();
   }
 
-  handleClick() {
+  /**
+   * Toggles the combobox.
+   * @returns {void}
+   */
+  toggleCombobox() {
     this.isComboboxOpen = !this.isComboboxOpen;
   }
 
+  /**
+   * Handles the selection of a tab from the dropdown list.
+   * @returns {void}
+   */
   handleDropdownTabSelect = (event) => {
     const targetValue = event.currentTarget.getAttribute('data-value');
     const clickedtab = this.overflowingTabs.find(
+      // @ts-ignore
       (tab) => tab.expression === targetValue
     );
+    // @ts-ignore
     clickedtab?.select();
-    this.options = this.options.map((option) => {
-      option.selected = option.value === targetValue;
-      return option;
-    });
+    this.isComboboxOpen = false;
   };
 
-  handleTabSelected = (event) => {
-    event.stopPropagation();
-    this.options = this.options.map((option) => {
-      option.selected = false;
-      return option;
-    });
-  };
-
-  /** Utils */
-
+  /**
+   * Gets all the tab components found in the slot.
+   * @returns {Array<Element>}
+   */
   getTabsFromSlot() {
     const isTab = (tagName) => /-quantic-tab$/i.test(tagName);
     return Array.from(this.querySelectorAll('*')).filter((element) =>
@@ -204,8 +342,14 @@ export default class QuanticTabBar extends LightningElement {
     );
   }
 
+  /**
+   * Returns the padding values of an elemenet.
+   * @param {Element} element
+   * @returns {{top: number, right:number, bottom:number, left:number}}
+   */
   getElementPadding(element) {
-    var styles = window.getComputedStyle(element);
+    const styles = window.getComputedStyle(element);
+
     return {
       top: parseFloat(styles.paddingTop),
       right: parseFloat(styles.paddingRight),
@@ -214,10 +358,16 @@ export default class QuanticTabBar extends LightningElement {
     };
   }
 
+  /**
+   * Returns the absolute width of an element.
+   * @param {Element} element
+   * @returns {number}
+   */
   getAbsoluteWidth(element) {
-    var paddings = this.getElementPadding(element);
-    var padding = paddings.left + paddings.right;
+    const paddings = this.getElementPadding(element);
+    const padding = paddings.left + paddings.right;
 
+    // @ts-ignore
     return Math.ceil(element.offsetWidth + padding);
   }
 }
