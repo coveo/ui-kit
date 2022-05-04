@@ -109,12 +109,9 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     return styleTag.innerHTML;
   }
 
-  private getRelatedQuestionId(relatedQuestion: SmartSnippetRelatedQuestion) {
+  private getRelatedQuestionId(index: number) {
     // TODO: Change to the snippet's unique ID
-    return `${this.id}-${relatedQuestion.question
-      .toLowerCase()
-      .replace(/\s/g, '-')
-      .replace(/[^a-z-]/g, '')}`;
+    return `${this.id}-${index}`;
   }
 
   private getQuestionPart(
@@ -126,13 +123,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
 
   private toggleQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
     if (relatedQuestion.expanded) {
-      this.smartSnippetQuestionsList.collapse(relatedQuestion.documentId);
+      this.smartSnippetQuestionsList.collapse(relatedQuestion.questionAnswerId);
     } else {
-      this.smartSnippetQuestionsList.expand(relatedQuestion.documentId);
+      this.smartSnippetQuestionsList.expand(relatedQuestion.questionAnswerId);
     }
   }
 
-  private renderQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
+  private renderQuestion(
+    relatedQuestion: SmartSnippetRelatedQuestion,
+    index: number
+  ) {
     return (
       <Button
         style="text-neutral"
@@ -140,7 +140,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         onClick={() => this.toggleQuestion(relatedQuestion)}
         class="flex items-center px-4"
         ariaExpanded={`${relatedQuestion.expanded}`}
-        ariaControls={this.getRelatedQuestionId(relatedQuestion)}
+        ariaControls={this.getRelatedQuestionId(index)}
       >
         <atomic-icon
           icon={relatedQuestion.expanded ? ArrowDown : ArrowRight}
@@ -207,19 +207,22 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     );
   }
 
-  public renderRelatedQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
+  public renderRelatedQuestion(
+    relatedQuestion: SmartSnippetRelatedQuestion,
+    index: number
+  ) {
     return (
       <li
-        key={this.getRelatedQuestionId(relatedQuestion)}
+        key={relatedQuestion.questionAnswerId}
         part={this.getQuestionPart('question-answer', relatedQuestion)}
         class="flex flex-col"
       >
         <article class="contents">
-          {this.renderQuestion(relatedQuestion)}
+          {this.renderQuestion(relatedQuestion, index)}
           <div
             part={relatedQuestion.expanded ? 'answer-and-source' : ''}
             class={relatedQuestion.expanded ? 'pl-10 pr-6 pb-6' : 'hidden'}
-            id={this.getRelatedQuestionId(relatedQuestion)}
+            id={this.getRelatedQuestionId(index)}
           >
             {this.renderContent(relatedQuestion)}
             {this.renderSource(relatedQuestion)}
@@ -248,7 +251,8 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         </Heading>
         <ul part="questions" class="divide-neutral divide-y">
           {this.smartSnippetQuestionsListState.questions.map(
-            (relatedQuestion) => this.renderRelatedQuestion(relatedQuestion)
+            (relatedQuestion, i) =>
+              this.renderRelatedQuestion(relatedQuestion, i)
           )}
         </ul>
       </aside>
