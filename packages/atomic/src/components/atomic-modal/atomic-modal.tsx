@@ -108,7 +108,7 @@ export class AtomicModal implements InitializableComponent {
       <Host class={this.getClasses().join(' ')}>
         <div
           part="backdrop"
-          class="fixed left-0 top-0 right-0 bottom-0 z-10"
+          class="fixed left-0 top-0 right-0 bottom-0 z-[9999]"
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
           <atomic-focus-trap
