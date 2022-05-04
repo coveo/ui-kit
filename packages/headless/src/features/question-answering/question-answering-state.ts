@@ -3,6 +3,10 @@ import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question
 export interface QuestionAnsweringRelatedQuestionState
   extends QuestionAnswerDocumentIdentifier {
   expanded: boolean;
+  /**
+   * The unique identifier for this question & answer.
+   */
+  questionAnswerId?: string;
 }
 export interface QuestionAnsweringState {
   /**

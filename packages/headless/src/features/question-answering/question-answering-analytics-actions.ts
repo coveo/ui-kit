@@ -1,5 +1,4 @@
 import {Result} from '../../api/search/search/result';
-import {validatePayload} from '../../utils/validate-payload';
 import {
   AnalyticsType,
   documentIdentifier,
@@ -8,9 +7,12 @@ import {
   validateResultPayload,
 } from '../analytics/analytics-utils';
 import {
-  documentIdentifierPayloadDefinition,
+  isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
+import {relatedQuestionSelector} from './question-answering-selectors';
 
 export type SmartSnippetFeedback =
   | 'does_not_answer'
@@ -81,25 +83,55 @@ export const logSmartSnippetDetailedFeedback = (details: string) =>
   )();
 
 export const logExpandSmartSnippetSuggestion = (
-  payload: QuestionAnsweringDocumentIdActionCreatorPayload
+  payload:
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
     AnalyticsType.Custom,
-    (client) => {
-      validatePayload(payload, documentIdentifierPayloadDefinition());
-      return client.logExpandSmartSnippetSuggestion(payload);
+    (client, state) => {
+      validateQuestionAnsweringActionCreatorPayload(payload);
+
+      if (!isQuestionAnsweringUniqueIdentifierActionCreatorPayload(payload)) {
+        return client.logExpandSmartSnippetSuggestion(payload);
+      }
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+
+      return client.logExpandSmartSnippetSuggestion(relatedQuestion);
     }
   )();
 
 export const logCollapseSmartSnippetSuggestion = (
-  payload: QuestionAnsweringDocumentIdActionCreatorPayload
+  payload:
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
     AnalyticsType.Custom,
-    (client) => {
-      validatePayload(payload, documentIdentifierPayloadDefinition());
-      return client.logCollapseSmartSnippetSuggestion(payload);
+    (client, state) => {
+      validateQuestionAnsweringActionCreatorPayload(payload);
+
+      if (!isQuestionAnsweringUniqueIdentifierActionCreatorPayload(payload)) {
+        return client.logCollapseSmartSnippetSuggestion(payload);
+      }
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+
+      return client.logCollapseSmartSnippetSuggestion(relatedQuestion);
     }
   )();

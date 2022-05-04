@@ -33,7 +33,10 @@ function buildUniqueQuestionAnswer(increment: number) {
   });
 }
 
-function buildUniqueSearchResponse(increment: number): SearchResponseSuccess {
+function buildUniqueSearchResponse(
+  increment: number,
+  amountOfRelatedQuestions = 0
+): SearchResponseSuccess {
   const permanentid = `permanent\u0100id${increment}`;
   return buildMockSearchResponse({
     searchUid: `searchUid${increment}`,
@@ -44,7 +47,13 @@ function buildUniqueSearchResponse(increment: number): SearchResponseSuccess {
     ],
     questionAnswer: buildMockQuestionsAnswers({
       ...buildUniqueQuestionAnswer(increment),
-      relatedQuestions: [buildUniqueQuestionAnswer(increment * 1000)],
+      relatedQuestions: Array.from({length: amountOfRelatedQuestions}, (_, i) =>
+        buildUniqueQuestionAnswer(
+          increment +
+            (i + 1) /
+              10 ** (Math.floor(Math.log10(amountOfRelatedQuestions)) + 1)
+        )
+      ),
     }),
   });
 }
@@ -88,7 +97,7 @@ describe('question answering slice', () => {
     expect(resulting.liked).toBe(false);
   });
 
-  it('should handle expandSmartSnippetRelatedQuestion', () => {
+  it('should handle expandSmartSnippetRelatedQuestion using the documentId', () => {
     state.relatedQuestions = [
       {contentIdKey: 'foo', contentIdValue: 'bar', expanded: false},
       {contentIdKey: 'foo', contentIdValue: 'bazz', expanded: false},
@@ -100,10 +109,11 @@ describe('question answering slice', () => {
         contentIdValue: 'bazz',
       })
     );
+    expect(resulting.relatedQuestions[0].expanded).toBe(false);
     expect(resulting.relatedQuestions[1].expanded).toBe(true);
   });
 
-  it('should handle collapseSmartSnippetRelatedQuestion', () => {
+  it('should handle collapseSmartSnippetRelatedQuestion using the documentId', () => {
     state.relatedQuestions = [
       {contentIdKey: 'foo', contentIdValue: 'bar', expanded: true},
       {contentIdKey: 'foo', contentIdValue: 'bazz', expanded: true},
@@ -115,11 +125,76 @@ describe('question answering slice', () => {
         contentIdValue: 'bazz',
       })
     );
+    expect(resulting.relatedQuestions[0].expanded).toBe(true);
     expect(resulting.relatedQuestions[1].expanded).toBe(false);
   });
 
+  it('should handle expandSmartSnippetRelatedQuestion using the unique id', () => {
+    state.relatedQuestions = [
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bar',
+        expanded: false,
+        questionAnswerId: 'abc',
+      },
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bazz',
+        expanded: false,
+        questionAnswerId: 'def',
+      },
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bazz',
+        expanded: false,
+        questionAnswerId: 'ghi',
+      },
+    ];
+    const resulting = questionAnsweringReducer(
+      state,
+      expandSmartSnippetRelatedQuestion({
+        questionAnswerId: 'def',
+      })
+    );
+    expect(resulting.relatedQuestions[0].expanded).toBe(false);
+    expect(resulting.relatedQuestions[1].expanded).toBe(true);
+    expect(resulting.relatedQuestions[2].expanded).toBe(false);
+  });
+
+  it('should handle collapseSmartSnippetRelatedQuestion using the unique id', () => {
+    state.relatedQuestions = [
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bar',
+        expanded: true,
+        questionAnswerId: 'abc',
+      },
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bazz',
+        expanded: true,
+        questionAnswerId: 'def',
+      },
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bazz',
+        expanded: true,
+        questionAnswerId: 'ghi',
+      },
+    ];
+    const resulting = questionAnsweringReducer(
+      state,
+      collapseSmartSnippetRelatedQuestion({
+        questionAnswerId: 'def',
+      })
+    );
+    expect(resulting.relatedQuestions[0].expanded).toBe(true);
+    expect(resulting.relatedQuestions[1].expanded).toBe(false);
+    expect(resulting.relatedQuestions[2].expanded).toBe(true);
+  });
+
   it('should handle executeSearch to populate relatedQuestions', () => {
-    const response = buildUniqueSearchResponse(0);
+    const response = buildUniqueSearchResponse(0, 1);
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         response,
@@ -198,5 +273,59 @@ describe('question answering slice', () => {
     );
 
     expect(finalState.liked).toBeFalsy();
+  });
+
+  it('when executeSearch is triggered again, resets only the altered snippets', () => {
+    const relatedQuestionsCount = 5;
+    const firstSearchResponse = buildUniqueSearchResponse(
+      0,
+      relatedQuestionsCount
+    );
+    const firstResponseState = questionAnsweringReducer(
+      state,
+      executeSearch.fulfilled(
+        buildMockSearch({response: firstSearchResponse}),
+        '',
+        null as never
+      )
+    );
+
+    const stateWithAllSnippetsExpanded =
+      firstResponseState.relatedQuestions.reduce(
+        (state, {questionAnswerId}) =>
+          questionAnsweringReducer(
+            state,
+            expandSmartSnippetRelatedQuestion({
+              questionAnswerId: questionAnswerId!,
+            })
+          ),
+        firstResponseState
+      );
+
+    const secondSearchResponse = buildUniqueSearchResponse(
+      0,
+      relatedQuestionsCount
+    );
+    const {relatedQuestions: expandedQuestions} =
+      secondSearchResponse.questionAnswer;
+    expandedQuestions[0].question += 'a';
+    expandedQuestions[1].answerSnippet += 'a';
+    expandedQuestions[2].documentId.contentIdKey += 'a';
+    expandedQuestions[3].documentId.contentIdValue += 'a';
+    const finalState = questionAnsweringReducer(
+      stateWithAllSnippetsExpanded,
+      executeSearch.fulfilled(
+        buildMockSearch({response: secondSearchResponse}),
+        '',
+        null as never
+      )
+    );
+
+    const {relatedQuestions: finalQuestions} = finalState;
+    expect(finalQuestions[0].expanded).toBeFalsy();
+    expect(finalQuestions[1].expanded).toBeFalsy();
+    expect(finalQuestions[2].expanded).toBeFalsy();
+    expect(finalQuestions[3].expanded).toBeFalsy();
+    expect(finalQuestions[4].expanded).toBeTruthy();
   });
 });

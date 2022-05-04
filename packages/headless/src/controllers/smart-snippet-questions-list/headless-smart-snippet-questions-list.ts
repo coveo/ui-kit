@@ -31,11 +31,27 @@ export interface SmartSnippetQuestionsList extends Controller {
   /**
    * Expand the specified snippet suggestion.
    *
+   * @param identifier - The `questionAnswerId` of the smart snippet to expand.
+   */
+  expand(identifier: string): void;
+  /**
+   * Expand the specified snippet suggestion.
+   *
+   * @deprecated - Use expand(identifier: string) instead.
+   *
    * @param identifier - The identifier of a document used to create the smart snippet.
    */
   expand(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
    * Collapse the specified snippet suggestion.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  collapse(identifier: string): void;
+  /**
+   * Collapse the specified snippet suggestion.
+   *
+   * @deprecated - Use collapse(identifier: string) instead.
    *
    * @param identifier - The identifier of a document used to create the smart snippet.
    */
@@ -106,6 +122,13 @@ export function buildSmartSnippetQuestionsList(
     return relatedQuestions[idx].expanded;
   };
 
+  const getPayloadFromIdentifier = (
+    identifier: string | QuestionAnswerDocumentIdentifier
+  ) =>
+    typeof identifier === 'string'
+      ? {questionAnswerId: identifier}
+      : identifier;
+
   return {
     ...controller,
 
@@ -127,13 +150,15 @@ export function buildSmartSnippetQuestionsList(
       };
     },
 
-    expand(documentId: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logExpandSmartSnippetSuggestion(documentId));
-      engine.dispatch(expandSmartSnippetRelatedQuestion(documentId));
+    expand(identifier) {
+      const payload = getPayloadFromIdentifier(identifier);
+      engine.dispatch(logExpandSmartSnippetSuggestion(payload));
+      engine.dispatch(expandSmartSnippetRelatedQuestion(payload));
     },
-    collapse(documentId: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logCollapseSmartSnippetSuggestion(documentId));
-      engine.dispatch(collapseSmartSnippetRelatedQuestion(documentId));
+    collapse(identifier) {
+      const payload = getPayloadFromIdentifier(identifier);
+      engine.dispatch(logCollapseSmartSnippetSuggestion(payload));
+      engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
     },
   };
 }

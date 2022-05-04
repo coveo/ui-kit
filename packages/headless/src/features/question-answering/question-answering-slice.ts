@@ -1,8 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  QuestionAnswer,
-  QuestionAnswerDocumentIdentifier,
-} from '../../api/search/search/question-answering';
+import {QuestionAnswer} from '../../api/search/search/question-answering';
 import {encodedBtoa} from '../../utils/utils';
 import {executeSearch} from '../search/search-actions';
 import {
@@ -16,18 +13,26 @@ import {
   closeFeedbackModal,
 } from './question-answering-actions';
 import {
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  QuestionAnsweringDocumentIdActionCreatorPayload,
+  isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
+} from './question-answering-document-id';
+import {
   getQuestionAnsweringInitialState,
   QuestionAnsweringRelatedQuestionState,
 } from './question-answering-state';
 
 export const findRelatedQuestionIdx = (
   relatedQuestions: QuestionAnsweringRelatedQuestionState[],
-  identifier: QuestionAnswerDocumentIdentifier
+  identifier:
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
 ) =>
-  relatedQuestions.findIndex(
-    (relatedQuestion) =>
-      relatedQuestion.contentIdValue === identifier.contentIdValue &&
-      relatedQuestion.contentIdKey === identifier.contentIdKey
+  relatedQuestions.findIndex((relatedQuestion) =>
+    isQuestionAnsweringUniqueIdentifierActionCreatorPayload(identifier)
+      ? relatedQuestion.questionAnswerId === identifier.questionAnswerId
+      : relatedQuestion.contentIdValue === identifier.contentIdValue &&
+        relatedQuestion.contentIdKey === identifier.contentIdKey
   );
 
 function hashQuestionAnswer({
@@ -43,6 +48,22 @@ function hashQuestionAnswer({
       contentIdValue,
     })
   );
+}
+
+function buildQuestionAnsweringRelatedQuestionState(
+  responseQuestionAnswer: QuestionAnswer,
+  currentState?: QuestionAnsweringRelatedQuestionState
+): QuestionAnsweringRelatedQuestionState {
+  const id = hashQuestionAnswer(responseQuestionAnswer);
+  if (currentState && id === currentState.questionAnswerId) {
+    return currentState;
+  }
+  return {
+    contentIdKey: responseQuestionAnswer.documentId.contentIdKey,
+    contentIdValue: responseQuestionAnswer.documentId.contentIdValue,
+    expanded: false,
+    questionAnswerId: id,
+  };
 }
 
 export const questionAnsweringReducer = createReducer(
@@ -73,11 +94,11 @@ export const questionAnsweringReducer = createReducer(
       .addCase(executeSearch.fulfilled, (state, action) => {
         const relatedQuestions =
           action.payload.response.questionAnswer.relatedQuestions.map(
-            (relatedQuestion) => ({
-              contentIdKey: relatedQuestion.documentId.contentIdKey,
-              contentIdValue: relatedQuestion.documentId.contentIdValue,
-              expanded: false,
-            })
+            (relatedQuestion, i) =>
+              buildQuestionAnsweringRelatedQuestionState(
+                relatedQuestion,
+                state.relatedQuestions[i]
+              )
           );
         const questionAnswerId = hashQuestionAnswer(
           action.payload.response.questionAnswer
@@ -94,20 +115,30 @@ export const questionAnsweringReducer = createReducer(
           questionAnswerId,
         };
       })
-      .addCase(expandSmartSnippetRelatedQuestion, (state, action) => {
-        const idx = findRelatedQuestionIdx(
-          state.relatedQuestions,
-          action.payload as QuestionAnswerDocumentIdentifier
-        );
-        if (idx === -1) {
-          return;
+      .addCase(
+        expandSmartSnippetRelatedQuestion,
+        (
+          state,
+          action: ReturnType<typeof expandSmartSnippetRelatedQuestion>
+        ) => {
+          const idx = findRelatedQuestionIdx(
+            state.relatedQuestions,
+            action.payload as
+              | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+              | QuestionAnsweringDocumentIdActionCreatorPayload
+          );
+          if (idx === -1) {
+            return;
+          }
+          state.relatedQuestions[idx].expanded = true;
         }
-        state.relatedQuestions[idx].expanded = true;
-      })
+      )
       .addCase(collapseSmartSnippetRelatedQuestion, (state, action) => {
         const idx = findRelatedQuestionIdx(
           state.relatedQuestions,
-          action.payload as QuestionAnswerDocumentIdentifier
+          action.payload as
+            | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+            | QuestionAnsweringDocumentIdActionCreatorPayload
         );
         if (idx === -1) {
           return;
