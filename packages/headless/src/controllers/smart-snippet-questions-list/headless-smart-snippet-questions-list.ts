@@ -17,6 +17,8 @@ import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
 } from '../../features/question-answering/question-answering-actions';
+import {Result} from '../../api/search/search/result';
+import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
@@ -90,6 +92,10 @@ export interface SmartSnippetRelatedQuestion {
    * Determines if the snippet is currently expanded.
    */
   expanded: boolean;
+  /**
+   * Provides the source of the smart snippet.
+   */
+  source?: Result;
 }
 
 /**
@@ -107,6 +113,13 @@ export function buildSmartSnippetQuestionsList(
 
   const controller = buildController(engine);
   const getState = () => engine.state;
+
+  const getResult = (identifier: QuestionAnswerDocumentIdentifier) => {
+    const {contentIdKey, contentIdValue} = identifier;
+    return engine.state.search.results.find(
+      (result) => getResultProperty(result, contentIdKey) === contentIdValue
+    );
+  };
 
   const getIsExpanded = (
     questionAndAnswer: QuestionAnswer,
@@ -145,6 +158,7 @@ export function buildSmartSnippetQuestionsList(
               relatedQuestion,
               state.questionAnswering.relatedQuestions
             ),
+            source: getResult(relatedQuestion.documentId),
           })
         ),
       };

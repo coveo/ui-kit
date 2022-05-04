@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.63.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.62.0...@coveo/headless@1.63.0) (2022-05-03)
+
+
+### Bug Fixes
+
+* **headless:** fix search ID generation for results-per-page controller ([#1956](https://github.com/coveo/ui-kit/issues/1956)) ([5d66e9a](https://github.com/coveo/ui-kit/commit/5d66e9a4660721ea55a65c2f05a9224c56b8e860))
+
+
+### Features
+
+* **atomic,headless:** added atomic-smart-snippet-suggestions ([#1954](https://github.com/coveo/ui-kit/issues/1954)) ([8d502ff](https://github.com/coveo/ui-kit/commit/8d502ff3ce7f89d6178c39f7dec42815162f4e87))
+* **atomic:** added smart snippet feedback modal ([#1950](https://github.com/coveo/ui-kit/issues/1950)) ([3fd232f](https://github.com/coveo/ui-kit/commit/3fd232f9a72865df528813b49e4808e780d5c3c5))
+
+
+
+
+
 # [1.62.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.61.1...@coveo/headless@1.62.0) (2022-04-28)
 
 

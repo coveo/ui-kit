@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.49.0...@coveo/atomic@1.50.0) (2022-05-03)
+
+
+### Features
+
+* **atomic,headless:** added atomic-smart-snippet-suggestions ([#1954](https://github.com/coveo/ui-kit/issues/1954)) ([8d502ff](https://github.com/coveo/ui-kit/commit/8d502ff3ce7f89d6178c39f7dec42815162f4e87))
+* **atomic:** added smart snippet feedback modal ([#1950](https://github.com/coveo/ui-kit/issues/1950)) ([3fd232f](https://github.com/coveo/ui-kit/commit/3fd232f9a72865df528813b49e4808e780d5c3c5))
+
+
+
+
+
 # [1.49.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.48.1...@coveo/atomic@1.49.0) (2022-04-28)
 
 

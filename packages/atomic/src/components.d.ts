@@ -846,7 +846,7 @@ export namespace Components {
          */
         "collapsedHeight": number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.  You can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel": number;
         /**
@@ -879,6 +879,16 @@ export namespace Components {
     interface AtomicSmartSnippetFeedbackModal {
         "isOpen": boolean;
         "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
@@ -1384,6 +1394,12 @@ declare global {
         prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
         new (): HTMLAtomicSmartSnippetFeedbackModalElement;
     };
+    interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetSuggestionsElement: {
+        prototype: HTMLAtomicSmartSnippetSuggestionsElement;
+        new (): HTMLAtomicSmartSnippetSuggestionsElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1492,6 +1508,7 @@ declare global {
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
+        "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
@@ -2305,7 +2322,7 @@ declare namespace LocalJSX {
          */
         "collapsedHeight"?: number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.  You can style the snippet by inserting a template element like this: ```html <atomic-smart-snippet>   <template>     <style>       b {         color: blue;       }     </style>   </template> </atomic-smart-snippet> ```
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel"?: number;
         /**
@@ -2340,6 +2357,16 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: CustomEvent<any>) => void;
         "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
@@ -2489,6 +2516,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
+        "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-element": AtomicTableElement;
@@ -2572,6 +2600,7 @@ declare module "@stencil/core" {
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
             "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
+            "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
