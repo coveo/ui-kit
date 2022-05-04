@@ -424,4 +424,8 @@
       <label>En savoir plus</label>
       <name>quantic_ReadMore</name>
     </customLabels>
+    <customLabels>
+      <label>Plus</label>
+      <name>quantic_More</name>
+    </customLabels>
 </Translations>

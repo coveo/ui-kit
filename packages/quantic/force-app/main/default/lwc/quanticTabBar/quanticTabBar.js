@@ -1,8 +1,6 @@
 import {LightningElement} from 'lwc';
 
 import more from '@salesforce/label/c.quantic_More';
-import tabs from '@salesforce/label/c.quantic_Tabs';
-import moreTabs from '@salesforce/label/c.quantic_MoreTabs';
 
 /**
  *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner by showing a drop-down list that will display overflowing tabs on smaller screens.
@@ -17,8 +15,6 @@ import moreTabs from '@salesforce/label/c.quantic_MoreTabs';
 export default class QuanticTabBar extends LightningElement {
   labels = {
     more,
-    tabs,
-    moreTabs,
   };
 
   /** @type {boolean} */
