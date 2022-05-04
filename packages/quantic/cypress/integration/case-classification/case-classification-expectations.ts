@@ -5,6 +5,9 @@ import {
   CaseClassificationSelector,
   CaseClassificationSelectors,
 } from './case-classification-selectors';
+import {ConsoleExpectations} from '../console-expectations';
+
+const testOrigin = 'test origin';
 
 function caseClassificationExpectations(selector: CaseClassificationSelector) {
   return {
@@ -43,7 +46,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`${should(display)} display the loading spinner`);
     },
 
-    displayRenderingError: (display: boolean, error) => {
+    displayRenderingError: (display: boolean, error: string) => {
       selector
         .renderingError()
         .should(display ? 'exist' : 'not.exist')
@@ -84,6 +87,13 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
         .logDetail(`should display ${value} inline options`);
     },
 
+    correctValue: (value: string) => {
+      selector
+        .get()
+        .should('have.value', value)
+        .logDetail(`should have the following value: "${value}"`);
+    },
+
     logUpdatedClassificationFromSuggestion: (field: string, index: number) => {
       cy.wait(InterceptAliases.UA.FieldUpdate)
         .then((interception) => {
@@ -92,6 +102,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .suggestedOptionInput(index)
             .invoke('attr', 'value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -105,6 +116,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             field
           );
           expect(analyticsBody.svc_ticket_custom).not.to.have.property(field);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -120,6 +132,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .selectOption(index)
             .invoke('attr', 'data-value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
@@ -135,11 +148,12 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .inlineOptionInput(index)
             .invoke('attr', 'value')
             .should('eq', analyticsBody.svc_ticket_custom[field]);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "ticket_field_update" UA event');
     },
 
-    logClickedSuggestion: (index: number) => {
+    logClickedSuggestion: (index: number, autoSelection = false) => {
       cy.wait(InterceptAliases.UA.ClassificationClick)
         .then((interception) => {
           const analyticsBody = interception.request.body;
@@ -147,6 +161,13 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
             .suggestedOptionInput(index)
             .invoke('attr', 'data-suggestion-id')
             .should('eq', analyticsBody.svc_action_data.classificationId);
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
+          if (autoSelection) {
+            expect(analyticsBody.svc_action_data).to.have.property(
+              'autoSelection',
+              true
+            );
+          }
         })
         .logDetail('should log the "ticket_classification_click" UA event');
     },
@@ -155,4 +176,7 @@ function caseClassificationExpectations(selector: CaseClassificationSelector) {
 
 export const CaseClassificationExpectations = {
   ...caseClassificationExpectations(CaseClassificationSelectors),
+  console: {
+    ...ConsoleExpectations,
+  },
 };

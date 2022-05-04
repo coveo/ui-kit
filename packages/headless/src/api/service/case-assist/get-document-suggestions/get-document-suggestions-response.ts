@@ -1,7 +1,7 @@
 /**
  * Defines document suggestion result.
  */
-export interface DocumentSuggestion {
+export interface DocumentSuggestionResponse {
   clickUri: string;
   excerpt: string;
   fields: Record<string, string | number | boolean | string[]>;
@@ -16,7 +16,7 @@ export interface DocumentSuggestion {
  * See https://platform.cloud.coveo.com/docs?urls.primaryName=Customer%20Service#/Suggestions/getSuggestDocument
  */
 export interface GetDocumentSuggestionsResponse {
-  documents: DocumentSuggestion[];
+  documents: DocumentSuggestionResponse[];
   totalCount: number;
   responseId: string;
 }

@@ -90,7 +90,7 @@ export function applyFocusVisiblePolyfill(element: HTMLElement) {
 
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used on a property named `bindings`.
- * This will automatically fetch the `Bindings` from the parent `atomic-search-interface` or `atomic-extarnal` components.
+ * This will automatically fetch the `Bindings` from the parent `atomic-search-interface` or `atomic-external` components.
  *
  * Once a component is bound, the `initialize` method is called.
  * In the event of an initialization error, the `error` property will be set and an `atomic-component-error` will be rendered.
@@ -154,8 +154,8 @@ export function InitializeBindings() {
       return componentWillLoad && componentWillLoad.call(this);
     };
 
-    let hasRendered = false;
-    let hasLoaded = false;
+    component['hasRendered'] = false;
+    component['hasLoaded'] = false;
 
     component.render = function () {
       if (this.error) {
@@ -171,24 +171,26 @@ export function InitializeBindings() {
         return <Hidden></Hidden>;
       }
 
-      hasRendered = true;
+      component['hasRendered'] = true;
       return render && render.call(this);
     };
 
     component.disconnectedCallback = function () {
+      component['hasRendered'] = false;
+      component['hasLoaded'] = false;
       unsubscribeLanguage();
       disconnectedCallback && disconnectedCallback.call(this);
     };
 
     component.componentDidRender = function () {
-      if (!hasRendered) {
+      if (!component['hasRendered']) {
         return;
       }
 
       componentDidRender && componentDidRender.call(this);
-      if (!hasLoaded) {
+      if (!component['hasLoaded']) {
         componentDidLoad && componentDidLoad.call(this);
-        hasLoaded = true;
+        component['hasLoaded'] = true;
       }
     };
 

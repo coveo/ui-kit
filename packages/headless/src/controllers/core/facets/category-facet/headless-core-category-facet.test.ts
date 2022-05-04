@@ -33,6 +33,7 @@ import {
   categoryFacetSet,
   configuration,
   search,
+  facetOptions,
 } from '../../../../app/reducers';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
@@ -70,6 +71,7 @@ describe('category facet', () => {
       configuration,
       categoryFacetSet,
       categoryFacetSearchSet,
+      facetOptions,
       search,
     });
   });

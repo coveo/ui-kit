@@ -1,8 +1,10 @@
+import {btoa as btoashim} from 'abab';
+
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
   Math.random()
     .toString(36)
-    .substr(2, 2 + length);
+    .substring(2, 2 + length);
 
 export function isArray<T>(value: T | T[]): value is T[] {
   return Array.isArray(value);
@@ -25,4 +27,10 @@ export function removeDuplicates<T>(
       <Record<string, T>>{}
     )
   );
+}
+
+export function encodedBtoa(stringToEncode: string) {
+  return (typeof btoa !== 'undefined' ? btoa : btoashim)(
+    encodeURI(stringToEncode)
+  )!;
 }

@@ -5,7 +5,7 @@ import {RecommendationPage} from './pages/RecommendationPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 import {SamlPage} from './pages/SamlPage';
 import {DependentFacetPage} from './pages/DependentFacetPage';
-import {AtomicReactPage} from './pages/AtomicReactPage';
+import {AnalyticsHook} from './pages/AnalyticsHook';
 
 function App(props: SearchPageProps) {
   const activeNavLink: React.CSSProperties = {color: 'red'};
@@ -45,8 +45,8 @@ function App(props: SearchPageProps) {
             </NavLink>
           </button>
           <button>
-            <NavLink to="/atomic-react" activeStyle={activeNavLink}>
-              Atomic React
+            <NavLink to="/analyticshooks" activeStyle={activeNavLink}>
+              Analytics hook (Google Tag Manager)
             </NavLink>
           </button>
         </nav>
@@ -66,8 +66,8 @@ function App(props: SearchPageProps) {
           <Route path="/dependent-facet">
             <DependentFacetPage />
           </Route>
-          <Route path="/atomic-react">
-            <AtomicReactPage />
+          <Route path="/analyticshooks">
+            <AnalyticsHook />
           </Route>
           <Route path="/search-page">
             <SearchPage {...props} />

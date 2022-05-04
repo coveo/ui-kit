@@ -27,7 +27,7 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
       firstResult: state.pagination.firstResult,
     }),
     ...(state.facetOptions && {
-      facetOptions: state.facetOptions,
+      facetOptions: {freezeFacetOrder: state.facetOptions.freezeFacetOrder},
     }),
     ...(state.folding?.enabled && {
       filterField: state.folding.fields.collection,
@@ -39,7 +39,13 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
 };
 
 function getFacets(state: StateNeededBySearchRequest) {
-  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
+  return sortFacets(getAllEnabledFacets(state), state.facetOrder ?? []);
+}
+
+function getAllEnabledFacets(state: StateNeededBySearchRequest) {
+  return getAllFacets(state).filter(
+    ({facetId}) => state.facetOptions?.facets[facetId]?.enabled ?? true
+  );
 }
 
 function getAllFacets(state: StateNeededBySearchRequest) {

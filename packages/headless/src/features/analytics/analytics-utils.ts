@@ -223,8 +223,14 @@ function buildPartialDocumentInformation(
 }
 
 export const documentIdentifier = (result: Result): DocumentIdentifier => {
+  if (!result.raw.permanentid) {
+    console.warn(
+      'Missing field permanentid on result. This might cause many issues with your Coveo deployment. See https://docs.coveo.com/en/1913 and https://docs.coveo.com/en/1640 for more information.',
+      result
+    );
+  }
   return {
-    contentIDKey: '@permanentid',
+    contentIDKey: 'permanentid',
     contentIDValue: result.raw.permanentid || '',
   };
 };

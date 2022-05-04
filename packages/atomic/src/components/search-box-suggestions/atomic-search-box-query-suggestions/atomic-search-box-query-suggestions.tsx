@@ -28,11 +28,11 @@ export class AtomicSearchBoxQuerySuggestions {
   /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
-  @Prop() public maxWithQuery?: number;
+  @Prop({reflect: true}) public maxWithQuery?: number;
   /**
    * The maximum number of suggestions that will be displayed initially when the input field is empty.
    */
-  @Prop() public maxWithoutQuery?: number;
+  @Prop({reflect: true}) public maxWithoutQuery?: number;
 
   componentWillLoad() {
     try {
@@ -83,12 +83,20 @@ export class AtomicSearchBoxQuerySuggestions {
       content: (
         <div class="flex items-center">
           {this.bindings.getSuggestions().length > 1 && (
-            <atomic-icon icon={SearchIcon} class="w-4 h-4 mr-2"></atomic-icon>
+            <atomic-icon
+              icon={SearchIcon}
+              class="w-4 h-4 mr-2 shrink-0"
+            ></atomic-icon>
           )}
           {hasQuery ? (
-            <span innerHTML={suggestion.highlightedValue}></span>
+            // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
+            <span
+              class="break-all line-clamp-2"
+              // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
+              innerHTML={suggestion.highlightedValue}
+            ></span>
           ) : (
-            <span>{suggestion.rawValue}</span>
+            <span class="break-all line-clamp-2">{suggestion.rawValue}</span>
           )}
         </div>
       ),
@@ -96,7 +104,6 @@ export class AtomicSearchBoxQuerySuggestions {
       query: suggestion.rawValue,
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
-        this.bindings.clearSuggestions();
       },
     };
   }

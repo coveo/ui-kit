@@ -94,13 +94,16 @@ export function buildCaseInput(
   validateCaseInputOptions(engine, props.options);
 
   const fieldName = props.options.field;
+  const isRegistered = getState().caseInput?.[fieldName];
 
-  dispatch(
-    updateCaseInput({
-      fieldName: fieldName,
-      fieldValue: '',
-    })
-  );
+  if (!isRegistered) {
+    dispatch(
+      updateCaseInput({
+        fieldName: fieldName,
+        fieldValue: '',
+      })
+    );
+  }
 
   return {
     ...controller,

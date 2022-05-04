@@ -18,7 +18,8 @@ import {
 /** @typedef {import("coveo").CaseField} CaseField */
 
 /**
- * The `QuanticCaseClassification` component displays field value suggestions returned by Coveo Case Assist as well as a single-select dropdown containing other available values retreived from the CASE_OBJECT of the Salesforce org used.
+ * The `QuanticCaseClassification` component displays field value suggestions returned by Coveo Case Assist as well as a single-select dropdown containing other available values retrieved from the CASE_OBJECT of the Salesforce org used.
+ * Note: only supports Salesforce fields of type `Picklist`.
  *
  * @category Case Assist
  * @example
@@ -43,9 +44,12 @@ export default class QuanticCaseClassification extends LightningElement {
     if (error) {
       console.error('Error getting the picklist values');
     } else {
-      this.picklistValues = data;
-      if (data && !data.picklistFieldValues[this.sfFieldApiName]) {
-        this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
+      if (data) {
+        this.picklistValues = data;
+        this.allOptionsReceived = true;
+        if (!data.picklistFieldValues[this.sfFieldApiName]) {
+          this.renderingError = `The Salesforce field API name "${this.sfFieldApiName}" is not found.`;
+        }
       }
     }
   }
@@ -128,6 +132,14 @@ export default class QuanticCaseClassification extends LightningElement {
   _isSuggestionsVisible = true;
   /** @type {string} */
   renderingError = '';
+  /** @type {boolean} */
+  hideSuggestions = false;
+  /** @type {boolean} */
+  lockedState = false;
+  /** @type {boolean} */
+  allOptionsReceived;
+  /** @type {Object} */
+  loggedInvalidFieldValueWarnings = {};
 
   connectedCallback() {
     this.validateProps();
@@ -169,29 +181,21 @@ export default class QuanticCaseClassification extends LightningElement {
       this.renderingError = `"${this.maxSuggestions}" is an invalid maximum number of suggestions. A positive integer was expected.`;
     }
     if (!this.coveoFieldName) {
-      this.renderingError =
-        'coveoFieldName is required, please set its value.';
+      this.renderingError = 'coveoFieldName is required, please set its value.';
     }
   }
 
   updateFieldState() {
-    if (this.maxSuggestions > 0) {
-      this.previousClassifications = this.classifications;
-      this.classifications =
-        this.field.state.suggestions.slice(
-          0,
-          Math.max(Number(this.maxSuggestions), 0)
-        ) ?? [];
+    if (!this.lockedState) {
       this.loading = this.field.state.loading;
-      if (
-        JSON.stringify(this.classifications) !==
-        JSON.stringify(this.previousClassifications)
-      ) {
-        const value = this.classifications.length
+      const hasNewSuggestions =
+        this.maxSuggestions > 0 && this.newSuggestionsReceived;
+      const value =
+        hasNewSuggestions && this.isAutoSelectionNeeded
           ? this.classifications[0].value
-          : '';
-        this.setFieldValue(value);
-      }
+          : this.field.state.value;
+      this.setFieldValue(value, hasNewSuggestions);
+      this.updateSuggestionsVisibility();
     }
   }
 
@@ -294,9 +298,22 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {Array<object>}
    */
   get suggestions() {
-    return this.classifications.map((suggestion) => {
-      return {...suggestion, checked: suggestion.value === this._value};
-    });
+    if (!this.allOptionsReceived) {
+      return [];
+    }
+    return this.classifications
+      .filter((suggestion) => {
+        const suggestionIncludedInOptions = this.options.some(
+          (option) => option.value === suggestion.value
+        );
+        if (!suggestionIncludedInOptions) {
+          this.logInvalidFieldValueWarningOnce(suggestion.value);
+        }
+        return suggestionIncludedInOptions;
+      })
+      .map((suggestion) => {
+        return {...suggestion, checked: suggestion.value === this._value};
+      });
   }
 
   /**
@@ -308,11 +325,18 @@ export default class QuanticCaseClassification extends LightningElement {
   }
 
   /**
+   * Hides the select input.
+   * @returns {void}
+   */
+  hideSelect() {
+    this._isSelectVisible = false;
+  }
+
+  /**
    * Handles the selection of a suggestion.
    * @returns {void}
    */
   handleSelectSuggestion(event) {
-    this._errorMessage = '';
     const value = event.target.checked ? event.target.value : '';
     this.setFieldValue(value);
   }
@@ -322,11 +346,11 @@ export default class QuanticCaseClassification extends LightningElement {
    * @returns {void}
    */
   handleSelectChange(event) {
-    this._errorMessage = '';
+    this.lockedState = true;
     const value = event.target.value;
     this.setFieldValue(value);
     if (this._isSuggestionsVisible && this.isMoreOptionsVisible) {
-      this.hideSuggestions();
+      this.animateHideSuggestions();
     }
   }
 
@@ -334,7 +358,7 @@ export default class QuanticCaseClassification extends LightningElement {
    * Hide the suggested options.
    * @returns {void}
    */
-  hideSuggestions() {
+  animateHideSuggestions() {
     const suggestions = this.template.querySelectorAll(
       '.case-classification-suggestion'
     );
@@ -349,8 +373,81 @@ export default class QuanticCaseClassification extends LightningElement {
    * Set the current value and update the state.
    * @returns {void}
    */
-  setFieldValue(value) {
-    this.field.update(value);
+  setFieldValue(value, autoSelection) {
+    if (this.field.state.value !== value) {
+      this.field.update(value, undefined, autoSelection);
+    }
     this._value = value;
+    if (this._errorMessage && value) {
+      this._errorMessage = '';
+    }
+  }
+
+  /**
+   * Indicates whether a value is one of the proposed suggestions.
+   * @param {string} value
+   * @returns {boolean}
+   */
+  isSuggestion(value) {
+    return this.suggestions.some((suggestion) => suggestion.value === value);
+  }
+
+  /**
+   * Indicates whether new suggestions have been received.
+   * @returns {boolean}
+   */
+  get newSuggestionsReceived() {
+    this.previousClassifications = this.classifications;
+    this.classifications =
+      this.field.state.suggestions.slice(
+        0,
+        Math.max(Number(this.maxSuggestions), 0)
+      ) ?? [];
+    return (
+      this.classifications.length &&
+      JSON.stringify(this.classifications) !==
+        JSON.stringify(this.previousClassifications)
+    );
+  }
+  /**
+   * Indicates whether auto-selecting the suggestion with the highest confidence is needed.
+   * @returns {boolean}
+   */
+  get isAutoSelectionNeeded() {
+    return (
+      !this.field.state.value ||
+      this.previousClassifications?.[0]?.value === this.field.state.value
+    );
+  }
+
+  /**
+   * Logs warning message when a field receives an invalid suggestion value.
+   * @returns {void}
+   */
+  logInvalidFieldValueWarningOnce(value) {
+    if (!this.loggedInvalidFieldValueWarnings[value]) {
+      this.loggedInvalidFieldValueWarnings[value] = true;
+      console.warn(
+        `The value "${value}" was not found among all the options retrieved from Salesforce. Ensure that the Coveo field name "${this.coveoFieldName}" corresponds to the correct Salesforce field name "${this.sfFieldApiName}".`
+      );
+    }
+  }
+
+  /**
+   * Updates the visibility of the suggestions.
+   * @returns {void}
+   */
+  updateSuggestionsVisibility() {
+    if (
+      this._value &&
+      !this.isSuggestion(this._value) &&
+      this.isMoreOptionsVisible
+    ) {
+      this.hideSuggestions = true;
+      this.showSelect();
+    } else {
+      this.hideSuggestions = false;
+      this.hideSelect();
+    }
   }
 }

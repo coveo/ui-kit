@@ -13,11 +13,16 @@ import {categoryFacetResponseSelector} from '../../../../features/facets/categor
 import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../features/facet-options/facet-options-actions';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
+  FacetOptionsSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
@@ -32,6 +37,7 @@ import {CategoryFacetValue} from '../../../../features/facets/category-facet-set
 import {
   categoryFacetSearchSet,
   categoryFacetSet,
+  facetOptions,
   configuration,
   search,
 } from '../../../../app/reducers';
@@ -39,6 +45,7 @@ import {loadReducerError} from '../../../../utils/errors';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {CoreEngine} from '../../../../app/engine';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 
 export type {
   CategoryFacetValue,
@@ -105,6 +112,16 @@ export interface CoreCategoryFacet extends Controller {
   showLessValues(): void;
 
   /**
+   * Enables the facet. I.e., undoes the effects of `disable`.
+   */
+  enable(): void;
+
+  /**
+   * Disables the facet. I.e., prevents it from filtering results.
+   */
+  disable(): void;
+
+  /**
    * The state of the `Facet` controller.
    * */
   state: CoreCategoryFacetState;
@@ -142,6 +159,9 @@ export interface CoreCategoryFacetState {
 
   /** Returns `true` if fewer values can be displayed, and `false` if not. */
   canShowLessValues: boolean;
+
+  /** Whether the facet is enabled and its values are used to filter search results. */
+  enabled: boolean;
 }
 
 export interface CategoryFacetSearch {
@@ -268,6 +288,7 @@ export function buildCoreCategoryFacet(
   };
 
   const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
+  const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
   dispatch(registerCategoryFacet(options));
 
@@ -313,10 +334,19 @@ export function buildCoreCategoryFacet(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
 
+    enable() {
+      dispatch(enableFacet(facetId));
+    },
+
+    disable() {
+      dispatch(disableFacet(facetId));
+    },
+
     get state() {
       const request = getRequest();
       const response = getResponse();
       const isLoading = getIsLoading();
+      const enabled = getIsEnabled();
 
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
       const hasActiveValues = parents.length !== 0;
@@ -335,6 +365,7 @@ export function buildCoreCategoryFacet(
         canShowMoreValues,
         canShowLessValues,
         sortCriteria: request!.sortCriteria,
+        enabled,
       };
     },
   };
@@ -344,6 +375,7 @@ function loadCategoryFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
   CategoryFacetSection &
+    FacetOptionsSection &
     CategoryFacetSearchSection &
     ConfigurationSection &
     SearchSection
@@ -351,6 +383,7 @@ function loadCategoryFacetReducers(
   engine.addReducers({
     categoryFacetSet,
     categoryFacetSearchSet,
+    facetOptions,
     configuration,
     search,
   });

@@ -1,37 +1,70 @@
 export const colorFacetComponent = 'atomic-color-facet';
 export const ColorFacetSelectors = {
-  shadow: () => cy.get(colorFacetComponent).shadow(),
-  wrapper: () => ColorFacetSelectors.shadow().find('[part="facet"]'),
-  placeholder: () => ColorFacetSelectors.shadow().find('[part="placeholder"]'),
-  selectedBoxValue: () =>
-    ColorFacetSelectors.shadow().find(
-      '[part="value-box"][aria-pressed="true"]'
-    ),
-  idleBoxValue: () =>
-    ColorFacetSelectors.shadow().find(
-      '[part="value-box"][aria-pressed="false"]'
-    ),
-  selectedBoxValueWithText: (text: string) =>
-    ColorFacetSelectors.shadow().find(
+  withId(id: string) {
+    return {
+      ...this,
+      shadow() {
+        return cy.get(`${colorFacetComponent}[facet-id="${id}"]`).shadow();
+      },
+    };
+  },
+  shadow() {
+    return cy.get(colorFacetComponent).shadow();
+  },
+  wrapper() {
+    return this.shadow().find('[part="facet"]');
+  },
+  placeholder() {
+    return this.shadow().find('[part="placeholder"]');
+  },
+  selectedBoxValue() {
+    return this.shadow().find('[part="value-box"][aria-pressed="true"]');
+  },
+  idleBoxValue() {
+    return this.shadow().find('[part="value-box"][aria-pressed="false"]');
+  },
+  selectedBoxValueWithText(text: string) {
+    return this.shadow().find(
       `[part="value-box"][aria-pressed="true"]:contains("${text}")`
-    ),
-  idleBoxValueLabel: () =>
-    ColorFacetSelectors.idleBoxValue().find('[part="value-label"]'),
-  clearButton: () => ColorFacetSelectors.shadow().find('[part="clear-button"]'),
-  labelButton: () => ColorFacetSelectors.shadow().find('[part="label-button"]'),
-  values: () => ColorFacetSelectors.shadow().find('[part="values"]'),
-  valueLabel: () => ColorFacetSelectors.shadow().find('[part="value-label"]'),
-  searchInput: () => ColorFacetSelectors.shadow().find('[part="search-input"]'),
-  searchClearButton: () =>
-    ColorFacetSelectors.shadow().find('[part="search-clear-button"]'),
-  moreMatches: () => ColorFacetSelectors.shadow().find('[part="more-matches"]'),
-  noMatches: () => ColorFacetSelectors.shadow().find('[part="no-matches"]'),
-  valueHighlight: () =>
-    ColorFacetSelectors.shadow().find(
-      '[part="value-label"] [part="search-highlight"]'
-    ),
-  facetValueLabelAtIndex: (index: number) =>
-    ColorFacetSelectors.valueLabel().eq(index),
-  showMoreButton: () => ColorFacetSelectors.shadow().find('[part="show-more"]'),
-  showLessButton: () => ColorFacetSelectors.shadow().find('[part="show-less"]'),
+    );
+  },
+  idleBoxValueLabel() {
+    return this.idleBoxValue().find('[part="value-label"]');
+  },
+  clearButton() {
+    return this.shadow().find('[part="clear-button"]');
+  },
+  labelButton() {
+    return this.shadow().find('[part="label-button"]');
+  },
+  values() {
+    return this.shadow().find('[part="values"]');
+  },
+  valueLabel() {
+    return this.shadow().find('[part="value-label"]');
+  },
+  searchInput() {
+    return this.shadow().find('[part="search-input"]');
+  },
+  searchClearButton() {
+    return this.shadow().find('[part="search-clear-button"]');
+  },
+  moreMatches() {
+    return this.shadow().find('[part="more-matches"]');
+  },
+  noMatches() {
+    return this.shadow().find('[part="no-matches"]');
+  },
+  valueHighlight() {
+    return this.shadow().find('[part="value-label"] [part="search-highlight"]');
+  },
+  facetValueLabelAtIndex(index: number) {
+    return this.valueLabel().eq(index);
+  },
+  showMoreButton() {
+    return this.shadow().find('[part="show-more"]');
+  },
+  showLessButton() {
+    return this.shadow().find('[part="show-less"]');
+  },
 };

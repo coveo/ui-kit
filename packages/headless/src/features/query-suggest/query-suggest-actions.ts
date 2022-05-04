@@ -21,6 +21,7 @@ import {
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &
@@ -171,6 +172,8 @@ export const buildQuerySuggestRequest = async (
     ...(s.searchHub && {searchHub: s.searchHub}),
     ...(s.configuration.analytics.enabled && {
       visitorId: await getVisitorID(),
+      ...(s.configuration.analytics.enabled &&
+        (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
     }),
   };
 };

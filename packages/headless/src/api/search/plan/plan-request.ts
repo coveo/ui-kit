@@ -5,6 +5,7 @@ import {
   VisitorIDParam,
 } from '../../platform-service-params';
 import {
+  AnalyticsParam,
   PipelineParam,
   QueryParam,
   SearchHubParam,
@@ -18,4 +19,5 @@ export type PlanRequest = BaseParam &
   PipelineParam &
   LocaleParam &
   TimezoneParam &
-  VisitorIDParam;
+  VisitorIDParam &
+  AnalyticsParam;

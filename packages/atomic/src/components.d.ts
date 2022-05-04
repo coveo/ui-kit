@@ -5,13 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
-import { Section } from "./components/atomic-layout-section/sections";
-import { ModalStatus } from "./components/atomic-refine-modal/atomic-refine-modal";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
-import { TemplateContent } from "./components/atomic-result-template/atomic-result-template";
+import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
+import { Section } from "./components/atomic-layout-section/sections";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -188,7 +187,7 @@ export namespace Components {
     }
     interface AtomicFieldCondition {
         /**
-          * A list of conditions that must be fulfilled for this template to be selected.
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions": ResultTemplateCondition[];
         /**
@@ -202,6 +201,40 @@ export namespace Components {
     }
     interface AtomicFocusTrap {
         "active": boolean;
+    }
+    interface AtomicFoldedResultList {
+        /**
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
+         */
+        "childField"?: string;
+        /**
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
+         */
+        "collectionField"?: string;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
+         */
+        "parentField"?: string;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param render
+         */
+        "setRenderFunction": (render: (result: FoldedResult) => HTMLElement) => Promise<void>;
     }
     interface AtomicFormatCurrency {
         /**
@@ -263,7 +296,19 @@ export namespace Components {
          */
         "section": Section;
     }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label": string;
+    }
     interface AtomicLoadMoreResults {
+    }
+    interface AtomicModal {
+        "close": () => void;
+        "isOpen": boolean;
+        "source"?: HTMLElement;
     }
     interface AtomicNoResults {
         /**
@@ -439,7 +484,7 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRefineModal {
-        "modalStatus": ModalStatus;
+        "isOpen": boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
@@ -451,6 +496,7 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "classes": string;
         /**
           * The result content to display.
          */
@@ -478,7 +524,7 @@ export namespace Components {
         /**
           * The result item.
          */
-        "result": Result;
+        "result": Result | FoldedResult;
     }
     interface AtomicResultBadge {
         /**
@@ -493,6 +539,31 @@ export namespace Components {
           * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
+    }
+    interface AtomicResultChildren {
+        /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize": ResultDisplayImageSize | null;
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates": boolean;
+        /**
+          * The copy for an empty result state.
+          * @defaultValue `No documents are related to this one.`
+         */
+        "noResultText": string;
+    }
+    interface AtomicResultChildrenTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -516,7 +587,13 @@ export namespace Components {
     }
     interface AtomicResultLink {
         /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
+        /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * @deprecated Use the "attributes" slot instead to pass down attributes to the link.
          */
         "target": string;
     }
@@ -530,7 +607,7 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
         /**
@@ -570,7 +647,8 @@ export namespace Components {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
+        "isChild": boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -602,6 +680,8 @@ export namespace Components {
     }
     interface AtomicResultSectionBottomMetadata {
     }
+    interface AtomicResultSectionChildren {
+    }
     interface AtomicResultSectionEmphasized {
     }
     interface AtomicResultSectionExcerpt {
@@ -629,7 +709,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<TemplateContent> | null>;
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultText {
         /**
@@ -664,6 +744,10 @@ export namespace Components {
           * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
+        /**
+          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout": number;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -703,13 +787,27 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath": string;
+        /**
           * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
+          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
+         */
+        "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
+        /**
           * The search interface language.
          */
         "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath": string;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -737,6 +835,60 @@ export namespace Components {
         "timezone"?: string;
     }
     interface AtomicSearchLayout {
+        /**
+          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint": string;
+    }
+    interface AtomicSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetAnswer {
+        "htmlContent": string;
+        "innerStyle"?: string;
+    }
+    interface AtomicSmartSnippetExpandableAnswer {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetFeedbackModal {
+        "isOpen": boolean;
+        "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
@@ -894,6 +1046,12 @@ declare global {
         prototype: HTMLAtomicFocusTrapElement;
         new (): HTMLAtomicFocusTrapElement;
     };
+    interface HTMLAtomicFoldedResultListElement extends Components.AtomicFoldedResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicFoldedResultListElement: {
+        prototype: HTMLAtomicFoldedResultListElement;
+        new (): HTMLAtomicFoldedResultListElement;
+    };
     interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
     }
     var HTMLAtomicFormatCurrencyElement: {
@@ -930,11 +1088,23 @@ declare global {
         prototype: HTMLAtomicLayoutSectionElement;
         new (): HTMLAtomicLayoutSectionElement;
     };
+    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
+    }
+    var HTMLAtomicLoadMoreChildrenResultsElement: {
+        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
+        new (): HTMLAtomicLoadMoreChildrenResultsElement;
+    };
     interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
     }
     var HTMLAtomicLoadMoreResultsElement: {
         prototype: HTMLAtomicLoadMoreResultsElement;
         new (): HTMLAtomicLoadMoreResultsElement;
+    };
+    interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
+    }
+    var HTMLAtomicModalElement: {
+        prototype: HTMLAtomicModalElement;
+        new (): HTMLAtomicModalElement;
     };
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
     }
@@ -1013,6 +1183,18 @@ declare global {
     var HTMLAtomicResultBadgeElement: {
         prototype: HTMLAtomicResultBadgeElement;
         new (): HTMLAtomicResultBadgeElement;
+    };
+    interface HTMLAtomicResultChildrenElement extends Components.AtomicResultChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicResultChildrenElement: {
+        prototype: HTMLAtomicResultChildrenElement;
+        new (): HTMLAtomicResultChildrenElement;
+    };
+    interface HTMLAtomicResultChildrenTemplateElement extends Components.AtomicResultChildrenTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicResultChildrenTemplateElement: {
+        prototype: HTMLAtomicResultChildrenTemplateElement;
+        new (): HTMLAtomicResultChildrenTemplateElement;
     };
     interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
     }
@@ -1098,6 +1280,12 @@ declare global {
         prototype: HTMLAtomicResultSectionBottomMetadataElement;
         new (): HTMLAtomicResultSectionBottomMetadataElement;
     };
+    interface HTMLAtomicResultSectionChildrenElement extends Components.AtomicResultSectionChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionChildrenElement: {
+        prototype: HTMLAtomicResultSectionChildrenElement;
+        new (): HTMLAtomicResultSectionChildrenElement;
+    };
     interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
     }
     var HTMLAtomicResultSectionEmphasizedElement: {
@@ -1182,6 +1370,36 @@ declare global {
         prototype: HTMLAtomicSearchLayoutElement;
         new (): HTMLAtomicSearchLayoutElement;
     };
+    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetElement: {
+        prototype: HTMLAtomicSmartSnippetElement;
+        new (): HTMLAtomicSmartSnippetElement;
+    };
+    interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetAnswerElement: {
+        prototype: HTMLAtomicSmartSnippetAnswerElement;
+        new (): HTMLAtomicSmartSnippetAnswerElement;
+    };
+    interface HTMLAtomicSmartSnippetExpandableAnswerElement extends Components.AtomicSmartSnippetExpandableAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetExpandableAnswerElement: {
+        prototype: HTMLAtomicSmartSnippetExpandableAnswerElement;
+        new (): HTMLAtomicSmartSnippetExpandableAnswerElement;
+    };
+    interface HTMLAtomicSmartSnippetFeedbackModalElement extends Components.AtomicSmartSnippetFeedbackModal, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetFeedbackModalElement: {
+        prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
+        new (): HTMLAtomicSmartSnippetFeedbackModalElement;
+    };
+    interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetSuggestionsElement: {
+        prototype: HTMLAtomicSmartSnippetSuggestionsElement;
+        new (): HTMLAtomicSmartSnippetSuggestionsElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -1232,13 +1450,16 @@ declare global {
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-focus-trap": HTMLAtomicFocusTrapElement;
+        "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
+        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
+        "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -1252,6 +1473,8 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-badge": HTMLAtomicResultBadgeElement;
+        "atomic-result-children": HTMLAtomicResultChildrenElement;
+        "atomic-result-children-template": HTMLAtomicResultChildrenTemplateElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
@@ -1266,6 +1489,7 @@ declare global {
         "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
         "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
         "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
+        "atomic-result-section-children": HTMLAtomicResultSectionChildrenElement;
         "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
         "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
         "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
@@ -1280,6 +1504,11 @@ declare global {
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
+        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
+        "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
+        "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
+        "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
+        "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
@@ -1462,7 +1691,7 @@ declare namespace LocalJSX {
     }
     interface AtomicFieldCondition {
         /**
-          * A list of conditions that must be fulfilled for this template to be selected.
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions"?: ResultTemplateCondition[];
         /**
@@ -1476,6 +1705,35 @@ declare namespace LocalJSX {
     }
     interface AtomicFocusTrap {
         "active"?: boolean;
+    }
+    interface AtomicFoldedResultList {
+        /**
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
+         */
+        "childField"?: string;
+        /**
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
+         */
+        "collectionField"?: string;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
+         */
+        "parentField"?: string;
     }
     interface AtomicFormatCurrency {
         /**
@@ -1537,7 +1795,20 @@ declare namespace LocalJSX {
          */
         "section": Section;
     }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The label for the button used to load more results.
+          * @defaultValue `Load all results`
+         */
+        "label"?: string;
+    }
     interface AtomicLoadMoreResults {
+    }
+    interface AtomicModal {
+        "close"?: () => void;
+        "isOpen"?: boolean;
+        "onAnimationEnded"?: (event: CustomEvent<never>) => void;
+        "source"?: HTMLElement;
     }
     interface AtomicNoResults {
         /**
@@ -1714,7 +1985,7 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRefineModal {
-        "modalStatus": ModalStatus;
+        "isOpen"?: boolean;
         "openButton"?: HTMLElement;
     }
     interface AtomicRefineToggle {
@@ -1726,6 +1997,7 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "classes"?: string;
         /**
           * The result content to display.
          */
@@ -1753,7 +2025,7 @@ declare namespace LocalJSX {
         /**
           * The result item.
          */
-        "result": Result;
+        "result": Result | FoldedResult;
     }
     interface AtomicResultBadge {
         /**
@@ -1768,6 +2040,27 @@ declare namespace LocalJSX {
           * The text to display in the badge.  Not compatible with `field` nor slotted elements.
          */
         "label"?: string;
+    }
+    interface AtomicResultChildren {
+        /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize"?: ResultDisplayImageSize | null;
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates"?: boolean;
+        /**
+          * The copy for an empty result state.
+          * @defaultValue `No documents are related to this one.`
+         */
+        "noResultText"?: string;
+    }
+    interface AtomicResultChildrenTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultDate {
         /**
@@ -1791,7 +2084,13 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLink {
         /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+         */
+        "hrefTemplate"?: string;
+        /**
           * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+          * @deprecated Use the "attributes" slot instead to pass down attributes to the link.
          */
         "target"?: string;
     }
@@ -1805,7 +2104,7 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas. The default fields sent in a request are: 'date', 'author', 'source', 'language', 'filetype', 'parents', ‘urihash’, ‘objecttype’, ‘collection’, ‘permanentid’ 'ec_price', 'ec_name', 'ec_description', 'ec_brand', 'ec_category', 'ec_item_group_id', 'ec_shortdesc', 'ec_thumbnails', 'ec_images', 'ec_promo_price', 'ec_in_stock', 'ec_cogs', and 'ec_rating'.
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
         /**
@@ -1840,7 +2139,8 @@ declare namespace LocalJSX {
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
-        "imageSize": ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize;
+        "isChild"?: boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -1871,6 +2171,8 @@ declare namespace LocalJSX {
     interface AtomicResultSectionBadges {
     }
     interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionChildren {
     }
     interface AtomicResultSectionEmphasized {
     }
@@ -1930,6 +2232,10 @@ declare namespace LocalJSX {
           * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
+        /**
+          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout"?: number;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -1965,9 +2271,19 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath"?: string;
+        /**
           * The search interface language.
          */
         "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath"?: string;
         /**
           * The severity level of the messages to log in the console.
          */
@@ -1995,6 +2311,62 @@ declare namespace LocalJSX {
         "timezone"?: string;
     }
     interface AtomicSearchLayout {
+        /**
+          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint"?: string;
+    }
+    interface AtomicSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetAnswer {
+        "htmlContent": string;
+        "innerStyle"?: string;
+        "onAtomic/smartSnippet/answerRendered"?: (event: CustomEvent<{height: number}>) => void;
+    }
+    interface AtomicSmartSnippetExpandableAnswer {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetFeedbackModal {
+        "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: CustomEvent<any>) => void;
+        "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
     }
     interface AtomicSortDropdown {
     }
@@ -2086,13 +2458,16 @@ declare namespace LocalJSX {
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-focus-trap": AtomicFocusTrap;
+        "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-icon": AtomicIcon;
         "atomic-layout-section": AtomicLayoutSection;
+        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
+        "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
@@ -2106,6 +2481,8 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-badge": AtomicResultBadge;
+        "atomic-result-children": AtomicResultChildren;
+        "atomic-result-children-template": AtomicResultChildrenTemplate;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
         "atomic-result-icon": AtomicResultIcon;
@@ -2120,6 +2497,7 @@ declare namespace LocalJSX {
         "atomic-result-section-actions": AtomicResultSectionActions;
         "atomic-result-section-badges": AtomicResultSectionBadges;
         "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
+        "atomic-result-section-children": AtomicResultSectionChildren;
         "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
         "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
         "atomic-result-section-title": AtomicResultSectionTitle;
@@ -2134,6 +2512,11 @@ declare namespace LocalJSX {
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
+        "atomic-smart-snippet": AtomicSmartSnippet;
+        "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
+        "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
+        "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
+        "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-table-element": AtomicTableElement;
@@ -2159,13 +2542,16 @@ declare module "@stencil/core" {
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
+            "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
             "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
+            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
+            "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
@@ -2179,6 +2565,8 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
+            "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
+            "atomic-result-children-template": LocalJSX.AtomicResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenTemplateElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
@@ -2193,6 +2581,7 @@ declare module "@stencil/core" {
             "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
             "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
             "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
+            "atomic-result-section-children": LocalJSX.AtomicResultSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicResultSectionChildrenElement>;
             "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
             "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
             "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
@@ -2207,6 +2596,11 @@ declare module "@stencil/core" {
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
+            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
+            "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
+            "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
+            "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
+            "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;

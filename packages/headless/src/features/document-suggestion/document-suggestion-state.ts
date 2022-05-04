@@ -1,5 +1,5 @@
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
-import {DocumentSuggestion} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 
 export const getDocumentSuggestionInitialState =
   (): DocumentSuggestionState => ({
@@ -34,5 +34,5 @@ export interface DocumentSuggestionState {
   /**
    * The retrieved document suggestions.
    */
-  documents: DocumentSuggestion[];
+  documents: DocumentSuggestionResponse[];
 }

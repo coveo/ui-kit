@@ -6,9 +6,19 @@ import {
   // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
 
+type RequestParams = Record<string, string | number | boolean | undefined>;
+
 function uaAlias(eventName: string) {
   return `@UA-${eventName}`;
 }
+
+function paramsInclude(superset: RequestParams, subset: RequestParams) {
+  return Object.keys(subset).reduce((isMatching, key) => {
+    return isMatching && superset[key] === subset[key];
+  }, true);
+}
+
+export const baselineAlias = '@baseline';
 
 export const InterceptAliases = {
   UA: {
@@ -33,10 +43,12 @@ export const InterceptAliases = {
     Breadcrumb: uaAlias('breadcrumbFacet'),
     DocumentOpen: uaAlias('documentOpen'),
     DocumentQuickview: uaAlias('documentQuickview'),
+    SearchFromLink: uaAlias('searchFromLink'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
+  ResultHtml: '@coveoResultHtml',
 };
 
 export const routeMatchers = {
@@ -44,6 +56,7 @@ export const routeMatchers = {
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
+  html: '**/rest/search/v2/html?*',
 };
 
 export function interceptSearch() {
@@ -141,4 +154,39 @@ export function mockSearchNoResults() {
       res.send();
     });
   }).as(InterceptAliases.Search.substring(1));
+}
+
+export function interceptResultHtmlContent() {
+  cy.intercept('POST', routeMatchers.html).as(
+    InterceptAliases.ResultHtml.substring(1)
+  );
+}
+
+export function mockResultHtmlContent(tag: string, innerHtml?: string) {
+  cy.intercept('POST', routeMatchers.html, (req) => {
+    req.alias = InterceptAliases.ResultHtml.substring(1);
+    req.continue((res) => {
+      const element = document.createElement(tag);
+      element.innerHTML = innerHtml ? innerHtml : 'this is a response';
+      res.body = element;
+      res.send();
+    });
+  });
+}
+
+export function interceptQuerySuggestWithParam(
+  params: RequestParams,
+  alias: string
+) {
+  cy.intercept('POST', routeMatchers.querySuggest, (req) => {
+    if (paramsInclude(req.body, params)) {
+      req.alias = alias.substring(1);
+    }
+  });
+}
+
+export function captureBaselineNumberOfRequests(interceptAlias: string) {
+  cy.get(`${interceptAlias}.all`).then((calls) =>
+    cy.wrap(calls.length).as(baselineAlias.substring(1))
+  );
 }

@@ -1,8 +1,21 @@
+import {Result} from '@coveo/headless';
 import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
+
+interface ResultWithFolding extends Result {
+  parentResult: ResultWithFolding | null;
+  childResults: ResultWithFolding[];
+}
+
+export type SearchFoldedResponseSuccess = Omit<
+  SearchResponseSuccess,
+  'results'
+> & {
+  results: ResultWithFolding[];
+};
 
 export type SearchResponseModifierPredicate = (
   response: SearchResponseSuccess
@@ -36,6 +49,7 @@ export class TestFixture {
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifierPredicate[] = [];
   private returnError = false;
+  private reflectStateInUrl = true;
   private redirected = false;
 
   public with(feat: TestFeature) {
@@ -45,6 +59,11 @@ export class TestFixture {
 
   public withoutFirstAutomaticSearch() {
     this.execFirstSearch = false;
+    return this;
+  }
+
+  public withoutStateInUrl() {
+    this.reflectStateInUrl = false;
     return this;
   }
 
@@ -137,6 +156,10 @@ export class TestFixture {
 
     cy.get(`@${this.elementAliases.SearchInterface}`).then(($si) => {
       const searchInterfaceComponent = $si.get()[0] as SearchInterface;
+      searchInterfaceComponent.setAttribute(
+        'reflect-state-in-url',
+        `${this.reflectStateInUrl}`
+      );
 
       if (this.language) {
         searchInterfaceComponent.setAttribute('language', this.language);
@@ -160,6 +183,7 @@ export class TestFixture {
           {
             method: 'POST',
             url: '**/rest/search/v2?*',
+            times: 9999,
           },
           (request) => {
             request.reply((response) => {

@@ -7,6 +7,8 @@
 @layer base {
   :host {
     display: block;
+    /* TODO: remove when upgrading Tailwind > v3.0.23 */
+    --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
   }
 
   :host,
@@ -89,5 +91,24 @@
 
   .with-outline {
     @apply focus-visible:outline-color;
+  }
+
+  .accessibility-only {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .text-inherit {
+    font-size: inherit;
+  }
+
+  .cursor-inherit {
+    cursor: inherit;
+  }
+
+  .shadow-lg {
+    --tw-shadow: 0px -2px 8px rgba(229, 232, 232, 0.75);
   }
 }

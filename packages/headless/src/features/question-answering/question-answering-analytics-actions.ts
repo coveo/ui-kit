@@ -1,9 +1,21 @@
+import {Result} from '../../api/search/search/result';
 import {validatePayload} from '../../utils/validate-payload';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  documentIdentifier,
+  makeAnalyticsAction,
+  partialDocumentInformation,
+  validateResultPayload,
+} from '../analytics/analytics-utils';
 import {
   documentIdentifierPayloadDefinition,
   QuestionAnsweringDocumentIdActionCreatorPayload,
 } from './question-answering-document-id';
+
+export type SmartSnippetFeedback =
+  | 'does_not_answer'
+  | 'partially_answers'
+  | 'was_not_a_question';
 
 export const logExpandSmartSnippet = makeAnalyticsAction(
   'analytics/smartSnippet/expand',
@@ -28,6 +40,45 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
   AnalyticsType.Custom,
   (client) => client.logDislikeSmartSnippet()
 );
+
+export const logOpenSmartSnippetSource = (source: Result) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(source);
+      return client.logOpenSmartSnippetSource(
+        partialDocumentInformation(source, state),
+        documentIdentifier(source)
+      );
+    }
+  )();
+
+export const logOpenSmartSnippetFeedbackModal = makeAnalyticsAction(
+  'analytics/smartSnippet/feedbackModal/open',
+  AnalyticsType.Custom,
+  (client) => client.logOpenSmartSnippetFeedbackModal()
+);
+
+export const logCloseSmartSnippetFeedbackModal = makeAnalyticsAction(
+  'analytics/smartSnippet/feedbackModal/close',
+  AnalyticsType.Custom,
+  (client) => client.logCloseSmartSnippetFeedbackModal()
+);
+
+export const logSmartSnippetFeedback = (feedback: SmartSnippetFeedback) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/sendFeedback',
+    AnalyticsType.Custom,
+    (client) => client.logSmartSnippetFeedbackReason(feedback)
+  )();
+
+export const logSmartSnippetDetailedFeedback = (details: string) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/sendFeedback',
+    AnalyticsType.Custom,
+    (client) => client.logSmartSnippetFeedbackReason('other', details)
+  )();
 
 export const logExpandSmartSnippetSuggestion = (
   payload: QuestionAnsweringDocumentIdActionCreatorPayload

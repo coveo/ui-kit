@@ -4,17 +4,22 @@ import {
   InteractiveResult,
   Result,
 } from '@coveo/headless';
-import {ResultContext} from '../../result-template-components/result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 import {
   Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LinkWithResultAnalytics} from '../../result-link/result-link';
+import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
+import {isUndefined} from '@coveo/bueno';
+import {buildStringTemplateFromResult} from '../../../utils/result-utils';
+import {getSlotFromHost} from '../../../utils/slot-utils';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
- * @slot default - Allow to display alternative content inside the link
+ * @slot default - Lets you display alternative content inside the link
+ * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to the link element, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
  */
 @Component({
   tag: 'atomic-result-link',
@@ -38,11 +43,26 @@ export class AtomicResultLink implements InitializableComponent {
    * * _blank: usually a new tab, but users can configure their browsers to open a new window instead.
    * * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`.
    * * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
+   *
+   * @deprecated Use the "attributes" slot instead to pass down attributes to the link.
    */
-  @Prop() target = '_self';
+  @Prop({reflect: true}) target = '_self';
+
+  /**
+   * Specifies a template literal from which to generate the `href` attribute value (see
+   * [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).
+   *
+   * The template literal can reference any number of result properties from the parent result. It can also reference the window object.
+   *
+   * @example
+   * The following markup generates an `href` value such as `http://uri.com?id=itemTitle`:
+   * <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+   */
+  @Prop({reflect: true}) hrefTemplate?: string;
 
   private interactiveResult!: InteractiveResult;
-  private hasSlot!: boolean;
+  private hasDefaultSlot!: boolean;
+  private linkAttributes?: Attr[];
 
   public initialize() {
     this.interactiveResult = buildInteractiveResult(this.bindings.engine, {
@@ -51,17 +71,32 @@ export class AtomicResultLink implements InitializableComponent {
   }
 
   public connectedCallback() {
-    this.hasSlot = !!this.host.children.length;
+    const slotName = 'attributes';
+    this.hasDefaultSlot = !!getSlotFromHost(this.host, slotName);
+    this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
   }
 
   public render() {
+    const href = isUndefined(this.hrefTemplate)
+      ? this.result.clickUri
+      : buildStringTemplateFromResult(
+          this.hrefTemplate,
+          this.result,
+          this.bindings
+        );
+
     return (
       <LinkWithResultAnalytics
-        interactiveResult={this.interactiveResult}
-        href={this.result.clickUri}
+        href={href}
         target={this.target}
+        onSelect={() => this.interactiveResult.select()}
+        onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
+        onCancelPendingSelect={() =>
+          this.interactiveResult.cancelPendingSelect()
+        }
+        attributes={this.linkAttributes}
       >
-        {this.hasSlot ? (
+        {this.hasDefaultSlot ? (
           <slot></slot>
         ) : (
           <atomic-result-text

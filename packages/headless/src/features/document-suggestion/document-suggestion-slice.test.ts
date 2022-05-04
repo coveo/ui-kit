@@ -1,5 +1,5 @@
 import {
-  DocumentSuggestion,
+  DocumentSuggestionResponse,
   GetDocumentSuggestionsResponse,
 } from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 import {fetchDocumentSuggestions} from './document-suggestion-actions';
@@ -11,7 +11,7 @@ import {
 
 describe('document suggestion slice', () => {
   let state: DocumentSuggestionState;
-  const mockDocument: DocumentSuggestion = {
+  const mockDocument: DocumentSuggestionResponse = {
     clickUri: 'www.clikuri.com',
     title: 'Mock Document',
     excerpt: 'This is a dang good mock document.',

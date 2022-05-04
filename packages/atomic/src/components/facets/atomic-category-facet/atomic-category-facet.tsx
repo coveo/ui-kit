@@ -9,6 +9,8 @@ import {
   SearchStatusState,
   buildSearchStatus,
   CategoryFacetValue,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -26,7 +28,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {
   getFieldCaptions,
   getFieldValueCaption,
@@ -42,6 +44,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -93,6 +96,7 @@ export class AtomicCategoryFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
+  private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -111,39 +115,40 @@ export class AtomicCategoryFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
-  @Prop() public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    * When "true", the search is only enabled when more facet values are available.
    */
-  @Prop() public withSearch = false;
+  @Prop({reflect: true}) public withSearch = false;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'alphanumeric' and 'occurrences'.
    */
   // TODO: add automatic (occurrences when not expanded, alphanumeric when expanded)
-  @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
+  @Prop({reflect: true}) public sortCriteria: CategoryFacetSortCriterion =
+    'occurrences';
   /**
    * The character that separates values of a multi-value field.
    */
-  @Prop() public delimitingCharacter = ';';
+  @Prop({reflect: true}) public delimitingCharacter = ';';
   /**
    * The base path shared by all values for the facet, separated by commas.
    */
-  @Prop() public basePath?: string;
+  @Prop({reflect: true}) public basePath?: string;
   /**
    * Whether to use basePath as a filter for the results.
    */
-  @Prop() public filterByBasePath = true;
+  @Prop({reflect: true}) public filterByBasePath = true;
   /**
    * Specifies if the facet is collapsed.
    */
@@ -151,14 +156,35 @@ export class AtomicCategoryFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
+
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-category-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-category-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-category-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-category-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
@@ -172,7 +198,12 @@ export class AtomicCategoryFacet
   @FocusTarget()
   private activeValueFocus!: FocusTargetController;
 
+  private validateProps() {
+    validateDependsOn(this.dependsOn);
+  }
+
   public initialize() {
+    this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
       facetId: this.facetId,
@@ -195,6 +226,14 @@ export class AtomicCategoryFacet
       facetId: this.facetId!,
       element: this.host,
     });
+    this.inititalizeDependenciesManager();
+  }
+
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   public componentShouldUpdate(
@@ -214,6 +253,16 @@ export class AtomicCategoryFacet
 
   private get hasParents() {
     return !!this.facetState.parents.length;
+  }
+
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facetId!,
+        conditions: parseDependsOn(this.dependsOn),
+      }
+    );
   }
 
   private renderHeader() {
@@ -463,7 +512,7 @@ export class AtomicCategoryFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
       return <Hidden></Hidden>;
     }
 

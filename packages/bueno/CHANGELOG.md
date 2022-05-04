@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.34.9](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.34.8...@coveo/bueno@0.34.9) (2022-03-28)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+## [0.34.8](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.34.7...@coveo/bueno@0.34.8) (2022-03-25)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+## [0.34.7](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.34.6...@coveo/bueno@0.34.7) (2022-03-24)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+## [0.34.6](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.34.5...@coveo/bueno@0.34.6) (2022-03-18)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+## [0.34.5](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.34.4...@coveo/bueno@0.34.5) (2022-03-16)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+## [0.34.4](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.34.3...@coveo/bueno@0.34.4) (2022-03-02)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
 ## [0.34.3](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.34.2...@coveo/bueno@0.34.3) (2022-02-16)
 
 **Note:** Version bump only for package @coveo/bueno

@@ -1,5 +1,9 @@
 import {useEffect, useState} from 'react';
-import {Facet as HeadlessFacet, FacetState} from '@coveo/headless';
+import {
+  buildFacetConditionsManager,
+  CoreEngine,
+  Facet as HeadlessFacet,
+} from '@coveo/headless';
 import {Facet} from '../facet/facet.fn';
 
 interface MultiLevelDependency {
@@ -13,58 +17,43 @@ interface ShowFacetState {
   [facetId: string]: boolean;
 }
 
-interface FacetDependencyState {
-  [facetId: string]: FacetState;
-}
-
 export const MultilevelDependentFacet: React.FunctionComponent<{
+  engine: CoreEngine;
   dependencies: MultiLevelDependency;
-}> = ({dependencies}) => {
+}> = ({engine, dependencies}) => {
   const [showFacet, setShowFacet] = useState<ShowFacetState>({});
 
-  const [facetDependencyState, setFacetDependencyState] =
-    useState<FacetDependencyState>(() => {
-      return Object.entries(dependencies)
-        .map(([facetId, tree]) => ({
-          [facetId]: tree.facet.state,
-        }))
-        .reduce((previous, next) => ({...previous, ...next}), {});
-    });
+  Object.values(dependencies).forEach(({facet}) => {
+    useEffect(
+      () =>
+        facet.subscribe(() =>
+          setShowFacet((otherValues) => ({
+            ...otherValues,
+            [facet.state.facetId]: facet.state.enabled,
+          }))
+        ),
+      []
+    );
+  });
 
-  const linkFacets = () => {
-    const resultingState = {...showFacet};
-
-    Object.keys(dependencies).forEach((facetId) => {
-      resultingState[facetId] = true;
-
-      if (dependencies[facetId].dependsOn) {
-        const parentFacetHasActiveValues =
-          dependencies[facetId].dependsOn!.state.hasActiveValues;
-
-        if (!parentFacetHasActiveValues && showFacet[facetId]) {
-          dependencies[facetId].facet.deselectAll();
-        }
-
-        resultingState[facetId] = parentFacetHasActiveValues;
+  Object.values(dependencies).forEach(({facet, dependsOn}) => {
+    useEffect(() => {
+      if (!dependsOn) {
+        return;
       }
+      const facetConditionsManager = buildFacetConditionsManager(engine, {
+        facetId: facet.state.facetId,
+        conditions: [
+          {
+            parentFacetId: dependsOn.state.facetId,
+            condition: (parentValues) =>
+              parentValues.some((value) => value.state === 'selected'),
+          },
+        ],
+      });
+      return facetConditionsManager.stopWatching;
     });
-
-    setShowFacet(resultingState);
-  };
-
-  const bindFacetsToState = () => {
-    Object.entries(dependencies).forEach(([facetId, dependency]) => {
-      dependency.facet.subscribe(() =>
-        setFacetDependencyState({
-          ...facetDependencyState,
-          [facetId]: dependency.facet.state,
-        })
-      );
-    });
-  };
-
-  useEffect(bindFacetsToState, []);
-  useEffect(linkFacets, [facetDependencyState]);
+  });
 
   return (
     <>

@@ -1,5 +1,6 @@
 import {getAssetPath} from '@stencil/core';
 import {NODE_TYPES} from '@stencil/core/mock-doc';
+import {sanitize} from 'dompurify';
 
 /**
  * Returns a function that can be executed only once
@@ -34,12 +35,13 @@ export function titleToKebab(value: string) {
 }
 
 export function randomID(prepend?: string, length = 5) {
-  return (
-    prepend +
-    Math.random()
-      .toString(36)
-      .substr(2, 2 + length)
-  );
+  const randomStr = Math.random()
+    .toString(36)
+    .substring(2, 2 + length);
+  if (!prepend) {
+    return randomStr;
+  }
+  return prepend + randomStr;
 }
 
 export function getRandomArbitrary(min: number, max: number) {
@@ -67,7 +69,7 @@ export function containsVisualElement(node: Node) {
   return false;
 }
 
-export function parseAssetURL(url: string) {
+export function parseAssetURL(url: string, assetPath = './assets') {
   const [, protocol, remainder] =
     url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
   if (!protocol) {
@@ -80,7 +82,58 @@ export function parseAssetURL(url: string) {
     return url;
   }
   if (protocol === 'assets') {
-    return getAssetPath(`./assets/${remainder}.svg`);
+    return getAssetPath(`${assetPath}/${remainder}.svg`);
   }
   return null;
+}
+
+// TODO: add tests
+export function elementHasAncestorTag(
+  el: HTMLElement,
+  tagName: string
+): boolean {
+  const parentElement = el.parentElement;
+  if (!parentElement) return false;
+  if (parentElement.tagName === tagName.toUpperCase()) return true;
+  return elementHasAncestorTag(parentElement, tagName);
+}
+
+export function closest<K extends keyof HTMLElementTagNameMap>(
+  element: Element | null,
+  selector: K
+): HTMLElementTagNameMap[K] | null;
+export function closest<K extends keyof SVGElementTagNameMap>(
+  element: Element | null,
+  selector: K
+): SVGElementTagNameMap[K] | null;
+export function closest<E extends Element = Element>(
+  element: Element | null,
+  selector: string
+): E | null;
+export function closest(
+  element: Element | null,
+  selector: string
+): HTMLElement | null {
+  if (!element) {
+    return null;
+  }
+  if (element.matches(selector)) {
+    return element as HTMLElement;
+  }
+  if (element.parentNode instanceof ShadowRoot) {
+    return closest(element.parentNode.host, selector);
+  }
+  return closest(element.parentElement, selector);
+}
+
+export function sanitizeStyle(style: string) {
+  const purifiedOuterHTML = sanitize(`<style>${style}</style>`, {
+    ALLOWED_TAGS: ['style'],
+    ALLOWED_ATTR: [],
+    FORCE_BODY: true,
+  });
+  const wrapperEl = document.createElement('div');
+  // deepcode ignore ReactSetInnerHtml: sanitized by dompurify
+  wrapperEl.innerHTML = purifiedOuterHTML;
+  return wrapperEl.querySelector('style')?.innerHTML;
 }

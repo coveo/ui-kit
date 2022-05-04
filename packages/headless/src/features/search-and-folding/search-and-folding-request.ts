@@ -1,13 +1,16 @@
 import {SearchAppState} from '../../state/search-app-state';
-import {getVisitorID} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {ConfigurationSection} from '../../state/state-sections';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
+import {SearchRequest} from '../../api/search/search/search-request';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;
 
 export const buildSearchAndFoldingLoadCollectionRequest = async (
   state: StateNeededByExecuteSearchAndFolding
-) => {
+): Promise<SearchRequest> => {
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -19,6 +22,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
       visitorId: await getVisitorID(),
+      actionsHistory: historyStore.getHistory(),
     }),
     ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,
@@ -28,6 +32,9 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     }),
     ...(state.advancedSearchQueries?.lq && {
       lq: state.advancedSearchQueries.lq,
+    }),
+    ...(state.advancedSearchQueries?.dq && {
+      dq: state.advancedSearchQueries.dq,
     }),
     ...(state.context && {
       context: state.context.contextValues,
@@ -52,5 +59,13 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     ...(state.sortCriteria && {
       sortCriteria: state.sortCriteria,
     }),
+    ...(state.configuration.analytics.enabled &&
+      (await fromAnalyticsStateToAnalyticsParams(
+        state.configuration.analytics
+      ))),
+    ...(state.excerptLength &&
+      !isNullOrUndefined(state.excerptLength.length) && {
+        excerptLength: state.excerptLength.length,
+      }),
   };
 };

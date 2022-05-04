@@ -1,0 +1,22 @@
+@import '../../global/global.pcss';
+@import '../../global/mixins.pcss';
+
+[part='source-url'] a {
+  @mixin link-style;
+  @mixin set-font-size var(--atomic-text-base);
+}
+
+[part='source-title'] a {
+  @mixin link-style;
+  @mixin set-font-size var(--atomic-text-2xl);
+}
+
+footer {
+  &:before {
+    content: ' ';
+    display: block;
+    height: 1px;
+    background-color: var(--atomic-neutral);
+    margin-bottom: 1.5rem;
+  }
+}

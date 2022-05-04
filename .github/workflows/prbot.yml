@@ -68,6 +68,31 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-react
+  e2e-atomic-angular-test:
+    name: 'Run e2e tests on Atomic Angular'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-angular
+  e2e-atomic-vuejs-test:
+    name: 'Run e2e tests on Vue.js sample'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-vuejs
+  e2e-atomic-stencil-test:
+    name: 'Run e2e tests on Stencil.js sample'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-stencil
+
   is-valid:
     name: 'Confirm build is valid'
     runs-on: ubuntu-latest

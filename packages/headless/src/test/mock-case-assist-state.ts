@@ -6,6 +6,7 @@ import {getDebugInitialState} from '../features/debug/debug-state';
 import {getDocumentSuggestionInitialState} from '../features/document-suggestion/document-suggestion-state';
 import {CaseAssistAppState} from '../state/case-assist-app-state';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 
 export function buildMockCaseAssistState(
   config: Partial<CaseAssistAppState> = {}
@@ -19,6 +20,7 @@ export function buildMockCaseAssistState(
     debug: getDebugInitialState(),
     version: 'unit-testing-version',
     resultPreview: getResultPreviewInitialState(),
+    searchHub: getSearchHubInitialState(),
     ...config,
   };
 }

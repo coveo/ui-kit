@@ -32,7 +32,10 @@ export * from './features/recommendation/recommendation-actions-loader';
 export * from './features/recommendation/recommendation-click-analytics-actions-loader';
 
 // Controllers
-export type {Controller} from './controllers/controller/headless-controller';
+export type {
+  Controller,
+  Subscribable,
+} from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {

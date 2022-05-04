@@ -1,3 +1,9 @@
+library(
+    identifier: "jenkins-common-lib@master",
+    retriever: modernSCM(github(credentialsId: "github-app-dev", repository: "jenkins-common-lib", repoOwner: "coveo")),
+    changelog: false
+)
+
 node('linux && docker') {
   def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
 
@@ -8,7 +14,7 @@ node('linux && docker') {
     userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/ui-kit']]
   ])
 
-  withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
+  dockerUtils.withDocker(image: 'node:16', args: '-e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     
     stage('Npm publish') {
       withCredentials([

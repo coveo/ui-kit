@@ -4,11 +4,12 @@ import {
   DocumentSuggestionSelector,
   DocumentSuggestionSelectors,
 } from './document-suggestion-selectors';
-import {ConsoleExpectations} from '../console-expectations';
 
 interface Fields {
   uri: string;
 }
+
+const testOrigin = 'test origin';
 
 function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
   return {
@@ -101,6 +102,7 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
             'documentPosition',
             index
           );
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
           if (fromQuickview) {
             expect(analyticsBody.svc_action_data).to.have.property(
               'fromQuickview',
@@ -134,6 +136,7 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
             'documentPosition',
             index
           );
+          expect(analyticsBody.searchHub).to.eq(testOrigin);
         })
         .logDetail('should log the "suggestion_rate" UA event');
     },

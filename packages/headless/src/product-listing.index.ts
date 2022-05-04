@@ -26,7 +26,10 @@ export * from './features/configuration/configuration-actions-loader';
 export * from './features/product-listing/product-listing-actions-loader';
 
 // Controllers
-export type {Controller} from './controllers/controller/headless-controller';
+export type {
+  Controller,
+  Subscribable,
+} from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
@@ -159,3 +162,11 @@ export type {
   NumericFilterInitialState,
 } from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-filter';
 export {buildNumericFilter} from './controllers/product-listing/range-facet/numeric-facet/headless-product-listing-numeric-filter';
+
+export type {
+  Context,
+  ContextState,
+  ContextPayload,
+  ContextValue,
+} from './controllers/product-listing/context/headless-product-listing-context';
+export {buildContext} from './controllers/product-listing/context/headless-product-listing-context';

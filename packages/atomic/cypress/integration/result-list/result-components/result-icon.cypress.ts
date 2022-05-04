@@ -76,7 +76,7 @@ describe('Result Icon Component', () => {
 
     IconAssertions.assertRendersIcon(
       () => ResultIconSelectors.svg().first(),
-      'custom'
+      'document'
     );
   });
 });

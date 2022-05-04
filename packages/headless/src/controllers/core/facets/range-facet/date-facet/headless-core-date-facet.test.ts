@@ -19,7 +19,12 @@ import {buildMockDateFacetResponse} from '../../../../../test/mock-date-facet-re
 import {SearchAppState} from '../../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  search,
+  facetOptions,
+} from '../../../../../app/reducers';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 
@@ -60,6 +65,7 @@ describe('date facet', () => {
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       dateFacetSet,
+      facetOptions,
       configuration,
       search,
     });

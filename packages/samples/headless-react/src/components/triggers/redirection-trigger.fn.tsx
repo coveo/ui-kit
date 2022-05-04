@@ -5,20 +5,21 @@ interface HeadlessRedirectionTriggerProps {
   controller: HeadlessRedirectionTrigger;
 }
 
-export const RedirectionTrigger: FunctionComponent<HeadlessRedirectionTriggerProps> =
-  (props) => {
-    const {controller} = props;
-    const [state, setState] = useState(controller.state);
+export const RedirectionTrigger: FunctionComponent<
+  HeadlessRedirectionTriggerProps
+> = (props) => {
+  const {controller} = props;
+  const [state, setState] = useState(controller.state);
 
-    useEffect(() => controller.subscribe(() => redirect()), []);
-    useEffect(() => redirect(), [state.redirectTo]);
+  useEffect(() => controller.subscribe(() => redirect()), []);
+  useEffect(() => redirect(), [state.redirectTo]);
 
-    const redirect = () => {
-      setState(props.controller.state);
-      if (state.redirectTo) {
-        window.location.href = controller.state.redirectTo!;
-      }
-    };
-
-    return null;
+  const redirect = () => {
+    setState(props.controller.state);
+    if (state.redirectTo) {
+      window.location.href = controller.state.redirectTo!;
+    }
   };
+
+  return null;
+};

@@ -6,7 +6,12 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
   props,
   children
 ) => {
+  const compactCount = new Intl.NumberFormat(props.i18n.language, {
+    notation: 'compact',
+  }).format(props.numberOfResults);
+
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
+
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
@@ -31,7 +36,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
           class="value-box-count text-neutral-dark truncate w-full text-sm mt-1"
         >
           {props.i18n.t('between-parentheses', {
-            text: count,
+            text: compactCount,
           })}
         </span>
       </Button>

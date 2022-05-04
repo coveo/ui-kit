@@ -1,5 +1,6 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
+import {ComponentErrorSelectors} from './component-error-selectors';
 import * as IconAssertions from './icon-assertions';
 import {IconSelectors} from './icon-selectors';
 import {getSvg} from './icon-utils';
@@ -67,7 +68,11 @@ describe('Icon Test Suites', () => {
       setupIcon('http://localhost:1');
     });
 
-    CommonAssertions.assertRemovesComponent(() => cy.get(IconSelectors.icon));
+    it('should display an error component', () => {
+      cy.get(IconSelectors.icon)
+        .find(ComponentErrorSelectors.component)
+        .should('be.visible');
+    });
     CommonAssertions.assertConsoleError();
   });
 });

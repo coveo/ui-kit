@@ -69,6 +69,7 @@ export class AtomicLoadMoreResults {
     });
 
     return (
+      // deepcode ignore ReactSetInnerHtml: This is not React code.
       <div
         class="my-2 text-lg text-neutral-dark"
         part="showing-results"

@@ -1,6 +1,6 @@
 import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../../result-template-components/result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 import {
   Bindings,
   InitializeBindings,
@@ -32,7 +32,7 @@ export class AtomicResultNumber {
    * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
    * Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
    */
-  @Prop() field!: string;
+  @Prop({reflect: true}) field!: string;
 
   @State() formatter: NumberFormatter = defaultNumberFormatter;
 

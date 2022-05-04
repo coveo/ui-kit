@@ -7,6 +7,7 @@ import {
 import {
   ActionsHistoryParam,
   AdvancedQueryParam,
+  AnalyticsParam,
   ConstantQueryParam,
   FieldsToIncludeParam,
   PipelineParam,
@@ -30,4 +31,5 @@ export type RecommendationRequest = BaseParam &
   ReferrerParam &
   LocaleParam &
   TimezoneParam &
-  VisitorIDParam;
+  VisitorIDParam &
+  AnalyticsParam;

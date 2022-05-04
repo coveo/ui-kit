@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
       import {loadAdvancedSearchQueryActions, loadContextActions} from '/build/headless/headless.esm.js';
-      // CDN example: 'https://static.cloud.coveo.com/atomic/v1/atomic.esm.js/headless/headless.esm.js'
+      // CDN example: 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js'
 
       function setExpression(engine) {
         const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
@@ -50,5 +50,6 @@
       <atomic-query-summary></atomic-query-summary>
       <atomic-result-list></atomic-result-list>
     </atomic-search-interface>
+    <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>

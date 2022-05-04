@@ -420,6 +420,22 @@
     "en": "Load more results",
     "fr": "Afficher plus de résultats"
   },
+  "load-all-results": {
+    "en": "Load all results",
+    "fr": "Afficher tous les résultats"
+  },
+  "expand-results": {
+    "en": "Expand results",
+    "fr": "Afficher tous les résultats"
+  },
+  "collapse-results": {
+    "en": "Collapse results",
+    "fr": "Cacher tous les résultats"
+  },
+  "no-documents-related": {
+    "en": "No documents are related to this one.",
+    "fr": "Aucun document associé à celui-ci."
+  },
   "in-seconds": {
     "en": "in {{count}} second",
     "fr": "en {{count}} seconde",
@@ -540,6 +556,10 @@
     "tr": "Son işlemi iptal et",
     "zh-cn": "取消最后一个动作",
     "zh-tw": "取消最後一個動作"
+  },
+  "cancel": {
+    "en": "Cancel",
+    "fr": "Annuler"
   },
   "check-spelling": {
     "en": "Check the spelling of your keywords.",
@@ -930,6 +950,14 @@
     "en": "Apply",
     "fr": "Filtrer"
   },
+  "yes": {
+    "en": "Yes",
+    "fr": "Oui"
+  },
+  "no": {
+    "en": "No",
+    "fr": "Non"
+  },
   "number-input-minimum": {
     "en": "Enter a minimum numerical value for the {{label}} facet",
     "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"
@@ -1137,5 +1165,57 @@
   "between-parentheses": {
     "en": "({{text}})",
     "fr": "(\u00A0{{text}}\u00A0)"
+  },
+  "smart-snippet": {
+    "en": "Potential answer to your question",
+    "fr": "Réponse potentielle à votre question"
+  },
+  "smart-snippet-source": {
+    "en": "Source of the answer",
+    "fr": "Source de la réponse"
+  },
+  "smart-snippet-feedback-inquiry": {
+    "en": "Was this information useful?",
+    "fr": "Est-ce que cette information est utile\u00A0?"
+  },
+  "smart-snippet-feedback-thanks": {
+    "en": "Thank you for your feedback!",
+    "fr": "Merci pour votre réponse\u00A0!"
+  },
+  "smart-snippet-feedback-explain-why": {
+    "en": "Explain why",
+    "fr": "Expliquez pourquoi"
+  },
+  "smart-snippet-feedback-select-reason": {
+    "en": "Select the reason",
+    "fr": "Sélectionnez la raison"
+  },
+  "smart-snippet-feedback-details": {
+    "en": "Details",
+    "fr": "Détails"
+  },
+  "smart-snippet-feedback-send": {
+    "en": "Send feedback",
+    "fr": "Envoyer la réponse"
+  },
+  "smart-snippet-feedback-reason-does-not-answer": {
+    "en": "This didn't answer my question at all",
+    "fr": "Ceci n'a pas répondu à ma question du tout"
+  },
+  "smart-snippet-feedback-reason-partially-answers": {
+    "en": "This only partially answered my question",
+    "fr": "Ceci a seulement partiellement répondu à ma question"
+  },
+  "smart-snippet-feedback-reason-was-not-a-question": {
+    "en": "My request wasn't meant to be perceived as a question",
+    "fr": "Ma requête n'était pas sensée être perçue comme une question"
+  },
+  "smart-snippet-feedback-reason-other": {
+    "en": "Other",
+    "fr": "Autre"
+  },
+  "smart-snippet-people-also-ask": {
+    "en": "People also ask",
+    "fr": "Autres questions posées"
   }
 }

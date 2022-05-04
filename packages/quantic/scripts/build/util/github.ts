@@ -45,7 +45,7 @@ export async function createDiscussion(
     },
   });
   const query = `
-    mutation createDiscussion($repositoryId: String!, $categoryId: String!,  $title: String!, $body: String!) {
+    mutation createDiscussion($repositoryId: ID!, $categoryId: ID!,  $title: String!, $body: String!) {
       createDiscussion(input: {repositoryId: $repositoryId, categoryId: $categoryId, title: $title, body: $body}) {
         discussion {
           id

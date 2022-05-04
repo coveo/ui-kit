@@ -1,5 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {
+  QuestionAnswer,
+  QuestionAnswerDocumentIdentifier,
+} from '../../api/search/search/question-answering';
+import {encodedBtoa} from '../../utils/utils';
 import {executeSearch} from '../search/search-actions';
 import {
   collapseSmartSnippet,
@@ -8,6 +12,8 @@ import {
   expandSmartSnippet,
   expandSmartSnippetRelatedQuestion,
   likeSmartSnippet,
+  openFeedbackModal,
+  closeFeedbackModal,
 } from './question-answering-actions';
 import {
   getQuestionAnsweringInitialState,
@@ -24,6 +30,21 @@ export const findRelatedQuestionIdx = (
       relatedQuestion.contentIdKey === identifier.contentIdKey
   );
 
+function hashQuestionAnswer({
+  question,
+  answerSnippet,
+  documentId: {contentIdKey, contentIdValue},
+}: QuestionAnswer) {
+  return encodedBtoa(
+    JSON.stringify({
+      question,
+      answerSnippet,
+      contentIdKey,
+      contentIdValue,
+    })
+  );
+}
+
 export const questionAnsweringReducer = createReducer(
   getQuestionAnsweringInitialState(),
   (builder) =>
@@ -37,13 +58,20 @@ export const questionAnsweringReducer = createReducer(
       .addCase(likeSmartSnippet, (state) => {
         state.liked = true;
         state.disliked = false;
+        state.feedbackModalOpen = false;
       })
       .addCase(dislikeSmartSnippet, (state) => {
         state.liked = false;
         state.disliked = true;
       })
+      .addCase(openFeedbackModal, (state) => {
+        state.feedbackModalOpen = true;
+      })
+      .addCase(closeFeedbackModal, (state) => {
+        state.feedbackModalOpen = false;
+      })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        state.relatedQuestions =
+        const relatedQuestions =
           action.payload.response.questionAnswer.relatedQuestions.map(
             (relatedQuestion) => ({
               contentIdKey: relatedQuestion.documentId.contentIdKey,
@@ -51,6 +79,20 @@ export const questionAnsweringReducer = createReducer(
               expanded: false,
             })
           );
+        const questionAnswerId = hashQuestionAnswer(
+          action.payload.response.questionAnswer
+        );
+        if (state.questionAnswerId === questionAnswerId) {
+          return {
+            ...state,
+            relatedQuestions,
+          };
+        }
+        return {
+          ...getQuestionAnsweringInitialState(),
+          relatedQuestions,
+          questionAnswerId,
+        };
       })
       .addCase(expandSmartSnippetRelatedQuestion, (state, action) => {
         const idx = findRelatedQuestionIdx(

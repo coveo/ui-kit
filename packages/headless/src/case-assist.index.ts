@@ -26,7 +26,10 @@ export * from './features/document-suggestion/document-suggestion-actions-loader
 export * from './features/case-assist/case-assist-analytics-actions-loader';
 
 // Controllers
-export type {Controller} from './controllers/controller/headless-controller';
+export type {
+  Controller,
+  Subscribable,
+} from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
@@ -34,6 +37,7 @@ export type {
   CaseInput,
   CaseInputOptions,
   CaseInputProps,
+  UpdateFetchOptions,
 } from './controllers/case-input/headless-case-input';
 export {buildCaseInput} from './controllers/case-input/headless-case-input';
 
@@ -42,9 +46,18 @@ export type {
   CaseField,
   CaseFieldOptions,
   CaseFieldProps,
+  UpdateCaseFieldFetchOptions,
 } from './controllers/case-field/headless-case-field';
 export {buildCaseField} from './controllers/case-field/headless-case-field';
 
+export type {CaseFieldSuggestion} from './features/case-field/case-field-state';
+
+export type {
+  QuickviewCore,
+  QuickviewCoreOptions,
+  QuickviewCoreProps,
+  QuickviewCoreState,
+} from './controllers/core/quickview/headless-core-quickview';
 export type {
   CaseAssistQuickviewState,
   CaseAssistQuickview,
@@ -53,8 +66,32 @@ export type {
 } from './controllers/quickview/case-assist-headless-quickview';
 export {buildCaseAssistQuickview} from './controllers/quickview/case-assist-headless-quickview';
 
+export type {Result} from './api/search/search/result';
+export type {Raw} from './api/search/search/raw';
+export type {HighlightKeyword} from './utils/highlight';
+
+export type {DocumentSuggestionResponse} from './api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+
+export type {
+  DocumentSuggestionList,
+  DocumentSuggestionListState,
+} from './controllers/document-suggestion-list/headless-document-suggestion-list';
+export {buildDocumentSuggestionList} from './controllers/document-suggestion-list/headless-document-suggestion-list';
+
+/**
+ * @deprecated
+ * Types exported for backward compatibility only.
+ */
 export type {
   DocumentSuggestionList as DocumentSuggestion,
   DocumentSuggestionListState as DocumentSuggestionState,
 } from './controllers/document-suggestion-list/headless-document-suggestion-list';
+
 export {buildDocumentSuggestionList as buildDocumentSuggestion} from './controllers/document-suggestion-list/headless-document-suggestion-list';
+
+export type {
+  CaseAssistInteractiveResult,
+  CaseAssistInteractiveResultOptions,
+  CaseAssistInteractiveResultProps,
+} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
+export {buildCaseAssistInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';

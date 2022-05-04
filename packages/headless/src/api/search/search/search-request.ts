@@ -9,14 +9,19 @@ import {
   VisitorIDParam,
 } from '../../platform-service-params';
 import {
+  ActionsHistoryParam,
   AdvancedQueryParam,
+  AnalyticsParam,
   ConstantQueryParam,
+  DisjunctionQueryParam,
   EnableDidYouMeanParam,
   EnableQuerySyntaxParam,
+  ExcerptLength,
   FacetOptionsParam,
   FacetsParam,
   FieldsToIncludeParam,
   FirstResultParam,
+  LargeQueryParam,
   PipelineParam,
   QueryParam,
   ReferrerParam,
@@ -30,6 +35,8 @@ export type SearchRequest = BaseParam &
   QueryParam &
   AdvancedQueryParam &
   ConstantQueryParam &
+  LargeQueryParam &
+  DisjunctionQueryParam &
   NumberOfResultsParam &
   FirstResultParam &
   SortCriteriaParam &
@@ -48,4 +55,7 @@ export type SearchRequest = BaseParam &
   FoldingParam &
   TabParam &
   ReferrerParam &
-  TimezoneParam;
+  TimezoneParam &
+  AnalyticsParam &
+  ExcerptLength &
+  ActionsHistoryParam;

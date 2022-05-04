@@ -20,10 +20,15 @@ const placeholderClasses = 'block bg-neutral w-full h-full rounded';
 export class AtomicResultPlaceholder {
   @Prop() display!: ResultDisplayLayout;
   @Prop() density!: ResultDisplayDensity;
-  @Prop() imageSize!: ResultDisplayImageSize;
+  @Prop() imageSize?: ResultDisplayImageSize;
+  @Prop() isChild = false;
 
   private getClasses() {
-    return getResultDisplayClasses(this.display, this.density, this.imageSize);
+    return getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.imageSize!
+    ).concat(this.isChild ? 'child-result' : '');
   }
 
   private renderExcerptLine(width: string) {
@@ -45,9 +50,9 @@ export class AtomicResultPlaceholder {
   public render() {
     return (
       <div
-        class={`result-root with-sections animate-pulse ${this.getClasses().join(
-          ' '
-        )}`}
+        class={`result-root with-sections animate-pulse ${this.getClasses()
+          .join(' ')
+          .trim()}`}
       >
         <atomic-result-section-visual>
           <div class={placeholderClasses}></div>

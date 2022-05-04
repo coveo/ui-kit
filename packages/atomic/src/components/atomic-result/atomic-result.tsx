@@ -1,5 +1,5 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {Result, SearchEngine} from '@coveo/headless';
+import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
 import {
   ResultDisplayLayout,
   ResultDisplayDensity,
@@ -7,7 +7,10 @@ import {
   getResultDisplayClasses,
 } from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../utils/initialization-utils';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
+import {
+  DisplayConfig,
+  ResultContextEvent,
+} from '../result-template-components/result-template-decorators';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -34,7 +37,7 @@ export class AtomicResult {
   /**
    * The result item.
    */
-  @Prop() result!: Result;
+  @Prop() result!: Result | FoldedResult;
 
   /**
    * The headless search engine.
@@ -68,11 +71,23 @@ export class AtomicResult {
    */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
+  @Prop() classes = '';
+
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent) {
+  public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveResultDisplayConfig')
+  public resolveResultDisplayConfig(event: ResultContextEvent<DisplayConfig>) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.detail({
+      density: this.density,
+      imageSize: this.imageSize!,
+    });
   }
 
   private containsSections() {
@@ -108,6 +123,9 @@ export class AtomicResult {
     if (this.containsSections()) {
       classes.push('with-sections');
     }
+    if (this.classes) {
+      classes.push(this.classes);
+    }
     return classes;
   }
 
@@ -119,6 +137,7 @@ export class AtomicResult {
 
   public render() {
     return (
+      // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
         class={`result-root ${this.getClasses().join(' ')}`}
         innerHTML={this.getContentHTML()}

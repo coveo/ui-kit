@@ -34,6 +34,7 @@ import {
   DictionaryFieldContextSection,
   TabSection,
   StaticFilterSection,
+  ExcerptLengthSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -72,4 +73,5 @@ export type SearchAppState = SearchParametersState &
   TriggerSection &
   QuestionAnsweringSection &
   RecentResultsSection &
-  RecentQueriesSection;
+  RecentQueriesSection &
+  ExcerptLengthSection;

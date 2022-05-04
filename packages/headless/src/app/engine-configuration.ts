@@ -100,6 +100,14 @@ export interface AnalyticsConfiguration {
    * If set to true, the Usage Analytics Write API will not extract the name and userDisplayName, if present, from the search token
    */
   anonymous?: boolean;
+  /**
+   *  The name of the device that the end user is using. It should be explicitly configured in the context of a native mobile app.
+   */
+  deviceId?: string;
+  /**
+   * Specifies the user display name for the usage analytics logs.
+   */
+  userDisplayName?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -140,6 +148,7 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
 export function getSampleEngineConfiguration(): EngineConfiguration {
   return {
     organizationId: 'searchuisamples',
+    // deepcode ignore HardcodedNonCryptoSecret: Public key freely available for our documentation
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
   };
 }

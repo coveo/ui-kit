@@ -16,6 +16,8 @@ import {
   NumericFilterState,
   NumericFilter,
   loadNumericFacetSetActions,
+  buildFacetConditionsManager,
+  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,7 +30,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet} from '../facet-common';
+import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
@@ -43,6 +45,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {MapProp} from '../../../utils/props-utils';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -84,6 +87,7 @@ export class AtomicNumericFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: NumericFacet;
+  private dependenciesManager?: FacetConditionsManager;
   public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -108,35 +112,38 @@ export class AtomicNumericFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'no-label';
+  @Prop({reflect: true}) public label = 'no-label';
   /**
    * The field whose values you want to display in the facet.
    */
-  @Prop() public field!: string;
+  @Prop({reflect: true}) public field!: string;
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    * If the number of values is 0, no ranges will be displayed.
    */
-  @Prop() public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * Whether this facet should contain an input allowing users to set custom ranges.
    * Depending on the field, the input can allow either decimal or integer values.
    */
-  @Prop() public withInput?: NumberInputType;
+  @Prop({reflect: true}) public withInput?: NumberInputType;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
    */
-  @Prop() public sortCriteria: RangeFacetSortCriterion = 'ascending';
+  @Prop({reflect: true}) public sortCriteria: RangeFacetSortCriterion =
+    'ascending';
   /**
    * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
    */
-  @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'equiprobable';
+  @Prop({reflect: true}) public rangeAlgorithm: RangeFacetRangeAlgorithm =
+    'equiprobable';
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop() public displayValuesAs: 'checkbox' | 'link' = 'checkbox';
+  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
+    'checkbox';
   /**
    * Specifies if the facet is collapsed.
    */
@@ -144,13 +151,34 @@ export class AtomicNumericFacet
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
-  @Prop() public filterFacetCount = true;
+  @Prop({reflect: true}) public filterFacetCount = true;
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
    */
-  @Prop() public injectionDepth = 1000;
+  @Prop({reflect: true}) public injectionDepth = 1000;
+
+  /**
+   * The required facets & values for this facet to be displayed.
+   * Examples:
+   * ```html
+   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   *
+   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
+   * <atomic-numeric-facet
+   *   depends-on-abc
+   *   ...
+   * ></atomic-numeric-facet>
+   *
+   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
+   * <atomic-numeric-facet
+   *   depends-on-abc="doc"
+   *   ...
+   * ></atomic-numeric-facet>
+   * ```
+   */
+  @MapProp() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -163,6 +191,7 @@ export class AtomicNumericFacet
       displayValuesAs: this.displayValuesAs,
       withInput: this.withInput,
     });
+    validateDependsOn(this.dependsOn);
   }
 
   public initialize() {
@@ -170,7 +199,15 @@ export class AtomicNumericFacet
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.numberOfValues && this.initializeFacet();
     this.withInput && this.initializeFilter();
+    this.inititalizeDependenciesManager();
     this.registerFacetToStore();
+  }
+
+  public disconnectedCallback() {
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private initializeFacet() {
@@ -217,6 +254,16 @@ export class AtomicNumericFacet
     }
   }
 
+  private inititalizeDependenciesManager() {
+    this.dependenciesManager = buildFacetConditionsManager(
+      this.bindings.engine,
+      {
+        facetId: this.facet?.state.facetId ?? this.filter!.state.facetId,
+        conditions: parseDependsOn(this.dependsOn),
+      }
+    );
+  }
+
   @Listen('atomic/numberFormat')
   public setFormat(event: CustomEvent<NumberFormatter>) {
     event.preventDefault();
@@ -253,6 +300,10 @@ export class AtomicNumericFacet
         label,
       })
     );
+  }
+
+  private get enabled() {
+    return this.facetState?.enabled ?? this.filterState?.enabled ?? true;
   }
 
   private get numberOfSelectedValues() {
@@ -420,7 +471,7 @@ export class AtomicNumericFacet
   }
 
   public render() {
-    if (this.searchStatusState.hasError) {
+    if (this.searchStatusState.hasError || !this.enabled) {
       return <Hidden></Hidden>;
     }
 

@@ -6,7 +6,6 @@ import {
 import {BreadboxSelectors} from './breadbox-selectors';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
-import {CategoryFacetSelectors} from '../facets/category-facet/category-facet-selectors';
 import {label} from '../facets/facet/facet-actions';
 import {timeframeFacetLabel} from '../facets/timeframe-facet/timeframe-facet-action';
 import {colorFacetLabel} from '../facets/color-facet/color-facet-actions';
@@ -144,13 +143,6 @@ export function assertDeselectCheckboxFacet(
   });
 }
 
-export function assertDeselectCategoryFacet(index: number) {
-  it('should be deselected after removing from breadcrumb list', () => {
-    deselectBreadcrumbAtIndex(index);
-    CategoryFacetSelectors.activeParentValue().should('not.exist');
-  });
-}
-
 export function assertDeselectLinkFacet(
   FacetWithLinkSelector: FacetWithLinkSelector,
   index: number
@@ -163,17 +155,6 @@ export function assertDeselectLinkFacet(
         FacetWithLinkSelector.selectedLinkValueWithText(text).should(
           'not.exist'
         );
-      });
-  });
-}
-
-export function assertDeselectColorFacet(index: number) {
-  it('should be deselected after removing from breadcrumb list', () => {
-    BreadboxSelectors.breadcrumbValueAtIndex(index)
-      .invoke('text')
-      .then((text) => {
-        deselectBreadcrumbAtIndex(index);
-        ColorFacetSelectors.selectedBoxValueWithText(text).should('not.exist');
       });
   });
 }

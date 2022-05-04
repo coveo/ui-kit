@@ -20,7 +20,7 @@ describe('facet options slice', () => {
 
   it('initializes the state correctly', () => {
     const finalState = facetOptionsReducer(undefined, {type: ''});
-    expect(finalState).toEqual({freezeFacetOrder: false});
+    expect(finalState).toEqual({facets: {}, freezeFacetOrder: false});
   });
 
   describe('#updateFacetOptions', () => {

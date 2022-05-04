@@ -3,6 +3,326 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.63.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.62.0...@coveo/headless@1.63.0) (2022-05-03)
+
+
+### Bug Fixes
+
+* **headless:** fix search ID generation for results-per-page controller ([#1956](https://github.com/coveo/ui-kit/issues/1956)) ([5d66e9a](https://github.com/coveo/ui-kit/commit/5d66e9a4660721ea55a65c2f05a9224c56b8e860))
+
+
+### Features
+
+* **atomic,headless:** added atomic-smart-snippet-suggestions ([#1954](https://github.com/coveo/ui-kit/issues/1954)) ([8d502ff](https://github.com/coveo/ui-kit/commit/8d502ff3ce7f89d6178c39f7dec42815162f4e87))
+* **atomic:** added smart snippet feedback modal ([#1950](https://github.com/coveo/ui-kit/issues/1950)) ([3fd232f](https://github.com/coveo/ui-kit/commit/3fd232f9a72865df528813b49e4808e780d5c3c5))
+
+
+
+
+
+# [1.62.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.61.1...@coveo/headless@1.62.0) (2022-04-28)
+
+
+### Features
+
+* **atomic,headless:** add analytics to the show more/show less button ([#1945](https://github.com/coveo/ui-kit/issues/1945)) ([be9c694](https://github.com/coveo/ui-kit/commit/be9c6940c279014cdffeeebd50723d6de01e979b))
+
+
+
+
+
+## [1.61.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.61.0...@coveo/headless@1.61.1) (2022-04-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.61.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.60.1...@coveo/headless@1.61.0) (2022-04-25)
+
+
+### Features
+
+* **headless:** add methods for finding results by id and by collection ([#1933](https://github.com/coveo/ui-kit/issues/1933)) ([80eb892](https://github.com/coveo/ui-kit/commit/80eb892c1e87da1f2c123091aff2df0bc2d43115))
+
+
+
+
+
+## [1.60.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.60.0...@coveo/headless@1.60.1) (2022-04-22)
+
+
+### Bug Fixes
+
+* **headless:** rework pagination logic to reuse existing searchResponseId ([#1938](https://github.com/coveo/ui-kit/issues/1938)) ([8a1b299](https://github.com/coveo/ui-kit/commit/8a1b29932cd0ed9469754e1424687c68030832e8))
+* **headless:** set root result as main result instead of collection p… ([#1936](https://github.com/coveo/ui-kit/issues/1936)) ([6d7c194](https://github.com/coveo/ui-kit/commit/6d7c1940bb628bbb813960654e27c97ac3df1b99))
+
+
+
+
+
+# [1.60.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.59.0...@coveo/headless@1.60.0) (2022-04-19)
+
+
+### Features
+
+* **headless,atomic:** added smart snippet source analytics ([#1876](https://github.com/coveo/ui-kit/issues/1876)) ([8e7ec24](https://github.com/coveo/ui-kit/commit/8e7ec2490615b346aac692aa1c970a6d6b536a27))
+
+
+
+
+
+# [1.59.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.58.0...@coveo/headless@1.59.0) (2022-04-13)
+
+
+### Features
+
+* **commerce:** add a context controller for the product listings engine ([#1917](https://github.com/coveo/ui-kit/issues/1917)) ([0c4083d](https://github.com/coveo/ui-kit/commit/0c4083da66fd05e8ee6f795b9a3978499b00accf))
+
+
+
+
+
+# [1.58.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.57.0...@coveo/headless@1.58.0) (2022-04-07)
+
+
+### Features
+
+* **headless, quantic:** search hub added to payload of case assist analytics" ([#1884](https://github.com/coveo/ui-kit/issues/1884)) ([a135b71](https://github.com/coveo/ui-kit/commit/a135b71c5e11ea25a351b0aeda8fb8c7b586d871))
+
+
+
+
+
+# [1.57.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.56.0...@coveo/headless@1.57.0) (2022-04-04)
+
+
+### Features
+
+* **headless:** stageName parameter added to loadCaseNextStage case assist event ([#1886](https://github.com/coveo/ui-kit/issues/1886)) ([9d3f030](https://github.com/coveo/ui-kit/commit/9d3f03033cb6e35c64877134f46d80dd2f066c25))
+
+
+
+
+
+# [1.56.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.55.0...@coveo/headless@1.56.0) (2022-03-31)
+
+
+### Features
+
+* **headless:** added feedback modal logic & analytics ([#1843](https://github.com/coveo/ui-kit/issues/1843)) ([24efb0c](https://github.com/coveo/ui-kit/commit/24efb0ccf0c0619899a939d31f01720a580ab7fb))
+
+
+
+
+
+# [1.55.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.4...@coveo/headless@1.55.0) (2022-03-31)
+
+
+### Features
+
+* **headless:** export SearchDefaultFieldsToInclude ([#1874](https://github.com/coveo/ui-kit/issues/1874)) ([11b5a11](https://github.com/coveo/ui-kit/commit/11b5a1140c8b96104bc6cb4bfa29ebc098485248))
+
+
+
+
+
+## [1.54.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.3...@coveo/headless@1.54.4) (2022-03-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.54.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.2...@coveo/headless@1.54.3) (2022-03-28)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.54.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.1...@coveo/headless@1.54.2) (2022-03-28)
+
+
+### Bug Fixes
+
+* **headless:** made question answer reset its state when changed ([#1844](https://github.com/coveo/ui-kit/issues/1844)) ([8d13fa2](https://github.com/coveo/ui-kit/commit/8d13fa2f08da97223189d2eb0e06385e5bdb09eb))
+
+
+
+
+
+## [1.54.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.54.0...@coveo/headless@1.54.1) (2022-03-25)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.54.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.53.0...@coveo/headless@1.54.0) (2022-03-24)
+
+
+### Features
+
+* **headless:** add support for disjunctionQuery parameter ([#1845](https://github.com/coveo/ui-kit/issues/1845)) ([9301fa8](https://github.com/coveo/ui-kit/commit/9301fa807b5945da8330b2fb843e1513d35ddebb))
+
+
+
+
+
+# [1.53.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.52.1...@coveo/headless@1.53.0) (2022-03-22)
+
+
+### Features
+
+* **headless:** add field suggestions controller ([#1842](https://github.com/coveo/ui-kit/issues/1842)) ([73adff0](https://github.com/coveo/ui-kit/commit/73adff0608234c700771098c0de670c6a603289c))
+
+
+
+
+
+## [1.52.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.52.0...@coveo/headless@1.52.1) (2022-03-18)
+
+
+### Bug Fixes
+
+* **headless:** prevent empty query values in actionHistory ([#1837](https://github.com/coveo/ui-kit/issues/1837)) ([d264195](https://github.com/coveo/ui-kit/commit/d2641959dcc2f3692957d6a9bcc24b2d22c88319))
+
+
+
+
+
+# [1.52.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.51.0...@coveo/headless@1.52.0) (2022-03-16)
+
+
+### Bug Fixes
+
+* **headless:** add actionsHistory to search request ([#1824](https://github.com/coveo/ui-kit/issues/1824)) ([1a4f3f8](https://github.com/coveo/ui-kit/commit/1a4f3f81befa1c342c9b4595a5aaa13c85864425))
+
+
+### Features
+
+* **headless:** added FacetConditionsManager ([#1792](https://github.com/coveo/ui-kit/issues/1792)) ([102d0db](https://github.com/coveo/ui-kit/commit/102d0db312896e457dfdd0adf32adb5f8d2815a1))
+
+
+
+
+
+# [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.50.1...@coveo/headless@1.51.0) (2022-03-11)
+
+
+### Features
+
+* **headless:** add excerpt length support ([#1812](https://github.com/coveo/ui-kit/issues/1812)) ([b54f937](https://github.com/coveo/ui-kit/commit/b54f9371034e4ceca71118331943fa79e515db52))
+
+
+
+
+
+## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.50.0...@coveo/headless@1.50.1) (2022-03-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.49.1...@coveo/headless@1.50.0) (2022-03-08)
+
+
+### Features
+
+* **headless:** reconcile search token config with engine config ([#1797](https://github.com/coveo/ui-kit/issues/1797)) ([89633b3](https://github.com/coveo/ui-kit/commit/89633b30c12160e247be6418b01bdce7eba06058))
+
+
+
+
+
+## [1.49.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.49.0...@coveo/headless@1.49.1) (2022-03-08)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.49.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.48.2...@coveo/headless@1.49.0) (2022-03-03)
+
+
+### Features
+
+* **headless:** added disable facets functionality ([#1735](https://github.com/coveo/ui-kit/issues/1735)) ([c8862de](https://github.com/coveo/ui-kit/commit/c8862de04e92c4cb8c9b8d6f3f2510c6d1fd3ab2))
+
+
+
+
+
+## [1.48.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.48.1...@coveo/headless@1.48.2) (2022-03-02)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.48.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.48.0...@coveo/headless@1.48.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* **headless, quantic:**  Update analytics events sent when auto selecting the classification with the highest confidence ([#1740](https://github.com/coveo/ui-kit/issues/1740)) ([4145187](https://github.com/coveo/ui-kit/commit/414518781cbb7791b841e9596eb5317608fcb7a7))
+
+
+
+
+
+# [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.47.1...@coveo/headless@1.48.0) (2022-02-25)
+
+
+### Features
+
+* **case-assist:** add JSDoc support ([#1762](https://github.com/coveo/ui-kit/issues/1762)) ([bdf24cb](https://github.com/coveo/ui-kit/commit/bdf24cb0178b20fa2ff503ad86149cc04d43828b))
+
+
+
+
+
+## [1.47.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.47.0...@coveo/headless@1.47.1) (2022-02-24)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.47.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.3...@coveo/headless@1.47.0) (2022-02-24)
+
+
+### Bug Fixes
+
+* **headless:** add warning on missing permanentid ([#1758](https://github.com/coveo/ui-kit/issues/1758)) ([dd0a3d7](https://github.com/coveo/ui-kit/commit/dd0a3d74929cd38a5988a9c5497e7938e2582925))
+
+
+### Features
+
+* **headless:** add support for analytics parameter in search API ([#1752](https://github.com/coveo/ui-kit/issues/1752)) ([3dc96a7](https://github.com/coveo/ui-kit/commit/3dc96a745675ea6bd01198af2bc92a6b6bfaee53))
+
+
+
+
+
+## [1.46.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.2...@coveo/headless@1.46.3) (2022-02-21)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.46.1...@coveo/headless@1.46.2) (2022-02-16)
 
 **Note:** Version bump only for package @coveo/headless

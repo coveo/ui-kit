@@ -1,7 +1,36 @@
+@define-mixin atomic-children-desktop $margin-small, $margin-small {
+  &.child-result {
+    margin-bottom: $margin-small;
+  }
+
+  atomic-result-section-children {
+    atomic-result-children::part(children-root) {
+      margin-top: $margin-small;
+      padding: $margin-small;
+    }
+
+    atomic-result-children::part(show-hide-button) {
+      margin-top: $margin-small;
+      margin-bottom: $margin-small;
+    }
+  }
+
+  atomic-result-placeholder {
+    margin-bottom: $margin-small;
+  }
+}
+
 @define-mixin row-result-desktop {
   &.image-large.density-compact atomic-result-section-visual {
     width: 10.25rem;
     height: 10.25rem;
+  }
+
+  atomic-result-section-children {
+    atomic-result-children::part(children-root) {
+      border: 1px solid var(--atomic-neutral);
+      border-radius: 16px;
+    }
   }
 
   /* == Density styles == */
@@ -38,6 +67,8 @@
     atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
+
+    @mixin atomic-children-desktop 1.75rem, 1.25rem;
   }
 
   &.density-normal {
@@ -73,6 +104,8 @@
     atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
+
+    @mixin atomic-children-desktop 1.5rem, 0.875rem;
   }
 
   &.density-compact {
@@ -108,6 +141,8 @@
     atomic-result-section-title-metadata {
       margin-top: 0.475rem;
     }
+
+    @mixin atomic-children-desktop 1rem, 0.475rem;
   }
 
   /* == Image styles == */
@@ -120,7 +155,7 @@
       'visual emphasized      emphasized      emphasized'
       'visual excerpt         excerpt         excerpt'
       'visual bottom-metadata bottom-metadata bottom-metadata'
-      'visual .               .               .';
+      'visual children        children        children';
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
     grid-template-rows: repeat(6, auto) minmax(0, 1fr);
   }
@@ -149,9 +184,9 @@
       'visual emphasized      emphasized      emphasized'
       'visual excerpt         excerpt         excerpt'
       'visual bottom-metadata bottom-metadata bottom-metadata'
-      'visual .               .               .';
+      'visual children        children        children';
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
-    grid-template-rows: repeat(6, auto) 1fr;
+    grid-template-rows: repeat(6, auto) 1fr minmax(0, min-content);
 
     atomic-result-section-visual {
       width: 2rem;
@@ -166,7 +201,8 @@
       'title-metadata  title-metadata  title-metadata'
       'emphasized      emphasized      emphasized'
       'excerpt         excerpt         excerpt'
-      'bottom-metadata bottom-metadata bottom-metadata';
+      'bottom-metadata bottom-metadata bottom-metadata'
+      'children        children        children';
     grid-template-columns: auto 1fr auto;
     grid-template-rows: repeat(6, auto);
 

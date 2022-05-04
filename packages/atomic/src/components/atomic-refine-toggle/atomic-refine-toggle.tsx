@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   buildSearchStatus,
   SearchStatusState,
@@ -16,6 +16,7 @@ import {Button} from '../common/button';
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
  *
  * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
+ * @part button - The refine toggle button.
  */
 @Component({
   tag: 'atomic-refine-toggle',
@@ -23,6 +24,7 @@ import {Button} from '../common/button';
   shadow: true,
 })
 export class AtomicRefineToggle implements InitializableComponent {
+  @Element() public host!: HTMLElement;
   public searchStatus!: SearchStatus;
   private modalRef?: HTMLAtomicRefineModalElement;
 
@@ -35,11 +37,11 @@ export class AtomicRefineToggle implements InitializableComponent {
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.modalRef = document.createElement('atomic-refine-modal');
-    this.bindings.interfaceElement.prepend(this.modalRef);
+    this.host.insertAdjacentElement('beforebegin', this.modalRef);
   }
 
   private enableModal() {
-    this.modalRef && (this.modalRef.modalStatus = 'opened');
+    this.modalRef && (this.modalRef.isOpen = true);
   }
 
   public render() {
@@ -64,10 +66,11 @@ export class AtomicRefineToggle implements InitializableComponent {
     return (
       <Button
         style="outline-primary"
-        class="p-3"
+        class="p-3 w-full"
         onClick={() => this.enableModal()}
         text={this.bindings.i18n.t('sort-and-filter')}
         ref={(button) => (this.modalRef!.openButton = button)}
+        part="button"
       ></Button>
     );
   }

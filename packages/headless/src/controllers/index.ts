@@ -1,4 +1,4 @@
-export type {Controller} from './controller/headless-controller';
+export type {Controller, Subscribable} from './controller/headless-controller';
 export {buildController} from './controller/headless-controller';
 
 export type {
@@ -322,6 +322,8 @@ export {buildNotifyTrigger} from './triggers/headless-notify-trigger';
 
 export type {
   SmartSnippet,
+  SmartSnippetOptions,
+  SmartSnippetProps,
   SmartSnippetState,
   QuestionAnswerDocumentIdentifier,
 } from './smart-snippet/headless-smart-snippet';
@@ -360,3 +362,23 @@ export {
    */
   buildInteractiveResultCore,
 } from './core/interactive-result/headless-core-interactive-result';
+
+export type {
+  FacetConditionsManager,
+  AnyFacetValuesCondition,
+} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
+export {buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
+
+export type {
+  FieldSuggestions,
+  FieldSuggestionsOptions,
+  FieldSuggestionsProps,
+} from './field-suggestions/facet/headless-field-suggestions';
+export {buildFieldSuggestions} from './field-suggestions/facet/headless-field-suggestions';
+
+export type {
+  CategoryFieldSuggestions,
+  CategoryFieldSuggestionsOptions,
+  CategoryFieldSuggestionsProps,
+} from './field-suggestions/category-facet/headless-category-field-suggestions';
+export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';

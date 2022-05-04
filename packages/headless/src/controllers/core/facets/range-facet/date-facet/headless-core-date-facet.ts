@@ -17,6 +17,7 @@ import {
 import {
   ConfigurationSection,
   DateFacetSection,
+  FacetOptionsSection,
   SearchSection,
 } from '../../../../../state/state-sections';
 import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
@@ -29,7 +30,12 @@ import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
 import {Controller} from '../../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  facetOptions,
+  search,
+} from '../../../../../app/reducers';
 import {loadReducerError} from '../../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {CoreEngine} from '../../../../../app/engine';
@@ -95,6 +101,16 @@ export interface DateFacet extends Controller {
   toggleSingleSelect(selection: DateFacetValue): void;
 
   /**
+   * Enables the facet. I.e., undoes the effects of `disable`.
+   */
+  enable(): void;
+
+  /**
+   * Disables the facet. I.e., prevents it from filtering results.
+   */
+  disable(): void;
+
+  /**
    * The state of the `DateFacet` controller.
    */
   state: DateFacetState;
@@ -128,6 +144,11 @@ export interface DateFacetState {
    * `true` if there is at least one non-idle value and `false` otherwise.
    */
   hasActiveValues: boolean;
+
+  /**
+   * Whether the facet is enabled and its values are used to filter search results.
+   */
+  enabled: boolean;
 }
 
 /**
@@ -157,6 +178,7 @@ export function buildCoreDateFacet(
   };
 
   validateDateFacetOptions(engine, options);
+
   dispatch(registerDateFacet(options));
 
   const rangeFacet = buildCoreRangeFacet<DateFacetRequest, DateFacetResponse>(
@@ -190,8 +212,8 @@ export function buildCoreDateFacet(
 function loadDateFacetReducers(
   engine: CoreEngine
 ): engine is CoreEngine<
-  ConfigurationSection & SearchSection & DateFacetSection
+  ConfigurationSection & SearchSection & DateFacetSection & FacetOptionsSection
 > {
-  engine.addReducers({configuration, search, dateFacetSet});
+  engine.addReducers({configuration, search, dateFacetSet, facetOptions});
   return true;
 }

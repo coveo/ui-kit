@@ -37,7 +37,7 @@ export class AtomicResultPrintableUri {
   /**
    * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
    */
-  @Prop() maxNumberOfParts = 5;
+  @Prop({reflect: true}) maxNumberOfParts = 5;
 
   /**
    * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).
@@ -49,7 +49,7 @@ export class AtomicResultPrintableUri {
    * * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`.
    * * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
    */
-  @Prop() target = '_self';
+  @Prop({reflect: true}) target = '_self';
 
   @FocusTarget()
   private expandedPartFocus!: FocusTargetController;
@@ -141,10 +141,14 @@ export class AtomicResultPrintableUri {
   ) {
     return (
       <LinkWithResultAnalytics
-        interactiveResult={this.interactiveResult}
         href={uri}
         title={typeof content === 'string' ? content : undefined}
         target={this.target}
+        onSelect={() => this.interactiveResult.select()}
+        onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
+        onCancelPendingSelect={() =>
+          this.interactiveResult.cancelPendingSelect()
+        }
         ref={shouldSetTarget ? this.expandedPartFocus.setTarget : undefined}
       >
         {content}

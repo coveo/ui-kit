@@ -17,6 +17,7 @@ import {
 import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
 
 describe('Case Input', () => {
   let engine: MockCaseAssistEngine;
@@ -49,6 +50,23 @@ describe('Case Input', () => {
 
   it('building a case input registers the input field in the state', () => {
     expect(engine.actions).toContainEqual(
+      updateCaseInput({fieldName: testFieldName, fieldValue: ''})
+    );
+  });
+
+  it('building a case input that was already registered does not register the input field again', () => {
+    engine = buildMockCaseAssistEngine({
+      state: {
+        ...buildMockCaseAssistState(),
+        caseInput: {
+          [testFieldName]: {
+            value: '',
+          },
+        },
+      },
+    });
+    initCaseInput();
+    expect(engine.actions).not.toContainEqual(
       updateCaseInput({fieldName: testFieldName, fieldValue: ''})
     );
   });

@@ -1,5 +1,8 @@
 // Must be declared global to be detected by typescript (allows import/export)
-import {SearchEventRequest} from '@coveo/headless/node_modules/coveo.analytics/src/events';
+import {
+  SearchEventRequest,
+  ClickEventRequest,
+} from '@coveo/headless/node_modules/coveo.analytics/src/events';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 // eslint-disable @typescript/interface-name
@@ -8,12 +11,22 @@ declare global {
   namespace Cypress {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     interface Chainable<Subject> {
+      map<T>(
+        predicate: (subject: Subject, i: number, subjects: Subject[]) => T
+      ): Chainable<T>;
       getTextOfAllElements(selector: string): Chainable<unknown>;
       // https://github.com/cypress-io/cypress-documentation/issues/108
       state(key: string): CypressRequest[];
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
       expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
-      expectCustomEvent(eventType: string): Chainable<SearchEventRequest>;
+      expectClickEvent(actionCause: string): Chainable<ClickEventRequest>;
+      expectCustomEvent(
+        eventType: string,
+        eventValue?: string
+      ): Chainable<SearchEventRequest>;
+      distanceTo(
+        getSubjectB: () => Chainable<JQuery<HTMLElement>>
+      ): Chainable<{horizontal: number; vertical: number}>;
     }
   }
 }
@@ -27,13 +40,30 @@ Cypress.Commands.add('expectSearchEvent', (actionCause) => {
     });
 });
 
-Cypress.Commands.add('expectCustomEvent', (eventType) => {
+Cypress.Commands.add('expectClickEvent', (actionCause) => {
   cy.wrap(AnalyticsTracker)
-    .invoke('getLastCustomEvent', eventType)
+    .invoke('getLastClickEvent', actionCause)
     .should('not.be.null')
     .should((analyticsBody) => {
       return analyticsBody;
     });
+});
+
+Cypress.Commands.add('expectCustomEvent', (eventType, eventValue) => {
+  cy.wrap(AnalyticsTracker)
+    .invoke('getLastCustomEvent', eventType)
+    .should('not.be.null')
+    .should((analyticsBody) => {
+      if (eventValue) {
+        expect(analyticsBody).to.haveOwnProperty('eventValue', eventValue);
+      }
+      return analyticsBody;
+    });
+});
+
+Cypress.Commands.add('map', {prevSubject: 'element'}, ($element, predicate) => {
+  const elements = $element.toArray().map((element) => Cypress.$(element));
+  cy.wrap(elements.map(predicate));
 });
 
 Cypress.Commands.add('getTextOfAllElements', (selector: string) => {
@@ -61,6 +91,27 @@ Cypress.Commands.add('shouldBeCalled', (urlPart, timesCalled) => {
     `Url containing "${urlPart}"" should have been called ${timesCalled} times`
   ).to.have.length(timesCalled);
 });
+
+Cypress.Commands.add(
+  'distanceTo',
+  {prevSubject: 'element'},
+  ($elementA, getSubjectB) =>
+    getSubjectB().then(([elementB]) => {
+      const [elementA] = $elementA;
+      return cy.wrap({
+        get horizontal() {
+          const rectA = elementA.getBoundingClientRect();
+          const rectB = elementB.getBoundingClientRect();
+          return rectB.left - rectA.right;
+        },
+        get vertical() {
+          const rectA = elementA.getBoundingClientRect();
+          const rectB = elementB.getBoundingClientRect();
+          return rectB.top - rectA.bottom;
+        },
+      });
+    })
+);
 
 // Convert this to a module instead of script (allows import/export)
 export {};

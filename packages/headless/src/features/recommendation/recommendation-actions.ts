@@ -17,6 +17,7 @@ import {
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -105,4 +106,6 @@ export const buildRecommendationRequest = async (
   ...(s.configuration.analytics.enabled && {
     visitorId: await getVisitorID(),
   }),
+  ...(s.configuration.analytics.enabled &&
+    (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
 });

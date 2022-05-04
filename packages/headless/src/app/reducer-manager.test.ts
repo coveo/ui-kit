@@ -28,4 +28,12 @@ describe('ReducerManager', () => {
     const manager = createReducerManager({pagination});
     expect(manager.containsAll({pagination, search})).toBe(false);
   });
+
+  it('should call root reducer when configured', () => {
+    const manager = createReducerManager({pagination});
+    const rootReducer = jest.fn();
+    manager.addCrossReducer(rootReducer);
+    manager.combinedReducer(undefined, {type: ''});
+    expect(rootReducer).toHaveBeenCalled();
+  });
 });

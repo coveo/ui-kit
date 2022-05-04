@@ -17,7 +17,7 @@ import {
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
-import {DocumentSuggestion} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 
 /**
  * The `DocumentSuggestion` controller is responsible for getting document suggestions using case information present in the state.
@@ -45,7 +45,7 @@ export interface DocumentSuggestionListState {
   /**
    * The retrieved document suggestions.
    */
-  documents: DocumentSuggestion[];
+  documents: DocumentSuggestionResponse[];
 }
 
 /**

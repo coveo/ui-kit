@@ -9,7 +9,12 @@ import {
 } from '../../../../test/mock-engine';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {
+  configuration,
+  dateFacetSet,
+  search,
+  facetOptions,
+} from '../../../../app/reducers';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {ProductListingAppState} from '../../../../state/product-listing-app-state';
 import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
@@ -39,6 +44,7 @@ describe('date facet', () => {
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       dateFacetSet,
+      facetOptions,
       configuration,
       search,
     });

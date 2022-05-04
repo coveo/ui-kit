@@ -32,11 +32,11 @@ export class AtomicSearchBoxRecentQueries {
   /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
-  @Prop() public maxWithQuery = 3;
+  @Prop({reflect: true}) public maxWithQuery = 3;
   /**
    * The maximum number of suggestions that will be displayed initially when the input field is empty.
    */
-  @Prop() public maxWithoutQuery?: number;
+  @Prop({reflect: true}) public maxWithoutQuery?: number;
 
   componentWillLoad() {
     try {
@@ -141,12 +141,15 @@ export class AtomicSearchBoxRecentQueries {
       key: `recent-${value}`,
       query: value,
       content: (
-        <div class="flex items-center">
-          <atomic-icon icon={Clock} class="w-5 h-5 mr-2 -ml-1"></atomic-icon>
+        <div class="flex items-center break-all">
+          <atomic-icon icon={Clock} class="w-4 h-4 mr-2 shrink-0"></atomic-icon>
           {query === '' ? (
-            <span>{value}</span>
+            <span class="break-all line-clamp-2">{value}</span>
           ) : (
+            // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
             <span
+              class="break-all line-clamp-2"
+              // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
               innerHTML={HighlightUtils.highlightString({
                 content: value,
                 openingDelimiter: '<span class="font-bold">',
@@ -172,7 +175,6 @@ export class AtomicSearchBoxRecentQueries {
         this.recentQueriesList.executeRecentQuery(
           this.recentQueriesList.state.queries.indexOf(value)
         );
-        this.bindings.clearSuggestions();
       },
     };
   }

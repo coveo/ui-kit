@@ -23,7 +23,7 @@ export class AtomicResultSectionVisual {
   /**
    * How large or small the visual section of results using this template should be.
    */
-  @Prop() public imageSize?: ResultDisplayImageSize;
+  @Prop({reflect: true}) public imageSize?: ResultDisplayImageSize;
 
   public componentDidRender() {
     hideEmptySection(this.host);

@@ -16,33 +16,11 @@
   },
   "ordered_phases": [
     {
-      "id": "deploy-headless-to-s3-latest",
+      "id": "deploy-headless-patch-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/latest",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_PATCH_VERSION]",
         "source": "packages/headless/dist/browser",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-atomic-to-s3-latest",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/latest",
-        "source": "packages/atomic/dist/atomic",
-        "parameters": {
-          "acl": "public-read"
-        }
-      }
-    },
-    {
-      "id": "deploy-atomic-headless-to-s3-latest",
-      "s3": {
-        "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/latest/headless",
-        "source": "packages/atomic/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
@@ -71,10 +49,21 @@
       }
     },
     {
-      "id": "deploy-atomic-minor-to-s3-version",
+      "id": "deploy-headless-to-s3-latest",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]",
+        "directory": "proda/StaticCDN/headless/latest",
+        "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
@@ -82,11 +71,11 @@
       }
     },
     {
-      "id": "deploy-atomic-headless-minor-to-s3-version",
+      "id": "deploy-atomic-minor-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/headless",
-        "source": "packages/atomic/headless/dist/browser",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]",
+        "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
         }
@@ -104,10 +93,54 @@
       }
     },
     {
+      "id": "deploy-atomic-to-s3-latest",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/latest",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-headless-patch-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]/headless",
+        "source": "packages/atomic/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-headless-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/headless",
+        "source": "packages/atomic/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-headless-major-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/headless",
+        "source": "packages/atomic/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-headless-to-s3-latest",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/latest/headless",
         "source": "packages/atomic/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
@@ -160,11 +193,18 @@
       }
     ]
   },
+  "snyk_code": {
+    "no_scan": false,
+    "configurations": [
+      {
+        "path": ".",
+        "project_name": "coveo/ui-kit",
+        "org": "coveo-jsui"
+      }
+    ]
+  },
   "veracode": {
-    "sandbox_name": "UI Kit",
-    "app_name": "JSUI",
-    "source": "veracode",
-    "scan_include_patterns": "*"
+    "no_scan": true
   },
   "observatory": {
     "no_endpoint": true
@@ -177,6 +217,9 @@
     "dev": [
       {
         "system_certifier": "snyk"
+      },
+      {
+        "system_certifier": "snyk-code"
       }
     ]
   }

@@ -76,18 +76,13 @@
           <atomic-result-section-bottom-metadata>
             <atomic-result-fields-list>
               <atomic-field-condition class="field" if-defined="cat_platform">
-                <span class="field-label"> <atomic-text value="Platform"></atomic-text>: </span>
-                <atomic-result-text field="cat_platform"></atomic-result-text>
+                <app-label-and-field-value label="Platform" field="cat_platform"></app-label-and-field-value>
               </atomic-field-condition>
-
               <atomic-field-condition class="field" if-defined="cat_condition">
-                <span class="field-label"> <atomic-text value="Condition"></atomic-text>: </span>
-                <atomic-result-text field="cat_condition"></atomic-result-text>
+                <app-label-and-field-value label="Condition" field="cat_condition"></app-label-and-field-value>
               </atomic-field-condition>
-
               <atomic-field-condition class="field" if-defined="cat_categories">
-                <span class="field-label"> <atomic-text value="Tags"></atomic-text>: </span>
-                <atomic-result-multi-value-text field="cat_categories"></atomic-result-multi-value-text>
+                <app-label-and-field-value label="Tags" field="cat_categories"></app-label-and-field-value>
               </atomic-field-condition>
             </atomic-result-fields-list>
           </atomic-result-section-bottom-metadata>

@@ -86,15 +86,29 @@ export type {
   ResultTemplateCondition,
 } from './features/result-templates/result-templates';
 export {platformUrl, analyticsUrl} from './api/platform-client';
-export type {CategoryFacetSortCriterion} from './features/facets/category-facet-set/interfaces/request';
+export type {
+  CategoryFacetValueRequest,
+  CategoryFacetSortCriterion,
+} from './features/facets/category-facet-set/interfaces/request';
 export type {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';
+export type {DateRangeRequest} from './features/facets/range-facets/date-facet-set/interfaces/request';
 export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
-export type {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
+export type {
+  FacetValueRequest,
+  FacetSortCriterion,
+} from './features/facets/facet-set/interfaces/request';
+export type {NumericRangeRequest} from './features/facets/range-facets/numeric-facet-set/interfaces/request';
 export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+export type {AnyFacetValueRequest} from './features/facets/generic/interfaces/generic-facet-request';
 export type {
   RangeFacetSortCriterion,
   RangeFacetRangeAlgorithm,
 } from './features/facets/range-facets/generic/interfaces/request';
+export {
+  MinimumFieldsToInclude,
+  DefaultFieldsToInclude,
+  EcommerceDefaultFieldsToInclude,
+} from './features/fields/fields-state';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export type {HighlightKeyword} from './utils/highlight';
 export {VERSION} from './utils/version';

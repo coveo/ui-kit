@@ -56,7 +56,7 @@ export class AtomicNoResults {
   /**
    * Whether to display a button which cancels the last available action.
    */
-  @Prop() enableCancelLastAction = true;
+  @Prop({reflect: true}) enableCancelLastAction = true;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -97,6 +97,7 @@ export class AtomicNoResults {
         })
       : this.bindings.i18n.t('no-results');
     return (
+      // file deepcode ignore ReactSetInnerHtml: This is not React code.
       <div
         class="my-2 text-2xl font-medium"
         part="no-results"

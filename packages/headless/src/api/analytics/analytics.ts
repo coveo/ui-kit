@@ -5,6 +5,7 @@ import {
   CoveoAnalyticsClient,
   AnalyticsClientSendEventHook,
   CaseAssistClient,
+  CaseAssistClientProvider,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
 import {getQueryInitialState} from '../../features/query/query-state';
@@ -43,7 +44,8 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
   >;
 
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
-  Partial<CaseAssistConfigurationSection>;
+  Partial<CaseAssistConfigurationSection> &
+  Partial<SearchHubSection>;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}
@@ -75,6 +77,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
 
   public getSearchUID() {
     return (
+      this.state.search?.searchResponseId ||
       this.state.search?.response.searchUid ||
       this.state.recommendation?.searchUid ||
       this.state.productListing?.responseId ||
@@ -139,6 +142,14 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   }
 }
 
+export class CaseAssistAnalyticsProvider implements CaseAssistClientProvider {
+  constructor(private state: StateNeededByCaseAssistAnalytics) {}
+
+  public getOriginLevel1() {
+    return this.state.searchHub || getSearchHubInitialState();
+  }
+}
+
 interface ConfigureAnalyticsOptions {
   state: StateNeededByAnalyticsProvider;
   logger: Logger;
@@ -194,11 +205,25 @@ export const getVisitorID = () =>
 
 export const historyStore = new history.HistoryStore();
 
+export const getPageID = () => {
+  const actions = historyStore.getHistory();
+  const lastPageView = actions.reverse().find((action) => {
+    return action.name === 'PageView' && action.value;
+  });
+
+  if (!lastPageView) {
+    return '';
+  }
+
+  return lastPageView.value!;
+};
+
 interface ConfigureCaseAssistAnalyticsOptions {
   state: StateNeededByCaseAssistAnalytics;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
+  provider?: CaseAssistClientProvider;
 }
 
 export const configureCaseAssistAnalytics = ({
@@ -206,33 +231,37 @@ export const configureCaseAssistAnalytics = ({
   state,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
+  provider = new CaseAssistAnalyticsProvider(state),
 }: ConfigureCaseAssistAnalyticsOptions) => {
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const enableAnalytics = state.configuration.analytics.enabled;
-  const client = new CaseAssistClient({
-    enableAnalytics,
-    token,
-    endpoint,
-    runtimeEnvironment,
-    preprocessRequest,
-    beforeSendHooks: [
-      analyticsClientMiddleware,
-      (type, payload) => {
-        logger.info(
-          {
-            ...payload,
-            type,
-            endpoint,
-            token,
-          },
-          'Analytics request'
-        );
-        return payload;
-      },
-    ],
-  });
+  const client = new CaseAssistClient(
+    {
+      enableAnalytics,
+      token,
+      endpoint,
+      runtimeEnvironment,
+      preprocessRequest,
+      beforeSendHooks: [
+        analyticsClientMiddleware,
+        (type, payload) => {
+          logger.info(
+            {
+              ...payload,
+              type,
+              endpoint,
+              token,
+            },
+            'Analytics request'
+          );
+          return payload;
+        },
+      ],
+    },
+    provider
+  );
 
   if (!enableAnalytics) {
     client.disable();

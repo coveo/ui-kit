@@ -125,7 +125,9 @@ export default class QuanticResultQuickview extends LightningElement {
   openQuickview() {
     this.isQuickviewOpen = true;
     this.quickview.fetchResultContent();
-    this.addRecentResult();
+    if(this.useCase !== 'case-assist'){
+      this.addRecentResult();
+    }
   }
 
   addRecentResult() {

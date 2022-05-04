@@ -35,6 +35,8 @@ describe('configuration slice', () => {
       originLevel3: '3',
       apiBaseUrl: `${url}/rest/ua`,
       anonymous: false,
+      deviceId: 'Chrome',
+      userDisplayName: 'Someone',
     },
   };
 
@@ -138,6 +140,8 @@ describe('configuration slice', () => {
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
+          deviceId: 'wozz',
+          userDisplayName: 'wazz',
         },
       };
       expect(
@@ -150,6 +154,8 @@ describe('configuration slice', () => {
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
+            deviceId: 'wozz',
+            userDisplayName: 'wazz',
           })
         )
       ).toEqual(expectedState);
@@ -165,6 +171,8 @@ describe('configuration slice', () => {
           originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
           anonymous: true,
+          deviceId: 'wozz',
+          userDisplayName: 'wazz',
         },
       };
 
@@ -178,6 +186,8 @@ describe('configuration slice', () => {
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
             anonymous: true,
+            deviceId: 'wozz',
+            userDisplayName: 'wazz',
           })
         )
       ).toEqual(expectedState);

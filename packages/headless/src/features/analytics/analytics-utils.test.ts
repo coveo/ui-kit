@@ -3,6 +3,7 @@ import {buildMockResult} from '../../test';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {
+  documentIdentifier,
   partialDocumentInformation,
   partialRecommendationInformation,
 } from './analytics-utils';
@@ -135,6 +136,40 @@ describe('analytics-utils', () => {
         state
       );
       expect(documentPosition).toBe(1);
+    });
+  });
+
+  describe('documentIdentifier', () => {
+    it('should extract permanentid properly if available on a result', () => {
+      const result = buildMockResult();
+      result.raw.permanentid = 'qwerty';
+      expect(documentIdentifier(result)).toMatchObject({
+        contentIDKey: 'permanentid',
+        contentIDValue: 'qwerty',
+      });
+    });
+
+    it('should return an empty string if permanentid is not available on a result', () => {
+      const result = buildMockResult();
+      delete result.raw.permanentid;
+      expect(documentIdentifier(result)).toMatchObject({
+        contentIDKey: 'permanentid',
+        contentIDValue: '',
+      });
+    });
+
+    it('should log an error permanentid is not available on a result', () => {
+      const spyConsole = jest
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const result = buildMockResult();
+      delete result.raw.permanentid;
+
+      documentIdentifier(result);
+
+      expect(spyConsole).toHaveBeenCalled();
+      spyConsole.mockRestore();
     });
   });
 });

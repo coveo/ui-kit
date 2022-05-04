@@ -194,6 +194,40 @@ export const executeSearch = createAsyncThunk<
   }
 );
 
+export const fetchPage = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  SearchAction,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>(
+  'search/fetchPage',
+  async (
+    analyticsAction: SearchAction,
+    {getState, dispatch, rejectWithValue, extra}
+  ) => {
+    const state = getState();
+    addEntryInActionsHistory(state);
+    const fetched = await fetchFromAPI(
+      extra.apiClient,
+      state,
+      await buildSearchRequest(state)
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
+      return rejectWithValue(fetched.response.error);
+    }
+
+    dispatch(snapshot(extractHistory(state)));
+    return {
+      ...fetched,
+      response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
+      analyticsAction,
+    };
+  }
+);
+
 export const fetchMoreResults = createAsyncThunk<
   ExecuteSearchThunkReturn,
   void,
@@ -342,7 +376,9 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {
     historyStore.addElement({
       name: 'Query',
-      value: state.query?.q || getQueryInitialState().q,
+      ...(state.query?.q && {
+        value: state.query.q,
+      }),
       time: JSON.stringify(new Date()),
     });
   }

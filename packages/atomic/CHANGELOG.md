@@ -3,6 +3,558 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.49.0...@coveo/atomic@1.50.0) (2022-05-03)
+
+
+### Features
+
+* **atomic,headless:** added atomic-smart-snippet-suggestions ([#1954](https://github.com/coveo/ui-kit/issues/1954)) ([8d502ff](https://github.com/coveo/ui-kit/commit/8d502ff3ce7f89d6178c39f7dec42815162f4e87))
+* **atomic:** added smart snippet feedback modal ([#1950](https://github.com/coveo/ui-kit/issues/1950)) ([3fd232f](https://github.com/coveo/ui-kit/commit/3fd232f9a72865df528813b49e4808e780d5c3c5))
+
+
+
+
+
+# [1.49.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.48.1...@coveo/atomic@1.49.0) (2022-04-28)
+
+
+### Features
+
+* **atomic,headless:** add analytics to the show more/show less button ([#1945](https://github.com/coveo/ui-kit/issues/1945)) ([be9c694](https://github.com/coveo/ui-kit/commit/be9c6940c279014cdffeeebd50723d6de01e979b))
+* **atomic:** allow for custom query suggestions + example ([#1949](https://github.com/coveo/ui-kit/issues/1949)) ([cd5c605](https://github.com/coveo/ui-kit/commit/cd5c60539a86ab16a3d0d592526b2af22f9ba20a))
+* **atomic:** release folding-related components ([#1952](https://github.com/coveo/ui-kit/issues/1952)) ([7140887](https://github.com/coveo/ui-kit/commit/7140887004c83d810d2e02478b9693dd71c06e6b))
+
+
+
+
+
+## [1.48.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.48.0...@coveo/atomic@1.48.1) (2022-04-26)
+
+
+### Bug Fixes
+
+* **atomic:** change default icon for atomic-result-icon & make it full-width ([#1951](https://github.com/coveo/ui-kit/issues/1951)) ([9060461](https://github.com/coveo/ui-kit/commit/9060461857a5d5a2beecdb8364f301c506f03430))
+
+
+
+
+
+# [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.47.0...@coveo/atomic@1.48.0) (2022-04-26)
+
+
+### Features
+
+* **atomic:** make grid result <a> a sibling instead of parent ([#1947](https://github.com/coveo/ui-kit/issues/1947)) ([85df6af](https://github.com/coveo/ui-kit/commit/85df6afff82efb86fee2400af67e42018c6fb092))
+
+
+
+
+
+# [1.47.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.2...@coveo/atomic@1.47.0) (2022-04-25)
+
+
+### Features
+
+* **atomic:** add "attributes" slot for the atomic-result-link to allow copying attributes ([#1922](https://github.com/coveo/ui-kit/issues/1922)) ([e61c6c6](https://github.com/coveo/ui-kit/commit/e61c6c65bcea2d4eb0eb135fb5c00f76b45b1937))
+* **atomic:** add styling and states for children results and loading ([#1939](https://github.com/coveo/ui-kit/issues/1939)) ([687595c](https://github.com/coveo/ui-kit/commit/687595c0d10dcaf368540c60238e17b0725eba1c))
+
+
+
+
+
+## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.1...@coveo/atomic@1.46.2) (2022-04-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.46.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.46.0...@coveo/atomic@1.46.1) (2022-04-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.46.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.45.1...@coveo/atomic@1.46.0) (2022-04-19)
+
+
+### Features
+
+* **atomic:** add load collection component ([#1921](https://github.com/coveo/ui-kit/issues/1921)) ([1702778](https://github.com/coveo/ui-kit/commit/170277893b829ab03187ee793798273aa2fa5a51))
+* **headless,atomic:** added smart snippet source analytics ([#1876](https://github.com/coveo/ui-kit/issues/1876)) ([8e7ec24](https://github.com/coveo/ui-kit/commit/8e7ec2490615b346aac692aa1c970a6d6b536a27))
+
+
+
+
+
+## [1.45.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.45.0...@coveo/atomic@1.45.1) (2022-04-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.2...@coveo/atomic@1.45.0) (2022-04-14)
+
+
+### Features
+
+* **atomic:** add hrefTemplate prop to atomic-result-link ([#1918](https://github.com/coveo/ui-kit/issues/1918)) ([04f7c0c](https://github.com/coveo/ui-kit/commit/04f7c0cc808c525beaf61367a6dfcd7bf3d0c991))
+
+
+
+
+
+## [1.44.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.1...@coveo/atomic@1.44.2) (2022-04-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.44.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.44.0...@coveo/atomic@1.44.1) (2022-04-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.1...@coveo/atomic@1.44.0) (2022-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** make resultContext function generic ([#1905](https://github.com/coveo/ui-kit/issues/1905)) ([f150717](https://github.com/coveo/ui-kit/commit/f150717a63c70373bee0e2326fd230390021cfb8))
+
+
+### Features
+
+* **atomic:** allow grandchild children to inherit templates from chi… ([#1902](https://github.com/coveo/ui-kit/issues/1902)) ([7a61b5f](https://github.com/coveo/ui-kit/commit/7a61b5f03ffaa3a336682cd7e7cda2b6a85a1e96))
+
+
+
+
+
+## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.43.0...@coveo/atomic@1.43.1) (2022-04-11)
+
+
+### Bug Fixes
+
+* **atomic:** fix set renderingFunction for atomic-react ([#1910](https://github.com/coveo/ui-kit/issues/1910)) ([c2a6630](https://github.com/coveo/ui-kit/commit/c2a66300f0b37ca9a486a5ae8b9c029420873bcc))
+
+
+
+
+
+# [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.4...@coveo/atomic@1.43.0) (2022-04-11)
+
+
+### Bug Fixes
+
+* **atomic:** fix atomic react rendering function ([#1909](https://github.com/coveo/ui-kit/issues/1909)) ([28217bf](https://github.com/coveo/ui-kit/commit/28217bfc4b1dc130592cbc7749ee76c4ce437bce))
+
+
+### Features
+
+* **atomic:** add default part for color facet values  ([#1901](https://github.com/coveo/ui-kit/issues/1901)) ([7335114](https://github.com/coveo/ui-kit/commit/733511487d9271396438e2955c4bdcb43480b354))
+* **atomic:** added custom styling to smart snippet answer ([#1887](https://github.com/coveo/ui-kit/issues/1887)) ([3932de3](https://github.com/coveo/ui-kit/commit/3932de3d10b67f539b9aa2d5f7d8a4e1cc08c2b4))
+
+
+
+
+
+## [1.42.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.3...@coveo/atomic@1.42.4) (2022-04-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.42.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.2...@coveo/atomic@1.42.3) (2022-04-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.42.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.1...@coveo/atomic@1.42.2) (2022-04-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.42.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.42.0...@coveo/atomic@1.42.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* **atomic:** add refine toggle part & make full width ([#1897](https://github.com/coveo/ui-kit/issues/1897)) ([8c7a799](https://github.com/coveo/ui-kit/commit/8c7a799a654be03d7f6dcf109a752f3022d57b06))
+
+
+
+
+
+# [1.42.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.41.2...@coveo/atomic@1.42.0) (2022-04-04)
+
+
+### Bug Fixes
+
+* **atomic:** atomic-result-icon styling typo ([#1893](https://github.com/coveo/ui-kit/issues/1893)) ([f1f4707](https://github.com/coveo/ui-kit/commit/f1f4707685e6072f5e77565eca2e571f25f0f1ed))
+
+
+### Features
+
+* **atomic:** allow to add children inside atomic-result-children ([#1894](https://github.com/coveo/ui-kit/issues/1894)) ([28d4909](https://github.com/coveo/ui-kit/commit/28d490975231b5d4a6f59375942a9a00092d6675))
+
+
+
+
+
+## [1.41.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.41.1...@coveo/atomic@1.41.2) (2022-04-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.41.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.41.0...@coveo/atomic@1.41.1) (2022-04-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.41.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.40.2...@coveo/atomic@1.41.0) (2022-03-31)
+
+
+### Features
+
+* **atomic:** add breadcrumb-clear part ([#1882](https://github.com/coveo/ui-kit/issues/1882)) ([5106dd6](https://github.com/coveo/ui-kit/commit/5106dd612bfa5d6006ad28261d35a70ee822a4b1))
+
+
+
+
+
+## [1.40.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.40.1...@coveo/atomic@1.40.2) (2022-03-31)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.40.0...@coveo/atomic@1.40.1) (2022-03-31)
+
+
+### Bug Fixes
+
+* **atomic:** query suggestion & recent queries, wrap long query up to 2 lines ([#1881](https://github.com/coveo/ui-kit/issues/1881)) ([aa18a44](https://github.com/coveo/ui-kit/commit/aa18a443d14da6c92fc654f984b83ae3dc8de92d))
+
+
+
+
+
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.39.1...@coveo/atomic@1.40.0) (2022-03-31)
+
+
+### Features
+
+* **atomic:** added table odd and even row parts ([#1877](https://github.com/coveo/ui-kit/issues/1877)) ([c4d6fd4](https://github.com/coveo/ui-kit/commit/c4d6fd48bb80bb801921793e7b97c801832b5ede))
+* **atomic:** display count as compact number for facet values box ([#1879](https://github.com/coveo/ui-kit/issues/1879)) ([3f568b0](https://github.com/coveo/ui-kit/commit/3f568b0e26a72c112609b254325bc72a2bc46ec8))
+
+
+
+
+
+## [1.39.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.39.0...@coveo/atomic@1.39.1) (2022-03-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.2...@coveo/atomic@1.39.0) (2022-03-29)
+
+
+### Features
+
+* **atomic:** add folded results component ([#1853](https://github.com/coveo/ui-kit/issues/1853)) ([4197705](https://github.com/coveo/ui-kit/commit/419770513bc5a773b5a48c8e056431b45dae7c23))
+
+
+
+
+
+## [1.38.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.1...@coveo/atomic@1.38.2) (2022-03-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.38.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.38.0...@coveo/atomic@1.38.1) (2022-03-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.37.0...@coveo/atomic@1.38.0) (2022-03-25)
+
+
+### Features
+
+* **atomic:** added smart snippet expandable answer ([#1841](https://github.com/coveo/ui-kit/issues/1841)) ([d7169d9](https://github.com/coveo/ui-kit/commit/d7169d96abacecbccdcc9accc9199688f44cdd31))
+
+
+
+
+
+# [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.36.3...@coveo/atomic@1.37.0) (2022-03-24)
+
+
+### Features
+
+* **atomic:** added SmartSnippetFeedbackBanner ([#1848](https://github.com/coveo/ui-kit/issues/1848)) ([3d8a44d](https://github.com/coveo/ui-kit/commit/3d8a44d5d9f95306770990529397ac90bc6a0118))
+
+
+
+
+
+## [1.36.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.36.2...@coveo/atomic@1.36.3) (2022-03-24)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.36.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.36.1...@coveo/atomic@1.36.2) (2022-03-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.36.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.36.0...@coveo/atomic@1.36.1) (2022-03-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.36.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.35.0...@coveo/atomic@1.36.0) (2022-03-17)
+
+
+### Features
+
+* **atomic:** added basic smart snippet ([#1825](https://github.com/coveo/ui-kit/issues/1825)) ([b298cb4](https://github.com/coveo/ui-kit/commit/b298cb45559d728d1a40e162b3c39f1199f78c07))
+
+
+
+
+
+# [1.35.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.3...@coveo/atomic@1.35.0) (2022-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** make layout & refine modal compatible with Stencil's JSX ([#1817](https://github.com/coveo/ui-kit/issues/1817)) ([7c35fd6](https://github.com/coveo/ui-kit/commit/7c35fd6b23e3d37ab0cd9f4579dc1a82fe3ba55d))
+
+
+### Features
+
+* **atomic:** added dependsOn ([#1786](https://github.com/coveo/ui-kit/issues/1786)) ([3444b96](https://github.com/coveo/ui-kit/commit/3444b961d430a4157eb13a9b42a0738cef4fee06))
+
+
+
+
+
+## [1.34.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.2...@coveo/atomic@1.34.3) (2022-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** temp fix for outline rings ([#1826](https://github.com/coveo/ui-kit/issues/1826)) ([917a007](https://github.com/coveo/ui-kit/commit/917a007908a0913fe8fe3f087dcacc56272191f2))
+
+
+
+
+
+## [1.34.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.1...@coveo/atomic@1.34.2) (2022-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** moved "view results" button on Android above the navigation bar ([#1818](https://github.com/coveo/ui-kit/issues/1818)) ([7cd0b71](https://github.com/coveo/ui-kit/commit/7cd0b7118223a6501238520b54a5b65dfc4bd329))
+* **atomic:** reflect all relevant props ([#1816](https://github.com/coveo/ui-kit/issues/1816)) ([4100e43](https://github.com/coveo/ui-kit/commit/4100e436d7a31da3a7502c2933d8ccbf6fc4a351))
+
+
+
+
+
+## [1.34.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.34.0...@coveo/atomic@1.34.1) (2022-03-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.34.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.3...@coveo/atomic@1.34.0) (2022-03-11)
+
+
+### Features
+
+* **atomic:** add initWithSearchEngine method to be leveraged by atomic-react ([#1809](https://github.com/coveo/ui-kit/issues/1809)) ([eb62182](https://github.com/coveo/ui-kit/commit/eb621827d2beea2a7bda7d24cc84c6f30fe56a55))
+* **atomic-react:** improve localization configuration for atomic-react ([#1807](https://github.com/coveo/ui-kit/issues/1807)) ([4fc2a04](https://github.com/coveo/ui-kit/commit/4fc2a0460b541099c55b00be1ccad69b655b30f7))
+
+
+
+
+
+## [1.33.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.2...@coveo/atomic@1.33.3) (2022-03-09)
+
+
+### Bug Fixes
+
+* **atomic-react:** fix result list table layout ([#1801](https://github.com/coveo/ui-kit/issues/1801)) ([e02d3f8](https://github.com/coveo/ui-kit/commit/e02d3f817420162b35b3f20925fd1feb2ef46f1e))
+
+
+
+
+
+## [1.33.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.1...@coveo/atomic@1.33.2) (2022-03-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.33.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.33.0...@coveo/atomic@1.33.1) (2022-03-08)
+
+
+### Bug Fixes
+
+* invert collapsible facet icon ([#1796](https://github.com/coveo/ui-kit/issues/1796)) ([d5c03af](https://github.com/coveo/ui-kit/commit/d5c03af01d3b4465570fefbbd42353e444be1681))
+* **atomic:** remove unnecessary border from search box ([#1795](https://github.com/coveo/ui-kit/issues/1795)) ([b345c26](https://github.com/coveo/ui-kit/commit/b345c2609cb88b6fffc3bd89ed741556d1992029))
+
+
+
+
+
+# [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.32.2...@coveo/atomic@1.33.0) (2022-03-04)
+
+
+### Features
+
+* **headless:** updates the possible values for the Section property ([#1788](https://github.com/coveo/ui-kit/issues/1788)) ([56b9286](https://github.com/coveo/ui-kit/commit/56b9286c524db7134d6f659b703daf4c9f9b0bed))
+
+
+
+
+
+## [1.32.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.32.1...@coveo/atomic@1.32.2) (2022-03-03)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.32.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.32.0...@coveo/atomic@1.32.1) (2022-03-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.32.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.31.3...@coveo/atomic@1.32.0) (2022-02-28)
+
+
+### Features
+
+* **atomic:** allow to specify assets path on search interface ([#1768](https://github.com/coveo/ui-kit/issues/1768)) ([734ca66](https://github.com/coveo/ui-kit/commit/734ca668f9fbb86bb92bce03bf3da528f9b08f6a))
+
+
+
+
+
+## [1.31.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.31.2...@coveo/atomic@1.31.3) (2022-02-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.31.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.31.1...@coveo/atomic@1.31.2) (2022-02-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.31.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.31.0...@coveo/atomic@1.31.1) (2022-02-24)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.31.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.30.3...@coveo/atomic@1.31.0) (2022-02-24)
+
+
+### Bug Fixes
+
+* **atomic:** search layout optimization for table results & more ([#1755](https://github.com/coveo/ui-kit/issues/1755)) ([e9dfd38](https://github.com/coveo/ui-kit/commit/e9dfd38ef1578bdcf7268e29f97cf9fa90d2e1fe))
+* **atomic:** update index.html example layout y gap ([#1757](https://github.com/coveo/ui-kit/issues/1757)) ([60405c0](https://github.com/coveo/ui-kit/commit/60405c033311084e01305c74d11261f7cacc38b9))
+
+
+### Features
+
+* **atomic:** add configurable breakpoint for layouts ([#1742](https://github.com/coveo/ui-kit/issues/1742)) ([9096363](https://github.com/coveo/ui-kit/commit/9096363c13d0d44e73a8ae2923bd28b20667b2b4))
+
+
+
+
+
+## [1.30.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.30.2...@coveo/atomic@1.30.3) (2022-02-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.30.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.30.1...@coveo/atomic@1.30.2) (2022-02-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.30.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.30.0...@coveo/atomic@1.30.1) (2022-02-16)
 
 **Note:** Version bump only for package @coveo/atomic

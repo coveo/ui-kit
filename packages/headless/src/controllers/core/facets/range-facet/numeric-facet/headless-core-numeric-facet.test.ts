@@ -23,6 +23,7 @@ import {
   configuration,
   numericFacetSet,
   search,
+  facetOptions,
 } from '../../../../../app/reducers';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
@@ -67,6 +68,7 @@ describe('numeric facet', () => {
   it('it adds the correct reducers to engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       numericFacetSet,
+      facetOptions,
       configuration,
       search,
     });

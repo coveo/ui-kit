@@ -10,5 +10,5 @@ export class AtomicTableElement {
   /**
    * The label to display in the header of this column.
    */
-  @Prop() public label!: string;
+  @Prop({reflect: true}) public label!: string;
 }

@@ -24,6 +24,14 @@ export interface ConstantQueryParam {
   cq?: string;
 }
 
+export interface LargeQueryParam {
+  lq?: string;
+}
+
+export interface DisjunctionQueryParam {
+  dq?: string;
+}
+
 export interface SortCriteriaParam {
   sortCriteria?: string;
 }
@@ -82,11 +90,27 @@ export interface MaximumAgeParam {
 }
 
 export interface ActionsHistoryParam {
-  actionsHistory: history.HistoryElement[];
+  actionsHistory?: history.HistoryElement[];
 }
 
 export interface TimezoneParam {
   timezone: string;
+}
+
+export interface AnalyticsParam {
+  analytics?: {
+    clientId: string;
+    deviceId?: string;
+    pageId: string;
+    clientTimestamp: string;
+    documentReferrer: string;
+    originContext: string;
+    userDisplayName: string;
+  };
+}
+
+export interface ExcerptLength {
+  excerptLength?: number;
 }
 
 export const baseSearchRequest = (
