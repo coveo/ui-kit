@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Element, Listen} from '@stencil/core';
+import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -7,17 +7,13 @@ import {
 } from '../../utils/initialization-utils';
 import {
   buildSmartSnippet,
-  Result,
   SmartSnippet,
   SmartSnippetState,
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../utils/utils';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
-
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
  *
@@ -102,14 +98,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   @State() feedbackSent = false;
 
-  @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<Result>) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (this.smartSnippetState.source !== undefined)
-      event.detail(this.smartSnippetState.source);
-  }
-
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.modalRef = document.createElement(
@@ -155,52 +143,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  private renderSource() {
-    const {source} = this.smartSnippetState;
-    if (!source) {
-      return [];
-    }
-    return (
-      <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
-        <div part="source-url">
-          <LinkWithResultAnalytics
-            title={source.clickUri}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => this.smartSnippet.selectSource()}
-            onBeginDelayedSelect={() =>
-              this.smartSnippet.beginDelayedSelectSource()
-            }
-            onCancelPendingSelect={() =>
-              this.smartSnippet.cancelPendingSelectSource()
-            }
-          >
-            {source.clickUri}
-          </LinkWithResultAnalytics>
-        </div>
-        <div part="source-title" class="mb-6">
-          <LinkWithResultAnalytics
-            title={source.title}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => this.smartSnippet.selectSource()}
-            onBeginDelayedSelect={() =>
-              this.smartSnippet.beginDelayedSelectSource()
-            }
-            onCancelPendingSelect={() =>
-              this.smartSnippet.cancelPendingSelectSource()
-            }
-          >
-            <atomic-result-text
-              field="title"
-              default="no-title"
-            ></atomic-result-text>
-          </LinkWithResultAnalytics>
-        </div>
-      </section>
-    );
-  }
-
   private renderFeedbackBanner() {
     return (
       <SmartSnippetFeedbackBanner
@@ -240,7 +182,15 @@ export class AtomicSmartSnippet implements InitializableComponent {
           {this.renderQuestion()}
           {this.renderContent()}
           <footer part="footer">
-            {this.renderSource()}
+            {this.smartSnippetState.source ? (
+              <atomic-smart-snippet-source
+                source={this.smartSnippetState.source}
+                smartSnippet={this.smartSnippet}
+                isSuggestion={false}
+              ></atomic-smart-snippet-source>
+            ) : (
+              []
+            )}
             {this.renderFeedbackBanner()}
           </footer>
         </article>

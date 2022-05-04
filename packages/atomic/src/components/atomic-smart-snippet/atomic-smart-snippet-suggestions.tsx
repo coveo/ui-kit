@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Element, Listen} from '@stencil/core';
+import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -8,19 +8,15 @@ import {
 import ArrowRight from '../../images/arrow-right.svg';
 import ArrowDown from '../../images/arrow-down.svg';
 import {
-  buildInteractiveResult,
   buildSmartSnippetQuestionsList,
-  Result,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -92,16 +88,6 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
    * ```
    */
   @Prop({reflect: true}) snippetStyle?: string;
-
-  @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<Result>) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    this.smartSnippetQuestionsListState.questions.forEach((question) => {
-      if (question.source !== undefined) event.detail(question.source);
-    });
-  }
 
   private id = randomID('atomic-smart-snippet-suggestions-');
 
@@ -179,49 +165,6 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       ></atomic-smart-snippet-answer>
     );
   }
-
-  private renderSource(relatedQuestion: SmartSnippetRelatedQuestion) {
-    const {source} = relatedQuestion;
-    if (!source) {
-      return [];
-    }
-    const interactiveResult = buildInteractiveResult(this.bindings.engine!, {
-      options: {result: source},
-    });
-    return (
-      <footer
-        part="footer"
-        aria-label={this.bindings.i18n.t('smart-snippet-source')}
-      >
-        <LinkWithResultAnalytics
-          title={source.clickUri}
-          href={source.clickUri}
-          target="_self"
-          part="source-url"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {source.clickUri}
-        </LinkWithResultAnalytics>
-        <LinkWithResultAnalytics
-          title={source.title}
-          href={source.clickUri}
-          target="_self"
-          part="source-title"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          <atomic-result-text
-            field="title"
-            default="no-title"
-          ></atomic-result-text>
-        </LinkWithResultAnalytics>
-      </footer>
-    );
-  }
-
   public renderRelatedQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
     return (
       <li
@@ -237,7 +180,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
             id={this.getRelatedQuestionId(relatedQuestion)}
           >
             {this.renderContent(relatedQuestion)}
-            {this.renderSource(relatedQuestion)}
+
+            {relatedQuestion.source ? (
+              <atomic-smart-snippet-source
+                source={relatedQuestion.source}
+                smartSnippet={undefined}
+                isSuggestion={true}
+              ></atomic-smart-snippet-source>
+            ) : (
+              []
+            )}
           </div>
         </article>
       </li>
