@@ -106,7 +106,10 @@ export class AtomicSmartSnippetExpandableAnswer {
         part={this.expanded ? 'show-less-button' : 'show-more-button'}
       >
         {this.bindings.i18n.t(this.expanded ? 'show-less' : 'show-more')}
-        <atomic-icon icon={ArrowDown} class="w-3 ml-2"></atomic-icon>
+        <atomic-icon
+          icon={ArrowDown}
+          class="w-3 ml-2 align-baseline"
+        ></atomic-icon>
       </button>
     );
   }
