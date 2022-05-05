@@ -563,6 +563,32 @@ describe('SearchPageClient', () => {
         });
     });
 
+    it('should send proper payload for #logShowMoreSmartSnippetSuggestion', async () => {
+        await client.logShowMoreSmartSnippetSuggestion({
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+        expectMatchCustomEventPayload(SearchPageEvents.showMoreSmartSnippetSuggestion, {
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+    });
+
+    it('should send proper payload for #logShowLessSmartSnippetSuggestion', async () => {
+        await client.logShowLessSmartSnippetSuggestion({
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+        expectMatchCustomEventPayload(SearchPageEvents.showLessSmartSnippetSuggestion, {
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+    });
+
     it('should send proper payload for #logOpenSmartSnippetSource', async () => {
         await client.logOpenSmartSnippetSource(fakeDocInfo, fakeDocID);
         expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);

@@ -293,6 +293,14 @@ export class CoveoSearchPageClient {
         );
     }
 
+    public logShowMoreSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta) {
+        return this.logCustomEvent(SearchPageEvents.showMoreSmartSnippetSuggestion, snippet);
+    }
+
+    public logShowLessSmartSnippetSuggestion(snippet: SmartSnippetSuggestionMeta) {
+        return this.logCustomEvent(SearchPageEvents.showLessSmartSnippetSuggestion, snippet);
+    }
+
     public logOpenSmartSnippetSource(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.logClickEvent(SearchPageEvents.openSmartSnippetSource, info, identifier);
     }
