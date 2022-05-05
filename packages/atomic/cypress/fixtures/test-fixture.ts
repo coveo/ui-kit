@@ -37,6 +37,7 @@ export type TagProps = Record<string, string | number>;
 export class TestFixture {
   private aliases: TestFeature[] = [];
   private execFirstSearch = true;
+  private initializeInterface = true;
   private searchInterface = document.createElement(
     'atomic-search-interface'
   ) as SearchInterface;
@@ -54,6 +55,12 @@ export class TestFixture {
 
   public with(feat: TestFeature) {
     feat(this);
+    return this;
+  }
+
+  public withoutInterfaceInitialization() {
+    this.withoutFirstAutomaticSearch();
+    this.initializeInterface = false;
     return this;
   }
 
@@ -213,6 +220,10 @@ export class TestFixture {
               })
             )
         ).as(TestFixture.interceptAliases.Search.substring(1));
+      }
+
+      if (!this.initializeInterface) {
+        return;
       }
 
       searchInterfaceComponent

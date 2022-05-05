@@ -307,6 +307,7 @@ export namespace Components {
     }
     interface AtomicModal {
         "close": () => void;
+        "fullscreen": boolean;
         "isOpen": boolean;
         "source"?: HTMLElement;
     }
@@ -1806,6 +1807,7 @@ declare namespace LocalJSX {
     }
     interface AtomicModal {
         "close"?: () => void;
+        "fullscreen"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: CustomEvent<never>) => void;
         "source"?: HTMLElement;

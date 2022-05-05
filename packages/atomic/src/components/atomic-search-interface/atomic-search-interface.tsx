@@ -135,10 +135,14 @@ export class AtomicSearchInterface {
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
+    if (!this.engineIsCreated(this.engine)) {
+      return;
+    }
+
     const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine!
+      this.engine
     );
-    this.engine?.dispatch(
+    this.engine.dispatch(
       updateSearchConfiguration({
         pipeline: this.pipeline,
         searchHub: this.searchHub,
@@ -148,20 +152,28 @@ export class AtomicSearchInterface {
 
   @Watch('analytics')
   public toggleAnalytics() {
-    if (!this.analytics) {
-      this.engine?.disableAnalytics();
+    if (!this.engineIsCreated(this.engine)) {
       return;
     }
 
-    this.engine?.enableAnalytics();
+    if (!this.analytics) {
+      this.engine.disableAnalytics();
+      return;
+    }
+
+    this.engine.enableAnalytics();
   }
 
   @Watch('language')
   public updateLanguage() {
+    if (!this.engineIsCreated(this.engine)) {
+      return;
+    }
+
     const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine!
+      this.engine
     );
-    this.engine?.dispatch(
+    this.engine.dispatch(
       updateSearchConfiguration({
         locale: this.language,
       })
@@ -240,11 +252,7 @@ export class AtomicSearchInterface {
    * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
    */
   @Method() public async executeFirstSearch() {
-    if (!this.engine) {
-      console.error(
-        'You have to call "initialize" on the atomic-search-interface component before executing a search.',
-        this.host
-      );
+    if (!this.engineIsCreated(this.engine)) {
       return;
     }
 
@@ -273,6 +281,18 @@ export class AtomicSearchInterface {
     const {value, analytics} = standaloneSearchBoxData;
     this.engine!.dispatch(updateQuery({q: value}));
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+  }
+
+  private engineIsCreated(engine?: SearchEngine): engine is SearchEngine {
+    if (!engine) {
+      console.error(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
+        this.host
+      );
+      return false;
+    }
+
+    return true;
   }
 
   private initEngine(options: InitializationOptions) {
