@@ -1,29 +1,18 @@
 @import '../../global/global.pcss';
 
-[part='reason-title'],
-[part='details-title'] {
-  @screen mobile-only {
-    @apply text-2xl;
-  }
+[part='reason'] {
+  @apply text-base leading-4 text-neutral-dark;
 
   @screen desktop-only {
-    @apply text-lg;
+    @apply mt-2;
   }
-}
 
-[part='cancel-button'] {
-  @apply text-primary;
+  @screen mobile-only {
+    @apply mt-4;
+  }
 }
 
 [part='cancel-button'],
 [part='submit-button'] {
-  @apply flex justify-center;
-
-  @screen mobile-only {
-    @apply text-lg leading-6 p-3;
-  }
-
-  @screen desktop-only {
-    @apply text-sm leading-4 p-2;
-  }
+  @apply flex justify-center text-sm leading-4 p-2;
 }
