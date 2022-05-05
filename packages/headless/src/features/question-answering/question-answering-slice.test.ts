@@ -99,8 +99,18 @@ describe('question answering slice', () => {
 
   it('should handle expandSmartSnippetRelatedQuestion using the documentId', () => {
     state.relatedQuestions = [
-      {contentIdKey: 'foo', contentIdValue: 'bar', expanded: false},
-      {contentIdKey: 'foo', contentIdValue: 'bazz', expanded: false},
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bar',
+        expanded: false,
+        questionAnswerId: 'a',
+      },
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bazz',
+        expanded: false,
+        questionAnswerId: 'b',
+      },
     ];
     const resulting = questionAnsweringReducer(
       state,
@@ -115,8 +125,18 @@ describe('question answering slice', () => {
 
   it('should handle collapseSmartSnippetRelatedQuestion using the documentId', () => {
     state.relatedQuestions = [
-      {contentIdKey: 'foo', contentIdValue: 'bar', expanded: true},
-      {contentIdKey: 'foo', contentIdValue: 'bazz', expanded: true},
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bar',
+        expanded: true,
+        questionAnswerId: 'a',
+      },
+      {
+        contentIdKey: 'foo',
+        contentIdValue: 'bazz',
+        expanded: true,
+        questionAnswerId: 'b',
+      },
     ];
     const resulting = questionAnsweringReducer(
       state,
