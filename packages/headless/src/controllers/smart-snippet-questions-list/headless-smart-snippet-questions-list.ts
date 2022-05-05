@@ -2,17 +2,12 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {search, questionAnswering} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {
-  QuestionAnswer,
-  QuestionAnswerDocumentIdentifier,
-} from '../../api/search/search/question-answering';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
 } from '../../features/question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
-import {QuestionAnsweringRelatedQuestionState} from '../../features/question-answering/question-answering-state';
-import {findRelatedQuestionIdx} from '../../features/question-answering/question-answering-slice';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
@@ -33,11 +28,27 @@ export interface SmartSnippetQuestionsList extends Controller {
   /**
    * Expand the specified snippet suggestion.
    *
+   * @param identifier - The `questionAnswerId` of the smart snippet to expand.
+   */
+  expand(identifier: string): void;
+  /**
+   * Expand the specified snippet suggestion.
+   *
+   * @deprecated - Use expand(identifier: string) instead.
+   *
    * @param identifier - The identifier of a document used to create the smart snippet.
    */
   expand(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
    * Collapse the specified snippet suggestion.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  collapse(identifier: string): void;
+  /**
+   * Collapse the specified snippet suggestion.
+   *
+   * @deprecated - Use collapse(identifier: string) instead.
    *
    * @param identifier - The identifier of a document used to create the smart snippet.
    */
@@ -73,6 +84,10 @@ export interface SmartSnippetRelatedQuestion {
    */
   documentId: QuestionAnswerDocumentIdentifier;
   /**
+   * The unique identifier for this question & answer.
+   */
+  questionAnswerId: string;
+  /**
    * Determines if the snippet is currently expanded.
    */
   expanded: boolean;
@@ -105,19 +120,12 @@ export function buildSmartSnippetQuestionsList(
     );
   };
 
-  const getIsExpanded = (
-    questionAndAnswer: QuestionAnswer,
-    relatedQuestions: QuestionAnsweringRelatedQuestionState[]
-  ) => {
-    const idx = findRelatedQuestionIdx(
-      relatedQuestions,
-      questionAndAnswer.documentId
-    );
-    if (idx === -1) {
-      return false;
-    }
-    return relatedQuestions[idx].expanded;
-  };
+  const getPayloadFromIdentifier = (
+    identifier: string | QuestionAnswerDocumentIdentifier
+  ) =>
+    typeof identifier === 'string'
+      ? {questionAnswerId: identifier}
+      : identifier;
 
   return {
     ...controller,
@@ -127,27 +135,28 @@ export function buildSmartSnippetQuestionsList(
 
       return {
         questions: state.search.response.questionAnswer.relatedQuestions.map(
-          (relatedQuestion) => ({
+          (relatedQuestion, i) => ({
             question: relatedQuestion.question,
             answer: relatedQuestion.answerSnippet,
             documentId: relatedQuestion.documentId,
-            expanded: getIsExpanded(
-              relatedQuestion,
-              state.questionAnswering.relatedQuestions
-            ),
+            questionAnswerId:
+              state.questionAnswering.relatedQuestions[i].questionAnswerId,
+            expanded: state.questionAnswering.relatedQuestions[i].expanded,
             source: getResult(relatedQuestion.documentId),
           })
         ),
       };
     },
 
-    expand(documentId: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logExpandSmartSnippetSuggestion(documentId));
-      engine.dispatch(expandSmartSnippetRelatedQuestion(documentId));
+    expand(identifier) {
+      const payload = getPayloadFromIdentifier(identifier);
+      engine.dispatch(logExpandSmartSnippetSuggestion(payload));
+      engine.dispatch(expandSmartSnippetRelatedQuestion(payload));
     },
-    collapse(documentId: QuestionAnswerDocumentIdentifier) {
-      engine.dispatch(logCollapseSmartSnippetSuggestion(documentId));
-      engine.dispatch(collapseSmartSnippetRelatedQuestion(documentId));
+    collapse(identifier) {
+      const payload = getPayloadFromIdentifier(identifier);
+      engine.dispatch(logCollapseSmartSnippetSuggestion(payload));
+      engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
     },
   };
 }
