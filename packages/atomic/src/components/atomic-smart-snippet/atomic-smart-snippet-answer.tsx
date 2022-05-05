@@ -1,12 +1,4 @@
-import {
-  Component,
-  h,
-  Prop,
-  Event,
-  EventEmitter,
-  Host,
-  Listen,
-} from '@stencil/core';
+import {Component, h, Prop, Event, EventEmitter, Host} from '@stencil/core';
 import {sanitize} from 'dompurify';
 import {sanitizeStyle} from '../../utils/utils';
 
@@ -24,9 +16,10 @@ export class AtomicSmartSnippetAnswer {
   @Prop({reflect: true}) innerStyle?: string;
 
   @Event({bubbles: false})
-  private answerRendered!: EventEmitter<{height: number}>;
+  private answerSizeUpdated!: EventEmitter<{height: number}>;
   private wrapperElement?: HTMLElement;
   private isRendering = true;
+  private resizeObserver: ResizeObserver | undefined;
 
   public componentWillRender() {
     this.isRendering = true;
@@ -37,9 +30,23 @@ export class AtomicSmartSnippetAnswer {
     this.emitCurrentHeight();
   }
 
-  @Listen('resize', {target: 'window'})
-  public windowResized() {
-    this.emitCurrentHeight();
+  public connectedCallback() {
+    if (this.wrapperElement && this.resizeObserver) {
+      this.resizeObserver.observe(this.wrapperElement);
+    }
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
+  }
+
+  public setWrapperElement(element: HTMLElement) {
+    this.wrapperElement = element;
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    this.resizeObserver = new ResizeObserver(() => this.emitCurrentHeight());
+    this.resizeObserver.observe(element);
   }
 
   private get sanitizedStyle() {
@@ -53,7 +60,7 @@ export class AtomicSmartSnippetAnswer {
     if (this.isRendering) {
       return;
     }
-    this.answerRendered.emit({height: this.wrapperElement!.scrollHeight});
+    this.answerSizeUpdated.emit({height: this.wrapperElement!.scrollHeight});
   }
 
   private renderStyle() {
@@ -67,7 +74,10 @@ export class AtomicSmartSnippetAnswer {
 
   private renderContent() {
     return (
-      <div class="wrapper" ref={(element) => (this.wrapperElement = element)}>
+      <div
+        class="wrapper"
+        ref={(element) => element && this.setWrapperElement(element)}
+      >
         {/* deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify */}
         <div
           innerHTML={sanitize(this.htmlContent, {

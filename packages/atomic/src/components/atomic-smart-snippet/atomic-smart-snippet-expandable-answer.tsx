@@ -64,7 +64,7 @@ export class AtomicSmartSnippetExpandableAnswer {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
 
-  public answerRendered(event: CustomEvent<{height: number}>) {
+  public answerSizeUpdated(event: CustomEvent<{height: number}>) {
     const {height} = event.detail;
     this.host.style.setProperty('--full-height', `${height}px`);
     this.showButton = height > this.maximumHeight;
@@ -85,7 +85,7 @@ export class AtomicSmartSnippetExpandableAnswer {
           exportparts="answer"
           htmlContent={this.smartSnippetState.answer}
           innerStyle={this.snippetStyle}
-          onAnswerRendered={(e) => this.answerRendered(e)}
+          onAnswerSizeUpdated={(e) => this.answerSizeUpdated(e)}
         ></atomic-smart-snippet-answer>
       </div>
     );
