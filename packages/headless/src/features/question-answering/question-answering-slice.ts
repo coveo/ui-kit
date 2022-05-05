@@ -11,6 +11,8 @@ import {
   likeSmartSnippet,
   openFeedbackModal,
   closeFeedbackModal,
+  showMoreSmartSnippetRelatedQuestion,
+  showLessSmartSnippetRelatedQuestion,
 } from './question-answering-actions';
 import {
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
@@ -19,6 +21,7 @@ import {
 } from './question-answering-document-id';
 import {
   getQuestionAnsweringInitialState,
+  getQuestionAnsweringRelatedQuestionInitialState,
   QuestionAnsweringRelatedQuestionState,
 } from './question-answering-state';
 
@@ -58,12 +61,11 @@ function buildQuestionAnsweringRelatedQuestionState(
   if (currentState && id === currentState.questionAnswerId) {
     return currentState;
   }
-  return {
+  return getQuestionAnsweringRelatedQuestionInitialState({
     contentIdKey: responseQuestionAnswer.documentId.contentIdKey,
     contentIdValue: responseQuestionAnswer.documentId.contentIdValue,
-    expanded: false,
     questionAnswerId: id,
-  };
+  });
 }
 
 export const questionAnsweringReducer = createReducer(
@@ -123,9 +125,7 @@ export const questionAnsweringReducer = createReducer(
         ) => {
           const idx = findRelatedQuestionIdx(
             state.relatedQuestions,
-            action.payload as
-              | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-              | QuestionAnsweringDocumentIdActionCreatorPayload
+            action.payload
           );
           if (idx === -1) {
             return;
@@ -136,13 +136,31 @@ export const questionAnsweringReducer = createReducer(
       .addCase(collapseSmartSnippetRelatedQuestion, (state, action) => {
         const idx = findRelatedQuestionIdx(
           state.relatedQuestions,
-          action.payload as
-            | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-            | QuestionAnsweringDocumentIdActionCreatorPayload
+          action.payload
         );
         if (idx === -1) {
           return;
         }
         state.relatedQuestions[idx].expanded = false;
+      })
+      .addCase(showMoreSmartSnippetRelatedQuestion, (state, action) => {
+        const idx = findRelatedQuestionIdx(
+          state.relatedQuestions,
+          action.payload
+        );
+        if (idx === -1) {
+          return;
+        }
+        state.relatedQuestions[idx].showFullSnippet = true;
+      })
+      .addCase(showLessSmartSnippetRelatedQuestion, (state, action) => {
+        const idx = findRelatedQuestionIdx(
+          state.relatedQuestions,
+          action.payload
+        );
+        if (idx === -1) {
+          return;
+        }
+        state.relatedQuestions[idx].showFullSnippet = false;
       })
 );

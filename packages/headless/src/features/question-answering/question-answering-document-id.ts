@@ -54,7 +54,13 @@ export function validateQuestionAnsweringActionCreatorPayload(
     | QuestionAnsweringDocumentIdActionCreatorPayload
 ) {
   if (isQuestionAnsweringUniqueIdentifierActionCreatorPayload(payload)) {
-    return validatePayload(payload, uniqueIdentifierPayloadDefinition());
+    return validatePayload<QuestionAnsweringUniqueIdentifierActionCreatorPayload>(
+      payload,
+      uniqueIdentifierPayloadDefinition()
+    );
   }
-  return validatePayload(payload, documentIdentifierPayloadDefinition());
+  return validatePayload<QuestionAnsweringDocumentIdActionCreatorPayload>(
+    payload,
+    documentIdentifierPayloadDefinition()
+  );
 }

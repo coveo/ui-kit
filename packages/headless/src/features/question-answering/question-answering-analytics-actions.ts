@@ -1,4 +1,5 @@
 import {Result} from '../../api/search/search/result';
+import {validatePayload} from '../../utils/validate-payload';
 import {
   AnalyticsType,
   documentIdentifier,
@@ -10,6 +11,7 @@ import {
   isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
 import {relatedQuestionSelector} from './question-answering-selectors';
@@ -137,6 +139,56 @@ export const logCollapseSmartSnippetSuggestion = (
       }
 
       return client.logCollapseSmartSnippetSuggestion({
+        question: relatedQuestion.question,
+        answerSnippet: relatedQuestion.answerSnippet,
+        documentId: relatedQuestion.documentId,
+      });
+    }
+  )();
+
+export const logShowMoreSmartSnippetSuggestion = (
+  payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippetSuggestion/showMore',
+    AnalyticsType.Custom,
+    (client, state) => {
+      validatePayload(payload, uniqueIdentifierPayloadDefinition());
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+
+      return client.logShowMoreSmartSnippetSuggestion({
+        question: relatedQuestion.question,
+        answerSnippet: relatedQuestion.answerSnippet,
+        documentId: relatedQuestion.documentId,
+      });
+    }
+  )();
+
+export const logShowLessSmartSnippetSuggestion = (
+  payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippetSuggestion/showLess',
+    AnalyticsType.Custom,
+    (client, state) => {
+      validatePayload(payload, uniqueIdentifierPayloadDefinition());
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+
+      return client.logShowLessSmartSnippetSuggestion({
         question: relatedQuestion.question,
         answerSnippet: relatedQuestion.answerSnippet,
         documentId: relatedQuestion.documentId,

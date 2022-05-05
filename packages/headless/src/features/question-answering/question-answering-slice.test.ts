@@ -14,10 +14,13 @@ import {
   expandSmartSnippet,
   expandSmartSnippetRelatedQuestion,
   likeSmartSnippet,
+  showLessSmartSnippetRelatedQuestion,
+  showMoreSmartSnippetRelatedQuestion,
 } from './question-answering-actions';
 import {questionAnsweringReducer} from './question-answering-slice';
 import {
   getQuestionAnsweringInitialState,
+  getQuestionAnsweringRelatedQuestionInitialState,
   QuestionAnsweringState,
 } from './question-answering-state';
 
@@ -99,18 +102,16 @@ describe('question answering slice', () => {
 
   it('should handle expandSmartSnippetRelatedQuestion using the documentId', () => {
     state.relatedQuestions = [
-      {
+      getQuestionAnsweringRelatedQuestionInitialState({
         contentIdKey: 'foo',
         contentIdValue: 'bar',
-        expanded: false,
         questionAnswerId: 'a',
-      },
-      {
+      }),
+      getQuestionAnsweringRelatedQuestionInitialState({
         contentIdKey: 'foo',
         contentIdValue: 'bazz',
-        expanded: false,
         questionAnswerId: 'b',
-      },
+      }),
     ];
     const resulting = questionAnsweringReducer(
       state,
@@ -126,16 +127,20 @@ describe('question answering slice', () => {
   it('should handle collapseSmartSnippetRelatedQuestion using the documentId', () => {
     state.relatedQuestions = [
       {
-        contentIdKey: 'foo',
-        contentIdValue: 'bar',
+        ...getQuestionAnsweringRelatedQuestionInitialState({
+          contentIdKey: 'foo',
+          contentIdValue: 'bar',
+          questionAnswerId: 'a',
+        }),
         expanded: true,
-        questionAnswerId: 'a',
       },
       {
-        contentIdKey: 'foo',
-        contentIdValue: 'bazz',
+        ...getQuestionAnsweringRelatedQuestionInitialState({
+          contentIdKey: 'foo',
+          contentIdValue: 'bazz',
+          questionAnswerId: 'b',
+        }),
         expanded: true,
-        questionAnswerId: 'b',
       },
     ];
     const resulting = questionAnsweringReducer(
@@ -151,24 +156,21 @@ describe('question answering slice', () => {
 
   it('should handle expandSmartSnippetRelatedQuestion using the unique id', () => {
     state.relatedQuestions = [
-      {
+      getQuestionAnsweringRelatedQuestionInitialState({
         contentIdKey: 'foo',
         contentIdValue: 'bar',
-        expanded: false,
         questionAnswerId: 'abc',
-      },
-      {
+      }),
+      getQuestionAnsweringRelatedQuestionInitialState({
         contentIdKey: 'foo',
         contentIdValue: 'bazz',
-        expanded: false,
         questionAnswerId: 'def',
-      },
-      {
+      }),
+      getQuestionAnsweringRelatedQuestionInitialState({
         contentIdKey: 'foo',
         contentIdValue: 'bazz',
-        expanded: false,
         questionAnswerId: 'ghi',
-      },
+      }),
     ];
     const resulting = questionAnsweringReducer(
       state,
@@ -184,22 +186,28 @@ describe('question answering slice', () => {
   it('should handle collapseSmartSnippetRelatedQuestion using the unique id', () => {
     state.relatedQuestions = [
       {
-        contentIdKey: 'foo',
-        contentIdValue: 'bar',
+        ...getQuestionAnsweringRelatedQuestionInitialState({
+          contentIdKey: 'foo',
+          contentIdValue: 'bar',
+          questionAnswerId: 'abc',
+        }),
         expanded: true,
-        questionAnswerId: 'abc',
       },
       {
-        contentIdKey: 'foo',
-        contentIdValue: 'bazz',
+        ...getQuestionAnsweringRelatedQuestionInitialState({
+          contentIdKey: 'foo',
+          contentIdValue: 'bazz',
+          questionAnswerId: 'def',
+        }),
         expanded: true,
-        questionAnswerId: 'def',
       },
       {
-        contentIdKey: 'foo',
-        contentIdValue: 'bazz',
+        ...getQuestionAnsweringRelatedQuestionInitialState({
+          contentIdKey: 'foo',
+          contentIdValue: 'bazz',
+          questionAnswerId: 'ghi',
+        }),
         expanded: true,
-        questionAnswerId: 'ghi',
       },
     ];
     const resulting = questionAnsweringReducer(
@@ -211,6 +219,58 @@ describe('question answering slice', () => {
     expect(resulting.relatedQuestions[0].expanded).toBe(true);
     expect(resulting.relatedQuestions[1].expanded).toBe(false);
     expect(resulting.relatedQuestions[2].expanded).toBe(true);
+  });
+
+  it('should handle showMoreSmartSnippetRelatedQuestion', () => {
+    state.relatedQuestions = [
+      getQuestionAnsweringRelatedQuestionInitialState({
+        contentIdKey: 'foo',
+        contentIdValue: 'bar',
+        questionAnswerId: 'abc',
+      }),
+      getQuestionAnsweringRelatedQuestionInitialState({
+        contentIdKey: 'foo',
+        contentIdValue: 'bar',
+        questionAnswerId: 'def',
+      }),
+    ];
+    const resulting = questionAnsweringReducer(
+      state,
+      showMoreSmartSnippetRelatedQuestion({
+        questionAnswerId: 'def',
+      })
+    );
+    expect(resulting.relatedQuestions[0].showFullSnippet).toBe(false);
+    expect(resulting.relatedQuestions[1].showFullSnippet).toBe(true);
+  });
+
+  it('should handle showLessSmartSnippetRelatedQuestion', () => {
+    state.relatedQuestions = [
+      {
+        ...getQuestionAnsweringRelatedQuestionInitialState({
+          contentIdKey: 'foo',
+          contentIdValue: 'bar',
+          questionAnswerId: 'abc',
+        }),
+        showFullSnippet: true,
+      },
+      {
+        ...getQuestionAnsweringRelatedQuestionInitialState({
+          contentIdKey: 'foo',
+          contentIdValue: 'bar',
+          questionAnswerId: 'def',
+        }),
+        showFullSnippet: true,
+      },
+    ];
+    const resulting = questionAnsweringReducer(
+      state,
+      showLessSmartSnippetRelatedQuestion({
+        questionAnswerId: 'def',
+      })
+    );
+    expect(resulting.relatedQuestions[0].showFullSnippet).toBe(true);
+    expect(resulting.relatedQuestions[1].showFullSnippet).toBe(false);
   });
 
   it('should handle executeSearch to populate relatedQuestions', () => {

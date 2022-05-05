@@ -2,7 +2,14 @@ import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question
 
 export interface QuestionAnsweringRelatedQuestionState
   extends QuestionAnswerDocumentIdentifier {
+  /**
+   * Determines if the snippet is expanded.
+   */
   expanded: boolean;
+  /**
+   * Whether the full answer snippet should be displayed.
+   */
+  showFullSnippet: boolean;
   /**
    * The unique identifier for this question & answer.
    */
@@ -30,6 +37,14 @@ export interface QuestionAnsweringState {
    */
   questionAnswerId?: string;
   relatedQuestions: QuestionAnsweringRelatedQuestionState[];
+}
+
+export function getQuestionAnsweringRelatedQuestionInitialState(options: {
+  contentIdKey: string;
+  contentIdValue: string;
+  questionAnswerId: string;
+}): QuestionAnsweringRelatedQuestionState {
+  return {...options, expanded: false, showFullSnippet: false};
 }
 
 export const getQuestionAnsweringInitialState: () => QuestionAnsweringState =

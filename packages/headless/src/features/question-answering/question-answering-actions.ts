@@ -1,7 +1,9 @@
 import {createAction} from '@reduxjs/toolkit';
+import {validatePayload} from '../../utils/validate-payload';
 import {
   QuestionAnsweringDocumentIdActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
 
@@ -37,4 +39,22 @@ export const collapseSmartSnippetRelatedQuestion = createAction(
       | QuestionAnsweringUniqueIdentifierActionCreatorPayload
       | QuestionAnsweringDocumentIdActionCreatorPayload
   ) => validateQuestionAnsweringActionCreatorPayload(payload)
+);
+
+export const showMoreSmartSnippetRelatedQuestion = createAction(
+  'smartSnippet/related/showMore',
+  (payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload) =>
+    validatePayload<QuestionAnsweringUniqueIdentifierActionCreatorPayload>(
+      payload,
+      uniqueIdentifierPayloadDefinition()
+    )
+);
+
+export const showLessSmartSnippetRelatedQuestion = createAction(
+  'smartSnippet/related/showLess',
+  (payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload) =>
+    validatePayload<QuestionAnsweringUniqueIdentifierActionCreatorPayload>(
+      payload,
+      uniqueIdentifierPayloadDefinition()
+    )
 );

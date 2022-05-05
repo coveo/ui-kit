@@ -8,7 +8,15 @@ import {
   expandSmartSnippet,
   openFeedbackModal,
   closeFeedbackModal,
+  collapseSmartSnippetRelatedQuestion,
+  expandSmartSnippetRelatedQuestion,
+  showLessSmartSnippetRelatedQuestion,
+  showMoreSmartSnippetRelatedQuestion,
 } from './question-answering-actions';
+import {
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  QuestionAnsweringDocumentIdActionCreatorPayload,
+} from './question-answering-document-id';
 
 /**
  * The question answering action creators.
@@ -50,6 +58,52 @@ export interface QuestionAnsweringActionCreators {
    * @returns A dispatchable action.
    */
   closeFeedbackModal(): PayloadAction;
+  /**
+   * Expand the specified snippet suggestion
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  expandSmartSnippetRelatedQuestion(
+    payload:
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+  ): PayloadAction<
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
+  >;
+  /**
+   * Collapse the specified snippet suggestion
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  collapseSmartSnippetRelatedQuestion(
+    payload:
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+  ): PayloadAction<
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
+  >;
+  /**
+   * See more of the specified snippet suggestion
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  showMoreSmartSnippetRelatedQuestion(
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): PayloadAction<QuestionAnsweringUniqueIdentifierActionCreatorPayload>;
+  /**
+   * See less of the specified snippet suggestion
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  showLessSmartSnippetRelatedQuestion(
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): PayloadAction<QuestionAnsweringUniqueIdentifierActionCreatorPayload>;
 }
 
 /**
@@ -70,5 +124,9 @@ export function loadQuestionAnsweringActions(
     likeSmartSnippet,
     openFeedbackModal,
     closeFeedbackModal,
+    expandSmartSnippetRelatedQuestion,
+    collapseSmartSnippetRelatedQuestion,
+    showMoreSmartSnippetRelatedQuestion,
+    showLessSmartSnippetRelatedQuestion,
   };
 }

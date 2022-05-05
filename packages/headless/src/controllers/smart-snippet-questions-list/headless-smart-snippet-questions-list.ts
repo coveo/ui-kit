@@ -6,11 +6,15 @@ import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
+  logShowMoreSmartSnippetSuggestion,
+  logShowLessSmartSnippetSuggestion,
 } from '../../features/question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
+  showMoreSmartSnippetRelatedQuestion,
+  showLessSmartSnippetRelatedQuestion,
 } from '../../features/question-answering/question-answering-actions';
 import {Result} from '../../api/search/search/result';
 import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
@@ -53,6 +57,18 @@ export interface SmartSnippetQuestionsList extends Controller {
    * @param identifier - The identifier of a document used to create the smart snippet.
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
+  /**
+   * Ask to see more of the specified snippet suggestion.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to expand.
+   */
+  showMore(identifier: string): void;
+  /**
+   * Ask to see less of the specified snippet suggestion.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  showLess(identifier: string): void;
 }
 
 /**
@@ -89,8 +105,16 @@ export interface SmartSnippetRelatedQuestion {
   questionAnswerId: string;
   /**
    * Determines if the snippet is currently expanded.
+   *
+   * This is toggled with `expand` and `collapse`.
    */
   expanded: boolean;
+  /**
+   * Whether the full answer snippet should be displayed.
+   *
+   * This is toggled with `showMore` and `showLess`.
+   */
+  showFullSnippet: boolean;
   /**
    * Provides the source of the smart snippet.
    */
@@ -142,6 +166,8 @@ export function buildSmartSnippetQuestionsList(
             questionAnswerId:
               state.questionAnswering.relatedQuestions[i].questionAnswerId,
             expanded: state.questionAnswering.relatedQuestions[i].expanded,
+            showFullSnippet:
+              state.questionAnswering.relatedQuestions[i].showFullSnippet,
             source: getResult(relatedQuestion.documentId),
           })
         ),
@@ -157,6 +183,16 @@ export function buildSmartSnippetQuestionsList(
       const payload = getPayloadFromIdentifier(identifier);
       engine.dispatch(logCollapseSmartSnippetSuggestion(payload));
       engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
+    },
+    showMore(identifier) {
+      const payload = {questionAnswerId: identifier};
+      engine.dispatch(logShowMoreSmartSnippetSuggestion(payload));
+      engine.dispatch(showMoreSmartSnippetRelatedQuestion(payload));
+    },
+    showLess(identifier) {
+      const payload = {questionAnswerId: identifier};
+      engine.dispatch(logShowLessSmartSnippetSuggestion(payload));
+      engine.dispatch(showLessSmartSnippetRelatedQuestion(payload));
     },
   };
 }
