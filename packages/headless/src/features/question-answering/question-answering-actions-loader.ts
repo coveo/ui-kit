@@ -65,9 +65,7 @@ export interface QuestionAnsweringActionCreators {
    * @returns A dispatchable action.
    */
   expandSmartSnippetRelatedQuestion(
-    payload:
-      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-      | QuestionAnsweringDocumentIdActionCreatorPayload
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): PayloadAction<
     | QuestionAnsweringUniqueIdentifierActionCreatorPayload
     | QuestionAnsweringDocumentIdActionCreatorPayload
@@ -79,9 +77,7 @@ export interface QuestionAnsweringActionCreators {
    * @returns A dispatchable action.
    */
   collapseSmartSnippetRelatedQuestion(
-    payload:
-      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-      | QuestionAnsweringDocumentIdActionCreatorPayload
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): PayloadAction<
     | QuestionAnsweringUniqueIdentifierActionCreatorPayload
     | QuestionAnsweringDocumentIdActionCreatorPayload
