@@ -64,8 +64,13 @@ import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
   SmartSnippetFeedback,
+  logShowMoreSmartSnippetSuggestion,
+  logShowLessSmartSnippetSuggestion,
 } from '../question-answering/question-answering-analytics-actions';
-import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
+import {
+  QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+} from '../question-answering/question-answering-document-id';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   logStaticFilterSelect,
@@ -86,6 +91,7 @@ export type {
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   LogStaticFilterToggleValueActionCreatorPayload,
   LogStaticFilterClearAllActionCreatorPayload,
   StaticFilterValueMetadata,
@@ -558,7 +564,9 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logExpandSmartSnippetSuggestion(
-    payload: QuestionAnsweringDocumentIdActionCreatorPayload
+    payload:
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
@@ -574,7 +582,41 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logCollapseSmartSnippetSuggestion(
-    payload: QuestionAnsweringDocumentIdActionCreatorPayload
+    payload:
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when the show more button in a smart snippet suggestion, or related question, is pressed.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logShowMoreSmartSnippetSuggestion(
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when the show less button in a smart snippet suggestion, or related question, is pressed.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logShowLessSmartSnippetSuggestion(
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
@@ -693,6 +735,8 @@ export function loadSearchAnalyticsActions(
     logCollapseSmartSnippet,
     logExpandSmartSnippetSuggestion,
     logCollapseSmartSnippetSuggestion,
+    logShowMoreSmartSnippetSuggestion,
+    logShowLessSmartSnippetSuggestion,
     logNoResultsBack,
     logStaticFilterSelect,
     logStaticFilterDeselect,
