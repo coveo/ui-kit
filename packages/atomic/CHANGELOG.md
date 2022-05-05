@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.50.1...@coveo/atomic@1.51.0) (2022-05-05)
+
+
+### Features
+
+* **atomic:** refactored atomic-modal mobile/desktop look to fullscreen true/false prop ([#1955](https://github.com/coveo/ui-kit/issues/1955)) ([737b1fc](https://github.com/coveo/ui-kit/commit/737b1fc5b5aa90ba78005fb054e9cf8cc757e8b9))
+
+
+
+
+
 ## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.50.0...@coveo/atomic@1.50.1) (2022-05-04)
 
 
