@@ -49,6 +49,10 @@ import {randomID} from '../../utils/utils';
  * @part question-text-collapsed - The title of a collapsed related question.
  * @part answer-and-source - The wrapper around the answer and source of a related question.
  * @part answer - The container displaying the full document excerpt of a related question's answer.
+ * @part truncated-answer - The container displaying only part of a related question's answer.
+ * @part show-more-button - The show more button of a related question's answer.
+ * @part show-less-button - The show less button of a related question's answer.
+ * @part body - The body of a related question's answer, containing the truncated answer and the show more or show less button.
  * @part footer - The wrapper around the source of a related question's answer.
  * @part source-url - The URL to the document a related question's answer is extracted from.
  * @part source-title - The title of the document a related question's answer is extracted from.
@@ -76,6 +80,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
    *
    */
   @Prop({reflect: true}) public headingLevel = 0;
+
+  /**
+   * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+   */
+  @Prop({reflect: true}) maximumHeight = 250;
+
+  /**
+   * When an answer is partly hidden, how much of its height (in pixels) should be visible.
+   */
+  @Prop({reflect: true}) collapsedHeight = 180;
 
   /**
    * Sets the style of the snippets.
@@ -159,11 +173,25 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
 
   private renderContent(relatedQuestion: SmartSnippetRelatedQuestion) {
     return (
-      <atomic-smart-snippet-answer
-        exportparts="answer"
+      <atomic-smart-snippet-expandable-answer
+        exportparts="answer,show-more-button,show-less-button,truncated-answer"
+        part="body"
+        expanded={relatedQuestion.showFullSnippet}
+        maximumHeight={this.maximumHeight}
+        collapsedHeight={this.collapsedHeight}
         htmlContent={relatedQuestion.answer}
-        innerStyle={this.style}
-      ></atomic-smart-snippet-answer>
+        snippetStyle={this.style}
+        onExpand={() =>
+          this.smartSnippetQuestionsList.showMore(
+            relatedQuestion.questionAnswerId
+          )
+        }
+        onCollapse={() =>
+          this.smartSnippetQuestionsList.showLess(
+            relatedQuestion.questionAnswerId
+          )
+        }
+      ></atomic-smart-snippet-expandable-answer>
     );
   }
 
@@ -218,14 +246,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       >
         <article class="contents">
           {this.renderQuestion(relatedQuestion, index)}
-          <div
-            part={relatedQuestion.expanded ? 'answer-and-source' : ''}
-            class={relatedQuestion.expanded ? 'pl-10 pr-6 pb-6' : 'hidden'}
-            id={this.getRelatedQuestionId(index)}
-          >
-            {this.renderContent(relatedQuestion)}
-            {this.renderSource(relatedQuestion)}
-          </div>
+          {relatedQuestion.expanded && (
+            <div
+              part="answer-and-source"
+              class="pl-10 pr-6 pb-6"
+              id={this.getRelatedQuestionId(index)}
+            >
+              {this.renderContent(relatedQuestion)}
+              {this.renderSource(relatedQuestion)}
+            </div>
+          )}
         </article>
       </li>
     );

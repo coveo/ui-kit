@@ -82,6 +82,28 @@ export const SmartSnippetSuggestionsSelectors = {
     SmartSnippetSuggestionsSelectors.shadow().find('[part="answer"]', {
       includeShadowDom: true,
     }),
+  truncatedAnswer: () =>
+    SmartSnippetSuggestionsSelectors.shadow().find(
+      '[part="truncated-answer"]',
+      {
+        includeShadowDom: true,
+      }
+    ),
+  showMoreButton: () =>
+    SmartSnippetSuggestionsSelectors.shadow().find(
+      '[part="show-more-button"]',
+      {
+        includeShadowDom: true,
+      }
+    ),
+  showLessButton: () =>
+    SmartSnippetSuggestionsSelectors.shadow().find(
+      '[part="show-less-button"]',
+      {
+        includeShadowDom: true,
+      }
+    ),
+  body: () => SmartSnippetSuggestionsSelectors.shadow().find('[part="body"]'),
   footer: () =>
     SmartSnippetSuggestionsSelectors.shadow().find('[part="footer"]', {
       includeShadowDom: true,

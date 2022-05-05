@@ -15,6 +15,11 @@ import {
 const {remSize, relatedQuestions: defaultRelatedQuestions} =
   addSmartSnippetSuggestionsDefaultOptions;
 
+function buildAnswerWithHeight(height: number) {
+  const heightWithoutMargins = height - remSize * 2;
+  return `<div style="height: ${heightWithoutMargins}px; background-color: red;"></div>`;
+}
+
 describe('Smart Snippet Suggestions Test Suites', () => {
   describe('after toggling the first section twice and all others once', () => {
     const expectedNumberOfCollapsedSections = 1;
@@ -91,6 +96,40 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
     });
+  });
+
+  describe('with a specific heading level and no expanded section', () => {
+    const headingLevel = 5;
+    before(() => {
+      new TestFixture()
+        .with(
+          addSmartSnippetSuggestions({props: {'heading-level': headingLevel}})
+        )
+        .init();
+    });
+
+    it('should use the correct heading level for the accessibility heading', () => {
+      SmartSnippetSuggestionsSelectors.heading().should(
+        'have.prop',
+        'tagName',
+        'H' + headingLevel
+      );
+    });
+
+    it('should use the correct heading level for the question', () => {
+      SmartSnippetSuggestionsSelectors.questionCollapsedText()
+        .first()
+        .should('have.prop', 'tagName', 'H' + (headingLevel + 1));
+    });
+  });
+
+  describe('with all sections expanded', () => {
+    before(() => {
+      new TestFixture().with(addSmartSnippetSuggestions()).init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton().each((e) =>
+        cy.wrap(e).click()
+      );
+    });
 
     it('should have links to the source', () => {
       SmartSnippetSuggestionsSelectors.sourceUrl()
@@ -128,28 +167,108 @@ describe('Smart Snippet Suggestions Test Suites', () => {
     });
   });
 
-  describe('with a specific heading level and no expanded section', () => {
-    const headingLevel = 5;
+  describe('when maximumHeight is smaller than collapsedHeight', () => {
+    before(() => {
+      const value = 50;
+      new TestFixture()
+        .with(
+          addSmartSnippetSuggestions({
+            props: {
+              'maximum-height': value - 1,
+              'collapsed-height': value,
+            },
+          })
+        )
+        .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
+    });
+
+    CommonAssertions.assertConsoleError(true);
+    CommonAssertions.assertContainsComponentError(
+      SmartSnippetSuggestionsSelectors,
+      true
+    );
+  });
+
+  describe("when an expanded snippet's height is equal to maximumHeight", () => {
+    before(() => {
+      const height = 300;
+      new TestFixture()
+        .with(
+          addSmartSnippetSuggestions({
+            relatedQuestions: [
+              {
+                ...defaultRelatedQuestions[0],
+                answer: buildAnswerWithHeight(height),
+              },
+            ],
+            props: {
+              'maximum-height': height,
+              'collapsed-height': 150,
+            },
+          })
+        )
+        .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
+    });
+
+    SmartSnippetSuggestionsAssertions.assertShowMore(false);
+    SmartSnippetSuggestionsAssertions.assertShowLess(false);
+  });
+
+  describe("when an expanded snippet's height is greater than maximumHeight", () => {
+    const height = 300;
+    const heightWhenCollapsed = 150;
     before(() => {
       new TestFixture()
         .with(
-          addSmartSnippetSuggestions({props: {'heading-level': headingLevel}})
+          addSmartSnippetSuggestions({
+            relatedQuestions: [
+              {
+                ...defaultRelatedQuestions[0],
+                answer: buildAnswerWithHeight(height),
+              },
+            ],
+            props: {
+              'maximum-height': height - 1,
+              'collapsed-height': heightWhenCollapsed,
+            },
+          })
         )
         .init();
-    });
-
-    it('should use the correct heading level for the accessibility heading', () => {
-      SmartSnippetSuggestionsSelectors.heading().should(
-        'have.prop',
-        'tagName',
-        'H' + headingLevel
-      );
-    });
-
-    it('should use the correct heading level for the question', () => {
-      SmartSnippetSuggestionsSelectors.questionCollapsedText()
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
         .first()
-        .should('have.prop', 'tagName', 'H' + (headingLevel + 1));
+        .click();
+    });
+
+    SmartSnippetSuggestionsAssertions.assertShowMore(true);
+    SmartSnippetSuggestionsAssertions.assertShowLess(false);
+    SmartSnippetSuggestionsAssertions.assertAnswerHeight(heightWhenCollapsed);
+
+    describe('then pressing show more', () => {
+      before(() => {
+        SmartSnippetSuggestionsSelectors.showMoreButton().click();
+      });
+
+      SmartSnippetSuggestionsAssertions.assertShowMore(false);
+      SmartSnippetSuggestionsAssertions.assertShowLess(true);
+      SmartSnippetSuggestionsAssertions.assertAnswerHeight(height);
+
+      describe('then pressing show less', () => {
+        before(() => {
+          SmartSnippetSuggestionsSelectors.showLessButton().click();
+        });
+
+        SmartSnippetSuggestionsAssertions.assertShowMore(true);
+        SmartSnippetSuggestionsAssertions.assertShowLess(false);
+        SmartSnippetSuggestionsAssertions.assertAnswerHeight(
+          heightWhenCollapsed
+        );
+      });
     });
   });
 
@@ -281,6 +400,9 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       new TestFixture()
         .with(addSmartSnippetSuggestions({content: templateEl}))
         .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
     });
 
     it('applies the styling to the rendered snippet', () => {
@@ -306,6 +428,9 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           })
         )
         .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
     });
 
     it('applies the styling to the rendered snippet', () => {
@@ -314,6 +439,48 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .find('b')
         .invoke('css', 'color')
         .should('equal', 'rgb(84, 170, 255)');
+    });
+  });
+
+  describe('when expanding a truncated answer (analytics)', () => {
+    const height = 300;
+    const heightWhenCollapsed = 150;
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSmartSnippetSuggestions({
+            relatedQuestions: [
+              {
+                ...defaultRelatedQuestions[0],
+                answer: buildAnswerWithHeight(height),
+              },
+            ],
+            props: {
+              'maximum-height': height - 1,
+              'collapsed-height': heightWhenCollapsed,
+            },
+          })
+        )
+        .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
+    });
+
+    describe('then pressing show more', () => {
+      beforeEach(() => {
+        SmartSnippetSuggestionsSelectors.showMoreButton().click();
+      });
+
+      SmartSnippetSuggestionsAssertions.assertLogShowMoreSmartSnippetSuggestion();
+
+      describe('then pressing show less', () => {
+        beforeEach(() => {
+          SmartSnippetSuggestionsSelectors.showLessButton().click();
+        });
+
+        SmartSnippetSuggestionsAssertions.assertLogShowLessSmartSnippetSuggestion();
+      });
     });
   });
 });

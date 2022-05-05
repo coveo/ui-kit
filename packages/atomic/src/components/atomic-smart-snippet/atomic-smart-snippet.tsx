@@ -79,6 +79,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
    * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
    */
   @Prop({reflect: true}) maximumHeight = 250;
+
   /**
    * When the answer is partly hidden, how much of its height (in pixels) should be visible.
    */
@@ -138,9 +139,13 @@ export class AtomicSmartSnippet implements InitializableComponent {
       <atomic-smart-snippet-expandable-answer
         exportparts="answer,show-more-button,show-less-button,truncated-answer"
         part="body"
+        htmlContent={this.smartSnippetState.answer}
+        expanded={this.smartSnippetState.expanded}
         maximumHeight={this.maximumHeight}
         collapsedHeight={this.collapsedHeight}
         snippetStyle={this.style}
+        onExpand={() => this.smartSnippet.expand()}
+        onCollapse={() => this.smartSnippet.collapse()}
       ></atomic-smart-snippet-expandable-answer>
     );
   }

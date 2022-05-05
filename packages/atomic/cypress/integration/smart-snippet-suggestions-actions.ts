@@ -6,6 +6,8 @@ export interface AddSmartSnippetSuggestionsOptions {
   remSize?: number;
   props?: {
     'heading-level'?: number;
+    'maximum-height'?: number;
+    'collapsed-height'?: number;
     'snippet-style'?: string;
   };
   content?: HTMLElement | HTMLElement[];

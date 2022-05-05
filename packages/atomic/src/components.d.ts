@@ -868,6 +868,8 @@ export namespace Components {
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
          */
         "collapsedHeight": number;
+        "expanded": boolean;
+        "htmlContent"?: string;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
@@ -883,9 +885,17 @@ export namespace Components {
     }
     interface AtomicSmartSnippetSuggestions {
         /**
+          * When an answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
         /**
           * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
@@ -2346,10 +2356,14 @@ declare namespace LocalJSX {
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
          */
         "collapsedHeight"?: number;
+        "expanded": boolean;
+        "htmlContent"?: string;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        "onCollapse"?: (event: CustomEvent<void>) => void;
+        "onExpand"?: (event: CustomEvent<void>) => void;
         /**
           * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */
@@ -2362,9 +2376,17 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippetSuggestions {
         /**
+          * When an answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
           * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
          */
         "headingLevel"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
         /**
           * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
          */
