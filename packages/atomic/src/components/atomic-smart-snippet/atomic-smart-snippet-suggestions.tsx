@@ -56,8 +56,6 @@ import {randomID} from '../../utils/utils';
  * @part footer - The wrapper around the source of a related question's answer.
  * @part source-url - The URL to the document a related question's answer is extracted from.
  * @part source-title - The title of the document a related question's answer is extracted from.
- *
- * @internal
  */
 @Component({
   tag: 'atomic-smart-snippet-suggestions',
