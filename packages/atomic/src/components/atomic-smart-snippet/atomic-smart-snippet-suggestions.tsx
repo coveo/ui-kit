@@ -110,7 +110,6 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
   }
 
   private getRelatedQuestionId(index: number) {
-    // TODO: Change to the snippet's unique ID
     return `${this.id}-${index}`;
   }
 
