@@ -2339,7 +2339,7 @@ declare namespace LocalJSX {
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
         "innerStyle"?: string;
-        "onAtomic/smartSnippet/answerRendered"?: (event: CustomEvent<{height: number}>) => void;
+        "onAnswerRendered"?: (event: CustomEvent<{height: number}>) => void;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**

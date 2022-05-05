@@ -1,4 +1,12 @@
-import {Component, h, Prop, Event, EventEmitter, Host} from '@stencil/core';
+import {
+  Component,
+  h,
+  Prop,
+  Event,
+  EventEmitter,
+  Host,
+  Listen,
+} from '@stencil/core';
 import {sanitize} from 'dompurify';
 import {sanitizeStyle} from '../../utils/utils';
 
@@ -15,14 +23,23 @@ export class AtomicSmartSnippetAnswer {
   @Prop({reflect: true}) htmlContent!: string;
   @Prop({reflect: true}) innerStyle?: string;
 
-  @Event({
-    eventName: 'atomic/smartSnippet/answerRendered',
-  })
+  @Event({bubbles: false})
   private answerRendered!: EventEmitter<{height: number}>;
   private wrapperElement?: HTMLElement;
+  private isRendering = true;
+
+  public componentWillRender() {
+    this.isRendering = true;
+  }
 
   public componentDidRender() {
-    this.answerRendered.emit({height: this.wrapperElement!.scrollHeight});
+    this.isRendering = false;
+    this.emitCurrentHeight();
+  }
+
+  @Listen('resize', {target: 'window'})
+  public windowResized() {
+    this.emitCurrentHeight();
   }
 
   private get sanitizedStyle() {
@@ -30,6 +47,13 @@ export class AtomicSmartSnippetAnswer {
       return undefined;
     }
     return sanitizeStyle(this.innerStyle);
+  }
+
+  private emitCurrentHeight() {
+    if (this.isRendering) {
+      return;
+    }
+    this.answerRendered.emit({height: this.wrapperElement!.scrollHeight});
   }
 
   private renderStyle() {

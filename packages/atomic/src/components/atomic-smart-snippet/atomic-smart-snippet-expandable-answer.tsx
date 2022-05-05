@@ -3,7 +3,7 @@ import {
   SmartSnippet,
   SmartSnippetState,
 } from '@coveo/headless';
-import {h, Component, State, Prop, Element, Listen} from '@stencil/core';
+import {h, Component, State, Prop, Element} from '@stencil/core';
 import ArrowDown from '../../images/arrow-down.svg';
 import {
   InitializeBindings,
@@ -64,7 +64,6 @@ export class AtomicSmartSnippetExpandableAnswer {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
 
-  @Listen('atomic/smartSnippet/answerRendered')
   public answerRendered(event: CustomEvent<{height: number}>) {
     const {height} = event.detail;
     this.host.style.setProperty('--full-height', `${height}px`);
@@ -86,6 +85,7 @@ export class AtomicSmartSnippetExpandableAnswer {
           exportparts="answer"
           htmlContent={this.smartSnippetState.answer}
           innerStyle={this.snippetStyle}
+          onAnswerRendered={(e) => this.answerRendered(e)}
         ></atomic-smart-snippet-answer>
       </div>
     );
