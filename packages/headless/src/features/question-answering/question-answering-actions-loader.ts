@@ -23,43 +23,43 @@ import {
  */
 export interface QuestionAnsweringActionCreators {
   /**
-   * Collapses a smart snippet
+   * Collapses a smart snippet.
    *
    * @returns A dispatchable action.
    */
   collapseSmartSnippet(): PayloadAction;
   /**
-   * Expands a smart snippet
+   * Expands a smart snippet.
    *
    * @returns A dispatchable action.
    */
   expandSmartSnippet(): PayloadAction;
   /**
-   * Dislikes a smart snippet (a 'thumbs down' reaction)
+   * Dislikes a smart snippet (a 'thumbs down' reaction).
    *
    * @returns A dispatchable action.
    */
   dislikeSmartSnippet(): PayloadAction;
   /**
-   * Likes a smart snippet (a 'thumbs up' reaction)
+   * Likes a smart snippet (a 'thumbs up' reaction).
    *
    * @returns A dispatchable action.
    */
   likeSmartSnippet(): PayloadAction;
   /**
-   * Opens the feedback modal of a smart snippet
+   * Opens the feedback modal of a smart snippet.
    *
    * @returns A dispatchable action.
    */
   openFeedbackModal(): PayloadAction;
   /**
-   * Closes the feedback modal of a smart snippet
+   * Closes the feedback modal of a smart snippet.
    *
    * @returns A dispatchable action.
    */
   closeFeedbackModal(): PayloadAction;
   /**
-   * Expands the specified snippet suggestion
+   * Expands the specified snippet suggestion.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -71,7 +71,7 @@ export interface QuestionAnsweringActionCreators {
     | QuestionAnsweringDocumentIdActionCreatorPayload
   >;
   /**
-   * Collapses the specified snippet suggestion
+   * Collapses the specified snippet suggestion.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -83,7 +83,7 @@ export interface QuestionAnsweringActionCreators {
     | QuestionAnsweringDocumentIdActionCreatorPayload
   >;
   /**
-   * Shows more of the specified snippet suggestion
+   * Shows more of the specified snippet suggestion.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -92,7 +92,7 @@ export interface QuestionAnsweringActionCreators {
     payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): PayloadAction<QuestionAnsweringUniqueIdentifierActionCreatorPayload>;
   /**
-   * Shows less of the specified snippet suggestion
+   * Shows less of the specified snippet suggestion.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
