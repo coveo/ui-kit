@@ -4,6 +4,7 @@ import {
   InitializeBindings,
   Bindings,
   BindStateToController,
+  RemainHiddenUntilDescendantsRendered,
 } from '../../utils/initialization-utils';
 import {
   buildSmartSnippet,
@@ -99,6 +100,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @Prop({reflect: true}) snippetStyle?: string;
 
   @State() feedbackSent = false;
+
+  @RemainHiddenUntilDescendantsRendered()
+  private remainHiddenUntilDescendantsRendered!: () => void;
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
@@ -214,6 +218,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     if (!this.smartSnippetState.answerFound) {
       return <Hidden></Hidden>;
     }
+    this.remainHiddenUntilDescendantsRendered();
 
     return (
       <aside>
