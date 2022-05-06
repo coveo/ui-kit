@@ -30,13 +30,13 @@ export interface SmartSnippetQuestionsList extends Controller {
    * */
   state: SmartSnippetQuestionsListState;
   /**
-   * Expand the specified snippet suggestion.
+   * Expands the specified snippet suggestion.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet to expand.
    */
   expand(identifier: string): void;
   /**
-   * Expand the specified snippet suggestion.
+   * Expands the specified snippet suggestion.
    *
    * @deprecated - Use expand(identifier: string) instead.
    *
@@ -44,13 +44,13 @@ export interface SmartSnippetQuestionsList extends Controller {
    */
   expand(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
-   * Collapse the specified snippet suggestion.
+   * Collapses the specified snippet suggestion.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
    */
   collapse(identifier: string): void;
   /**
-   * Collapse the specified snippet suggestion.
+   * Collapses the specified snippet suggestion.
    *
    * @deprecated - Use collapse(identifier: string) instead.
    *
@@ -58,13 +58,13 @@ export interface SmartSnippetQuestionsList extends Controller {
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
-   * Show more of a target truncated snippet suggestion.
+   * Shows more of the specified snippet suggestion.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet to expand.
    */
   showMore(identifier: string): void;
   /**
-   * Truncate the specified snippet suggestion.
+   * Shows less of the specified snippet suggestion.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet to truncate.
    */
