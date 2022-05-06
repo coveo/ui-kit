@@ -594,7 +594,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when the show more button in a smart snippet suggestion, or related question, is pressed.
+   * The event to log when the show more button is pressed in a related question.
    *
    * @param payload - The action creation payload.
    * @returns A dispatchable action.
@@ -610,7 +610,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when the show less button in a smart snippet suggestion, or related question, is pressed.
+   * The event to log when the show less button is pressed in a related question.
    *
    * @param payload - The action creation payload.
    * @returns A dispatchable action.

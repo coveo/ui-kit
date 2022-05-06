@@ -58,15 +58,15 @@ export interface SmartSnippetQuestionsList extends Controller {
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
-   * Ask to see more of the specified snippet suggestion.
+   * Show more of a target truncated snippet suggestion.
    *
    * @param identifier - The `questionAnswerId` of the smart snippet to expand.
    */
   showMore(identifier: string): void;
   /**
-   * Ask to see less of the specified snippet suggestion.
+   * Truncate the specified snippet suggestion.
    *
-   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   * @param identifier - The `questionAnswerId` of the smart snippet to truncate.
    */
   showLess(identifier: string): void;
 }
