@@ -23,25 +23,25 @@ import {
  */
 export interface QuestionAnsweringActionCreators {
   /**
-   * Collapse a smart snippet
+   * Collapses a smart snippet
    *
    * @returns A dispatchable action.
    */
   collapseSmartSnippet(): PayloadAction;
   /**
-   * Expand a smart snippet
+   * Expands a smart snippet
    *
    * @returns A dispatchable action.
    */
   expandSmartSnippet(): PayloadAction;
   /**
-   * Dislike, or thumbs down, a smart snippet
+   * Dislikes a smart snippet (a 'thumbs down' reaction)
    *
    * @returns A dispatchable action.
    */
   dislikeSmartSnippet(): PayloadAction;
   /**
-   * Like, or thumbs up, a smart snippet
+   * Likes a smart snippet (a 'thumbs up' reaction)
    *
    * @returns A dispatchable action.
    */
@@ -59,7 +59,7 @@ export interface QuestionAnsweringActionCreators {
    */
   closeFeedbackModal(): PayloadAction;
   /**
-   * Expand the specified snippet suggestion
+   * Expands the specified snippet suggestion
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -71,7 +71,7 @@ export interface QuestionAnsweringActionCreators {
     | QuestionAnsweringDocumentIdActionCreatorPayload
   >;
   /**
-   * Collapse the specified snippet suggestion
+   * Collapses the specified snippet suggestion
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -83,7 +83,7 @@ export interface QuestionAnsweringActionCreators {
     | QuestionAnsweringDocumentIdActionCreatorPayload
   >;
   /**
-   * See more of the specified snippet suggestion
+   * Shows more of the specified snippet suggestion
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
@@ -92,7 +92,7 @@ export interface QuestionAnsweringActionCreators {
     payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): PayloadAction<QuestionAnsweringUniqueIdentifierActionCreatorPayload>;
   /**
-   * See less of the specified snippet suggestion
+   * Shows less of the specified snippet suggestion
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
