@@ -8,48 +8,78 @@ import {
   expandSmartSnippet,
   openFeedbackModal,
   closeFeedbackModal,
+  collapseSmartSnippetRelatedQuestion,
+  expandSmartSnippetRelatedQuestion,
 } from './question-answering-actions';
+import {
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  QuestionAnsweringDocumentIdActionCreatorPayload,
+} from './question-answering-document-id';
 
 /**
  * The question answering action creators.
  */
 export interface QuestionAnsweringActionCreators {
   /**
-   * Collapse a smart snippet
+   * Collapses a smart snippet.
    *
    * @returns A dispatchable action.
    */
   collapseSmartSnippet(): PayloadAction;
   /**
-   * Expand a smart snippet
+   * Expands a smart snippet.
    *
    * @returns A dispatchable action.
    */
   expandSmartSnippet(): PayloadAction;
   /**
-   * Dislike, or thumbs down, a smart snippet
+   * Dislikes a smart snippet (a 'thumbs down' reaction).
    *
    * @returns A dispatchable action.
    */
   dislikeSmartSnippet(): PayloadAction;
   /**
-   * Like, or thumbs up, a smart snippet
+   * Likes a smart snippet (a 'thumbs up' reaction).
    *
    * @returns A dispatchable action.
    */
   likeSmartSnippet(): PayloadAction;
   /**
-   * Opens the feedback modal of a smart snippet
+   * Opens the feedback modal of a smart snippet.
    *
    * @returns A dispatchable action.
    */
   openFeedbackModal(): PayloadAction;
   /**
-   * Closes the feedback modal of a smart snippet
+   * Closes the feedback modal of a smart snippet.
    *
    * @returns A dispatchable action.
    */
   closeFeedbackModal(): PayloadAction;
+  /**
+   * Expands the specified snippet suggestion.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  expandSmartSnippetRelatedQuestion(
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): PayloadAction<
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
+  >;
+  /**
+   * Collapses the specified snippet suggestion.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  collapseSmartSnippetRelatedQuestion(
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): PayloadAction<
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
+  >;
 }
 
 /**
@@ -70,5 +100,7 @@ export function loadQuestionAnsweringActions(
     likeSmartSnippet,
     openFeedbackModal,
     closeFeedbackModal,
+    expandSmartSnippetRelatedQuestion,
+    collapseSmartSnippetRelatedQuestion,
   };
 }

@@ -123,9 +123,7 @@ export const questionAnsweringReducer = createReducer(
         ) => {
           const idx = findRelatedQuestionIdx(
             state.relatedQuestions,
-            action.payload as
-              | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-              | QuestionAnsweringDocumentIdActionCreatorPayload
+            action.payload
           );
           if (idx === -1) {
             return;
@@ -136,9 +134,7 @@ export const questionAnsweringReducer = createReducer(
       .addCase(collapseSmartSnippetRelatedQuestion, (state, action) => {
         const idx = findRelatedQuestionIdx(
           state.relatedQuestions,
-          action.payload as
-            | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-            | QuestionAnsweringDocumentIdActionCreatorPayload
+          action.payload
         );
         if (idx === -1) {
           return;
