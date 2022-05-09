@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SmartSnippet } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
@@ -881,8 +881,9 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
-        "isSuggestion": boolean;
-        "smartSnippet": SmartSnippet | undefined;
+        "beginDelayedSelectSource": (() => void);
+        "cancelPendingSelectSource": (() => void);
+        "selectSource": (() => void);
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
@@ -2371,8 +2372,9 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
-        "isSuggestion": boolean;
-        "smartSnippet"?: SmartSnippet | undefined;
+        "beginDelayedSelectSource": (() => void);
+        "cancelPendingSelectSource": (() => void);
+        "selectSource": (() => void);
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {

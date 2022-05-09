@@ -3,7 +3,7 @@
  
 
 # Owners of the Quantic package
-/packages/quantic/ @coveo/service-integrations
+/packages/quantic/ @coveo/service-integration
 
 # Owners of Atomic's Cypress Tests
 /packages/atomic/cypress/ @coveo/search @coveo/search-qa

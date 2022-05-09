@@ -185,8 +185,13 @@ export class AtomicSmartSnippet implements InitializableComponent {
             {this.smartSnippetState.source ? (
               <atomic-smart-snippet-source
                 source={this.smartSnippetState.source}
-                smartSnippet={this.smartSnippet}
-                isSuggestion={false}
+                selectSource={() => this.smartSnippet.selectSource()}
+                beginDelayedSelectSource={() =>
+                  this.smartSnippet.beginDelayedSelectSource()
+                }
+                cancelPendingSelectSource={() =>
+                  this.smartSnippet.cancelPendingSelectSource()
+                }
               ></atomic-smart-snippet-source>
             ) : (
               []
