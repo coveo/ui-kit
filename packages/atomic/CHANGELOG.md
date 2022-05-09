@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.52.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.51.0...@coveo/atomic@1.52.0) (2022-05-09)
+
+
+### Bug Fixes
+
+* **atomic:** fixed smart snippet show more/show less issue when rotating screen ([#1963](https://github.com/coveo/ui-kit/issues/1963)) ([30c5fb3](https://github.com/coveo/ui-kit/commit/30c5fb3680150c943e83af621633d2fd1be68b22))
+* **atomic:** improved alignment of the "show more"/"show less" smart snippet caret ([#1964](https://github.com/coveo/ui-kit/issues/1964)) ([7ba5fcc](https://github.com/coveo/ui-kit/commit/7ba5fcc79bff5f37b7ff88275ecb9b46e37fb59a))
+* **headless,atomic:** added unique id to related question answers ([#1961](https://github.com/coveo/ui-kit/issues/1961)) ([fd1194e](https://github.com/coveo/ui-kit/commit/fd1194ea5346112198d8928e4e3578a498ce4dd2))
+
+
+### Features
+
+* **atomic:** removed [@internal](https://github.com/internal) flag from atomic-smart-snippet-suggestions ([#1968](https://github.com/coveo/ui-kit/issues/1968)) ([43713ca](https://github.com/coveo/ui-kit/commit/43713ca0534bba3dc252d22e040f41a6c77e7389))
+
+
+
+
+
 # [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.50.1...@coveo/atomic@1.51.0) (2022-05-05)
 
 
