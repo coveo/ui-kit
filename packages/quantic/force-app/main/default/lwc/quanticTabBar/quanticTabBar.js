@@ -35,7 +35,7 @@ export default class QuanticTabBar extends LightningElement {
 
   renderedCallback() {
     if (!this.hasRendered) {
-      this.hideMoreButton();
+      this.updateMoreButtonVisibility(false);
       this.hasRendered = true;
     }
   }
@@ -45,11 +45,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   updateTabsDisplay = () => {
-    if (this.isOverflow) {
-      this.showMoreButton();
-    } else {
-      this.hideMoreButton();
-    }
+    this.updateMoreButtonVisibility(this.isOverflow);
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
     this.updateComboboxOptions();
@@ -97,19 +93,11 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Shows the more button.
-   * @returns {void}
+   * Updates the visibility of the more button.
+   * @param {boolean} show
    */
-  showMoreButton() {
-    this.moreButton?.style.setProperty('display', 'block');
-  }
-
-  /**
-   * Hides the more button.
-   * @returns {void}
-   */
-  hideMoreButton() {
-    this.moreButton?.style.setProperty('display', 'none');
+  updateMoreButtonVisibility(show) {
+    this.moreButton?.style.setProperty('display', show ? 'block' : 'none');
   }
 
   /**
@@ -159,7 +147,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   get slotContentWidth() {
-    return this.getTabsFromSlot()?.reduce(
+    return this.getTabsFromSlot().reduce(
       (total, el) => total + this.getAbsoluteWidth(el),
       0
     );
@@ -186,16 +174,21 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {Array<Element>}
    */
   get overflowingTabs() {
-    const containerRelativeRightPosition = this.container.getBoundingClientRect().right;
-    const selectedTabRelativeRightPosition = this.selectedTab.getBoundingClientRect().right;
+    const containerRelativeRightPosition =
+      this.container.getBoundingClientRect().right;
+    const selectedTabRelativeRightPosition =
+      this.selectedTab.getBoundingClientRect().right;
 
     return this.getTabsFromSlot().filter((element) => {
       const tabPositionedBeforeSelectedTab =
-        selectedTabRelativeRightPosition > element.getBoundingClientRect().right;
+        selectedTabRelativeRightPosition >
+        element.getBoundingClientRect().right;
       const rightPositionLimit = !this.isOverflow
         ? containerRelativeRightPosition
         : tabPositionedBeforeSelectedTab
-        ? containerRelativeRightPosition - this.moreButtonWidth - this.selectedTabWidth
+        ? containerRelativeRightPosition -
+          this.moreButtonWidth -
+          this.selectedTabWidth
         : containerRelativeRightPosition - this.moreButtonWidth;
       return (
         element.getBoundingClientRect().right > rightPositionLimit &&
