@@ -4,6 +4,7 @@ import {
   randomID,
   kebabToCamel,
   parseAssetURL,
+  listenOnce,
 } from './utils';
 
 describe('once', () => {
@@ -12,6 +13,17 @@ describe('once', () => {
     const executeOnce = once(myFunction);
     executeOnce();
     executeOnce();
+    expect(myFunction).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('listenOnce', () => {
+  it('only listens to an event once', () => {
+    const myFunction = jest.fn();
+    const element = document.createElement('div');
+    listenOnce(element, 'click', myFunction);
+    element.click();
+    element.click();
     expect(myFunction).toHaveBeenCalledTimes(1);
   });
 });
