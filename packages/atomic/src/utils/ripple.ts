@@ -10,7 +10,7 @@ const RIPPLE = 'ripple';
 
 function getAnimationDurationInMilliseconds(radiusPixels: number) {
   // A 318px wide button has a duration of 700ms.
-  return Math.cbrt(radiusPixels) / 0.007739287879;
+  return Math.cbrt(radiusPixels) * 129.21;
 }
 
 function setPositionRelativeIfStatic(element: Element) {
