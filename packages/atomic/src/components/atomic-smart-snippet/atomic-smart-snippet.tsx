@@ -182,7 +182,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
           {this.renderQuestion()}
           {this.renderContent()}
           <footer part="footer">
-            {this.smartSnippetState.source ? (
+            {this.smartSnippetState.source && (
               <atomic-smart-snippet-source
                 source={this.smartSnippetState.source}
                 selectSource={() => this.smartSnippet.selectSource()}
@@ -193,8 +193,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
                   this.smartSnippet.cancelPendingSelectSource()
                 }
               ></atomic-smart-snippet-source>
-            ) : (
-              []
             )}
             {this.renderFeedbackBanner()}
           </footer>
