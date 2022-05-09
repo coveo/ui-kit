@@ -16,6 +16,33 @@ export function once<T extends unknown[]>(fn: (...args: T) => unknown) {
   };
 }
 
+export function listenOnce<K extends keyof HTMLElementEventMap>(
+  element: HTMLElement,
+  type: K,
+  listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+  options?: boolean | AddEventListenerOptions
+): void;
+export function listenOnce(
+  element: HTMLElement,
+  type: string,
+  listener: EventListenerOrEventListenerObject,
+  options?: boolean | AddEventListenerOptions
+): void;
+export function listenOnce(
+  element: HTMLElement,
+  type: string,
+  listener: EventListenerOrEventListenerObject,
+  options?: boolean | AddEventListenerOptions
+): void {
+  const _listener: EventListener = (evt: Event) => {
+    element.removeEventListener(type, _listener, options);
+    typeof listener === 'object'
+      ? listener.handleEvent.call(element, evt)
+      : listener.call(element, evt);
+  };
+  element.addEventListener(type, listener, options);
+}
+
 export function camelToKebab(value: string) {
   return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }

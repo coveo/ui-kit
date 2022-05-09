@@ -3,13 +3,14 @@ import {
   SmartSnippet,
   SmartSnippetState,
 } from '@coveo/headless';
-import {h, Component, State, Prop, Element} from '@stencil/core';
+import {h, Component, State, Prop, Element, Watch} from '@stencil/core';
 import ArrowDown from '../../images/arrow-down.svg';
 import {
   InitializeBindings,
   Bindings,
   BindStateToController,
 } from '../../utils/initialization-utils';
+import {listenOnce} from '../../utils/utils';
 import {Hidden} from '../common/hidden';
 
 /**
@@ -51,7 +52,7 @@ export class AtomicSmartSnippetExpandableAnswer {
    */
   @Prop({reflect: true}) snippetStyle?: string;
 
-  @State() showButton = true;
+  @State() fullHeight?: number;
 
   private validateProps() {
     if (this.maximumHeight < this.collapsedHeight) {
@@ -64,18 +65,42 @@ export class AtomicSmartSnippetExpandableAnswer {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
 
-  public answerSizeUpdated(event: CustomEvent<{height: number}>) {
-    const {height} = event.detail;
-    this.host.style.setProperty('--full-height', `${height}px`);
-    this.showButton = height > this.maximumHeight;
+  @Watch('fullHeight')
+  public fullHeightUpdated() {
+    this.host.style.setProperty('--full-height', `${this.fullHeight}px`);
     this.host.style.setProperty(
       '--collapsed-size',
-      `${this.showButton ? this.collapsedHeight : height}px`
+      `${this.showButton ? this.collapsedHeight : this.fullHeight}px`
     );
+  }
+
+  private establishInitialHeight() {
+    return new Promise<number>((resolve) => {
+      const answerElement = document.createElement(
+        'atomic-smart-snippet-answer'
+      );
+      answerElement.htmlContent = this.smartSnippetState.answer;
+      answerElement.innerStyle = this.snippetStyle;
+      answerElement.style.visibility = 'hidden';
+      answerElement.style.position = 'absolute';
+      listenOnce(answerElement, 'answerSizeUpdated', (event) => {
+        answerElement.remove();
+        resolve((event as CustomEvent<{height: number}>).detail.height);
+      });
+      this.host.parentElement!.appendChild(answerElement);
+    });
+  }
+
+  private get showButton() {
+    return this.fullHeight! > this.maximumHeight;
   }
 
   private get expanded() {
     return this.smartSnippetState.expanded || !this.showButton;
+  }
+
+  public async componentWillLoad() {
+    this.fullHeight = await this.establishInitialHeight();
   }
 
   public renderAnswer() {
@@ -85,7 +110,7 @@ export class AtomicSmartSnippetExpandableAnswer {
           exportparts="answer"
           htmlContent={this.smartSnippetState.answer}
           innerStyle={this.snippetStyle}
-          onAnswerSizeUpdated={(e) => this.answerSizeUpdated(e)}
+          onAnswerSizeUpdated={(e) => (this.fullHeight = e.detail.height)}
         ></atomic-smart-snippet-answer>
       </div>
     );
