@@ -331,7 +331,7 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Returns the padding values of an elemenet.
+   * Returns the padding values of an element.
    * @param {Element} element
    * @returns {{top: number, right:number, bottom:number, left:number}}
    */
