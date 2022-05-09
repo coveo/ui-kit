@@ -65,7 +65,10 @@ import {
   logExpandSmartSnippetSuggestion,
   SmartSnippetFeedback,
 } from '../question-answering/question-answering-analytics-actions';
-import {QuestionAnsweringDocumentIdActionCreatorPayload} from '../question-answering/question-answering-document-id';
+import {
+  QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+} from '../question-answering/question-answering-document-id';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   logStaticFilterSelect,
@@ -86,6 +89,7 @@ export type {
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   LogStaticFilterToggleValueActionCreatorPayload,
   LogStaticFilterClearAllActionCreatorPayload,
   StaticFilterValueMetadata,
@@ -558,7 +562,9 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logExpandSmartSnippetSuggestion(
-    payload: QuestionAnsweringDocumentIdActionCreatorPayload
+    payload:
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
@@ -574,7 +580,9 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logCollapseSmartSnippetSuggestion(
-    payload: QuestionAnsweringDocumentIdActionCreatorPayload
+    payload:
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;

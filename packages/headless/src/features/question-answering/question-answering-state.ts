@@ -2,6 +2,9 @@ import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question
 
 export interface QuestionAnsweringRelatedQuestionState
   extends QuestionAnswerDocumentIdentifier {
+  /**
+   * Determines if the snippet is expanded.
+   */
   expanded: boolean;
   /**
    * The unique identifier for this question & answer.
