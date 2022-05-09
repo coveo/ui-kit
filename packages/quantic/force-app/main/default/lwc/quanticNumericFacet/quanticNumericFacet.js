@@ -200,6 +200,7 @@ export default class QuanticNumericFacet extends LightningElement {
       label: this.label,
       facetId: this.facet?.state.facetId ?? this.field,
       format: this.formattingFunction,
+      element: this.template.host
     });
   }
 

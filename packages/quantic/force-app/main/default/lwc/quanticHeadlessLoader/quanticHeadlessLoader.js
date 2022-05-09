@@ -267,7 +267,7 @@ function destroyEngine(engineId) {
  * Register a facet in the store.
  * @param {string} engineId The engine ID.
  * @param {string} facetType
- * @param {{ label: string; facetId: string; format?: function}} data
+ * @param {{ label: string; facetId: string; format?: function, element?: HTMLElement}} data
  */
 function registerToStore(engineId, facetType, data) {
   const store = getQuanticStore(engineId);
@@ -293,6 +293,17 @@ function getFromStore(engineId, facetType) {
   }
 }
 
+/**
+ * Get all facets data from store.
+ * @param {string} engineId The engine ID.
+ */
+ function getAllFacetsFromStore(engineId) {
+  return Object.values(Store.facetTypes).reduce((allFacets, facetType) => ({
+    ...allFacets, ...getFromStore(engineId, facetType)
+  }), {})
+}
+
+
 export {
   loadDependencies,
   setInitializedCallback,
@@ -306,4 +317,5 @@ export {
   registerToStore,
   getFromStore,
   HeadlessBundleNames,
+  getAllFacetsFromStore,
 }
