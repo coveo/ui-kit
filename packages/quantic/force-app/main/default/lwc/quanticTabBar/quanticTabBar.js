@@ -3,7 +3,7 @@ import {LightningElement} from 'lwc';
 import more from '@salesforce/label/c.quantic_More';
 
 /**
- *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner by showing a drop-down list that will display overflowing tabs on smaller screens.
+ *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" drop-down list.
  * @category Search
  * @example
  * <c-quantic-tab-bar>
