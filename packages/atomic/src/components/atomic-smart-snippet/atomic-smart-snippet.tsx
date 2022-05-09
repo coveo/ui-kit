@@ -4,7 +4,6 @@ import {
   InitializeBindings,
   Bindings,
   BindStateToController,
-  RemainHiddenUntilDescendantsRendered,
 } from '../../utils/initialization-utils';
 import {
   buildSmartSnippet,
@@ -101,9 +100,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   @State() feedbackSent = false;
 
-  @RemainHiddenUntilDescendantsRendered()
-  private remainHiddenUntilDescendantsRendered!: () => void;
-
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
     this.modalRef = document.createElement(
@@ -123,6 +119,11 @@ export class AtomicSmartSnippet implements InitializableComponent {
       return this.snippetStyle;
     }
     return styleTag.innerHTML;
+  }
+
+  private set isRenderingFromHidden(shouldHide: boolean) {
+    this.host.style.visibility = shouldHide ? 'hidden' : '';
+    this.host.style.position = shouldHide ? 'absolute' : '';
   }
 
   private renderQuestion() {
@@ -214,11 +215,18 @@ export class AtomicSmartSnippet implements InitializableComponent {
     }
   }
 
+  public componentDidRender() {
+    this.isRenderingFromHidden = false;
+  }
+
   public render() {
     if (!this.smartSnippetState.answerFound) {
       return <Hidden></Hidden>;
     }
-    this.remainHiddenUntilDescendantsRendered();
+
+    if (this.host.classList.contains('atomic-hidden')) {
+      this.isRenderingFromHidden = true;
+    }
 
     return (
       <aside>

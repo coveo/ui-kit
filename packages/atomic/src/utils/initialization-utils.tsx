@@ -290,26 +290,4 @@ export function DeferUntilRender() {
   };
 }
 
-export function RemainHiddenUntilDescendantsRendered() {
-  return (component: ComponentInterface, methodName: string) => {
-    const {componentDidRender} = component;
-
-    component[methodName] = function () {
-      const element = getElement(this);
-      if (!element.classList.contains('atomic-hidden')) {
-        return;
-      }
-      element.style.visibility = 'hidden';
-      element.style.position = 'absolute';
-    };
-
-    component.componentDidRender = function () {
-      const element = getElement(this);
-      element.style.visibility = '';
-      element.style.position = '';
-      return componentDidRender && componentDidRender.call(this);
-    };
-  };
-}
-
 export type I18nState = Record<string, (variables?: TOptions) => string>;
