@@ -40,7 +40,7 @@ export function listenOnce(
       ? listener.handleEvent.call(element, evt)
       : listener.call(element, evt);
   };
-  element.addEventListener(type, listener, options);
+  element.addEventListener(type, _listener, options);
 }
 
 export function camelToKebab(value: string) {
