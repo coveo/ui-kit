@@ -8,7 +8,7 @@
     </div>
   </template>
   <template if:true={hasFacets}>
-    <div class="filters-header slds-var-m-bottom_small">
+    <div class="slds-align_absolute-center filters-header slds-var-m-bottom_small">
       <div class="slds-text-heading_small">{labels.filters}</div>
       <lightning-button
         variant="base"
@@ -51,6 +51,19 @@
             is-collapsed
           ></c-quantic-category-facet>
         </template>
+        <template if:true={facet.isTimeframe}>
+          <c-quantic-timeframe-facet
+            engine-id={engineId}
+            facet-id={facet.facetId}
+            field={facet.field}
+            label={facet.label}
+            with-date-picker={facet.withDatePicker}
+            no-filter-facet-count={facet.noFilterFacetCount}
+            injection-depth={facet.injectionDepth}
+            key={facet.field}
+            is-collapsed
+          ></c-quantic-timeframe-facet>
+        </template>
         <template if:true={facet.isDefault}>
           <c-quantic-facet
             engine-id={engineId}
@@ -66,19 +79,6 @@
             key={facet.field}
             is-collapsed
           ></c-quantic-facet>
-        </template>
-        <template if:true={facet.isTimeframe}>
-          <c-quantic-timeframe-facet
-            engine-id={engineId}
-            facet-id={facet.facetId}
-            field={facet.field}
-            label={facet.label}
-            with-date-picker={facet.withDatePicker}
-            no-filter-facet-count={facet.noFilterFacetCount}
-            injection-depth={facet.injectionDepth}
-            key={facet.field}
-            is-collapsed
-          ></c-quantic-timeframe-facet>
         </template>
       </template>
     </c-quantic-facet-manager>
