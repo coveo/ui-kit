@@ -881,9 +881,9 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
-        "beginDelayedSelectSource": (() => void);
-        "cancelPendingSelectSource": (() => void);
-        "selectSource": (() => void);
+        "beginDelayedSelectSource": () => void;
+        "cancelPendingSelectSource": () => void;
+        "selectSource": () => void;
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
@@ -2372,9 +2372,9 @@ declare namespace LocalJSX {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
-        "beginDelayedSelectSource": (() => void);
-        "cancelPendingSelectSource": (() => void);
-        "selectSource": (() => void);
+        "beginDelayedSelectSource": () => void;
+        "cancelPendingSelectSource": () => void;
+        "selectSource": () => void;
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
