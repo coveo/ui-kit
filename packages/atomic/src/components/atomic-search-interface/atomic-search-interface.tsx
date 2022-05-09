@@ -132,6 +132,10 @@ export class AtomicSearchInterface {
     setCoveoGlobal();
   }
 
+  public async componentWillLoad() {
+    return await this.initI18n();
+  }
+
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
@@ -166,18 +170,16 @@ export class AtomicSearchInterface {
 
   @Watch('language')
   public updateLanguage() {
-    if (!this.engineIsCreated(this.engine)) {
-      return;
+    if (this.engineIsCreated(this.engine)) {
+      const {updateSearchConfiguration} = loadSearchConfigurationActions(
+        this.engine
+      );
+      this.engine.dispatch(
+        updateSearchConfiguration({
+          locale: this.language,
+        })
+      );
     }
-
-    const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine
-    );
-    this.engine.dispatch(
-      updateSearchConfiguration({
-        locale: this.language,
-      })
-    );
 
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
@@ -337,7 +339,7 @@ export class AtomicSearchInterface {
     return this.i18n.use(Backend).init({
       debug: this.logLevel === 'debug',
       lng: this.language,
-      fallbackLng: ['en'],
+      fallbackLng: false,
       backend: this.i18nBackendOptions,
     });
   }
@@ -444,7 +446,6 @@ export class AtomicSearchInterface {
     }
     this.updateIconAssetsPath();
     initEngine();
-    await this.initI18n();
     this.initComponents();
     this.initSearchStatus();
     this.initUrlManager();
