@@ -867,6 +867,8 @@ export namespace Components {
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
          */
         "collapsedHeight": number;
+        "expanded": boolean;
+        "htmlContent": string;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
@@ -2345,10 +2347,14 @@ declare namespace LocalJSX {
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
          */
         "collapsedHeight"?: number;
+        "expanded": boolean;
+        "htmlContent": string;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        "onCollapse"?: (event: CustomEvent<any>) => void;
+        "onExpand"?: (event: CustomEvent<any>) => void;
         /**
           * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */
