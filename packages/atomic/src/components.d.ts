@@ -9,7 +9,6 @@ import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCrite
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
-import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { Section } from "./components/atomic-layout-section/sections";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";

@@ -132,7 +132,9 @@ export class ResultListCommon {
     resultOrFolded: Result | FoldedResult
   ): HTMLElement | DocumentFragment {
     const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
-    return this.render ? this.render(result) : this.getTemplate(result)!;
+    return this.render
+      ? this.render(resultOrFolded)
+      : this.getTemplate(result)!;
   }
 
   private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
