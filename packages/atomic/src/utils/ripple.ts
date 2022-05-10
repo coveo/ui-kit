@@ -8,6 +8,11 @@ interface RippleOptions {
 
 const RIPPLE = 'ripple';
 
+function getAnimationDurationInMilliseconds(radiusPixels: number) {
+  // A 318px wide button has a duration of 700ms.
+  return Math.cbrt(radiusPixels) * 129.21;
+}
+
 function setPositionRelativeIfStatic(element: Element) {
   if (getComputedStyle(element).position === 'static') {
     element.classList.add('ripple-relative');
@@ -34,6 +39,10 @@ export function createRipple(event: MouseEvent, options: RippleOptions) {
   ripple.style.width = ripple.style.height = `${diameter}px`;
   ripple.style.left = `${event.clientX - (left + radius)}px`;
   ripple.style.top = `${event.clientY - (top + radius)}px`;
+  ripple.style.setProperty(
+    '--animation-duration',
+    `${getAnimationDurationInMilliseconds(radius)}ms`
+  );
   button.prepend(ripple);
   cleanupAnimationOnFinish(ripple);
 }
