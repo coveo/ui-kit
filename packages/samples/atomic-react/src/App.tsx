@@ -1,218 +1,40 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import ReactDOM from 'react-dom';
+import './style.css';
+import {List} from './List';
+import {Folded} from './Folded';
+import {HeaderLink} from './HeaderLink';
+import {CustomChildren} from './CustomChildren';
 
-import {
-  AtomicBreadbox,
-  AtomicCategoryFacet,
-  AtomicColorFacet,
-  AtomicDidYouMean,
-  AtomicFacet,
-  AtomicFacetManager,
-  AtomicFormatCurrency,
-  AtomicLayoutSection,
-  AtomicLoadMoreResults,
-  AtomicNoResults,
-  AtomicNumericFacet,
-  AtomicNumericRange,
-  AtomicQueryError,
-  AtomicQuerySummary,
-  AtomicRatingFacet,
-  AtomicRatingRangeFacet,
-  AtomicRefineToggle,
-  AtomicResultBadge,
-  AtomicResultFieldsList,
-  AtomicResultImage,
-  AtomicResultLink,
-  AtomicResultList,
-  AtomicResultMultiValueText,
-  AtomicResultNumber,
-  AtomicResultPrintableUri,
-  AtomicResultRating,
-  AtomicResultSectionBadges,
-  AtomicResultSectionBottomMetadata,
-  AtomicResultSectionEmphasized,
-  AtomicResultSectionExcerpt,
-  AtomicResultSectionTitle,
-  AtomicResultSectionTitleMetadata,
-  AtomicResultSectionVisual,
-  AtomicResultText,
-  AtomicSearchBox,
-  AtomicSearchInterface,
-  AtomicSearchLayout,
-  AtomicSortDropdown,
-  AtomicSortExpression,
-  AtomicText,
-  AtomicTimeframe,
-  AtomicTimeframeFacet,
-  buildSearchEngine,
-  Result,
-} from '@coveo/atomic-react';
+const LIST_PAGE = 'List';
+const FOLDED_LIST_PAGE = 'Folded list';
+const FOLDED_CUSTOM_CHILDREN_PAGE = 'Folded list with custom children';
 
 const App: FunctionComponent = () => {
-  const engine = buildSearchEngine({
-    configuration: {
-      accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
-      organizationId: 'electronicscoveodemocomo0n2fu8v',
-    },
-  });
+  const [page, setPage] = useState(LIST_PAGE);
   return (
-    <AtomicSearchInterface
-      engine={engine}
-      pipeline="Search"
-      searchHub="MainSearch"
-    >
-      <AtomicSearchLayout>
-        <AtomicLayoutSection section="search">
-          <AtomicSearchBox />
-        </AtomicLayoutSection>
-        <AtomicLayoutSection section="facets">
-          <AtomicFacetManager>
-            <AtomicCategoryFacet
-              field="ec_category"
-              label="Category"
-              withSearch
-            />
-            <AtomicFacet field="ec_brand" label="Brand" />
-            <AtomicNumericFacet
-              field="cat_review_count"
-              label="Amount of reviews"
-              displayValuesAs="link"
-            >
-              <AtomicNumericRange start={0} end={150} label="Few" />
-              <AtomicNumericRange
-                start={150}
-                end={650}
-                label="A moderate amount"
-              />
-              <AtomicNumericRange start={650} end={9999999999} label="A lot" />
-            </AtomicNumericFacet>
-            <AtomicColorFacet
-              field="cat_color"
-              label="Color"
-              numberOfValues={6}
-              sortCriteria="occurrences"
-            />
-            <AtomicNumericFacet
-              field="ec_price"
-              label="Cost"
-              withInput="integer"
-            >
-              <AtomicFormatCurrency currency="USD" />
-            </AtomicNumericFacet>
-            <AtomicTimeframeFacet withDatePicker label="Listed within">
-              <AtomicTimeframe unit="hour" />
-              <AtomicTimeframe unit="day" />
-              <AtomicTimeframe unit="week" />
-              <AtomicTimeframe unit="month" />
-              <AtomicTimeframe unit="quarter" />
-              <AtomicTimeframe unit="year" />
-              <AtomicTimeframe unit="year" amount={10} period="next" />
-            </AtomicTimeframeFacet>
-            <AtomicRatingFacet
-              field="ec_rating"
-              label="Rating"
-              numberOfIntervals={5}
-            />
-            <AtomicRatingRangeFacet
-              field="ec_rating"
-              label="Rating Range"
-              numberOfIntervals={5}
-              facetId="ec_rating_range"
-            />
-          </AtomicFacetManager>
-        </AtomicLayoutSection>
-        <AtomicLayoutSection section="main">
-          <AtomicLayoutSection section="status">
-            <AtomicBreadbox />
-            <AtomicQuerySummary enableDuration={false} />
-            <AtomicRefineToggle />
-            <AtomicSortDropdown>
-              <AtomicSortExpression label="relevance" expression="relevancy" />
-              <AtomicSortExpression
-                label="Price (low to high)"
-                expression="ec_price ascending"
-              />
-              <AtomicSortExpression
-                label="Price (high to low)"
-                expression="ec_price descending"
-              />
-            </AtomicSortDropdown>
-
-            <AtomicDidYouMean />
-          </AtomicLayoutSection>
-          <AtomicLayoutSection section="results">
-            <AtomicResultList
-              fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
-              display="grid"
-              imageSize="large"
-              template={MyTemplate}
-            />
-
-            <AtomicQueryError />
-            <AtomicNoResults />
-          </AtomicLayoutSection>
-          <AtomicLayoutSection section="pagination">
-            <AtomicLoadMoreResults />
-          </AtomicLayoutSection>
-        </AtomicLayoutSection>
-      </AtomicSearchLayout>
-    </AtomicSearchInterface>
+    <>
+      <header>
+        <span className="pageTitle">{page} example</span>
+        <ul>
+          <HeaderLink page={LIST_PAGE} currentPage={page} setPage={setPage} />
+          <HeaderLink
+            page={FOLDED_LIST_PAGE}
+            currentPage={page}
+            setPage={setPage}
+          />
+          <HeaderLink
+            page={FOLDED_CUSTOM_CHILDREN_PAGE}
+            currentPage={page}
+            setPage={setPage}
+          />
+        </ul>
+      </header>
+      {page === LIST_PAGE && <List />}
+      {page === FOLDED_LIST_PAGE && <Folded />}
+      {page === FOLDED_CUSTOM_CHILDREN_PAGE && <CustomChildren />}
+    </>
   );
 };
 
-function MyTemplate(result: Result) {
-  return (
-    <>
-      <AtomicResultSectionBadges>
-        <AtomicResultBadge field="ec_brand" />
-      </AtomicResultSectionBadges>
-      <AtomicResultSectionVisual>
-        <AtomicResultImage field="ec_images" />
-      </AtomicResultSectionVisual>
-      <AtomicResultSectionTitle>
-        <AtomicResultLink />
-      </AtomicResultSectionTitle>
-      <AtomicResultSectionTitleMetadata>
-        <AtomicResultRating field="ec_rating" />
-        <AtomicResultPrintableUri maxNumberOfParts={3} />
-      </AtomicResultSectionTitleMetadata>
-      <AtomicResultSectionEmphasized>
-        <AtomicResultNumber field="ec_price">
-          <AtomicFormatCurrency currency="USD" />
-        </AtomicResultNumber>
-      </AtomicResultSectionEmphasized>
-      <AtomicResultSectionExcerpt>
-        <AtomicResultText field="ec_shortdesc" />
-      </AtomicResultSectionExcerpt>
-      <AtomicResultSectionBottomMetadata>
-        <AtomicResultFieldsList>
-          {result.raw.cat_platform !== undefined && (
-            <>
-              <span className="field-label">
-                <AtomicText value="Platform" />
-              </span>
-              <AtomicResultText field="cat_platform" />
-            </>
-          )}
-          {result.raw.cat_condition !== undefined && (
-            <>
-              <span className="field-label">
-                <AtomicText value="Condition" />
-              </span>
-              <AtomicResultText field="cat_condition" />
-            </>
-          )}
-          {result.raw.cat_categories !== undefined && (
-            <>
-              <span className="field-label">
-                <AtomicText value="Tags" />
-              </span>
-              <AtomicResultMultiValueText field="cat_categories" />
-            </>
-          )}
-        </AtomicResultFieldsList>
-      </AtomicResultSectionBottomMetadata>
-    </>
-  );
-}
 ReactDOM.hydrate(<App />, document.getElementById('root'));
