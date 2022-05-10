@@ -95,7 +95,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   };
 
   /**
-   * Gather all facets registred from the Quantic store.
+   * Gather all facets registered in the Quantic store.
    * @returns {void}
    */
   gatherFacets() {
