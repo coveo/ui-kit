@@ -121,7 +121,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return styleTag.innerHTML;
   }
 
-  private set isRenderingFromHidden(shouldHide: boolean) {
+  private set hideDuringRender(shouldHide: boolean) {
     this.host.style.visibility = shouldHide ? 'hidden' : '';
     this.host.style.position = shouldHide ? 'absolute' : '';
   }
@@ -216,7 +216,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   public componentDidRender() {
-    this.isRenderingFromHidden = false;
+    this.hideDuringRender = false;
   }
 
   public render() {
@@ -225,7 +225,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
     }
 
     if (this.host.classList.contains('atomic-hidden')) {
-      this.isRenderingFromHidden = true;
+      this.hideDuringRender = true;
     }
 
     return (
