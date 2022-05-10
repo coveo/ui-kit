@@ -1,4 +1,12 @@
-import {Component, Prop, h, Listen, State} from '@stencil/core';
+import {
+  Component,
+  Prop,
+  h,
+  Listen,
+  State,
+  EventEmitter,
+  Event,
+} from '@stencil/core';
 import {Result} from '@coveo/headless';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {
@@ -21,9 +29,9 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @Prop({reflect: true, mutable: true}) source!: Result;
 
-  @Prop() selectSource!: () => void;
-  @Prop() beginDelayedSelectSource!: () => void;
-  @Prop() cancelPendingSelectSource!: () => void;
+  @Event() selectSource!: EventEmitter;
+  @Event() beginDelayedSelectSource!: EventEmitter;
+  @Event() cancelPendingSelectSource!: EventEmitter;
 
   @State() public error!: Error;
 
@@ -45,9 +53,9 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
           target="_self"
           className="block"
           part="source-url"
-          onSelect={this.selectSource}
-          onBeginDelayedSelect={() => this.beginDelayedSelectSource}
-          onCancelPendingSelect={() => this.cancelPendingSelectSource}
+          onSelect={() => this.selectSource.emit()}
+          onBeginDelayedSelect={() => this.beginDelayedSelectSource.emit()}
+          onCancelPendingSelect={() => this.cancelPendingSelectSource.emit()}
         >
           {this.source.clickUri}
         </LinkWithResultAnalytics>
@@ -57,9 +65,9 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
           target="_self"
           className="block mb-6"
           part="source-title"
-          onSelect={this.selectSource}
-          onBeginDelayedSelect={() => this.beginDelayedSelectSource}
-          onCancelPendingSelect={() => this.cancelPendingSelectSource}
+          onSelect={() => this.selectSource.emit()}
+          onBeginDelayedSelect={() => this.beginDelayedSelectSource.emit()}
+          onCancelPendingSelect={() => this.cancelPendingSelectSource.emit()}
         >
           <atomic-result-text
             field="title"
