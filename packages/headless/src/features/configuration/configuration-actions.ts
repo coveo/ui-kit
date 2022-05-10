@@ -123,6 +123,10 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    * Specifies the user display name for the usage analytics logs.
    */
   userDisplayName?: string;
+  /**
+   * Specifies the URL of the current page or component.
+   */
+  documentLocation?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
@@ -140,6 +144,7 @@ export const updateAnalyticsConfiguration = createAction(
       anonymous: new BooleanValue({default: false}),
       deviceId: nonEmptyString,
       userDisplayName: nonEmptyString,
+      documentLocation: nonEmptyString,
     })
 );
 

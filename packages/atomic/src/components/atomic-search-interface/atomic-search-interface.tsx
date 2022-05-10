@@ -297,7 +297,11 @@ export class AtomicSearchInterface {
 
   private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
-    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    const analyticsConfig = getAnalyticsConfig(
+      options,
+      this.analytics,
+      this.store
+    );
     try {
       this.engine = buildSearchEngine({
         configuration: {

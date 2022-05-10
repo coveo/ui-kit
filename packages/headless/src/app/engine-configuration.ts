@@ -108,6 +108,10 @@ export interface AnalyticsConfiguration {
    * Specifies the user display name for the usage analytics logs.
    */
   userDisplayName?: string;
+  /**
+   * Specifies the URL of the current page or component.
+   */
+  documentLocation?: string;
 }
 
 export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
