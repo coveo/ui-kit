@@ -23,7 +23,7 @@ import {
   loadQueryActions,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
-import i18next, {i18n} from 'i18next';
+import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
@@ -53,6 +53,7 @@ export class AtomicSearchInterface {
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>(initialStore());
+  private i18nPromise!: Promise<TFunction>;
 
   @Element() private host!: HTMLElement;
 
@@ -132,8 +133,8 @@ export class AtomicSearchInterface {
     setCoveoGlobal();
   }
 
-  public async componentWillLoad() {
-    return await this.initI18n();
+  public connectedCallback() {
+    this.i18nPromise = this.initI18n();
   }
 
   @Watch('searchHub')
@@ -237,7 +238,7 @@ export class AtomicSearchInterface {
   /**
    * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
-  @Method() public initialize(options: InitializationOptions) {
+  @Method() public async initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
@@ -341,6 +342,7 @@ export class AtomicSearchInterface {
       lng: this.language,
       fallbackLng: false,
       backend: this.i18nBackendOptions,
+      initImmediate: false,
     });
   }
 
@@ -444,6 +446,7 @@ export class AtomicSearchInterface {
       );
       return;
     }
+    await this.i18nPromise;
     this.updateIconAssetsPath();
     initEngine();
     this.initComponents();
