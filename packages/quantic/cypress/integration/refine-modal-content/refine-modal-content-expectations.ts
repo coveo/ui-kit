@@ -141,6 +141,27 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail('should display the duplicated timeframe facet');
     },
 
+    displayDuplicatedTimeframeFacetValues: () => {
+      selector
+        .timeframeFacetValues()
+        .should('exist')
+        .then((elements) => {
+          const duplicatedFacetValues = Cypress.$.makeArray(elements).map(
+            (duplicatedElement) => duplicatedElement.innerText
+          );
+          selector.container
+            .timeframeFacetValues()
+            .should('exist')
+            .then((elements) => {
+              const facetValues = Cypress.$.makeArray(elements).map(
+                (element) => element.innerText
+              );
+              expect(duplicatedFacetValues).to.eql(facetValues);
+            });
+        })
+        .logDetail('should display the duplicated timeframe facet values');
+    },
+
     displaySort: (display: boolean) => {
       selector
         .sort()

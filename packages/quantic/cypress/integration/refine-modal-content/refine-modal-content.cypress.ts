@@ -76,6 +76,8 @@ describe('quantic-refine-content', () => {
         Expect.displayDuplicatedFacet();
         Expect.displayDuplicatedCategoryFacet();
         Expect.displayDuplicatedTimeframeFacet();
+        Actions.clickDuplicatedTimeframeFacetExpandButton();
+        Expect.displayDuplicatedTimeframeFacetValues();
         Expect.displaySort(false);
         Expect.correctFacetsOrder();
       });

@@ -24,6 +24,7 @@ export interface FacetSelector extends ComponentSelector {
   facetClearFiltersButton: () => CypressSelector;
   timeframeFacetFirstOption: () => CypressSelector;
   facetFirstOption: () => CypressSelector;
+  timeframeFacetValues: () => CypressSelector;
 }
 
 const getCommonFacetSelectors = (
@@ -52,6 +53,8 @@ const getCommonFacetSelectors = (
         .eq(0),
     facetFirstOption: () =>
       rootSelector().find('c-quantic-facet .facet__value-option').eq(0),
+    timeframeFacetValues: () =>
+      rootSelector().find('c-quantic-timeframe-facet c-quantic-facet-value'),
   };
 };
 
