@@ -43,7 +43,7 @@ const TIMEFRAME_FACET_PROPERTIES = [
 ];
 
 /**
- * The `QuanticRefineModalContent` component displays a copy of the search interface facets and sort components. This component is intended to be displayed inside a modal to assure the responsiveness when the search interface is displayed on smaller screens.
+ * The `QuanticRefineModalContent` component displays a copy of the search interface facets and sort components. This component is intended to be displayed inside the Quantic Modal to assure the responsiveness when the search interface is displayed on smaller screens.
  *
  * @category Search
  * @example
