@@ -294,7 +294,7 @@ function getFromStore(engineId, facetType) {
 }
 
 /**
- * Get all facets data from store.
+ * Get all facet data from store.
  * @param {string} engineId The engine ID.
  */
  function getAllFacetsFromStore(engineId) {
