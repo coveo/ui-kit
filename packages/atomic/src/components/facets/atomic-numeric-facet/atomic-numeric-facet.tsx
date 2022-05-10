@@ -160,7 +160,7 @@ export class AtomicNumericFacet
   @Prop({reflect: true}) public injectionDepth = 1000;
 
   /**
-   * The required facets & values for this facet to be displayed.
+   * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
