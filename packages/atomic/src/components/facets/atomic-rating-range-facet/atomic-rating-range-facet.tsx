@@ -151,7 +151,7 @@ export class AtomicRatingRangeFacet
    * ></atomic-rating-range-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;

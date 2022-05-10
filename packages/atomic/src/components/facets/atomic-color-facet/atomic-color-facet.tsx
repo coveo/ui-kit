@@ -168,7 +168,7 @@ export class AtomicColorFacet
    * ></atomic-color-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;

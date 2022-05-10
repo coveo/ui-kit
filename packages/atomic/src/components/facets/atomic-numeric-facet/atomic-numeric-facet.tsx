@@ -178,7 +178,7 @@ export class AtomicNumericFacet
    * ></atomic-numeric-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;

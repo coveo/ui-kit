@@ -142,7 +142,7 @@ export class AtomicTimeframeFacet
    * ></atomic-timeframe-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
