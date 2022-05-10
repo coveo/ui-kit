@@ -1,17 +1,16 @@
 import {
-  buildSmartSnippet,
-  SmartSnippet,
-  SmartSnippetState,
-} from '@coveo/headless';
-import {h, Component, State, Prop, Element, Watch} from '@stencil/core';
+  h,
+  Component,
+  State,
+  Prop,
+  Element,
+  Watch,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import ArrowDown from '../../images/arrow-down.svg';
 import {listenOnce} from '../../utils/event-utils';
-import {
-  InitializeBindings,
-  Bindings,
-  BindStateToController,
-} from '../../utils/initialization-utils';
-import {Hidden} from '../common/hidden';
+import {InitializeBindings, Bindings} from '../../utils/initialization-utils';
 
 /**
  * @internal
@@ -23,13 +22,11 @@ import {Hidden} from '../common/hidden';
 })
 export class AtomicSmartSnippetExpandableAnswer {
   @InitializeBindings() public bindings!: Bindings;
-  public smartSnippet!: SmartSnippet;
-  @BindStateToController('smartSnippet')
-  @State()
-  public smartSnippetState!: SmartSnippetState;
   public error!: Error;
   @Element() public host!: HTMLElement;
 
+  @Prop({reflect: true}) expanded!: boolean;
+  @Prop({reflect: true}) htmlContent!: string;
   /**
    * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
    */
@@ -54,6 +51,9 @@ export class AtomicSmartSnippetExpandableAnswer {
 
   @State() fullHeight?: number;
 
+  @Event() expand!: EventEmitter;
+  @Event() collapse!: EventEmitter;
+
   private validateProps() {
     if (this.maximumHeight < this.collapsedHeight) {
       throw 'maximumHeight must be equal or greater than collapsedHeight';
@@ -62,7 +62,6 @@ export class AtomicSmartSnippetExpandableAnswer {
 
   public initialize() {
     this.validateProps();
-    this.smartSnippet = buildSmartSnippet(this.bindings.engine);
   }
 
   @Watch('fullHeight')
@@ -75,14 +74,12 @@ export class AtomicSmartSnippetExpandableAnswer {
   }
 
   private establishInitialHeight() {
+    const answerElement = document.createElement('atomic-smart-snippet-answer');
+    answerElement.htmlContent = this.htmlContent;
+    answerElement.innerStyle = this.snippetStyle;
+    answerElement.style.visibility = 'hidden';
+    answerElement.style.position = 'absolute';
     return new Promise<number>((resolve) => {
-      const answerElement = document.createElement(
-        'atomic-smart-snippet-answer'
-      );
-      answerElement.htmlContent = this.smartSnippetState.answer;
-      answerElement.innerStyle = this.snippetStyle;
-      answerElement.style.visibility = 'hidden';
-      answerElement.style.position = 'absolute';
       listenOnce(answerElement, 'answerSizeUpdated', (event) => {
         answerElement.remove();
         resolve((event as CustomEvent<{height: number}>).detail.height);
@@ -95,8 +92,8 @@ export class AtomicSmartSnippetExpandableAnswer {
     return this.fullHeight! > this.maximumHeight;
   }
 
-  private get expanded() {
-    return this.smartSnippetState.expanded || !this.showButton;
+  private get isExpanded() {
+    return this.expanded || !this.showButton;
   }
 
   public async componentWillLoad() {
@@ -108,7 +105,7 @@ export class AtomicSmartSnippetExpandableAnswer {
       <div part="truncated-answer">
         <atomic-smart-snippet-answer
           exportparts="answer"
-          htmlContent={this.smartSnippetState.answer}
+          htmlContent={this.htmlContent}
           innerStyle={this.snippetStyle}
           onAnswerSizeUpdated={(e) => (this.fullHeight = e.detail.height)}
         ></atomic-smart-snippet-answer>
@@ -123,14 +120,12 @@ export class AtomicSmartSnippetExpandableAnswer {
     return (
       <button
         onClick={() =>
-          this.expanded
-            ? this.smartSnippet.collapse()
-            : this.smartSnippet.expand()
+          this.isExpanded ? this.collapse.emit() : this.expand.emit()
         }
         class="text-primary hover:underline mb-4"
-        part={this.expanded ? 'show-less-button' : 'show-more-button'}
+        part={this.isExpanded ? 'show-less-button' : 'show-more-button'}
       >
-        {this.bindings.i18n.t(this.expanded ? 'show-less' : 'show-more')}
+        {this.bindings.i18n.t(this.isExpanded ? 'show-less' : 'show-more')}
         <atomic-icon
           icon={ArrowDown}
           class="w-3 ml-2 align-baseline"
@@ -140,11 +135,8 @@ export class AtomicSmartSnippetExpandableAnswer {
   }
 
   public render() {
-    if (!this.smartSnippetState.answerFound) {
-      return <Hidden></Hidden>;
-    }
     return (
-      <div class={this.expanded ? 'expanded' : ''}>
+      <div class={this.isExpanded ? 'expanded' : ''}>
         {this.renderAnswer()}
         {this.renderButton()}
       </div>

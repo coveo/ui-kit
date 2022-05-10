@@ -143,9 +143,13 @@ export class AtomicSmartSnippet implements InitializableComponent {
       <atomic-smart-snippet-expandable-answer
         exportparts="answer,show-more-button,show-less-button,truncated-answer"
         part="body"
+        htmlContent={this.smartSnippetState.answer}
+        expanded={this.smartSnippetState.expanded}
         maximumHeight={this.maximumHeight}
         collapsedHeight={this.collapsedHeight}
         snippetStyle={this.style}
+        onExpand={() => this.smartSnippet.expand()}
+        onCollapse={() => this.smartSnippet.collapse()}
       ></atomic-smart-snippet-expandable-answer>
     );
   }
