@@ -5,12 +5,12 @@ import {
 } from '@coveo/headless';
 import {h, Component, State, Prop, Element, Watch} from '@stencil/core';
 import ArrowDown from '../../images/arrow-down.svg';
+import {listenOnce} from '../../utils/event-utils';
 import {
   InitializeBindings,
   Bindings,
   BindStateToController,
 } from '../../utils/initialization-utils';
-import {listenOnce} from '../../utils/utils';
 import {Hidden} from '../common/hidden';
 
 /**
