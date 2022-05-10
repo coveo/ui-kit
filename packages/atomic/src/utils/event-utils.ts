@@ -13,7 +13,7 @@ export function buildCustomEvent<T>(name: string, detail: T) {
 export function listenOnce<K extends keyof HTMLElementEventMap>(
   element: HTMLElement,
   type: K,
-  listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+  listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => void,
   options?: boolean | AddEventListenerOptions
 ): void;
 export function listenOnce(
