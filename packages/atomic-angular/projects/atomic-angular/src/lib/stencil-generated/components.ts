@@ -632,30 +632,23 @@ export class AtomicRelevanceInspector {
 }
 
 
-export declare interface AtomicResult extends Components.AtomicResult {
-  /**
-   *  
-   */
-  'atomic/removeResultsPlaceholders': EventEmitter<CustomEvent<any>>;
-
-}
+export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'store']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'store']
 })
 export class AtomicResult {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['atomic/removeResultsPlaceholders']);
   }
 }
 

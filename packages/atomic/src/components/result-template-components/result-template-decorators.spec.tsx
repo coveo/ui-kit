@@ -8,6 +8,8 @@ import {AtomicResultFieldsList} from './atomic-result-fields-list/atomic-result-
 import {AtomicResult} from '../atomic-result/atomic-result';
 import {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
 import {TestUtils} from '@coveo/headless';
+import {AtomicStore, initialStore} from '../../utils/store';
+import {createStore} from '@stencil/store';
 
 describe('ResultContext decorator', () => {
   let page: SpecPage;
@@ -62,7 +64,7 @@ describe('resultContext method', () => {
           content={document.createElement('div')}
           engine={TestUtils.buildMockSearchAppEngine()}
           result={TestUtils.buildMockResult()}
-          firstResultToRender={true}
+          store={createStore<AtomicStore>(initialStore())}
         ></atomic-result>
       ),
     });
