@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.54.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.53.1...@coveo/atomic@1.54.0) (2022-05-11)
+
+
+### Bug Fixes
+
+* **atomic:** added map props to atomic-react and atomic-angular ([#1976](https://github.com/coveo/ui-kit/issues/1976)) ([661faf1](https://github.com/coveo/ui-kit/commit/661faf1ec476d99feec95944a75dacfdcf38038a))
+
+
+### Features
+
+* **atomic,headless:** add more out of the box analytics configuration for atomic ([#1977](https://github.com/coveo/ui-kit/issues/1977)) ([7dff239](https://github.com/coveo/ui-kit/commit/7dff239d942140ef2f085e7aecbf21f1db039c8c))
+
+
+
+
+
 ## [1.53.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.53.0...@coveo/atomic@1.53.1) (2022-05-10)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.6.2...@coveo/atomic-angular@1.6.3) (2022-05-11)
+
+
+### Bug Fixes
+
+* **atomic:** added map props to atomic-react and atomic-angular ([#1976](https://github.com/coveo/ui-kit/issues/1976)) ([661faf1](https://github.com/coveo/ui-kit/commit/661faf1ec476d99feec95944a75dacfdcf38038a))
+
+
+
+
+
 ## [1.6.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.6.1...@coveo/atomic-angular@1.6.2) (2022-05-10)
 
 **Note:** Version bump only for package @coveo/atomic-angular
