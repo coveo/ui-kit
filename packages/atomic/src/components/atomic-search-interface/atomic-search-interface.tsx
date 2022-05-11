@@ -256,7 +256,7 @@ export class AtomicSearchInterface {
    *
    * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
    */
-  @Method() public executeFirstSearch() {
+  @Method() public async executeFirstSearch() {
     if (!this.engineIsCreated(this.engine)) {
       return;
     }
