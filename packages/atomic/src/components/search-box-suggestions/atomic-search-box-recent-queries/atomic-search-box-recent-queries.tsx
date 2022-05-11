@@ -31,7 +31,7 @@ export class AtomicSearchBoxRecentQueries {
 
   /**
    * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list.
-   * Defaults to atomic icon. Setting it to an empty string hides it.
+   * Defaults to the atomic icon.
    */
   @Prop() public icon?: string;
 
@@ -55,8 +55,7 @@ export class AtomicSearchBoxRecentQueries {
     }
   }
 
-  get Icon() {
-    if (this.icon === '') return null;
+  private renderIcon() {
     return this.icon || Clock;
   }
 
@@ -153,12 +152,10 @@ export class AtomicSearchBoxRecentQueries {
       query: value,
       content: (
         <div class="flex items-center break-all">
-          {this.Icon && (
-            <atomic-icon
-              icon={this.Icon}
-              class="w-4 h-4 mr-2 shrink-0"
-            ></atomic-icon>
-          )}
+          <atomic-icon
+            icon={this.renderIcon()}
+            class="w-4 h-4 mr-2 shrink-0"
+          ></atomic-icon>
           {query === '' ? (
             <span class="break-all line-clamp-2">{value}</span>
           ) : (

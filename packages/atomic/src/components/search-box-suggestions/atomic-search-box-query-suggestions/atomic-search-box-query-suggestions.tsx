@@ -27,7 +27,7 @@ export class AtomicSearchBoxQuerySuggestions {
 
   /**
    * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list.
-   * Defaults to atomic icon. Setting it to an empty string hides it.
+   * Defaults to the atomic icon.
    */
   @Prop() public icon?: string;
 
@@ -51,9 +51,8 @@ export class AtomicSearchBoxQuerySuggestions {
     }
   }
 
-  get Icon() {
-    if (this.icon === '') return null;
-    return this.icon ?? SearchIcon;
+  private renderIcon() {
+    return this.icon || SearchIcon;
   }
 
   private initialize() {
@@ -93,9 +92,9 @@ export class AtomicSearchBoxQuerySuggestions {
     return {
       content: (
         <div class="flex items-center">
-          {this.bindings.getSuggestions().length > 1 && this.Icon && (
+          {this.bindings.getSuggestions().length > 1 && (
             <atomic-icon
-              icon={this.Icon}
+              icon={this.renderIcon()}
               class="w-4 h-4 mr-2 shrink-0"
             ></atomic-icon>
           )}

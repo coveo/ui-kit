@@ -752,7 +752,7 @@ export namespace Components {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
          */
         "icon"?: string;
         /**
@@ -766,7 +766,7 @@ export namespace Components {
     }
     interface AtomicSearchBoxRecentQueries {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
          */
         "icon"?: string;
         /**
@@ -2249,7 +2249,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
          */
         "icon"?: string;
         /**
@@ -2263,7 +2263,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxRecentQueries {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
          */
         "icon"?: string;
         /**
