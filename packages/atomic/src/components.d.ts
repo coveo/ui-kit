@@ -29,6 +29,10 @@ export namespace Components {
          */
         "delimitingCharacter": string;
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -70,6 +74,10 @@ export namespace Components {
         "withSearch": boolean;
     }
     interface AtomicColorFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+         */
+        "dependsOn": Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
@@ -124,6 +132,10 @@ export namespace Components {
         "selector": string;
     }
     interface AtomicFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn": Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
@@ -318,6 +330,10 @@ export namespace Components {
     }
     interface AtomicNumericFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
         "displayValuesAs": 'checkbox' | 'link';
@@ -397,6 +413,10 @@ export namespace Components {
     }
     interface AtomicRatingFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
         "displayValuesAs": 'checkbox' | 'link';
@@ -442,6 +462,10 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRatingRangeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+         */
+        "dependsOn": Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -939,6 +963,10 @@ export namespace Components {
         "unit": RelativeDateUnit;
     }
     interface AtomicTimeframeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+         */
+        "dependsOn": Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -1534,6 +1562,10 @@ declare namespace LocalJSX {
          */
         "delimitingCharacter"?: string;
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -1575,6 +1607,10 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     interface AtomicColorFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
@@ -1629,6 +1665,10 @@ declare namespace LocalJSX {
         "selector"?: string;
     }
     interface AtomicFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
@@ -1821,6 +1861,10 @@ declare namespace LocalJSX {
     }
     interface AtomicNumericFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
         "displayValuesAs"?: 'checkbox' | 'link';
@@ -1901,6 +1945,10 @@ declare namespace LocalJSX {
     }
     interface AtomicRatingFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
         "displayValuesAs"?: 'checkbox' | 'link';
@@ -1946,6 +1994,10 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRatingRangeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -2422,6 +2474,10 @@ declare namespace LocalJSX {
         "unit": RelativeDateUnit;
     }
     interface AtomicTimeframeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
          */

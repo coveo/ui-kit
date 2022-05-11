@@ -166,7 +166,7 @@ export class AtomicCategoryFacet
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   /**
-   * The required facets & values for this facet to be displayed.
+   * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
@@ -184,7 +184,7 @@ export class AtomicCategoryFacet
    * ></atomic-category-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
