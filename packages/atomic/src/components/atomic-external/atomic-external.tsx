@@ -25,6 +25,15 @@ export class AtomicExternal {
     );
   }
 
+  @Listen('atomic/scrollToTop')
+  public handleScrollToTop(event: CustomEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.interface.dispatchEvent(
+      buildCustomEvent('atomic/scrollToTop', event.detail)
+    );
+  }
+
   private get interface() {
     const element = document.querySelector(this.selector);
     if (!element) {
