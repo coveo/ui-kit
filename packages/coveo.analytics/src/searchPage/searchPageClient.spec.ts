@@ -594,6 +594,20 @@ describe('SearchPageClient', () => {
         expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);
     });
 
+    it('should send proper payload for #logOpenSmartSnippetSuggestionSource', async () => {
+        const meta = {
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        };
+        await client.logOpenSmartSnippetSuggestionSource(fakeDocInfo, meta);
+        expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSuggestionSource, fakeDocInfo, {
+            ...meta,
+            contentIDKey: meta.documentId.contentIdKey,
+            contentIDValue: meta.documentId.contentIdValue,
+        });
+    });
+
     it('should send proper payload for #logRecentQueryClick', async () => {
         await client.logRecentQueryClick();
         expectMatchPayload(SearchPageEvents.recentQueryClick);

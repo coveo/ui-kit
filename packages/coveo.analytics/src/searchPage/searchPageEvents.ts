@@ -230,6 +230,10 @@ export enum SearchPageEvents {
      */
     openSmartSnippetSource = 'openSmartSnippetSource',
     /**
+     * Identifies the custom event that gets logged when a user clicks on the source of a snippet suggestion for a related question.
+     */
+    openSmartSnippetSuggestionSource = 'openSmartSnippetSuggestionSource',
+    /**
      * Identifies the search event that gets logged when a recent queries list item gets clicked.
      */
     recentQueryClick = 'recentQueriesClick',

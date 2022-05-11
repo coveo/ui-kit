@@ -311,6 +311,15 @@ export class CoveoSearchPageClient {
         return this.logClickEvent(SearchPageEvents.openSmartSnippetSource, info, identifier);
     }
 
+    public logOpenSmartSnippetSuggestionSource(info: PartialDocumentInformation, snippet: SmartSnippetSuggestionMeta) {
+        return this.logClickEvent(
+            SearchPageEvents.openSmartSnippetSuggestionSource,
+            info,
+            {contentIDKey: snippet.documentId.contentIdKey, contentIDValue: snippet.documentId.contentIdValue},
+            snippet
+        );
+    }
+
     public logRecentQueryClick() {
         return this.logSearchEvent(SearchPageEvents.recentQueryClick);
     }
