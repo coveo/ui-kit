@@ -30,6 +30,12 @@ export class AtomicSearchBoxRecentQueries {
   @State() public error!: Error;
 
   /**
+   * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list.
+   * Defaults to atomic icon. Setting it to an empty string hides it.
+   */
+  @Prop() public icon?: string;
+
+  /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
   @Prop({reflect: true}) public maxWithQuery = 3;
@@ -47,6 +53,11 @@ export class AtomicSearchBoxRecentQueries {
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  get Icon() {
+    if (this.icon === '') return null;
+    return this.icon || Clock;
   }
 
   private initialize() {
@@ -97,8 +108,13 @@ export class AtomicSearchBoxRecentQueries {
     }
 
     const query = this.bindings.searchBoxController.state.value;
+    console.log(
+      'this.bindings.searchBoxController.state:',
+      this.bindings.searchBoxController.state
+    );
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
+    console.log('max:', max);
     const filteredQueries = this.recentQueriesList.state.queries
       .filter(
         (recentQuery) =>
@@ -142,7 +158,12 @@ export class AtomicSearchBoxRecentQueries {
       query: value,
       content: (
         <div class="flex items-center break-all">
-          <atomic-icon icon={Clock} class="w-4 h-4 mr-2 shrink-0"></atomic-icon>
+          {this.Icon && (
+            <atomic-icon
+              icon={this.Icon}
+              class="w-4 h-4 mr-2 shrink-0"
+            ></atomic-icon>
+          )}
           {query === '' ? (
             <span class="break-all line-clamp-2">{value}</span>
           ) : (

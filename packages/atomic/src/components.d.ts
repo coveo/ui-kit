@@ -752,6 +752,10 @@ export namespace Components {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -761,6 +765,10 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
@@ -2241,6 +2249,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -2250,6 +2262,10 @@ declare namespace LocalJSX {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to atomic icon. Setting it to an empty string hides it.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */

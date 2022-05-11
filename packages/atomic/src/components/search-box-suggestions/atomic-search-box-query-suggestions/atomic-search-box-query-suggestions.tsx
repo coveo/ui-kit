@@ -26,6 +26,12 @@ export class AtomicSearchBoxQuerySuggestions {
   @State() public error!: Error;
 
   /**
+   * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list.
+   * Defaults to atomic icon. Setting it to an empty string hides it.
+   */
+  @Prop() public icon?: string;
+
+  /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
   @Prop({reflect: true}) public maxWithQuery?: number;
@@ -43,6 +49,11 @@ export class AtomicSearchBoxQuerySuggestions {
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  get Icon() {
+    if (this.icon === '') return null;
+    return this.icon || SearchIcon;
   }
 
   private initialize() {
@@ -82,9 +93,9 @@ export class AtomicSearchBoxQuerySuggestions {
     return {
       content: (
         <div class="flex items-center">
-          {this.bindings.getSuggestions().length > 1 && (
+          {this.bindings.getSuggestions().length > 1 && this.Icon && (
             <atomic-icon
-              icon={SearchIcon}
+              icon={this.Icon}
               class="w-4 h-4 mr-2 shrink-0"
             ></atomic-icon>
           )}
