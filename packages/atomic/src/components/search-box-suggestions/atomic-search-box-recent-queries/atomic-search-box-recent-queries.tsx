@@ -114,7 +114,6 @@ export class AtomicSearchBoxRecentQueries {
     );
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
-    console.log('max:', max);
     const filteredQueries = this.recentQueriesList.state.queries
       .filter(
         (recentQuery) =>
