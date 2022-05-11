@@ -342,7 +342,6 @@ export class AtomicSearchInterface {
       lng: this.language,
       fallbackLng: false,
       backend: this.i18nBackendOptions,
-      initImmediate: false,
     });
   }
 
@@ -446,9 +445,9 @@ export class AtomicSearchInterface {
       );
       return;
     }
-    await this.i18nPromise;
     this.updateIconAssetsPath();
     initEngine();
+    await this.i18nPromise;
     this.initComponents();
     this.initSearchStatus();
     this.initUrlManager();
