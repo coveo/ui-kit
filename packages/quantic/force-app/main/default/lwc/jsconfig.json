@@ -116,7 +116,7 @@
             ],
             "c/quanticTimeframeFacet": [
               "quanticTimeframeFacet/quanticTimeframeFacet.js"
-          ],
+            ],
         }
     },
     "include": [
