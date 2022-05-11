@@ -752,7 +752,7 @@ export namespace Components {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
@@ -766,7 +766,7 @@ export namespace Components {
     }
     interface AtomicSearchBoxRecentQueries {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
@@ -2249,7 +2249,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
@@ -2263,7 +2263,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxRecentQueries {
         /**
-          * The icon that will be passed down to `atomic-icon` to be shown next to each suggestion on the list. Defaults to the atomic icon.
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon"?: string;
         /**
