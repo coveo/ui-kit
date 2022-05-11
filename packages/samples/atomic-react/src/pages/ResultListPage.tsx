@@ -6,6 +6,7 @@ import {
   AtomicResultFieldsList,
   AtomicResultImage,
   AtomicResultLink,
+  AtomicResultList,
   AtomicResultMultiValueText,
   AtomicResultNumber,
   AtomicResultPrintableUri,
@@ -19,28 +20,27 @@ import {
   AtomicResultSectionVisual,
   AtomicResultText,
   AtomicText,
-  FoldedResult,
-  AtomicResultSectionChildren,
-  AtomicFoldedResultList,
+  Result,
 } from '@coveo/atomic-react';
-import {AtomicApp} from './AtomicApp';
+import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
-export const CustomChildren: FunctionComponent = () => {
+export const ResultListPage: FunctionComponent = () => {
   return (
-    <AtomicApp
-      accessToken="xx564559b1-0045-48e1-953c-3addd1ee4457"
-      organizationId="searchuisamples"
+    <AtomicPageWrapper
+      accessToken="xxc23ce82a-3733-496e-b37e-9736168c4fd9"
+      organizationId="electronicscoveodemocomo0n2fu8v"
     >
-      <AtomicFoldedResultList
+      <AtomicResultList
         fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+        display="grid"
         imageSize="large"
         template={MyTemplate}
       />
-    </AtomicApp>
+    </AtomicPageWrapper>
   );
 };
 
-function MyTemplate(result: FoldedResult) {
+function MyTemplate(result: Result) {
   return (
     <>
       <AtomicResultSectionBadges>
@@ -64,24 +64,9 @@ function MyTemplate(result: FoldedResult) {
       <AtomicResultSectionExcerpt>
         <AtomicResultText field="ec_shortdesc" />
       </AtomicResultSectionExcerpt>
-      <AtomicResultSectionChildren>
-        {!!result.children.length && (
-          <div>
-            <b>This result has children:</b>
-            <ul>
-              {result.children.map((child, i) => (
-                <li>
-                  <b>Child {i + 1}: </b>
-                  {child.result.title}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </AtomicResultSectionChildren>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
-          {result.result.raw.cat_platform && (
+          {result.raw.cat_platform !== undefined && (
             <>
               <span className="field-label">
                 <AtomicText value="Platform" />
@@ -89,7 +74,7 @@ function MyTemplate(result: FoldedResult) {
               <AtomicResultText field="cat_platform" />
             </>
           )}
-          {result.result.raw.cat_condition && (
+          {result.raw.cat_condition !== undefined && (
             <>
               <span className="field-label">
                 <AtomicText value="Condition" />
@@ -97,7 +82,7 @@ function MyTemplate(result: FoldedResult) {
               <AtomicResultText field="cat_condition" />
             </>
           )}
-          {result.result.raw.cat_categories && (
+          {result.raw.cat_categories !== undefined && (
             <>
               <span className="field-label">
                 <AtomicText value="Tags" />

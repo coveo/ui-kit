@@ -1,14 +1,14 @@
 import React, {FunctionComponent, useState} from 'react';
 import ReactDOM from 'react-dom';
 import './style.css';
-import {List} from './List';
-import {Folded} from './Folded';
-import {HeaderLink} from './HeaderLink';
-import {CustomChildren} from './CustomChildren';
+import {ResultListPage} from './pages/ResultListPage';
+import {FoldedResultListPage} from './pages/FoldedResultListPage';
+import {HeaderLink} from './components/HeaderLink';
+import {FoldedResultListWithCustomChildrenPage} from './pages/FoldedResultListWithCustomChildrenPage';
 
-const LIST_PAGE = 'List';
-const FOLDED_LIST_PAGE = 'Folded list';
-const FOLDED_CUSTOM_CHILDREN_PAGE = 'Folded list with custom children';
+const LIST_PAGE = 'Result list';
+const FOLDED_LIST_PAGE = 'Folded result list';
+const FOLDED_CUSTOM_CHILDREN_PAGE = 'Folded result list with custom children';
 
 const App: FunctionComponent = () => {
   const [page, setPage] = useState(LIST_PAGE);
@@ -30,9 +30,11 @@ const App: FunctionComponent = () => {
           />
         </ul>
       </header>
-      {page === LIST_PAGE && <List />}
-      {page === FOLDED_LIST_PAGE && <Folded />}
-      {page === FOLDED_CUSTOM_CHILDREN_PAGE && <CustomChildren />}
+      {page === LIST_PAGE && <ResultListPage />}
+      {page === FOLDED_LIST_PAGE && <FoldedResultListPage />}
+      {page === FOLDED_CUSTOM_CHILDREN_PAGE && (
+        <FoldedResultListWithCustomChildrenPage />
+      )}
     </>
   );
 };

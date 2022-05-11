@@ -6,7 +6,6 @@ import {
   AtomicResultFieldsList,
   AtomicResultImage,
   AtomicResultLink,
-  AtomicResultList,
   AtomicResultMultiValueText,
   AtomicResultNumber,
   AtomicResultPrintableUri,
@@ -20,27 +19,30 @@ import {
   AtomicResultSectionVisual,
   AtomicResultText,
   AtomicText,
-  Result,
+  FoldedResult,
+  AtomicResultSectionChildren,
+  AtomicFoldedResultList,
+  AtomicResultChildren,
+  AtomicResultChildrenTemplate,
 } from '@coveo/atomic-react';
-import {AtomicApp} from './AtomicApp';
+import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
-export const List: FunctionComponent = () => {
+export const FoldedResultListPage: FunctionComponent = () => {
   return (
-    <AtomicApp
-      accessToken="xxc23ce82a-3733-496e-b37e-9736168c4fd9"
-      organizationId="electronicscoveodemocomo0n2fu8v"
+    <AtomicPageWrapper
+      accessToken="xx564559b1-0045-48e1-953c-3addd1ee4457"
+      organizationId="searchuisamples"
     >
-      <AtomicResultList
+      <AtomicFoldedResultList
         fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
-        display="grid"
         imageSize="large"
         template={MyTemplate}
       />
-    </AtomicApp>
+    </AtomicPageWrapper>
   );
 };
 
-function MyTemplate(result: Result) {
+function MyTemplate(result: FoldedResult) {
   return (
     <>
       <AtomicResultSectionBadges>
@@ -64,9 +66,18 @@ function MyTemplate(result: Result) {
       <AtomicResultSectionExcerpt>
         <AtomicResultText field="ec_shortdesc" />
       </AtomicResultSectionExcerpt>
+      <AtomicResultSectionChildren>
+        <AtomicResultChildren>
+          <AtomicResultChildrenTemplate>
+            <template>
+              <AtomicResultLink />
+            </template>
+          </AtomicResultChildrenTemplate>
+        </AtomicResultChildren>
+      </AtomicResultSectionChildren>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
-          {result.raw.cat_platform !== undefined && (
+          {result.result.raw.cat_platform && (
             <>
               <span className="field-label">
                 <AtomicText value="Platform" />
@@ -74,7 +85,7 @@ function MyTemplate(result: Result) {
               <AtomicResultText field="cat_platform" />
             </>
           )}
-          {result.raw.cat_condition !== undefined && (
+          {result.result.raw.cat_condition && (
             <>
               <span className="field-label">
                 <AtomicText value="Condition" />
@@ -82,7 +93,7 @@ function MyTemplate(result: Result) {
               <AtomicResultText field="cat_condition" />
             </>
           )}
-          {result.raw.cat_categories !== undefined && (
+          {result.result.raw.cat_categories && (
             <>
               <span className="field-label">
                 <AtomicText value="Tags" />

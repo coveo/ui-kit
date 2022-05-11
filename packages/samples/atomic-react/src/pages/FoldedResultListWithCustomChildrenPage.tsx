@@ -22,14 +22,12 @@ import {
   FoldedResult,
   AtomicResultSectionChildren,
   AtomicFoldedResultList,
-  AtomicResultChildren,
-  AtomicResultChildrenTemplate,
 } from '@coveo/atomic-react';
-import {AtomicApp} from './AtomicApp';
+import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
-export const Folded: FunctionComponent = () => {
+export const FoldedResultListWithCustomChildrenPage: FunctionComponent = () => {
   return (
-    <AtomicApp
+    <AtomicPageWrapper
       accessToken="xx564559b1-0045-48e1-953c-3addd1ee4457"
       organizationId="searchuisamples"
     >
@@ -38,7 +36,7 @@ export const Folded: FunctionComponent = () => {
         imageSize="large"
         template={MyTemplate}
       />
-    </AtomicApp>
+    </AtomicPageWrapper>
   );
 };
 
@@ -67,13 +65,19 @@ function MyTemplate(result: FoldedResult) {
         <AtomicResultText field="ec_shortdesc" />
       </AtomicResultSectionExcerpt>
       <AtomicResultSectionChildren>
-        <AtomicResultChildren>
-          <AtomicResultChildrenTemplate>
-            <template>
-              <AtomicResultLink />
-            </template>
-          </AtomicResultChildrenTemplate>
-        </AtomicResultChildren>
+        {!!result.children.length && (
+          <div>
+            <b>This result has children:</b>
+            <ul>
+              {result.children.map((child, i) => (
+                <li>
+                  <b>Child {i + 1}: </b>
+                  {child.result.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </AtomicResultSectionChildren>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>

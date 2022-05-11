@@ -33,7 +33,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const AtomicApp: FunctionComponent<Props> = ({
+export const AtomicPageWrapper: FunctionComponent<Props> = ({
   accessToken,
   organizationId,
   children,
