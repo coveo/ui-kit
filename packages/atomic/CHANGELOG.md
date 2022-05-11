@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.53.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.53.0...@coveo/atomic@1.53.1) (2022-05-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.53.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.52.0...@coveo/atomic@1.53.0) (2022-05-10)
+
+
+### Bug Fixes
+
+* **atomic:** made smart snippet wait for answer to be rendered ([#1971](https://github.com/coveo/ui-kit/issues/1971)) ([02fdf35](https://github.com/coveo/ui-kit/commit/02fdf35692f43d85e58544457e7074c8b66f3d11))
+* **atomic:** send correct result to rendering func and assign it at right time ([#1972](https://github.com/coveo/ui-kit/issues/1972)) ([857d62d](https://github.com/coveo/ui-kit/commit/857d62d8ce59ee5a4a0806aa4832f8682fb9157e))
+
+
+### Features
+
+* **atomic:** improved ripple animation speed ([#1974](https://github.com/coveo/ui-kit/issues/1974)) ([4623e96](https://github.com/coveo/ui-kit/commit/4623e961c73a706894a534606a7a366a30c46bec))
+
+
+
+
+
 # [1.52.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.51.0...@coveo/atomic@1.52.0) (2022-05-09)
 
 

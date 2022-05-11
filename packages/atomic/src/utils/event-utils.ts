@@ -9,3 +9,30 @@ export function buildCustomEvent<T>(name: string, detail: T) {
     composed: true,
   });
 }
+
+export function listenOnce<K extends keyof HTMLElementEventMap>(
+  element: HTMLElement,
+  type: K,
+  listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => void,
+  options?: boolean | AddEventListenerOptions
+): void;
+export function listenOnce(
+  element: HTMLElement,
+  type: string,
+  listener: EventListenerOrEventListenerObject,
+  options?: boolean | AddEventListenerOptions
+): void;
+export function listenOnce(
+  element: HTMLElement,
+  type: string,
+  listener: EventListenerOrEventListenerObject,
+  options?: boolean | AddEventListenerOptions
+): void {
+  const _listener: EventListener = (evt: Event) => {
+    element.removeEventListener(type, _listener, options);
+    typeof listener === 'object'
+      ? listener.handleEvent.call(element, evt)
+      : listener.call(element, evt);
+  };
+  element.addEventListener(type, _listener, options);
+}

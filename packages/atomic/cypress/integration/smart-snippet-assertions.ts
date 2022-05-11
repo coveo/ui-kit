@@ -26,18 +26,27 @@ export function assertAnswerHeight(expectedHeight: number) {
   });
 }
 
-export function assertAnswerTopMargin(margin: number) {
+export function assertAnswerTopMargin(
+  margin: number,
+  firstElementClass: string
+) {
   it(`has a ${margin}px gap between the title and the snippet`, () => {
     SmartSnippetSelectors.question()
-      .distanceTo(SmartSnippetSelectors.answer)
+      .distanceTo(() =>
+        SmartSnippetSelectors.answer().find(`.${firstElementClass}`)
+      )
       .should('have.property', 'vertical', margin);
   });
 }
 
-export function assertAnswerBottomMargin(margin: number) {
-  it(`has a ${margin}px gap between the snippet and the show less button`, () => {
+export function assertAnswerBottomMargin(
+  margin: number,
+  lastElementClass: string
+) {
+  it(`has a ${margin}px gap between the snippet and the footer`, () => {
     SmartSnippetSelectors.answer()
-      .distanceTo(SmartSnippetSelectors.showLessButton)
+      .find(`.${lastElementClass}`)
+      .distanceTo(SmartSnippetSelectors.footer)
       .should('have.property', 'vertical', margin);
   });
 }
