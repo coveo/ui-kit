@@ -171,16 +171,18 @@ export class AtomicSearchInterface {
 
   @Watch('language')
   public updateLanguage() {
-    if (this.engineIsCreated(this.engine)) {
-      const {updateSearchConfiguration} = loadSearchConfigurationActions(
-        this.engine
-      );
-      this.engine.dispatch(
-        updateSearchConfiguration({
-          locale: this.language,
-        })
-      );
+    if (!this.engineIsCreated(this.engine)) {
+      return;
     }
+
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine
+    );
+    this.engine.dispatch(
+      updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
 
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
@@ -238,7 +240,7 @@ export class AtomicSearchInterface {
   /**
    * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
-  @Method() public async initialize(options: InitializationOptions) {
+  @Method() public initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
@@ -246,7 +248,7 @@ export class AtomicSearchInterface {
    * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
    *
    */
-  @Method() public async initializeWithSearchEngine(engine: SearchEngine) {
+  @Method() public initializeWithSearchEngine(engine: SearchEngine) {
     return this.internalInitialization(() => (this.engine = engine));
   }
 
@@ -254,7 +256,7 @@ export class AtomicSearchInterface {
    *
    * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
    */
-  @Method() public async executeFirstSearch() {
+  @Method() public executeFirstSearch() {
     if (!this.engineIsCreated(this.engine)) {
       return;
     }
