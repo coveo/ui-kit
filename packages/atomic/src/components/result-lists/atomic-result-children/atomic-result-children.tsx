@@ -156,6 +156,7 @@ export class AtomicResultChildren {
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}
         classes="child-result"
+        firstResultToRender={false}
       ></atomic-result>
     );
   }

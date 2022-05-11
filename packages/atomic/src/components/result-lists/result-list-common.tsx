@@ -195,12 +195,9 @@ export class ResultListCommon {
     return window.innerHeight + window.scrollY >= childEl?.offsetHeight;
   }
 
-  public componentDidRender(
-    firstSearchExecuted: boolean,
-    listWrapperRef?: HTMLDivElement
-  ) {
-    if (firstSearchExecuted) {
-      listWrapperRef?.classList.remove('placeholder');
+  public removePlaceholders(listWrapperRef: HTMLDivElement) {
+    if (listWrapperRef.classList.contains('placeholder')) {
+      listWrapperRef.classList.remove('placeholder');
     }
   }
 

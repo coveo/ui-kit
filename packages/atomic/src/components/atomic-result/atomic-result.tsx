@@ -1,4 +1,12 @@
-import {Component, h, Prop, Element, Listen} from '@stencil/core';
+import {
+  Component,
+  h,
+  Prop,
+  Element,
+  Listen,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
 import {
   ResultDisplayLayout,
@@ -71,7 +79,15 @@ export class AtomicResult {
    */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
+  /**
+   * Classes that will be added to the result element.
+   */
   @Prop() classes = '';
+
+  /**
+   * @internal
+   */
+  @Prop() firstResultToRender!: boolean;
 
   @Listen('atomic/resolveResult')
   public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
@@ -89,6 +105,11 @@ export class AtomicResult {
       imageSize: this.imageSize!,
     });
   }
+
+  @Event({
+    eventName: 'atomic/removeResultsPlaceholders',
+  })
+  private removeResultsPlaceholders!: EventEmitter;
 
   private containsSections() {
     return Array.from(this.content.children).some((child) =>
@@ -146,6 +167,9 @@ export class AtomicResult {
   }
 
   public componentDidLoad() {
+    if (this.firstResultToRender) {
+      this.removeResultsPlaceholders.emit();
+    }
     applyFocusVisiblePolyfill(this.host);
   }
 }

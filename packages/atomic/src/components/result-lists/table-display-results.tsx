@@ -42,7 +42,7 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
                 : 'result-table-row-odd') /* Offset by 1 since the index starts at 0 */
             }
           >
-            {fieldColumns.map((column) => {
+            {fieldColumns.map((column, i) => {
               return (
                 <td
                   key={
@@ -61,6 +61,7 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
                     density={props.density}
                     image-size={props.imageSize}
                     content={column}
+                    firstResultToRender={i === 0 && rowIndex === 0}
                   ></atomic-result>
                 </td>
               );

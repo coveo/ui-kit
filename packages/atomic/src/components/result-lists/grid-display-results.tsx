@@ -6,7 +6,7 @@ import {ResultsProps} from './result-list-common';
 export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
   props
 ) => {
-  return props.resultListState.results.map((result) => {
+  return props.resultListState.results.map((result, i) => {
     const interactiveResult = buildInteractiveResult(props.bindings.engine, {
       options: {result: props.resultListCommon.getUnfoldedResult(result)},
     });
@@ -33,6 +33,7 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
           density={props.density}
           imageSize={props.imageSize}
           content={props.getContentOfResultTemplate(result)}
+          firstResultToRender={i === 0}
         ></atomic-result>
       </div>
     );

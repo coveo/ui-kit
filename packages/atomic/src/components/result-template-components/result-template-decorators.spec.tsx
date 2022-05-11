@@ -62,6 +62,7 @@ describe('resultContext method', () => {
           content={document.createElement('div')}
           engine={TestUtils.buildMockSearchAppEngine()}
           result={TestUtils.buildMockResult()}
+          firstResultToRender={true}
         ></atomic-result>
       ),
     });

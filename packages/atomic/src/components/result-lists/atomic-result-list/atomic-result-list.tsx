@@ -118,6 +118,13 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
+  @Listen('atomic/removeResultsPlaceholders')
+  removeResultsPlaceholders() {
+    if (this.listWrapperRef) {
+      this.resultListCommon.removePlaceholders(this.listWrapperRef);
+    }
+  }
+
   public async initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
       console.warn(
@@ -149,13 +156,6 @@ export class AtomicResultList implements InitializableComponent {
     result: Result
   ): HTMLElement | DocumentFragment {
     return this.resultListCommon.getContentOfResultTemplate(result);
-  }
-
-  public componentDidRender() {
-    this.resultListCommon.componentDidRender(
-      this.resultListState.firstSearchExecuted,
-      this.listWrapperRef
-    );
   }
 
   public render() {
