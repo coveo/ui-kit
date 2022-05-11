@@ -10,6 +10,8 @@ import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { Section } from "./components/atomic-layout-section/sections";
+import { ObservableMap } from "@stencil/store";
+import { AtomicStore } from "./utils/store";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -540,7 +542,6 @@ export namespace Components {
           * The headless search engine.
          */
         "engine": SearchEngine;
-        "firstResultToRender": boolean;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -553,6 +554,10 @@ export namespace Components {
           * The result item.
          */
         "result": Result | FoldedResult;
+        /**
+          * Global state for Atomic.
+         */
+        "store": ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -2076,7 +2081,6 @@ declare namespace LocalJSX {
           * The headless search engine.
          */
         "engine": SearchEngine;
-        "firstResultToRender": boolean;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -2085,11 +2089,14 @@ declare namespace LocalJSX {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
-        "onAtomic/removeResultsPlaceholders"?: (event: CustomEvent<any>) => void;
         /**
           * The result item.
          */
         "result": Result | FoldedResult;
+        /**
+          * Global state for Atomic.
+         */
+        "store": ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**

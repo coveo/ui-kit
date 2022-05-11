@@ -153,10 +153,10 @@ export class AtomicResultChildren {
         content={content}
         result={child}
         engine={this.bindings.engine}
+        store={this.bindings.store}
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}
         classes="child-result"
-        firstResultToRender={false}
       ></atomic-result>
     );
   }

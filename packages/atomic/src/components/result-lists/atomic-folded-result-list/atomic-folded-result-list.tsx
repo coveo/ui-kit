@@ -133,13 +133,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.foldedResultList.loadCollection(event.detail);
   }
 
-  @Listen('atomic/removeResultsPlaceholders')
-  removeResultsPlaceholders() {
-    if (this.listWrapperRef) {
-      this.resultListCommon.removePlaceholders(this.listWrapperRef);
-    }
-  }
-
   public async initialize() {
     this.resultListCommon = new ResultListCommon({
       host: this.host,

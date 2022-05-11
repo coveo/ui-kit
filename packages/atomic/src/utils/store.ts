@@ -32,6 +32,11 @@ export type AtomicStore = {
   facetElements: HTMLElement[];
   sortOptions: SortDropdownOption[];
   iconAssetsPath: string;
+  /**
+   * Flag set to 'true' when the first "atomic-result" & its component have been rendered, replacing the placeholders.
+   * When loading, Atomic has a rendering delay, this is a better indicator than the "firstSearchExecuted" of the Headless state.
+   */
+  firstResultLoaded: boolean;
 };
 
 export const initialStore: () => AtomicStore = () => ({
@@ -42,6 +47,7 @@ export const initialStore: () => AtomicStore = () => ({
   facetElements: [],
   sortOptions: [],
   iconAssetsPath: '',
+  firstResultLoaded: false,
 });
 
 export const registerFacetToStore = <T extends FacetType, U extends string>(
