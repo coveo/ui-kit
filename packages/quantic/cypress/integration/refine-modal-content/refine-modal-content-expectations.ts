@@ -35,6 +35,8 @@ const TIMEFRAME_FACET_PROPERTIES = [
   'injectionDepth',
 ];
 
+const DATE_FACET_PROPERTIES = ['numberOfValues', 'formattingFunction'];
+
 function refineContentExpectations(selector: RefineContentSelector) {
   return {
     displayFiltersTitle: () => {
@@ -160,6 +162,29 @@ function refineContentExpectations(selector: RefineContentSelector) {
             });
         })
         .logDetail('should display the duplicated timeframe facet values');
+    },
+
+    displayDuplicatedDateFacet: () => {
+      selector
+        .dateFacet()
+        .should('exist')
+        .then((duplicatedFacet) => {
+          selector.container.dateFacet().then((facet) => {
+            [...COMMON_FACET_PROPERTIES, ...DATE_FACET_PROPERTIES].forEach(
+              (property) => {
+                expect(duplicatedFacet[0]).to.have.property(
+                  property,
+                  facet[0][property]
+                );
+              }
+            );
+            expect(duplicatedFacet[0].formattingFunction).to.be.eq(
+              facet[0].formattingFunction
+            );
+            expect(duplicatedFacet[0]).to.have.property('isCollapsed', true);
+          });
+        })
+        .logDetail('should display the duplicated date facet');
     },
 
     displaySort: (display: boolean) => {

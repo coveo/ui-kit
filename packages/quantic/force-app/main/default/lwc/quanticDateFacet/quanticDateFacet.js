@@ -136,6 +136,7 @@ export default class QuanticDateFacet extends LightningElement {
       label: this.label,
       facetId: this.facet.state.facetId,
       format: this.formattingFunction,
+      element: this.template.host,
     });
   }
 

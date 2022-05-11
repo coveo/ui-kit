@@ -35,12 +35,14 @@ describe('quantic-refine-content', () => {
         Expect.displayDuplicatedFacet();
         Expect.displayDuplicatedCategoryFacet();
         Expect.displayDuplicatedTimeframeFacet();
+        Expect.displayDuplicatedDateFacet();
         Expect.displaySort(true);
         Expect.correctFacetsOrder();
       });
 
       scope('when selecting values from the duplicated facets', () => {
         Actions.clickDuplicatedTimeframeFacetExpandButton();
+        Expect.displayDuplicatedTimeframeFacetValues();
         Actions.clickDuplicatedTimeframeFacetFirstOption();
         Expect.displayDuplicatedTimeframeFacetClearFiltersButton(true);
         Expect.displayTimeframeFacetClearFiltersButton(true);
@@ -78,6 +80,7 @@ describe('quantic-refine-content', () => {
         Expect.displayDuplicatedTimeframeFacet();
         Actions.clickDuplicatedTimeframeFacetExpandButton();
         Expect.displayDuplicatedTimeframeFacetValues();
+        Expect.displayDuplicatedDateFacet();
         Expect.displaySort(false);
         Expect.correctFacetsOrder();
       });

@@ -41,6 +41,7 @@ const TIMEFRAME_FACET_PROPERTIES = [
   'noFilterFacetCount',
   'injectionDepth',
 ];
+const DATE_FACET_PROPERTIES = ['numberOfValues', 'formattingFunction'];
 
 /**
  * The `QuanticRefineModalContent` component displays a copy of the search interface facets and sort components. This component is intended to be displayed inside the Quantic Modal to assure the responsiveness when the search interface is displayed on smaller screens.
@@ -172,10 +173,26 @@ export default class QuanticRefineModalContent extends LightningElement {
     };
   };
 
+  /**
+   * Returns the data needed to create a copy of the date facet.
+   * @param {HTMLElement} facetElement
+   * @returns {object}
+   */
+  toDateFacet = (facetElement) => {
+    return {
+      isDate: true,
+      ...this.extractFacetDataFromElement(facetElement, [
+        ...COMMON_FACET_PROPERTIES,
+        ...DATE_FACET_PROPERTIES,
+      ]),
+    };
+  };
+
   selectors = {
     'c-quantic-numeric-facet': this.toNumericFacet,
     'c-quantic-category-facet': this.toCategoryFacet,
     'c-quantic-timeframe-facet': this.toTimeframeFacet,
+    'c-quantic-date-facet': this.toDateFacet,
     'c-quantic-facet': this.toDefaultFacet,
   };
 
