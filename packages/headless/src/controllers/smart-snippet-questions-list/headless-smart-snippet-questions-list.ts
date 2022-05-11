@@ -6,6 +6,7 @@ import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
+  logOpenSmartSnippetSuggestionSource,
 } from '../../features/question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
 import {
@@ -14,8 +15,30 @@ import {
 } from '../../features/question-answering/question-answering-actions';
 import {Result} from '../../api/search/search/result';
 import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
+import {
+  buildInteractiveResultCore,
+  InteractiveResultCore,
+} from '../core/interactive-result/headless-core-interactive-result';
+import {QuestionAnsweringRelatedQuestionState} from '../../features/question-answering/question-answering-state';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+
+export interface SmartSnippetQuestionsListOptions {
+  /**
+   * The amount of time in milliseconds to wait before selecting the source after calling `beginDelayedSelect`.
+   *
+   * @defaultValue `1000`
+   */
+  selectionDelay?: number;
+}
+
+export interface SmartSnippetQuestionsListProps {
+  /**
+   * The options for the `SmartSnippetQuestionsList` controller.
+   */
+  options?: SmartSnippetQuestionsListOptions;
+}
 
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
@@ -53,6 +76,34 @@ export interface SmartSnippetQuestionsList extends Controller {
    * @param identifier - The identifier of a document used to create the smart snippet.
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
+  /**
+   * Selects the source, logging a UA event to the Coveo Platform if the source wasn't already selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  selectSource(identifier: string): void;
+  /**
+   * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  beginDelayedSelectSource(identifier: string): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelect`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  cancelPendingSelectSource(identifier: string): void;
 }
 
 /**
@@ -101,10 +152,12 @@ export interface SmartSnippetRelatedQuestion {
  * Creates a `SmartSnippetQuestionsList` controller instance.
  *
  * @param engine - The headless engine.
+ * @param props - The configurable `SmartSnippetQuestionsList` properties.
  * @returns A `SmartSnippetQuestionsList` controller instance.
  * */
 export function buildSmartSnippetQuestionsList(
-  engine: SearchEngine
+  engine: SearchEngine,
+  props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
   if (!loadSmartSnippetQuestionsListReducer(engine)) {
     throw loadReducerError;
@@ -120,12 +173,65 @@ export function buildSmartSnippetQuestionsList(
     );
   };
 
+  let lastSearchResponseId: string | null = null;
+  let interactiveResultsPerRelatedQuestion: Record<
+    string,
+    InteractiveResultCore
+  > = {};
+  let clickedRelatedQuestions: Record<string, boolean> = {};
+  const getInteractiveResult = (
+    relatedQuestion: QuestionAnsweringRelatedQuestionState
+  ) => {
+    const {searchResponseId} = getState().search;
+    if (lastSearchResponseId !== searchResponseId) {
+      lastSearchResponseId = searchResponseId;
+      interactiveResultsPerRelatedQuestion = {};
+      clickedRelatedQuestions = {};
+    }
+
+    if (
+      relatedQuestion.questionAnswerId in interactiveResultsPerRelatedQuestion
+    ) {
+      return interactiveResultsPerRelatedQuestion[
+        relatedQuestion.questionAnswerId
+      ];
+    }
+
+    return (interactiveResultsPerRelatedQuestion[
+      relatedQuestion.questionAnswerId
+    ] = buildInteractiveResultCore(
+      engine,
+      {options: {selectionDelay: props?.options?.selectionDelay}},
+      () => {
+        if (clickedRelatedQuestions[relatedQuestion.questionAnswerId]) {
+          return;
+        }
+        const result = getResult(relatedQuestion);
+        if (!result) {
+          return;
+        }
+        clickedRelatedQuestions[relatedQuestion.questionAnswerId] = true;
+        engine.dispatch(
+          logOpenSmartSnippetSuggestionSource({
+            questionAnswerId: relatedQuestion.questionAnswerId,
+          })
+        );
+        engine.dispatch(pushRecentResult(result));
+      }
+    ));
+  };
+
   const getPayloadFromIdentifier = (
     identifier: string | QuestionAnswerDocumentIdentifier
   ) =>
     typeof identifier === 'string'
       ? {questionAnswerId: identifier}
       : identifier;
+
+  const getRelatedQuestionStateFromIdentifier = (identifier: string) =>
+    getState().questionAnswering.relatedQuestions.find(
+      (relatedQuestion) => relatedQuestion.questionAnswerId === identifier
+    );
 
   return {
     ...controller,
@@ -157,6 +263,30 @@ export function buildSmartSnippetQuestionsList(
       const payload = getPayloadFromIdentifier(identifier);
       engine.dispatch(logCollapseSmartSnippetSuggestion(payload));
       engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
+    },
+    selectSource(identifier) {
+      const relatedQuestionState =
+        getRelatedQuestionStateFromIdentifier(identifier);
+      if (!relatedQuestionState) {
+        return;
+      }
+      getInteractiveResult(relatedQuestionState).select();
+    },
+    beginDelayedSelectSource(identifier) {
+      const relatedQuestionState =
+        getRelatedQuestionStateFromIdentifier(identifier);
+      if (!relatedQuestionState) {
+        return;
+      }
+      getInteractiveResult(relatedQuestionState).beginDelayedSelect();
+    },
+    cancelPendingSelectSource(identifier) {
+      const relatedQuestionState =
+        getRelatedQuestionStateFromIdentifier(identifier);
+      if (!relatedQuestionState) {
+        return;
+      }
+      getInteractiveResult(relatedQuestionState).cancelPendingSelect();
     },
   };
 }
