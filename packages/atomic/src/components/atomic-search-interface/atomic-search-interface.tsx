@@ -23,7 +23,7 @@ import {
   loadQueryActions,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
-import i18next, {i18n} from 'i18next';
+import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
@@ -53,6 +53,7 @@ export class AtomicSearchInterface {
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>(initialStore());
+  private i18nPromise!: Promise<TFunction>;
 
   @Element() private host!: HTMLElement;
 
@@ -130,6 +131,10 @@ export class AtomicSearchInterface {
 
   public constructor() {
     setCoveoGlobal();
+  }
+
+  public connectedCallback() {
+    this.i18nPromise = this.initI18n();
   }
 
   @Watch('searchHub')
@@ -243,7 +248,7 @@ export class AtomicSearchInterface {
    * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
    *
    */
-  @Method() public async initializeWithSearchEngine(engine: SearchEngine) {
+  @Method() public initializeWithSearchEngine(engine: SearchEngine) {
     return this.internalInitialization(() => (this.engine = engine));
   }
 
@@ -251,7 +256,7 @@ export class AtomicSearchInterface {
    *
    * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
    */
-  @Method() public async executeFirstSearch() {
+  @Method() public executeFirstSearch() {
     if (!this.engineIsCreated(this.engine)) {
       return;
     }
@@ -338,10 +343,11 @@ export class AtomicSearchInterface {
   }
 
   private initI18n() {
+    const isLanguageComplete = ['en', 'fr'].includes(this.language);
     return this.i18n.use(Backend).init({
       debug: this.logLevel === 'debug',
       lng: this.language,
-      fallbackLng: ['en'],
+      fallbackLng: isLanguageComplete ? false : 'en',
       backend: this.i18nBackendOptions,
     });
   }
@@ -448,7 +454,7 @@ export class AtomicSearchInterface {
     }
     this.updateIconAssetsPath();
     initEngine();
-    await this.initI18n();
+    await this.i18nPromise;
     this.initComponents();
     this.initSearchStatus();
     this.initUrlManager();
