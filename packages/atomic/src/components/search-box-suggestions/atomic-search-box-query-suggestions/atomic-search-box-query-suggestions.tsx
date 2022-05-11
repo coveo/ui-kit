@@ -53,7 +53,7 @@ export class AtomicSearchBoxQuerySuggestions {
 
   get Icon() {
     if (this.icon === '') return null;
-    return this.icon || SearchIcon;
+    return this.icon ?? SearchIcon;
   }
 
   private initialize() {
