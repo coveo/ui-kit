@@ -3,9 +3,6 @@ import {
   ResultsPerPage,
   buildResultsPerPage,
   ResultsPerPageState,
-  buildSearchStatus,
-  SearchStatus,
-  SearchStatusState,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -32,16 +29,12 @@ import {RadioButton} from '../common/radio-button';
 export class AtomicResultsPerPage implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private resultPerPage!: ResultsPerPage;
-  public searchStatus!: SearchStatus;
   private choices!: number[];
   private readonly radioGroupName = randomID('atomic-results-per-page-');
 
   @State()
   @BindStateToController('resultPerPage')
   public resultPerPageState!: ResultsPerPageState;
-  @BindStateToController('searchStatus')
-  @State()
-  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   /**
@@ -57,7 +50,6 @@ export class AtomicResultsPerPage implements InitializableComponent {
     this.choices = this.validateChoicesDisplayed();
     this.validateInitialChoice();
 
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialChoice},
     });
@@ -112,7 +104,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   public render() {
-    if (!this.searchStatusState.hasResults) {
+    if (!this.bindings.store.get('firstResultLoaded')) {
       return;
     }
 

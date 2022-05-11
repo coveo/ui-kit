@@ -34,7 +34,7 @@ export type AtomicStore = {
   iconAssetsPath: string;
   /**
    * Flag set to 'true' when the first "atomic-result" & its component have been rendered, replacing the placeholders.
-   * When loading, Atomic has a rendering delay, this is a better indicator than the "firstSearchExecuted" of the Headless state.
+   * When first loading, Atomic has a rendering delay of its results, hence this is a better indicator than the "firstSearchExecuted" of the Headless state.
    */
   firstResultLoaded: boolean;
 };

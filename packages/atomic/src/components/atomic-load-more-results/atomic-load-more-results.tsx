@@ -108,7 +108,7 @@ export class AtomicLoadMoreResults {
   }
 
   public render() {
-    if (!this.querySummaryState.hasResults) {
+    if (!this.bindings.store.get('firstResultLoaded')) {
       return;
     }
 
