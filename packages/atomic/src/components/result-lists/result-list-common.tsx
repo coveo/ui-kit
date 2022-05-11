@@ -12,7 +12,6 @@ import {
   ResultListProps,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
-import {identity} from 'lodash';
 import {Bindings} from '../../utils/initialization-utils';
 import {
   ResultDisplayDensity,
@@ -132,7 +131,9 @@ export class ResultListCommon {
     resultOrFolded: Result | FoldedResult
   ): HTMLElement | DocumentFragment {
     const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
-    return this.render ? this.render(result) : this.getTemplate(result)!;
+    return this.render
+      ? this.render(resultOrFolded)
+      : this.getTemplate(result)!;
   }
 
   private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
@@ -167,7 +168,9 @@ export class ResultListCommon {
     const templates = (
       includeDefaultTemplate ? [this.makeDefaultTemplate()] : []
     ).concat(
-      customTemplates.filter(identity) as ResultTemplate<DocumentFragment>[]
+      customTemplates.filter(
+        (template) => template
+      ) as ResultTemplate<DocumentFragment>[]
     );
 
     this.resultTemplatesManager.registerTemplates(...templates);

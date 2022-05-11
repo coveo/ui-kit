@@ -15,14 +15,38 @@ export class AtomicSmartSnippetAnswer {
   @Prop({reflect: true}) htmlContent!: string;
   @Prop({reflect: true}) innerStyle?: string;
 
-  @Event({
-    eventName: 'atomic/smartSnippet/answerRendered',
-  })
-  private answerRendered!: EventEmitter<{height: number}>;
+  @Event({bubbles: false})
+  private answerSizeUpdated!: EventEmitter<{height: number}>;
   private wrapperElement?: HTMLElement;
+  private isRendering = true;
+  private resizeObserver: ResizeObserver | undefined;
+
+  public componentWillRender() {
+    this.isRendering = true;
+  }
 
   public componentDidRender() {
-    this.answerRendered.emit({height: this.wrapperElement!.scrollHeight});
+    this.isRendering = false;
+    this.emitCurrentHeight();
+  }
+
+  public connectedCallback() {
+    if (this.wrapperElement && this.resizeObserver) {
+      this.resizeObserver.observe(this.wrapperElement);
+    }
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
+  }
+
+  public setWrapperElement(element: HTMLElement) {
+    this.wrapperElement = element;
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    this.resizeObserver = new ResizeObserver(() => this.emitCurrentHeight());
+    this.resizeObserver.observe(element);
   }
 
   private get sanitizedStyle() {
@@ -30,6 +54,13 @@ export class AtomicSmartSnippetAnswer {
       return undefined;
     }
     return sanitizeStyle(this.innerStyle);
+  }
+
+  private emitCurrentHeight() {
+    if (this.isRendering) {
+      return;
+    }
+    this.answerSizeUpdated.emit({height: this.wrapperElement!.scrollHeight});
   }
 
   private renderStyle() {
@@ -43,7 +74,10 @@ export class AtomicSmartSnippetAnswer {
 
   private renderContent() {
     return (
-      <div class="wrapper" ref={(element) => (this.wrapperElement = element)}>
+      <div
+        class="wrapper"
+        ref={(element) => element && this.setWrapperElement(element)}
+      >
         {/* deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify */}
         <div
           innerHTML={sanitize(this.htmlContent, {

@@ -21,8 +21,8 @@
     mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
   }
 
-  atomic-icon {
-    vertical-align: bottom;
+  button atomic-icon {
+    @apply relative top-0.5;
   }
 
   .expanded {
@@ -32,8 +32,7 @@
     }
 
     button atomic-icon {
-      transform: scaleY(-1);
-      vertical-align: baseline;
+      @apply -scale-y-100 top-0;
     }
   }
 }

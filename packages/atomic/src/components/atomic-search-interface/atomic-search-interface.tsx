@@ -23,7 +23,7 @@ import {
   loadQueryActions,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
-import i18next, {i18n} from 'i18next';
+import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
@@ -53,6 +53,7 @@ export class AtomicSearchInterface {
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>(initialStore());
+  private i18nPromise!: Promise<TFunction>;
 
   @Element() private host!: HTMLElement;
 
@@ -132,13 +133,21 @@ export class AtomicSearchInterface {
     setCoveoGlobal();
   }
 
+  public connectedCallback() {
+    this.i18nPromise = this.initI18n();
+  }
+
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
+    if (!this.engineIsCreated(this.engine)) {
+      return;
+    }
+
     const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine!
+      this.engine
     );
-    this.engine?.dispatch(
+    this.engine.dispatch(
       updateSearchConfiguration({
         pipeline: this.pipeline,
         searchHub: this.searchHub,
@@ -148,20 +157,28 @@ export class AtomicSearchInterface {
 
   @Watch('analytics')
   public toggleAnalytics() {
-    if (!this.analytics) {
-      this.engine?.disableAnalytics();
+    if (!this.engineIsCreated(this.engine)) {
       return;
     }
 
-    this.engine?.enableAnalytics();
+    if (!this.analytics) {
+      this.engine.disableAnalytics();
+      return;
+    }
+
+    this.engine.enableAnalytics();
   }
 
   @Watch('language')
   public updateLanguage() {
+    if (!this.engineIsCreated(this.engine)) {
+      return;
+    }
+
     const {updateSearchConfiguration} = loadSearchConfigurationActions(
-      this.engine!
+      this.engine
     );
-    this.engine?.dispatch(
+    this.engine.dispatch(
       updateSearchConfiguration({
         locale: this.language,
       })
@@ -231,7 +248,7 @@ export class AtomicSearchInterface {
    * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
    *
    */
-  @Method() public async initializeWithSearchEngine(engine: SearchEngine) {
+  @Method() public initializeWithSearchEngine(engine: SearchEngine) {
     return this.internalInitialization(() => (this.engine = engine));
   }
 
@@ -239,12 +256,8 @@ export class AtomicSearchInterface {
    *
    * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
    */
-  @Method() public async executeFirstSearch() {
-    if (!this.engine) {
-      console.error(
-        'You have to call "initialize" on the atomic-search-interface component before executing a search.',
-        this.host
-      );
+  @Method() public executeFirstSearch() {
+    if (!this.engineIsCreated(this.engine)) {
       return;
     }
 
@@ -275,9 +288,25 @@ export class AtomicSearchInterface {
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
+  private engineIsCreated(engine?: SearchEngine): engine is SearchEngine {
+    if (!engine) {
+      console.error(
+        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
+        this.host
+      );
+      return false;
+    }
+
+    return true;
+  }
+
   private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
-    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    const analyticsConfig = getAnalyticsConfig(
+      options,
+      this.analytics,
+      this.store
+    );
     try {
       this.engine = buildSearchEngine({
         configuration: {
@@ -314,10 +343,11 @@ export class AtomicSearchInterface {
   }
 
   private initI18n() {
+    const isLanguageComplete = ['en', 'fr'].includes(this.language);
     return this.i18n.use(Backend).init({
       debug: this.logLevel === 'debug',
       lng: this.language,
-      fallbackLng: ['en'],
+      fallbackLng: isLanguageComplete ? false : 'en',
       backend: this.i18nBackendOptions,
     });
   }
@@ -424,7 +454,7 @@ export class AtomicSearchInterface {
     }
     this.updateIconAssetsPath();
     initEngine();
-    await this.initI18n();
+    await this.i18nPromise;
     this.initComponents();
     this.initSearchStatus();
     this.initUrlManager();

@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.55.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.55.0...@coveo/atomic@1.55.1) (2022-05-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.55.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.54.0...@coveo/atomic@1.55.0) (2022-05-11)
+
+
+### Features
+
+* **atomic:** network improvements ([#1981](https://github.com/coveo/ui-kit/issues/1981)) ([6490e0d](https://github.com/coveo/ui-kit/commit/6490e0dd0ca16e28e3aa715b87ed2cdeb66047f1))
+
+
+
+
+
+# [1.54.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.53.1...@coveo/atomic@1.54.0) (2022-05-11)
+
+
+### Bug Fixes
+
+* **atomic:** added map props to atomic-react and atomic-angular ([#1976](https://github.com/coveo/ui-kit/issues/1976)) ([661faf1](https://github.com/coveo/ui-kit/commit/661faf1ec476d99feec95944a75dacfdcf38038a))
+
+
+### Features
+
+* **atomic,headless:** add more out of the box analytics configuration for atomic ([#1977](https://github.com/coveo/ui-kit/issues/1977)) ([7dff239](https://github.com/coveo/ui-kit/commit/7dff239d942140ef2f085e7aecbf21f1db039c8c))
+
+
+
+
+
+## [1.53.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.53.0...@coveo/atomic@1.53.1) (2022-05-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.53.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.52.0...@coveo/atomic@1.53.0) (2022-05-10)
+
+
+### Bug Fixes
+
+* **atomic:** made smart snippet wait for answer to be rendered ([#1971](https://github.com/coveo/ui-kit/issues/1971)) ([02fdf35](https://github.com/coveo/ui-kit/commit/02fdf35692f43d85e58544457e7074c8b66f3d11))
+* **atomic:** send correct result to rendering func and assign it at right time ([#1972](https://github.com/coveo/ui-kit/issues/1972)) ([857d62d](https://github.com/coveo/ui-kit/commit/857d62d8ce59ee5a4a0806aa4832f8682fb9157e))
+
+
+### Features
+
+* **atomic:** improved ripple animation speed ([#1974](https://github.com/coveo/ui-kit/issues/1974)) ([4623e96](https://github.com/coveo/ui-kit/commit/4623e961c73a706894a534606a7a366a30c46bec))
+
+
+
+
+
+# [1.52.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.51.0...@coveo/atomic@1.52.0) (2022-05-09)
+
+
+### Bug Fixes
+
+* **atomic:** fixed smart snippet show more/show less issue when rotating screen ([#1963](https://github.com/coveo/ui-kit/issues/1963)) ([30c5fb3](https://github.com/coveo/ui-kit/commit/30c5fb3680150c943e83af621633d2fd1be68b22))
+* **atomic:** improved alignment of the "show more"/"show less" smart snippet caret ([#1964](https://github.com/coveo/ui-kit/issues/1964)) ([7ba5fcc](https://github.com/coveo/ui-kit/commit/7ba5fcc79bff5f37b7ff88275ecb9b46e37fb59a))
+* **headless,atomic:** added unique id to related question answers ([#1961](https://github.com/coveo/ui-kit/issues/1961)) ([fd1194e](https://github.com/coveo/ui-kit/commit/fd1194ea5346112198d8928e4e3578a498ce4dd2))
+
+
+### Features
+
+* **atomic:** removed [@internal](https://github.com/internal) flag from atomic-smart-snippet-suggestions ([#1968](https://github.com/coveo/ui-kit/issues/1968)) ([43713ca](https://github.com/coveo/ui-kit/commit/43713ca0534bba3dc252d22e040f41a6c77e7389))
+
+
+
+
+
+# [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.50.1...@coveo/atomic@1.51.0) (2022-05-05)
+
+
+### Features
+
+* **atomic:** refactored atomic-modal mobile/desktop look to fullscreen true/false prop ([#1955](https://github.com/coveo/ui-kit/issues/1955)) ([737b1fc](https://github.com/coveo/ui-kit/commit/737b1fc5b5aa90ba78005fb054e9cf8cc757e8b9))
+
+
+
+
+
+## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.50.0...@coveo/atomic@1.50.1) (2022-05-04)
+
+
+### Bug Fixes
+
+* **atomic:** graciously handle prop changes before initialization and log warning ([#1957](https://github.com/coveo/ui-kit/issues/1957)) ([008d22e](https://github.com/coveo/ui-kit/commit/008d22e082c9ce9e0dff6f95cf15a24126a7743b))
+* **atomic:** hid atomic-did-you-mean when there's no correction ([#1958](https://github.com/coveo/ui-kit/issues/1958)) ([02f018a](https://github.com/coveo/ui-kit/commit/02f018a8c8cfc591ac30d6b37f1cc310b7b2aaf4))
+
+
+
+
+
 # [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.49.0...@coveo/atomic@1.50.0) (2022-05-03)
 
 

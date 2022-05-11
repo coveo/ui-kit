@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.4.4...@coveo/atomic-react@1.4.5) (2022-05-11)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.4.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.4.3...@coveo/atomic-react@1.4.4) (2022-05-11)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.4.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.4.2...@coveo/atomic-react@1.4.3) (2022-05-11)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.4.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.4.1...@coveo/atomic-react@1.4.2) (2022-05-10)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.4.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.4.0...@coveo/atomic-react@1.4.1) (2022-05-10)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+# [1.4.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.3.2...@coveo/atomic-react@1.4.0) (2022-05-09)
+
+
+### Features
+
+* **atomic:** removed [@internal](https://github.com/internal) flag from atomic-smart-snippet-suggestions ([#1968](https://github.com/coveo/ui-kit/issues/1968)) ([43713ca](https://github.com/coveo/ui-kit/commit/43713ca0534bba3dc252d22e040f41a6c77e7389))
+
+
+
+
+
+## [1.3.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.3.1...@coveo/atomic-react@1.3.2) (2022-05-05)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.3.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.3.0...@coveo/atomic-react@1.3.1) (2022-05-04)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
 # [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.2.0...@coveo/atomic-react@1.3.0) (2022-05-03)
 
 

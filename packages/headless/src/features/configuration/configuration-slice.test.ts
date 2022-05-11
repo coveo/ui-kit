@@ -37,6 +37,7 @@ describe('configuration slice', () => {
       anonymous: false,
       deviceId: 'Chrome',
       userDisplayName: 'Someone',
+      documentLocation: 'http://hello.world.com',
     },
   };
 
@@ -142,6 +143,7 @@ describe('configuration slice', () => {
           anonymous: true,
           deviceId: 'wozz',
           userDisplayName: 'wazz',
+          documentLocation: 'http://somewhere.com',
         },
       };
       expect(
@@ -156,6 +158,7 @@ describe('configuration slice', () => {
             anonymous: true,
             deviceId: 'wozz',
             userDisplayName: 'wazz',
+            documentLocation: 'http://somewhere.com',
           })
         )
       ).toEqual(expectedState);
@@ -173,6 +176,7 @@ describe('configuration slice', () => {
           anonymous: true,
           deviceId: 'wozz',
           userDisplayName: 'wazz',
+          documentLocation: 'http://somewhere.com',
         },
       };
 
@@ -188,6 +192,7 @@ describe('configuration slice', () => {
             anonymous: true,
             deviceId: 'wozz',
             userDisplayName: 'wazz',
+            documentLocation: 'http://somewhere.com',
           })
         )
       ).toEqual(expectedState);

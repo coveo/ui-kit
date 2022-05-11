@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.64.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.63.1...@coveo/headless@1.64.0) (2022-05-11)
+
+
+### Features
+
+* **atomic,headless:** add more out of the box analytics configuration for atomic ([#1977](https://github.com/coveo/ui-kit/issues/1977)) ([7dff239](https://github.com/coveo/ui-kit/commit/7dff239d942140ef2f085e7aecbf21f1db039c8c))
+
+
+
+
+
+## [1.63.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.63.0...@coveo/headless@1.63.1) (2022-05-09)
+
+
+### Bug Fixes
+
+* **headless,atomic:** added unique id to related question answers ([#1961](https://github.com/coveo/ui-kit/issues/1961)) ([fd1194e](https://github.com/coveo/ui-kit/commit/fd1194ea5346112198d8928e4e3578a498ce4dd2))
+* **headless:** added missing actions to actions loaders ([#1969](https://github.com/coveo/ui-kit/issues/1969)) ([9982005](https://github.com/coveo/ui-kit/commit/9982005f1c0c6c0550036dde7c25f304d32ad0c8))
+
+
+
+
+
 # [1.63.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.62.0...@coveo/headless@1.63.0) (2022-05-03)
 
 

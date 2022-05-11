@@ -119,6 +119,11 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return styleTag.innerHTML;
   }
 
+  private set hideDuringRender(shouldHide: boolean) {
+    this.host.style.visibility = shouldHide ? 'hidden' : '';
+    this.host.style.position = shouldHide ? 'absolute' : '';
+  }
+
   private renderQuestion() {
     return (
       <Heading
@@ -136,9 +141,13 @@ export class AtomicSmartSnippet implements InitializableComponent {
       <atomic-smart-snippet-expandable-answer
         exportparts="answer,show-more-button,show-less-button,truncated-answer"
         part="body"
+        htmlContent={this.smartSnippetState.answer}
+        expanded={this.smartSnippetState.expanded}
         maximumHeight={this.maximumHeight}
         collapsedHeight={this.collapsedHeight}
         snippetStyle={this.style}
+        onExpand={() => this.smartSnippet.expand()}
+        onCollapse={() => this.smartSnippet.collapse()}
       ></atomic-smart-snippet-expandable-answer>
     );
   }
@@ -165,9 +174,17 @@ export class AtomicSmartSnippet implements InitializableComponent {
     }
   }
 
+  public componentDidRender() {
+    this.hideDuringRender = false;
+  }
+
   public render() {
     if (!this.smartSnippetState.answerFound) {
       return <Hidden></Hidden>;
+    }
+
+    if (this.host.classList.contains('atomic-hidden')) {
+      this.hideDuringRender = true;
     }
 
     return (
