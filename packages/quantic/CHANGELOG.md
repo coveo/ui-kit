@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.15.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.14.2...@coveo/quantic@1.15.0) (2022-05-11)
+
+
+### Features
+
+* **atomic:** network improvements ([#1981](https://github.com/coveo/ui-kit/issues/1981)) ([6490e0d](https://github.com/coveo/ui-kit/commit/6490e0dd0ca16e28e3aa715b87ed2cdeb66047f1))
+
+
+
+
+
 ## [1.14.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.14.1...@coveo/quantic@1.14.2) (2022-05-11)
 
 **Note:** Version bump only for package @coveo/quantic
