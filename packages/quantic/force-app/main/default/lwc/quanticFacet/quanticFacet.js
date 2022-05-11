@@ -124,6 +124,18 @@ export default class QuanticFacet extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
+  static attributes = [
+    'facetId',
+    'field',
+    'label',
+    'numberOfValues',
+    'sortCriteria',
+    'noSearch',
+    'displayValuesAs',
+    'noFilterFacetCount',
+    'injectionDepth',
+  ]
+
   /** @type {FacetState} */
   @track state;
   

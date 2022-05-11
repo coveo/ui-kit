@@ -7,41 +7,15 @@ import {
 import filters from '@salesforce/label/c.quantic_Filters';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 
+import QuanticNumericFacet from 'c/quanticNumericFacet';
+import QuanticFacet from 'c/quanticFacet';
+import QuanticCategoryFacet from 'c/quanticCategoryFacet';
+import QuanticDateFacet from 'c/quanticDateFacet';
+import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
+
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
-
-const COMMON_FACET_PROPERTIES = ['facetId', 'field', 'label'];
-const DEFAULT_FACET_PROPERTIES = [
-  'numberOfValues',
-  'sortCriteria',
-  'noSearch',
-  'displayValuesAs',
-  'noFilterFacetCount',
-  'injectionDepth',
-];
-const NUMERIC_FACET_PROPERTIES = [
-  'numberOfValues',
-  'sortCriteria',
-  'rangeAlgorithm',
-  'withInput',
-  'formattingFunction',
-];
-const CATEGORY_FACET_PROPERTIES = [
-  'basePath',
-  'noFilterByBasePath',
-  'noFilterFacetCount',
-  'delimitingCharacter',
-  'numberOfValues',
-  'sortCriteria',
-  'withSearch',
-];
-const TIMEFRAME_FACET_PROPERTIES = [
-  'withDatePicker',
-  'noFilterFacetCount',
-  'injectionDepth',
-];
-const DATE_FACET_PROPERTIES = ['numberOfValues', 'formattingFunction'];
 
 /**
  * The `QuanticRefineModalContent` component displays a copy of the search interface facets and sort components. This component is intended to be displayed inside the Quantic Modal to assure the responsiveness when the search interface is displayed on smaller screens.
@@ -121,10 +95,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   toNumericFacet = (facetElement) => {
     return {
       isNumeric: true,
-      ...this.extractFacetDataFromElement(facetElement, [
-        ...COMMON_FACET_PROPERTIES,
-        ...NUMERIC_FACET_PROPERTIES,
-      ]),
+      ...this.extractFacetDataFromElement(facetElement, QuanticNumericFacet.attributes),
     };
   };
 
@@ -136,10 +107,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   toDefaultFacet = (facetElement) => {
     return {
       isDefault: true,
-      ...this.extractFacetDataFromElement(facetElement, [
-        ...COMMON_FACET_PROPERTIES,
-        ...DEFAULT_FACET_PROPERTIES,
-      ]),
+      ...this.extractFacetDataFromElement(facetElement, QuanticFacet.attributes),
     };
   };
 
@@ -151,10 +119,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   toCategoryFacet = (facetElement) => {
     return {
       isCategory: true,
-      ...this.extractFacetDataFromElement(facetElement, [
-        ...COMMON_FACET_PROPERTIES,
-        ...CATEGORY_FACET_PROPERTIES,
-      ]),
+      ...this.extractFacetDataFromElement(facetElement, QuanticCategoryFacet.attributes),
     };
   };
 
@@ -166,10 +131,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   toTimeframeFacet = (facetElement) => {
     return {
       isTimeframe: true,
-      ...this.extractFacetDataFromElement(facetElement, [
-        ...COMMON_FACET_PROPERTIES,
-        ...TIMEFRAME_FACET_PROPERTIES,
-      ]),
+      ...this.extractFacetDataFromElement(facetElement, QuanticTimeframeFacet.attributes),
     };
   };
 
@@ -181,10 +143,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   toDateFacet = (facetElement) => {
     return {
       isDate: true,
-      ...this.extractFacetDataFromElement(facetElement, [
-        ...COMMON_FACET_PROPERTIES,
-        ...DATE_FACET_PROPERTIES,
-      ]),
+      ...this.extractFacetDataFromElement(facetElement, QuanticDateFacet.attributes),
     };
   };
 
