@@ -75,3 +75,10 @@ function isInDocument(element: Node) {
 export const getFacetElements = (store: ObservableMap<AtomicStore>) => {
   return store.state.facetElements.filter((element) => isInDocument(element));
 };
+
+export const getAllFacets = (store: ObservableMap<AtomicStore>) => ({
+  ...store.state.facets,
+  ...store.state.dateFacets,
+  ...store.state.categoryFacets,
+  ...store.state.numericFacets,
+});
