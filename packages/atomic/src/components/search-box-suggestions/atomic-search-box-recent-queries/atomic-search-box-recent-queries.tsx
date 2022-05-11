@@ -108,10 +108,6 @@ export class AtomicSearchBoxRecentQueries {
     }
 
     const query = this.bindings.searchBoxController.state.value;
-    console.log(
-      'this.bindings.searchBoxController.state:',
-      this.bindings.searchBoxController.state
-    );
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
