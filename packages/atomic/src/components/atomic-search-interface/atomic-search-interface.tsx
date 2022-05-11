@@ -337,10 +337,11 @@ export class AtomicSearchInterface {
   }
 
   private initI18n() {
+    const isLanguageComplete = ['en', 'fr'].includes(this.language);
     return this.i18n.use(Backend).init({
       debug: this.logLevel === 'debug',
       lng: this.language,
-      fallbackLng: false,
+      fallbackLng: isLanguageComplete ? false : 'en',
       backend: this.i18nBackendOptions,
     });
   }
