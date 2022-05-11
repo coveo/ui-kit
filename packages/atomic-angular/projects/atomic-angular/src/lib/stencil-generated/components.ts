@@ -632,7 +632,13 @@ export class AtomicRelevanceInspector {
 }
 
 
-export declare interface AtomicResult extends Components.AtomicResult {}
+export declare interface AtomicResult extends Components.AtomicResult {
+  /**
+   *  
+   */
+  'atomic/removeResultsPlaceholders': EventEmitter<CustomEvent<any>>;
+
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -649,6 +655,7 @@ export class AtomicResult {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/removeResultsPlaceholders']);
   }
 }
 

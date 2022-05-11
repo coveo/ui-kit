@@ -520,6 +520,9 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * Classes that will be added to the result element.
+         */
         "classes": string;
         /**
           * The result content to display.
@@ -537,6 +540,7 @@ export namespace Components {
           * The headless search engine.
          */
         "engine": SearchEngine;
+        "firstResultToRender": boolean;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -2052,6 +2056,9 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * Classes that will be added to the result element.
+         */
         "classes"?: string;
         /**
           * The result content to display.
@@ -2069,6 +2076,7 @@ declare namespace LocalJSX {
           * The headless search engine.
          */
         "engine": SearchEngine;
+        "firstResultToRender": boolean;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -2077,6 +2085,7 @@ declare namespace LocalJSX {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
+        "onAtomic/removeResultsPlaceholders"?: (event: CustomEvent<any>) => void;
         /**
           * The result item.
          */
