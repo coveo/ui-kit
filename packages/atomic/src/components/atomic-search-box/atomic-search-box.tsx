@@ -419,7 +419,7 @@ export class AtomicSearchBox {
     this.ariaMessage = '';
   }
 
-  private makeSuggestionPart(isSelected: boolean, customPart = '') {
+  private makeSuggestionPart(isSelected: boolean, customPart?: string) {
     let part = 'suggestion';
     if (isSelected) {
       part += ' active-suggestion';
