@@ -19,7 +19,7 @@ export function getAnalyticsConfig(
     payload: AnalyticsPayload
   ) => augmentAnalytics(event, payload, store, searchEngineConfig);
 
-  const outOfTheBoxConfig: AnalyticsConfiguration = {
+  const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
     enabled,
     documentLocation: document.location.href,
@@ -28,11 +28,11 @@ export function getAnalyticsConfig(
 
   if (searchEngineConfig.analytics) {
     return {
-      ...outOfTheBoxConfig,
+      ...defaultConfiguration,
       ...searchEngineConfig.analytics,
     };
   }
-  return outOfTheBoxConfig;
+  return defaultConfiguration;
 }
 
 function augmentAnalytics(

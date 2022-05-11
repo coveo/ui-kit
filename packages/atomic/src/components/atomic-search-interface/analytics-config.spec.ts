@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
-import {registerFacet} from '@coveo/headless/dist/definitions/features/facets/facet-set/facet-set-actions';
 import {createStore, ObservableMap} from '@stencil/store';
 import {
   AtomicStore,
