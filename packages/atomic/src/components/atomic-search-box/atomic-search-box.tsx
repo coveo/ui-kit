@@ -419,12 +419,27 @@ export class AtomicSearchBox {
     this.ariaMessage = '';
   }
 
+  private makeSuggestionPart(isSelected: boolean, customPart = '') {
+    let part = 'suggestion';
+    if (isSelected) {
+      part += ' active-suggestion';
+    }
+    if (customPart) {
+      part += ` ${customPart}`;
+    }
+    return part;
+  }
+
   private renderSuggestion(
     suggestion: SearchBoxSuggestionElement,
-    index: number
+    index: number,
+    lastIndex: number
   ) {
     const id = `${this.id}-suggestion-${index}`;
     const isSelected = id === this.activeDescendant;
+    if (suggestion.hideIf?.(index === lastIndex)) {
+      return null;
+    }
     return (
       <li
         id={id}
@@ -432,7 +447,7 @@ export class AtomicSearchBox {
         aria-selected={`${isSelected}`}
         key={suggestion.key}
         data-query={suggestion.query}
-        part={isSelected ? 'active-suggestion suggestion' : 'suggestion'}
+        part={this.makeSuggestionPart(isSelected, suggestion.part)}
         class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
@@ -467,7 +482,11 @@ export class AtomicSearchBox {
         }`}
       >
         {this.suggestionElements.map((suggestion, index) =>
-          this.renderSuggestion(suggestion, index)
+          this.renderSuggestion(
+            suggestion,
+            index,
+            this.suggestionElements.length - 1
+          )
         )}
       </ul>
     );

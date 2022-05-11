@@ -122,16 +122,18 @@ export class AtomicSearchBoxRecentQueries {
       key: 'recent-query-clear',
       content: (
         <div class="flex justify-between w-full">
-          <span class="font-bold">
+          <span class="font-bold" part="recent-query-title">
             {this.bindings.i18n.t('recent-searches')}
           </span>
-          <span>{this.bindings.i18n.t('clear')}</span>
+          <span part="recent-query-clear">{this.bindings.i18n.t('clear')}</span>
         </div>
       ),
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
       },
+      part: 'recent-query-header',
+      hideIf: (isLast: boolean) => isLast,
     };
   }
 
