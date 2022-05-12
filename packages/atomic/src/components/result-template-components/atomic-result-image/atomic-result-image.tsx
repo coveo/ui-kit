@@ -53,6 +53,12 @@ export class AtomicResultImage implements InitializableComponent {
       return;
     }
 
-    return <img alt={`${this.field} image`} src={filterProtocol(url)} />;
+    return (
+      <img
+        alt={`${this.field} image`}
+        src={filterProtocol(url)}
+        loading="lazy"
+      />
+    );
   }
 }
