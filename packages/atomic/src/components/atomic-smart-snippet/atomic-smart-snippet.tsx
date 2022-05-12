@@ -67,6 +67,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @Element() public host!: HTMLElement;
   private id = randomID();
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
+  private explainWhyBtnRef?: HTMLButtonElement;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -102,9 +103,24 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+    if (!this.bindings.store.get('firstResultLoaded')) {
+      this.bindings.store.onChange(
+        'firstResultLoaded',
+        (firstResultLoaded) =>
+          firstResultLoaded && (this.hideDuringRender = false)
+      );
+    }
+  }
+
+  private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+
     this.modalRef = document.createElement(
       'atomic-smart-snippet-feedback-modal'
     );
+    this.modalRef.source = this.explainWhyBtnRef;
     this.modalRef.addEventListener('feedbackSent', () => {
       this.feedbackSent = true;
     });
@@ -206,9 +222,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
         disliked={this.smartSnippetState.disliked}
         feedbackSent={this.feedbackSent}
         onLike={() => this.smartSnippet.like()}
-        onDislike={() => this.smartSnippet.dislike()}
+        onDislike={() => {
+          this.loadModal();
+          this.smartSnippet.dislike();
+        }}
         onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
-        explainWhyRef={(button) => (this.modalRef!.source = button)}
+        explainWhyRef={(button) => (this.explainWhyBtnRef = button)}
       ></SmartSnippetFeedbackBanner>
     );
   }
@@ -220,7 +239,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   public componentDidRender() {
-    this.hideDuringRender = false;
+    if (this.bindings.store.get('firstResultLoaded')) {
+      this.hideDuringRender = false;
+    }
   }
 
   public render() {

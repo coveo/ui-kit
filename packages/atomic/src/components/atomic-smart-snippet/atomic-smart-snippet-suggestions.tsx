@@ -87,7 +87,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
    * `;
    * ```
    */
-  @Prop({reflect: true}) snippetStyle?: string;
+  @Prop() snippetStyle?: string;
 
   private id = randomID('atomic-smart-snippet-suggestions-');
 
@@ -95,6 +95,15 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.bindings.engine
     );
+
+    if (!this.bindings.store.get('firstResultLoaded')) {
+      this.hideDuringRender = true;
+      this.bindings.store.onChange(
+        'firstResultLoaded',
+        (firstResultLoaded) =>
+          firstResultLoaded && (this.hideDuringRender = false)
+      );
+    }
   }
 
   private get style() {
@@ -105,6 +114,11 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       return this.snippetStyle;
     }
     return styleTag.innerHTML;
+  }
+
+  private set hideDuringRender(shouldHide: boolean) {
+    this.host.style.visibility = shouldHide ? 'hidden' : '';
+    this.host.style.position = shouldHide ? 'absolute' : '';
   }
 
   private getRelatedQuestionId(index: number) {
@@ -216,14 +230,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       >
         <article class="contents">
           {this.renderQuestion(relatedQuestion, index)}
-          <div
-            part={relatedQuestion.expanded ? 'answer-and-source' : ''}
-            class={relatedQuestion.expanded ? 'pl-10 pr-6 pb-6' : 'hidden'}
-            id={this.getRelatedQuestionId(index)}
-          >
-            {this.renderContent(relatedQuestion)}
-            {this.renderSource(relatedQuestion)}
-          </div>
+          {relatedQuestion.expanded && (
+            <div
+              part="answer-and-source"
+              class="pl-10 pr-6 pb-6"
+              id={this.getRelatedQuestionId(index)}
+            >
+              {this.renderContent(relatedQuestion)}
+              {this.renderSource(relatedQuestion)}
+            </div>
+          )}
         </article>
       </li>
     );
