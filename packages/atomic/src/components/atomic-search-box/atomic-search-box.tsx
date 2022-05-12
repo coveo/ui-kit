@@ -308,9 +308,9 @@ export class AtomicSearchBox {
   }
 
   private clearSuggestions() {
-    this.isExpanded = false;
+    // this.isExpanded = false;
     this.updateActiveDescendant();
-    this.clearSuggestionElements();
+    // this.clearSuggestionElements();
   }
 
   private onSubmit() {
@@ -419,13 +419,10 @@ export class AtomicSearchBox {
     this.ariaMessage = '';
   }
 
-  private makeSuggestionPart(isSelected: boolean, customPart?: string) {
+  private makeSuggestionPart(isSelected: boolean) {
     let part = 'suggestion';
     if (isSelected) {
       part += ' active-suggestion';
-    }
-    if (customPart) {
-      part += ` ${customPart}`;
     }
     return part;
   }
@@ -437,7 +434,7 @@ export class AtomicSearchBox {
   ) {
     const id = `${this.id}-suggestion-${index}`;
     const isSelected = id === this.activeDescendant;
-    if (suggestion.hideIf?.(index === lastIndex)) {
+    if (suggestion.key === 'recent-query-clear' && index === lastIndex) {
       return null;
     }
     return (
@@ -447,7 +444,7 @@ export class AtomicSearchBox {
         aria-selected={`${isSelected}`}
         key={suggestion.key}
         data-query={suggestion.query}
-        part={this.makeSuggestionPart(isSelected, suggestion.part)}
+        part={this.makeSuggestionPart(isSelected)}
         class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
           isSelected ? 'bg-neutral-light' : ''
         }`}

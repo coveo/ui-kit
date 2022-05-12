@@ -132,8 +132,6 @@ export class AtomicSearchBoxRecentQueries {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
       },
-      part: 'recent-query-header',
-      hideIf: (isLast: boolean) => isLast,
     };
   }
 

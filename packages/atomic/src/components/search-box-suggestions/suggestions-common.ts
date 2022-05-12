@@ -7,10 +7,8 @@ import {closest} from '../../utils/utils';
 export interface SearchBoxSuggestionElement {
   key: string;
   query?: string;
-  part?: string;
   onSelect(): void;
   content: Element | VNode;
-  hideIf?(isLast: boolean): boolean;
 }
 
 export interface SearchBoxSuggestions {
