@@ -1,5 +1,12 @@
 import {Component, h, Prop, State, Event, EventEmitter} from '@stencil/core';
-import {Pager, PagerState, buildPager} from '@coveo/headless';
+import {
+  Pager,
+  PagerState,
+  buildPager,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
+} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
@@ -34,11 +41,15 @@ import {isAppLoaded} from '../../utils/store';
 export class AtomicPager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private pager!: Pager;
+  public searchStatus!: SearchStatus;
   private readonly radioGroupName = randomID('atomic-pager-');
 
   @BindStateToController('pager')
   @State()
   private pagerState!: PagerState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() error!: Error;
 
   @Event({
@@ -55,6 +66,7 @@ export class AtomicPager implements InitializableComponent {
   private activePage!: FocusTargetController;
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.pager = buildPager(this.bindings.engine, {
       options: {numberOfPages: this.numberOfPages},
     });
@@ -140,7 +152,10 @@ export class AtomicPager implements InitializableComponent {
   }
 
   public render() {
-    if (!isAppLoaded(this.bindings.store)) {
+    if (
+      !isAppLoaded(this.bindings.store) ||
+      !this.searchStatusState.hasResults
+    ) {
       return;
     }
 

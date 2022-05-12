@@ -233,6 +233,10 @@ export class ResultListCommon {
       return;
     }
 
+    if (resultListState.firstSearchExecuted && !resultListState.hasResults) {
+      return;
+    }
+
     const displayPlaceholders = !isAppLoaded(this.bindings.store);
 
     const classes = this.getClasses(
