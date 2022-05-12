@@ -27,7 +27,13 @@ import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
-import {AtomicStore, initialStore} from '../../utils/store';
+import {
+  AtomicStore,
+  hasLoadingFlag,
+  initialStore,
+  setLoadingFlag,
+  unsetLoadingFlag,
+} from '../../utils/store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
   SafeStorage,
@@ -36,6 +42,8 @@ import {
 } from '../../utils/local-storage-utils';
 
 export type InitializationOptions = SearchEngineConfiguration;
+
+const FirstSearchExecutedFlag = 'firstSearchExecuted';
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
@@ -135,6 +143,7 @@ export class AtomicSearchInterface {
 
   public connectedCallback() {
     this.i18nPromise = this.initI18n();
+    setLoadingFlag(this.store, FirstSearchExecutedFlag);
   }
 
   @Watch('searchHub')
@@ -403,6 +412,13 @@ export class AtomicSearchInterface {
         'atomic-search-interface-no-results',
         hasNoResultsAfterInitialSearch
       );
+
+      if (
+        this.searchStatus.state.firstSearchExecuted &&
+        hasLoadingFlag(this.store, FirstSearchExecutedFlag)
+      ) {
+        unsetLoadingFlag(this.store, FirstSearchExecutedFlag);
+      }
     });
   }
 

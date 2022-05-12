@@ -37,6 +37,13 @@ export type AtomicStore = {
    * When first loading, Atomic has a rendering delay of its results, hence this is a better indicator than the "firstSearchExecuted" of the Headless state.
    */
   firstResultLoaded: boolean;
+  /**
+   * Dynamic list of flags that allows for syncing various components loading state on initialization.
+   * E.g., waiting for result template component to be rendered.
+   *
+   * This is a better indicator than only the "firstSearchExecuted" of the Headless search state.
+   */
+  loadingFlags: string[];
 };
 
 export const initialStore: () => AtomicStore = () => ({
@@ -48,6 +55,7 @@ export const initialStore: () => AtomicStore = () => ({
   sortOptions: [],
   iconAssetsPath: '',
   firstResultLoaded: false,
+  loadingFlags: [],
 });
 
 export const registerFacetToStore = <T extends FacetType, U extends string>(
@@ -88,3 +96,41 @@ export const getAllFacets = (store: ObservableMap<AtomicStore>) => ({
   ...store.state.categoryFacets,
   ...store.state.numericFacets,
 });
+
+export const setLoadingFlag = (
+  store: ObservableMap<AtomicStore>,
+  flag: string
+) => {
+  const flags = store.get('loadingFlags');
+  store.set('loadingFlags', flags.concat(flag));
+};
+
+export const unsetLoadingFlag = (
+  store: ObservableMap<AtomicStore>,
+  flag: string
+) => {
+  const flags = store.get('loadingFlags');
+  const flagIndex = flags.indexOf(flag);
+  if (flagIndex !== -1) {
+    store.set('loadingFlags', flags.splice(flagIndex, 1));
+  }
+};
+
+export const hasLoadingFlag = (
+  store: ObservableMap<AtomicStore>,
+  flag: string
+) => store.get('loadingFlags').indexOf(flag) !== -1;
+
+export const waitUntilAppLoaded = (
+  store: ObservableMap<AtomicStore>,
+  callback: () => void
+) => {
+  store.onChange('loadingFlags', (flags) => {
+    if (!flags.length) {
+      callback();
+    }
+  });
+};
+
+export const isAppLoaded = (store: ObservableMap<AtomicStore>) =>
+  !store.get('loadingFlags').length;
