@@ -15,6 +15,7 @@ import {Heading} from '../common/heading';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../utils/utils';
+import {isAppLoaded, waitUntilAppLoaded} from '../../utils/store';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -103,13 +104,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
-    if (!this.bindings.store.get('firstResultLoaded')) {
-      this.bindings.store.onChange(
-        'firstResultLoaded',
-        (firstResultLoaded) =>
-          firstResultLoaded && (this.hideDuringRender = false)
-      );
-    }
+    waitUntilAppLoaded(this.bindings.store, () => {
+      this.hideDuringRender = false;
+    });
   }
 
   private loadModal() {
@@ -239,7 +236,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   public componentDidRender() {
-    if (this.bindings.store.get('firstResultLoaded')) {
+    if (isAppLoaded(this.bindings.store)) {
       this.hideDuringRender = false;
     }
   }

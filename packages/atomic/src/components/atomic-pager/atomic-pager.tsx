@@ -14,6 +14,7 @@ import {
 } from '../../utils/accessibility-utils';
 import {randomID} from '../../utils/utils';
 import {RadioButton} from '../common/radio-button';
+import {isAppLoaded} from '../../utils/store';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -139,7 +140,7 @@ export class AtomicPager implements InitializableComponent {
   }
 
   public render() {
-    if (!this.bindings.store.get('firstResultLoaded')) {
+    if (!isAppLoaded(this.bindings.store)) {
       return;
     }
 

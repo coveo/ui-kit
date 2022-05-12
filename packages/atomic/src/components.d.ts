@@ -550,6 +550,7 @@ export namespace Components {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
         /**
           * The result item.
          */
@@ -2089,6 +2090,7 @@ declare namespace LocalJSX {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
         /**
           * The result item.
          */

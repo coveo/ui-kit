@@ -26,8 +26,9 @@ import {ListDisplayResults} from './list-display-results';
 import {GridDisplayResults} from './grid-display-results';
 import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
-import {once} from '../../utils/utils';
+import {once, randomID} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
+import {isAppLoaded, setLoadingFlag} from '../../utils/store';
 interface DisplayOptions {
   density: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
@@ -83,10 +84,12 @@ export class ResultListCommon {
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
+  public loadingFlag = randomID('firstResultLoaded-');
 
   constructor(opts: ResultListCommonOptions) {
     this.host = opts.host;
     this.bindings = opts.bindings;
+    setLoadingFlag(this.bindings.store, this.loadingFlag);
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
@@ -230,7 +233,7 @@ export class ResultListCommon {
       return;
     }
 
-    const displayPlaceholders = !this.bindings.store.get('firstResultLoaded');
+    const displayPlaceholders = !isAppLoaded(this.bindings.store);
 
     const classes = this.getClasses(
       display,

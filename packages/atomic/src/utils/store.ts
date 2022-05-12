@@ -33,11 +33,6 @@ export type AtomicStore = {
   sortOptions: SortDropdownOption[];
   iconAssetsPath: string;
   /**
-   * Flag set to 'true' when the first "atomic-result" & its component have been rendered, replacing the placeholders.
-   * When first loading, Atomic has a rendering delay of its results, hence this is a better indicator than the "firstSearchExecuted" of the Headless state.
-   */
-  firstResultLoaded: boolean;
-  /**
    * Dynamic list of flags that allows for syncing various components loading state on initialization.
    * E.g., waiting for result template component to be rendered.
    *
@@ -54,7 +49,6 @@ export const initialStore: () => AtomicStore = () => ({
   facetElements: [],
   sortOptions: [],
   iconAssetsPath: '',
-  firstResultLoaded: false,
   loadingFlags: [],
 });
 
@@ -110,10 +104,10 @@ export const unsetLoadingFlag = (
   flag: string
 ) => {
   const flags = store.get('loadingFlags');
-  const flagIndex = flags.indexOf(flag);
-  if (flagIndex !== -1) {
-    store.set('loadingFlags', flags.splice(flagIndex, 1));
-  }
+  store.set(
+    'loadingFlags',
+    flags.filter((value) => value !== flag)
+  );
 };
 
 export const hasLoadingFlag = (

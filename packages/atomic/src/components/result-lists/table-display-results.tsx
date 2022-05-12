@@ -62,6 +62,7 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
                     density={props.density}
                     image-size={props.imageSize}
                     content={column}
+                    loadingFlag={props.resultListCommon.loadingFlag}
                   ></atomic-result>
                 </td>
               );

@@ -19,6 +19,7 @@ import {Heading} from '../common/heading';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
+import {waitUntilAppLoaded} from '../../utils/store';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -96,14 +97,10 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       this.bindings.engine
     );
 
-    if (!this.bindings.store.get('firstResultLoaded')) {
-      this.hideDuringRender = true;
-      this.bindings.store.onChange(
-        'firstResultLoaded',
-        (firstResultLoaded) =>
-          firstResultLoaded && (this.hideDuringRender = false)
-      );
-    }
+    this.hideDuringRender = true;
+    waitUntilAppLoaded(this.bindings.store, () => {
+      this.hideDuringRender = false;
+    });
   }
 
   private get style() {

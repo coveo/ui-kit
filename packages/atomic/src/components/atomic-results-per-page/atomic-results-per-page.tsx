@@ -12,6 +12,7 @@ import {
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {RadioButton} from '../common/radio-button';
+import {isAppLoaded} from '../../utils/store';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
@@ -104,7 +105,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   public render() {
-    if (!this.bindings.store.get('firstResultLoaded')) {
+    if (!isAppLoaded(this.bindings.store)) {
       return;
     }
 

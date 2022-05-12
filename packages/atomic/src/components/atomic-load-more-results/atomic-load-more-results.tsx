@@ -12,6 +12,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {isAppLoaded} from '../../utils/store';
 import {Button} from '../common/button';
 
 /**
@@ -108,7 +109,7 @@ export class AtomicLoadMoreResults {
   }
 
   public render() {
-    if (!this.bindings.store.get('firstResultLoaded')) {
+    if (!isAppLoaded(this.bindings.store)) {
       return;
     }
 
