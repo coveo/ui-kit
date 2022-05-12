@@ -179,6 +179,13 @@ export type {
   SuggestionHighlightingOptions,
   Delimiters,
 } from './search-box/headless-search-box';
+
+export type {
+  InstantResults,
+  InstantResultsState,
+} from './instant-results/instant-results';
+export {buildInstantResults} from './instant-results/instant-results';
+
 export {buildSearchBox} from './search-box/headless-search-box';
 
 export type {
