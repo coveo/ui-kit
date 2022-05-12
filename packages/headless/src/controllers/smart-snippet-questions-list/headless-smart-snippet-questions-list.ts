@@ -77,7 +77,7 @@ export interface SmartSnippetQuestionsList extends Controller {
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
-   * Selects the source, logging a UA event to the Coveo Platform if the source wasn't already selected before.
+   * Selects the source, logging a UA event to the Coveo Platform if the source hadn't been selected before.
    *
    * In a DOM context, we recommend calling this method on all of the following events:
    * * `contextmenu`
@@ -89,7 +89,7 @@ export interface SmartSnippetQuestionsList extends Controller {
    */
   selectSource(identifier: string): void;
   /**
-   * Prepares to select the source after a certain delay, sending analytics if it was never selected before.
+   * Prepares to select the source after a certain delay, sending analytics if it hadn't been selected before.
    *
    * In a DOM context, we recommend calling this method on the `touchstart` event.
    *
