@@ -1164,7 +1164,7 @@
   },
   "between-parentheses": {
     "en": "({{text}})",
-    "fr": "(\u00A0{{text}}\u00A0)"
+    "fr": "({{text}})"
   },
   "smart-snippet": {
     "en": "Potential answer to your question",

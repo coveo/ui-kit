@@ -12,7 +12,6 @@ import {
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../utils/utils';
 import {isAppLoaded, waitUntilAppLoaded} from '../../utils/store';
@@ -167,49 +166,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
     );
   }
 
-  private renderSource() {
-    const {source} = this.smartSnippetState;
-    if (!source) {
-      return [];
-    }
-    return (
-      <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
-        <div part="source-url">
-          <LinkWithResultAnalytics
-            title={source.clickUri}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => this.smartSnippet.selectSource()}
-            onBeginDelayedSelect={() =>
-              this.smartSnippet.beginDelayedSelectSource()
-            }
-            onCancelPendingSelect={() =>
-              this.smartSnippet.cancelPendingSelectSource()
-            }
-          >
-            {source.clickUri}
-          </LinkWithResultAnalytics>
-        </div>
-        <div part="source-title" class="mb-6">
-          <LinkWithResultAnalytics
-            title={source.title}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => this.smartSnippet.selectSource()}
-            onBeginDelayedSelect={() =>
-              this.smartSnippet.beginDelayedSelectSource()
-            }
-            onCancelPendingSelect={() =>
-              this.smartSnippet.cancelPendingSelectSource()
-            }
-          >
-            {source.title}
-          </LinkWithResultAnalytics>
-        </div>
-      </section>
-    );
-  }
-
   private renderFeedbackBanner() {
     return (
       <SmartSnippetFeedbackBanner
@@ -262,7 +218,18 @@ export class AtomicSmartSnippet implements InitializableComponent {
           {this.renderQuestion()}
           {this.renderContent()}
           <footer part="footer">
-            {this.renderSource()}
+            {this.smartSnippetState.source && (
+              <atomic-smart-snippet-source
+                source={this.smartSnippetState.source}
+                onSelectSource={() => this.smartSnippet.selectSource()}
+                onBeginDelayedSelectSource={() =>
+                  this.smartSnippet.beginDelayedSelectSource()
+                }
+                onCancelPendingSelectSource={() =>
+                  this.smartSnippet.cancelPendingSelectSource()
+                }
+              ></atomic-smart-snippet-source>
+            )}
             {this.renderFeedbackBanner()}
           </footer>
         </article>

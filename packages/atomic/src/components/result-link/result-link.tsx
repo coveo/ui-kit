@@ -4,6 +4,7 @@ import {filterProtocol} from '../../utils/xss-utils';
 export interface ResultLinkProps {
   href: string;
   target: string;
+  className?: string;
   part?: string;
   title?: string;
   onSelect: () => void;
@@ -17,6 +18,7 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
   {
     href,
     target,
+    className,
     part,
     title,
     onSelect,
@@ -33,6 +35,7 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
   };
   return (
     <a
+      class={className}
       part={part}
       href={filterProtocol(href)}
       title={title}
