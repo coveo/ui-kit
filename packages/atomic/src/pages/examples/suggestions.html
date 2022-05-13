@@ -21,7 +21,7 @@
           suggestions = [];
 
           renderSuggestions(bindings) {
-            return this.suggestions.map((suggestion) => {
+            return this.suggestions.slice(0, 7).map((suggestion) => {
               const content = document.createElement('div');
               content.innerText = suggestion;
               return {

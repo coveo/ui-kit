@@ -7,7 +7,9 @@ import {
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
+  SearchBoxDividerElement,
   SearchBoxSuggestionElement,
+  SearchBoxSuggestionItem,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 import {once} from '../../../utils/utils';
@@ -91,7 +93,7 @@ export class AtomicSearchBoxRecentQueries {
     this.storage.removeItem(StorageItems.RECENT_QUERIES);
   }
 
-  private renderItems(): SearchBoxSuggestionElement[] {
+  private renderItems(): SearchBoxSuggestionItem[] {
     if (!this.recentQueriesList.state.analyticsEnabled) {
       return [];
     }
@@ -107,8 +109,8 @@ export class AtomicSearchBoxRecentQueries {
       )
       .slice(0, max);
 
-    const suggestionElements = filteredQueries.map((value) =>
-      this.renderItem(value)
+    const suggestionElements: SearchBoxSuggestionItem[] = filteredQueries.map(
+      (value) => this.renderItem(value)
     );
     if (suggestionElements.length) {
       suggestionElements.unshift(this.renderClear());
@@ -117,7 +119,7 @@ export class AtomicSearchBoxRecentQueries {
     return suggestionElements;
   }
 
-  private renderClear(): SearchBoxSuggestionElement {
+  private renderClear(): SearchBoxDividerElement {
     return {
       key: 'recent-query-clear',
       content: (
