@@ -67,7 +67,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @Element() public host!: HTMLElement;
   private id = randomID();
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
-  private explainWhyBtnRef?: HTMLButtonElement;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -116,7 +115,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.modalRef = document.createElement(
       'atomic-smart-snippet-feedback-modal'
     );
-    this.modalRef.source = this.explainWhyBtnRef;
+    // console.log('hmm', this.explainWhyBtnRef);
+    // this.modalRef.source = this.explainWhyBtnRef;
     this.modalRef.addEventListener('feedbackSent', () => {
       this.feedbackSent = true;
     });
@@ -180,7 +180,11 @@ export class AtomicSmartSnippet implements InitializableComponent {
           this.smartSnippet.dislike();
         }}
         onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
-        explainWhyRef={(button) => (this.explainWhyBtnRef = button)}
+        explainWhyRef={(button) => {
+          if (this.modalRef) {
+            this.modalRef!.source = button;
+          }
+        }}
       ></SmartSnippetFeedbackBanner>
     );
   }
