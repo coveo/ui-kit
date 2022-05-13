@@ -42,6 +42,7 @@ import {promiseTimeout} from '../../utils/promise-utils';
  * @part suggestions - A list of suggested query corrections.
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
+ * @part suggestion-divider - An item on the list that separates groups of suggestions.
  */
 @Component({
   tag: 'atomic-search-box',
