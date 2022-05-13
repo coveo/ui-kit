@@ -12,6 +12,7 @@ export function buildMockAnalyticsState(
     deviceId: '',
     originContext: '',
     userDisplayName: '',
+    documentLocation: '',
     ...config,
   };
 }

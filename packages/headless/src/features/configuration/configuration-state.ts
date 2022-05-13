@@ -106,6 +106,10 @@ export interface AnalyticsState {
    * Specifies the user display name for the usage analytics logs.
    */
   userDisplayName: string;
+  /**
+   * Specifies the URL of the current page or component.
+   */
+  documentLocation: string;
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -129,6 +133,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     anonymous: false,
     deviceId: '',
     userDisplayName: '',
+    documentLocation: '',
   },
 });
 
@@ -138,12 +143,13 @@ export const fromAnalyticsStateToAnalyticsParams = async (
   return {
     analytics: {
       clientId: await getVisitorID(),
-      deviceId: s.deviceId,
-      pageId: getPageID(),
       clientTimestamp: new Date().toISOString(),
       documentReferrer: s.originLevel3,
       originContext: s.originContext,
-      userDisplayName: s.userDisplayName,
+      ...(s.userDisplayName && {userDisplayName: s.userDisplayName}),
+      ...(s.documentLocation && {documentLocation: s.documentLocation}),
+      ...(s.deviceId && {deviceId: s.deviceId}),
+      ...(getPageID() && {pageId: getPageID()}),
     },
   };
 };

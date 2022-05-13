@@ -1,5 +1,4 @@
 import {ComponentInterface, getElement} from '@stencil/core';
-import {mapValues} from 'lodash';
 import {camelToKebab, kebabToCamel} from './utils';
 
 interface MapPropOptions {
@@ -45,8 +44,12 @@ export function mapAttributesToProp(
 }
 
 function stringMapToStringArrayMap(map: Record<string, string>) {
-  return mapValues(map, (value) =>
-    value.split(',').map((subValue) => subValue.trim())
+  return Object.entries(map).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      [key]: value.split(',').map((subValue) => subValue.trim()),
+    }),
+    {}
   );
 }
 

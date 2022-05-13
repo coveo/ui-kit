@@ -23,9 +23,9 @@ export const SmartSnippetSelectors = {
       includeShadowDom: true,
     }),
   body: () => SmartSnippetSelectors.shadow().find('[part="body"]'),
-  sourceUrl: () => SmartSnippetSelectors.shadow().find('[part="source-url"] a'),
+  sourceUrl: () => SmartSnippetSelectors.shadow().find('[part="source-url"]'),
   sourceTitle: () =>
-    SmartSnippetSelectors.shadow().find('[part="source-title"] a'),
+    SmartSnippetSelectors.shadow().find('[part="source-title"]'),
   footer: () => SmartSnippetSelectors.shadow().find('[part="footer"]'),
   feedbackBanner: () =>
     SmartSnippetSelectors.shadow().find('[part="feedback-banner"]', {

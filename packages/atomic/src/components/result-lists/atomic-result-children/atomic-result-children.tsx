@@ -125,7 +125,9 @@ export class AtomicResultChildren {
 
   private selectInheritedTemplate(result: Result) {
     const content = this.templatesManager?.selectTemplate(result);
-    if (!content) return;
+    if (!content) {
+      return;
+    }
 
     const fragment = document.createDocumentFragment();
     const children = Array.from(content.children).filter(
@@ -146,7 +148,9 @@ export class AtomicResultChildren {
 
   private renderChild(child: FoldedResult) {
     const content = this.getContent(child.result);
-    if (!content) return null;
+    if (!content) {
+      return null;
+    }
     return (
       <atomic-result
         key={child.result.uniqueId}
@@ -257,8 +261,12 @@ export class AtomicResultChildren {
   }
 
   public render() {
-    if (!this.ready) return null;
-    if (this.templateHasError) return <slot></slot>;
+    if (!this.ready) {
+      return null;
+    }
+    if (this.templateHasError) {
+      return <slot></slot>;
+    }
     return (
       <Host>
         {this.renderCollapseButton()}
