@@ -115,8 +115,8 @@ export function buildInstantResults(
     get state() {
       return {
         q: getQ(),
-        isLoading: getCached(getQ())?.isLoading,
-        error: getCached(getQ())?.error,
+        isLoading: getCached(getQ())?.isLoading || false,
+        error: getCached(getQ())?.error || null,
         results: getResults(),
       };
     },
