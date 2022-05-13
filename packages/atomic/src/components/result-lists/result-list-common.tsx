@@ -116,8 +116,9 @@ export class ResultListCommon {
   private determineAllFieldsToInclude(
     configuredFieldsToInclude: string
   ): string[] {
-    if (configuredFieldsToInclude.trim() === '')
+    if (configuredFieldsToInclude.trim() === '') {
       return [...EcommerceDefaultFieldsToInclude];
+    }
     return EcommerceDefaultFieldsToInclude.concat(
       configuredFieldsToInclude.split(',').map((field) => field.trim())
     );
