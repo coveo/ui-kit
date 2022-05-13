@@ -54,6 +54,10 @@ export class AtomicModal implements InitializableComponent {
   private wasEverOpened = false;
   private headerId = randomID('atomic-modal-header-');
 
+  connectedCallback() {
+    this.watchToggleOpen(this.isOpen);
+  }
+
   @Watch('isOpen')
   watchToggleOpen(isOpen: boolean) {
     const modalOpenedClass = 'atomic-modal-opened';

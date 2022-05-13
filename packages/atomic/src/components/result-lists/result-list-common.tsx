@@ -26,7 +26,7 @@ import {ListDisplayResults} from './list-display-results';
 import {GridDisplayResults} from './grid-display-results';
 import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
-import {once, randomID} from '../../utils/utils';
+import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {isAppLoaded, setLoadingFlag} from '../../utils/store';
 interface DisplayOptions {
@@ -74,6 +74,7 @@ interface ResultListCommonOptions {
   includeDefaultTemplate?: boolean;
   onReady(): void;
   onError(): void;
+  loadingFlag?: string;
 }
 
 export class ResultListCommon {
@@ -84,12 +85,15 @@ export class ResultListCommon {
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
-  public loadingFlag = randomID('firstResultLoaded-');
+  public loadingFlag?: string;
 
   constructor(opts: ResultListCommonOptions) {
     this.host = opts.host;
     this.bindings = opts.bindings;
-    setLoadingFlag(this.bindings.store, this.loadingFlag);
+    this.loadingFlag = opts.loadingFlag;
+    if (this.loadingFlag) {
+      setLoadingFlag(this.bindings.store, this.loadingFlag);
+    }
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
