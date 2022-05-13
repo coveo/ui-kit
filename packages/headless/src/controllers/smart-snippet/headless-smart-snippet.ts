@@ -33,7 +33,7 @@ export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/que
 
 export interface SmartSnippetOptions {
   /**
-   * The amount of time in milliseconds to wait before selecting the source after calling `source.beginDelayedSelect`.
+   * The amount of time in milliseconds to wait before selecting the source after calling `beginDelayedSelect`.
    *
    * @defaultValue `1000`
    */
@@ -42,7 +42,7 @@ export interface SmartSnippetOptions {
 
 export interface SmartSnippetProps {
   /**
-   * The options for the `Tab` controller.
+   * The options for the `SmartSnippet` controller.
    */
   options?: SmartSnippetOptions;
 }
