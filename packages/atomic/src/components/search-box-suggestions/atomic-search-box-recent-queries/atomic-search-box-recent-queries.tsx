@@ -19,7 +19,7 @@ import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
  *
  * @part recent-query-title - The 'Recent queries' title.
- * @part recent-query-clear - The 'Clear' button for clearing recent queries.
+ * @part recent-query-clear - The 'Clear' button to clear recent queries.
  */
 @Component({
   tag: 'atomic-search-box-recent-queries',
