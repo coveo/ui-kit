@@ -144,7 +144,7 @@ export class AtomicResultChildren {
     );
   }
 
-  private renderChild(child: FoldedResult) {
+  private renderChild(child: FoldedResult, isLast: boolean) {
     const content = this.getContent(child.result);
     if (!content) return null;
     return (
@@ -155,7 +155,7 @@ export class AtomicResultChildren {
         engine={this.bindings.engine}
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}
-        classes="child-result"
+        classes={`child-result ${isLast ? 'last-child' : ''}`.trim()}
       ></atomic-result>
     );
   }
@@ -211,7 +211,9 @@ export class AtomicResultChildren {
       const children = this.hideResults
         ? this.initialChildren
         : result.children;
-      return children.map((child) => this.renderChild(child));
+      return children.map((child, i) =>
+        this.renderChild(child, i === children.length - 1)
+      );
     }
     if (this.showAllResults) {
       return (
@@ -248,7 +250,7 @@ export class AtomicResultChildren {
           }}
         >
           {this.bindings.i18n.t(
-            this.hideResults ? 'expand-results' : 'collapse-results'
+            this.hideResults ? 'show-all-results' : 'collapse-results'
           )}
         </Button>
       );
