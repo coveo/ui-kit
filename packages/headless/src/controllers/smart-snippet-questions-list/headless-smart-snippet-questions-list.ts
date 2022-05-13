@@ -6,7 +6,6 @@ import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
-  logOpenSmartSnippetSuggestionSource,
 } from '../../features/question-answering/question-answering-analytics-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
 import {
@@ -15,12 +14,7 @@ import {
 } from '../../features/question-answering/question-answering-actions';
 import {Result} from '../../api/search/search/result';
 import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
-import {
-  buildInteractiveResultCore,
-  InteractiveResultCore,
-} from '../core/interactive-result/headless-core-interactive-result';
-import {QuestionAnsweringRelatedQuestionState} from '../../features/question-answering/question-answering-state';
-import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
+import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
@@ -173,53 +167,9 @@ export function buildSmartSnippetQuestionsList(
     );
   };
 
-  let lastSearchResponseId: string | null = null;
-  let interactiveResultsPerRelatedQuestion: Record<
-    string,
-    InteractiveResultCore
-  > = {};
-  let clickedRelatedQuestions: Record<string, boolean> = {};
-  const getInteractiveResult = (
-    relatedQuestion: QuestionAnsweringRelatedQuestionState
-  ) => {
-    const {searchResponseId} = getState().search;
-    if (lastSearchResponseId !== searchResponseId) {
-      lastSearchResponseId = searchResponseId;
-      interactiveResultsPerRelatedQuestion = {};
-      clickedRelatedQuestions = {};
-    }
-
-    if (
-      relatedQuestion.questionAnswerId in interactiveResultsPerRelatedQuestion
-    ) {
-      return interactiveResultsPerRelatedQuestion[
-        relatedQuestion.questionAnswerId
-      ];
-    }
-
-    return (interactiveResultsPerRelatedQuestion[
-      relatedQuestion.questionAnswerId
-    ] = buildInteractiveResultCore(
-      engine,
-      {options: {selectionDelay: props?.options?.selectionDelay}},
-      () => {
-        if (clickedRelatedQuestions[relatedQuestion.questionAnswerId]) {
-          return;
-        }
-        const result = getResult(relatedQuestion);
-        if (!result) {
-          return;
-        }
-        clickedRelatedQuestions[relatedQuestion.questionAnswerId] = true;
-        engine.dispatch(
-          logOpenSmartSnippetSuggestionSource({
-            questionAnswerId: relatedQuestion.questionAnswerId,
-          })
-        );
-        engine.dispatch(pushRecentResult(result));
-      }
-    ));
-  };
+  const interactiveQuestions = buildSmartSnippetInteractiveQuestions(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
   const getPayloadFromIdentifier = (
     identifier: string | QuestionAnswerDocumentIdentifier
@@ -227,11 +177,6 @@ export function buildSmartSnippetQuestionsList(
     typeof identifier === 'string'
       ? {questionAnswerId: identifier}
       : identifier;
-
-  const getRelatedQuestionStateFromIdentifier = (identifier: string) =>
-    getState().questionAnswering.relatedQuestions.find(
-      (relatedQuestion) => relatedQuestion.questionAnswerId === identifier
-    );
 
   return {
     ...controller,
@@ -265,28 +210,13 @@ export function buildSmartSnippetQuestionsList(
       engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
     },
     selectSource(identifier) {
-      const relatedQuestionState =
-        getRelatedQuestionStateFromIdentifier(identifier);
-      if (!relatedQuestionState) {
-        return;
-      }
-      getInteractiveResult(relatedQuestionState).select();
+      interactiveQuestions.selectSource(identifier);
     },
     beginDelayedSelectSource(identifier) {
-      const relatedQuestionState =
-        getRelatedQuestionStateFromIdentifier(identifier);
-      if (!relatedQuestionState) {
-        return;
-      }
-      getInteractiveResult(relatedQuestionState).beginDelayedSelect();
+      interactiveQuestions.beginDelayedSelectSource(identifier);
     },
     cancelPendingSelectSource(identifier) {
-      const relatedQuestionState =
-        getRelatedQuestionStateFromIdentifier(identifier);
-      if (!relatedQuestionState) {
-        return;
-      }
-      getInteractiveResult(relatedQuestionState).cancelPendingSelect();
+      interactiveQuestions.cancelPendingSelectSource(identifier);
     },
   };
 }
