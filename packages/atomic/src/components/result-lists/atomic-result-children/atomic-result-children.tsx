@@ -250,7 +250,7 @@ export class AtomicResultChildren {
           }}
         >
           {this.bindings.i18n.t(
-            this.hideResults ? 'show-all-results' : 'collapse-results'
+            this.hideResults ? 'load-all-results' : 'collapse-results'
           )}
         </Button>
       );
