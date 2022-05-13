@@ -9,7 +9,8 @@ import {
 } from '../core/interactive-result/headless-core-interactive-result';
 import {logOpenSmartSnippetSuggestionSource} from '../../features/question-answering/question-answering-analytics-actions';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
-import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
+import {relatedQuestionSelector} from '../../features/question-answering/question-answering-selectors';
+import {resultFromFieldSelector} from '../../features/search/search-selectors';
 
 /**
  * @internal
@@ -48,17 +49,15 @@ export function buildSmartSnippetInteractiveQuestions(
   const getState = () => engine.state;
 
   const getSource = (questionAnswerId: string) => {
-    const snippetState = getState().questionAnswering.relatedQuestions.find(
-      (relatedQuestion) => relatedQuestion.questionAnswerId === questionAnswerId
-    );
-    if (!snippetState) {
+    const state = getState();
+    const questionAnswer = relatedQuestionSelector(state, questionAnswerId);
+    if (!questionAnswer) {
       return null;
     }
-    const {contentIdKey, contentIdValue} = snippetState;
-    return (
-      engine.state.search.results.find(
-        (result) => getResultProperty(result, contentIdKey) === contentIdValue
-      ) ?? null
+    return resultFromFieldSelector(
+      state,
+      questionAnswer.documentId.contentIdKey,
+      questionAnswer.documentId.contentIdValue
     );
   };
 
