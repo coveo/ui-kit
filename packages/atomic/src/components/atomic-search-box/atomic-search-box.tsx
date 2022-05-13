@@ -10,6 +10,9 @@ import {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
   buildStandaloneSearchBox,
+  InstantResults,
+  InstantResultsState,
+  buildInstantResults,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -53,6 +56,7 @@ export class AtomicSearchBox {
   private inputRef!: HTMLInputElement;
   private listRef!: HTMLElement;
   private querySetActions!: QuerySetActionCreators;
+  private instantResults?: InstantResults;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
 
@@ -152,6 +156,18 @@ export class AtomicSearchBox {
       return;
     }
     this.pendingSuggestionEvents.push(event.detail);
+  }
+
+  @Listen('atomic/searchBoxInstantResults/register')
+  public registerInstantResults(
+    event: CustomEvent<(instantResults: InstantResults) => void>
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.instantResults = buildInstantResults(this.bindings.engine, {
+      options: {searchBoxId: this.id},
+    });
+    event.detail(this.instantResults);
   }
 
   @Watch('redirectionUrl')
@@ -264,6 +280,10 @@ export class AtomicSearchBox {
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
+  private updateInstantResultsQuery(q = '') {
+    this.instantResults && this.instantResults.updateQuery(q);
+  }
+
   private async triggerSuggestions() {
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
@@ -287,6 +307,10 @@ export class AtomicSearchBox {
       .sort((a, b) => a.position - b.position)
       .map((suggestion) => suggestion.renderItems())
       .flat();
+
+    this.updateInstantResultsQuery(
+      suggestionElements[0].query || suggestionElements[1].query
+    );
 
     const max =
       this.numberOfQueries +
@@ -440,6 +464,9 @@ export class AtomicSearchBox {
         onClick={() => {
           suggestion.onSelect();
           this.clearSuggestions();
+        }}
+        onMouseOver={() => {
+          this.updateInstantResultsQuery(suggestion.query);
         }}
         ref={(el) => {
           if (isHTMLElement(suggestion.content)) {

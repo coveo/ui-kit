@@ -22,7 +22,6 @@ export function getAnalyticsConfig(
   const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
     enabled,
-    documentLocation: document.location.href,
     ...(document.referrer && {originLevel3: document.referrer}),
   };
 

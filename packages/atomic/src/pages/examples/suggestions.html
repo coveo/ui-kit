@@ -64,8 +64,8 @@
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('atomic-search-interface');
         await searchInterface.initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
+          accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
+          organizationId: 'fashioncoveodemocomgzh7iep8',
         });
 
         const engine = searchInterface.engine;
@@ -81,8 +81,8 @@
       <atomic-search-layout>
         <atomic-layout-section section="search">
           <atomic-search-box suggestion-timeout="1000">
-            <custom-suggestions></custom-suggestions>
-            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+            <atomic-search-box-recent-queries> </atomic-search-box-recent-queries>
+            <atomic-search-box-instant-results></atomic-search-box-instant-results>
           </atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="main">
