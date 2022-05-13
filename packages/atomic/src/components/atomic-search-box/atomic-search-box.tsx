@@ -440,7 +440,9 @@ export class AtomicSearchBox {
     const isSelected = id === this.activeDescendant;
     const isLast = index === lastIndex;
     const isDivider = isDividerElement(item);
-    if (isLast && isDivider) return null;
+    if (isLast && isDivider) {
+      return null;
+    }
     return (
       <li
         id={id}
