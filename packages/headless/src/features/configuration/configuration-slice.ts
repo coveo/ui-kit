@@ -105,6 +105,9 @@ export const configurationReducer = createReducer(
         if (!isNullOrUndefined(action.payload.userDisplayName)) {
           state.analytics.userDisplayName = action.payload.userDisplayName;
         }
+        if (!isNullOrUndefined(action.payload.documentLocation)) {
+          state.analytics.documentLocation = action.payload.documentLocation;
+        }
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;

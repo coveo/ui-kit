@@ -73,9 +73,20 @@
               label="Last decade"
             ></c-quantic-timeframe>
           </c-quantic-timeframe-facet>
+          <c-quantic-date-facet
+            engine-id={engineId}
+            facet-id="myfacet"
+            field="date"
+            label="Date"
+            formatting-function={formattingFunction}
+            number-of-values="5"
+          ></c-quantic-date-facet>
         </c-quantic-facet-manager>
       </div>
-      <c-quantic-refine-modal-content engine-id={engineId} hide-sort={config.hideSort}></c-quantic-refine-modal-content>
+      <c-quantic-refine-modal-content
+        engine-id={engineId}
+        hide-sort={config.hideSort}
+      ></c-quantic-refine-modal-content>
     </c-quantic-search-interface>
   </c-example-layout>
 </template>

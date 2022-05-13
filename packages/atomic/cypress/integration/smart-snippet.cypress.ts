@@ -173,29 +173,25 @@ describe('Smart Snippet Test Suites', () => {
     });
   });
 
-  describe('when the snippet starts and ends with text nodes', () => {
+  describe('when the snippet starts and ends with inline elements', () => {
     before(() => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer: 'Abc<p>def</p>ghi',
+            answer:
+              '<span class="first">Abc</span><p>def</p><span class="last">ghi</span>',
             props: {
-              'maximum-height': 2 * remSize,
+              'maximum-height': Number.MAX_VALUE,
               'collapsed-height': 0,
+              'snippet-style': 'span { display: block; }',
             },
           })
         )
         .init();
     });
 
-    describe('and the snippet is expanded', () => {
-      before(() => {
-        SmartSnippetSelectors.showMoreButton().click();
-      });
-
-      SmartSnippetAssertions.assertAnswerTopMargin(remSize);
-      SmartSnippetAssertions.assertAnswerBottomMargin(remSize);
-    });
+    SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
+    SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
   describe('when the snippet contains elements with margins', () => {
@@ -203,9 +199,10 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer: '<p>Paragraph A</p><p>Paragraph B</p><p>Paragraph C</p>',
+            answer:
+              '<p class="first">Paragraph A</p><p>Paragraph B</p><p class="last">Paragraph C</p>',
             props: {
-              'maximum-height': 2 * remSize,
+              'maximum-height': Number.MAX_VALUE,
               'collapsed-height': 0,
             },
           })
@@ -213,14 +210,8 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    describe('and the snippet is expanded', () => {
-      before(() => {
-        SmartSnippetSelectors.showMoreButton().click();
-      });
-
-      SmartSnippetAssertions.assertAnswerTopMargin(remSize);
-      SmartSnippetAssertions.assertAnswerBottomMargin(remSize);
-    });
+    SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
+    SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
   describe('when the snippet contains collapsing margins', () => {
@@ -228,9 +219,10 @@ describe('Smart Snippet Test Suites', () => {
       new TestFixture()
         .with(
           addSmartSnippet({
-            answer: '<span><p>My parent has no margins, but I do!</p></span>',
+            answer:
+              '<span><p class="first last">My parent has no margins, but I do!</p></span>',
             props: {
-              'maximum-height': 2 * remSize,
+              'maximum-height': Number.MAX_VALUE,
               'collapsed-height': 0,
             },
           })
@@ -238,14 +230,8 @@ describe('Smart Snippet Test Suites', () => {
         .init();
     });
 
-    describe('and the snippet is expanded', () => {
-      before(() => {
-        SmartSnippetSelectors.showMoreButton().click();
-      });
-
-      SmartSnippetAssertions.assertAnswerTopMargin(remSize);
-      SmartSnippetAssertions.assertAnswerBottomMargin(remSize);
-    });
+    SmartSnippetAssertions.assertAnswerTopMargin(remSize, 'first');
+    SmartSnippetAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
   describe('after pressing the like button', () => {

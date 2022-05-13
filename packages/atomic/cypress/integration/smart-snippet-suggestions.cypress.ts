@@ -161,9 +161,11 @@ describe('Smart Snippet Suggestions Test Suites', () => {
             relatedQuestions: defaultRelatedQuestions.map(
               (relatedQuestion) => ({
                 ...relatedQuestion,
-                answer: 'Abc<p>def</p>ghi',
+                answer:
+                  '<span class="first">Abc</span><p>def</p><span class="last">ghi</span>',
               })
             ),
+            props: {'snippet-style': 'span { display: block; }'},
           })
         )
         .init();
@@ -172,8 +174,11 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .click();
     });
 
-    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(remSize / 2);
-    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize);
+    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
+      remSize / 2,
+      'first'
+    );
+    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
   describe('when the snippet contains elements with margins', () => {
@@ -185,7 +190,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
               (relatedQuestion) => ({
                 ...relatedQuestion,
                 answer:
-                  '<p>Paragraph A</p><p>Paragraph B</p><p>Paragraph C</p>',
+                  '<p class="first">Paragraph A</p><p>Paragraph B</p><p class="last">Paragraph C</p>',
               })
             ),
           })
@@ -196,8 +201,11 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .click();
     });
 
-    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(remSize / 2);
-    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize);
+    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
+      remSize / 2,
+      'first'
+    );
+    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
   describe('when the snippet contains collapsing margins', () => {
@@ -209,7 +217,7 @@ describe('Smart Snippet Suggestions Test Suites', () => {
               (relatedQuestion) => ({
                 ...relatedQuestion,
                 answer:
-                  '<span><p>My parent has no margins, but I do!</p></span>',
+                  '<span><p class="first last">My parent has no margins, but I do!</p></span>',
               })
             ),
           })
@@ -220,8 +228,11 @@ describe('Smart Snippet Suggestions Test Suites', () => {
         .click();
     });
 
-    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(remSize / 2);
-    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize);
+    SmartSnippetSuggestionsAssertions.assertAnswerTopMargin(
+      remSize / 2,
+      'first'
+    );
+    SmartSnippetSuggestionsAssertions.assertAnswerBottomMargin(remSize, 'last');
   });
 
   describe('after clicking on the title', () => {

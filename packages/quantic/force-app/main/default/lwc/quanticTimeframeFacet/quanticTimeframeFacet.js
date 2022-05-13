@@ -124,6 +124,15 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   @api injectionDepth = 1000;
 
+  static attributes = [
+    'facetId',
+    'field',
+    'label',
+    'withDatePicker',
+    'noFilterFacetCount',
+    'injectionDepth',
+  ]
+
   /** @type {DateFacetState} */
   @track facetState;
   /** @type {DateFilterState} */

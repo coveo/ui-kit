@@ -1,7 +1,6 @@
 import {Component, Prop, h, Element, Host, State} from '@stencil/core';
 import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import escape from 'escape-html';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
   Bindings,
@@ -53,7 +52,7 @@ export class AtomicResultText implements InitializableComponent {
         closingDelimiter,
         highlights,
       });
-      const innerHTML = escape(highlightedValue)
+      const innerHTML = highlightedValue
         .replace(new RegExp(openingDelimiter, 'g'), '<b>')
         .replace(new RegExp(closingDelimiter, 'g'), '</b>');
       // deepcode ignore ReactSetInnerHtml: This is not React code

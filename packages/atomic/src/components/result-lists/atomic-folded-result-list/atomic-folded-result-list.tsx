@@ -55,6 +55,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() public templateHasError = false;
 
   public resultListCommon!: ResultListCommon;
+  private renderingFunction: ((res: FoldedResult) => HTMLElement) | null = null;
+
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
@@ -103,7 +105,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: FoldedResult) => HTMLElement
   ) {
-    this.resultListCommon.renderingFunction = render as ResultRenderingFunction;
+    this.renderingFunction = render;
+    this.assignRenderingFunctionIfPossible();
   }
 
   @Listen('scroll', {target: 'window'})
@@ -138,6 +141,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
+        this.assignRenderingFunctionIfPossible();
       },
       onError: () => {
         this.templateHasError = true;
@@ -191,5 +195,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
       },
       getContentOfResultTemplate: this.getContentOfResultTemplate,
     });
+  }
+
+  private assignRenderingFunctionIfPossible() {
+    if (this.resultListCommon && this.renderingFunction) {
+      this.resultListCommon.renderingFunction = this
+        .renderingFunction as ResultRenderingFunction;
+    }
   }
 }

@@ -17,6 +17,7 @@ export interface FacetSelector extends ComponentSelector {
   numericFacet: () => CypressSelector;
   categoryFacet: () => CypressSelector;
   timeframeFacet: () => CypressSelector;
+  dateFacet: () => CypressSelector;
   facetManagerItems: () => CypressSelector;
   timeframeFacetExpandButton: () => CypressSelector;
   facetExpandButton: () => CypressSelector;
@@ -24,6 +25,7 @@ export interface FacetSelector extends ComponentSelector {
   facetClearFiltersButton: () => CypressSelector;
   timeframeFacetFirstOption: () => CypressSelector;
   facetFirstOption: () => CypressSelector;
+  timeframeFacetValues: () => CypressSelector;
 }
 
 const getCommonFacetSelectors = (
@@ -35,6 +37,7 @@ const getCommonFacetSelectors = (
     numericFacet: () => rootSelector().find('c-quantic-numeric-facet'),
     categoryFacet: () => rootSelector().find('c-quantic-category-facet'),
     timeframeFacet: () => rootSelector().find('c-quantic-timeframe-facet'),
+    dateFacet: () => rootSelector().find('c-quantic-date-facet'),
     facetManager: () => rootSelector().find('c-quantic-facet-manager'),
     facetManagerItems: () =>
       rootSelector().find('c-quantic-facet-manager .facet-manager__item'),
@@ -52,6 +55,8 @@ const getCommonFacetSelectors = (
         .eq(0),
     facetFirstOption: () =>
       rootSelector().find('c-quantic-facet .facet__value-option').eq(0),
+    timeframeFacetValues: () =>
+      rootSelector().find('c-quantic-timeframe-facet c-quantic-facet-value'),
   };
 };
 

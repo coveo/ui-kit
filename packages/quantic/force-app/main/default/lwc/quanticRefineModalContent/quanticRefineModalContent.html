@@ -64,6 +64,18 @@
             is-collapsed
           ></c-quantic-timeframe-facet>
         </template>
+        <template if:true={facet.isDate}>
+          <c-quantic-date-facet
+            engine-id={engineId}
+            facet-id={facet.facetId}
+            field={facet.field}
+            label={facet.label}
+            number-of-values={facet.numberOfValues}
+            formatting-function={facet.formattingFunction}
+            key={facet.field}
+            is-collapsed
+          ></c-quantic-date-facet>
+        </template>
         <template if:true={facet.isDefault}>
           <c-quantic-facet
             engine-id={engineId}
