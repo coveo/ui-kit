@@ -9,6 +9,7 @@ import {
   FoldedResult,
   FoldingFields,
   getFoldingInitialState,
+  FoldingState,
 } from './folding-state';
 import {getAllIncludedResultsFrom} from './folding-utils';
 
@@ -119,6 +120,13 @@ function createCollections(
     if (!collectionId) {
       return;
     }
+    if (result.parentResult) {
+      collections[collectionId] = createCollectionFromResult(
+        result,
+        fields,
+        result.parentResult
+      );
+    }
     if (!getChildField(result, fields)) {
       return;
     }
@@ -129,6 +137,21 @@ function createCollections(
     );
   });
   return collections;
+}
+
+function tryGetCollectionFromStateOrThrow(
+  state: FoldingState,
+  collectionId: string
+) {
+  if (!state.collections[collectionId]) {
+    throw new Error(
+      `Missing collection ${collectionId} from ${Object.keys(
+        state.collections
+      )}: Folding most probably in an invalid state...`
+    );
+  }
+
+  return state.collections[collectionId];
 }
 
 export const foldingReducer = createReducer(
@@ -171,11 +194,17 @@ export const foldingReducer = createReducer(
       )
       .addCase(loadCollection.pending, (state, {meta}) => {
         const collectionId = meta.arg;
-        state.collections[collectionId].isLoadingMoreResults = true;
+        tryGetCollectionFromStateOrThrow(
+          state,
+          collectionId
+        ).isLoadingMoreResults = true;
       })
       .addCase(loadCollection.rejected, (state, {meta}) => {
         const collectionId = meta.arg;
-        state.collections[collectionId].isLoadingMoreResults = false;
+        tryGetCollectionFromStateOrThrow(
+          state,
+          collectionId
+        ).isLoadingMoreResults = false;
       })
       .addCase(
         loadCollection.fulfilled,
@@ -185,6 +214,11 @@ export const foldingReducer = createReducer(
             state.fields,
             rootResult
           );
+          if (!newCollections || !newCollections[collectionId]) {
+            throw new Error(
+              `Unable to create collection ${collectionId} from received results: ${results}. Folding most probably in an invalid state... `
+            );
+          }
           state.collections[collectionId] = newCollections[collectionId];
           state.collections[collectionId].moreResultsAvailable = false;
         }
