@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.56.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.56.0...@coveo/atomic@1.56.1) (2022-05-13)
+
+
+### Bug Fixes
+
+* **atomic:** highlight encoding issue w/ result-text & no-results ([#1987](https://github.com/coveo/ui-kit/issues/1987)) ([4b511be](https://github.com/coveo/ui-kit/commit/4b511be6b1e24ec950c6e112bc005d82a7bec223))
+
+
+
+
+
 # [1.56.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.55.1...@coveo/atomic@1.56.0) (2022-05-12)
 
 
