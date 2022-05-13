@@ -6,11 +6,13 @@ export function assertHasNumberOfExpandedFacets(
   cy.get(facetManagerComponent)
     .children()
     .each(($child, index) => {
-      cy.wrap($child).should(
-        'have.attr',
-        'is-collapsed',
-        index + 1 > numberOfExpandedFacets ? '' : 'false'
-      );
+      if (index + 1 > numberOfExpandedFacets) {
+        cy.wrap($child)
+          .should('have.attr', 'is-collapsed')
+          .and('not.equal', 'false');
+        return;
+      }
+      cy.wrap($child).should('have.attr', 'is-collapsed', 'false');
     });
 }
 
