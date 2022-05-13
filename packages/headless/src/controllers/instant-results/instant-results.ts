@@ -107,7 +107,13 @@ export function buildInstantResults(
       if (!q) return;
       const cached = getCached(q);
       if (!cached || cached.error) {
-        dispatch(fetchInstantResults({id: searchBoxId, q}));
+        dispatch(
+          fetchInstantResults({
+            id: searchBoxId,
+            q,
+            maxResultsPerQuery: options.maxResultsPerQuery,
+          })
+        );
       }
       dispatch(updateInstantResultsQuery({id: searchBoxId, q}));
     },

@@ -14,6 +14,7 @@ import {mapSearchRequest, mapSearchResponse} from '../search/search-mappings';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {logQueryError} from '../search/search-analytics-actions';
 import {Result} from '../../case-assist.index';
+import {NumberValue} from '@coveo/bueno';
 
 export interface RegisterInstantResultActionCreatorPayload {
   /**
@@ -63,6 +64,10 @@ export interface FetchInstantResultsActionCreatorPayload {
    * The query for which instant results are retrieved.
    */
   q: string;
+  /**
+   * The maximum items to be stored in the instant result list for each query.
+   */
+  maxResultsPerQuery: number;
 }
 
 export interface FetchInstantResultsThunkReturn {
@@ -85,6 +90,10 @@ export const fetchInstantResults = createAsyncThunk<
     validatePayload(payload, {
       id: requiredNonEmptyString,
       q: requiredNonEmptyString,
+      maxResultsPerQuery: new NumberValue({
+        required: true,
+        min: 1,
+      }),
     });
     const q = payload.q;
     const state = getState();
@@ -99,7 +108,12 @@ export const fetchInstantResults = createAsyncThunk<
       dispatch(logQueryError(response.error));
       return rejectWithValue(response.error);
     }
-    return {results: response.success.results};
+    return {
+      results: response.success.results.slice(
+        0,
+        payload.maxResultsPerQuery + 1
+      ),
+    };
   }
 );
 
