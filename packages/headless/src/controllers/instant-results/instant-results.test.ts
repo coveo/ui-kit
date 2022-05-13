@@ -16,10 +16,6 @@ describe('instant results', () => {
     jest.useFakeTimers();
     state = createMockState();
     engine = buildMockSearchAppEngine({state});
-
-    // state = createMockState();
-    // engine = buildMockSearchAppEngine({state});
-    // querySummary = buildQuerySummary(engine);
   });
 
   it('it adds the correct reducers to engine', () => {

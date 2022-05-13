@@ -17,6 +17,7 @@ export const instantResultsReducer = createReducer(
   (builder) => {
     builder.addCase(registerInstantResults, (state, action) => {
       const {id} = action.payload;
+      if (state[id]) return;
       state[id] = {q: '', cache: {}};
     });
     builder.addCase(updateInstantResultsQuery, (state, action) => {

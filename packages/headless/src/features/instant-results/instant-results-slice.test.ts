@@ -38,6 +38,16 @@ describe('instant results slice', () => {
         instantResultsReducer(newState, registerInstantResults({id: id2}))
       ).toEqual(expectedState);
     });
+    it('does not override an existing search box', () => {
+      const searchBox1 = () =>
+        getSearchBoxInstantResultsState(id1, 'some_query', {
+          some_query: {isLoading: true, error: null, results: []},
+        });
+
+      expect(
+        instantResultsReducer(searchBox1(), registerInstantResults({id: id1}))
+      ).toEqual(searchBox1());
+    });
   });
 
   describe('updateQuery', () => {

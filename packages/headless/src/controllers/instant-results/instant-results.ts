@@ -104,8 +104,8 @@ export function buildInstantResults(
     ...controller,
 
     updateQuery(q: string) {
-      const cached = getCached(q);
       if (!q) return;
+      const cached = getCached(q);
       if (!cached || cached.error) {
         dispatch(fetchInstantResults({id: searchBoxId, q}));
       }
