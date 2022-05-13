@@ -6,6 +6,7 @@ import {
   State,
   EventEmitter,
   Event,
+  Host,
 } from '@stencil/core';
 import {Result} from '@coveo/headless';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
@@ -46,7 +47,7 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
 
   render() {
     return (
-      <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
+      <Host>
         <LinkWithResultAnalytics
           title={this.source.clickUri}
           href={this.source.clickUri}
@@ -63,7 +64,7 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
           title={this.source.title}
           href={this.source.clickUri}
           target="_self"
-          className="block mb-6"
+          className="block"
           part="source-title"
           onSelect={() => this.selectSource.emit()}
           onBeginDelayedSelect={() => this.beginDelayedSelectSource.emit()}
@@ -74,7 +75,7 @@ export class AtomicSmartSnippetSource implements InitializableComponent {
             default="no-title"
           ></atomic-result-text>
         </LinkWithResultAnalytics>
-      </section>
+      </Host>
     );
   }
 }

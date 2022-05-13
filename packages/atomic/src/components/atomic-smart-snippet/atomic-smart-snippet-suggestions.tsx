@@ -8,7 +8,6 @@ import {
 import ArrowRight from '../../images/arrow-right.svg';
 import ArrowDown from '../../images/arrow-down.svg';
 import {
-  buildInteractiveResult,
   buildSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
@@ -18,7 +17,6 @@ import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -170,36 +168,31 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     if (!source) {
       return [];
     }
-    const interactiveResult = buildInteractiveResult(this.bindings.engine!, {
-      options: {result: source},
-    });
     return (
       <footer
         part="footer"
         aria-label={this.bindings.i18n.t('smart-snippet-source')}
       >
-        <LinkWithResultAnalytics
-          title={source.clickUri}
-          href={source.clickUri}
-          target="_self"
-          part="source-url"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {source.clickUri}
-        </LinkWithResultAnalytics>
-        <LinkWithResultAnalytics
-          title={source.title}
-          href={source.clickUri}
-          target="_self"
-          part="source-title"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {source.title}
-        </LinkWithResultAnalytics>
+        {relatedQuestion.source && (
+          <atomic-smart-snippet-source
+            source={relatedQuestion.source}
+            onSelectSource={() =>
+              this.smartSnippetQuestionsList.selectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+            onBeginDelayedSelectSource={() =>
+              this.smartSnippetQuestionsList.beginDelayedSelectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+            onCancelPendingSelectSource={() =>
+              this.smartSnippetQuestionsList.cancelPendingSelectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+          ></atomic-smart-snippet-source>
+        )}
       </footer>
     );
   }

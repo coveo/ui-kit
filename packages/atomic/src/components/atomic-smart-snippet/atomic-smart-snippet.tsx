@@ -198,7 +198,10 @@ export class AtomicSmartSnippet implements InitializableComponent {
         >
           {this.renderQuestion()}
           {this.renderContent()}
-          <footer part="footer">
+          <footer
+            part="footer"
+            aria-label={this.bindings.i18n.t('smart-snippet-source')}
+          >
             {this.smartSnippetState.source && (
               <atomic-smart-snippet-source
                 source={this.smartSnippetState.source}
