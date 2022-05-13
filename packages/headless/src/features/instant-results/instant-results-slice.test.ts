@@ -17,7 +17,7 @@ const getSearchBoxInstantResultsState = (id: string, q = '', cache = {}) => ({
   },
 });
 
-describe('history slice', () => {
+describe('instant results slice', () => {
   describe('registerInstantResults', () => {
     it('registers one search box instant results cache', () => {
       const expectedState = getSearchBoxInstantResultsState(id1);
