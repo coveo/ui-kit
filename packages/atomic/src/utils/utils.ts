@@ -93,8 +93,12 @@ export function elementHasAncestorTag(
   tagName: string
 ): boolean {
   const parentElement = el.parentElement;
-  if (!parentElement) return false;
-  if (parentElement.tagName === tagName.toUpperCase()) return true;
+  if (!parentElement) {
+    return false;
+  }
+  if (parentElement.tagName === tagName.toUpperCase()) {
+    return true;
+  }
   return elementHasAncestorTag(parentElement, tagName);
 }
 
