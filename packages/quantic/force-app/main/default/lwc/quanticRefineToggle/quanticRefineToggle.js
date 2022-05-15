@@ -1,4 +1,4 @@
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from 'lwc';
 import {
   initializeWithHeadless,
   registerComponentForInit,
@@ -72,6 +72,8 @@ export default class QuanticRefineToggle extends LightningElement {
   total;
   /** @type {number} */
   activeFiltersCount = 0;
+  /** @type {string} */
+  modalId = 'refineModal';
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -156,10 +158,9 @@ export default class QuanticRefineToggle extends LightningElement {
    * Opens the refine modal.
    * @returns {void}
    */
-  openModal(event) {
-    const target = event.target.dataset.target;
+  openModal() {
     /** @type {QuanticModalElement} */
-    const modal = this.template.querySelector(`[data-id=${target}]`);
+    const modal = this.template.querySelector(`[data-id=${this.modalId}]`);
     modal.openModal();
   }
 
@@ -168,10 +169,9 @@ export default class QuanticRefineToggle extends LightningElement {
    * @returns {void}
    *
    */
-  closeModal(event) {
-    const target = event.target.dataset.target;
+  closeModal() {
     /** @type {QuanticModalElement} */
-    const modal = this.template.querySelector(`[data-id=${target}]`);
+    const modal = this.template.querySelector(`[data-id=${this.modalId}]`);
     modal.closeModal();
   }
 
