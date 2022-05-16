@@ -43,7 +43,7 @@ export class AtomicSmartSnippetAnswer {
   public componentDidLoad() {
     // Prevents initial transition
     setTimeout(() => {
-      this.host.classList.add('animatable');
+      this.host.classList.add('loaded');
     }, 0);
   }
 
