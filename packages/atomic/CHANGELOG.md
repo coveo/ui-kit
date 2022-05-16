@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.57.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.56.1...@coveo/atomic@1.57.0) (2022-05-16)
+
+
+### Bug Fixes
+
+* **atomic:** small issues related to folding ([#1986](https://github.com/coveo/ui-kit/issues/1986)) ([5f8567b](https://github.com/coveo/ui-kit/commit/5f8567bdc99c9ce8336b5f03b8c95aef1ce2adb3))
+
+
+### Features
+
+* **atomic:** add parts to suggestions ([#1982](https://github.com/coveo/ui-kit/issues/1982)) ([f4d4463](https://github.com/coveo/ui-kit/commit/f4d446344dbf167b61737cda98c6ebc6ea262ee0))
+
+
+
+
+
 ## [1.56.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.56.0...@coveo/atomic@1.56.1) (2022-05-13)
 
 
