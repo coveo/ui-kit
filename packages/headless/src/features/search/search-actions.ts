@@ -25,6 +25,7 @@ import {
   FacetSection,
   FieldsSection,
   FoldingSection,
+  InstantResultSection,
   NumericFacetSection,
   PaginationSection,
   PipelineSection,
@@ -43,14 +44,26 @@ import {SearchAction} from '../analytics/analytics-utils';
 import {extractHistory} from '../history/history-state';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
-import {MappedSearchRequest, mapSearchResponse} from './search-mappings';
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import {
+  MappedSearchRequest,
+  mapSearchRequest,
+  mapSearchResponse,
+} from './search-mappings';
+import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {updatePage} from '../pagination/pagination-actions';
-import {validatePayload} from '../../utils/validate-payload';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {buildSearchRequest} from './search-request';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {
+  FetchInstantResultsActionCreatorPayload,
+  FetchInstantResultsThunkReturn,
+} from '../instant-results/instant-results-actions';
+import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -293,6 +306,47 @@ export const fetchFacetValues = createAsyncThunk<
   }
 );
 
+export const fetchInstantResults = createAsyncThunk<
+  FetchInstantResultsThunkReturn,
+  FetchInstantResultsActionCreatorPayload,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch & InstantResultSection>
+>(
+  'instantResults/fetch',
+  async (
+    payload: FetchInstantResultsActionCreatorPayload,
+    {getState, dispatch, rejectWithValue, extra: {apiClient, validatePayload}}
+  ) => {
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+      q: requiredNonEmptyString,
+      maxResultsPerQuery: new NumberValue({
+        required: true,
+        min: 1,
+      }),
+    });
+    const q = payload.q;
+    const state = getState();
+
+    const {request, mappings} = await buildInstantResultSearchRequest(state, q);
+    const response = await mapSearchResponse(
+      await apiClient.search(request),
+      mappings
+    );
+
+    if (isErrorResponse(response)) {
+      dispatch(logQueryError(response.error));
+      return rejectWithValue(response.error);
+    }
+
+    return {
+      results: response.success.results.slice(
+        0,
+        payload.maxResultsPerQuery + 1
+      ),
+    };
+  }
+);
+
 const getStateAfterResponse: (
   query: string,
   duration: number,
@@ -323,7 +377,7 @@ const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,
   correction: string,
   getState: () => StateNeededByExecuteSearch,
-  dispatch: ThunkDispatch<never, never, AnyAction>
+  dispatch: ThunkDispatch<unknown, unknown, AnyAction>
 ) => {
   dispatch(updateQuery({q: correction}));
   const fetched = await fetchFromAPI(
@@ -360,6 +414,19 @@ const buildFetchMoreRequest = async (
       (state.search?.results.length ?? 0),
   };
   return mappedRequest;
+};
+
+export const buildInstantResultSearchRequest = async (
+  state: StateNeededByExecuteSearch,
+  q: string
+) => {
+  const sharedWithFoldingRequest =
+    await buildSearchAndFoldingLoadCollectionRequest(state);
+
+  return mapSearchRequest({
+    ...sharedWithFoldingRequest,
+    q,
+  });
 };
 
 const buildFetchFacetValuesRequest = async (

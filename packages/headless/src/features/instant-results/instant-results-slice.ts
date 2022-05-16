@@ -1,7 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {fetchInstantResults} from '../search/search-actions';
 
 import {
-  fetchInstantResults,
   FetchInstantResultsActionCreatorPayload,
   registerInstantResults,
   updateInstantResultsQuery,

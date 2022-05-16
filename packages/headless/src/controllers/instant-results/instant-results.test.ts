@@ -19,8 +19,9 @@ describe('instant results', () => {
   });
 
   it('it adds the correct reducers to engine', () => {
+    const searchBoxId = 'search_box_1';
     buildInstantResults(engine, {
-      options: {searchBoxId: 'search_box_1'},
+      options: {searchBoxId, maxResultsPerQuery: 2},
     });
 
     expect(engine.addReducers).toHaveBeenCalledWith({instantResults});
@@ -29,7 +30,7 @@ describe('instant results', () => {
   it('it registers search box', () => {
     const searchBoxId = 'search_box_1';
     buildInstantResults(engine, {
-      options: {searchBoxId},
+      options: {searchBoxId, maxResultsPerQuery: 2},
     });
 
     expect(engine.actions.pop()).toEqual(

@@ -1,11 +1,11 @@
 import {instantResultsReducer} from './instant-results-slice';
 import {
-  fetchInstantResults,
   registerInstantResults,
   updateInstantResultsQuery,
 } from './instant-results-actions';
 import {buildMockResult} from '../../test';
 import {InstantResultCache} from './instant-results-state';
+import {fetchInstantResults} from '../search/search-actions';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';
@@ -84,6 +84,7 @@ describe('instant results slice', () => {
         const action = fetchInstantResults.pending('req_id', {
           id: id1,
           q: query,
+          maxResultsPerQuery: 2,
         });
 
         const initialState = getSearchBoxInstantResultsState(id1, query);
@@ -101,6 +102,7 @@ describe('instant results slice', () => {
         const action = fetchInstantResults.pending('req_id', {
           id: id1,
           q: query,
+          maxResultsPerQuery: 2,
         });
 
         const initialState = getSearchBoxInstantResultsState(id1, query, {
@@ -120,6 +122,7 @@ describe('instant results slice', () => {
         const action = fetchInstantResults.pending('req_id', {
           id: id1,
           q: query,
+          maxResultsPerQuery: 2,
         });
 
         const initialState = {
@@ -148,6 +151,7 @@ describe('instant results slice', () => {
           {
             id: id1,
             q: query,
+            maxResultsPerQuery: 2,
           }
         );
 

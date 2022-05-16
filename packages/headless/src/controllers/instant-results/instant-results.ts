@@ -6,7 +6,6 @@ import {instantResults} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {
-  fetchInstantResults,
   registerInstantResults,
   updateInstantResultsQuery,
 } from '../../features/instant-results/instant-results-actions';
@@ -16,6 +15,7 @@ import {
 } from './instant-results-options';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {SerializedError} from '@reduxjs/toolkit';
+import {fetchInstantResults} from '../../features/search/search-actions';
 
 export interface InstantResultProps {
   options: InstantResultOptions;
