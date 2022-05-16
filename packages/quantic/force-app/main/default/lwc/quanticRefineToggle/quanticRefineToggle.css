@@ -2,11 +2,6 @@
   right: 0;
 }
 
-.refine-modal__header,
-.refine-modal__footer {
-  background-color: #F3F3F3;
-}
-
 .refine-modal__footer-button {
   width: 80%;
   max-width: 40rem;
