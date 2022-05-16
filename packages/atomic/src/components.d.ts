@@ -558,7 +558,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store": ObservableMap<AtomicStore>;
+        "store"?: ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -2108,7 +2108,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store": ObservableMap<AtomicStore>;
+        "store"?: ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**

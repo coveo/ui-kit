@@ -48,8 +48,9 @@ export class AtomicResult {
 
   /**
    * Global state for Atomic.
+   * @internal
    */
-  @Prop() store!: ObservableMap<AtomicStore>;
+  @Prop() store?: ObservableMap<AtomicStore>;
 
   /**
    * The result content to display.
@@ -161,7 +162,7 @@ export class AtomicResult {
   }
 
   public componentDidLoad() {
-    if (this.loadingFlag) {
+    if (this.loadingFlag && this.store) {
       unsetLoadingFlag(this.store, this.loadingFlag);
     }
     applyFocusVisiblePolyfill(this.host);
