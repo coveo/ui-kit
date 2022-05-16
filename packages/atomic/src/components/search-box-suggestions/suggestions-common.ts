@@ -4,17 +4,27 @@ import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings} from '../../utils/initialization-utils';
 import {closest} from '../../utils/utils';
 
+export interface SearchBoxDividerElement {
+  key: string;
+  content: Element | VNode;
+  onSelect?(): void;
+}
+
 export interface SearchBoxSuggestionElement {
   key: string;
-  query?: string;
-  onSelect(): void;
+  query: string;
   content: Element | VNode;
+  onSelect(): void;
 }
+
+export type SearchBoxSuggestionItem =
+  | SearchBoxDividerElement
+  | SearchBoxSuggestionElement;
 
 export interface SearchBoxSuggestions {
   position: number;
   onInput(): Promise<unknown> | void;
-  renderItems(): SearchBoxSuggestionElement[];
+  renderItems(): SearchBoxSuggestionItem[];
 }
 
 export type SearchBoxSuggestionsEvent = (
@@ -47,3 +57,15 @@ export const dispatchSearchBoxSuggestionsEvent = (
     );
   }
 };
+
+export function isSuggestionElement(
+  el: SearchBoxSuggestionItem
+): el is SearchBoxSuggestionElement {
+  return 'query' in el;
+}
+
+export function isDividerElement(
+  el: SearchBoxSuggestionItem
+): el is SearchBoxDividerElement {
+  return !('query' in el);
+}
