@@ -16,9 +16,9 @@ import {
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
+import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.

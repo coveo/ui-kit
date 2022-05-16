@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.15.0...@coveo/quantic@1.16.0) (2022-05-13)
+
+
+### Features
+
+* **quantic:** Create QuanticRefineModalContent component ([#1948](https://github.com/coveo/ui-kit/issues/1948)) ([97dca15](https://github.com/coveo/ui-kit/commit/97dca1547c17e72510d8cee34cb7f7cab217c9c4))
+
+
+
+
+
 # [1.15.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.14.2...@coveo/quantic@1.15.0) (2022-05-11)
 
 

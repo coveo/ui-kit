@@ -338,6 +338,8 @@ export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
 
 export type {
   SmartSnippetQuestionsList,
+  SmartSnippetQuestionsListOptions,
+  SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
