@@ -48,6 +48,7 @@ import {
   MappedSearchRequest,
   mapSearchRequest,
   mapSearchResponse,
+  SuccessResponse,
 } from './search-mappings';
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {updatePage} from '../pagination/pagination-actions';
@@ -62,6 +63,7 @@ import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
+  updateInstantResultsQuery,
 } from '../instant-results/instant-results-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 
@@ -327,25 +329,51 @@ export const fetchInstantResults = createAsyncThunk<
     const q = payload.q;
     const state = getState();
 
-    const {request, mappings} = await buildInstantResultSearchRequest(state, q);
-    const response = await mapSearchResponse(
-      await apiClient.search(request),
-      mappings
-    );
+    const response = await fetchInstantResultsFromAPI(apiClient, state, q);
 
     if (isErrorResponse(response)) {
       dispatch(logQueryError(response.error));
       return rejectWithValue(response.error);
     }
 
+    const getSlicedResults = (response: SuccessResponse) =>
+      response.success.results.slice(0, payload.maxResultsPerQuery + 1);
+
+    if (!shouldReExecuteTheQueryWithCorrections(state, response.success)) {
+      return {
+        results: getSlicedResults(response),
+      };
+    }
+
+    const {correctedQuery} = response.success.queryCorrections[0];
+
+    dispatch(updateInstantResultsQuery({q: correctedQuery, id: payload.id}));
+
+    const retried = await fetchInstantResultsFromAPI(
+      apiClient,
+      state,
+      correctedQuery
+    );
+
+    if (isErrorResponse(retried)) {
+      dispatch(logQueryError(retried.error));
+      return rejectWithValue(retried.error);
+    }
+
     return {
-      results: response.success.results.slice(
-        0,
-        payload.maxResultsPerQuery + 1
-      ),
+      results: getSlicedResults(retried),
     };
   }
 );
+
+async function fetchInstantResultsFromAPI(
+  apiClient: SearchAPIClient,
+  state: StateNeededByExecuteSearch,
+  q: string
+) {
+  const {request, mappings} = await buildInstantResultSearchRequest(state, q);
+  return mapSearchResponse(await apiClient.search(request), mappings);
+}
 
 const getStateAfterResponse: (
   query: string,
@@ -425,6 +453,9 @@ export const buildInstantResultSearchRequest = async (
 
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
+    ...(state.didYouMean && {
+      enableDidYouMean: state.didYouMean.enableDidYouMean,
+    }),
     q,
   });
 };
