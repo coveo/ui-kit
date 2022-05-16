@@ -51,6 +51,7 @@ import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {buildSearchRequest} from './search-request';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -323,7 +324,13 @@ const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,
   correction: string,
   getState: () => StateNeededByExecuteSearch,
-  dispatch: ThunkDispatch<never, never, AnyAction>
+  dispatch: ThunkDispatch<
+    StateNeededByExecuteSearch,
+    ClientThunkExtraArguments<SearchAPIClient> & {
+      searchAPIClient?: SearchAPIClient | undefined;
+    },
+    AnyAction
+  >
 ) => {
   dispatch(updateQuery({q: correction}));
   const fetched = await fetchFromAPI(
