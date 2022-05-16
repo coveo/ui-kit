@@ -14,6 +14,8 @@ import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../utils/utils';
+import {isAppLoaded, waitUntilAppLoaded} from '../../utils/store';
+
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
  *
@@ -100,6 +102,16 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+    waitUntilAppLoaded(this.bindings.store, () => {
+      this.hideDuringRender = false;
+    });
+  }
+
+  private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+
     this.modalRef = document.createElement(
       'atomic-smart-snippet-feedback-modal'
     );
@@ -161,9 +173,16 @@ export class AtomicSmartSnippet implements InitializableComponent {
         disliked={this.smartSnippetState.disliked}
         feedbackSent={this.feedbackSent}
         onLike={() => this.smartSnippet.like()}
-        onDislike={() => this.smartSnippet.dislike()}
+        onDislike={() => {
+          this.loadModal();
+          this.smartSnippet.dislike();
+        }}
         onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
-        explainWhyRef={(button) => (this.modalRef!.source = button)}
+        explainWhyRef={(button) => {
+          if (this.modalRef) {
+            this.modalRef!.source = button;
+          }
+        }}
       ></SmartSnippetFeedbackBanner>
     );
   }
@@ -175,7 +194,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   public componentDidRender() {
-    this.hideDuringRender = false;
+    if (isAppLoaded(this.bindings.store)) {
+      this.hideDuringRender = false;
+    }
   }
 
   public render() {

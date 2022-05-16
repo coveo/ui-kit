@@ -27,6 +27,7 @@ export class AtomicRefineToggle implements InitializableComponent {
   @Element() public host!: HTMLElement;
   public searchStatus!: SearchStatus;
   private modalRef?: HTMLAtomicRefineModalElement;
+  private buttonRef?: HTMLButtonElement;
 
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
@@ -36,11 +37,19 @@ export class AtomicRefineToggle implements InitializableComponent {
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+  }
+
+  private loadModal() {
     this.modalRef = document.createElement('atomic-refine-modal');
+    this.modalRef.style.display = 'none';
     this.host.insertAdjacentElement('beforebegin', this.modalRef);
+    this.modalRef.openButton = this.buttonRef;
   }
 
   private enableModal() {
+    if (!this.modalRef) {
+      this.loadModal();
+    }
     this.modalRef && (this.modalRef.isOpen = true);
   }
 
@@ -69,7 +78,7 @@ export class AtomicRefineToggle implements InitializableComponent {
         class="p-3 w-full"
         onClick={() => this.enableModal()}
         text={this.bindings.i18n.t('sort-and-filter')}
-        ref={(button) => (this.modalRef!.openButton = button)}
+        ref={(button) => (this.buttonRef = button)}
         part="button"
       ></Button>
     );

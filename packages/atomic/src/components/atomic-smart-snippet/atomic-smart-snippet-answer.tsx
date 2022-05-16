@@ -1,4 +1,12 @@
-import {Component, h, Prop, Event, EventEmitter, Host} from '@stencil/core';
+import {
+  Component,
+  h,
+  Prop,
+  Event,
+  EventEmitter,
+  Host,
+  Element,
+} from '@stencil/core';
 import {sanitize} from 'dompurify';
 import {sanitizeStyle} from '../../utils/utils';
 
@@ -12,8 +20,10 @@ import {sanitizeStyle} from '../../utils/utils';
   shadow: true,
 })
 export class AtomicSmartSnippetAnswer {
-  @Prop({reflect: true}) htmlContent!: string;
-  @Prop({reflect: true}) innerStyle?: string;
+  @Prop() htmlContent!: string;
+  @Prop() innerStyle?: string;
+
+  @Element() public host!: HTMLElement;
 
   @Event({bubbles: false})
   private answerSizeUpdated!: EventEmitter<{height: number}>;
@@ -28,6 +38,13 @@ export class AtomicSmartSnippetAnswer {
   public componentDidRender() {
     this.isRendering = false;
     this.emitCurrentHeight();
+  }
+
+  public componentDidLoad() {
+    // Prevents initial transition
+    setTimeout(() => {
+      this.host.classList.add('loaded');
+    }, 0);
   }
 
   public connectedCallback() {

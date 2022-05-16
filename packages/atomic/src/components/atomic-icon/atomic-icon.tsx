@@ -43,7 +43,6 @@ export class AtomicIcon implements InitializableComponent {
 
   public error!: Error;
   @State() private svg: string | null = null;
-  private deferRenderingPromise?: Promise<unknown>;
 
   private async fetchIcon(url: string) {
     try {
@@ -79,16 +78,11 @@ export class AtomicIcon implements InitializableComponent {
   @Watch('icon')
   public async updateIcon() {
     const svgPromise = this.getIcon();
-    this.deferRenderingPromise = svgPromise;
     this.svg = await svgPromise;
   }
 
   public initialize() {
     this.updateIcon();
-  }
-
-  public async componentWillRender() {
-    await this.deferRenderingPromise;
   }
 
   public render() {

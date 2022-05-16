@@ -26,7 +26,7 @@ export class AtomicSmartSnippetExpandableAnswer {
   @Element() public host!: HTMLElement;
 
   @Prop({reflect: true}) expanded!: boolean;
-  @Prop({reflect: true}) htmlContent!: string;
+  @Prop() htmlContent!: string;
   /**
    * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
    */
@@ -47,7 +47,7 @@ export class AtomicSmartSnippetExpandableAnswer {
    * `;
    * ```
    */
-  @Prop({reflect: true}) snippetStyle?: string;
+  @Prop() snippetStyle?: string;
 
   @State() fullHeight?: number;
 

@@ -91,6 +91,15 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           )
         );
     });
+  });
+
+  describe('with no heading level and all expanded sections', () => {
+    before(() => {
+      new TestFixture().with(addSmartSnippetSuggestions()).init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton().each(
+        ($element) => cy.wrap($element).click()
+      );
+    });
 
     it('should have links to the source', () => {
       SmartSnippetSuggestionsSelectors.sourceUrl()
@@ -292,6 +301,9 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       new TestFixture()
         .with(addSmartSnippetSuggestions({content: templateEl}))
         .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
     });
 
     it('applies the styling to the rendered snippet', () => {
@@ -317,6 +329,9 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           })
         )
         .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
     });
 
     it('applies the styling to the rendered snippet', () => {
