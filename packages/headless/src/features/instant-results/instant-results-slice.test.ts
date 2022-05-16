@@ -89,7 +89,7 @@ describe('instant results slice', () => {
 
         const initialState = getSearchBoxInstantResultsState(id1, query);
         const expectedState = getSearchBoxInstantResultsState(id1, query, {
-          some_query: {isLoading: true, error: null, results: []},
+          some_query: {isLoading: true, error: null, results: [], expiresAt: 0},
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(
@@ -131,7 +131,12 @@ describe('instant results slice', () => {
         };
         const expectedState = {
           ...getSearchBoxInstantResultsState(id1, query, {
-            some_query: {isLoading: true, error: null, results: []},
+            some_query: {
+              isLoading: true,
+              error: null,
+              results: [],
+              expiresAt: 0,
+            },
           }),
           ...getSearchBoxInstantResultsState(id2, query),
         };
@@ -143,6 +148,12 @@ describe('instant results slice', () => {
     });
 
     describe('when fulfilled', () => {
+      beforeEach(() => {
+        jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+      });
+      afterAll(() => {
+        jest.useRealTimers();
+      });
       it('updates results in correct searchbox and query cache', () => {
         const query = 'some_query';
         const action = fetchInstantResults.fulfilled(
@@ -169,12 +180,51 @@ describe('instant results slice', () => {
           isLoading: true,
           error: null,
           results: [],
+          expiresAt: 0,
         });
 
         const expectedState = makeState({
           isLoading: false,
           error: null,
           results: [buildMockResult()],
+          expiresAt: 0,
+        });
+
+        expect(instantResultsReducer(initialState, action)).toEqual(
+          expectedState
+        );
+      });
+      it('sets correct isLoading, error and expiresAt properties', () => {
+        const query = 'some_query';
+        const action = fetchInstantResults.fulfilled(
+          {results: [buildMockResult()]},
+          'req_id',
+          {
+            id: id1,
+            q: query,
+            maxResultsPerQuery: 2,
+            cacheTimeout: 10000,
+          }
+        );
+
+        const makeState = (some_query: InstantResultCache) =>
+          getSearchBoxInstantResultsState(id1, query, {
+            some_query,
+            some_other_query: {isLoading: false, error: null, results: []},
+          });
+
+        const initialState = makeState({
+          isLoading: true,
+          error: null,
+          results: [],
+          expiresAt: 0,
+        });
+
+        const expectedState = makeState({
+          isLoading: false,
+          error: null,
+          results: [buildMockResult()],
+          expiresAt: Date.now() + 10000,
         });
 
         expect(instantResultsReducer(initialState, action)).toEqual(

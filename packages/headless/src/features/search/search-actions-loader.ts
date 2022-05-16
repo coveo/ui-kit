@@ -1,10 +1,18 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {SearchAPIClient} from '../../api/search/search-api-client';
+import {
+  AsyncThunkSearchOptions,
+  SearchAPIClient,
+} from '../../api/search/search-api-client';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {InstantResultSection} from '../../state/state-sections';
 import {SearchAction} from '../analytics/analytics-utils';
+import {
+  FetchInstantResultsActionCreatorPayload,
+  FetchInstantResultsThunkReturn,
+} from '../instant-results/instant-results-actions';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
@@ -12,6 +20,7 @@ import {
   StateNeededByExecuteSearch,
   fetchFacetValues,
   fetchPage,
+  fetchInstantResults,
 } from './search-actions';
 
 /**
@@ -100,6 +109,19 @@ export interface SearchActionCreators {
       ClientThunkExtraArguments<SearchAPIClient>
     >
   >;
+
+  /**
+   * Creates an action that fetches instant results.
+   *
+   * @returns A dispatchable action.
+   */
+  fetchInstantResults(
+    options: FetchInstantResultsActionCreatorPayload
+  ): AsyncThunkAction<
+    FetchInstantResultsThunkReturn,
+    FetchInstantResultsActionCreatorPayload,
+    AsyncThunkSearchOptions<StateNeededByExecuteSearch & InstantResultSection>
+  >;
 }
 
 /**
@@ -115,5 +137,6 @@ export function loadSearchActions(engine: SearchEngine): SearchActionCreators {
     fetchMoreResults,
     fetchFacetValues,
     fetchPage,
+    fetchInstantResults,
   };
 }

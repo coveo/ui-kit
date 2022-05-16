@@ -4,6 +4,8 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   UpdateInstantResultQueryActionCreatorPayload,
   RegisterInstantResultActionCreatorPayload,
+  clearExpiredResults,
+  ClearExpiredInstantResultsActionCreatorPayload,
 } from './instant-results-actions';
 import {
   registerInstantResults,
@@ -15,6 +17,7 @@ export interface InstantResultsActionCreators {
    * Initializes the `instantResults` state for a search box ID.
    *
    * @param payload - The initial state and options.
+   * @returns A dispatchable action.
    */
   registerInstantResults(
     payload: RegisterInstantResultActionCreatorPayload
@@ -29,6 +32,16 @@ export interface InstantResultsActionCreators {
   updateInstantResultsQuery(
     payload: UpdateInstantResultQueryActionCreatorPayload
   ): PayloadAction<UpdateInstantResultQueryActionCreatorPayload>;
+
+  /**
+   * Updates the query expression to request instant results for the specified search box ID.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  clearExpiredResults(
+    payload: ClearExpiredInstantResultsActionCreatorPayload
+  ): PayloadAction<RegisterInstantResultActionCreatorPayload>;
 }
 
 /**
@@ -37,11 +50,14 @@ export interface InstantResultsActionCreators {
  * @param engine - The Headless engine.
  * @returns An object with the action creators.
  */
-export function loadInstantResultsActions(engine: SearchEngine) {
+export function loadInstantResultsActions(
+  engine: SearchEngine
+): InstantResultsActionCreators {
   engine.addReducers({instantResults: instantResults});
 
   return {
-    registerInstantResult: registerInstantResults,
-    updateInstantResultQuery: updateInstantResultsQuery,
+    registerInstantResults: registerInstantResults,
+    updateInstantResultsQuery: updateInstantResultsQuery,
+    clearExpiredResults: clearExpiredResults,
   };
 }

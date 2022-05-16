@@ -35,10 +35,6 @@ export interface InstantResults extends Controller {
    */
   updateQuery(q: string): void;
   /**
-   * Fetches results from the server for a query.
-   */
-  updateResultsForQuery(q: string): void;
-  /**
    * Clears all expired instant results queries.
    */
   clearExpired(): void;
@@ -120,17 +116,6 @@ export function buildInstantResults(
   return {
     ...controller,
 
-    updateResultsForQuery(q: string) {
-      dispatch(
-        fetchInstantResults({
-          id: searchBoxId,
-          q,
-          maxResultsPerQuery: options.maxResultsPerQuery,
-          cacheTimeout: options.cacheTimeout,
-        })
-      );
-    },
-
     updateQuery(q: string) {
       if (!q) {
         return;
@@ -140,7 +125,14 @@ export function buildInstantResults(
         !cached ||
         (!cached.isLoading && (cached.error || hasExpired(cached)))
       ) {
-        this.updateResultsForQuery(q);
+        dispatch(
+          fetchInstantResults({
+            id: searchBoxId,
+            q,
+            maxResultsPerQuery: options.maxResultsPerQuery,
+            cacheTimeout: options.cacheTimeout,
+          })
+        );
       }
       dispatch(updateInstantResultsQuery({id: searchBoxId, q}));
     },
