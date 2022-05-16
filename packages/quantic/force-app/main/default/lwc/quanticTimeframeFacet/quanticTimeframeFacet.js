@@ -124,6 +124,15 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   @api injectionDepth = 1000;
 
+  static attributes = [
+    'facetId',
+    'field',
+    'label',
+    'withDatePicker',
+    'noFilterFacetCount',
+    'injectionDepth',
+  ]
+
   /** @type {DateFacetState} */
   @track facetState;
   /** @type {DateFilterState} */
@@ -336,6 +345,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
       label: this.label,
       facetId: this.facet.state.facetId,
       format: this.formatFacetValue,
+      element: this.template.host
     });
   };
 

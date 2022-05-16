@@ -5,6 +5,9 @@
   "env": {
     "browser": true
   },
+  "rules": {
+    "curly": ["error"]
+  },
   "ignorePatterns": [
     "src/external-builds/**/*",
     "dist/**/*",

@@ -114,6 +114,9 @@
             "c/testUtils": [
                 "testUtils/testUtils.js"
             ],
+            "c/quanticTimeframeFacet": [
+              "quanticTimeframeFacet/quanticTimeframeFacet.js"
+            ],
         }
     },
     "include": [

@@ -7,7 +7,9 @@ import {
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
+  SearchBoxDividerElement,
   SearchBoxSuggestionElement,
+  SearchBoxSuggestionItem,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 import {once} from '../../../utils/utils';
@@ -15,6 +17,9 @@ import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
+ *
+ * @part recent-query-title - The 'Recent queries' title.
+ * @part recent-query-clear - The 'Clear' button for clearing recent queries    .
  */
 @Component({
   tag: 'atomic-search-box-recent-queries',
@@ -104,7 +109,7 @@ export class AtomicSearchBoxRecentQueries {
     this.storage.removeItem(StorageItems.RECENT_QUERIES);
   }
 
-  private renderItems(): SearchBoxSuggestionElement[] {
+  private renderItems(): SearchBoxSuggestionItem[] {
     if (!this.recentQueriesList.state.analyticsEnabled) {
       return [];
     }
@@ -120,8 +125,8 @@ export class AtomicSearchBoxRecentQueries {
       )
       .slice(0, max);
 
-    const suggestionElements = filteredQueries.map((value) =>
-      this.renderItem(value)
+    const suggestionElements: SearchBoxSuggestionItem[] = filteredQueries.map(
+      (value) => this.renderItem(value)
     );
     if (suggestionElements.length) {
       suggestionElements.unshift(this.renderClear());
@@ -130,15 +135,15 @@ export class AtomicSearchBoxRecentQueries {
     return suggestionElements;
   }
 
-  private renderClear(): SearchBoxSuggestionElement {
+  private renderClear(): SearchBoxDividerElement {
     return {
       key: 'recent-query-clear',
       content: (
         <div class="flex justify-between w-full">
-          <span class="font-bold">
+          <span class="font-bold" part="recent-query-title">
             {this.bindings.i18n.t('recent-searches')}
           </span>
-          <span>{this.bindings.i18n.t('clear')}</span>
+          <span part="recent-query-clear">{this.bindings.i18n.t('clear')}</span>
         </div>
       ),
       onSelect: () => {
