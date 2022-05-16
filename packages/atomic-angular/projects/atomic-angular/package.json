@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "@coveo/atomic": "1.56.1",
-    "tslib": "2.3.1"
+    "tslib": "2.4.0"
   }
 }
