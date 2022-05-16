@@ -113,6 +113,7 @@ export interface SearchActionCreators {
   /**
    * Creates an action that fetches instant results.
    *
+   * @param options - The options for fetching instant results.
    * @returns A dispatchable action.
    */
   fetchInstantResults(
