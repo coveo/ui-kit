@@ -16,7 +16,7 @@ export const baseInsightRequest = (
 ) => {
   validateInsightRequestParams(req);
 
-  const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/insight/v1/${req.insightId}${path}`;
+  const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/insight/v1/configs/${req.insightId}${path}`;
 
   return {
     accessToken: req.accessToken,

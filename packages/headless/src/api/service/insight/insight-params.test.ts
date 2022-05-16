@@ -24,7 +24,7 @@ describe('insight params', () => {
         accessToken: request.accessToken,
         method,
         contentType,
-        url: `${request.url}/rest/organizations/${request.organizationId}/insight/v1/${request.insightId}${path}`,
+        url: `${request.url}/rest/organizations/${request.organizationId}/insight/v1/configs/${request.insightId}${path}`,
       });
     });
 

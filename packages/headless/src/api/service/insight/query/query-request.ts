@@ -25,7 +25,7 @@ interface CaseContextParam {
 
 export const buildInsightQueryRequest = (req: InsightQueryRequest) => {
   return {
-    ...baseInsightRequest(req, 'POST', 'application/json', '/query'),
+    ...baseInsightRequest(req, 'POST', 'application/json', '/search'),
     requestParams: pickNonInsightParams(req),
   };
 };

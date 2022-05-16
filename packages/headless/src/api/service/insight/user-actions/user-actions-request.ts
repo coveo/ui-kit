@@ -12,7 +12,7 @@ export type InsightUserActionsRequest = InsightParam &
   ExcludedCustomActionsParam;
 
 interface TicketCreationDateParam {
-  tickerCreationDate?: string; // TODO: Make sure to indicate the exact date time format
+  ticketCreationDate?: string; // TODO: Make sure to indicate the exact date time format
 }
 
 interface NumberSessionsBeforeParam {
