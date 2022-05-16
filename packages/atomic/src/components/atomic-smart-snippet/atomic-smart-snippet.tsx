@@ -115,8 +115,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
     this.modalRef = document.createElement(
       'atomic-smart-snippet-feedback-modal'
     );
-    // console.log('hmm', this.explainWhyBtnRef);
-    // this.modalRef.source = this.explainWhyBtnRef;
     this.modalRef.addEventListener('feedbackSent', () => {
       this.feedbackSent = true;
     });
