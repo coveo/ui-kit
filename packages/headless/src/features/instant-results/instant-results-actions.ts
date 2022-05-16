@@ -9,14 +9,14 @@ import {StateNeededByExecuteSearch} from '../search/search-actions';
 import {Result} from '../../case-assist.index';
 export interface RegisterInstantResultActionCreatorPayload {
   /**
-   * The search box id.
+   * The search box ID.
    */
   id: string;
 }
 
 export interface UpdateInstantResultQueryActionCreatorPayload {
   /**
-   * The search box id.
+   * The search box ID.
    */
   id: string;
   /**
@@ -61,7 +61,7 @@ export const clearExpiredResults = createAction(
 
 export interface FetchInstantResultsActionCreatorPayload {
   /**
-   * The search box id.
+   * The search box ID.
    */
   id: string;
   /**

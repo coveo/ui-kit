@@ -23,12 +23,14 @@ export interface InstantResultProps {
   options: InstantResultOptions;
 }
 
+/**
+ * The `InstantResults` controller allows the end user to manage instant results queries.
+ */
 export interface InstantResults extends Controller {
   /**
-   * Updates the instant results query and shows instant results for it.
+   * Updates the specified query and shows instant results for it.
    *
-   * @param q - The string value to get instant results for.
-   *
+   * @param q - The query to get instant results for. For more precise instant results, query suggestions are recommended.
    */
   updateQuery(q: string): void;
   /**
@@ -51,25 +53,25 @@ export interface InstantResultsState {
    */
   q: string;
   /**
-   * The instant results for the current query in instant results.
+   * The instant results for the current query.
    */
   results: Result[];
   /**
-   * Determines if a search is in progress for the current instant results query.
+   * Determines if a search is in progress for the current query.
    */
   isLoading: boolean;
   /**
-   * Determines if a search is in progress for the current instant results query.
+   * An error returned when executing an instant results request, if any. This is `null` otherwise.
    */
   error: SearchAPIErrorWithStatusCode | SerializedError | null;
 }
 
 /**
- * Creates a `InstantResults` controller instance.
+ * Creates an `InstantResults` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The Headless engine.
  * @param props - The configurable `InstantResults` properties.
- * @returns A `InstantResults` controller instance.
+ * @returns An `InstantResults` controller instance.
  */
 export function buildInstantResults(
   engine: SearchEngine,
