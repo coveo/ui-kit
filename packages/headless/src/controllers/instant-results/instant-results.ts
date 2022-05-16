@@ -18,6 +18,7 @@ import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-re
 import {SerializedError} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../../features/search/search-actions';
 import {hasExpired} from '../../features/instant-results/instant-results-state';
+import {randomID} from '../../utils/utils';
 
 export interface InstantResultProps {
   options: InstantResultOptions;
@@ -86,8 +87,9 @@ export function buildInstantResults(
   const getState = () => engine.state;
 
   const options: Required<InstantResultOptions> = {
-    cacheTimeout: 6e4,
-    ...props.options,
+    searchBoxId: props.options.searchBoxId || randomID('instant-results-'),
+    cacheTimeout: props.options.cacheTimeout || 6e4,
+    maxResultsPerQuery: props.options.maxResultsPerQuery,
   };
 
   validateOptions(

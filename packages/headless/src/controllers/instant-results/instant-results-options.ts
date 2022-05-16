@@ -1,11 +1,11 @@
-import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {nonEmptyString} from '../../utils/validate-payload';
 import {NumberValue, Schema} from '@coveo/bueno';
 
 export interface InstantResultOptions {
   /**
    * A unique identifier for the search box.
    */
-  searchBoxId: string;
+  searchBoxId?: string;
   /**
    * The maximum items to be stored in the instant result list for each query.
    */
@@ -17,7 +17,7 @@ export interface InstantResultOptions {
 }
 
 export const instantResultsOptionDefinitions = {
-  searchBoxId: requiredNonEmptyString,
+  searchBoxId: nonEmptyString,
   maxResultsPerQuery: new NumberValue({
     required: true,
     min: 1,
