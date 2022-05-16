@@ -636,13 +636,13 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'store']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'store']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
 })
 export class AtomicResult {
   protected el: HTMLElement;
