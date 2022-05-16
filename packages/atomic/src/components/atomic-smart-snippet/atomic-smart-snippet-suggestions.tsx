@@ -173,9 +173,9 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         part="footer"
         aria-label={this.bindings.i18n.t('smart-snippet-source')}
       >
-        {relatedQuestion.source && (
+        {
           <atomic-smart-snippet-source
-            source={relatedQuestion.source}
+            source={source}
             onSelectSource={() =>
               this.smartSnippetQuestionsList.selectSource(
                 relatedQuestion.questionAnswerId
@@ -192,7 +192,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
               )
             }
           ></atomic-smart-snippet-source>
-        )}
+        }
       </footer>
     );
   }
