@@ -28,6 +28,8 @@ export function getInstantResultsInitialState(): InstantResultsState {
 }
 
 export function hasExpired(cached: InstantResultCache | undefined) {
-  if (!cached) return false;
+  if (!cached) {
+    return false;
+  }
   return cached.expiresAt && Date.now() >= cached.expiresAt;
 }

@@ -106,7 +106,9 @@ export function buildInstantResults(
   const getQ = () => getStateForSearchBox().q;
   const getResults = () => {
     const cached = getCached(getQ());
-    if (!cached) return [];
+    if (!cached) {
+      return [];
+    }
     if (cached.isLoading) {
       return [];
     }
@@ -128,7 +130,9 @@ export function buildInstantResults(
     },
 
     updateQuery(q: string) {
-      if (!q) return;
+      if (!q) {
+        return;
+      }
       const cached = getCached(q);
       if (
         !cached ||
