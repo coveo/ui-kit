@@ -6,11 +6,19 @@ import {
   RegisterInstantResultActionCreatorPayload,
   clearExpiredResults,
   ClearExpiredInstantResultsActionCreatorPayload,
+  FetchInstantResultsActionCreatorPayload,
 } from './instant-results-actions';
 import {
   registerInstantResults,
   updateInstantResultsQuery,
 } from './instant-results-actions';
+
+export type {
+  UpdateInstantResultQueryActionCreatorPayload,
+  RegisterInstantResultActionCreatorPayload,
+  ClearExpiredInstantResultsActionCreatorPayload,
+  FetchInstantResultsActionCreatorPayload,
+};
 
 export interface InstantResultsActionCreators {
   /**
