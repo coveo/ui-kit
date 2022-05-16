@@ -325,6 +325,7 @@ export const fetchInstantResults = createAsyncThunk<
         required: true,
         min: 1,
       }),
+      cacheTimeout: new NumberValue(),
     });
     const q = payload.q;
     const state = getState();
@@ -337,7 +338,7 @@ export const fetchInstantResults = createAsyncThunk<
     }
 
     const getSlicedResults = (response: SuccessResponse) =>
-      response.success.results.slice(0, payload.maxResultsPerQuery + 1);
+      response.success.results.slice(0, payload.maxResultsPerQuery);
 
     if (!shouldReExecuteTheQueryWithCorrections(state, response.success)) {
       return {

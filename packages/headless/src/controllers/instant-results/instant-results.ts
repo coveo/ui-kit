@@ -16,6 +16,7 @@ import {
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {SerializedError} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../../features/search/search-actions';
+import {InstantResultCache} from '../../features/instant-results/instant-results-state';
 
 export interface InstantResultProps {
   options: InstantResultOptions;
@@ -74,6 +75,7 @@ export function buildInstantResults(
   const getState = () => engine.state;
 
   const options: Required<InstantResultOptions> = {
+    cacheTimeout: 6e4,
     ...props.options,
   };
 
@@ -106,12 +108,16 @@ export function buildInstantResults(
     updateQuery(q: string) {
       if (!q) return;
       const cached = getCached(q);
-      if (!cached || cached.error) {
+      if (
+        !cached ||
+        (!cached.isLoading && (cached.error || hasExpired(cached)))
+      ) {
         dispatch(
           fetchInstantResults({
             id: searchBoxId,
             q,
             maxResultsPerQuery: options.maxResultsPerQuery,
+            cacheTimeout: options.cacheTimeout,
           })
         );
       }
@@ -119,10 +125,12 @@ export function buildInstantResults(
     },
 
     get state() {
+      const q = getQ();
+      const cached = getCached(q);
       return {
-        q: getQ(),
-        isLoading: getCached(getQ())?.isLoading || false,
-        error: getCached(getQ())?.error || null,
+        q,
+        isLoading: cached?.isLoading || false,
+        error: cached?.error || null,
         results: getResults(),
       };
     },
@@ -134,4 +142,8 @@ function loadInstantResultsReducers(
 ): engine is SearchEngine<InstantResultSection> {
   engine.addReducers({instantResults: instantResults});
   return true;
+}
+
+function hasExpired(cache: InstantResultCache) {
+  return cache.expiresAt && Date.now() >= cache.expiresAt;
 }

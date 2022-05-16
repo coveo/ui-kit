@@ -3,6 +3,7 @@ import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-re
 import {Result} from '../../case-assist.index';
 
 export type InstantResultCache = {
+  expiresAt: number;
   isLoading: boolean;
   error: SearchAPIErrorWithStatusCode | SerializedError | null;
   results: Result[];

@@ -34,8 +34,11 @@ export const instantResultsReducer = createReducer(
     });
     builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
       const {results} = action.payload;
-      getCached(state, action.meta)!.isLoading = false;
-      getCached(state, action.meta)!.results = results;
+      const {cacheTimeout} = action.meta.arg;
+      const cached = getCached(state, action.meta);
+      cached!.isLoading = false;
+      cached!.results = results;
+      cached!.expiresAt = cacheTimeout ? cacheTimeout + Date.now() : 0;
     });
     builder.addCase(fetchInstantResults.rejected, (state, action) => {
       getCached(state, action.meta)!.error = action.error || null;
@@ -45,7 +48,6 @@ export const instantResultsReducer = createReducer(
 
 const makeEmptyCache = (
   state: InstantResultsState,
-
   meta: {arg: FetchInstantResultsActionCreatorPayload}
 ) => {
   const {q, id} = meta.arg;
@@ -53,6 +55,7 @@ const makeEmptyCache = (
     isLoading: true,
     error: null,
     results: [],
+    expiresAt: 0,
   };
 };
 
@@ -61,5 +64,5 @@ const getCached = (
   meta: {arg: FetchInstantResultsActionCreatorPayload}
 ): InstantResultCache | null => {
   const {q, id} = meta.arg;
-  return state[id].cache[q];
+  return state[id].cache[q] || null;
 };

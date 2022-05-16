@@ -59,6 +59,10 @@ export interface FetchInstantResultsActionCreatorPayload {
    * The maximum items to be stored in the instant result list for each query.
    */
   maxResultsPerQuery: number;
+  /**
+   * The maximum items to be stored in the instant result list for each query.
+   */
+  cacheTimeout?: number;
 }
 
 export interface FetchInstantResultsThunkReturn {

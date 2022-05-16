@@ -10,6 +10,10 @@ export interface InstantResultOptions {
    * The maximum items to be stored in the instant result list for each query.
    */
   maxResultsPerQuery: number;
+  /**
+   * Number in milliseconds that cached results will be valid for. Defaults to 1 minute. Set to 0 so that results never expire.
+   */
+  cacheTimeout?: number;
 }
 
 export const instantResultsOptionDefinitions = {
@@ -18,6 +22,7 @@ export const instantResultsOptionDefinitions = {
     required: true,
     min: 1,
   }),
+  cacheTimeout: new NumberValue(),
 };
 
 export const instantResultsOptionsSchema = new Schema<
