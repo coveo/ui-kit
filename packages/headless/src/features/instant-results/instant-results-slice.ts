@@ -2,12 +2,14 @@ import {createReducer} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../search/search-actions';
 
 import {
+  clearExpiredResults,
   FetchInstantResultsActionCreatorPayload,
   registerInstantResults,
   updateInstantResultsQuery,
 } from './instant-results-actions';
 import {
   getInstantResultsInitialState,
+  hasExpired,
   InstantResultCache,
   InstantResultsState,
 } from './instant-results-state';
@@ -25,11 +27,21 @@ export const instantResultsReducer = createReducer(
       if (!q) return;
       state[id].q = q;
     });
+    builder.addCase(clearExpiredResults, (state, action) => {
+      const {id} = action.payload;
+      Object.entries(state[id].cache).forEach(([q, cached]) => {
+        if (hasExpired(cached)) {
+          delete state[id].cache[q];
+        }
+      });
+    });
     builder.addCase(fetchInstantResults.pending, (state, action) => {
       if (!getCached(state, action.meta)) {
         makeEmptyCache(state, action.meta);
       } else {
-        getCached(state, action.meta)!.isLoading = true;
+        const cached = getCached(state, action.meta);
+        cached!.isLoading = true;
+        cached!.error = null;
       }
     });
     builder.addCase(fetchInstantResults.fulfilled, (state, action) => {
@@ -37,11 +49,14 @@ export const instantResultsReducer = createReducer(
       const {cacheTimeout} = action.meta.arg;
       const cached = getCached(state, action.meta);
       cached!.isLoading = false;
+      cached!.error = null;
       cached!.results = results;
       cached!.expiresAt = cacheTimeout ? cacheTimeout + Date.now() : 0;
     });
     builder.addCase(fetchInstantResults.rejected, (state, action) => {
-      getCached(state, action.meta)!.error = action.error || null;
+      const cached = getCached(state, action.meta);
+      cached!.error = action.error || null;
+      cached!.isLoading = false;
     });
   }
 );

@@ -26,3 +26,8 @@ export type InstantResultsState = Record<
 export function getInstantResultsInitialState(): InstantResultsState {
   return {};
 }
+
+export function hasExpired(cached: InstantResultCache | undefined) {
+  if (!cached) return false;
+  return cached.expiresAt && Date.now() >= cached.expiresAt;
+}

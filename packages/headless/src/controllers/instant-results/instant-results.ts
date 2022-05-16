@@ -6,6 +6,7 @@ import {instantResults} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
 import {
+  clearExpiredResults,
   registerInstantResults,
   updateInstantResultsQuery,
 } from '../../features/instant-results/instant-results-actions';
@@ -16,7 +17,7 @@ import {
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {SerializedError} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../../features/search/search-actions';
-import {InstantResultCache} from '../../features/instant-results/instant-results-state';
+import {hasExpired} from '../../features/instant-results/instant-results-state';
 
 export interface InstantResultProps {
   options: InstantResultOptions;
@@ -30,6 +31,14 @@ export interface InstantResults extends Controller {
    *
    */
   updateQuery(q: string): void;
+  /**
+   * Fetches results from the server for a query.
+   */
+  updateResultsForQuery(q: string): void;
+  /**
+   * Clears all expired instant results queries.
+   */
+  clearExpired(): void;
   /**
    * The state of the `InstantResults` controller.
    */
@@ -105,6 +114,17 @@ export function buildInstantResults(
   return {
     ...controller,
 
+    updateResultsForQuery(q: string) {
+      dispatch(
+        fetchInstantResults({
+          id: searchBoxId,
+          q,
+          maxResultsPerQuery: options.maxResultsPerQuery,
+          cacheTimeout: options.cacheTimeout,
+        })
+      );
+    },
+
     updateQuery(q: string) {
       if (!q) return;
       const cached = getCached(q);
@@ -112,16 +132,17 @@ export function buildInstantResults(
         !cached ||
         (!cached.isLoading && (cached.error || hasExpired(cached)))
       ) {
-        dispatch(
-          fetchInstantResults({
-            id: searchBoxId,
-            q,
-            maxResultsPerQuery: options.maxResultsPerQuery,
-            cacheTimeout: options.cacheTimeout,
-          })
-        );
+        this.updateResultsForQuery(q);
       }
       dispatch(updateInstantResultsQuery({id: searchBoxId, q}));
+    },
+
+    clearExpired() {
+      dispatch(
+        clearExpiredResults({
+          id: searchBoxId,
+        })
+      );
     },
 
     get state() {
@@ -142,8 +163,4 @@ function loadInstantResultsReducers(
 ): engine is SearchEngine<InstantResultSection> {
   engine.addReducers({instantResults: instantResults});
   return true;
-}
-
-function hasExpired(cache: InstantResultCache) {
-  return cache.expiresAt && Date.now() >= cache.expiresAt;
 }

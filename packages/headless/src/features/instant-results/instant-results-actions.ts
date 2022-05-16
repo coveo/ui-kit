@@ -25,6 +25,13 @@ export interface UpdateInstantResultQueryActionCreatorPayload {
   q: string;
 }
 
+export interface ClearExpiredInstantResultsActionCreatorPayload {
+  /**
+   * The search box id.
+   */
+  id: string;
+}
+
 const instantResultsRegisterDefinition = {
   id: requiredNonEmptyString,
 };
@@ -44,6 +51,12 @@ export const updateInstantResultsQuery = createAction(
   'instantResults/updateQuery',
   (payload: UpdateInstantResultQueryActionCreatorPayload) =>
     validatePayload(payload, instantResultsQueryDefinition)
+);
+
+export const clearExpiredResults = createAction(
+  'instantResults/clearExpired',
+  (payload: ClearExpiredInstantResultsActionCreatorPayload) =>
+    validatePayload(payload, instantResultsRegisterDefinition)
 );
 
 export interface FetchInstantResultsActionCreatorPayload {
