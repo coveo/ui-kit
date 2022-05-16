@@ -95,6 +95,7 @@ function createCollectionFromResult(
   const resultToUseAsRoot =
     rootResult ??
     resolveRootFromFields(resultsInCollection, fields) ??
+    relevantResult.parentResult ??
     relevantResult;
 
   return {
@@ -120,14 +121,7 @@ function createCollections(
     if (!collectionId) {
       return;
     }
-    if (result.parentResult) {
-      collections[collectionId] = createCollectionFromResult(
-        result,
-        fields,
-        result.parentResult
-      );
-    }
-    if (!getChildField(result, fields)) {
+    if (!getChildField(result, fields) && !result.parentResult) {
       return;
     }
     collections[collectionId] = createCollectionFromResult(
@@ -216,7 +210,9 @@ export const foldingReducer = createReducer(
           );
           if (!newCollections || !newCollections[collectionId]) {
             throw new Error(
-              `Unable to create collection ${collectionId} from received results: ${results}. Folding most probably in an invalid state... `
+              `Unable to create collection ${collectionId} from received results: ${JSON.stringify(
+                results
+              )}. Folding most probably in an invalid state... `
             );
           }
           state.collections[collectionId] = newCollections[collectionId];
