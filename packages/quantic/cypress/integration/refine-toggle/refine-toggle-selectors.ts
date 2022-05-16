@@ -3,8 +3,8 @@ import {ComponentSelector, CypressSelector} from '../common-selectors';
 export const modalComponent = 'c-quantic-refine-toggle';
 
 export interface RefineToggleSelector extends ComponentSelector {
-  refineButton: () => CypressSelector;
-  refineButtonIcon: () => CypressSelector;
+  refineToggle: () => CypressSelector;
+  refineToggleIcon: () => CypressSelector;
   refineModalCloseButton: () => CypressSelector;
   refineModalTitle: () => CypressSelector;
   modal: () => CypressSelector;
@@ -25,9 +25,9 @@ export interface RefineToggleSelector extends ComponentSelector {
 export const RefineToggleSelectors: RefineToggleSelector = {
   get: () => cy.get(modalComponent),
 
-  refineButton: () => RefineToggleSelectors.get().find('.refine-button'),
-  refineButtonIcon: () =>
-    RefineToggleSelectors.refineButton().find('lightning-icon'),
+  refineToggle: () => RefineToggleSelectors.get().find('.refine-button'),
+  refineToggleIcon: () =>
+    RefineToggleSelectors.refineToggle().find('lightning-icon'),
   refineModalCloseButton: () =>
     RefineToggleSelectors.get().find('.refine-modal__action'),
   refineModalTitle: () =>

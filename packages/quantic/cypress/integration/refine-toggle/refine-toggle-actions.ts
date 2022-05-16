@@ -7,7 +7,7 @@ const refineToggleActions = (selector: RefineToggleSelector) => {
   return {
     clickRefineButton: () =>
       selector
-        .refineButton()
+        .refineToggle()
         .click()
         .logAction('When clicking the refine button'),
 

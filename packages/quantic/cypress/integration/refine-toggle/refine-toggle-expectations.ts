@@ -7,32 +7,23 @@ import {
 
 function refineToggleSelector(selector: RefineToggleSelector) {
   return {
-    displayRefineButton: (display: boolean) => {
+    displayRefineToggle: (display: boolean) => {
       selector
-        .refineButton()
+        .refineToggle()
         .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the refine button`);
+        .logDetail(`${should(display)} display the refine toggle`);
     },
 
-    displayRefineButtonIcon: (display: boolean) => {
+    displayRefineToggleIcon: (display: boolean) => {
       selector
-        .refineButtonIcon()
+        .refineToggleIcon()
         .should(display ? 'exist' : 'not.exist')
-        .logDetail(`${should(display)} display the refine button icon`);
+        .logDetail(`${should(display)} display the refine toggle icon`);
     },
 
-    refineButtonIconContains: (iconName: string) => {
+    refineToggleContains: (label: string) => {
       selector
-        .refineButtonIcon()
-        .find('svg')
-        .invoke('attr', 'data-key')
-        .should('contain', iconName)
-        .logDetail(`the icon in refine button should contain "${iconName}"`);
-    },
-
-    refineButtonContains: (label: string) => {
-      selector
-        .refineButton()
+        .refineToggle()
         .contains(label)
         .logDetail(`The refine button should contain "${label}"`);
     },
@@ -56,7 +47,7 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .modal()
         .should('exist')
         .should(display ? 'not.have.class' : 'have.class', 'modal_hidden')
-        .logDetail(`${should(display)} display the modal`);
+        .logDetail(`${should(display)} display the refine modal`);
     },
 
     displayModalFullScreen: (fullScreen: boolean) => {
@@ -65,7 +56,9 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .should('exist')
         .should(fullScreen ? 'have.class' : 'not.have.class', 'full-screen')
         .should(fullScreen ? 'not.have.class' : 'have.class', 'part-screen')
-        .logDetail(`${should(fullScreen)} display the modal on full screen`);
+        .logDetail(
+          `${should(fullScreen)} display the modal on full screen mode`
+        );
     },
 
     displayModalContent: (display: boolean) => {
@@ -73,7 +66,7 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .modalContent()
         .should('exist')
         .should(display ? 'not.have.class' : 'have.class', 'modal_hidden')
-        .logDetail(`${should(display)} display the modal content`);
+        .logDetail(`${should(display)} display the refine modal content`);
     },
 
     displayModalFooter: (display: boolean) => {
@@ -81,7 +74,7 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .modalFooter()
         .should('exist')
         .should(display ? 'not.have.class' : 'have.class', 'modal_hidden')
-        .logDetail(`${should(display)} display the modal footer`);
+        .logDetail(`${should(display)} display the refine modal footer`);
     },
 
     displayViewResultsButton: (display: boolean) => {
@@ -106,7 +99,7 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .logDetail(
           `${should(
             display
-          )} display the sort component inside the modal content`
+          )} display the sort component inside the refine modal content`
         );
     },
 

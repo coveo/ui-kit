@@ -34,10 +34,10 @@ describe('quantic-refine-toggle', () => {
       visitPage();
 
       scope('when loading the page', () => {
-        Expect.displayRefineButton(true);
-        Expect.displayRefineButtonIcon(true);
+        Expect.displayRefineToggle(true);
+        Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineButtonContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(defaultRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 
@@ -80,10 +80,10 @@ describe('quantic-refine-toggle', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayRefineButton(true);
-        Expect.displayRefineButtonIcon(false);
+        Expect.displayRefineToggle(true);
+        Expect.displayRefineToggleIcon(false);
         Expect.displayModal(false);
-        Expect.refineButtonContains(customRefineToggleLabel);
+        Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
     });
@@ -96,10 +96,10 @@ describe('quantic-refine-toggle', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayRefineButton(true);
-        Expect.displayRefineButtonIcon(true);
+        Expect.displayRefineToggle(true);
+        Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineButtonContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(defaultRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 
@@ -129,10 +129,10 @@ describe('quantic-refine-toggle', () => {
       });
 
       scope('when loading the page', () => {
-        Expect.displayRefineButton(true);
-        Expect.displayRefineButtonIcon(true);
+        Expect.displayRefineToggle(true);
+        Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineButtonContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(defaultRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 
@@ -160,10 +160,10 @@ describe('quantic-refine-toggle', () => {
       visitPage();
 
       scope('when loading the page', () => {
-        Expect.displayRefineButton(true);
-        Expect.displayRefineButtonIcon(true);
+        Expect.displayRefineToggle(true);
+        Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineButtonContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(defaultRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 

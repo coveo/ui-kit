@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import {LightningElement, api} from 'lwc';
 import {
   initializeWithHeadless,
   registerComponentForInit,

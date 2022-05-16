@@ -1,4 +1,4 @@
-import { api, LightningElement, track } from 'lwc';
+import {api, LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticRefineToggle extends LightningElement {
   @api engineId = 'quantic-refine-toggle';
@@ -18,7 +18,8 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
     {
       attribute: 'fullScreen',
       label: 'Full screen',
-      description: 'Indicates whether the refine modal will be opened in full screen.',
+      description:
+        'Indicates whether the refine modal should be opened in full screen.',
       defaultValue: false,
     },
     {
@@ -30,7 +31,8 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
     {
       attribute: 'hideIcon',
       label: 'Hide icon',
-      description: 'Indicates whether the icon of the refine toggle button should be hidden.',
+      description:
+        'Indicates whether the icon of the refine toggle button should be hidden.',
       defaultValue: false,
     },
   ];
