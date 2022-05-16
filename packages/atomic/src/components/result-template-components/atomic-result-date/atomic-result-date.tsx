@@ -2,6 +2,10 @@ import {Component, Prop, Element, State} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import {ResultContext} from '../result-template-decorators';
+import {
+  Bindings,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
 
 /**
  * The `atomic-result-date` component renders the value of a date result field.
@@ -16,6 +20,9 @@ export class AtomicResultDate {
   @Element() host!: HTMLElement;
 
   @State() public error!: Error;
+
+  @InitializeBindings()
+  public bindings!: Bindings;
 
   /**
    * The result field which the component should use.
