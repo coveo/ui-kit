@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.56.1",
+  "version": "1.57.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -112,7 +112,7 @@
     "puppeteer": "9.1.1",
     "react": "16.14.0",
     "rollup-plugin-html": "0.2.1",
-    "tailwindcss": "3.0.23"
+    "tailwindcss": "3.0.24"
   },
   "license": "Apache-2.0",
   "engines": {
