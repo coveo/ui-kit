@@ -9,15 +9,15 @@ runs:
   using: composite
   steps:
     - if: ${{ inputs.with-registry != 'true' }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
     - if: ${{ inputs.with-registry == 'true' }}
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version-file: '.nvmrc'
         registry-url: 'https://registry.npmjs.org'
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       id: build-cache
       with:
         path: |
@@ -38,7 +38,7 @@ runs:
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       with:
         path: |
           node_modules
