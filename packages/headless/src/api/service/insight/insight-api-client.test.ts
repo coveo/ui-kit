@@ -127,7 +127,7 @@ describe('insight api client', () => {
   describe('userActions', () => {
     const userActionsRequest = {
       ...insightRequest,
-      ticketCreationDate: '2000-01-01 13:26:59',
+      ticketCreationDate: new Date().toISOString(),
       numberSessionsBefore: 50,
       numberSessionsAfter: 250,
       maximumSessionInactivityMinutes: 60,
@@ -145,7 +145,7 @@ describe('insight api client', () => {
         accessToken: userActionsRequest.accessToken,
         method: 'POST',
         contentType: 'application/json',
-        url: `${userActionsRequest.url}/rest/organizations/${userActionsRequest.organizationId}/insight/v1/configs/${userActionsRequest.insightId}/useractions`,
+        url: `${userActionsRequest.url}/rest/organizations/${userActionsRequest.organizationId}/insight/v1/configs/${userActionsRequest.insightId}/user-actions`,
         requestParams: {
           ticketCreationDate: userActionsRequest.ticketCreationDate,
           numberSessionsBefore: userActionsRequest.numberSessionsBefore,
@@ -153,6 +153,26 @@ describe('insight api client', () => {
           maximumSessionInactivityMinutes:
             userActionsRequest.maximumSessionInactivityMinutes,
           excludedCustomActions: userActionsRequest.excludedCustomActions,
+        },
+      });
+    });
+
+    it('should call the platform endpoint with the default values when not specified', async () => {
+      const callSpy = setupCallMock(true, 'some content');
+
+      await client.userActions({
+        ...insightRequest,
+        ticketCreationDate: new Date().toISOString(),
+      });
+
+      expect(callSpy).toHaveBeenCalled();
+      const request = callSpy.mock.calls[0][0];
+      expect(request).toMatchObject({
+        requestParams: {
+          numberSessionsBefore: 50,
+          numberSessionsAfter: 50,
+          maximumSessionInactivityMinutes: 30,
+          excludedCustomActions: [],
         },
       });
     });

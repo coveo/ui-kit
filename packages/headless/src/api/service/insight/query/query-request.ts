@@ -1,10 +1,4 @@
-import {NumberOfResultsParam} from '../../../platform-service-params';
-import {
-  AdvancedQueryParam,
-  ConstantQueryParam,
-  FacetsParam,
-  QueryParam,
-} from '../../../search/search-api-params';
+import {FacetsParam, QueryParam} from '../../../search/search-api-params';
 import {
   baseInsightRequest,
   InsightParam,
@@ -12,11 +6,8 @@ import {
 } from '../insight-params';
 
 export type InsightQueryRequest = InsightParam &
-  AdvancedQueryParam &
   CaseContextParam &
-  ConstantQueryParam &
   FacetsParam &
-  NumberOfResultsParam &
   QueryParam;
 
 interface CaseContextParam {

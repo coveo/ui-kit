@@ -12,7 +12,10 @@ export type InsightUserActionsRequest = InsightParam &
   ExcludedCustomActionsParam;
 
 interface TicketCreationDateParam {
-  ticketCreationDate?: string; // TODO: Make sure to indicate the exact date time format
+  /**
+   * The ticket creation date in the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.
+   */
+  ticketCreationDate?: string;
 }
 
 interface NumberSessionsBeforeParam {
@@ -34,8 +37,19 @@ interface ExcludedCustomActionsParam {
 export const buildInsightUserActionsRequest = (
   req: InsightUserActionsRequest
 ) => {
+  const params = pickNonInsightParams(
+    req
+  ) as Partial<InsightUserActionsRequest>;
+
   return {
-    ...baseInsightRequest(req, 'POST', 'application/json', '/useractions'),
-    requestParams: pickNonInsightParams(req),
+    ...baseInsightRequest(req, 'POST', 'application/json', '/user-actions'),
+    requestParams: {
+      ticketCreationDate: params.ticketCreationDate,
+      numberSessionsBefore: params.numberSessionsBefore ?? 50,
+      numberSessionsAfter: params.numberSessionsAfter ?? 50,
+      maximumSessionInactivityMinutes:
+        params.maximumSessionInactivityMinutes ?? 30,
+      excludedCustomActions: params.excludedCustomActions ?? [],
+    },
   };
 };
