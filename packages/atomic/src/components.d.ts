@@ -785,6 +785,10 @@ export namespace Components {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -794,6 +798,10 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
@@ -2322,6 +2330,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -2331,6 +2343,10 @@ declare namespace LocalJSX {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
