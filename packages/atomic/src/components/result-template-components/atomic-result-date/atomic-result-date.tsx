@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import {ResultContext} from '../result-template-decorators';
 import {
   Bindings,
+  InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 
@@ -14,15 +15,15 @@ import {
   tag: 'atomic-result-date',
   shadow: false,
 })
-export class AtomicResultDate {
+export class AtomicResultDate implements InitializableComponent {
+  @InitializeBindings()
+  public bindings!: Bindings;
+
   @ResultContext() private result!: Result;
 
   @Element() host!: HTMLElement;
 
   @State() public error!: Error;
-
-  @InitializeBindings()
-  public bindings!: Bindings;
 
   /**
    * The result field which the component should use.
