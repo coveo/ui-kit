@@ -479,6 +479,7 @@ export class AtomicNumericFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfValues}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

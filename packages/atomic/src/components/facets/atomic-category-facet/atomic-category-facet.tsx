@@ -520,6 +520,7 @@ export class AtomicCategoryFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfValues}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

@@ -417,6 +417,7 @@ export class AtomicColorFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfValues}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

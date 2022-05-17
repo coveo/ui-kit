@@ -11,6 +11,8 @@ import {
   DisplayConfig,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
+import {ObservableMap} from '@stencil/store';
+import {AtomicStore, unsetLoadingFlag} from '../../utils/store';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -45,6 +47,12 @@ export class AtomicResult {
   @Prop() engine!: SearchEngine;
 
   /**
+   * Global state for Atomic.
+   * @internal
+   */
+  @Prop() store?: ObservableMap<AtomicStore>;
+
+  /**
    * The result content to display.
    */
   @Prop() content!: ParentNode;
@@ -71,7 +79,15 @@ export class AtomicResult {
    */
   @Prop() image: ResultDisplayImageSize = 'icon';
 
+  /**
+   * Classes that will be added to the result element.
+   */
   @Prop() classes = '';
+
+  /**
+   * @internal
+   */
+  @Prop() loadingFlag?: string;
 
   @Listen('atomic/resolveResult')
   public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
@@ -146,6 +162,9 @@ export class AtomicResult {
   }
 
   public componentDidLoad() {
+    if (this.loadingFlag && this.store) {
+      unsetLoadingFlag(this.store, this.loadingFlag);
+    }
     applyFocusVisiblePolyfill(this.host);
   }
 }
