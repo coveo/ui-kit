@@ -34,6 +34,7 @@ import {getDictionaryFieldContextInitialState} from '../features/dictionary-fiel
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
 import {getExcerptLengthInitialState} from '../features/excerpt-length/excerpt-length-state';
+import {getInstantResultsInitialState} from '../features/instant-results/instant-results-state';
 
 /**
  * For internal use only.
@@ -59,6 +60,7 @@ export function createMockState(
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),
     querySet: getQuerySetInitialState(),
+    instantResults: getInstantResultsInitialState(),
     tabSet: getTabSetInitialState(),
     querySuggest: {},
     redirection: getRedirectionInitialState(),
