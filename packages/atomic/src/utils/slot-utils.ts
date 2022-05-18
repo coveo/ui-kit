@@ -19,6 +19,10 @@ export function getDefaultSlotFromHost(host: HTMLElement) {
   const children = Array.from(host.children);
   const defaultSlot = children.filter((child) => !child.hasAttribute('slot'));
 
+  if (!defaultSlot.length) {
+    return;
+  }
+
   if (defaultSlot.length > 1) {
     console.warn('Element should only have 1 default slot.', host);
   }
