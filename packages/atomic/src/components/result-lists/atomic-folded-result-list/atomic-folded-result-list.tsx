@@ -28,6 +28,7 @@ import {randomID} from '../../../utils/utils';
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
  *
  * @part result-list - The element containing every result of a result list
+ * @part outline - The element displaying an outline or a divider around a result
  */
 @Component({
   tag: 'atomic-folded-result-list',

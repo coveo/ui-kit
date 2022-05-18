@@ -1,7 +1,7 @@
 @import './table-display.pcss';
 
 @define-mixin atomic-list-with-cards {
-  > * {
+  [part~='outline'] {
     border: 1px solid var(--atomic-neutral);
     padding: 1rem;
     border-radius: 1rem;
@@ -14,7 +14,7 @@
 
 @define-mixin atomic-list-with-dividers {
   &.density-comfortable {
-    > * {
+    [part~='outline'] {
       &::before {
         margin: 2rem 0;
       }
@@ -22,14 +22,14 @@
   }
 
   &.density-normal {
-    > * {
+    [part~='outline'] {
       &::before {
         margin: 1.5rem 0;
       }
     }
 
     @screen mobile-only {
-      > * {
+      [part~='outline'] {
         &::before {
           margin: 1.75rem 0;
         }
@@ -38,14 +38,14 @@
   }
 
   &.density-compact {
-    > * {
+    [part~='outline'] {
       &::before {
         margin: 1rem 0;
       }
     }
 
     @screen mobile-only {
-      > * {
+      [part~='outline'] {
         &::before {
           margin: 1.5rem 0;
         }
@@ -53,7 +53,7 @@
     }
   }
 
-  > * {
+  [part~='outline'] {
     &::before {
       display: block;
       content: ' ';
@@ -147,7 +147,7 @@
   }
 }
 
-[part='result-list-grid-clickable-container'] {
+[part~='outline'][part~='result-list-grid-clickable-container'] {
   position: relative;
 
   @screen desktop-only {
