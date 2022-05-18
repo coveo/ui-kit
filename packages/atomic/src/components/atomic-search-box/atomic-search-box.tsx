@@ -10,8 +10,7 @@ import {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
   buildStandaloneSearchBox,
-  InstantResults,
-  buildInstantResults,
+  Result,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -32,6 +31,11 @@ import {
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
 import {promiseTimeout} from '../../utils/promise-utils';
+import {
+  InstantResultItem,
+  RegisterInstantResultsEvent,
+  UpdateInstantResultsCallback,
+} from '../search-box-suggestions/instant-results-common';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -58,9 +62,10 @@ export class AtomicSearchBox {
   private inputRef!: HTMLInputElement;
   private listRef!: HTMLElement;
   private querySetActions!: QuerySetActionCreators;
-  private instantResults?: InstantResults;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
+  private pendingInstantResultsEvents: (() => InstantResultItem)[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
+  private instantResultsItems: InstantResultItem[] = [];
 
   @BindStateToController('searchBox')
   @State()
@@ -68,6 +73,8 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
+
+  @State() private instantResults: Result[][] = [];
   @State() private suggestionElements: SearchBoxSuggestionItem[] = [];
 
   /**
@@ -129,6 +136,7 @@ export class AtomicSearchBox {
         event(this.suggestionBindings)
       )
     );
+    this.pendingInstantResultsEvents.forEach((init) => init());
     this.pendingSuggestionEvents = [];
   }
 
@@ -160,19 +168,29 @@ export class AtomicSearchBox {
     this.pendingSuggestionEvents.push(event.detail);
   }
 
+  public updateResults(cb: UpdateInstantResultsCallback, pos: number) {
+    const copy = [...this.instantResults];
+    copy[pos] = cb(this.instantResults[pos] || []);
+
+    this.instantResults = copy;
+  }
+
   @Listen('atomic/searchBoxInstantResults/register')
-  public registerInstantResults(
-    event: CustomEvent<(instantResults: InstantResults) => void>
-  ) {
+  public registerInstantResults(event: RegisterInstantResultsEvent) {
     event.preventDefault();
     event.stopPropagation();
-    this.instantResults = buildInstantResults(this.bindings.engine, {
-      options: {
-        searchBoxId: this.id,
-        maxResultsPerQuery: 4,
-      },
-    });
-    event.detail(this.instantResults);
+    const pos =
+      this.instantResultsItems.length ||
+      this.pendingInstantResultsEvents.length;
+    const updateResults = (cb: UpdateInstantResultsCallback) => {
+      this.updateResults(cb, pos);
+    };
+    if (this.searchBox) {
+      this.instantResultsItems[pos] = event.detail(this.id, updateResults);
+      return;
+    }
+    this.pendingInstantResultsEvents[pos] = () =>
+      event.detail(this.id, updateResults);
   }
 
   @Watch('redirectionUrl')
@@ -246,6 +264,9 @@ export class AtomicSearchBox {
       this.activeDescendantElement?.previousElementSibling || this.lastValue
     );
   }
+  private get showSuggestions() {
+    return this.hasSuggestions && this.isExpanded;
+  }
 
   private scrollActiveDescendantIntoView() {
     this.activeDescendantElement?.scrollIntoView({
@@ -283,8 +304,10 @@ export class AtomicSearchBox {
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
-  private updateInstantResultsQuery(q = '') {
-    this.instantResults && this.instantResults.updateQuery(q);
+  private async triggerInstantResults(q: string) {
+    this.instantResultsItems.map((instantResultsController) =>
+      instantResultsController.onChange(q)
+    );
   }
 
   private async triggerSuggestions() {
@@ -311,12 +334,11 @@ export class AtomicSearchBox {
       .map((suggestion) => suggestion.renderItems())
       .flat();
 
-    const defaultSuggestionQ = suggestionElements.find(
-      (suggestion) => suggestion.query
-    )?.query;
+    const defaultSuggestionQ =
+      suggestionElements.find(isSuggestionElement)?.query;
 
     if (defaultSuggestionQ) {
-      this.updateInstantResultsQuery(defaultSuggestionQ);
+      this.triggerInstantResults(defaultSuggestionQ);
     }
 
     const max =
@@ -489,7 +511,9 @@ export class AtomicSearchBox {
           this.clearSuggestions();
         }}
         onMouseOver={() => {
-          this.updateInstantResultsQuery(suggestion.query);
+          if (isSuggestionElement(item)) {
+            this.triggerInstantResults(item.query);
+          }
         }}
         ref={(el) => {
           if (isHTMLElement(item.content)) {
@@ -504,8 +528,6 @@ export class AtomicSearchBox {
   }
 
   private renderSuggestions() {
-    const showSuggestions = this.hasSuggestions && this.isExpanded;
-
     return (
       <ul
         id={this.popupId}
@@ -513,9 +535,6 @@ export class AtomicSearchBox {
         part="suggestions"
         aria-label={this.bindings.i18n.t('query-suggestion-list')}
         ref={(el) => (this.listRef = el!)}
-        class={`w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
-          showSuggestions ? '' : 'hidden'
-        }`}
       >
         {this.suggestionElements.map((suggestion, index) =>
           this.renderSuggestion(
@@ -545,16 +564,36 @@ export class AtomicSearchBox {
     );
   }
 
+  private renderInstantResults() {
+    const elements = this.instantResultsItems.map((controller, i) =>
+      this.instantResults[i]?.map(controller.renderItem)
+    );
+    // TODO: do more accessibility stuff
+    return (
+      <ul class="flex flex-col h-full p-4">
+        {elements.flat().map((el) => (
+          <li class="flex-grow">{el}</li>
+        ))}
+      </ul>
+    );
+  }
+
   public render() {
     return [
       <div
         part="wrapper"
-        class={
-          'relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary'
-        }
+        class="relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary"
       >
         {this.renderInputContainer()}
-        {this.renderSuggestions()}
+        <div class={wrapperClasses([this.showSuggestions ? '' : 'hidden'])}>
+          {/* TODO: add parts */}
+          <div class="flex-grow" style={{width: '50%'}}>
+            {this.renderSuggestions()}
+          </div>
+          <div class="flex-grow" style={{width: '50%'}}>
+            {this.renderInstantResults()}
+          </div>
+        </div>
         {this.renderSubmitButton()}
       </div>,
       !this.suggestions.length && (
@@ -567,6 +606,22 @@ export class AtomicSearchBox {
   }
 }
 
+const wrapperClasses = (extras: string[]) =>
+  [
+    'flex',
+    'w-full',
+    'z-10',
+    'absolute',
+    'left-0',
+    'top-full',
+    'rounded-md',
+    'bg-background',
+    'border',
+    'border-neutral',
+  ]
+    .concat(extras)
+    .filter((c) => c)
+    .join(' ');
 function isHTMLElement(el: VNode | Element): el is HTMLElement {
   return el instanceof HTMLElement;
 }
