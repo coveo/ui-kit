@@ -141,6 +141,7 @@ describe('#resolveInterfaceMembers', () => {
         {
           parameterName: 'key',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+          isOptional: true,
         },
       ],
     });
@@ -179,6 +180,7 @@ describe('#resolveInterfaceMembers', () => {
         {
           parameterName: 'page',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+          isOptional: true,
         },
       ],
       returnTypeTokenRange: {startIndex: 3, endIndex: 4},
@@ -236,6 +238,7 @@ describe('#resolveInterfaceMembers', () => {
         {
           parameterName: 'listener',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+          isOptional: true,
         },
       ],
       returnTypeTokenRange: {startIndex: 3, endIndex: 4},
@@ -526,6 +529,7 @@ describe('#resolveInterfaceMembers', () => {
         {
           parameterName: 'selection',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+          isOptional: true,
         },
       ],
     });
@@ -587,6 +591,7 @@ describe('#resolveInterfaceMembers', () => {
         {
           parameterName: 'contextValue',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+          isOptional: true,
         },
       ],
       returnTypeTokenRange: {startIndex: 3, endIndex: 4},
