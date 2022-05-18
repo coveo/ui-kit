@@ -64,6 +64,7 @@ export class AtomicFacetManager implements InitializableComponent {
 
   private sortFacets = () => {
     if (!this.searchStatusState.firstSearchExecuted) {
+      this.updateCollapsedState(this.facets);
       return;
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));

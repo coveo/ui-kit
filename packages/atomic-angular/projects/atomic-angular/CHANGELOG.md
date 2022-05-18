@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.6.9...@coveo/atomic-angular@1.7.0) (2022-05-17)
+
+
+### Features
+
+* **atomic:** allow to customise suggestions icons ([#1980](https://github.com/coveo/ui-kit/issues/1980)) ([b5f7a6d](https://github.com/coveo/ui-kit/commit/b5f7a6de0315136551178b7a8fa69c92920a49dc))
+
+
+
+
+
+## [1.6.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.6.8...@coveo/atomic-angular@1.6.9) (2022-05-16)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 ## [1.6.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.6.7...@coveo/atomic-angular@1.6.8) (2022-05-16)
 
 **Note:** Version bump only for package @coveo/atomic-angular

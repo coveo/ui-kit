@@ -3,6 +3,7 @@ import {
   isRelativeDateFormat,
 } from '../../api/search/date/relative-date';
 import {SearchAPIClientResponse} from '../../api/search/search-api-client';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
@@ -126,10 +127,17 @@ function mapFacetResponse(
   return facetResponse;
 }
 
+export type ErrorResponse = {
+  error: SearchAPIErrorWithStatusCode;
+};
+export type SuccessResponse = {
+  success: SearchResponseSuccess;
+};
+
 export function mapSearchResponse(
   response: SearchAPIClientResponse<SearchResponseSuccess>,
   mappings: SearchMappings
-) {
+): SuccessResponse | ErrorResponse {
   if ('success' in response) {
     const success: SearchResponseSuccess = {
       ...response.success,

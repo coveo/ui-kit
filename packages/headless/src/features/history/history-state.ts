@@ -11,6 +11,7 @@ import {getDateFacetSetInitialState} from '../facets/range-facets/date-facet-set
 import {getNumericFacetSetInitialState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getPaginationInitialState} from '../pagination/pagination-state';
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
+import {getInstantResultsInitialState} from '../instant-results/instant-results-state';
 import {getQuerySetInitialState} from '../query-set/query-set-state';
 import {getQueryInitialState} from '../query/query-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
@@ -43,6 +44,7 @@ export function extractHistory(state: Partial<HistoryState>): HistoryState {
       state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
     staticFilterSet: state.staticFilterSet || getStaticFilterSetInitialState(),
     querySet: state.querySet || getQuerySetInitialState(),
+    instantResults: state.instantResults || getInstantResultsInitialState(),
     sortCriteria: state.sortCriteria || getSortCriteriaInitialState(),
     pipeline: state.pipeline || getPipelineInitialState(),
     searchHub: state.searchHub || getSearchHubInitialState(),

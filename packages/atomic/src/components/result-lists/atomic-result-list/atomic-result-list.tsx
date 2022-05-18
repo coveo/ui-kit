@@ -20,6 +20,7 @@ import {
   ResultDisplayImageSize,
 } from '../../atomic-result/atomic-result-display-options';
 import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
+import {randomID} from '../../../utils/utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -71,6 +72,7 @@ export class AtomicResultList implements InitializableComponent {
 
   private resultListCommon!: ResultListCommon;
   private renderingFunction: ((res: Result) => HTMLElement) | null = null;
+  private loadingFlag = randomID('firstResultLoaded-');
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -136,6 +138,7 @@ export class AtomicResultList implements InitializableComponent {
       onError: () => {
         this.templateHasError = true;
       },
+      loadingFlag: this.loadingFlag,
     });
 
     this.resultList = buildResultList(
@@ -149,13 +152,6 @@ export class AtomicResultList implements InitializableComponent {
     result: Result
   ): HTMLElement | DocumentFragment {
     return this.resultListCommon.getContentOfResultTemplate(result);
-  }
-
-  public componentDidRender() {
-    this.resultListCommon.componentDidRender(
-      this.resultListState.firstSearchExecuted,
-      this.listWrapperRef
-    );
   }
 
   public render() {

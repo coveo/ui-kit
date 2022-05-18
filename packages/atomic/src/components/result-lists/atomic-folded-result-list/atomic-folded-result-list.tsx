@@ -22,6 +22,7 @@ import {
 } from '../../atomic-result/atomic-result-display-options';
 import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
+import {randomID} from '../../../utils/utils';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -56,6 +57,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   public resultListCommon!: ResultListCommon;
   private renderingFunction: ((res: FoldedResult) => HTMLElement) | null = null;
+  private loadingFlag = randomID('firstResultLoaded-');
 
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
@@ -146,6 +148,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       onError: () => {
         this.templateHasError = true;
       },
+      loadingFlag: this.loadingFlag,
     });
 
     this.foldedResultList = this.initFolding(
@@ -173,13 +176,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
     foldedResult: FoldedResult
   ): HTMLElement | DocumentFragment {
     return this.resultListCommon.getContentOfResultTemplate(foldedResult);
-  }
-
-  public componentDidRender() {
-    this.resultListCommon.componentDidRender(
-      this.foldedResultListState.firstSearchExecuted,
-      this.listWrapperRef
-    );
   }
 
   public render() {

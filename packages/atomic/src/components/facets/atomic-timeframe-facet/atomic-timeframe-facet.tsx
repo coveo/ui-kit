@@ -403,6 +403,7 @@ export class AtomicTimeframeFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.currentValues.length}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

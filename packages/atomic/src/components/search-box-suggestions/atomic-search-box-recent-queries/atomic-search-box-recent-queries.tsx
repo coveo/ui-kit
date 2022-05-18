@@ -35,6 +35,15 @@ export class AtomicSearchBoxRecentQueries {
   @State() public error!: Error;
 
   /**
+   * The SVG icon to display.
+   *
+   * - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location.
+   * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
+   * - Use a stringified SVG to display it directly.
+   */
+  @Prop() public icon?: string;
+
+  /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
   @Prop({reflect: true}) public maxWithQuery = 3;
@@ -52,6 +61,10 @@ export class AtomicSearchBoxRecentQueries {
     } catch (error) {
       this.error = error as Error;
     }
+  }
+
+  private renderIcon() {
+    return this.icon || Clock;
   }
 
   private initialize() {
@@ -147,7 +160,10 @@ export class AtomicSearchBoxRecentQueries {
       query: value,
       content: (
         <div class="flex items-center break-all">
-          <atomic-icon icon={Clock} class="w-4 h-4 mr-2 shrink-0"></atomic-icon>
+          <atomic-icon
+            icon={this.renderIcon()}
+            class="w-4 h-4 mr-2 shrink-0"
+          ></atomic-icon>
           {query === '' ? (
             <span class="break-all line-clamp-2">{value}</span>
           ) : (
