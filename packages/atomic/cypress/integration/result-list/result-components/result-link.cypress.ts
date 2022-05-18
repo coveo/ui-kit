@@ -87,15 +87,17 @@ describe('Result Link Component', () => {
     CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
 
     describe('when there is a default slot', () => {
-      const slottedComponent = 'canvas';
+      const slottedComponent = document.createElement('div');
+      slottedComponent.id = 'myslot';
+      slottedComponent.innerText = 'Slotted element';
       beforeEach(() => {
-        setupResultLink({slot: generateComponentHTML(slottedComponent)});
+        setupResultLink({slot: slottedComponent});
       });
 
       it('should render the slot inside of the "a" tag', () => {
         ResultLinkSelectors.firstInResult()
-          .find(slottedComponent)
-          .should('exist');
+          .find('a #myslot')
+          .should('be.visible');
       });
     });
 
