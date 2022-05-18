@@ -17,6 +17,8 @@ import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
+import {waitUntilAppLoaded} from '../../utils/store';
+import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -85,7 +87,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
    * `;
    * ```
    */
-  @Prop({reflect: true}) snippetStyle?: string;
+  @Prop() snippetStyle?: string;
 
   private id = randomID('atomic-smart-snippet-suggestions-');
 
@@ -93,6 +95,11 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.bindings.engine
     );
+
+    this.hideDuringRender = true;
+    waitUntilAppLoaded(this.bindings.store, () => {
+      this.hideDuringRender = false;
+    });
   }
 
   private get style() {
@@ -103,6 +110,11 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       return this.snippetStyle;
     }
     return styleTag.innerHTML;
+  }
+
+  private set hideDuringRender(shouldHide: boolean) {
+    this.host.style.visibility = shouldHide ? 'hidden' : '';
+    this.host.style.position = shouldHide ? 'absolute' : '';
   }
 
   private getRelatedQuestionId(index: number) {
@@ -209,14 +221,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
       >
         <article class="contents">
           {this.renderQuestion(relatedQuestion, index)}
-          <div
-            part={relatedQuestion.expanded ? 'answer-and-source' : ''}
-            class={relatedQuestion.expanded ? 'pl-10 pr-6 pb-6' : 'hidden'}
-            id={this.getRelatedQuestionId(index)}
-          >
-            {this.renderContent(relatedQuestion)}
-            {this.renderSource(relatedQuestion)}
-          </div>
+          {relatedQuestion.expanded && (
+            <div
+              part="answer-and-source"
+              class="pl-10 pr-6 pb-6"
+              id={this.getRelatedQuestionId(index)}
+            >
+              {this.renderContent(relatedQuestion)}
+              {this.renderSource(relatedQuestion)}
+            </div>
+          )}
         </article>
       </li>
     );
