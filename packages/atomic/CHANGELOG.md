@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.59.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.59.0...@coveo/atomic@1.59.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* **atomic:** clone child nodes for inherited templates in children ([#1995](https://github.com/coveo/ui-kit/issues/1995)) ([25097eb](https://github.com/coveo/ui-kit/commit/25097eb7c0181a7da3bbcc9e53da4d1603012610))
+
+
+
+
+
 # [1.59.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.58.0...@coveo/atomic@1.59.0) (2022-05-17)
 
 
