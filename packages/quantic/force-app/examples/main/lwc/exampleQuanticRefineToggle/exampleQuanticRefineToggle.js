@@ -24,6 +24,8 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
     },
   ];
 
+  formattingFunction = (item) => `${item.start} - ${item.end}`;
+
   handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;

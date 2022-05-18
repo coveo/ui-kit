@@ -151,12 +151,20 @@ export default class QuanticRefineToggle extends LightningElement {
   }
 
   /**
+   * Returns the Quantic Modal element.
+   * @returns {HTMLElement}
+   */
+  getModal() {
+    return this.template.querySelector(`[data-id=${this.modalId}]`);
+  }
+
+  /**
    * Opens the refine modal.
    * @returns {void}
    */
   openModal() {
     /** @type {QuanticModalElement} */
-    const modal = this.template.querySelector(`[data-id=${this.modalId}]`);
+    const modal = this.getModal();
     modal.openModal();
   }
 
@@ -166,7 +174,7 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   closeModal() {
     /** @type {QuanticModalElement} */
-    const modal = this.template.querySelector(`[data-id=${this.modalId}]`);
+    const modal = this.getModal();
     modal.closeModal();
   }
 
