@@ -22,19 +22,6 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
         'Indicates whether the refine modal should be opened in full screen.',
       defaultValue: false,
     },
-    {
-      attribute: 'buttonLabel',
-      label: 'Button Label',
-      description: 'The label to be shown in the refine toggle button.',
-      defaultValue: 'Sort & Filters',
-    },
-    {
-      attribute: 'hideIcon',
-      label: 'Hide icon',
-      description:
-        'Indicates whether the icon of the refine toggle button should be hidden.',
-      defaultValue: false,
-    },
   ];
 
   handleTryItNow(evt) {

@@ -6,22 +6,7 @@
 }
 
 .refine-toggle_container {
-  display: none;
+  display: flex;
   width: 100%;
   justify-content: flex-end;
-}
-
-
-@media only screen and (max-width: 1023px) {
-  .facets_container {
-    display: none;
-  }
-
-  c-quantic-sort {
-    display: none;
-  }
-
-  .refine-toggle_container {
-    display: flex;
-  }
 }

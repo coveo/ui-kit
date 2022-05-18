@@ -27,7 +27,7 @@ export const RefineToggleSelectors: RefineToggleSelector = {
 
   refineToggle: () => RefineToggleSelectors.get().find('.refine-button'),
   refineToggleIcon: () =>
-    RefineToggleSelectors.refineToggle().find('lightning-icon'),
+    RefineToggleSelectors.get().find('.custom-refine-icon'),
   refineModalCloseButton: () =>
     RefineToggleSelectors.get().find('.refine-modal__action'),
   refineModalTitle: () =>

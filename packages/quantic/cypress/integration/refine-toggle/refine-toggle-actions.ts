@@ -8,7 +8,7 @@ const refineToggleActions = (selector: RefineToggleSelector) => {
     clickRefineButton: () =>
       selector
         .refineToggle()
-        .click()
+        .click({force: true})
         .logAction('When clicking the refine button'),
 
     clickRefineModalCloseButton: () =>

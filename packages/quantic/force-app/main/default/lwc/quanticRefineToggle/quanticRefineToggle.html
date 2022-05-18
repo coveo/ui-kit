@@ -1,12 +1,12 @@
 <template>
   <button class="slds-button slds-button_neutral refine-button slds-is-relative" onclick={openModal}
     title={buttonLabel}>
-    <template if:true={hasButtonLabel}> {buttonLabel} </template>
-    <template if:false={hideIcon}>
+    <slot name="button-content">
+      {labels.sortAndFilters}
       <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonLabel}
-        class={buttonIconClass}>
+        class="slds-current-color slds-var-p-vertical_x-small slds-button__icon_right">
       </lightning-icon>
-    </template>
+    </slot>
     <template if:true={activeFiltersCount}>
       <div
         class="refine-button_filters-badge slds-is-absolute slds-align_absolute-center slds-text-title slds-var-p-around_xxx-small">
@@ -21,7 +21,7 @@
       <slot name="refine-title">
         <div class="slds-text-title_bold">{labels.sortAndFilters}</div>
       </slot>
-      <lightning-button class="slds-is-absolute slds-align_absolute-center slds-var-p-right_large refine-modal__action"
+      <lightning-button class="slds-is-absolute slds-align_absolute-center slds-var-m-right_large refine-modal__action"
         onclick={closeModal} variant="base" title="Close" icon-name="utility:close">
       </lightning-button>
     </div>

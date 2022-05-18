@@ -7,8 +7,6 @@ import {InterceptAliases, interceptSearch} from '../../page-objects/search';
 
 interface RefineToggleOptions {
   fullScreen: boolean;
-  buttonLabel: string;
-  hideIcon: boolean;
   hideSort: boolean;
 }
 
@@ -17,7 +15,6 @@ const viewResultsLabel = (value: number) => {
 };
 
 const customRefineModalTitle = 'Custom Title';
-const defaultRefineToggleLabel = 'Sort & Filters';
 const customRefineToggleLabel = 'Custom Label';
 
 describe('quantic-refine-toggle', () => {
@@ -37,7 +34,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayRefineToggle(true);
         Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineToggleContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 
@@ -72,23 +69,6 @@ describe('quantic-refine-toggle', () => {
     });
   });
 
-  describe('when customizing the refine toggle button', () => {
-    it('should render the custom label and hide the icon of the toggle button', () => {
-      visitPage({
-        hideIcon: true,
-        buttonLabel: customRefineToggleLabel,
-      });
-
-      scope('when loading the page', () => {
-        Expect.displayRefineToggle(true);
-        Expect.displayRefineToggleIcon(false);
-        Expect.displayModal(false);
-        Expect.refineToggleContains(customRefineToggleLabel);
-        Expect.displayFiltersCountBadge(false);
-      });
-    });
-  });
-
   describe('when the fullScreen property is set to true', () => {
     it('should open the refine modal in full screen', () => {
       visitPage({
@@ -99,7 +79,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayRefineToggle(true);
         Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineToggleContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 
@@ -132,7 +112,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayRefineToggle(true);
         Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineToggleContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 
@@ -163,7 +143,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayRefineToggle(true);
         Expect.displayRefineToggleIcon(true);
         Expect.displayModal(false);
-        Expect.refineToggleContains(defaultRefineToggleLabel);
+        Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
       });
 
@@ -186,8 +166,8 @@ describe('quantic-refine-toggle', () => {
 
       scope('when selecting filters', () => {
         Actions.clickFacetExpandButton();
-        Actions.clickTimeframeFacetExpandButton();
         Actions.clickFacetFirstOption();
+        Actions.clickTimeframeFacetExpandButton();
         Actions.clickTimeframeFacetFirstOption();
       });
 

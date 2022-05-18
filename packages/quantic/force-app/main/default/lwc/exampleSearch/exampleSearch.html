@@ -9,7 +9,7 @@
         </div>
         <div class="slds-col">
           <div class="slds-grid slds-gutters_direct slds-wrap main slds-grid_align-center">
-            <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 facets_container">
+            <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12 facets_container slds-show_large">
               <c-quantic-facet-manager engine-id={engineId}>
                 <c-quantic-facet field="objecttype" label="Type" engine-id={engineId} data-cy="type"></c-quantic-facet>
                 <c-quantic-facet display-values-as="link" field="filetype" label="File Type" engine-id={engineId}></c-quantic-facet>
@@ -34,9 +34,9 @@
               <div class="slds-grid slds-var-m-top_small">
                 <c-quantic-summary class="slds-var-m-vertical_x-small slds-medium-size_7-of-12" engine-id={engineId}>
                 </c-quantic-summary>
-                <c-quantic-sort class="slds-var-m-vertical_xxx-small slds-medium-size_5-of-12 slds-col_bump-left" engine-id={engineId}>
+                <c-quantic-sort class="slds-var-m-vertical_xxx-small slds-medium-size_5-of-12 slds-col_bump-left slds-show_large" engine-id={engineId}>
                 </c-quantic-sort>
-                <div class="refine-toggle_container">
+                <div class="refine-toggle_container slds-hide_large">
                   <c-quantic-refine-toggle engine-id={engineId} full-screen></c-quantic-refine-toggle>
                 </div>
               </div>

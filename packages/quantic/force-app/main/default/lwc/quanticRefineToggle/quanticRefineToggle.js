@@ -21,8 +21,14 @@ import viewResults from '@salesforce/label/c.quantic_ViewResults';
  * The `QuanticRefineToggle` component displays a button that is used to open the refine modal.
  * @category Search
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-icon button-label="Custom label" hide-sort full-screen>
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen>
  *   <div slot="refine-title">Custom Title</div>
+ *   <div slot="button-content">
+ *     Custom Label
+ *     <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonLabel}
+ *       class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right">
+ *     </lightning-icon>
+ *   </div>
  * </c-quantic-refine-toggle>
  */
 export default class QuanticRefineToggle extends LightningElement {
@@ -37,19 +43,6 @@ export default class QuanticRefineToggle extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /**
-   * Indicates whether the icon of the refine toggle button should be hidden.
-   * @api
-   * @type {string}
-   */
-  @api hideIcon;
-  /**
-   * The label to be shown in the refine toggle button.
-   * @api
-   * @type {string}
-   * @defaultValue `'Sort & Filters'`
-   */
-  @api buttonLabel = this.labels.sortAndFilters;
   /**
    * Indicates whether the Quantic Sort component should be hidden.
    * @api
@@ -137,7 +130,7 @@ export default class QuanticRefineToggle extends LightningElement {
       (count, facetKey) =>
         count +
         this.getFiltersCountFromFacetBreadcrumb(
-          this.breadcrumbManager.state[facetKey]
+          this.breadcrumbManager?.state?.[facetKey]
         ),
       0
     );
@@ -148,6 +141,9 @@ export default class QuanticRefineToggle extends LightningElement {
    * @param {Array<{values: Array}>} facetBreadcrumb
    */
   getFiltersCountFromFacetBreadcrumb(facetBreadcrumb) {
+    if (!facetBreadcrumb) {
+      return 0;
+    }
     return facetBreadcrumb.reduce(
       (count, facet) => count + facet.values.length,
       0
@@ -167,7 +163,6 @@ export default class QuanticRefineToggle extends LightningElement {
   /**
    * Closes the refine modal.
    * @returns {void}
-   *
    */
   closeModal() {
     /** @type {QuanticModalElement} */
@@ -183,25 +178,5 @@ export default class QuanticRefineToggle extends LightningElement {
     return `${this.labels.viewResults} (${new Intl.NumberFormat(LOCALE).format(
       this.total
     )})`;
-  }
-
-  /**
-   * Returns the CSS class of the icon of the refine button.
-   * @returns {string}
-   */
-  get buttonIconClass() {
-    return [
-      'slds-current-color',
-      'slds-var-p-vertical_x-small',
-      this.buttonLabel && 'slds-button__icon_right',
-    ].join(' ');
-  }
-
-  /**
-   * Indicates whether the refine button has a label.
-   * @returns {boolean}
-   */
-  get hasButtonLabel() {
-    return !!this.buttonLabel;
   }
 }
