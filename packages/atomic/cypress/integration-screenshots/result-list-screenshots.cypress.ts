@@ -3,6 +3,16 @@ const cartesianProduct = (...a: any[]) =>
   a.reduce((a, b) => a.flatMap((d: any) => b.map((e: any) => [d, e].flat())));
 
 describe('screenshots for result lists display mode', () => {
+  // Context: https://stackoverflow.com/a/50387233
+  // This is a benign error that can be safely ignored
+  const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
+  Cypress.on('uncaught:exception', (err) => {
+    if (resizeObserverLoopErrRe.test(err.message)) {
+      return false;
+    }
+    return true;
+  });
+
   const host = 'http://localhost:3333';
 
   const layouts = ['table', 'list', 'grid'];
