@@ -20,9 +20,10 @@ describe('screenshots for result lists display mode', () => {
     cy.wait(5000);
     combinations.forEach(([layout, density, imageSize, viewport]) => {
       cy.viewport(viewport as Cypress.ViewportPreset);
-      cy.get('atomic-result-list').invoke('attr', 'display', layout);
-      cy.get('atomic-result-list').invoke('attr', 'density', density);
-      cy.get('atomic-result-list').invoke('attr', 'image-size', imageSize);
+      cy.get('atomic-result-list')
+        .invoke('attr', 'display', layout)
+        .invoke('attr', 'density', density)
+        .invoke('attr', 'image-size', imageSize);
       cy.screenshot(
         `${viewport}-imageSize(${imageSize})-density(${density})-layout(${layout})`
       );
