@@ -95,7 +95,7 @@ export class AtomicSegmentedFacet
   }
 
   private renderValuesContainer(children: VNode[]) {
-    const classes = `mt-3 ${'box-container'}`;
+    const classes = 'mt-3 box-container';
     return (
       <ul part="values" class={classes}>
         {children}
