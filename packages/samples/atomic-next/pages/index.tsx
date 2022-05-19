@@ -4,4 +4,4 @@ const DynamicSearchPage = dynamic(() => import('./search-page'), {
   ssr: false,
 });
 
-export default <DynamicSearchPage />;
+export default DynamicSearchPage;
