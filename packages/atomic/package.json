@@ -66,7 +66,7 @@
     "stencil-inline-svg": "^1.1.0"
   },
   "devDependencies": {
-    "@babel/core": "7.17.10",
+    "@babel/core": "7.17.12",
     "@fullhuman/postcss-purgecss": "4.1.3",
     "@monaco-editor/react": "4.3.1",
     "@rollup/plugin-alias": "3.1.9",
@@ -82,7 +82,7 @@
     "@storybook/addon-viewport": "6.3.12",
     "@storybook/api": "6.3.12",
     "@storybook/html": "6.3.12",
-    "@tailwindcss/line-clamp": "0.3.1",
+    "@tailwindcss/line-clamp": "0.4.0",
     "@types/dompurify": "2.3.3",
     "@types/escape-html": "1.0.2",
     "@types/jest": "26.0.24",
@@ -93,7 +93,7 @@
     "axe-core": "4.4.2",
     "babel-loader": "8.2.5",
     "cross-fetch": "3.1.5",
-    "cypress": "9.5.2",
+    "cypress": "9.6.1",
     "cypress-axe": "0.14.0",
     "eslint-plugin-cypress": "2.12.1",
     "html-loader-jest": "0.2.1",
@@ -101,7 +101,7 @@
     "jest-cli": "26.6.3",
     "jest-localstorage-mock": "2.4.21",
     "lit-analyzer": "1.2.1",
-    "lit-html": "2.2.3",
+    "lit-html": "2.2.4",
     "lodash": "4.17.21",
     "monaco-editor-webpack-plugin": "6.0.0",
     "ncp": "2.0.0",
@@ -112,7 +112,7 @@
     "puppeteer": "9.1.1",
     "react": "16.14.0",
     "rollup-plugin-html": "0.2.1",
-    "tailwindcss": "3.0.23"
+    "tailwindcss": "3.0.24"
   },
   "license": "Apache-2.0",
   "engines": {

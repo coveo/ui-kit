@@ -59,7 +59,7 @@
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
     "ts-debounce": "^3.0.0",
-    "web-encoding": "1.1.4"
+    "web-encoding": "1.1.5"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "7.24.0",
@@ -68,7 +68,7 @@
     "@types/jest": "27.5.1",
     "jest": "27.5.1",
     "jest-fetch-mock": "3.0.3",
-    "ts-jest": "27.1.4",
+    "ts-jest": "27.1.5",
     "ts-node": "10.7.0"
   }
 }

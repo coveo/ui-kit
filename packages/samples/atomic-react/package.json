@@ -6,22 +6,22 @@
   "dependencies": {
     "@coveo/atomic": "^1.40.0",
     "@coveo/atomic-react": "^1.0.2",
-    "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
   },
   "devDependencies": {
-    "@types/react": "18.0.2",
-    "@types/react-dom": "18.0.0",
+    "@types/react": "18.0.9",
+    "@types/react-dom": "18.0.4",
     "css-loader": "6.7.1",
-    "cypress": "9.3.1",
-    "eslint-plugin-react": "7.29.4",
+    "cypress": "9.6.1",
+    "eslint-plugin-react": "7.30.0",
     "ncp": "2.0.0",
     "style-loader": "3.3.1",
-    "ts-loader": "9.2.8",
-    "typescript": "4.6.3",
-    "webpack": "5.72.0",
+    "ts-loader": "9.3.0",
+    "typescript": "4.6.4",
+    "webpack": "5.72.1",
     "webpack-cli": "4.9.2",
-    "webpack-dev-server": "4.8.1"
+    "webpack-dev-server": "4.9.0"
   },
   "scripts": {
     "build": "tsc --noEmit",
