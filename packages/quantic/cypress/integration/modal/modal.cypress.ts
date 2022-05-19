@@ -7,8 +7,12 @@ import {closeModal} from '../../page-objects/actions/action-close-modal';
 
 interface ModalOptions {
   fullScreen: boolean;
-  animation: 'slideToTop' | 'slideToLeft';
+  animation: string;
 }
+
+const invalidAnimationError = (value: string) => {
+  return `"${value}" is an invalid animation type. Animation can only be set to "slideToTop" or "slideToLeft".`;
+};
 
 describe('quantic-modal', () => {
   const pageUrl = 's/quantic-modal';
@@ -93,6 +97,22 @@ describe('quantic-modal', () => {
       scope('when closing the modal', () => {
         closeModal();
         Expect.displayModal(false);
+      });
+    });
+  });
+
+  describe('when setting an invalid animation', () => {
+    it('should render an error message', () => {
+      const invalidAnimation = 'invalid animation';
+      visitModal({
+        animation: invalidAnimation,
+      });
+
+      scope('when loading the page', () => {
+        Expect.displayRenderingError(
+          true,
+          invalidAnimationError(invalidAnimation)
+        );
       });
     });
   });

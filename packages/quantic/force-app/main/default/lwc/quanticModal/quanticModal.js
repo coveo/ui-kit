@@ -29,6 +29,18 @@ export default class QuanticModal extends LightningElement {
 
   /** @type {boolean} */
   isVisible = false;
+  /** @type {string} */
+  renderingError = '';
+
+  connectedCallback() {
+    this.validateProps();
+  }
+
+  validateProps() {
+    if (this.animation !== 'slideToLeft' && this.animation !== 'slideToTop') {
+      this.renderingError = `"${this.animation}" is an invalid animation type. Animation can only be set to "slideToTop" or "slideToLeft".`;
+    }
+  }
 
   /**
    * Opens the modal.
