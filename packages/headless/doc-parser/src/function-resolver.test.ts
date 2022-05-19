@@ -40,6 +40,7 @@ describe('#resolveFunction', () => {
         {
           parameterName: 'config',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+          isOptional: true,
         },
       ],
     });

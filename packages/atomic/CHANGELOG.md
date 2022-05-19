@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.60.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.60.0...@coveo/atomic@1.60.1) (2022-05-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.60.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.59.1...@coveo/atomic@1.60.0) (2022-05-18)
+
+
+### Features
+
+* **atomic:** added analytics & highlighting to smart snippet suggestions ([#1990](https://github.com/coveo/ui-kit/issues/1990)) ([7da3924](https://github.com/coveo/ui-kit/commit/7da3924b8effa71dc858f5968f8c161aeda16dd2))
+
+
+
+
+
+## [1.59.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.59.0...@coveo/atomic@1.59.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* **atomic:** clone child nodes for inherited templates in children ([#1995](https://github.com/coveo/ui-kit/issues/1995)) ([25097eb](https://github.com/coveo/ui-kit/commit/25097eb7c0181a7da3bbcc9e53da4d1603012610))
+
+
+
+
+
 # [1.59.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.58.0...@coveo/atomic@1.59.0) (2022-05-17)
 
 

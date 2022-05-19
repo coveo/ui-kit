@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "@coveo/atomic": "^1.44.0",
-    "@stencil/core": "^2.15.0"
+    "@stencil/core": "2.15.0"
   },
   "devDependencies": {
     "rollup-plugin-html": "0.2.1",
-    "cypress": "^9.5.1"
+    "cypress": "9.5.3"
   }
 }

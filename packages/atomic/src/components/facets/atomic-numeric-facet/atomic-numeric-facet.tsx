@@ -283,7 +283,7 @@ export class AtomicNumericFacet
 
   private formatValue(value: number) {
     try {
-      return this.formatter(value, this.bindings.i18n.languages);
+      return this.formatter(value, this.bindings.i18n.languages as string[]);
     } catch (error) {
       this.bindings.engine.logger.error(
         `atomic-numeric-facet facet value "${value}" could not be formatted correctly.`,

@@ -65,7 +65,7 @@ export class AtomicResultNumber {
 
   private formatValue(value: number) {
     try {
-      return this.formatter(value, this.bindings.i18n.languages);
+      return this.formatter(value, this.bindings.i18n.languages as string[]);
     } catch (error) {
       this.error = error as Error;
       return value.toString();
