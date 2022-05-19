@@ -73,6 +73,10 @@
   }
 }
 
+.list-wrapper {
+  word-break: break-word;
+}
+
 .list-wrapper.placeholder {
   atomic-result {
     display: none;
@@ -232,13 +236,13 @@
     &.image-none {
       @mixin atomic-grid-with-cards;
       @media not all and (min-width: 320px) {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
       @media (min-width: 320px) {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       }
       @media (min-width: 768px) {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
       }
     }
   }
