@@ -882,6 +882,33 @@ export namespace Components {
          */
         "mobileBreakpoint": string;
     }
+    interface AtomicSegmentedFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        "injectionDepth": number;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -1421,6 +1448,12 @@ declare global {
         prototype: HTMLAtomicSearchLayoutElement;
         new (): HTMLAtomicSearchLayoutElement;
     };
+    interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetElement: {
+        prototype: HTMLAtomicSegmentedFacetElement;
+        new (): HTMLAtomicSegmentedFacetElement;
+    };
     interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
     }
     var HTMLAtomicSmartSnippetElement: {
@@ -1561,6 +1594,7 @@ declare global {
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
+        "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
@@ -2415,6 +2449,33 @@ declare namespace LocalJSX {
          */
         "mobileBreakpoint"?: string;
     }
+    interface AtomicSegmentedFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        "injectionDepth"?: number;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -2625,6 +2686,7 @@ declare namespace LocalJSX {
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
+        "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
@@ -2710,6 +2772,7 @@ declare module "@stencil/core" {
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
+            "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
