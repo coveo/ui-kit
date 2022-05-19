@@ -15,7 +15,6 @@ const locales: Record<string, () => Promise<unknown>> = {
   ja: () => import('dayjs/locale/ja'),
   ko: () => import('dayjs/locale/ko'),
   nl: () => import('dayjs/locale/nl'),
-  no: () => import('dayjs/locale/no'),
   pl: () => import('dayjs/locale/pl'),
   'pt-br': () => import('dayjs/locale/pt-br'),
   ru: () => import('dayjs/locale/ru'),
