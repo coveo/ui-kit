@@ -24,7 +24,7 @@ describe('quantic-tab-bar', () => {
     }
   }
 
-  describe('when the container has a large width', () => {
+  describe("when the container's width can fit all the tabs", () => {
     it('should display all the tabs without displaying the dropdown list', () => {
       visitPage();
 

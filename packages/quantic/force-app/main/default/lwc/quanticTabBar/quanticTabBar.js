@@ -22,7 +22,7 @@ export default class QuanticTabBar extends LightningElement {
   /** @type {boolean} */
   isComboboxOpen = false;
   /** @type {Array<{value: string, label: string}>} */
-  options = [];
+  tabsInDropdown = [];
   /** @type {number} */
   maxMoreButtonWidth = 0;
   /** @type {boolean} */
@@ -58,7 +58,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   updateComboboxOptions() {
-    this.options = this.overflowingTabs.map((el) => ({
+    this.tabsInDropdown = this.overflowingTabs.map((el) => ({
       // @ts-ignore
       label: el.label,
       // @ts-ignore
@@ -94,6 +94,7 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Updates the visibility of the more button.
+   * We update the More button position relativly to the last displayed tab.
    * @param {boolean} show
    */
   updateMoreButtonVisibility(show) {
@@ -171,6 +172,8 @@ export default class QuanticTabBar extends LightningElement {
 
   /**
    * Returns the overflowing tabs.
+   * We compare the right position of each tab to the right position of the tab container to find the tabs that overflow.
+   * We include in our calculations the minimum width needed to display the elements that should always be displayed, namely the More button and the currently selected tab.
    * @returns {Array<Element>}
    */
   get overflowingTabs() {
@@ -183,13 +186,12 @@ export default class QuanticTabBar extends LightningElement {
       const tabPositionedBeforeSelectedTab =
         selectedTabRelativeRightPosition >
         element.getBoundingClientRect().right;
+      const minimumWidthNeeded = tabPositionedBeforeSelectedTab
+        ? this.moreButtonWidth + this.selectedTabWidth
+        : this.moreButtonWidth;
       const rightPositionLimit = !this.isOverflow
         ? containerRelativeRightPosition
-        : tabPositionedBeforeSelectedTab
-        ? containerRelativeRightPosition -
-          this.moreButtonWidth -
-          this.selectedTabWidth
-        : containerRelativeRightPosition - this.moreButtonWidth;
+        : containerRelativeRightPosition - minimumWidthNeeded;
       return (
         element.getBoundingClientRect().right > rightPositionLimit &&
         // @ts-ignore
