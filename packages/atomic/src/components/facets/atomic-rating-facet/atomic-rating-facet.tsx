@@ -345,6 +345,7 @@ export class AtomicRatingFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfIntervals}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

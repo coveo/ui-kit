@@ -179,6 +179,13 @@ export type {
   SuggestionHighlightingOptions,
   Delimiters,
 } from './search-box/headless-search-box';
+
+export type {
+  InstantResults,
+  InstantResultsState,
+} from './instant-results/instant-results';
+export {buildInstantResults} from './instant-results/instant-results';
+
 export {buildSearchBox} from './search-box/headless-search-box';
 
 export type {
@@ -331,6 +338,8 @@ export {buildSmartSnippet} from './smart-snippet/headless-smart-snippet';
 
 export type {
   SmartSnippetQuestionsList,
+  SmartSnippetQuestionsListOptions,
+  SmartSnippetQuestionsListProps,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';

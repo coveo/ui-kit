@@ -34,8 +34,10 @@ describe('product-recommendations', () => {
     const result = await engine.dispatch(getProductRecommendations());
     let recommendations: ProductRecommendation[] = [];
 
-    if (result.payload && 'recommendations' in result.payload)
+    if (result.payload && 'recommendations' in result.payload) {
       recommendations = result.payload.recommendations;
+    }
+
     expect(recommendations).toHaveLength(1);
 
     if (recommendations.length > 0) {

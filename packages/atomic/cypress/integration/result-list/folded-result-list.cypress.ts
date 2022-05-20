@@ -2,6 +2,7 @@ import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
 import {
   addFoldedResultList,
   buildTemplateWithoutSections,
+  buildTemplateWithSections,
 } from './result-list-actions';
 import {
   buildResultChildren,
@@ -115,7 +116,10 @@ describe('Folded Result List Component', () => {
         .with(setSource)
         .with(
           addFoldedResultList(
-            buildTemplateWithoutSections(buildResultTopChild(resultChildren))
+            buildTemplateWithSections({
+              title: generateComponentHTML(resultLinkComponent),
+              children: buildResultChildren(resultChildren),
+            })
           )
         )
         .init();

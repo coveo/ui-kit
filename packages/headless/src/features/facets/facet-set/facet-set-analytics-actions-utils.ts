@@ -148,9 +148,13 @@ export const buildFacetStateMetadata = (
 };
 
 const getFacetResponse = (state: SectionNeededForFacetMetadata) => {
-  if ('productListing' in state && state.productListing)
+  if ('productListing' in state && state.productListing) {
     return state.productListing.facets.results;
-  if ('search' in state && state.search) return state.search.response.facets;
+  }
+
+  if ('search' in state && state.search) {
+    return state.search.response.facets;
+  }
   return [];
 };
 

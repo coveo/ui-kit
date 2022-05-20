@@ -2,7 +2,11 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
 import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {logOpenSmartSnippetSource} from '../question-answering/question-answering-analytics-actions';
+import {
+  logOpenSmartSnippetSource,
+  logOpenSmartSnippetSuggestionSource,
+} from '../question-answering/question-answering-analytics-actions';
+import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from '../question-answering/question-answering-document-id';
 import {logDocumentOpen} from '../result/result-analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 
@@ -36,6 +40,21 @@ export interface ClickAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+  /**
+   * The event to log when the source of a smart snippet suggestion, or related question, is clicked.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logOpenSmartSnippetSuggestionSource(
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Click;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -52,5 +71,6 @@ export function loadClickAnalyticsActions(
   return {
     logDocumentOpen,
     logOpenSmartSnippetSource,
+    logOpenSmartSnippetSuggestionSource,
   };
 }

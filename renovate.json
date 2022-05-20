@@ -16,5 +16,16 @@
   "commitMessageSuffix": "J:KIT-282",
   "vulnerabilityAlerts": {
     "enabled": false
-  }
+  },
+  "ignoreDeps": [
+    "esbuild",
+    "@monaco-editor/react",
+    "@storybook/addon-a11y",
+    "@storybook/addon-controls",
+    "@storybook/addon-docs",
+    "@storybook/addon-essentials",
+    "@storybook/addon-viewport",
+    "@storybook/api",
+    "@storybook/html"
+  ]
 }

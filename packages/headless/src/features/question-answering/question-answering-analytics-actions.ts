@@ -1,4 +1,5 @@
 import {Result} from '../../api/search/search/result';
+import {validatePayload} from '../../utils/validate-payload';
 import {
   AnalyticsType,
   documentIdentifier,
@@ -6,10 +7,12 @@ import {
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {getResultProperty} from '../result-templates/result-templates-helpers';
 import {
   isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
 import {relatedQuestionSelector} from './question-answering-selectors';
@@ -141,5 +144,41 @@ export const logCollapseSmartSnippetSuggestion = (
         answerSnippet: relatedQuestion.answerSnippet,
         documentId: relatedQuestion.documentId,
       });
+    }
+  )();
+
+export const logOpenSmartSnippetSuggestionSource = (
+  payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      validatePayload(payload, uniqueIdentifierPayloadDefinition());
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+      const source = state.search?.results.find(
+        (result) =>
+          getResultProperty(result, relatedQuestion.documentId.contentIdKey) ===
+          relatedQuestion.documentId.contentIdValue
+      );
+      if (!source) {
+        return;
+      }
+
+      return client.logOpenSmartSnippetSuggestionSource(
+        partialDocumentInformation(source, state),
+        {
+          question: relatedQuestion.question,
+          answerSnippet: relatedQuestion.answerSnippet,
+          documentId: relatedQuestion.documentId,
+        }
+      );
     }
   )();
