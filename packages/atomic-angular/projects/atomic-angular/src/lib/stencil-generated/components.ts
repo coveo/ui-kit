@@ -1267,27 +1267,6 @@ export class AtomicSearchLayout {
 }
 
 
-export declare interface AtomicSegmentedFacet extends Components.AtomicSegmentedFacet {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['field', 'isCollapsed', 'label']
-})
-@Component({
-  selector: 'atomic-segmented-facet',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['field', 'isCollapsed', 'label']
-})
-export class AtomicSegmentedFacet {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
 export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippet {}
 
 @ProxyCmp({
