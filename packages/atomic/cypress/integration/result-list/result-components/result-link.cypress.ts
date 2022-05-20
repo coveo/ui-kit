@@ -86,6 +86,16 @@ describe('Result Link Component', () => {
 
     CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
 
+    describe('when there is no default slot', () => {
+      beforeEach(() => {
+        setupResultLink();
+      });
+
+      it('should render an "atomic-result-text" component containing the title', () => {
+        ResultLinkSelectors.firstInResult().should('have.text', title);
+      });
+    });
+
     describe('when there is a default slot', () => {
       const slottedComponent = document.createElement('div');
       slottedComponent.id = 'myslot';
@@ -101,13 +111,19 @@ describe('Result Link Component', () => {
       });
     });
 
-    describe('when there is no default slot', () => {
+    describe('when there is a default slot (empty string)', () => {
+      const slottedComponent = document.createElement('div');
+      slottedComponent.id = 'myslot';
+      slottedComponent.innerText = 'Slotted element';
+      slottedComponent.slot = '';
       beforeEach(() => {
-        setupResultLink();
+        setupResultLink({slot: slottedComponent});
       });
 
-      it('should render an "atomic-result-text" component containing the title', () => {
-        ResultLinkSelectors.firstInResult().should('have.text', title);
+      it('should render the slot inside of the "a" tag', () => {
+        ResultLinkSelectors.firstInResult()
+          .find('a #myslot')
+          .should('be.visible');
       });
     });
 
