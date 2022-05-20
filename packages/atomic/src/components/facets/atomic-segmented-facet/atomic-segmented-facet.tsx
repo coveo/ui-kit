@@ -61,7 +61,11 @@ export class AtomicSegmentedFacet
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
-
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Minimum: `0`
+   */
   @Prop() public injectionDepth = 1000;
   /**
    * The number of values to request for this facet.
@@ -138,6 +142,6 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
-    return <FacetContainer>{this.renderValues()}</FacetContainer>;
+    return this.renderValues();
   }
 }
