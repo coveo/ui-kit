@@ -895,6 +895,9 @@ export namespace Components {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
         "injectionDepth": number;
         /**
           * The non-localized label for the facet.
@@ -2462,6 +2465,9 @@ declare namespace LocalJSX {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
         "injectionDepth"?: number;
         /**
           * The non-localized label for the facet.
