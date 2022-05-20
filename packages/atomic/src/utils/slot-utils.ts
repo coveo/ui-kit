@@ -1,7 +1,9 @@
 export function getNamedSlotFromHost(host: HTMLElement, slotName: string) {
   const children = Array.from(host.children);
   const targetSlot = children.filter(
-    (child) => child.getAttribute('slot') === slotName
+    (child) =>
+      child.getAttribute('slot') === slotName ||
+      child.getAttribute('slot') !== ''
   );
 
   if (!targetSlot.length) {
@@ -17,7 +19,9 @@ export function getNamedSlotFromHost(host: HTMLElement, slotName: string) {
 
 export function getDefaultSlotFromHost(host: HTMLElement) {
   const children = Array.from(host.children);
-  const defaultSlot = children.filter((child) => !child.hasAttribute('slot'));
+  const defaultSlot = children.filter(
+    (child) => !child.hasAttribute('slot') || child.getAttribute('slot') === ''
+  );
 
   if (!defaultSlot.length) {
     return;
