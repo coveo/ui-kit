@@ -18,6 +18,7 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {registerFacetToStore} from '../../../utils/store';
+import {FacetContainer} from '../facet-container/facet-container';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
@@ -60,11 +61,7 @@ export class AtomicSegmentedFacet
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
-  /**
-   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
-   * Note: A high injectionDepth may negatively impact the facet request performance.
-   * Minimum: `0`
-   */
+
   @Prop() public injectionDepth = 1000;
   /**
    * The number of values to request for this facet.
@@ -141,6 +138,6 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
-    return this.renderValues();
+    return <FacetContainer>{this.renderValues()}</FacetContainer>;
   }
 }
