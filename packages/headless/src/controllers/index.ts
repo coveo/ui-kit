@@ -346,6 +346,7 @@ export type {
 export {buildSmartSnippetQuestionsList} from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
 
 export type {
+  RecentQueriesListInitialState,
   RecentQueriesList,
   RecentQueriesState,
   RecentQueriesListProps,
@@ -354,6 +355,7 @@ export type {
 export {buildRecentQueriesList} from './recent-queries-list/headless-recent-queries-list';
 
 export type {
+  RecentResultsListInitialState,
   RecentResultsList,
   RecentResultsState,
   RecentResultsListProps,
