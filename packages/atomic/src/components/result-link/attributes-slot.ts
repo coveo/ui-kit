@@ -1,7 +1,7 @@
-import {getSlotFromHost} from '../../utils/slot-utils';
+import {getNamedSlotFromHost} from '../../utils/slot-utils';
 
 export function getAttributesFromLinkSlot(host: HTMLElement, slotName: string) {
-  const attributesSlot = getSlotFromHost(host, slotName);
+  const attributesSlot = getNamedSlotFromHost(host, slotName);
   if (!attributesSlot) {
     return;
   }

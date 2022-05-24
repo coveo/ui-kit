@@ -28,7 +28,9 @@ export function assertAnswerBottomMargin(
 }
 
 export function assertlogOpenSmartSnippetSuggestionsSource(log: boolean) {
-  it.skip(`${should(log)} log a openSmartSnippetSource click event`, () => {
+  it(`${should(
+    log
+  )} log a openSmartSnippetSuggestionSource click event`, () => {
     if (log) {
       cy.expectClickEvent('openSmartSnippetSuggestionSource');
     } else {

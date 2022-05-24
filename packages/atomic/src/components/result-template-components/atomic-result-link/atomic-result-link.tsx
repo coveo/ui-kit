@@ -14,7 +14,7 @@ import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
 import {isUndefined} from '@coveo/bueno';
 import {buildStringTemplateFromResult} from '../../../utils/result-utils';
-import {getSlotFromHost} from '../../../utils/slot-utils';
+import {getDefaultSlotFromHost} from '../../../utils/slot-utils';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -72,7 +72,7 @@ export class AtomicResultLink implements InitializableComponent {
 
   public connectedCallback() {
     const slotName = 'attributes';
-    this.hasDefaultSlot = !!getSlotFromHost(this.host, slotName);
+    this.hasDefaultSlot = !!getDefaultSlotFromHost(this.host);
     this.linkAttributes = getAttributesFromLinkSlot(this.host, slotName);
   }
 
@@ -97,7 +97,7 @@ export class AtomicResultLink implements InitializableComponent {
         attributes={this.linkAttributes}
       >
         {this.hasDefaultSlot ? (
-          <slot></slot>
+          <slot />
         ) : (
           <atomic-result-text
             field="title"

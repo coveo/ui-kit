@@ -202,6 +202,7 @@ export class AtomicBreadbox implements InitializableComponent {
             part="breadcrumb-clear"
             class="w-2.5 h-2.5 ml-2 mt-px"
             icon={CloseIcon}
+            aria-hidden="true"
           ></atomic-icon>
         </Button>
       </li>

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.2...@coveo/quantic@1.16.3) (2022-05-19)
+
+
+### Bug Fixes
+
+* **atomic:** fix regression on deprecated image prop for result list ([#2001](https://github.com/coveo/ui-kit/issues/2001)) ([c632c69](https://github.com/coveo/ui-kit/commit/c632c69480468b3cef144cd099a95819f69e0336))
+
+
+
+
+
+## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.1...@coveo/quantic@1.16.2) (2022-05-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.0...@coveo/quantic@1.16.1) (2022-05-17)
 
 **Note:** Version bump only for package @coveo/quantic

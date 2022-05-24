@@ -4,6 +4,7 @@ import {
   resultChildrenTemplateComponent,
 } from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
+import {resultSectionTags} from './result-list-selectors';
 
 export function buildResultTopChild(children?: HTMLElement): HTMLElement[] {
   return [
@@ -17,12 +18,17 @@ export function buildResultChildren(grandChildren?: HTMLElement): HTMLElement {
   const childrenTemplate = generateComponentHTML(
     resultChildrenTemplateComponent
   );
+  const sectionEl = generateComponentHTML(resultSectionTags.title);
   const link = generateComponentHTML(resultLinkComponent);
   const template = generateComponentHTML('template') as HTMLTemplateElement;
-  template.content.appendChild(link);
+  sectionEl.appendChild(link);
+  template.content.appendChild(sectionEl);
 
   if (grandChildren) {
-    template.content.appendChild(grandChildren);
+    const childrenSectionEL = generateComponentHTML(resultSectionTags.children);
+    childrenSectionEL.appendChild(grandChildren);
+
+    template.content.appendChild(childrenSectionEL);
   }
 
   childrenTemplate.appendChild(template);

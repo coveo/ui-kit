@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.61.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.60.1...@coveo/atomic@1.61.0) (2022-05-19)
+
+
+### Bug Fixes
+
+* **atomic:** fix grid columns when image is not large ([#2000](https://github.com/coveo/ui-kit/issues/2000)) ([a73fa8a](https://github.com/coveo/ui-kit/commit/a73fa8a0276a82223792d5a4c13485adfaecff32))
+* **atomic:** fix regression on deprecated image prop for result list ([#2001](https://github.com/coveo/ui-kit/issues/2001)) ([c632c69](https://github.com/coveo/ui-kit/commit/c632c69480468b3cef144cd099a95819f69e0336))
+
+
+### Features
+
+* **atomic:** made result list outline and divider easily customizable ([#1998](https://github.com/coveo/ui-kit/issues/1998)) ([f2c1d1f](https://github.com/coveo/ui-kit/commit/f2c1d1fbfe0ad83b324fbe5567909b419df84ab8))
+
+
+
+
+
+## [1.60.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.60.0...@coveo/atomic@1.60.1) (2022-05-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.60.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.59.1...@coveo/atomic@1.60.0) (2022-05-18)
+
+
+### Features
+
+* **atomic:** added analytics & highlighting to smart snippet suggestions ([#1990](https://github.com/coveo/ui-kit/issues/1990)) ([7da3924](https://github.com/coveo/ui-kit/commit/7da3924b8effa71dc858f5968f8c161aeda16dd2))
+
+
+
+
+
+## [1.59.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.59.0...@coveo/atomic@1.59.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* **atomic:** clone child nodes for inherited templates in children ([#1995](https://github.com/coveo/ui-kit/issues/1995)) ([25097eb](https://github.com/coveo/ui-kit/commit/25097eb7c0181a7da3bbcc9e53da4d1603012610))
+
+
+
+
+
 # [1.59.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.58.0...@coveo/atomic@1.59.0) (2022-05-17)
 
 

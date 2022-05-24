@@ -38,7 +38,9 @@ import {promiseTimeout} from '../../utils/promise-utils';
  * @part input - The search box input.
  * @part loading - The search box loading animation.
  * @part clear-button - The button to clear the search box of input.
+ * @part clear-icon - The clear button's icon.
  * @part submit-button - The search box submit button.
+ * @part submit-icon - The search box submit button's icon.
  * @part suggestions - A list of suggested query corrections.
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
@@ -394,7 +396,11 @@ export class AtomicSearchBox {
         }}
         ariaLabel={this.bindings.i18n.t('clear')}
       >
-        <atomic-icon icon={ClearIcon} class="w-3 h-3"></atomic-icon>
+        <atomic-icon
+          part="clear-icon"
+          icon={ClearIcon}
+          class="w-3 h-3"
+        ></atomic-icon>
       </Button>
     );
   }
@@ -507,7 +513,11 @@ export class AtomicSearchBox {
           this.clearSuggestionElements();
         }}
       >
-        <atomic-icon icon={SearchIcon} class="w-4 h-4"></atomic-icon>
+        <atomic-icon
+          part="submit-icon"
+          icon={SearchIcon}
+          class="w-4 h-4"
+        ></atomic-icon>
       </Button>
     );
   }
