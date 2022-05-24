@@ -85,6 +85,15 @@ function resolveRootFromFields(
   });
 }
 
+function resolveRootFromParentResult(
+  result: ResultWithFolding
+): ResultWithFolding {
+  if (result.parentResult) {
+    return resolveRootFromParentResult(result.parentResult);
+  }
+  return result;
+}
+
 function createCollectionFromResult(
   relevantResult: ResultWithFolding,
   fields: FoldingFields,
@@ -95,8 +104,7 @@ function createCollectionFromResult(
   const resultToUseAsRoot =
     rootResult ??
     resolveRootFromFields(resultsInCollection, fields) ??
-    relevantResult.parentResult ??
-    relevantResult;
+    resolveRootFromParentResult(relevantResult);
 
   return {
     result: resultToUseAsRoot,
