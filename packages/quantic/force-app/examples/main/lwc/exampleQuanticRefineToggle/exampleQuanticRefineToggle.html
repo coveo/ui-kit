@@ -71,26 +71,27 @@
         </c-quantic-timeframe-facet>
       </c-quantic-facet-manager>
       <div class="container slds-is-relative">
-        <c-quantic-refine-toggle
-          engine-id={engineId}
-          full-screen={config.fullScreen}
-          hide-sort={config.hideSort}
-        >
-          <div slot="refine-title" class="refine-modal__title">
-            Custom Title
-          </div>
-          <div slot="button-content">
-            Custom Label
-            <lightning-icon
-
-              size="x-small"
-              icon-name="utility:filterList"
-              alternative-text={buttonLabel}
-              class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right"
-            >
-            </lightning-icon>
-          </div>
-        </c-quantic-refine-toggle>
+        <div>
+          <c-quantic-refine-toggle
+            engine-id={engineId}
+            full-screen={config.fullScreen}
+            hide-sort={config.hideSort}
+          >
+            <div slot="refine-title" class="refine-modal__title">
+              Custom Title
+            </div>
+            <div slot="button-content">
+              Custom Label
+              <lightning-icon
+                size="x-small"
+                icon-name="utility:filterList"
+                alternative-text={buttonLabel}
+                class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right"
+              >
+              </lightning-icon>
+            </div>
+          </c-quantic-refine-toggle>
+        </div>
       </div>
     </c-quantic-search-interface>
   </c-example-layout>
