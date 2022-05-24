@@ -904,7 +904,8 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+          * The number of values to request for this facet.
+          * Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
         /**
