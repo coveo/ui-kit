@@ -1,23 +1,35 @@
-export function getSlotFromHost(host: HTMLElement, slotName: string) {
+export function getNamedSlotFromHost(host: HTMLElement, slotName: string) {
   const children = Array.from(host.children);
-  const slots = children.filter((child) => {
-    if (slotName) {
-      return child.getAttribute('slot') === slotName;
-    }
+  const targetSlot = children.filter(
+    (child) =>
+      child.getAttribute('slot') === slotName ||
+      child.getAttribute('slot') !== ''
+  );
 
-    return child.getAttribute('slot') === '';
-  });
-
-  if (!slots.length) {
+  if (!targetSlot.length) {
     return;
   }
 
-  if (slots.length > 1) {
-    const msg = slotName
-      ? `Element should only have 1 slot named "${slotName}".`
-      : 'Element should only have 1 default slot.';
-    console.warn(msg, host);
+  if (targetSlot.length > 1) {
+    console.warn(`Element should only have 1 slot named "${slotName}".`, host);
   }
 
-  return slots[0];
+  return targetSlot[0];
+}
+
+export function getDefaultSlotFromHost(host: HTMLElement) {
+  const children = Array.from(host.children);
+  const defaultSlot = children.filter(
+    (child) => !child.hasAttribute('slot') || child.getAttribute('slot') === ''
+  );
+
+  if (!defaultSlot.length) {
+    return;
+  }
+
+  if (defaultSlot.length > 1) {
+    console.warn('Element should only have 1 default slot.', host);
+  }
+
+  return defaultSlot[0];
 }
