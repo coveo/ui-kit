@@ -30,6 +30,7 @@ export type BaseFacet<FacetType extends AnyFacetType> = {
   StateProp<FacetType> &
   SearchProp<FacetType> &
   NumberOfValuesProp<FacetType> &
+  NumberOfIntervalsProp<FacetType> &
   SortCriterionProp<FacetType> &
   DisplayValuesAsProp;
 
@@ -51,7 +52,7 @@ type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
   ? {facetState: CategoryFacetState}
   : FacetType extends DateFacet
   ? {facetState: DateFacetState}
-  : {};
+  : {facetState: never};
 
 type SearchProp<FacetType extends AnyFacetType> = FacetType extends
   | Facet
@@ -64,6 +65,9 @@ type NumberOfValuesProp<FacetType extends AnyFacetType> = FacetType extends
   | CategoryFacet
   ? {numberOfValues: number}
   : {};
+
+type NumberOfIntervalsProp<FacetType extends AnyFacetType> =
+  FacetType extends NumericFacet ? {numberOfIntervals?: number} : {};
 
 type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
   | Facet
