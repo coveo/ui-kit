@@ -1,0 +1,98 @@
+<template>
+  <template if:false={hideSort}>
+    <div class="slds-var-m-bottom_small slds-clearfix">
+      <c-quantic-sort
+        class="slds-float_left"
+        engine-id={engineId}
+      ></c-quantic-sort>
+    </div>
+  </template>
+  <template if:true={hasFacets}>
+    <div class="slds-align_absolute-center filters-header slds-var-m-bottom_small">
+      <div class="slds-text-heading_small">{labels.filters}</div>
+      <lightning-button
+        variant="base"
+        label={labels.clearAllFilters}
+        title={labels.clearAllFilters}
+        onclick={clearAllFilters}
+      ></lightning-button>
+    </div>
+    <c-quantic-facet-manager engine-id={engineId}>
+      <template for:each={facets} for:item="facet">
+        <template if:true={facet.isNumeric}>
+          <c-quantic-numeric-facet
+            engine-id={engineId}
+            facet-id={facet.facetId}
+            field={facet.field}
+            label={facet.label}
+            number-of-values={facet.numberOfValues}
+            sort-criteria={facet.sortCriteria}
+            range-algorithm={facet.rangeAlgorithm}
+            with-input={facet.withInput}
+            formatting-function={facet.formattingFunction}
+            key={facet.field}
+            is-collapsed
+          ></c-quantic-numeric-facet>
+        </template>
+        <template if:true={facet.isCategory}>
+          <c-quantic-category-facet
+            engine-id={engineId}
+            facet-id={facet.facetId}
+            field={facet.field}
+            label={facet.label}
+            base-path={facet.basePath}
+            no-filter-by-base-path={facet.noFilterByBasePath}
+            no-filter-facet-count={facet.noFilterFacetCount}
+            delimiting-character={facet.delimitingCharacter}
+            number-of-values={facet.numberOfValues}
+            sort-criteria={facet.sortCriteria}
+            with-search={facet.withSearch}
+            key={facet.field}
+            is-collapsed
+          ></c-quantic-category-facet>
+        </template>
+        <template if:true={facet.isTimeframe}>
+          <c-quantic-timeframe-facet
+            engine-id={engineId}
+            facet-id={facet.facetId}
+            field={facet.field}
+            label={facet.label}
+            with-date-picker={facet.withDatePicker}
+            no-filter-facet-count={facet.noFilterFacetCount}
+            injection-depth={facet.injectionDepth}
+            key={facet.field}
+            is-collapsed
+          ></c-quantic-timeframe-facet>
+        </template>
+        <template if:true={facet.isDate}>
+          <c-quantic-date-facet
+            engine-id={engineId}
+            facet-id={facet.facetId}
+            field={facet.field}
+            label={facet.label}
+            number-of-values={facet.numberOfValues}
+            formatting-function={facet.formattingFunction}
+            key={facet.field}
+            is-collapsed
+          ></c-quantic-date-facet>
+        </template>
+        <template if:true={facet.isDefault}>
+          <c-quantic-facet
+            engine-id={engineId}
+            facet-id={facet.facetId}
+            field={facet.field}
+            label={facet.label}
+            number-of-values={facet.numberOfValues}
+            sort-criteria={facet.sortCriteria}
+            no-search={facet.noSearch}
+            display-values-as={facet.displayValuesAs}
+            no-filter-facet-count={facet.noFilterFacetCount}
+            injection-depth={facet.injectionDepth}
+            key={facet.field}
+            is-collapsed
+          ></c-quantic-facet>
+        </template>
+      </template>
+    </c-quantic-facet-manager>
+  </template>
+</template>

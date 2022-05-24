@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.66.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.66.1...@coveo/headless@1.66.2) (2022-05-19)
+
+
+### Bug Fixes
+
+* **headless:** add dedicated context controller for recommendation & product-recommendations engines ([#1997](https://github.com/coveo/ui-kit/issues/1997)) ([ca90e63](https://github.com/coveo/ui-kit/commit/ca90e6311205ab330b88e48a9d6883c206440c5e))
+
+
+
+
+
+## [1.66.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.66.0...@coveo/headless@1.66.1) (2022-05-18)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.66.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.65.0...@coveo/headless@1.66.0) (2022-05-17)
+
+
+### Features
+
+* **headless:** add instant results to controller ([#1985](https://github.com/coveo/ui-kit/issues/1985)) ([593b56f](https://github.com/coveo/ui-kit/commit/593b56f89175ca84c1122209fe3d148c61228213))
+
+
+
+
+
+# [1.65.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.64.0...@coveo/headless@1.65.0) (2022-05-13)
+
+
+### Features
+
+* **headless:** added smart snippet suggestions source click analytics ([#1983](https://github.com/coveo/ui-kit/issues/1983)) ([6240b06](https://github.com/coveo/ui-kit/commit/6240b067a12e9434d8b12a8358159157d28ce0fd))
+
+
+
+
+
 # [1.64.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.63.1...@coveo/headless@1.64.0) (2022-05-11)
 
 

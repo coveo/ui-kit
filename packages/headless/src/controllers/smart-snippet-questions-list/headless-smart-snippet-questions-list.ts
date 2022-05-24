@@ -14,8 +14,25 @@ import {
 } from '../../features/question-answering/question-answering-actions';
 import {Result} from '../../api/search/search/result';
 import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
+import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+
+export interface SmartSnippetQuestionsListOptions {
+  /**
+   * The amount of time in milliseconds to wait before selecting the source after calling `beginDelayedSelect`.
+   *
+   * @defaultValue `1000`
+   */
+  selectionDelay?: number;
+}
+
+export interface SmartSnippetQuestionsListProps {
+  /**
+   * The options for the `SmartSnippetQuestionsList` controller.
+   */
+  options?: SmartSnippetQuestionsListOptions;
+}
 
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
@@ -53,6 +70,34 @@ export interface SmartSnippetQuestionsList extends Controller {
    * @param identifier - The identifier of a document used to create the smart snippet.
    */
   collapse(identifier: QuestionAnswerDocumentIdentifier): void;
+  /**
+   * Selects the source, logging a UA event to the Coveo Platform if the source hadn't been selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  selectSource(identifier: string): void;
+  /**
+   * Prepares to select the source after a certain delay, sending analytics if it hadn't been selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  beginDelayedSelectSource(identifier: string): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelect`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
+   */
+  cancelPendingSelectSource(identifier: string): void;
 }
 
 /**
@@ -101,10 +146,12 @@ export interface SmartSnippetRelatedQuestion {
  * Creates a `SmartSnippetQuestionsList` controller instance.
  *
  * @param engine - The headless engine.
+ * @param props - The configurable `SmartSnippetQuestionsList` properties.
  * @returns A `SmartSnippetQuestionsList` controller instance.
  * */
 export function buildSmartSnippetQuestionsList(
-  engine: SearchEngine
+  engine: SearchEngine,
+  props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
   if (!loadSmartSnippetQuestionsListReducer(engine)) {
     throw loadReducerError;
@@ -119,6 +166,10 @@ export function buildSmartSnippetQuestionsList(
       (result) => getResultProperty(result, contentIdKey) === contentIdValue
     );
   };
+
+  const interactiveQuestions = buildSmartSnippetInteractiveQuestions(engine, {
+    options: {selectionDelay: props?.options?.selectionDelay},
+  });
 
   const getPayloadFromIdentifier = (
     identifier: string | QuestionAnswerDocumentIdentifier
@@ -157,6 +208,15 @@ export function buildSmartSnippetQuestionsList(
       const payload = getPayloadFromIdentifier(identifier);
       engine.dispatch(logCollapseSmartSnippetSuggestion(payload));
       engine.dispatch(collapseSmartSnippetRelatedQuestion(payload));
+    },
+    selectSource(identifier) {
+      interactiveQuestions.selectSource(identifier);
+    },
+    beginDelayedSelectSource(identifier) {
+      interactiveQuestions.beginDelayedSelectSource(identifier);
+    },
+    cancelPendingSelectSource(identifier) {
+      interactiveQuestions.cancelPendingSelectSource(identifier);
     },
   };
 }

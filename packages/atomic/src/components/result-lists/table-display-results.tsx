@@ -56,11 +56,13 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
                 >
                   <atomic-result
                     engine={props.bindings.engine}
+                    store={props.bindings.store}
                     result={result}
                     display={props.display}
                     density={props.density}
                     image-size={props.imageSize}
                     content={column}
+                    loadingFlag={props.resultListCommon.loadingFlag}
                   ></atomic-result>
                 </td>
               );

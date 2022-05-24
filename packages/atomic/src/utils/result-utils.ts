@@ -67,6 +67,7 @@ export function buildStringTemplateFromResult(
   });
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function readFromObject(object: any, key: string): string {
   const firstPeriodIndex = key.indexOf('.');
   if (object && firstPeriodIndex !== -1) {

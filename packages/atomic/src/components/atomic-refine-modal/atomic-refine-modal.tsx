@@ -83,6 +83,7 @@ export class AtomicRefineModal implements InitializableComponent {
     this.querySummary = buildQuerySummary(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
+    this.watchEnabled(this.isOpen);
   }
 
   private onAnimationEnded() {
@@ -255,5 +256,9 @@ export class AtomicRefineModal implements InitializableComponent {
         {this.renderFooter()}
       </atomic-modal>
     );
+  }
+
+  public componentDidLoad() {
+    this.host.style.display = '';
   }
 }

@@ -125,7 +125,9 @@ export class AtomicResultChildren {
 
   private selectInheritedTemplate(result: Result) {
     const content = this.templatesManager?.selectTemplate(result);
-    if (!content) return;
+    if (!content) {
+      return;
+    }
 
     const fragment = document.createDocumentFragment();
     const children = Array.from(content.children).filter(
@@ -133,7 +135,7 @@ export class AtomicResultChildren {
         el.tagName.toLowerCase() !== componentTag &&
         !el.querySelector(componentTag)
     );
-    fragment.append(...children.map((c) => c.cloneNode()));
+    fragment.append(...children.map((c) => c.cloneNode(true)));
     return fragment;
   }
 
@@ -144,18 +146,21 @@ export class AtomicResultChildren {
     );
   }
 
-  private renderChild(child: FoldedResult) {
+  private renderChild(child: FoldedResult, isLast: boolean) {
     const content = this.getContent(child.result);
-    if (!content) return null;
+    if (!content) {
+      return null;
+    }
     return (
       <atomic-result
         key={child.result.uniqueId}
         content={content}
         result={child}
         engine={this.bindings.engine}
+        store={this.bindings.store}
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}
-        classes="child-result"
+        classes={`child-result ${isLast ? 'last-child' : ''}`.trim()}
       ></atomic-result>
     );
   }
@@ -211,7 +216,9 @@ export class AtomicResultChildren {
       const children = this.hideResults
         ? this.initialChildren
         : result.children;
-      return children.map((child) => this.renderChild(child));
+      return children.map((child, i) =>
+        this.renderChild(child, i === children.length - 1)
+      );
     }
     if (this.showAllResults) {
       return (
@@ -248,7 +255,7 @@ export class AtomicResultChildren {
           }}
         >
           {this.bindings.i18n.t(
-            this.hideResults ? 'expand-results' : 'collapse-results'
+            this.hideResults ? 'load-all-results' : 'collapse-results'
           )}
         </Button>
       );
@@ -257,8 +264,12 @@ export class AtomicResultChildren {
   }
 
   public render() {
-    if (!this.ready) return null;
-    if (this.templateHasError) return <slot></slot>;
+    if (!this.ready) {
+      return null;
+    }
+    if (this.templateHasError) {
+      return <slot></slot>;
+    }
     return (
       <Host>
         {this.renderCollapseButton()}
