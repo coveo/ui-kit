@@ -15,7 +15,7 @@ interface TicketCreationDateParam {
   /**
    * The ticket creation date in the [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) format.
    */
-  ticketCreationDate?: string;
+  ticketCreationDate: string;
 }
 
 interface NumberSessionsBeforeParam {
@@ -42,7 +42,7 @@ export const buildInsightUserActionsRequest = (
   ) as Partial<InsightUserActionsRequest>;
 
   return {
-    ...baseInsightRequest(req, 'POST', 'application/json', '/user-actions'),
+    ...baseInsightRequest(req, 'POST', 'application/json', '/useractions'),
     requestParams: {
       ticketCreationDate: params.ticketCreationDate,
       numberSessionsBefore: params.numberSessionsBefore ?? 50,

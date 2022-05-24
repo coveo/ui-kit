@@ -1,5 +1,3 @@
-// TODO: Write the JSDoc for everything
-
 export interface GetInsightInterfaceResponse {
   contextFields: Record<string, string>;
   searchHub: string;
@@ -23,33 +21,14 @@ interface InsightResultTemplate {
   tags: Tags;
 }
 
-type Condition =
-  | FieldIsDefined
-  | FieldIsNotDefined
-  | FieldMustMatch
-  | FieldMustNotMatch;
-
-interface FieldIsDefined {
-  conditionType: 'isDefined';
+type Condition<
+  ConditionType = 'isDefined' | 'isNotDefined' | 'mustMatch' | 'mustNotMatch'
+> = {
   field: string;
-}
-
-interface FieldIsNotDefined {
-  conditionType: 'isNotDefined';
-  field: string;
-}
-
-interface FieldMustMatch {
-  conditionType: 'mustMatch';
-  field: string;
-  values: string[];
-}
-
-interface FieldMustNotMatch {
-  conditionType: 'mustNotMatch';
-  field: string;
-  values: string[];
-}
+  conditionType: ConditionType;
+} & (ConditionType extends 'mustMatch' | 'mustNotMatch'
+  ? {values: string[]}
+  : {});
 
 interface Badge {
   field: string;
