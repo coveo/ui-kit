@@ -348,12 +348,16 @@ export {buildSmartSnippetQuestionsList} from './smart-snippet-questions-list/hea
 export type {
   RecentQueriesList,
   RecentQueriesState,
+  RecentQueriesListProps,
+  RecentQueriesListOptions,
 } from './recent-queries-list/headless-recent-queries-list';
 export {buildRecentQueriesList} from './recent-queries-list/headless-recent-queries-list';
 
 export type {
   RecentResultsList,
   RecentResultsState,
+  RecentResultsListProps,
+  RecentResultsListOptions,
 } from './recent-results-list/headless-recent-results-list';
 export {buildRecentResultsList} from './recent-results-list/headless-recent-results-list';
 
