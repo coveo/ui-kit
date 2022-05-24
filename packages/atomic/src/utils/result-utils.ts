@@ -1,4 +1,9 @@
-import {buildInteractiveResult, SearchEngine, Result} from '@coveo/headless';
+import {
+  buildInteractiveResult,
+  SearchEngine,
+  Result,
+  ResultTemplatesHelpers,
+} from '@coveo/headless';
 import {Bindings} from './initialization-utils';
 
 /**
@@ -65,6 +70,16 @@ export function buildStringTemplateFromResult(
 
     return newValue;
   });
+}
+
+export function getStringValueFromResultORNull(result: Result, field: string) {
+  const value = ResultTemplatesHelpers.getResultProperty(result, field);
+
+  if (typeof value !== 'string' || value.trim() === '') {
+    return null;
+  }
+
+  return value;
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any

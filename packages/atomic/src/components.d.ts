@@ -289,6 +289,16 @@ export namespace Components {
     }
     interface AtomicFrequentlyBoughtTogether {
     }
+    interface AtomicHtml {
+        /**
+          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize": boolean;
+        /**
+          * The string value containg HTML to display;
+         */
+        "value": string;
+    }
     interface AtomicIcon {
         /**
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
@@ -610,6 +620,16 @@ export namespace Components {
         "format": string;
     }
     interface AtomicResultFieldsList {
+    }
+    interface AtomicResultHtml {
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize": boolean;
     }
     interface AtomicResultIcon {
     }
@@ -1127,6 +1147,12 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    interface HTMLAtomicHtmlElement extends Components.AtomicHtml, HTMLStencilElement {
+    }
+    var HTMLAtomicHtmlElement: {
+        prototype: HTMLAtomicHtmlElement;
+        new (): HTMLAtomicHtmlElement;
+    };
     interface HTMLAtomicIconElement extends Components.AtomicIcon, HTMLStencilElement {
     }
     var HTMLAtomicIconElement: {
@@ -1258,6 +1284,12 @@ declare global {
     var HTMLAtomicResultFieldsListElement: {
         prototype: HTMLAtomicResultFieldsListElement;
         new (): HTMLAtomicResultFieldsListElement;
+    };
+    interface HTMLAtomicResultHtmlElement extends Components.AtomicResultHtml, HTMLStencilElement {
+    }
+    var HTMLAtomicResultHtmlElement: {
+        prototype: HTMLAtomicResultHtmlElement;
+        new (): HTMLAtomicResultHtmlElement;
     };
     interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
     }
@@ -1512,6 +1544,7 @@ declare global {
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
+        "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
@@ -1534,6 +1567,7 @@ declare global {
         "atomic-result-children-template": HTMLAtomicResultChildrenTemplateElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
+        "atomic-result-html": HTMLAtomicResultHtmlElement;
         "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
@@ -1844,6 +1878,16 @@ declare namespace LocalJSX {
         "unitDisplay"?: 'long' | 'short' | 'narrow';
     }
     interface AtomicFrequentlyBoughtTogether {
+    }
+    interface AtomicHtml {
+        /**
+          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize"?: boolean;
+        /**
+          * The string value containg HTML to display;
+         */
+        "value": string;
     }
     interface AtomicIcon {
         /**
@@ -2164,6 +2208,16 @@ declare namespace LocalJSX {
         "format"?: string;
     }
     interface AtomicResultFieldsList {
+    }
+    interface AtomicResultHtml {
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize"?: boolean;
     }
     interface AtomicResultIcon {
     }
@@ -2576,6 +2630,7 @@ declare namespace LocalJSX {
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
+        "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
@@ -2598,6 +2653,7 @@ declare namespace LocalJSX {
         "atomic-result-children-template": AtomicResultChildrenTemplate;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-fields-list": AtomicResultFieldsList;
+        "atomic-result-html": AtomicResultHtml;
         "atomic-result-icon": AtomicResultIcon;
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
@@ -2661,6 +2717,7 @@ declare module "@stencil/core" {
             "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
             "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
@@ -2683,6 +2740,7 @@ declare module "@stencil/core" {
             "atomic-result-children-template": LocalJSX.AtomicResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenTemplateElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
+            "atomic-result-html": LocalJSX.AtomicResultHtml & JSXBase.HTMLAttributes<HTMLAtomicResultHtmlElement>;
             "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
