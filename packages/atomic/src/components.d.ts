@@ -51,7 +51,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -59,7 +59,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -97,7 +97,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -105,7 +105,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -155,7 +155,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -163,7 +163,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -352,7 +352,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -360,7 +360,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -390,7 +390,7 @@ export namespace Components {
          */
         "endInclusive": boolean;
         /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -447,7 +447,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -485,7 +485,7 @@ export namespace Components {
          */
         "icon": string;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -493,7 +493,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -896,22 +896,19 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
-          * The non-localized label for the facet.
-          * Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
-          * The number of values to request for this facet.
-          * Also determines the number of additional values to request each time more values are shown.
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values.
-          * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
     }
@@ -1004,7 +1001,7 @@ export namespace Components {
          */
         "amount": number;
         /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1034,7 +1031,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -1650,7 +1647,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1658,7 +1655,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1696,7 +1693,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1704,7 +1701,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1754,7 +1751,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1762,7 +1759,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1949,7 +1946,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1957,7 +1954,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1987,7 +1984,7 @@ declare namespace LocalJSX {
          */
         "endInclusive"?: boolean;
         /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2045,7 +2042,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2083,7 +2080,7 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -2091,7 +2088,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2469,11 +2466,11 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
-          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2581,7 +2578,7 @@ declare namespace LocalJSX {
          */
         "amount"?: number;
         /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2611,7 +2608,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
