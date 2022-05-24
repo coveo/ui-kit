@@ -59,7 +59,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -105,7 +105,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -163,7 +163,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -360,7 +360,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -447,7 +447,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -493,7 +493,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -900,7 +900,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -1039,7 +1039,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -1655,7 +1655,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1701,7 +1701,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1759,7 +1759,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1954,7 +1954,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2042,7 +2042,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2088,7 +2088,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2470,7 +2470,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2616,7 +2616,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**

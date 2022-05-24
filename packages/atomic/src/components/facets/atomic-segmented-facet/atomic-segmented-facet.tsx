@@ -54,6 +54,7 @@ export class AtomicSegmentedFacet
   @Prop({reflect: true}) public field!: string;
   /**
    * The non-localized label for the facet.
+   * Used in the atomic-breadbox component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -98,7 +99,7 @@ export class AtomicSegmentedFacet
   }
 
   private renderValuesContainer(children: VNode[]) {
-    const classes = 'mt-3 box-container';
+    const classes = 'box-container';
     return (
       <ul part="values" class={classes}>
         {children}
