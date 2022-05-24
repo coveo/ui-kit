@@ -18,7 +18,7 @@ describe('screenshots for result lists display mode', () => {
   const layouts = ['table', 'list', 'grid'];
   const densities = ['normal'];
   const imageSizes = ['none', 'icon', 'small', 'large'];
-  const viewports = ['iphone-8', 'macbook-16'];
+  const viewports = ['iphone-8', 'ipad-2', 'macbook-16'];
   const combinations: string[][] = cartesianProduct(
     layouts,
     densities,
@@ -35,6 +35,7 @@ describe('screenshots for result lists display mode', () => {
         .invoke('attr', 'display', layout)
         .invoke('attr', 'density', density)
         .invoke('attr', 'image-size', imageSize);
+      cy.wait(100);
       cy.screenshot(
         `${viewport}-imageSize(${imageSize})-density(${density})-layout(${layout})`
       );
