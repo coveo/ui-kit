@@ -71,7 +71,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicTimeframeFacet
-  implements InitializableComponent, BaseFacet<DateFacet, DateFacetState>
+  implements InitializableComponent, BaseFacet<DateFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: DateFacet;
@@ -83,7 +83,7 @@ export class AtomicTimeframeFacet
 
   @BindStateToController('facet')
   @State()
-  public facetState?: DateFacetState;
+  public facetState!: DateFacetState;
   @BindStateToController('filter')
   @State()
   public filterState?: DateFilterState;

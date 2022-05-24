@@ -86,9 +86,7 @@ import {MapProp} from '../../../utils/props-utils';
   styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet
-  implements InitializableComponent, BaseFacet<Facet, FacetState>
-{
+export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   private dependenciesManager?: FacetConditionsManager;

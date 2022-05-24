@@ -83,7 +83,7 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
   shadow: true,
 })
 export class AtomicNumericFacet
-  implements InitializableComponent, BaseFacet<NumericFacet, NumericFacetState>
+  implements InitializableComponent, BaseFacet<NumericFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: NumericFacet;
@@ -96,7 +96,7 @@ export class AtomicNumericFacet
 
   @BindStateToController('facet')
   @State()
-  public facetState?: NumericFacetState;
+  public facetState!: NumericFacetState;
   @BindStateToController('filter')
   @State()
   public filterState?: NumericFilterState;
