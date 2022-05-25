@@ -67,7 +67,8 @@ export default class QuanticTabBar extends LightningElement {
   }
 
   /**
-   * Updates the position of the more button element.
+   * Updates the position of the "More" button element.
+   * We need to update the position of the "More" button so that it is always to the right of the last tab displayed, as hidden tabs are just hidden visually but there is always space allocated for them.
    * @returns {void}
    */
   updateMoreButtonPosition() {
