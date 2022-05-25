@@ -11,6 +11,7 @@ import {
   addSmartSnippetSuggestions,
   addSmartSnippetSuggestionsDefaultOptions,
 } from './smart-snippet-suggestions-actions';
+import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 const {remSize, relatedQuestions: defaultRelatedQuestions} =
   addSmartSnippetSuggestionsDefaultOptions;
@@ -90,6 +91,15 @@ describe('Smart Snippet Suggestions Test Suites', () => {
             (relatedQuestion) => relatedQuestion.question
           )
         );
+    });
+  });
+
+  describe('with no heading level and all expanded sections', () => {
+    before(() => {
+      new TestFixture().with(addSmartSnippetSuggestions()).init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton().each(
+        ($element) => cy.wrap($element).click()
+      );
     });
 
     it('should have links to the source', () => {
@@ -264,6 +274,17 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       true
     );
 
+    describe('then clicking the snippet url with the same snippet', () => {
+      beforeEach(() => {
+        AnalyticsTracker.reset();
+        SmartSnippetSuggestionsSelectors.sourceUrl().first().rightclick();
+      });
+
+      SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsSource(
+        false
+      );
+    });
+
     describe('then getting a new snippet and clicking on the title again', () => {
       beforeEach(() => {
         currentQuestion = 'Hello, World!';
@@ -292,6 +313,9 @@ describe('Smart Snippet Suggestions Test Suites', () => {
       new TestFixture()
         .with(addSmartSnippetSuggestions({content: templateEl}))
         .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
     });
 
     it('applies the styling to the rendered snippet', () => {
@@ -317,6 +341,9 @@ describe('Smart Snippet Suggestions Test Suites', () => {
           })
         )
         .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
     });
 
     it('applies the styling to the rendered snippet', () => {

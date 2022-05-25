@@ -10,6 +10,8 @@ import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
 import { Section } from "./components/atomic-layout-section/sections";
+import { ObservableMap } from "@stencil/store";
+import { AtomicStore } from "./utils/store";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -49,7 +51,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -57,7 +59,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -95,7 +97,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -103,7 +105,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -153,7 +155,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -161,7 +163,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -350,7 +352,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -358,7 +360,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -388,7 +390,7 @@ export namespace Components {
          */
         "endInclusive": boolean;
         /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -445,7 +447,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -483,7 +485,7 @@ export namespace Components {
          */
         "icon": string;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -491,7 +493,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -520,6 +522,9 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * Classes that will be added to the result element.
+         */
         "classes": string;
         /**
           * The result content to display.
@@ -545,10 +550,15 @@ export namespace Components {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
         /**
           * The result item.
          */
         "result": Result | FoldedResult;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -641,7 +651,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
@@ -775,6 +785,10 @@ export namespace Components {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -784,6 +798,10 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
@@ -863,6 +881,38 @@ export namespace Components {
           * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
          */
         "mobileBreakpoint": string;
+    }
+    interface AtomicSegmentedFacet {
+        "dependsOn": Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+        "withSearch": boolean;
     }
     interface AtomicSmartSnippet {
         /**
@@ -953,7 +1003,7 @@ export namespace Components {
          */
         "amount": number;
         /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -983,7 +1033,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -991,7 +1041,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -1403,6 +1453,12 @@ declare global {
         prototype: HTMLAtomicSearchLayoutElement;
         new (): HTMLAtomicSearchLayoutElement;
     };
+    interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetElement: {
+        prototype: HTMLAtomicSegmentedFacetElement;
+        new (): HTMLAtomicSegmentedFacetElement;
+    };
     interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
     }
     var HTMLAtomicSmartSnippetElement: {
@@ -1543,6 +1599,7 @@ declare global {
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
+        "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
@@ -1592,7 +1649,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1600,7 +1657,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1638,7 +1695,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1646,7 +1703,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1696,7 +1753,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1704,7 +1761,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1891,7 +1948,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1899,7 +1956,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1929,7 +1986,7 @@ declare namespace LocalJSX {
          */
         "endInclusive"?: boolean;
         /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1987,7 +2044,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2025,7 +2082,7 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -2033,7 +2090,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2062,6 +2119,9 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * Classes that will be added to the result element.
+         */
         "classes"?: string;
         /**
           * The result content to display.
@@ -2087,10 +2147,15 @@ declare namespace LocalJSX {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
         /**
           * The result item.
          */
         "result": Result | FoldedResult;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -2304,6 +2369,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -2313,6 +2382,10 @@ declare namespace LocalJSX {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
@@ -2380,6 +2453,38 @@ declare namespace LocalJSX {
           * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
          */
         "mobileBreakpoint"?: string;
+    }
+    interface AtomicSegmentedFacet {
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+        "withSearch"?: boolean;
     }
     interface AtomicSmartSnippet {
         /**
@@ -2477,7 +2582,7 @@ declare namespace LocalJSX {
          */
         "amount"?: number;
         /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2507,7 +2612,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -2515,7 +2620,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2591,6 +2696,7 @@ declare namespace LocalJSX {
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
+        "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
@@ -2676,6 +2782,7 @@ declare module "@stencil/core" {
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
+            "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;

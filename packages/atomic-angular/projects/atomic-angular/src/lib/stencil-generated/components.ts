@@ -1186,13 +1186,13 @@ export declare interface AtomicSearchBoxQuerySuggestions extends Components.Atom
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 @Component({
   selector: 'atomic-search-box-query-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 export class AtomicSearchBoxQuerySuggestions {
   protected el: HTMLElement;
@@ -1207,13 +1207,13 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 @Component({
   selector: 'atomic-search-box-recent-queries',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 export class AtomicSearchBoxRecentQueries {
   protected el: HTMLElement;

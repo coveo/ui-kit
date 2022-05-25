@@ -44,6 +44,7 @@ import {caseInputReducer} from '../features/case-input/case-input-slice';
 import {caseFieldReducer} from '../features/case-field/case-field-slice';
 import {documentSuggestionReducer} from '../features/document-suggestion/document-suggestion-slice';
 import {excerptLengthReducer} from '../features/excerpt-length/excerpt-length-slice';
+import {instantResultsReducer} from '../features/instant-results/instant-results-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -62,6 +63,7 @@ export const query = queryReducer;
 export const advancedSearchQueries = advancedSearchQueriesReducer;
 export const staticFilterSet = staticFilterSetReducer;
 export const querySet = querySetReducer;
+export const instantResults = instantResultsReducer;
 export const tabSet = tabSetReducer;
 /**
  * @deprecated - The `redirection` functionality is now handled by the `standaloneSearchBoxSet`.

@@ -181,32 +181,6 @@
                       </span>
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>
-                  <atomic-table-element label="Description">
-                    <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-                    <atomic-result-section-title-metadata>
-                      <atomic-field-condition class="field" if-defined="snrating">
-                        <atomic-result-rating field="snrating"></atomic-result-rating>
-                      </atomic-field-condition>
-                      <atomic-field-condition class="field" if-not-defined="snrating">
-                        <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
-                      </atomic-field-condition>
-                    </atomic-result-section-title-metadata>
-                    <atomic-result-section-excerpt>
-                      <atomic-result-text field="excerpt"></atomic-result-text>
-                    </atomic-result-section-excerpt>
-                  </atomic-table-element>
-                  <atomic-table-element label="author">
-                    <atomic-result-text field="author"></atomic-result-text>
-                  </atomic-table-element>
-                  <atomic-table-element label="source">
-                    <atomic-result-text field="source"></atomic-result-text>
-                  </atomic-table-element>
-                  <atomic-table-element label="language">
-                    <atomic-result-text field="language"></atomic-result-text>
-                  </atomic-table-element>
-                  <atomic-table-element label="file-type">
-                    <atomic-result-text field="filetype"></atomic-result-text>
-                  </atomic-table-element>
                   <atomic-result-section-children>
                     <atomic-load-more-children-results></atomic-load-more-children-results>
                     <atomic-result-children image-size="icon">
@@ -259,34 +233,32 @@
                           <atomic-result-section-excerpt
                             ><atomic-result-text field="excerpt"></atomic-result-text
                           ></atomic-result-section-excerpt>
-                          <atomic-table-element label="Description">
-                            <atomic-result-section-title
-                              ><atomic-result-link></atomic-result-link
-                            ></atomic-result-section-title>
-                            <atomic-result-section-title-metadata>
-                              <atomic-field-condition class="field" if-defined="snrating">
-                                <atomic-result-rating field="snrating"></atomic-result-rating>
+                          <atomic-result-section-bottom-metadata>
+                            <atomic-result-fields-list>
+                              <atomic-field-condition class="field" if-defined="author">
+                                <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
+                                <atomic-result-text field="author"></atomic-result-text>
                               </atomic-field-condition>
-                              <atomic-field-condition class="field" if-not-defined="snrating">
-                                <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+
+                              <atomic-field-condition class="field" if-defined="source">
+                                <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
+                                <atomic-result-text field="source"></atomic-result-text>
                               </atomic-field-condition>
-                            </atomic-result-section-title-metadata>
-                            <atomic-result-section-excerpt>
-                              <atomic-result-text field="excerpt"></atomic-result-text>
-                            </atomic-result-section-excerpt>
-                          </atomic-table-element>
-                          <atomic-table-element label="author">
-                            <atomic-result-text field="author"></atomic-result-text>
-                          </atomic-table-element>
-                          <atomic-table-element label="source">
-                            <atomic-result-text field="source"></atomic-result-text>
-                          </atomic-table-element>
-                          <atomic-table-element label="language">
-                            <atomic-result-text field="language"></atomic-result-text>
-                          </atomic-table-element>
-                          <atomic-table-element label="file-type">
-                            <atomic-result-text field="filetype"></atomic-result-text>
-                          </atomic-table-element>
+
+                              <atomic-field-condition class="field" if-defined="language">
+                                <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
+                                <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+                              </atomic-field-condition>
+
+                              <atomic-field-condition class="field" if-defined="filetype">
+                                <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
+                                <atomic-result-text field="filetype"></atomic-result-text>
+                              </atomic-field-condition>
+                            </atomic-result-fields-list>
+                          </atomic-result-section-bottom-metadata>
+                          <atomic-result-section-children>
+                            <atomic-result-children inherit-templates> </atomic-result-children>
+                          </atomic-result-section-children>
                         </template>
                       </atomic-result-children-template>
                     </atomic-result-children>

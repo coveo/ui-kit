@@ -142,7 +142,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
           {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
         </legend>
         {options.map(({id, localeKey, correspondingAnswer}) => (
-          <div key={id} part="reason">
+          <div class="flex items-center" key={id} part="reason">
             <input
               part="reason-radio"
               type="radio"

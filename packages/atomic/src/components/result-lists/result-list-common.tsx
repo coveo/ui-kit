@@ -28,6 +28,7 @@ import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder'
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
+import {isAppLoaded, setLoadingFlag} from '../../utils/store';
 interface DisplayOptions {
   density: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
@@ -73,6 +74,7 @@ interface ResultListCommonOptions {
   includeDefaultTemplate?: boolean;
   onReady(): void;
   onError(): void;
+  loadingFlag?: string;
 }
 
 export class ResultListCommon {
@@ -83,10 +85,15 @@ export class ResultListCommon {
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
+  public loadingFlag?: string;
 
   constructor(opts: ResultListCommonOptions) {
     this.host = opts.host;
     this.bindings = opts.bindings;
+    this.loadingFlag = opts.loadingFlag;
+    if (this.loadingFlag) {
+      setLoadingFlag(this.bindings.store, this.loadingFlag);
+    }
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
@@ -196,25 +203,20 @@ export class ResultListCommon {
     return window.innerHeight + window.scrollY >= childEl?.offsetHeight;
   }
 
-  public componentDidRender(
-    firstSearchExecuted: boolean,
-    listWrapperRef?: HTMLDivElement
-  ) {
-    if (firstSearchExecuted) {
-      listWrapperRef?.classList.remove('placeholder');
-    }
-  }
-
   private getClasses(
     display: ResultDisplayLayout = 'list',
     density: ResultDisplayDensity,
     imageSize: ResultDisplayImageSize,
     firstSearchExecuted: boolean,
-    isLoading: boolean
+    isLoading: boolean,
+    displayPlaceholders: boolean
   ): string {
-    const classes = getResultDisplayClasses(display, density, imageSize!);
+    const classes = getResultDisplayClasses(display, density, imageSize);
     if (firstSearchExecuted && isLoading) {
       classes.push('loading');
+    }
+    if (displayPlaceholders) {
+      classes.push('placeholder');
     }
     return classes.join(' ');
   }
@@ -236,38 +238,46 @@ export class ResultListCommon {
       return;
     }
 
+    if (resultListState.firstSearchExecuted && !resultListState.hasResults) {
+      return;
+    }
+
+    const displayPlaceholders = !isAppLoaded(this.bindings.store);
+
     const classes = this.getClasses(
       display,
       density,
       imageSize!,
       resultListState.firstSearchExecuted,
-      resultListState.isLoading
+      resultListState.isLoading,
+      displayPlaceholders
     );
     return (
       <Host>
         {templateHasError && <slot></slot>}
-        <div
-          class={`list-wrapper placeholder ${classes}`}
-          ref={setListWrapperRef}
-        >
+        <div class={`list-wrapper ${classes}`} ref={setListWrapperRef}>
           <ResultDisplayWrapper classes={classes} display={display}>
-            <ResultsPlaceholder
-              display={display}
-              density={density}
-              imageSize={imageSize}
-              resultsPerPageState={resultsPerPageState}
-            />
-            <Results
-              classes={classes}
-              bindings={this.bindings}
-              host={host}
-              display={display}
-              density={density}
-              imageSize={imageSize}
-              resultListState={resultListState}
-              resultListCommon={this}
-              getContentOfResultTemplate={getContentOfResultTemplate}
-            />
+            {displayPlaceholders && (
+              <ResultsPlaceholder
+                display={display}
+                density={density}
+                imageSize={imageSize}
+                resultsPerPageState={resultsPerPageState}
+              />
+            )}
+            {resultListState.firstSearchExecuted && (
+              <Results
+                classes={classes}
+                bindings={this.bindings}
+                host={host}
+                display={display}
+                density={density}
+                imageSize={imageSize}
+                resultListState={resultListState}
+                resultListCommon={this}
+                getContentOfResultTemplate={getContentOfResultTemplate}
+              />
+            )}
           </ResultDisplayWrapper>
         </div>
       </Host>
