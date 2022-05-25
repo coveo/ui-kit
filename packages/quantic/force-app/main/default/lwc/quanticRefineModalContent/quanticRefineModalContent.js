@@ -98,11 +98,14 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @param {FacetObject} facetObject
    * @returns {object}
    */
-   toNumericFacet = (facetObject) => {
+  toNumericFacet = (facetObject) => {
     return {
       isNumeric: true,
-      ...this.extractFacetDataFromElement(facetObject.element, QuanticNumericFacet.attributes),
-      formattingFunction: facetObject.format
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticNumericFacet.attributes
+      ),
+      formattingFunction: facetObject.format,
     };
   };
 
@@ -111,10 +114,13 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @param {FacetObject} facetObject
    * @returns {object}
    */
-   toDefaultFacet = (facetObject) => {
+  toDefaultFacet = (facetObject) => {
     return {
       isDefault: true,
-      ...this.extractFacetDataFromElement(facetObject.element, QuanticFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticFacet.attributes
+      ),
     };
   };
 
@@ -126,7 +132,10 @@ export default class QuanticRefineModalContent extends LightningElement {
   toCategoryFacet = (facetObject) => {
     return {
       isCategory: true,
-      ...this.extractFacetDataFromElement(facetObject.element, QuanticCategoryFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticCategoryFacet.attributes
+      ),
     };
   };
 
@@ -138,7 +147,10 @@ export default class QuanticRefineModalContent extends LightningElement {
   toTimeframeFacet = (facetObject) => {
     return {
       isTimeframe: true,
-      ...this.extractFacetDataFromElement(facetObject.element, QuanticTimeframeFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticTimeframeFacet.attributes
+      ),
     };
   };
 
@@ -150,8 +162,11 @@ export default class QuanticRefineModalContent extends LightningElement {
   toDateFacet = (facetObject) => {
     return {
       isDate: true,
-      ...this.extractFacetDataFromElement(facetObject.element, QuanticDateFacet.attributes),
-      formattingFunction: facetObject.format
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticDateFacet.attributes
+      ),
+      formattingFunction: facetObject.format,
     };
   };
 
