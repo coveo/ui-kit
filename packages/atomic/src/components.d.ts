@@ -51,6 +51,10 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
+        /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
@@ -96,6 +100,10 @@ export namespace Components {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
         /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
@@ -154,6 +162,10 @@ export namespace Components {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
         /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
@@ -352,6 +364,10 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
+        /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
@@ -435,6 +451,10 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
+        /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon": string;
@@ -480,6 +500,10 @@ export namespace Components {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
         /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
@@ -1032,6 +1056,10 @@ export namespace Components {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel": number;
         /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
@@ -1649,6 +1677,10 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
+        /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
@@ -1694,6 +1726,10 @@ declare namespace LocalJSX {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
         /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
@@ -1752,6 +1788,10 @@ declare namespace LocalJSX {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
         /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
@@ -1948,6 +1988,10 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
+        /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
@@ -2032,6 +2076,10 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
+        /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
         "icon"?: string;
@@ -2077,6 +2125,10 @@ declare namespace LocalJSX {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
         /**
           * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-facet-icon-active-color` - `--atomic-rating-facet-icon-inactive-color`
          */
@@ -2611,6 +2663,10 @@ declare namespace LocalJSX {
           * Whether to exclude the parents of folded results when estimating the result count for each facet value.
          */
         "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+         */
+        "headingLevel"?: number;
         /**
           * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */

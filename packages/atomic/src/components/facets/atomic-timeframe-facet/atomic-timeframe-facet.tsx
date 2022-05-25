@@ -114,6 +114,13 @@ export class AtomicTimeframeFacet
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   *
+   * We recommend setting this property in order to improve accessibility.
+   *
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
+  /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
@@ -282,6 +289,7 @@ export class AtomicTimeframeFacet
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
+        headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         headerRef={this.headerFocus.setTarget}
       ></FacetHeader>

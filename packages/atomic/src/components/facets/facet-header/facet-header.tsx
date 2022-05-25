@@ -4,12 +4,14 @@ import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-r
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
 import {Button} from '../../common/button';
+import {Heading} from '../../common/heading';
 
 export interface FacetHeaderProps {
   i18n: i18n;
   label: string;
   numberOfSelectedValues: number;
   isCollapsed: boolean;
+  headingLevel?: number;
   onToggleCollapse(): void;
   onClearFilters?(): void;
   headerRef?: (element?: HTMLButtonElement) => void;
@@ -35,9 +37,11 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
       ariaExpanded={(!props.isCollapsed).toString()}
-      text={label}
       ref={props.headerRef}
     >
+      <Heading level={props.headingLevel ?? 0} class="truncate">
+        {label}
+      </Heading>
       <atomic-icon
         part="label-button-icon"
         class="w-3 self-center shrink-0 ml-4"
