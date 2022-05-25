@@ -85,7 +85,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicColorFacet
-  implements InitializableComponent, BaseFacet<Facet, FacetState>
+  implements InitializableComponent, BaseFacet<Facet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;

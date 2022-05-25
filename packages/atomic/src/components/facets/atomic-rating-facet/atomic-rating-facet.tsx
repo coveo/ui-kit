@@ -66,7 +66,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicRatingFacet
-  implements InitializableComponent, BaseFacet<NumericFacet, NumericFacetState>
+  implements InitializableComponent, BaseFacet<NumericFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;

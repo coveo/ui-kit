@@ -90,9 +90,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicCategoryFacet
-  implements
-    InitializableComponent,
-    BaseFacet<CategoryFacet, CategoryFacetState>
+  implements InitializableComponent, BaseFacet<CategoryFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;

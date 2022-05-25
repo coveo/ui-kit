@@ -883,6 +883,7 @@ export namespace Components {
         "mobileBreakpoint": string;
     }
     interface AtomicSegmentedFacet {
+        "dependsOn": Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -2453,6 +2454,7 @@ declare namespace LocalJSX {
         "mobileBreakpoint"?: string;
     }
     interface AtomicSegmentedFacet {
+        "dependsOn"?: Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
          */

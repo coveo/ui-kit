@@ -21,6 +21,7 @@ import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
+import {MapProp} from '../../../utils/props-utils';
 
 /**
  * @internal
@@ -31,7 +32,7 @@ import {FacetValueBox} from '../facet-value-box/facet-value-box';
   shadow: true,
 })
 export class AtomicSegmentedFacet
-  implements InitializableComponent, BaseFacet<Facet, FacetState>
+  implements InitializableComponent, BaseFacet<Facet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
@@ -78,6 +79,9 @@ export class AtomicSegmentedFacet
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+
+  // TODO
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
