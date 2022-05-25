@@ -296,9 +296,7 @@ export class AtomicColorFacet
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
-    const partValue = displayValue
-      .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
-      ?.toString();
+    const partValue = facetValue.value.replace(/[^a-z0-9]/gi, '');
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
