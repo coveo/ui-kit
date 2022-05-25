@@ -45,6 +45,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -449,15 +450,24 @@ export class AtomicCategoryFacet
     }
 
     return (
-      <ul part="values" class={this.hasParents ? 'pl-9' : 'mt-3'}>
+      <FacetValuesGroup
+        i18n={this.bindings.i18n}
+        label={this.label}
+        classes={this.hasParents ? 'pl-9' : 'mt-3'}
+      >
         {this.facetState.values.map((value) => this.renderValue(value))}
-      </ul>
+      </FacetValuesGroup>
     );
   }
 
   private renderSearchResults() {
     return (
-      <ul part="search-results" class="mt-3">
+      <FacetValuesGroup
+        i18n={this.bindings.i18n}
+        label={this.label}
+        query={this.facetState.facetSearch.query}
+        classes="mt-3"
+      >
         {this.facetState.facetSearch.values.map((value) => (
           <CategoryFacetSearchResult
             result={value}
@@ -470,7 +480,7 @@ export class AtomicCategoryFacet
             }}
           ></CategoryFacetSearchResult>
         ))}
-      </ul>
+      </FacetValuesGroup>
     );
   }
 

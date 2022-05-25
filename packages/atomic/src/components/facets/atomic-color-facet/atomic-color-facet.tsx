@@ -43,6 +43,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -341,14 +342,19 @@ export class AtomicColorFacet
     }
   }
 
-  private renderValuesContainer(children: VNode[]) {
+  private renderValuesContainer(children: VNode[], query?: string) {
     const classes = `mt-3 ${
       this.displayValuesAs === 'box' ? 'box-color-container' : ''
     }`;
     return (
-      <ul part="values" class={classes}>
+      <FacetValuesGroup
+        i18n={this.bindings.i18n}
+        label={this.label}
+        query={query}
+        classes={classes}
+      >
         {children}
-      </ul>
+      </FacetValuesGroup>
     );
   }
 
@@ -371,7 +377,8 @@ export class AtomicColorFacet
           },
           () => this.facet.facetSearch.select(value)
         )
-      )
+      ),
+      this.facetState.facetSearch.query
     );
   }
 
