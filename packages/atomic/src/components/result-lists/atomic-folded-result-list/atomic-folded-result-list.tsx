@@ -22,11 +22,13 @@ import {
 } from '../../atomic-result/atomic-result-display-options';
 import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
+import {randomID} from '../../../utils/utils';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
  *
  * @part result-list - The element containing every result of a result list
+ * @part outline - The element displaying an outline or a divider around a result
  */
 @Component({
   tag: 'atomic-folded-result-list',
@@ -55,6 +57,9 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() public templateHasError = false;
 
   public resultListCommon!: ResultListCommon;
+  private renderingFunction: ((res: FoldedResult) => HTMLElement) | null = null;
+  private loadingFlag = randomID('firstResultLoaded-');
+
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
@@ -103,7 +108,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @Method() public async setRenderFunction(
     render: (result: FoldedResult) => HTMLElement
   ) {
-    this.resultListCommon.renderingFunction = render as ResultRenderingFunction;
+    this.renderingFunction = render;
+    this.assignRenderingFunctionIfPossible();
   }
 
   @Listen('scroll', {target: 'window'})
@@ -138,10 +144,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
+        this.assignRenderingFunctionIfPossible();
       },
       onError: () => {
         this.templateHasError = true;
       },
+      loadingFlag: this.loadingFlag,
     });
 
     this.foldedResultList = this.initFolding(
@@ -171,13 +179,6 @@ export class AtomicFoldedResultList implements InitializableComponent {
     return this.resultListCommon.getContentOfResultTemplate(foldedResult);
   }
 
-  public componentDidRender() {
-    this.resultListCommon.componentDidRender(
-      this.foldedResultListState.firstSearchExecuted,
-      this.listWrapperRef
-    );
-  }
-
   public render() {
     return this.resultListCommon.renderList({
       host: this.host,
@@ -191,5 +192,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
       },
       getContentOfResultTemplate: this.getContentOfResultTemplate,
     });
+  }
+
+  private assignRenderingFunctionIfPossible() {
+    if (this.resultListCommon && this.renderingFunction) {
+      this.resultListCommon.renderingFunction = this
+        .renderingFunction as ResultRenderingFunction;
+    }
   }
 }

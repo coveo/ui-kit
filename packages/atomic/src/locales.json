@@ -424,10 +424,6 @@
     "en": "Load all results",
     "fr": "Afficher tous les résultats"
   },
-  "expand-results": {
-    "en": "Expand results",
-    "fr": "Afficher tous les résultats"
-  },
   "collapse-results": {
     "en": "Collapse results",
     "fr": "Cacher tous les résultats"
@@ -1164,7 +1160,7 @@
   },
   "between-parentheses": {
     "en": "({{text}})",
-    "fr": "(\u00A0{{text}}\u00A0)"
+    "fr": "({{text}})"
   },
   "smart-snippet": {
     "en": "Potential answer to your question",

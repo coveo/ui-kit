@@ -7,10 +7,15 @@ import {
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
+import {getResultProperty} from '../result-templates/result-templates-helpers';
 import {
-  documentIdentifierPayloadDefinition,
+  isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  uniqueIdentifierPayloadDefinition,
+  validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
+import {relatedQuestionSelector} from './question-answering-selectors';
 
 export type SmartSnippetFeedback =
   | 'does_not_answer'
@@ -81,25 +86,99 @@ export const logSmartSnippetDetailedFeedback = (details: string) =>
   )();
 
 export const logExpandSmartSnippetSuggestion = (
-  payload: QuestionAnsweringDocumentIdActionCreatorPayload
+  payload:
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
     AnalyticsType.Custom,
-    (client) => {
-      validatePayload(payload, documentIdentifierPayloadDefinition());
-      return client.logExpandSmartSnippetSuggestion(payload);
+    (client, state) => {
+      validateQuestionAnsweringActionCreatorPayload(payload);
+
+      if (!isQuestionAnsweringUniqueIdentifierActionCreatorPayload(payload)) {
+        return client.logExpandSmartSnippetSuggestion(payload);
+      }
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+
+      return client.logExpandSmartSnippetSuggestion({
+        question: relatedQuestion.question,
+        answerSnippet: relatedQuestion.answerSnippet,
+        documentId: relatedQuestion.documentId,
+      });
     }
   )();
 
 export const logCollapseSmartSnippetSuggestion = (
-  payload: QuestionAnsweringDocumentIdActionCreatorPayload
+  payload:
+    | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    | QuestionAnsweringDocumentIdActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
     AnalyticsType.Custom,
-    (client) => {
-      validatePayload(payload, documentIdentifierPayloadDefinition());
-      return client.logCollapseSmartSnippetSuggestion(payload);
+    (client, state) => {
+      validateQuestionAnsweringActionCreatorPayload(payload);
+
+      if (!isQuestionAnsweringUniqueIdentifierActionCreatorPayload(payload)) {
+        return client.logCollapseSmartSnippetSuggestion(payload);
+      }
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+
+      return client.logCollapseSmartSnippetSuggestion({
+        question: relatedQuestion.question,
+        answerSnippet: relatedQuestion.answerSnippet,
+        documentId: relatedQuestion.documentId,
+      });
+    }
+  )();
+
+export const logOpenSmartSnippetSuggestionSource = (
+  payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      validatePayload(payload, uniqueIdentifierPayloadDefinition());
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        payload.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+      const source = state.search?.results.find(
+        (result) =>
+          getResultProperty(result, relatedQuestion.documentId.contentIdKey) ===
+          relatedQuestion.documentId.contentIdValue
+      );
+      if (!source) {
+        return;
+      }
+
+      return client.logOpenSmartSnippetSuggestionSource(
+        partialDocumentInformation(source, state),
+        {
+          question: relatedQuestion.question,
+          answerSnippet: relatedQuestion.answerSnippet,
+          documentId: relatedQuestion.documentId,
+        }
+      );
     }
   )();

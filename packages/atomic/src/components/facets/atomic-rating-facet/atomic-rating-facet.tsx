@@ -66,7 +66,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicRatingFacet
-  implements InitializableComponent, BaseFacet<NumericFacet, NumericFacetState>
+  implements InitializableComponent, BaseFacet<NumericFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
@@ -88,6 +88,7 @@ export class AtomicRatingFacet
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -143,7 +144,7 @@ export class AtomicRatingFacet
   @Prop({reflect: true}) public injectionDepth = 1000;
 
   /**
-   * The required facets & values for this facet to be displayed.
+   * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
@@ -161,7 +162,7 @@ export class AtomicRatingFacet
    * ></atomic-rating-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -345,6 +346,7 @@ export class AtomicRatingFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfIntervals}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

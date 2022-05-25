@@ -7,6 +7,8 @@ export const selectors = {
   sort: 'c-quantic-sort',
   pager: 'c-quantic-pager',
   regularFacet: 'c-quantic-facet[data-cy="type"]',
+  facetsContainer: '.facets_container',
+  refineToggle: '.refine-toggle_container',
 };
 
 export const setupAliases = () =>
@@ -27,6 +29,7 @@ export const selectRegularFacetValue = (value: string) =>
 export const sortByDateDescending = () =>
   cy
     .get(selectors.sort)
+    .eq(0)
     .find('lightning-combobox')
     .click()
     .get(selectors.sort)

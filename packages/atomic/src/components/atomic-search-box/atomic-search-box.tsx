@@ -20,7 +20,9 @@ import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  SearchBoxSuggestionElement,
+  isDividerElement,
+  isSuggestionElement,
+  SearchBoxSuggestionItem,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
@@ -36,10 +38,13 @@ import {promiseTimeout} from '../../utils/promise-utils';
  * @part input - The search box input.
  * @part loading - The search box loading animation.
  * @part clear-button - The button to clear the search box of input.
+ * @part clear-icon - The clear button's icon.
  * @part submit-button - The search box submit button.
+ * @part submit-icon - The search box submit button's icon.
  * @part suggestions - A list of suggested query corrections.
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
+ * @part suggestion-divider - An item in the list that separates groups of suggestions.
  */
 @Component({
   tag: 'atomic-search-box',
@@ -62,7 +67,7 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
-  @State() private suggestionElements: SearchBoxSuggestionElement[] = [];
+  @State() private suggestionElements: SearchBoxSuggestionItem[] = [];
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -257,9 +262,7 @@ export class AtomicSearchBox {
   private updateAriaMessage() {
     this.ariaMessage = this.suggestionElements.length
       ? this.bindings.i18n.t('query-suggestions-available', {
-          count: this.suggestionElements.filter(
-            (element) => element.query !== undefined
-          ).length,
+          count: this.suggestionElements.filter(isSuggestionElement).length,
         })
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
@@ -289,8 +292,8 @@ export class AtomicSearchBox {
       .flat();
 
     const max =
-      this.numberOfQueries +
-      suggestionElements.filter((sug) => sug.query === undefined).length;
+      this.numberOfQueries + suggestionElements.filter(isDividerElement).length;
+
     this.suggestionElements = suggestionElements.slice(0, max);
     this.updateAriaMessage();
   }
@@ -393,7 +396,11 @@ export class AtomicSearchBox {
         }}
         ariaLabel={this.bindings.i18n.t('clear')}
       >
-        <atomic-icon icon={ClearIcon} class="w-3 h-3"></atomic-icon>
+        <atomic-icon
+          part="clear-icon"
+          icon={ClearIcon}
+          class="w-3 h-3"
+        ></atomic-icon>
       </Button>
     );
   }
@@ -419,35 +426,52 @@ export class AtomicSearchBox {
     this.ariaMessage = '';
   }
 
+  private makeSuggestionPart(isSelected: boolean, isDivider: boolean) {
+    let part = 'suggestion';
+    if (isSelected) {
+      part += ' active-suggestion';
+    }
+    if (isDivider) {
+      part += ' suggestion-divider';
+    }
+    return part;
+  }
+
   private renderSuggestion(
-    suggestion: SearchBoxSuggestionElement,
-    index: number
+    item: SearchBoxSuggestionItem,
+    index: number,
+    lastIndex: number
   ) {
     const id = `${this.id}-suggestion-${index}`;
     const isSelected = id === this.activeDescendant;
+    const isLast = index === lastIndex;
+    const isDivider = isDividerElement(item);
+    if (isLast && isDivider) {
+      return null;
+    }
     return (
       <li
         id={id}
         role="option"
         aria-selected={`${isSelected}`}
-        key={suggestion.key}
-        data-query={suggestion.query}
-        part={isSelected ? 'active-suggestion suggestion' : 'suggestion'}
+        key={item.key}
+        part={this.makeSuggestionPart(isSelected, isDivider)}
         class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
-          suggestion.onSelect();
+          item.onSelect && item.onSelect();
           this.clearSuggestions();
         }}
         ref={(el) => {
-          if (isHTMLElement(suggestion.content)) {
-            el?.replaceChildren(suggestion.content);
+          if (isHTMLElement(item.content)) {
+            el?.replaceChildren(item.content);
           }
         }}
+        {...(isSuggestionElement(item) && {'data-query': item.query})}
       >
-        {!isHTMLElement(suggestion.content) && suggestion.content}
+        {!isHTMLElement(item.content) && item.content}
       </li>
     );
   }
@@ -467,7 +491,11 @@ export class AtomicSearchBox {
         }`}
       >
         {this.suggestionElements.map((suggestion, index) =>
-          this.renderSuggestion(suggestion, index)
+          this.renderSuggestion(
+            suggestion,
+            index,
+            this.suggestionElements.length - 1
+          )
         )}
       </ul>
     );
@@ -485,7 +513,11 @@ export class AtomicSearchBox {
           this.clearSuggestionElements();
         }}
       >
-        <atomic-icon icon={SearchIcon} class="w-4 h-4"></atomic-icon>
+        <atomic-icon
+          part="submit-icon"
+          icon={SearchIcon}
+          class="w-4 h-4"
+        ></atomic-icon>
       </Button>
     );
   }

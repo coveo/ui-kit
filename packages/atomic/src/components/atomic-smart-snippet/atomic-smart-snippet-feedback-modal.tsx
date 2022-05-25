@@ -36,6 +36,7 @@ import {updateBreakpoints} from '../../utils/replace-breakpoint';
  * @part body - The body of the modal, between the header and the footer.
  * @part form - The wrapper around the reason and details.
  * @part reason-title - The title above the reason radio buttons.
+ * @part reason - A wrapper around the radio button and the label of a reason.
  * @part reason-radio - A radio button representing a reason.
  * @part reason-label - A label linked to a radio button representing a reason.
  * @part details-title - The title above the details input.
@@ -134,11 +135,14 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
     return (
       <fieldset>
-        <legend part="reason-title" class="font-bold text-on-background">
+        <legend
+          part="reason-title"
+          class="font-bold text-on-background text-lg"
+        >
           {this.bindings.i18n.t('smart-snippet-feedback-select-reason')}
         </legend>
         {options.map(({id, localeKey, correspondingAnswer}) => (
-          <div key={id} class="text-base leading-4 text-neutral-dark mt-2">
+          <div class="flex items-center" key={id} part="reason">
             <input
               part="reason-radio"
               type="radio"
@@ -168,7 +172,10 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
     return (
       <fieldset>
-        <legend part="details-title" class="font-bold text-on-background">
+        <legend
+          part="details-title"
+          class="font-bold text-on-background text-lg"
+        >
           {this.bindings.i18n.t('smart-snippet-feedback-details')}
         </legend>
         <textarea
@@ -207,6 +214,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
         <Button
           part="cancel-button"
           style="outline-neutral"
+          class="text-primary"
           onClick={() => this.close()}
         >
           {this.bindings.i18n.t('cancel')}
@@ -230,6 +238,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
 
     return (
       <atomic-modal
+        fullscreen={false}
         source={this.source}
         isOpen={this.isOpen}
         close={() => this.close()}

@@ -5,19 +5,88 @@ import {
   AnyFacetValueRequest,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  Facet,
+  NumericFacet,
+  CategoryFacet,
+  DateFacet,
+  FacetState,
+  NumericFacetState,
+  CategoryFacetState,
+  DateFacetState,
+  FacetSortCriterion,
+  CategoryFacetSortCriterion,
+  RangeFacetSortCriterion,
 } from '@coveo/headless';
 import {i18n} from 'i18next';
 
-export interface BaseFacet<Facet, FacetState> {
-  facet?: Facet;
-  facetState?: FacetState;
+type AnyFacetType = Facet | NumericFacet | CategoryFacet | DateFacet;
+
+export type BaseFacet<FacetType extends AnyFacetType> = {
+  facet?: FacetType;
   searchStatus: SearchStatus;
   searchStatusState: SearchStatusState;
   error: Error;
-  isCollapsed: Boolean;
+} & PropsOnAllFacets &
+  StateProp<FacetType> &
+  SearchProp<FacetType> &
+  NumberOfValuesProp<FacetType> &
+  NumberOfIntervalsProp<FacetType> &
+  SortCriterionProp<FacetType> &
+  DisplayValuesAsProp &
+  CollapsedProp;
+
+type PropsOnAllFacets = {
+  facetId?: string;
   label: string;
   field: string;
-}
+
+  filterFacetCount: boolean;
+  injectionDepth: number;
+  dependsOn: Record<string, string>;
+};
+
+type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
+  ? {facetState: FacetState}
+  : FacetType extends NumericFacet
+  ? {facetState: NumericFacetState}
+  : FacetType extends CategoryFacet
+  ? {facetState: CategoryFacetState}
+  : FacetType extends DateFacet
+  ? {facetState: DateFacetState}
+  : {facetState: never};
+
+type SearchProp<FacetType extends AnyFacetType> = FacetType extends
+  | Facet
+  | CategoryFacet
+  ? {withSearch: boolean}
+  : {};
+
+type NumberOfValuesProp<FacetType extends AnyFacetType> = FacetType extends
+  | Facet
+  | CategoryFacet
+  ? {numberOfValues: number}
+  : {};
+
+type NumberOfIntervalsProp<FacetType extends AnyFacetType> =
+  FacetType extends NumericFacet ? {numberOfIntervals?: number} : {};
+
+type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
+  | Facet
+  | CategoryFacet
+  ? {
+      sortCriteria: FacetType extends Facet
+        ? FacetSortCriterion
+        : CategoryFacetSortCriterion;
+    }
+  : FacetType extends NumericFacet
+  ? {sortCriteria?: RangeFacetSortCriterion}
+  : {};
+
+type DisplayValuesAsProp = {
+  displayValueAs?: 'checkbox' | 'box' | 'link';
+};
+
+type CollapsedProp = {isCollapsed?: boolean};
 
 export interface FacetValueProps {
   i18n: i18n;

@@ -8,7 +8,6 @@ import {
 import ArrowRight from '../../images/arrow-right.svg';
 import ArrowDown from '../../images/arrow-down.svg';
 import {
-  buildInteractiveResult,
   buildSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
@@ -16,9 +15,9 @@ import {
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
+import {waitUntilAppLoaded} from '../../utils/store';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -52,8 +51,6 @@ import {randomID} from '../../utils/utils';
  * @part footer - The wrapper around the source of a related question's answer.
  * @part source-url - The URL to the document a related question's answer is extracted from.
  * @part source-title - The title of the document a related question's answer is extracted from.
- *
- * @internal
  */
 @Component({
   tag: 'atomic-smart-snippet-suggestions',
@@ -89,7 +86,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
    * `;
    * ```
    */
-  @Prop({reflect: true}) snippetStyle?: string;
+  @Prop() snippetStyle?: string;
 
   private id = randomID('atomic-smart-snippet-suggestions-');
 
@@ -97,6 +94,11 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.bindings.engine
     );
+
+    this.hideDuringRender = true;
+    waitUntilAppLoaded(this.bindings.store, () => {
+      this.hideDuringRender = false;
+    });
   }
 
   private get style() {
@@ -109,12 +111,13 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     return styleTag.innerHTML;
   }
 
-  private getRelatedQuestionId(relatedQuestion: SmartSnippetRelatedQuestion) {
-    // TODO: Change to the snippet's unique ID
-    return `${this.id}-${relatedQuestion.question
-      .toLowerCase()
-      .replace(/\s/g, '-')
-      .replace(/[^a-z-]/g, '')}`;
+  private set hideDuringRender(shouldHide: boolean) {
+    this.host.style.visibility = shouldHide ? 'hidden' : '';
+    this.host.style.position = shouldHide ? 'absolute' : '';
+  }
+
+  private getRelatedQuestionId(index: number) {
+    return `${this.id}-${index}`;
   }
 
   private getQuestionPart(
@@ -126,13 +129,16 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
 
   private toggleQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
     if (relatedQuestion.expanded) {
-      this.smartSnippetQuestionsList.collapse(relatedQuestion.documentId);
+      this.smartSnippetQuestionsList.collapse(relatedQuestion.questionAnswerId);
     } else {
-      this.smartSnippetQuestionsList.expand(relatedQuestion.documentId);
+      this.smartSnippetQuestionsList.expand(relatedQuestion.questionAnswerId);
     }
   }
 
-  private renderQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
+  private renderQuestion(
+    relatedQuestion: SmartSnippetRelatedQuestion,
+    index: number
+  ) {
     return (
       <Button
         style="text-neutral"
@@ -140,7 +146,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         onClick={() => this.toggleQuestion(relatedQuestion)}
         class="flex items-center px-4"
         ariaExpanded={`${relatedQuestion.expanded}`}
-        ariaControls={this.getRelatedQuestionId(relatedQuestion)}
+        ariaControls={this.getRelatedQuestionId(index)}
       >
         <atomic-icon
           icon={relatedQuestion.expanded ? ArrowDown : ArrowRight}
@@ -173,57 +179,57 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     if (!source) {
       return [];
     }
-    const interactiveResult = buildInteractiveResult(this.bindings.engine!, {
-      options: {result: source},
-    });
     return (
       <footer
         part="footer"
         aria-label={this.bindings.i18n.t('smart-snippet-source')}
       >
-        <LinkWithResultAnalytics
-          title={source.clickUri}
-          href={source.clickUri}
-          target="_self"
-          part="source-url"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {source.clickUri}
-        </LinkWithResultAnalytics>
-        <LinkWithResultAnalytics
-          title={source.title}
-          href={source.clickUri}
-          target="_self"
-          part="source-title"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {source.title}
-        </LinkWithResultAnalytics>
+        {
+          <atomic-smart-snippet-source
+            source={source}
+            onSelectSource={() =>
+              this.smartSnippetQuestionsList.selectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+            onBeginDelayedSelectSource={() =>
+              this.smartSnippetQuestionsList.beginDelayedSelectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+            onCancelPendingSelectSource={() =>
+              this.smartSnippetQuestionsList.cancelPendingSelectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+          ></atomic-smart-snippet-source>
+        }
       </footer>
     );
   }
 
-  public renderRelatedQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
+  public renderRelatedQuestion(
+    relatedQuestion: SmartSnippetRelatedQuestion,
+    index: number
+  ) {
     return (
       <li
-        key={this.getRelatedQuestionId(relatedQuestion)}
+        key={relatedQuestion.questionAnswerId}
         part={this.getQuestionPart('question-answer', relatedQuestion)}
         class="flex flex-col"
       >
         <article class="contents">
-          {this.renderQuestion(relatedQuestion)}
-          <div
-            part={relatedQuestion.expanded ? 'answer-and-source' : ''}
-            class={relatedQuestion.expanded ? 'pl-10 pr-6 pb-6' : 'hidden'}
-            id={this.getRelatedQuestionId(relatedQuestion)}
-          >
-            {this.renderContent(relatedQuestion)}
-            {this.renderSource(relatedQuestion)}
-          </div>
+          {this.renderQuestion(relatedQuestion, index)}
+          {relatedQuestion.expanded && (
+            <div
+              part="answer-and-source"
+              class="pl-10 pr-6 pb-6"
+              id={this.getRelatedQuestionId(index)}
+            >
+              {this.renderContent(relatedQuestion)}
+              {this.renderSource(relatedQuestion)}
+            </div>
+          )}
         </article>
       </li>
     );
@@ -248,7 +254,8 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         </Heading>
         <ul part="questions" class="divide-neutral divide-y">
           {this.smartSnippetQuestionsListState.questions.map(
-            (relatedQuestion) => this.renderRelatedQuestion(relatedQuestion)
+            (relatedQuestion, i) =>
+              this.renderRelatedQuestion(relatedQuestion, i)
           )}
         </ul>
       </aside>

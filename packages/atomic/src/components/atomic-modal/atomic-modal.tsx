@@ -7,6 +7,7 @@ import {
   Watch,
   Event,
   EventEmitter,
+  Host,
 } from '@stencil/core';
 import {
   Bindings,
@@ -43,6 +44,7 @@ export class AtomicModal implements InitializableComponent {
 
   @State() public error!: Error;
 
+  @Prop({reflect: true, mutable: true}) fullscreen = false;
   @Prop({mutable: true}) source?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
   @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
@@ -51,6 +53,10 @@ export class AtomicModal implements InitializableComponent {
 
   private wasEverOpened = false;
   private headerId = randomID('atomic-modal-header-');
+
+  connectedCallback() {
+    this.watchToggleOpen(this.isOpen);
+  }
 
   @Watch('isOpen')
   watchToggleOpen(isOpen: boolean) {
@@ -76,6 +82,19 @@ export class AtomicModal implements InitializableComponent {
     this.source?.focus();
   }
 
+  private getClasses() {
+    const classes: string[] = [];
+    if (this.isOpen) {
+      classes.push('open');
+    }
+    if (this.fullscreen) {
+      classes.push('fullscreen');
+    } else {
+      classes.push('dialog');
+    }
+    return classes;
+  }
+
   public componentWillRender() {
     this.wasEverOpened ||= this.isOpen;
   }
@@ -90,55 +109,55 @@ export class AtomicModal implements InitializableComponent {
     }
 
     return (
-      <div
-        part="backdrop"
-        class={`fixed left-0 top-0 right-0 bottom-0 z-10 ${
-          this.isOpen ? 'opened' : ''
-        }`}
-        onClick={(e) => e.target === e.currentTarget && this.close()}
-      >
-        <atomic-focus-trap
-          active={this.isOpen}
-          role="dialog"
-          aria-modal={this.isOpen.toString()}
-          aria-labelledby={this.headerId}
+      <Host class={this.getClasses().join(' ')}>
+        <div
+          part="backdrop"
+          class="fixed left-0 top-0 right-0 bottom-0 z-[9999]"
+          onClick={(e) => e.target === e.currentTarget && this.close()}
         >
-          <article
-            part="container"
-            class={`flex flex-col justify-between bg-background text-on-background ${
-              this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
-            }`}
-            onAnimationEnd={() => this.animationEnded.emit()}
+          <atomic-focus-trap
+            active={this.isOpen}
+            role="dialog"
+            aria-modal={this.isOpen.toString()}
+            aria-labelledby={this.headerId}
           >
-            <header part="header-wrapper" class="flex flex-col items-center">
+            <article
+              part="container"
+              class={`flex flex-col justify-between bg-background text-on-background ${
+                this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
+              }`}
+              onAnimationEnd={() => this.animationEnded.emit()}
+            >
+              <header part="header-wrapper" class="flex flex-col items-center">
+                <div
+                  part="header"
+                  class="flex justify-between text-xl w-full max-w-lg"
+                  id={this.headerId}
+                >
+                  <slot name="header"></slot>
+                </div>
+              </header>
+              <hr part="header-ruler" class="border-neutral"></hr>
               <div
-                part="header"
-                class="flex justify-between text-xl w-full max-w-lg"
-                id={this.headerId}
+                part="body-wrapper"
+                class="overflow-auto grow flex flex-col items-center w-full"
               >
-                <slot name="header"></slot>
+                <div part="body" class="w-full max-w-lg">
+                  <slot name="body"></slot>
+                </div>
               </div>
-            </header>
-            <hr part="header-ruler" class="border-neutral"></hr>
-            <div
-              part="body-wrapper"
-              class="overflow-auto grow flex flex-col items-center w-full"
-            >
-              <div part="body" class="w-full max-w-lg">
-                <slot name="body"></slot>
-              </div>
-            </div>
-            <footer
-              part="footer-wrapper"
-              class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
-            >
-              <div part="footer" class="w-full max-w-lg">
-                <slot name="footer"></slot>
-              </div>
-            </footer>
-          </article>
-        </atomic-focus-trap>
-      </div>
+              <footer
+                part="footer-wrapper"
+                class="border-neutral border-t bg-background z-10 flex flex-col items-center w-full"
+              >
+                <div part="footer" class="w-full max-w-lg">
+                  <slot name="footer"></slot>
+                </div>
+              </footer>
+            </article>
+          </atomic-focus-trap>
+        </div>
+      </Host>
     );
   }
 }

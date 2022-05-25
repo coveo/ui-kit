@@ -90,9 +90,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicCategoryFacet
-  implements
-    InitializableComponent,
-    BaseFacet<CategoryFacet, CategoryFacetState>
+  implements InitializableComponent, BaseFacet<CategoryFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
@@ -114,6 +112,7 @@ export class AtomicCategoryFacet
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -161,12 +160,13 @@ export class AtomicCategoryFacet
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
+   * Default: `1000`
    */
   @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
 
   /**
-   * The required facets & values for this facet to be displayed.
+   * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
@@ -184,7 +184,7 @@ export class AtomicCategoryFacet
    * ></atomic-category-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private showMoreFocus!: FocusTargetController;
@@ -520,6 +520,7 @@ export class AtomicCategoryFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfValues}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

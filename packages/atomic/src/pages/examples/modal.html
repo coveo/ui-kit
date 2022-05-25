@@ -18,13 +18,20 @@
           organizationId: 'searchuisamples',
         });
 
+        const fullscreenCheckbox = document.getElementById('checkbox-fullscreen');
         const openModalButton = document.getElementById('btn-open-modal');
         const closeModalButton = document.getElementById('btn-done');
         const modal = document.getElementById('modal');
         modal.source = openModalButton;
 
+        function updateFullscreen() {
+          modal.setAttribute('fullscreen', `${fullscreenCheckbox.checked}`);
+        }
+
+        fullscreenCheckbox.addEventListener('change', () => updateFullscreen());
         openModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'true'));
         closeModalButton.addEventListener('click', () => modal.setAttribute('is-open', 'false'));
+        updateFullscreen();
       })();
     </script>
   </head>
@@ -32,6 +39,7 @@
   <body>
     <atomic-search-interface>
       <button id="btn-open-modal">Open modal</button>
+      <input type="checkbox" id="checkbox-fullscreen" /><label for="checkbox-fullscreen">Fullscreen</label>
       <atomic-modal id="modal">
         <div slot="header">This is a title</div>
         <div slot="body">This is the body</div>

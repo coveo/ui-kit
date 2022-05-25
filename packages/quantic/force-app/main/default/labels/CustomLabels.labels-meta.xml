@@ -798,4 +798,25 @@
       <protected>false</protected>
       <shortDescription>More</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_Filters</fullName>
+      <value>Filters</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Filters</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_SortAndFilters</fullName>
+      <value>Sort &#38; Filters</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Sort &#38; Filters</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_ViewResults</fullName>
+      <value>View results</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>View results</shortDescription>
+    </labels>
 </CustomLabels>

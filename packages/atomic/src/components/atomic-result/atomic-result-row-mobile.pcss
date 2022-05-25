@@ -1,13 +1,13 @@
 @import '../../global/polyfills.pcss';
 
-@define-mixin atomic-children-mobile $max, $min {
-  &.child-result {
-    margin-bottom: $max;
+@define-mixin atomic-children-mobile $margin-lg, $margin-sm {
+  &.child-result:not(.last-child) {
+    margin-bottom: $margin-lg;
   }
 
   atomic-result-section-children {
     atomic-result-children::part(children-root) {
-      padding-top: $max;
+      padding-top: $margin-lg;
       margin-top: 1rem;
       margin-left: -1rem;
       margin-right: -1rem;
@@ -16,13 +16,13 @@
     }
 
     atomic-result-children::part(show-hide-button) {
-      margin-top: $min;
-      margin-bottom: $min;
+      margin-top: $margin-sm;
+      margin-bottom: $margin-sm;
     }
   }
 
   atomic-result-placeholder {
-    margin-bottom: $max;
+    margin-bottom: $margin-lg;
   }
 }
 

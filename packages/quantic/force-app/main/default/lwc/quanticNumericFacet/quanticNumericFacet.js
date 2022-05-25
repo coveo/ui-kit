@@ -123,6 +123,17 @@ export default class QuanticNumericFacet extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
+  static attributes = [
+    'facetId',
+    'field',
+    'label',
+    'numberOfValues',
+    'sortCriteria',
+    'rangeAlgorithm',
+    'withInput',
+    'formattingFunction',
+  ]
+
   /** @type {NumericFacetState} */
   @track state;
   /** @type {NumericFilterState} */
@@ -200,6 +211,7 @@ export default class QuanticNumericFacet extends LightningElement {
       label: this.label,
       facetId: this.facet?.state.facetId ?? this.field,
       format: this.formattingFunction,
+      element: this.template.host
     });
   }
 

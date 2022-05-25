@@ -79,7 +79,6 @@ export class SmartSnippet extends Component<{}, SmartSnippetState> {
       liked,
       disliked,
       expanded,
-      source,
       feedbackModalOpen,
     } = this.state;
 

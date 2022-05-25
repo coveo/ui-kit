@@ -1,4 +1,12 @@
-import {Component, h, Prop, Event, EventEmitter, Host} from '@stencil/core';
+import {
+  Component,
+  h,
+  Prop,
+  Event,
+  EventEmitter,
+  Host,
+  Element,
+} from '@stencil/core';
 import {sanitize} from 'dompurify';
 import {sanitizeStyle} from '../../utils/utils';
 
@@ -12,17 +20,50 @@ import {sanitizeStyle} from '../../utils/utils';
   shadow: true,
 })
 export class AtomicSmartSnippetAnswer {
-  @Prop({reflect: true}) htmlContent!: string;
-  @Prop({reflect: true}) innerStyle?: string;
+  @Prop() htmlContent!: string;
+  @Prop() innerStyle?: string;
 
-  @Event({
-    eventName: 'atomic/smartSnippet/answerRendered',
-  })
-  private answerRendered!: EventEmitter<{height: number}>;
+  @Element() public host!: HTMLElement;
+
+  @Event({bubbles: false})
+  private answerSizeUpdated!: EventEmitter<{height: number}>;
   private wrapperElement?: HTMLElement;
+  private isRendering = true;
+  private resizeObserver: ResizeObserver | undefined;
+
+  public componentWillRender() {
+    this.isRendering = true;
+  }
 
   public componentDidRender() {
-    this.answerRendered.emit({height: this.wrapperElement!.scrollHeight});
+    this.isRendering = false;
+    this.emitCurrentHeight();
+  }
+
+  public componentDidLoad() {
+    // Prevents initial transition
+    setTimeout(() => {
+      this.host.classList.add('loaded');
+    }, 0);
+  }
+
+  public connectedCallback() {
+    if (this.wrapperElement && this.resizeObserver) {
+      this.resizeObserver.observe(this.wrapperElement);
+    }
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
+  }
+
+  public setWrapperElement(element: HTMLElement) {
+    this.wrapperElement = element;
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+    this.resizeObserver = new ResizeObserver(() => this.emitCurrentHeight());
+    this.resizeObserver.observe(element);
   }
 
   private get sanitizedStyle() {
@@ -30,6 +71,13 @@ export class AtomicSmartSnippetAnswer {
       return undefined;
     }
     return sanitizeStyle(this.innerStyle);
+  }
+
+  private emitCurrentHeight() {
+    if (this.isRendering) {
+      return;
+    }
+    this.answerSizeUpdated.emit({height: this.wrapperElement!.scrollHeight});
   }
 
   private renderStyle() {
@@ -43,7 +91,10 @@ export class AtomicSmartSnippetAnswer {
 
   private renderContent() {
     return (
-      <div class="wrapper" ref={(element) => (this.wrapperElement = element)}>
+      <div
+        class="wrapper"
+        ref={(element) => element && this.setWrapperElement(element)}
+      >
         {/* deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify */}
         <div
           innerHTML={sanitize(this.htmlContent, {

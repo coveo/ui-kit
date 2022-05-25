@@ -12,9 +12,9 @@ import {
 } from '@coveo/headless';
 import {Hidden} from '../common/hidden';
 import {Heading} from '../common/heading';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../utils/utils';
+import {isAppLoaded, waitUntilAppLoaded} from '../../utils/store';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -102,6 +102,16 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
+    waitUntilAppLoaded(this.bindings.store, () => {
+      this.hideDuringRender = false;
+    });
+  }
+
+  private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+
     this.modalRef = document.createElement(
       'atomic-smart-snippet-feedback-modal'
     );
@@ -121,6 +131,11 @@ export class AtomicSmartSnippet implements InitializableComponent {
     return styleTag.innerHTML;
   }
 
+  private set hideDuringRender(shouldHide: boolean) {
+    this.host.style.visibility = shouldHide ? 'hidden' : '';
+    this.host.style.position = shouldHide ? 'absolute' : '';
+  }
+
   private renderQuestion() {
     return (
       <Heading
@@ -138,53 +153,14 @@ export class AtomicSmartSnippet implements InitializableComponent {
       <atomic-smart-snippet-expandable-answer
         exportparts="answer,show-more-button,show-less-button,truncated-answer"
         part="body"
+        htmlContent={this.smartSnippetState.answer}
+        expanded={this.smartSnippetState.expanded}
         maximumHeight={this.maximumHeight}
         collapsedHeight={this.collapsedHeight}
         snippetStyle={this.style}
+        onExpand={() => this.smartSnippet.expand()}
+        onCollapse={() => this.smartSnippet.collapse()}
       ></atomic-smart-snippet-expandable-answer>
-    );
-  }
-
-  private renderSource() {
-    const {source} = this.smartSnippetState;
-    if (!source) {
-      return [];
-    }
-    return (
-      <section aria-label={this.bindings.i18n.t('smart-snippet-source')}>
-        <div part="source-url">
-          <LinkWithResultAnalytics
-            title={source.clickUri}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => this.smartSnippet.selectSource()}
-            onBeginDelayedSelect={() =>
-              this.smartSnippet.beginDelayedSelectSource()
-            }
-            onCancelPendingSelect={() =>
-              this.smartSnippet.cancelPendingSelectSource()
-            }
-          >
-            {source.clickUri}
-          </LinkWithResultAnalytics>
-        </div>
-        <div part="source-title" class="mb-6">
-          <LinkWithResultAnalytics
-            title={source.title}
-            href={source.clickUri}
-            target="_self"
-            onSelect={() => this.smartSnippet.selectSource()}
-            onBeginDelayedSelect={() =>
-              this.smartSnippet.beginDelayedSelectSource()
-            }
-            onCancelPendingSelect={() =>
-              this.smartSnippet.cancelPendingSelectSource()
-            }
-          >
-            {source.title}
-          </LinkWithResultAnalytics>
-        </div>
-      </section>
     );
   }
 
@@ -197,9 +173,16 @@ export class AtomicSmartSnippet implements InitializableComponent {
         disliked={this.smartSnippetState.disliked}
         feedbackSent={this.feedbackSent}
         onLike={() => this.smartSnippet.like()}
-        onDislike={() => this.smartSnippet.dislike()}
+        onDislike={() => {
+          this.loadModal();
+          this.smartSnippet.dislike();
+        }}
         onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
-        explainWhyRef={(button) => (this.modalRef!.source = button)}
+        explainWhyRef={(button) => {
+          if (this.modalRef) {
+            this.modalRef!.source = button;
+          }
+        }}
       ></SmartSnippetFeedbackBanner>
     );
   }
@@ -210,9 +193,19 @@ export class AtomicSmartSnippet implements InitializableComponent {
     }
   }
 
+  public componentDidRender() {
+    if (isAppLoaded(this.bindings.store)) {
+      this.hideDuringRender = false;
+    }
+  }
+
   public render() {
     if (!this.smartSnippetState.answerFound) {
       return <Hidden></Hidden>;
+    }
+
+    if (this.host.classList.contains('atomic-hidden')) {
+      this.hideDuringRender = true;
     }
 
     return (
@@ -226,8 +219,22 @@ export class AtomicSmartSnippet implements InitializableComponent {
         >
           {this.renderQuestion()}
           {this.renderContent()}
-          <footer part="footer">
-            {this.renderSource()}
+          <footer
+            part="footer"
+            aria-label={this.bindings.i18n.t('smart-snippet-source')}
+          >
+            {this.smartSnippetState.source && (
+              <atomic-smart-snippet-source
+                source={this.smartSnippetState.source}
+                onSelectSource={() => this.smartSnippet.selectSource()}
+                onBeginDelayedSelectSource={() =>
+                  this.smartSnippet.beginDelayedSelectSource()
+                }
+                onCancelPendingSelectSource={() =>
+                  this.smartSnippet.cancelPendingSelectSource()
+                }
+              ></atomic-smart-snippet-source>
+            )}
             {this.renderFeedbackBanner()}
           </footer>
         </article>

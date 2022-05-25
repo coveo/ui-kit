@@ -72,7 +72,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private get resultOfOptions() {
-    const locales = this.bindings.i18n.languages;
+    const locales = this.bindings.i18n.languages as string[];
     return {
       count: this.querySummaryState.lastResult,
       first: this.querySummaryState.firstResult.toLocaleString(locales),

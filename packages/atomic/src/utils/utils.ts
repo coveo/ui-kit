@@ -93,8 +93,12 @@ export function elementHasAncestorTag(
   tagName: string
 ): boolean {
   const parentElement = el.parentElement;
-  if (!parentElement) return false;
-  if (parentElement.tagName === tagName.toUpperCase()) return true;
+  if (!parentElement) {
+    return false;
+  }
+  if (parentElement.tagName === tagName.toUpperCase()) {
+    return true;
+  }
   return elementHasAncestorTag(parentElement, tagName);
 }
 
@@ -136,4 +140,14 @@ export function sanitizeStyle(style: string) {
   // deepcode ignore ReactSetInnerHtml: sanitized by dompurify
   wrapperEl.innerHTML = purifiedOuterHTML;
   return wrapperEl.querySelector('style')?.innerHTML;
+}
+
+export function getFocusedElement(
+  rootElement: Document | ShadowRoot = document
+): Element | null {
+  const activeElement = rootElement.activeElement;
+  if (activeElement?.shadowRoot) {
+    return getFocusedElement(activeElement.shadowRoot) ?? activeElement;
+  }
+  return activeElement;
 }

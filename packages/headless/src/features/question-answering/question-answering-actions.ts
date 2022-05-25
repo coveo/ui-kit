@@ -1,8 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
 import {
-  documentIdentifierPayloadDefinition,
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
 
 export const expandSmartSnippet = createAction('smartSnippet/expand');
@@ -23,12 +23,18 @@ export const closeFeedbackModal = createAction(
 
 export const expandSmartSnippetRelatedQuestion = createAction(
   'smartSnippet/related/expand',
-  (payload: QuestionAnsweringDocumentIdActionCreatorPayload) =>
-    validatePayload(payload, documentIdentifierPayloadDefinition())
+  (
+    payload:
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+  ) => validateQuestionAnsweringActionCreatorPayload(payload)
 );
 
 export const collapseSmartSnippetRelatedQuestion = createAction(
   'smartSnippet/related/collapse',
-  (payload: QuestionAnsweringDocumentIdActionCreatorPayload) =>
-    validatePayload(payload, documentIdentifierPayloadDefinition())
+  (
+    payload:
+      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+      | QuestionAnsweringDocumentIdActionCreatorPayload
+  ) => validateQuestionAnsweringActionCreatorPayload(payload)
 );

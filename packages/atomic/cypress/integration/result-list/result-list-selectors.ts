@@ -6,7 +6,8 @@ export type ResultSection =
   | 'titleMetadata'
   | 'emphasized'
   | 'excerpt'
-  | 'bottomMetadata';
+  | 'bottomMetadata'
+  | 'children';
 
 export const resultSectionTags: Record<ResultSection, string> = {
   visual: 'atomic-result-section-visual',
@@ -17,6 +18,7 @@ export const resultSectionTags: Record<ResultSection, string> = {
   emphasized: 'atomic-result-section-emphasized',
   excerpt: 'atomic-result-section-excerpt',
   bottomMetadata: 'atomic-result-section-bottom-metadata',
+  children: 'atomic-result-section-children',
 };
 
 export const resultComponent = 'atomic-result';

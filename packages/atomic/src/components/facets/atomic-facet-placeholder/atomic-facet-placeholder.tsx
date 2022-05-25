@@ -3,10 +3,12 @@ import {getRandomArbitrary} from '../../../utils/utils';
 
 export interface FacetPlaceholderProps {
   numberOfValues: number;
+  isCollapsed: boolean;
 }
 
 export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
   numberOfValues,
+  isCollapsed,
 }) => {
   const facetValues = [];
   for (let i = 0; i < numberOfValues; i++) {
@@ -27,7 +29,7 @@ export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
         class="bg-neutral rounded h-8"
         style={{width: `${getRandomArbitrary(25, 75)}%`}}
       ></div>
-      <div class="mt-7">{facetValues}</div>
+      {!isCollapsed && <div class="mt-7">{facetValues}</div>}
     </div>
   );
 };

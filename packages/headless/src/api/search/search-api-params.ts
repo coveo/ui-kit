@@ -101,11 +101,12 @@ export interface AnalyticsParam {
   analytics?: {
     clientId: string;
     deviceId?: string;
-    pageId: string;
+    pageId?: string;
     clientTimestamp: string;
     documentReferrer: string;
     originContext: string;
-    userDisplayName: string;
+    userDisplayName?: string;
+    documentLocation?: string;
   };
 }
 

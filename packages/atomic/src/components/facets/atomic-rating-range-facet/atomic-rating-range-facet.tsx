@@ -63,7 +63,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicRatingRangeFacet
-  implements InitializableComponent, BaseFacet<NumericFacet, NumericFacetState>
+  implements InitializableComponent, BaseFacet<NumericFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
@@ -85,6 +85,7 @@ export class AtomicRatingRangeFacet
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -129,11 +130,12 @@ export class AtomicRatingRangeFacet
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
+   * Default: `1000`
    */
   @Prop({reflect: true}) public injectionDepth = 1000;
 
   /**
-   * The required facets & values for this facet to be displayed.
+   * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
    * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
@@ -151,7 +153,7 @@ export class AtomicRatingRangeFacet
    * ></atomic-rating-range-facet>
    * ```
    */
-  @MapProp() public dependsOn: Record<string, string> = {};
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -337,6 +339,7 @@ export class AtomicRatingRangeFacet
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfIntervals}
+          isCollapsed={this.isCollapsed}
         ></FacetPlaceholder>
       );
     }

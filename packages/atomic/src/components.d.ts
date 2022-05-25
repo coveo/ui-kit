@@ -9,8 +9,9 @@ import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCrite
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
-import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { Section } from "./components/atomic-layout-section/sections";
+import { ObservableMap } from "@stencil/store";
+import { AtomicStore } from "./utils/store";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -30,6 +31,10 @@ export namespace Components {
          */
         "delimitingCharacter": string;
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -46,7 +51,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -54,7 +59,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -72,6 +77,10 @@ export namespace Components {
     }
     interface AtomicColorFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs": 'checkbox' | 'box';
@@ -88,7 +97,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -96,7 +105,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -126,6 +135,10 @@ export namespace Components {
     }
     interface AtomicFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs": 'checkbox' | 'link' | 'box';
@@ -142,7 +155,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -150,7 +163,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -307,6 +320,7 @@ export namespace Components {
     }
     interface AtomicModal {
         "close": () => void;
+        "fullscreen": boolean;
         "isOpen": boolean;
         "source"?: HTMLElement;
     }
@@ -317,6 +331,10 @@ export namespace Components {
         "enableCancelLastAction": boolean;
     }
     interface AtomicNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn": Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
@@ -334,7 +352,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -342,7 +360,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -372,7 +390,7 @@ export namespace Components {
          */
         "endInclusive": boolean;
         /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -396,6 +414,10 @@ export namespace Components {
         "enableDuration": boolean;
     }
     interface AtomicRatingFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+         */
+        "dependsOn": Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
@@ -425,7 +447,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -443,6 +465,10 @@ export namespace Components {
     }
     interface AtomicRatingRangeFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -459,7 +485,7 @@ export namespace Components {
          */
         "icon": string;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -467,7 +493,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -496,6 +522,9 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * Classes that will be added to the result element.
+         */
         "classes": string;
         /**
           * The result content to display.
@@ -521,10 +550,15 @@ export namespace Components {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
         /**
           * The result item.
          */
         "result": Result | FoldedResult;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -617,7 +651,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
@@ -751,6 +785,10 @@ export namespace Components {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -760,6 +798,10 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
@@ -840,6 +882,37 @@ export namespace Components {
          */
         "mobileBreakpoint": string;
     }
+    interface AtomicSegmentedFacet {
+        "dependsOn": Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -867,6 +940,8 @@ export namespace Components {
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
          */
         "collapsedHeight": number;
+        "expanded": boolean;
+        "htmlContent": string;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
@@ -879,6 +954,9 @@ export namespace Components {
     interface AtomicSmartSnippetFeedbackModal {
         "isOpen": boolean;
         "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSource {
+        "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
         /**
@@ -924,7 +1002,7 @@ export namespace Components {
          */
         "amount": number;
         /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -938,6 +1016,10 @@ export namespace Components {
     }
     interface AtomicTimeframeFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -950,7 +1032,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth": number;
         /**
@@ -958,7 +1040,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label": string;
         /**
@@ -1370,6 +1452,12 @@ declare global {
         prototype: HTMLAtomicSearchLayoutElement;
         new (): HTMLAtomicSearchLayoutElement;
     };
+    interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetElement: {
+        prototype: HTMLAtomicSegmentedFacetElement;
+        new (): HTMLAtomicSegmentedFacetElement;
+    };
     interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
     }
     var HTMLAtomicSmartSnippetElement: {
@@ -1393,6 +1481,12 @@ declare global {
     var HTMLAtomicSmartSnippetFeedbackModalElement: {
         prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
         new (): HTMLAtomicSmartSnippetFeedbackModalElement;
+    };
+    interface HTMLAtomicSmartSnippetSourceElement extends Components.AtomicSmartSnippetSource, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetSourceElement: {
+        prototype: HTMLAtomicSmartSnippetSourceElement;
+        new (): HTMLAtomicSmartSnippetSourceElement;
     };
     interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
     }
@@ -1504,10 +1598,12 @@ declare global {
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
+        "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
+        "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
@@ -1532,6 +1628,10 @@ declare namespace LocalJSX {
          */
         "delimitingCharacter"?: string;
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -1548,7 +1648,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1556,7 +1656,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1574,6 +1674,10 @@ declare namespace LocalJSX {
     }
     interface AtomicColorFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
          */
         "displayValuesAs"?: 'checkbox' | 'box';
@@ -1590,7 +1694,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1598,7 +1702,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1628,6 +1732,10 @@ declare namespace LocalJSX {
     }
     interface AtomicFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs"?: 'checkbox' | 'link' | 'box';
@@ -1644,7 +1752,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1652,7 +1760,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1806,6 +1914,7 @@ declare namespace LocalJSX {
     }
     interface AtomicModal {
         "close"?: () => void;
+        "fullscreen"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: CustomEvent<never>) => void;
         "source"?: HTMLElement;
@@ -1817,6 +1926,10 @@ declare namespace LocalJSX {
         "enableCancelLastAction"?: boolean;
     }
     interface AtomicNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
@@ -1834,7 +1947,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1842,7 +1955,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1872,7 +1985,7 @@ declare namespace LocalJSX {
          */
         "endInclusive"?: boolean;
         /**
-          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1897,6 +2010,10 @@ declare namespace LocalJSX {
         "enableDuration"?: boolean;
     }
     interface AtomicRatingFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
          */
@@ -1926,7 +2043,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1944,6 +2061,10 @@ declare namespace LocalJSX {
     }
     interface AtomicRatingRangeFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -1960,7 +2081,7 @@ declare namespace LocalJSX {
          */
         "icon"?: string;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -1968,7 +2089,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -1997,6 +2118,9 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * Classes that will be added to the result element.
+         */
         "classes"?: string;
         /**
           * The result content to display.
@@ -2022,10 +2146,15 @@ declare namespace LocalJSX {
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
         "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
         /**
           * The result item.
          */
         "result": Result | FoldedResult;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ObservableMap<AtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -2239,6 +2368,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
         "maxWithQuery"?: number;
@@ -2248,6 +2381,10 @@ declare namespace LocalJSX {
         "maxWithoutQuery"?: number;
     }
     interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
         /**
           * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
          */
@@ -2316,6 +2453,37 @@ declare namespace LocalJSX {
          */
         "mobileBreakpoint"?: string;
     }
+    interface AtomicSegmentedFacet {
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -2337,17 +2505,21 @@ declare namespace LocalJSX {
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
         "innerStyle"?: string;
-        "onAtomic/smartSnippet/answerRendered"?: (event: CustomEvent<{height: number}>) => void;
+        "onAnswerSizeUpdated"?: (event: CustomEvent<{height: number}>) => void;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
          */
         "collapsedHeight"?: number;
+        "expanded": boolean;
+        "htmlContent": string;
         /**
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        "onCollapse"?: (event: CustomEvent<any>) => void;
+        "onExpand"?: (event: CustomEvent<any>) => void;
         /**
           * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */
@@ -2357,6 +2529,12 @@ declare namespace LocalJSX {
         "isOpen"?: boolean;
         "onFeedbackSent"?: (event: CustomEvent<any>) => void;
         "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSource {
+        "onBeginDelayedSelectSource"?: (event: CustomEvent<any>) => void;
+        "onCancelPendingSelectSource"?: (event: CustomEvent<any>) => void;
+        "onSelectSource"?: (event: CustomEvent<any>) => void;
+        "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
         /**
@@ -2402,7 +2580,7 @@ declare namespace LocalJSX {
          */
         "amount"?: number;
         /**
-          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2416,6 +2594,10 @@ declare namespace LocalJSX {
     }
     interface AtomicTimeframeFacet {
         /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
           * Specifies a unique identifier for the facet.
          */
         "facetId"?: string;
@@ -2428,7 +2610,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
          */
         "injectionDepth"?: number;
         /**
@@ -2436,7 +2618,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet.
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2512,10 +2694,12 @@ declare namespace LocalJSX {
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
+        "atomic-segmented-facet": AtomicSegmentedFacet;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
+        "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
@@ -2596,10 +2780,12 @@ declare module "@stencil/core" {
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
+            "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
             "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
+            "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
