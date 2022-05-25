@@ -133,6 +133,10 @@ import {
   FieldSuggestions as HeadlessFieldSuggestions,
   CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions,
   buildCategoryFieldSuggestions,
+  RecentQueriesList as HeadlessRecentQueriesList,
+  buildRecentQueriesList,
+  RecentResultsList as HeadlessRecentResultsList,
+  buildRecentResultsList,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -146,6 +150,10 @@ import {FieldSuggestions as FieldSuggestionsFn} from '../components/field-sugges
 import {FieldSuggestions} from '../components/field-suggestions/specific-field/field-suggestions.class';
 import {CategoryFieldSuggestions as CategorySuggestionsFn} from '../components/field-suggestions/category-field/category-suggestions.fn';
 import {CategoryFieldSuggestions} from '../components/field-suggestions/category-field/category-suggestions.class';
+import {RecentQueriesList} from '../components/recent-queries/recent-queries.class';
+import {RecentQueriesList as RecentQueriesListFn} from '../components/recent-queries/recent-queries.fn';
+import {RecentResultsList} from '../components/recent-results/recent-results.class';
+import {RecentResultsList as RecentResultsListFn} from '../components/recent-results/recent-results.fn';
 
 declare global {
   interface Window {
@@ -210,6 +218,8 @@ export class SearchPage extends Component {
   private readonly smartSnippetQuestionsList: HeadlessSmartSnippetQuestionsList;
   private readonly fieldSuggestionsAuthor: HeadlessFieldSuggestions;
   private readonly categoryFieldSuggestions: HeadlessCategoryFieldSuggestions;
+  private readonly recentQueriesList: HeadlessRecentQueriesList;
+  private readonly recentResultsList: HeadlessRecentResultsList;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -362,6 +372,10 @@ export class SearchPage extends Component {
         facetId: 'geographicalhierarchy-3',
       },
     });
+
+    this.recentQueriesList = buildRecentQueriesList(this.engine);
+
+    this.recentResultsList = buildRecentResultsList(this.engine);
   }
 
   initEngine(props: SearchPageProps) {
@@ -669,6 +683,14 @@ export class SearchPage extends Component {
           <Section title="notify-trigger">
             <NotifyTrigger></NotifyTrigger>
             <NotifyTriggerFn controller={this.notifyTrigger}></NotifyTriggerFn>
+          </Section>
+          <Section title="recent-queries-list">
+            <RecentQueriesList maxLength={10} />
+            <RecentQueriesListFn controller={this.recentQueriesList} />
+          </Section>
+          <Section title="recent-results-list">
+            <RecentResultsList maxLength={10} />
+            <RecentResultsListFn controller={this.recentResultsList} />
           </Section>
         </AppContext.Provider>
       </div>
