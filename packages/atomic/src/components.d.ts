@@ -912,6 +912,7 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
+        "withSearch": boolean;
     }
     interface AtomicSmartSnippet {
         /**
@@ -2483,6 +2484,7 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
+        "withSearch"?: boolean;
     }
     interface AtomicSmartSnippet {
         /**
