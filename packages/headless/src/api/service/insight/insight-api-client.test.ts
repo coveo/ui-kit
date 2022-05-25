@@ -145,7 +145,7 @@ describe('insight api client', () => {
         accessToken: userActionsRequest.accessToken,
         method: 'POST',
         contentType: 'application/json',
-        url: `${userActionsRequest.url}/rest/organizations/${userActionsRequest.organizationId}/insight/v1/configs/${userActionsRequest.insightId}/user-actions`,
+        url: `${userActionsRequest.url}/rest/organizations/${userActionsRequest.organizationId}/insight/v1/configs/${userActionsRequest.insightId}/useractions`,
         requestParams: {
           ticketCreationDate: userActionsRequest.ticketCreationDate,
           numberSessionsBefore: userActionsRequest.numberSessionsBefore,
