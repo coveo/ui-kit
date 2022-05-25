@@ -83,6 +83,9 @@ export class AtomicSegmentedFacet
   // TODO
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
+  // TODO
+  @Prop({reflect: true}) public withSearch = true;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
