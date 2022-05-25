@@ -32,13 +32,14 @@ export type BaseFacet<FacetType extends AnyFacetType> = {
   NumberOfValuesProp<FacetType> &
   NumberOfIntervalsProp<FacetType> &
   SortCriterionProp<FacetType> &
-  DisplayValuesAsProp;
+  DisplayValuesAsProp &
+  CollapsedProp;
 
 type PropsOnAllFacets = {
   facetId?: string;
   label: string;
   field: string;
-  isCollapsed: boolean;
+
   filterFacetCount: boolean;
   injectionDepth: number;
   dependsOn: Record<string, string>;
@@ -84,6 +85,8 @@ type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
 type DisplayValuesAsProp = {
   displayValueAs?: 'checkbox' | 'box' | 'link';
 };
+
+type CollapsedProp = {isCollapsed?: boolean};
 
 export interface FacetValueProps {
   i18n: i18n;
