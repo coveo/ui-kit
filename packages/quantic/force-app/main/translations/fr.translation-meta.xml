@@ -428,4 +428,12 @@
       <label>Filtres</label>
       <name>quantic_Filters</name>
     </customLabels>
+    <customLabels>
+      <label>Tri et Filtres</label>
+      <name>quantic_SortAndFilters</name>
+    </customLabels>
+    <customLabels>
+      <label>Voir les résultats</label>
+      <name>quantic_ViewResults</name>
+    </customLabels>
 </Translations>
