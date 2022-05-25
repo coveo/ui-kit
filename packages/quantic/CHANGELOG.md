@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.3...@coveo/quantic@1.17.0) (2022-05-25)
+
+
+### Bug Fixes
+
+* **atomic:** vertical align feedback modal reasons ([#2008](https://github.com/coveo/ui-kit/issues/2008)) ([8f41383](https://github.com/coveo/ui-kit/commit/8f413834fd8d48a27c04e22367bc198b451f53d4))
+
+
+### Features
+
+* **quantic:** Creation of the Quantic Refine Toggle component ([#1970](https://github.com/coveo/ui-kit/issues/1970)) ([1ed44f2](https://github.com/coveo/ui-kit/commit/1ed44f2733ea2011d524aaf8a408da5756e67e48))
+
+
+
+
+
 ## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.2...@coveo/quantic@1.16.3) (2022-05-19)
 
 
