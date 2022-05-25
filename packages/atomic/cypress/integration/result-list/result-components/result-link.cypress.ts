@@ -13,17 +13,17 @@ import {pickBy} from 'lodash';
 
 interface ResultLinkOptions {
   target?: '_self' | '_blank' | '_parent' | '_top';
-  slot?: HTMLElement;
+  slots?: HTMLElement[];
   hrefTemplate?: string;
 }
 
 const addResultLinkInResultList = (
   props: TagProps = {},
-  slot?: HTMLElement
+  slots?: HTMLElement[]
 ) => {
   const resultLinkEl = generateComponentHTML(resultLinkComponent, props);
-  if (slot) {
-    resultLinkEl.appendChild(slot);
+  if (slots?.length) {
+    slots.forEach((slot) => resultLinkEl.appendChild(slot));
   }
   return addResultList(buildTemplateWithSections({title: resultLinkEl}));
 };
@@ -48,7 +48,7 @@ describe('Result Link Component', () => {
     function setupResultLink({
       target,
       hrefTemplate,
-      slot,
+      slots,
     }: ResultLinkOptions = {}) {
       new TestFixture()
         .with(
@@ -57,7 +57,7 @@ describe('Result Link Component', () => {
               {target: target, 'href-template': hrefTemplate},
               (property) => property !== undefined
             ) as TagProps,
-            slot
+            slots
           )
         )
         .withCustomResponse((response) =>
@@ -86,19 +86,6 @@ describe('Result Link Component', () => {
 
     CommonAssertions.assertAccessibility(ResultLinkSelectors.firstInResult);
 
-    describe('when there is a default slot', () => {
-      const slottedComponent = 'canvas';
-      beforeEach(() => {
-        setupResultLink({slot: generateComponentHTML(slottedComponent)});
-      });
-
-      it('should render the slot inside of the "a" tag', () => {
-        ResultLinkSelectors.firstInResult()
-          .find(slottedComponent)
-          .should('exist');
-      });
-    });
-
     describe('when there is no default slot', () => {
       beforeEach(() => {
         setupResultLink();
@@ -109,17 +96,103 @@ describe('Result Link Component', () => {
       });
     });
 
+    describe('when there is a default slot', () => {
+      const slottedComponent = document.createElement('div');
+      slottedComponent.id = 'myslot';
+      slottedComponent.innerText = 'Slotted element';
+      beforeEach(() => {
+        setupResultLink({slots: [slottedComponent]});
+      });
+
+      it('should render the slot inside of the "a" tag', () => {
+        ResultLinkSelectors.firstInResult()
+          .find('a #myslot')
+          .should('be.visible');
+      });
+    });
+
+    describe('when there is a default slot (empty string)', () => {
+      const slottedComponent = document.createElement('div');
+      slottedComponent.id = 'myslot';
+      slottedComponent.innerText = 'Slotted element';
+      slottedComponent.slot = '';
+      beforeEach(() => {
+        setupResultLink({slots: [slottedComponent]});
+      });
+
+      it('should render the slot inside of the "a" tag', () => {
+        ResultLinkSelectors.firstInResult()
+          .find('a #myslot')
+          .should('be.visible');
+      });
+    });
+
     describe('when there is a valid slot named "attributes"', () => {
       it('copies the attributes properly', () => {
         const slot = generateComponentHTML('a', {
           download: '',
           target: '_self',
         });
-        setupResultLink({slot});
+        setupResultLink({slots: [slot]});
         ResultLinkSelectors.firstInResult()
           .find('a')
           .should('have.attr', 'download', '')
           .and('have.attr', 'target', '_self');
+      });
+    });
+
+    describe('when there is a slot named "attributes" & a default slot', () => {
+      before(() => {
+        const attributesSlot = generateComponentHTML('a', {
+          download: '',
+          target: '_self',
+        });
+        const defaultSlot = document.createElement('div');
+        defaultSlot.id = 'myslot';
+        defaultSlot.innerText = 'Slotted element';
+
+        setupResultLink({slots: [attributesSlot, defaultSlot]});
+      });
+
+      it('copies the attributes properly', () => {
+        ResultLinkSelectors.firstInResult()
+          .find('a')
+          .should('have.attr', 'download', '')
+          .and('have.attr', 'target', '_self');
+      });
+
+      it('should render the slot inside of the "a" tag', () => {
+        ResultLinkSelectors.firstInResult()
+          .find('a #myslot')
+          .should('be.visible');
+      });
+    });
+
+    describe('when there is a slot named "attributes" & a default slot (empty string)', () => {
+      before(() => {
+        const attributesSlot = generateComponentHTML('a', {
+          download: '',
+          target: '_self',
+        });
+        const defaultSlot = document.createElement('div');
+        defaultSlot.id = 'myslot';
+        defaultSlot.innerText = 'Slotted element';
+        defaultSlot.slot = '';
+
+        setupResultLink({slots: [attributesSlot, defaultSlot]});
+      });
+
+      it('copies the attributes properly', () => {
+        ResultLinkSelectors.firstInResult()
+          .find('a')
+          .should('have.attr', 'download', '')
+          .and('have.attr', 'target', '_self');
+      });
+
+      it('should render the slot inside of the "a" tag', () => {
+        ResultLinkSelectors.firstInResult()
+          .find('a #myslot')
+          .should('be.visible');
       });
     });
 

@@ -33,6 +33,7 @@ export class AtomicTimeframe implements Timeframe {
 
   /**
    * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label?: string;
 }

@@ -27,6 +27,7 @@ import {AriaLiveRegion} from '../../utils/accessibility-utils';
  * @part no-results - The text indicating that no results were found for the search.
  * @part search-tips - The search tips to help the user correct the query.
  * @part highlight - The highlighted query.
+ * @part icon - The magnifying glass icon.
  */
 @Component({
   tag: 'atomic-no-results',
@@ -74,6 +75,7 @@ export class AtomicNoResults {
   private renderMagnifyingGlass() {
     return (
       <atomic-icon
+        part="icon"
         icon={MagnifyingGlass}
         class="my-6 flex flex-col items-center w-1/2"
       ></atomic-icon>
