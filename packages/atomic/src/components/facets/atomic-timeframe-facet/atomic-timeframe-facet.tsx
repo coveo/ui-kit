@@ -28,7 +28,12 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+import {
+  BaseFacet,
+  parseDependsOn,
+  shouldDisplayInputForFacetRange,
+  validateDependsOn,
+} from '../facet-common';
 import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';
@@ -384,16 +389,20 @@ export class AtomicTimeframeFacet
   }
 
   private get shouldRenderValues() {
-    const hasInputRange = !!this.filterState?.range;
-    return !hasInputRange && !!this.valuesToRender.length;
+    return !this.hasInputRange && !!this.valuesToRender.length;
+  }
+
+  private get hasInputRange() {
+    return !!this.filterState?.range;
   }
 
   private get shouldRenderInput() {
-    if (!this.withDatePicker) {
-      return false;
-    }
-
-    return this.searchStatusState.hasResults || !!this.filterState?.range;
+    return shouldDisplayInputForFacetRange({
+      hasInput: this.withDatePicker,
+      hasInputRange: this.hasInputRange,
+      searchStatusState: this.searchStatusState,
+      valuesToRender: this.valuesToRender,
+    });
   }
 
   public render() {

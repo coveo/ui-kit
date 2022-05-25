@@ -30,7 +30,12 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+import {
+  BaseFacet,
+  parseDependsOn,
+  shouldDisplayInputForFacetRange,
+  validateDependsOn,
+} from '../facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
@@ -199,7 +204,9 @@ export class AtomicNumericFacet
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.numberOfValues && this.initializeFacet();
+    this.numberOfValues > 0
+      ? this.initializeFacetForDisplay()
+      : this.initializeFacetForResultsMatch();
     this.withInput && this.initializeFilter();
     this.inititalizeDependenciesManager();
     this.registerFacetToStore();
@@ -212,20 +219,31 @@ export class AtomicNumericFacet
     this.dependenciesManager?.stopWatching();
   }
 
-  private initializeFacet() {
+  private initializeFacetForDisplay() {
     this.manualRanges = this.buildManualRanges();
-    const options: NumericFacetOptions = {
-      facetId: this.facetId,
-      field: this.field,
+    this.initializeFacet({
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       rangeAlgorithm: this.rangeAlgorithm,
       currentValues: this.manualRanges,
-      generateAutomaticRanges: !this.manualRanges.length,
-      filterFacetCount: this.filterFacetCount,
-      injectionDepth: this.injectionDepth,
-    };
-    this.facet = buildNumericFacet(this.bindings.engine, {options});
+    });
+  }
+
+  private initializeFacetForResultsMatch() {
+    this.initializeFacet({numberOfValues: 1});
+  }
+
+  private initializeFacet(options: Partial<NumericFacetOptions>) {
+    this.facet = buildNumericFacet(this.bindings.engine, {
+      options: {
+        facetId: this.facetId,
+        field: this.field,
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+        generateAutomaticRanges: !this.manualRanges.length,
+        ...options,
+      },
+    });
     this.facetId = this.facet.state.facetId;
   }
 
@@ -449,27 +467,20 @@ export class AtomicNumericFacet
   }
 
   private get shouldRenderValues() {
-    return !this.hasInputRange && !!this.valuesToRender.length;
+    return (
+      !this.hasInputRange &&
+      this.numberOfValues > 0 &&
+      !!this.valuesToRender.length
+    );
   }
 
   private get shouldRenderInput() {
-    if (!this.withInput) {
-      return false;
-    }
-
-    if (this.hasInputRange) {
-      return true;
-    }
-
-    if (!this.searchStatusState.hasResults) {
-      return false;
-    }
-
-    if (!this.valuesToRender.length && this.numberOfValues > 0) {
-      return false;
-    }
-
-    return true;
+    return shouldDisplayInputForFacetRange({
+      hasInputRange: this.hasInputRange,
+      searchStatusState: this.searchStatusState,
+      valuesToRender: this.valuesToRender,
+      hasInput: !!this.withInput,
+    });
   }
 
   public render() {
