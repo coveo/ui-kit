@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.62.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.61.0...@coveo/atomic@1.62.0) (2022-05-25)
+
+
+### Bug Fixes
+
+* **atomic:** change breakpoints for grid display + nowrap for table ([#2011](https://github.com/coveo/ui-kit/issues/2011)) ([7bfb901](https://github.com/coveo/ui-kit/commit/7bfb901d4f29b9aa4f1084556e69229463db4b04))
+* **atomic:** fix bad merge ([#2017](https://github.com/coveo/ui-kit/issues/2017)) ([6916079](https://github.com/coveo/ui-kit/commit/691607912da71d93c5050dfec8f7cb9ecba13881))
+* **atomic:** hid breadcrumb icon from screen readers ([#2012](https://github.com/coveo/ui-kit/issues/2012)) ([12486eb](https://github.com/coveo/ui-kit/commit/12486ebe2973b5a6e087b468d183fb4b05dba629))
+* **atomic:** improved focus trap detection ([#2015](https://github.com/coveo/ui-kit/issues/2015)) ([5f127a4](https://github.com/coveo/ui-kit/commit/5f127a4759993f0979b11556fddd8b54f0ee2506))
+* **atomic:** make atomic-result-link default/unnamed slot render properly ([#1994](https://github.com/coveo/ui-kit/issues/1994)) ([518f673](https://github.com/coveo/ui-kit/commit/518f6730bc217f7bc4fde4c35d2d0c01e85a495c))
+* **atomic:** vertical align feedback modal reasons ([#2008](https://github.com/coveo/ui-kit/issues/2008)) ([8f41383](https://github.com/coveo/ui-kit/commit/8f413834fd8d48a27c04e22367bc198b451f53d4))
+
+
+### Features
+
+* **atomic:** add missing parts for atomic-search-box/atomic-no-results ([#2005](https://github.com/coveo/ui-kit/issues/2005)) ([595b8be](https://github.com/coveo/ui-kit/commit/595b8be51e72811eaf6ecfeb1302b33841da194f))
+* **atomic:** Segmented Filter Facet basic structure ([#2007](https://github.com/coveo/ui-kit/issues/2007)) ([5f53de1](https://github.com/coveo/ui-kit/commit/5f53de1da2b1272865881bda2199b2ab33d8d157))
+
+
+
+
+
 # [1.61.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.60.1...@coveo/atomic@1.61.0) (2022-05-19)
 
 
