@@ -107,6 +107,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -146,6 +147,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
+   * Default: `1000`
    */
   @Prop() public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
