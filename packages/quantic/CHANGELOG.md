@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.17.0...@coveo/quantic@1.17.1) (2022-05-26)
+
+
+### Bug Fixes
+
+* **atomic:** sanitize facet value to use them as parts ([#2024](https://github.com/coveo/ui-kit/issues/2024)) ([87259f0](https://github.com/coveo/ui-kit/commit/87259f097c39d26510024750f9714f88ff043066))
+
+
+
+
+
 # [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.3...@coveo/quantic@1.17.0) (2022-05-25)
 
 
