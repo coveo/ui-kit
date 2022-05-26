@@ -407,6 +407,28 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildRecentQueriesList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/recent-queries/recent-queries.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/recent-queries/recent-queries.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildRecentResultsList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/recent-results/recent-results.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/recent-results/recent-results.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [

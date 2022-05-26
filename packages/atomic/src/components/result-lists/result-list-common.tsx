@@ -211,7 +211,7 @@ export class ResultListCommon {
     isLoading: boolean,
     displayPlaceholders: boolean
   ): string {
-    const classes = getResultDisplayClasses(display, density, imageSize!);
+    const classes = getResultDisplayClasses(display, density, imageSize);
     if (firstSearchExecuted && isLoading) {
       classes.push('loading');
     }

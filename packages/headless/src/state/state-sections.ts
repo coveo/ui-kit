@@ -39,6 +39,7 @@ import {CaseFieldState} from '../features/case-field/case-field-state';
 import {CaseInputState} from '../features/case-input/case-input-state';
 import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state';
 import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-state';
+import {InstantResultsState} from '../features/instant-results/instant-results-state';
 
 export interface QuerySection {
   /**
@@ -141,6 +142,13 @@ export interface QuerySetSection {
    * The set of basic query expressions.
    */
   querySet: QuerySetState;
+}
+
+export interface InstantResultSection {
+  /**
+   * The set of results loaded for query expressions.
+   */
+  instantResults: InstantResultsState;
 }
 
 export interface PipelineSection {

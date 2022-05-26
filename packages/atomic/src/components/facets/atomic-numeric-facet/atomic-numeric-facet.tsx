@@ -83,7 +83,7 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
   shadow: true,
 })
 export class AtomicNumericFacet
-  implements InitializableComponent, BaseFacet<NumericFacet, NumericFacetState>
+  implements InitializableComponent, BaseFacet<NumericFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: NumericFacet;
@@ -96,7 +96,7 @@ export class AtomicNumericFacet
 
   @BindStateToController('facet')
   @State()
-  public facetState?: NumericFacetState;
+  public facetState!: NumericFacetState;
   @BindStateToController('filter')
   @State()
   public filterState?: NumericFilterState;
@@ -111,6 +111,7 @@ export class AtomicNumericFacet
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -149,6 +150,10 @@ export class AtomicNumericFacet
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
+  /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
@@ -156,6 +161,7 @@ export class AtomicNumericFacet
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
+   * Default: `1000`
    */
   @Prop({reflect: true}) public injectionDepth = 1000;
 
@@ -283,7 +289,7 @@ export class AtomicNumericFacet
 
   private formatValue(value: number) {
     try {
-      return this.formatter(value, this.bindings.i18n.languages);
+      return this.formatter(value, this.bindings.i18n.languages as string[]);
     } catch (error) {
       this.bindings.engine.logger.error(
         `atomic-numeric-facet facet value "${value}" could not be formatted correctly.`,
@@ -332,6 +338,7 @@ export class AtomicNumericFacet
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
+        headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
