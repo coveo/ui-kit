@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.17.1...@coveo/quantic@1.18.0) (2022-05-26)
+
+
+### Features
+
+* **quantic:** New Quantic Tab Bar component created ([#1960](https://github.com/coveo/ui-kit/issues/1960)) ([5cf3b41](https://github.com/coveo/ui-kit/commit/5cf3b4137aae801685af1f9a0637e54fe48b6d56))
+
+
+
+
+
+## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.17.0...@coveo/quantic@1.17.1) (2022-05-26)
+
+
+### Bug Fixes
+
+* **atomic:** sanitize facet value to use them as parts ([#2024](https://github.com/coveo/ui-kit/issues/2024)) ([87259f0](https://github.com/coveo/ui-kit/commit/87259f097c39d26510024750f9714f88ff043066))
+
+
+
+
+
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.3...@coveo/quantic@1.17.0) (2022-05-25)
+
+
+### Bug Fixes
+
+* **atomic:** vertical align feedback modal reasons ([#2008](https://github.com/coveo/ui-kit/issues/2008)) ([8f41383](https://github.com/coveo/ui-kit/commit/8f413834fd8d48a27c04e22367bc198b451f53d4))
+
+
+### Features
+
+* **quantic:** Creation of the Quantic Refine Toggle component ([#1970](https://github.com/coveo/ui-kit/issues/1970)) ([1ed44f2](https://github.com/coveo/ui-kit/commit/1ed44f2733ea2011d524aaf8a408da5756e67e48))
+
+
+
+
+
+## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.2...@coveo/quantic@1.16.3) (2022-05-19)
+
+
+### Bug Fixes
+
+* **atomic:** fix regression on deprecated image prop for result list ([#2001](https://github.com/coveo/ui-kit/issues/2001)) ([c632c69](https://github.com/coveo/ui-kit/commit/c632c69480468b3cef144cd099a95819f69e0336))
+
+
+
+
+
+## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.1...@coveo/quantic@1.16.2) (2022-05-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.0...@coveo/quantic@1.16.1) (2022-05-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.15.0...@coveo/quantic@1.16.0) (2022-05-13)
 
 

@@ -50,13 +50,13 @@ export declare interface AtomicCategoryFacet extends Components.AtomicCategoryFa
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 @Component({
   selector: 'atomic-category-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 export class AtomicCategoryFacet {
   protected el: HTMLElement;
@@ -71,13 +71,13 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 @Component({
   selector: 'atomic-color-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 export class AtomicColorFacet {
   protected el: HTMLElement;
@@ -153,13 +153,13 @@ export declare interface AtomicFacet extends Components.AtomicFacet {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 @Component({
   selector: 'atomic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
 })
 export class AtomicFacet {
   protected el: HTMLElement;
@@ -423,13 +423,13 @@ export declare interface AtomicNumericFacet extends Components.AtomicNumericFace
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput']
 })
 @Component({
   selector: 'atomic-numeric-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput']
 })
 export class AtomicNumericFacet {
   protected el: HTMLElement;
@@ -533,13 +533,13 @@ export declare interface AtomicRatingFacet extends Components.AtomicRatingFacet 
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
 })
 @Component({
   selector: 'atomic-rating-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
 })
 export class AtomicRatingFacet {
   protected el: HTMLElement;
@@ -554,13 +554,13 @@ export declare interface AtomicRatingRangeFacet extends Components.AtomicRatingR
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
 })
 @Component({
   selector: 'atomic-rating-range-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals']
 })
 export class AtomicRatingRangeFacet {
   protected el: HTMLElement;
@@ -1186,13 +1186,13 @@ export declare interface AtomicSearchBoxQuerySuggestions extends Components.Atom
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 @Component({
   selector: 'atomic-search-box-query-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 export class AtomicSearchBoxQuerySuggestions {
   protected el: HTMLElement;
@@ -1207,13 +1207,13 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 @Component({
   selector: 'atomic-search-box-recent-queries',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
 export class AtomicSearchBoxRecentQueries {
   protected el: HTMLElement;
@@ -1444,13 +1444,13 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'withDatePicker']
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'withDatePicker']
 })
 @Component({
   selector: 'atomic-timeframe-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'isCollapsed', 'label', 'withDatePicker']
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'withDatePicker']
 })
 export class AtomicTimeframeFacet {
   protected el: HTMLElement;

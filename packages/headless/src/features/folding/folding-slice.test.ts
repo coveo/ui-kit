@@ -600,5 +600,25 @@ describe('folding slice', () => {
 
       expect(Object.keys(state.collections)).toEqual(['thread', 'storage']);
     });
+
+    it('creates a collection when a result has a parentResult', () => {
+      const childResult = buildMockResultWithFolding();
+      childResult.parentResult = buildMockResultWithFolding();
+      childResult.raw.collection = childResult.parentResult.raw.collection =
+        'the_collection';
+      dispatchSearch([childResult]);
+      expect(state.collections['the_collection'].result).toEqual(
+        childResult.parentResult
+      );
+    });
+
+    it('throws a clear error message when it is unable to find a collection in the state', () => {
+      state.collections = {};
+      const foldedResult = buildMockResultWithFolding();
+      foldedResult.raw.collection = 'totally_does_not_exists';
+      expect(() => dispatchLoadCollection([foldedResult])).toThrowError(
+        /Unable to create collection totally_does_not_exists/
+      );
+    });
   });
 });

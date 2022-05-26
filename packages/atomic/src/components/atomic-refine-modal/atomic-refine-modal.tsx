@@ -132,6 +132,7 @@ export class AtomicRefineModal implements InitializableComponent {
           class="grid place-items-center"
           part="close-button"
           onClick={() => (this.isOpen = false)}
+          ariaLabel={this.bindings.i18n.t('close')}
         >
           <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
         </Button>

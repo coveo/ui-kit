@@ -26,6 +26,7 @@ import {randomID} from '../../../utils/utils';
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
  *
  * @part result-list - The element containing every result of a result list
+ * @part outline - The element displaying an outline or a divider around a result
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
  * @part result-list-grid-clickable - The clickable link encompassing the result when results are displayed as a grid
  * @part result-table - The element of the result table containing a heading and a body
@@ -89,11 +90,14 @@ export class AtomicResultList implements InitializableComponent {
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
+  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
   /**
    * @deprecated use `imageSize` instead.
    */
   @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
+
+  // to remove when `image` prop is removed;
+  private propToUseForImageSize: 'image' | 'imageSize' = 'imageSize';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -108,6 +112,16 @@ export class AtomicResultList implements InitializableComponent {
   ) {
     this.renderingFunction = render;
     this.assignRenderingFunctionIfPossible();
+  }
+
+  connectedCallback() {
+    // to remove when `image` prop is removed;
+    if (this.host.hasAttribute('image')) {
+      this.propToUseForImageSize = 'image';
+    }
+    if (this.host.hasAttribute('image-size')) {
+      this.propToUseForImageSize = 'imageSize';
+    }
   }
 
   @Listen('scroll', {target: 'window'})
@@ -159,7 +173,7 @@ export class AtomicResultList implements InitializableComponent {
       host: this.host,
       display: this.display,
       density: this.density,
-      imageSize: this.imageSize,
+      imageSize: this.determineImageSize,
       templateHasError: this.templateHasError,
       resultListState: this.resultListState,
       resultsPerPageState: this.resultsPerPageState,
@@ -175,5 +189,12 @@ export class AtomicResultList implements InitializableComponent {
       this.resultListCommon.renderingFunction = this
         .renderingFunction as ResultRenderingFunction;
     }
+  }
+
+  private get determineImageSize() {
+    if (this.propToUseForImageSize === 'image') {
+      return this.image;
+    }
+    return this.imageSize;
   }
 }

@@ -13,6 +13,7 @@ import {
   PaginationSection,
   PipelineSection,
   QuerySetSection,
+  InstantResultSection,
   QuerySuggestionSection,
   RedirectionSection,
   SearchHubSection,
@@ -51,6 +52,7 @@ export type SearchParametersState = FacetSection &
   ContextSection &
   DictionaryFieldContextSection &
   QuerySetSection &
+  InstantResultSection &
   PipelineSection &
   SearchHubSection &
   DebugSection;
