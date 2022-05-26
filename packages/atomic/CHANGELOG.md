@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.63.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.2...@coveo/atomic@1.63.0) (2022-05-26)
+
+
+### Features
+
+* **atomic:** added heading-level prop to facets ([#2025](https://github.com/coveo/ui-kit/issues/2025)) ([660ac63](https://github.com/coveo/ui-kit/commit/660ac637e58db47b0349aa8e36ba797c6e4d017d))
+
+
+
+
+
 ## [1.62.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.1...@coveo/atomic@1.62.2) (2022-05-26)
 
 
