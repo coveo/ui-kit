@@ -792,6 +792,13 @@
       <shortDescription>Read more</shortDescription>
     </labels>
     <labels>
+      <fullName>quantic_More</fullName>
+      <value>More</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>More</shortDescription>
+    </labels>
+    <labels>
       <fullName>quantic_Filters</fullName>
       <value>Filters</value>
       <language>en_US</language>
