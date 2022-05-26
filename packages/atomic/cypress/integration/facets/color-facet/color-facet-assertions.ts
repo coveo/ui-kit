@@ -48,10 +48,10 @@ export function assertValuesSortedAlphanumerically() {
   });
 }
 
-export function assertBackgroundButtonColorRed() {
-  it('should have "red" background color for YoutTubeVideo', () => {
-    ColorFacetSelectors.selectedBoxValue().should(($el) => {
-      expect($el).to.have.css('background-color', 'rgb(255, 255, 255)');
+export function assertButtonBackgroundColor(text: string, color: string) {
+  it(`should have ${color} background color for ${text}`, () => {
+    ColorFacetSelectors.boxValueWithText(text).should(($el) => {
+      expect($el).to.have.css('background-color', color);
     });
   });
 }
