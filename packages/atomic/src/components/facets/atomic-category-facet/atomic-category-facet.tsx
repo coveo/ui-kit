@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -318,29 +318,27 @@ export class AtomicCategoryFacet
   private renderAllCategories() {
     const allCategories = this.bindings.i18n.t('all-categories');
     return (
-      <li key={allCategories}>
-        <Button
-          style="text-neutral"
-          part="all-categories-button"
-          class="parent-button"
-          onClick={() => {
-            this.activeValueFocus.focusAfterSearch();
-            this.facet.deselectAll();
-          }}
-        >
-          <atomic-icon
-            aria-hidden="true"
-            icon={LeftArrow}
-            part="back-arrow"
-            class="back-arrow"
-          ></atomic-icon>
-          <span class="truncate">{allCategories}</span>
-        </Button>
-      </li>
+      <Button
+        style="text-neutral"
+        part="all-categories-button"
+        class="parent-button"
+        onClick={() => {
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
+      >
+        <atomic-icon
+          aria-hidden="true"
+          icon={LeftArrow}
+          part="back-arrow"
+          class="back-arrow"
+        ></atomic-icon>
+        <span class="truncate">{allCategories}</span>
+      </Button>
     );
   }
 
-  private renderParent(facetValue: CategoryFacetValue) {
+  private renderParentButton(facetValue: CategoryFacetValue) {
     const displayValue = getFieldValueCaption(
       this.field,
       facetValue.value,
@@ -352,71 +350,87 @@ export class AtomicCategoryFacet
     });
 
     return (
-      <li key={displayValue}>
-        <Button
-          style="text-neutral"
-          part="parent-button"
-          class="parent-button"
-          ariaPressed="false"
-          onClick={() => {
-            this.activeValueFocus.focusAfterSearch();
-            this.facet.toggleSelect(facetValue);
-          }}
-          ariaLabel={ariaLabel}
-        >
-          <atomic-icon
-            aria-hidden="true"
-            icon={LeftArrow}
-            part="back-arrow"
-            class="back-arrow"
-          ></atomic-icon>
-          <span class="truncate">{displayValue}</span>
-        </Button>
-      </li>
+      <Button
+        style="text-neutral"
+        part="parent-button"
+        class="parent-button"
+        ariaPressed="false"
+        onClick={() => {
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.toggleSelect(facetValue);
+        }}
+        ariaLabel={ariaLabel}
+      >
+        <atomic-icon
+          aria-hidden="true"
+          icon={LeftArrow}
+          part="back-arrow"
+          class="back-arrow"
+        ></atomic-icon>
+        <span class="truncate">{displayValue}</span>
+      </Button>
     );
   }
 
-  private renderParents() {
+  private renderValuesTree(
+    parents: CategoryFacetValue[],
+    startWithAllCategories: boolean
+  ) {
     if (!this.hasParents) {
       return;
     }
 
-    const nonActiveParents = this.facetState.parents.slice(0, -1);
-    const activeParent = this.facetState.parents.slice(-1)[0];
+    if (startWithAllCategories) {
+      return (
+        <li class="contents">
+          {this.renderAllCategories()}
+          <ul class="contents">{this.renderValuesTree(parents, false)}</ul>
+        </li>
+      );
+    }
+
+    if (parents.length > 1) {
+      return (
+        <li class="contents">
+          {this.renderParentButton(parents[0])}
+          <ul class="contents">
+            {this.renderValuesTree(parents.slice(1), false)}
+          </ul>
+        </li>
+      );
+    }
+
     const activeParentDisplayValue = getFieldValueCaption(
       this.field,
-      activeParent.value,
+      parents[0].value,
       this.bindings.i18n
     );
 
     return (
-      <ul part="parents" class="mt-3">
-        {this.renderAllCategories()}
-        {nonActiveParents.map((parent) => this.renderParent(parent))}
-        <FacetValueLink
+      <FacetValueLink
+        displayValue={activeParentDisplayValue}
+        numberOfResults={parents[0].numberOfResults}
+        isSelected={true}
+        i18n={this.bindings.i18n}
+        onClick={() => {
+          this.activeValueFocus.focusAfterSearch();
+          this.facet.deselectAll();
+        }}
+        searchQuery={this.facetState.facetSearch.query}
+        part="active-parent"
+        class="parent-active"
+        buttonRef={this.activeValueFocus.setTarget}
+        subList={this.renderChildren()}
+      >
+        <FacetValueLabelHighlight
           displayValue={activeParentDisplayValue}
-          numberOfResults={activeParent.numberOfResults}
           isSelected={true}
-          i18n={this.bindings.i18n}
-          onClick={() => {
-            this.activeValueFocus.focusAfterSearch();
-            this.facet.deselectAll();
-          }}
-          searchQuery={this.facetState.facetSearch.query}
-          part="active-parent"
-          class="parent-active"
-          buttonRef={this.activeValueFocus.setTarget}
-        >
-          <FacetValueLabelHighlight
-            displayValue={activeParentDisplayValue}
-            isSelected={true}
-          ></FacetValueLabelHighlight>
-        </FacetValueLink>
-      </ul>
+        ></FacetValueLabelHighlight>
+      </FacetValueLink>
     );
   }
 
-  private renderValue(facetValue: CategoryFacetValue) {
+  private renderChild(facetValue: CategoryFacetValue) {
     const displayValue = getFieldValueCaption(
       this.field,
       facetValue.value,
@@ -443,14 +457,14 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderValues() {
+  private renderChildren() {
     if (!this.facetState.values.length) {
       return;
     }
 
     return (
-      <ul part="values" class={this.hasParents ? 'pl-9' : 'mt-3'}>
-        {this.facetState.values.map((value) => this.renderValue(value))}
+      <ul part="values" class={this.hasParents ? 'pl-2' : 'mt-3'}>
+        {this.facetState.values.map((value) => this.renderChild(value))}
       </ul>
     );
   }
@@ -534,13 +548,16 @@ export class AtomicCategoryFacet
         {this.renderHeader()}
         {!this.isCollapsed && [
           this.renderSearchInput(),
-          shouldDisplaySearchResults(this.facetState.facetSearch)
-            ? [this.renderSearchResults(), this.renderMatches()]
-            : [
-                this.renderParents(),
-                this.renderValues(),
-                this.renderShowMoreLess(),
-              ],
+          shouldDisplaySearchResults(this.facetState.facetSearch) ? (
+            [this.renderSearchResults(), this.renderMatches()]
+          ) : (
+            <Fragment>
+              <ul part="parents" class="mt-3">
+                {this.renderValuesTree(this.facetState.parents, true)}
+              </ul>
+              {this.renderShowMoreLess()}
+            </Fragment>
+          ),
         ]}
       </FacetContainer>
     );

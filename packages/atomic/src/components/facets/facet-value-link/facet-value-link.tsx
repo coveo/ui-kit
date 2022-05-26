@@ -1,11 +1,12 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {FunctionalComponent, h, VNode} from '@stencil/core';
 import {Button} from '../../common/button';
 import {FacetValueProps} from '../facet-common';
 
-export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
-  props,
-  children
-) => {
+export const FacetValueLink: FunctionalComponent<
+  FacetValueProps & {
+    subList?: VNode[];
+  }
+> = (props, children) => {
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
@@ -31,6 +32,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
           })}
         </span>
       </Button>
+      {props.subList}
     </li>
   );
 };
