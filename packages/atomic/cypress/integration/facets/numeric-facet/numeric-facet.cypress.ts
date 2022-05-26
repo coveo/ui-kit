@@ -595,17 +595,21 @@ describe('Numeric Facet V1 Test Suites', () => {
         describe('with no facet results', () => {
           const baseSetup = () =>
             visibilitySetup().withCustomResponse((r) => {
-              const idx = r.facets.findIndex(
-                (facet) => facet.field === numericFacetField
-              );
-              r.facets[idx].values = [];
+              r.facets.forEach((facet, i) => {
+                if (
+                  facet.facetId !== numericFacetField &&
+                  facet.facetId !== `${numericFacetField}_input`
+                ) {
+                  r.facets[i].values = [];
+                }
+              });
             });
 
           before(() => {
             baseSetup().init();
           });
 
-          NumericFacetAssertions.assertDisplayRangeInput(true);
+          NumericFacetAssertions.assertDisplayRangeInput(false);
 
           describe('with active input', () => {
             before(() => {
