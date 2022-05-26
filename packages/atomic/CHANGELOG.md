@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.62.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.1...@coveo/atomic@1.62.2) (2022-05-26)
+
+
+### Bug Fixes
+
+* **atomic:** added aria-label to refine modal close button ([#2019](https://github.com/coveo/ui-kit/issues/2019)) ([d8a90af](https://github.com/coveo/ui-kit/commit/d8a90afea0e3328ce3f7178c799f8e6d1a81bc40))
+
+
+
+
+
 ## [1.62.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.0...@coveo/atomic@1.62.1) (2022-05-26)
 
 
