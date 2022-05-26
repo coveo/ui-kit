@@ -51,6 +51,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {randomID} from '../../../utils/utils';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -92,6 +93,7 @@ export class AtomicNumericFacet
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet?: NumericFacet;
+  public facetForCountsOnly?: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
   public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
@@ -109,6 +111,9 @@ export class AtomicNumericFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
+  @BindStateToController('facetForCountsOnly')
+  @State()
+  public facetForCountsOnlyState?: NumericFacetState;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -204,9 +209,7 @@ export class AtomicNumericFacet
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.numberOfValues > 0
-      ? this.initializeFacetForDisplay()
-      : this.initializeFacetForResultsMatch();
+    this.initializeFacets();
     this.withInput && this.initializeFilter();
     this.inititalizeDependenciesManager();
     this.registerFacetToStore();
@@ -219,22 +222,26 @@ export class AtomicNumericFacet
     this.dependenciesManager?.stopWatching();
   }
 
-  private initializeFacetForDisplay() {
-    this.manualRanges = this.buildManualRanges();
-    this.initializeFacet({
-      numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
-      rangeAlgorithm: this.rangeAlgorithm,
-      currentValues: this.manualRanges,
-    });
-  }
+  private initializeFacets() {
+    // Initialize two facets: One that is actually used to display values for end users, which only exists
+    // if we need to display something to the end user (ie: numberOfValues > 0)
 
-  private initializeFacetForResultsMatch() {
-    this.initializeFacet({numberOfValues: 1});
+    // A second facet is initialized only to verify the results count. It is never used to display results to end user.
+    // It serves as a way to determine if the input should be rendered or not, independent of the ranges (manual or automatic) configured in the component
+    if (this.numberOfValues > 0) {
+      const {facet: facetForDisplay, facetId: facetIDForDisplay} =
+        this.initializeFacetForDisplay();
+      this.facet = facetForDisplay;
+      this.facetId = facetIDForDisplay;
+    }
+    if (this.withInput) {
+      const {facet: facetForResultsMatch} = this.initializeFacetForCountsOnly();
+      this.facetForCountsOnly = facetForResultsMatch;
+    }
   }
 
   private initializeFacet(options: Partial<NumericFacetOptions>) {
-    this.facet = buildNumericFacet(this.bindings.engine, {
+    const facet = buildNumericFacet(this.bindings.engine, {
       options: {
         facetId: this.facetId,
         field: this.field,
@@ -244,7 +251,26 @@ export class AtomicNumericFacet
         ...options,
       },
     });
-    this.facetId = this.facet.state.facetId;
+    const facetId = facet.state.facetId;
+    return {facet, facetId};
+  }
+
+  private initializeFacetForDisplay() {
+    this.manualRanges = this.buildManualRanges();
+    return this.initializeFacet({
+      numberOfValues: this.numberOfValues,
+      sortCriteria: this.sortCriteria,
+      rangeAlgorithm: this.rangeAlgorithm,
+      currentValues: this.manualRanges,
+    });
+  }
+
+  private initializeFacetForCountsOnly() {
+    return this.initializeFacet({
+      numberOfValues: 1,
+      generateAutomaticRanges: true,
+      facetId: randomID(this.field),
+    });
   }
 
   private initializeFilter() {
@@ -451,8 +477,15 @@ export class AtomicNumericFacet
   }
 
   private get valuesToRender() {
+    return this.getValuesWithResultsOrActive(this.facetState?.values);
+  }
+
+  private getValuesWithResultsOrActive(values?: NumericFacetValue[]) {
+    if (!values) {
+      return [];
+    }
     return (
-      this.facetState?.values.filter(
+      values.filter(
         (value) => value.numberOfResults || value.state !== 'idle'
       ) || []
     );
@@ -478,7 +511,9 @@ export class AtomicNumericFacet
     return shouldDisplayInputForFacetRange({
       hasInputRange: this.hasInputRange,
       searchStatusState: this.searchStatusState,
-      valuesToRender: this.valuesToRender,
+      facetValues: this.getValuesWithResultsOrActive(
+        this.facetForCountsOnlyState?.values
+      ),
       hasInput: !!this.withInput,
     });
   }

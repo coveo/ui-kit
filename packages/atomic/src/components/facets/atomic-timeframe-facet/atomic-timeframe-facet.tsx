@@ -401,7 +401,7 @@ export class AtomicTimeframeFacet
       hasInput: this.withDatePicker,
       hasInputRange: this.hasInputRange,
       searchStatusState: this.searchStatusState,
-      valuesToRender: this.valuesToRender,
+      facetValues: this.valuesToRender,
     });
   }
 

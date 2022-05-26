@@ -177,10 +177,9 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;
   searchStatusState: SearchStatusState;
-  valuesToRender: NumericFacetValue[] | DateFacetValue[];
+  facetValues: NumericFacetValue[] | DateFacetValue[];
 }) {
-  const {hasInput, hasInputRange, searchStatusState, valuesToRender} =
-    facetRange;
+  const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
   if (!hasInput) {
     return false;
   }
@@ -193,7 +192,7 @@ export function shouldDisplayInputForFacetRange(facetRange: {
     return false;
   }
 
-  if (!valuesToRender.length) {
+  if (!facetValues.length) {
     return false;
   }
 

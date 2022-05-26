@@ -13,7 +13,7 @@ describe('facet common', () => {
           hasInput: false,
           hasInputRange: false,
           searchStatusState: {hasResults: true} as SearchStatusState,
-          valuesToRender: [{}, {}] as NumericFacetValue[],
+          facetValues: [{}, {}] as NumericFacetValue[],
         })
       ).toBe(false);
     });
@@ -24,7 +24,7 @@ describe('facet common', () => {
           hasInput: true,
           hasInputRange: true,
           searchStatusState: {hasResults: false} as SearchStatusState,
-          valuesToRender: [] as NumericFacetValue[],
+          facetValues: [] as NumericFacetValue[],
         })
       ).toBe(true);
     });
@@ -35,7 +35,7 @@ describe('facet common', () => {
           hasInput: true,
           hasInputRange: false,
           searchStatusState: {hasResults: false} as SearchStatusState,
-          valuesToRender: [] as NumericFacetValue[],
+          facetValues: [] as NumericFacetValue[],
         })
       ).toBe(false);
     });
@@ -46,7 +46,7 @@ describe('facet common', () => {
           hasInput: true,
           hasInputRange: false,
           searchStatusState: {hasResults: true} as SearchStatusState,
-          valuesToRender: [] as NumericFacetValue[],
+          facetValues: [] as NumericFacetValue[],
         })
       ).toBe(false);
     });
@@ -57,7 +57,7 @@ describe('facet common', () => {
           hasInput: true,
           hasInputRange: false,
           searchStatusState: {hasResults: true} as SearchStatusState,
-          valuesToRender: [{}, {}] as NumericFacetValue[],
+          facetValues: [{}, {}] as NumericFacetValue[],
         })
       ).toBe(true);
     });

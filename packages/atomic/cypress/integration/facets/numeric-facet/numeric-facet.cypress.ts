@@ -605,7 +605,7 @@ describe('Numeric Facet V1 Test Suites', () => {
             baseSetup().init();
           });
 
-          NumericFacetAssertions.assertDisplayRangeInput(false);
+          NumericFacetAssertions.assertDisplayRangeInput(true);
 
           describe('with active input', () => {
             before(() => {
