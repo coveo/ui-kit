@@ -5,9 +5,7 @@ import {FieldsetGroup} from '../../common/fieldset-group';
 export interface FacetValuesGroupProps {
   i18n: i18n;
   label: string;
-  part?: string;
   query?: string;
-  classes?: string;
 }
 
 export const FacetValuesGroup: FunctionalComponent<FacetValuesGroupProps> = (
@@ -23,11 +21,5 @@ export const FacetValuesGroup: FunctionalComponent<FacetValuesGroupProps> = (
           label: facetDisplayLabel,
         });
 
-  return (
-    <FieldsetGroup label={groupLabel}>
-      <ul class={props.classes ?? ''} part={props.part ?? 'values'}>
-        {children}
-      </ul>
-    </FieldsetGroup>
-  );
+  return <FieldsetGroup label={groupLabel}>{children}</FieldsetGroup>;
 };

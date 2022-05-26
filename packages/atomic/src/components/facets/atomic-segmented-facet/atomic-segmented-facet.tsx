@@ -110,12 +110,10 @@ export class AtomicSegmentedFacet
   private renderValuesContainer(children: VNode[]) {
     const classes = 'box-container';
     return (
-      <FacetValuesGroup
-        i18n={this.bindings.i18n}
-        label={this.label}
-        classes={classes}
-      >
-        {children}
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class={classes} part="values">
+          {children}
+        </ul>
       </FacetValuesGroup>
     );
   }

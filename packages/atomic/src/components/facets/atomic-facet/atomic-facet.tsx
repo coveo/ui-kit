@@ -369,9 +369,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
         i18n={this.bindings.i18n}
         label={this.label}
         query={query}
-        classes={classes}
       >
-        {children}
+        <ul class={classes} part="values">
+          {children}
+        </ul>
       </FacetValuesGroup>
     );
   }

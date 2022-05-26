@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -450,24 +450,15 @@ export class AtomicCategoryFacet
     }
 
     return (
-      <FacetValuesGroup
-        i18n={this.bindings.i18n}
-        label={this.label}
-        classes={this.hasParents ? 'pl-9' : 'mt-3'}
-      >
+      <ul part="values" class={this.hasParents ? 'pl-9' : 'mt-3'}>
         {this.facetState.values.map((value) => this.renderValue(value))}
-      </FacetValuesGroup>
+      </ul>
     );
   }
 
   private renderSearchResults() {
     return (
-      <FacetValuesGroup
-        i18n={this.bindings.i18n}
-        label={this.label}
-        query={this.facetState.facetSearch.query}
-        classes="mt-3"
-      >
+      <ul part="search-results" class="mt-3">
         {this.facetState.facetSearch.values.map((value) => (
           <CategoryFacetSearchResult
             result={value}
@@ -480,7 +471,7 @@ export class AtomicCategoryFacet
             }}
           ></CategoryFacetSearchResult>
         ))}
-      </FacetValuesGroup>
+      </ul>
     );
   }
 
@@ -544,13 +535,30 @@ export class AtomicCategoryFacet
         {this.renderHeader()}
         {!this.isCollapsed && [
           this.renderSearchInput(),
-          shouldDisplaySearchResults(this.facetState.facetSearch)
-            ? [this.renderSearchResults(), this.renderMatches()]
-            : [
-                this.renderParents(),
-                this.renderValues(),
-                this.renderShowMoreLess(),
-              ],
+          shouldDisplaySearchResults(this.facetState.facetSearch) ? (
+            <Fragment>
+              {this.facetState.facetSearch.values.length ? (
+                <FacetValuesGroup
+                  i18n={this.bindings.i18n}
+                  label={this.label}
+                  query={this.facetState.facetSearch.query}
+                >
+                  {this.renderSearchResults()}
+                </FacetValuesGroup>
+              ) : (
+                <div class="mt-3"></div>
+              )}
+              {this.renderMatches()}
+            </Fragment>
+          ) : (
+            <Fragment>
+              <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+                {this.renderParents()}
+                {this.renderValues()}
+              </FacetValuesGroup>
+              {this.renderShowMoreLess()}
+            </Fragment>
+          ),
         ]}
       </FacetContainer>
     );

@@ -415,12 +415,10 @@ export class AtomicNumericFacet
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <FacetValuesGroup
-        i18n={this.bindings.i18n}
-        label={this.label}
-        classes="mt-3"
-      >
-        {children}
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class="mt-3" part="values">
+          {children}
+        </ul>
       </FacetValuesGroup>
     );
   }
