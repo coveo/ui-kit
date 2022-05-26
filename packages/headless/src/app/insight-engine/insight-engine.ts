@@ -10,7 +10,7 @@ import {
 } from '../engine';
 import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments';
 import {buildLogger} from '../logger';
-import {insightConfiguration} from '../reducers';
+import {insightConfiguration, insightInterface, searchHub} from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   InsightEngineConfiguration,
@@ -18,11 +18,14 @@ import {
 } from './insight-engine-configuration';
 import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
+import {fetchInterface} from '../../features/insight-interface/insight-interface-actions';
 
 export type {InsightEngineConfiguration};
 
 const insightEngineReducers = {
   insightConfiguration,
+  insightInterface,
+  searchHub,
 };
 type InsightEngineReducers = typeof insightEngineReducers;
 
@@ -79,6 +82,8 @@ export function buildInsightEngine(
       insightId,
     })
   );
+
+  engine.dispatch(fetchInterface());
 
   return {
     ...engine,

@@ -46,6 +46,7 @@ import {documentSuggestionReducer} from '../features/document-suggestion/documen
 import {excerptLengthReducer} from '../features/excerpt-length/excerpt-length-slice';
 import {instantResultsReducer} from '../features/instant-results/instant-results-slice';
 import {insightConfigurationReducer} from '../features/insight-configuration/insight-configuration-slice';
+import {insightInterfaceReducer} from '../features/insight-interface/insight-interface-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -107,3 +108,4 @@ export const documentSuggestion = documentSuggestionReducer;
 export const excerptLength = excerptLengthReducer;
 
 export const insightConfiguration = insightConfigurationReducer;
+export const insightInterface = insightInterfaceReducer;
