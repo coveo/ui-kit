@@ -1,21 +1,12 @@
 import {Component, Element, State, h, Watch} from '@stencil/core';
-import {
-  Bindings,
-  BindStateToController,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {
-  buildInstantResults,
-  InstantResults,
-  InstantResultsState,
-  Result,
-} from '@coveo/headless';
+import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
 
-import {buildCustomEvent} from '../../../utils/event-utils';
 import {
-  InstantResultItem,
-  UpdateInstantResultsCallback,
-} from '../instant-results-common';
+  dispatchSearchBoxSuggestionsEvent,
+  SearchBoxSuggestionItem,
+  SearchBoxSuggestions,
+  SearchBoxSuggestionsBindings,
+} from '../suggestions-common';
 
 /**
  * TODO:
@@ -26,72 +17,71 @@ import {
   shadow: true,
 })
 export class AtomicSearchBoxRecentQueries {
-  @InitializeBindings() public bindings!: Bindings;
+  private bindings!: SearchBoxSuggestionsBindings;
 
   @Element() private host!: HTMLElement;
 
   @State() public error!: Error;
   private instantResults!: InstantResults;
 
-  @BindStateToController('instantResults')
-  @State()
-  private instantResultsState!: InstantResultsState;
+  private results: Result[] = [];
 
-  @Watch('instantResultsState')
-  updateResults() {
-    if (
-      !this.instantResultsState.isLoading &&
-      !this.instantResultsState.error
-    ) {
-      this.onResultChange((prev: Result[]) => {
-        if (this.instantResultsState.results.length) {
-          return this.instantResultsState.results;
-        } else {
-          return prev;
-        }
-      });
+  componentWillLoad() {
+    try {
+      dispatchSearchBoxSuggestionsEvent((bindings) => {
+        this.bindings = bindings;
+        return this.initialize();
+      }, this.host);
+    } catch (error) {
+      this.error = error as Error;
     }
   }
 
-  private onResultChange!: (cb: UpdateInstantResultsCallback) => void;
-
-  private makeInstantResultItem() {
-    return {
-      onChange: (q: string) => {
-        this.instantResults.updateQuery(q);
+  private renderItems(): SearchBoxSuggestionItem[] {
+    const results = this.instantResults.state.results.length
+      ? this.instantResults.state.results
+      : this.results;
+    return results.map((result, i) => ({
+      key: `instant-result-${i}`,
+      query: '',
+      content: <div class="flex items-center break-all">{result.title}</div>,
+      onSelect: () => {
+        // TODO: ADD LOGS
       },
-      // TODO: turn this into an atomic template like the lists
-      renderItem: (result: Result) => (
-        <div>
-          <p>{result.title}</p>
-        </div>
-      ),
-    };
+    }));
   }
 
-  private initInstantResults(searchBoxId: string) {
+  public initialize(): SearchBoxSuggestions {
     this.instantResults = buildInstantResults(this.bindings.engine, {
       options: {
-        searchBoxId,
         maxResultsPerQuery: 4,
       },
     });
+
+    return {
+      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      panel: 'right',
+      onSuggestedQueryChange: (q) => {
+        this.instantResults.updateQuery(q);
+        return this.onSuggestedQueryChange();
+      },
+      renderItems: () => this.renderItems(),
+    };
   }
 
-  public initialize() {
-    this.host.dispatchEvent(
-      buildCustomEvent(
-        'atomic/searchBoxInstantResults/register',
-        (
-          searchBoxId: string,
-          updateResults: (cb: UpdateInstantResultsCallback) => void
-        ): InstantResultItem => {
-          this.initInstantResults(searchBoxId);
-          this.onResultChange = updateResults;
-          return this.makeInstantResultItem();
+  private onSuggestedQueryChange() {
+    return new Promise((resolve) => {
+      const unsubscribe = this.instantResults.subscribe(() => {
+        const state = this.instantResults.state;
+        if (!state.isLoading) {
+          if (state.results.length) {
+            this.results = state.results;
+          }
+          unsubscribe();
+          resolve(null);
         }
-      )
-    );
+      });
+    });
   }
 
   public render() {

@@ -9,6 +9,7 @@ import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
+  SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 
@@ -58,7 +59,7 @@ export class AtomicSearchBoxQuerySuggestions {
     return this.icon || SearchIcon;
   }
 
-  private initialize() {
+  private initialize(): SearchBoxSuggestions {
     const engine = this.bindings.engine as SearchEngine<QuerySuggestionSection>;
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);

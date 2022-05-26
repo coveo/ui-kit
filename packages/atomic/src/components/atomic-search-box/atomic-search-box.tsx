@@ -10,7 +10,6 @@ import {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
   buildStandaloneSearchBox,
-  Result,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -31,11 +30,6 @@ import {
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
 import {promiseTimeout} from '../../utils/promise-utils';
-import {
-  InstantResultItem,
-  RegisterInstantResultsEvent,
-  UpdateInstantResultsCallback,
-} from '../search-box-suggestions/instant-results-common';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -45,7 +39,9 @@ import {
  * @part loading - The search box loading animation.
  * @part clear-button - The button to clear the search box of input.
  * @part submit-button - The search box submit button.
- * @part suggestions - A list of suggested query corrections.
+ * @part suggestions - A list of suggested query corrections on both panels.
+ * @part suggestions-left - A list of suggested query corrections on the left panel.
+ * @part suggestions-right - A list of suggested query corrections on the right panel.
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
@@ -63,9 +59,7 @@ export class AtomicSearchBox {
   private listRef!: HTMLElement;
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
-  private pendingInstantResultsEvents: (() => InstantResultItem)[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
-  private instantResultsItems: InstantResultItem[] = [];
 
   @BindStateToController('searchBox')
   @State()
@@ -74,8 +68,11 @@ export class AtomicSearchBox {
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
 
-  @State() private instantResults: Result[][] = [];
-  @State() private suggestionElements: SearchBoxSuggestionItem[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @State() private suggestedQuery = '';
+
+  @State() private leftSuggestions: SearchBoxSuggestions[] = [];
+  @State() private rightSuggestions: SearchBoxSuggestions[] = [];
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -136,7 +133,6 @@ export class AtomicSearchBox {
         event(this.suggestionBindings)
       )
     );
-    this.pendingInstantResultsEvents.forEach((init) => init());
     this.pendingSuggestionEvents = [];
   }
 
@@ -168,31 +164,6 @@ export class AtomicSearchBox {
     this.pendingSuggestionEvents.push(event.detail);
   }
 
-  public updateResults(cb: UpdateInstantResultsCallback, pos: number) {
-    const copy = [...this.instantResults];
-    copy[pos] = cb(this.instantResults[pos] || []);
-
-    this.instantResults = copy;
-  }
-
-  @Listen('atomic/searchBoxInstantResults/register')
-  public registerInstantResults(event: RegisterInstantResultsEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    const pos =
-      this.instantResultsItems.length ||
-      this.pendingInstantResultsEvents.length;
-    const updateResults = (cb: UpdateInstantResultsCallback) => {
-      this.updateResults(cb, pos);
-    };
-    if (this.searchBox) {
-      this.instantResultsItems[pos] = event.detail(this.id, updateResults);
-      return;
-    }
-    this.pendingInstantResultsEvents[pos] = () =>
-      event.detail(this.id, updateResults);
-  }
-
   @Watch('redirectionUrl')
   watchRedirectionUrl() {
     this.initialize();
@@ -220,7 +191,7 @@ export class AtomicSearchBox {
   }
 
   private get hasSuggestions() {
-    return !!this.suggestionElements.length;
+    return !!this.allSuggestionElements.length;
   }
 
   private get hasActiveDescendant() {
@@ -268,6 +239,22 @@ export class AtomicSearchBox {
     return this.hasSuggestions && this.isExpanded;
   }
 
+  private get allSuggestionElements() {
+    return [
+      ...this.getSuggestionElements(this.leftSuggestions),
+      ...this.getSuggestionElements(this.rightSuggestions),
+    ];
+  }
+
+  private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
+    const elements = suggestions
+      .map((suggestion) => suggestion.renderItems())
+      .flat();
+    const max = this.numberOfQueries + elements.filter(isDividerElement).length;
+
+    return elements.slice(0, max);
+  }
+
   private scrollActiveDescendantIntoView() {
     this.activeDescendantElement?.scrollIntoView({
       block: 'nearest',
@@ -297,23 +284,22 @@ export class AtomicSearchBox {
   }
 
   private updateAriaMessage() {
-    this.ariaMessage = this.suggestionElements.length
+    const elsLength =
+      this.allSuggestionElements.filter(isSuggestionElement).length;
+    this.ariaMessage = elsLength
       ? this.bindings.i18n.t('query-suggestions-available', {
-          count: this.suggestionElements.filter(isSuggestionElement).length,
+          count: elsLength,
         })
       : this.bindings.i18n.t('query-suggestions-unavailable');
-  }
-
-  private async triggerInstantResults(q: string) {
-    this.instantResultsItems.map((instantResultsController) =>
-      instantResultsController.onChange(q)
-    );
   }
 
   private async triggerSuggestions() {
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
-        promiseTimeout(suggestion.onInput(), this.suggestionTimeout)
+        promiseTimeout(
+          suggestion.onInput ? suggestion.onInput() : Promise.resolve(),
+          this.suggestionTimeout
+        )
       )
     );
 
@@ -329,23 +315,25 @@ export class AtomicSearchBox {
       }
     });
 
-    const suggestionElements = fulfilledSuggestions
-      .sort((a, b) => a.position - b.position)
-      .map((suggestion) => suggestion.renderItems())
-      .flat();
+    this.leftSuggestions = fulfilledSuggestions
+      .filter((suggestion) => !suggestion.panel || suggestion.panel === 'left')
+      .sort(this.sortSuggestions);
+    this.rightSuggestions = fulfilledSuggestions
+      .filter((suggestion) => suggestion.panel === 'right')
+      .sort(this.sortSuggestions);
 
     const defaultSuggestionQ =
-      suggestionElements.find(isSuggestionElement)?.query;
+      this.allSuggestionElements.find(isSuggestionElement)?.query;
 
     if (defaultSuggestionQ) {
-      this.triggerInstantResults(defaultSuggestionQ);
+      this.updateSuggestedQuery(defaultSuggestionQ);
     }
 
-    const max =
-      this.numberOfQueries + suggestionElements.filter(isDividerElement).length;
-
-    this.suggestionElements = suggestionElements.slice(0, max);
     this.updateAriaMessage();
+  }
+
+  private sortSuggestions(a: SearchBoxSuggestions, b: SearchBoxSuggestions) {
+    return a.position - b.position;
   }
 
   private onInput(value: string) {
@@ -468,7 +456,8 @@ export class AtomicSearchBox {
   }
 
   private clearSuggestionElements() {
-    this.suggestionElements = [];
+    this.leftSuggestions = [];
+    this.rightSuggestions = [];
     this.ariaMessage = '';
   }
 
@@ -512,7 +501,7 @@ export class AtomicSearchBox {
         }}
         onMouseOver={() => {
           if (isSuggestionElement(item)) {
-            this.triggerInstantResults(item.query);
+            this.updateSuggestedQuery(item.query);
           }
         }}
         ref={(el) => {
@@ -527,23 +516,61 @@ export class AtomicSearchBox {
     );
   }
 
+  private async updateSuggestedQuery(q: string) {
+    await Promise.allSettled(
+      this.suggestions.map((suggestion) =>
+        promiseTimeout(
+          suggestion.onSuggestedQueryChange
+            ? suggestion.onSuggestedQueryChange(q)
+            : Promise.resolve(),
+          this.suggestionTimeout
+        )
+      )
+    );
+    this.suggestedQuery = q;
+  }
+
   private renderSuggestions() {
+    if (!this.hasSuggestions) {
+      return null;
+    }
+    const leftElements = this.getSuggestionElements(this.leftSuggestions);
+    const rightElements = this.getSuggestionElements(this.rightSuggestions);
     return (
-      <ul
-        id={this.popupId}
-        role="listbox"
-        part="suggestions"
-        aria-label={this.bindings.i18n.t('query-suggestion-list')}
-        ref={(el) => (this.listRef = el!)}
+      <div
+        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+          this.showSuggestions ? '' : 'hidden'
+        }`}
       >
-        {this.suggestionElements.map((suggestion, index) =>
-          this.renderSuggestion(
-            suggestion,
-            index,
-            this.suggestionElements.length - 1
-          )
+        {!!leftElements.length && (
+          <ul
+            id={this.popupId}
+            role="listbox"
+            part="suggestions suggestions-left"
+            aria-label={this.bindings.i18n.t('query-suggestion-list')}
+            ref={(el) => (this.listRef = el!)}
+            class="flex-grow"
+          >
+            {leftElements.map((suggestion, index) =>
+              this.renderSuggestion(suggestion, index, leftElements.length - 1)
+            )}
+          </ul>
         )}
-      </ul>
+        {!!rightElements.length && (
+          <ul
+            id={this.popupId}
+            role="listbox"
+            part="suggestions suggestions-right"
+            aria-label={this.bindings.i18n.t('query-suggestion-list')}
+            ref={(el) => (this.listRef = el!)}
+            class="flex-grow"
+          >
+            {rightElements.map((suggestion, index) =>
+              this.renderSuggestion(suggestion, index, rightElements.length - 1)
+            )}
+          </ul>
+        )}
+      </div>
     );
   }
 
@@ -564,20 +591,6 @@ export class AtomicSearchBox {
     );
   }
 
-  private renderInstantResults() {
-    const elements = this.instantResultsItems.map((controller, i) =>
-      this.instantResults[i]?.map(controller.renderItem)
-    );
-    // TODO: do more accessibility stuff
-    return (
-      <ul class="flex flex-col h-full p-4">
-        {elements.flat().map((el) => (
-          <li class="flex-grow">{el}</li>
-        ))}
-      </ul>
-    );
-  }
-
   public render() {
     return [
       <div
@@ -585,15 +598,7 @@ export class AtomicSearchBox {
         class="relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary"
       >
         {this.renderInputContainer()}
-        <div class={wrapperClasses([this.showSuggestions ? '' : 'hidden'])}>
-          {/* TODO: add parts */}
-          <div class="flex-grow" style={{width: '50%'}}>
-            {this.renderSuggestions()}
-          </div>
-          <div class="flex-grow" style={{width: '50%'}}>
-            {this.renderInstantResults()}
-          </div>
-        </div>
+        {this.renderSuggestions()}
         {this.renderSubmitButton()}
       </div>,
       !this.suggestions.length && (
@@ -606,22 +611,6 @@ export class AtomicSearchBox {
   }
 }
 
-const wrapperClasses = (extras: string[]) =>
-  [
-    'flex',
-    'w-full',
-    'z-10',
-    'absolute',
-    'left-0',
-    'top-full',
-    'rounded-md',
-    'bg-background',
-    'border',
-    'border-neutral',
-  ]
-    .concat(extras)
-    .filter((c) => c)
-    .join(' ');
 function isHTMLElement(el: VNode | Element): el is HTMLElement {
   return el instanceof HTMLElement;
 }
