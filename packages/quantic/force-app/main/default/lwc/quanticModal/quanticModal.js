@@ -38,7 +38,10 @@ export default class QuanticModal extends LightningElement {
 
   validateProps() {
     if (this.animation !== 'slideToLeft' && this.animation !== 'slideToTop') {
-      this.renderingError = `"${this.animation}" is an invalid animation type. Animation can only be set to "slideToTop" or "slideToLeft".`;
+      this.renderingError = `"${this.animation}" is an invalid value for the animation property. animation can only be set to "slideToTop" or "slideToLeft".`;
+    }
+    if ( typeof(this.fullScreen)!== 'boolean' ){
+      this.renderingError = `"${this.fullScreen}" is an invalid value for the full-screen property. full-screen can only be set to a boolean value.`;
     }
   }
 
