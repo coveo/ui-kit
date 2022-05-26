@@ -35,7 +35,8 @@ export type BaseFacet<FacetType extends AnyFacetType> = {
   NumberOfIntervalsProp<FacetType> &
   SortCriterionProp<FacetType> &
   DisplayValuesAsProp &
-  CollapsedProp;
+  CollapsedProp &
+  HeadingLevelProp;
 
 type PropsOnAllFacets = {
   facetId?: string;
@@ -89,6 +90,8 @@ type DisplayValuesAsProp = {
 };
 
 type CollapsedProp = {isCollapsed?: boolean};
+
+type HeadingLevelProp = {headingLevel?: number};
 
 export interface FacetValueProps {
   i18n: i18n;

@@ -2,6 +2,7 @@ import {TestFixture} from '../fixtures/test-fixture';
 import {addRefineToggle} from './refine-toggle-actions';
 import * as CommonAssertions from './common-assertions';
 import {
+  refineModalComponent,
   RefineModalSelectors,
   RefineToggleSelectors,
 } from './refine-toggle-selectors';
@@ -38,6 +39,7 @@ describe('Refine Toggle Test Suites', () => {
 
     CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
     CommonAssertions.assertConsoleError(false);
+    CommonAssertions.assertAccessibility(refineModalComponent);
 
     it('should modify body className', () => {
       cy.get('body').should('have.class', 'atomic-modal-opened');
