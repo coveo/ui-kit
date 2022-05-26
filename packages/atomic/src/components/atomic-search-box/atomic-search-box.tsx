@@ -1,6 +1,15 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Listen,
+  Watch,
+  VNode,
+  forceUpdate,
+} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -67,10 +76,6 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  @State() private suggestedQuery = '';
-
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
   @State() private rightSuggestions: SearchBoxSuggestions[] = [];
 
@@ -527,7 +532,7 @@ export class AtomicSearchBox {
         )
       )
     );
-    this.suggestedQuery = q;
+    forceUpdate(this);
   }
 
   private renderSuggestions() {
