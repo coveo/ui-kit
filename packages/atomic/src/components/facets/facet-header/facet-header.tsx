@@ -11,7 +11,7 @@ export interface FacetHeaderProps {
   label: string;
   numberOfSelectedValues: number;
   isCollapsed: boolean;
-  headingLevel?: number;
+  headingLevel: number;
   onToggleCollapse(): void;
   onClearFilters?(): void;
   headerRef?: (element?: HTMLButtonElement) => void;
@@ -39,7 +39,7 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
       ariaExpanded={(!props.isCollapsed).toString()}
       ref={props.headerRef}
     >
-      <Heading level={props.headingLevel ?? 0} class="truncate">
+      <Heading level={props.headingLevel} class="truncate">
         {label}
       </Heading>
       <atomic-icon
