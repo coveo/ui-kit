@@ -151,9 +151,6 @@ export class AtomicNumericFacet
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
-   *
-   * We recommend setting this property in order to improve accessibility.
-   *
    */
   @Prop({reflect: true}) public headingLevel = 0;
   /**

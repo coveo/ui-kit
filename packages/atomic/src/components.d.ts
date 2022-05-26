@@ -51,7 +51,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel": number;
         /**
@@ -101,7 +101,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel": number;
         /**
@@ -163,7 +163,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel": number;
         /**
@@ -364,7 +364,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel": number;
         /**
@@ -451,7 +451,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel": number;
         /**
@@ -501,7 +501,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel": number;
         /**
@@ -944,7 +944,7 @@ export namespace Components {
          */
         "collapsedHeight": number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
          */
         "headingLevel": number;
         /**
@@ -985,7 +985,7 @@ export namespace Components {
     }
     interface AtomicSmartSnippetSuggestions {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
          */
         "headingLevel": number;
         /**
@@ -1057,7 +1057,7 @@ export namespace Components {
          */
         "filterFacetCount": boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel": number;
         /**
@@ -1677,7 +1677,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel"?: number;
         /**
@@ -1727,7 +1727,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel"?: number;
         /**
@@ -1789,7 +1789,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel"?: number;
         /**
@@ -1988,7 +1988,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel"?: number;
         /**
@@ -2076,7 +2076,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel"?: number;
         /**
@@ -2126,7 +2126,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel"?: number;
         /**
@@ -2544,7 +2544,7 @@ declare namespace LocalJSX {
          */
         "collapsedHeight"?: number;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
          */
         "headingLevel"?: number;
         /**
@@ -2592,7 +2592,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippetSuggestions {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
          */
         "headingLevel"?: number;
         /**
@@ -2664,7 +2664,7 @@ declare namespace LocalJSX {
          */
         "filterFacetCount"?: boolean;
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.  We recommend setting this property in order to improve accessibility.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
          */
         "headingLevel"?: number;
         /**
