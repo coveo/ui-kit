@@ -12,6 +12,11 @@ import {LightningElement, api} from 'lwc';
  * </c-quantic-modal>
  */
 export default class QuanticModal extends LightningElement {
+  animations = {
+    slideToLeft: 'slideToLeft',
+    slideToTop: 'slideToTop'
+  }
+
   /**
    * Indicates whether the modal will be opened in full screen.
    * @api
@@ -37,8 +42,8 @@ export default class QuanticModal extends LightningElement {
   }
 
   validateProps() {
-    if (this.animation !== 'slideToLeft' && this.animation !== 'slideToTop') {
-      this.renderingError = `"${this.animation}" is an invalid value for the animation property. animation can only be set to "slideToTop" or "slideToLeft".`;
+    if (this.animation !== this.animations.slideToLeft && this.animation !== this.animations.slideToTop) {
+      this.renderingError = `"${this.animation}" is an invalid value for the animation property. animation can only be set to "${this.animations.slideToTop}" or "${this.animations.slideToLeft}".`;
     }
     if ( typeof(this.fullScreen)!== 'boolean' ){
       this.renderingError = `"${this.fullScreen}" is an invalid value for the full-screen property. full-screen can only be set to a boolean value.`;
@@ -68,7 +73,7 @@ export default class QuanticModal extends LightningElement {
   get modalCssClass() {
     const displayAreaClass = this.fullScreen ? 'full-screen' : 'part-screen';
     const animationClass =
-      this.animation === 'slideToLeft'
+      this.animation === this.animations.slideToLeft
         ? 'hidden-modal_slide-to-left'
         : 'hidden-modal_slide-to-top';
     const visibilityClass = this.isVisible

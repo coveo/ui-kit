@@ -11,7 +11,7 @@ interface ModalOptions {
 }
 
 const invalidAnimationError = (value: string) => {
-  return `"${value}" is an invalid animation type. Animation can only be set to "slideToTop" or "slideToLeft".`;
+  return `"${value}" is an invalid value for the animation property. animation can only be set to "slideToTop" or "slideToLeft".`;
 };
 
 describe('quantic-modal', () => {
