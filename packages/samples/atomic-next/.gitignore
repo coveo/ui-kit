@@ -15,6 +15,10 @@
 # production
 /build
 
+# static
+public/lang
+public/assets
+
 # misc
 .DS_Store
 *.pem

@@ -28,6 +28,7 @@ import {
   AtomicResultBadge,
   AtomicResultFieldsList,
   AtomicResultImage,
+  AtomicResultDate,
   AtomicResultLink,
   AtomicResultList,
   AtomicResultMultiValueText,
@@ -44,15 +45,18 @@ import {
   AtomicResultText,
   AtomicText,
   Result,
-  getSampleSearchEngineConfiguration,
 } from '@coveo/atomic-react';
 
 const SearchPage: NextPage = () => {
   const engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
+    configuration: {
+      accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+      organizationId: 'electronicscoveodemocomo0n2fu8v',
+    },
   });
   return (
     <AtomicSearchInterface
+      language="fr"
       engine={engine}
       pipeline="Search"
       searchHub="MainSearch"
@@ -136,7 +140,7 @@ const SearchPage: NextPage = () => {
           <AtomicLayoutSection section="results">
             <AtomicResultList
               fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
-              display="grid"
+              display="list"
               imageSize="large"
               template={MyTemplate}
             />
@@ -178,7 +182,8 @@ function MyTemplate(result: Result) {
       </AtomicResultSectionExcerpt>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
-          {result.raw.cat_platform !== undefined && (
+          <AtomicResultDate format="ddd MMM D YYYY" />
+          {result.raw.cat_platform && (
             <>
               <span className="field-label">
                 <AtomicText value="Platform" />
@@ -186,7 +191,7 @@ function MyTemplate(result: Result) {
               <AtomicResultText field="cat_platform" />
             </>
           )}
-          {result.raw.cat_condition !== undefined && (
+          {result.raw.cat_condition && (
             <>
               <span className="field-label">
                 <AtomicText value="Condition" />
@@ -194,7 +199,7 @@ function MyTemplate(result: Result) {
               <AtomicResultText field="cat_condition" />
             </>
           )}
-          {result.raw.cat_categories !== undefined && (
+          {result.raw.cat_categories && (
             <>
               <span className="field-label">
                 <AtomicText value="Tags" />
