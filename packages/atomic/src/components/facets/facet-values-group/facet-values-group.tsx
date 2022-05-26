@@ -1,6 +1,6 @@
 import {h, FunctionalComponent} from '@stencil/core';
 import {i18n} from 'i18next';
-import {Group} from '../../common/group';
+import {FieldsetGroup} from '../../common/fieldset-group';
 
 export interface FacetValuesGroupProps {
   i18n: i18n;
@@ -24,10 +24,10 @@ export const FacetValuesGroup: FunctionalComponent<FacetValuesGroupProps> = (
         });
 
   return (
-    <Group label={groupLabel}>
+    <FieldsetGroup label={groupLabel}>
       <ul class={props.classes ?? ''} part={props.part ?? 'values'}>
         {children}
       </ul>
-    </Group>
+    </FieldsetGroup>
   );
 };
