@@ -135,7 +135,7 @@ export class AtomicResultChildren {
         el.tagName.toLowerCase() !== componentTag &&
         !el.querySelector(componentTag)
     );
-    fragment.append(...children.map((c) => c.cloneNode()));
+    fragment.append(...children.map((c) => c.cloneNode(true)));
     return fragment;
   }
 

@@ -141,3 +141,13 @@ export function sanitizeStyle(style: string) {
   wrapperEl.innerHTML = purifiedOuterHTML;
   return wrapperEl.querySelector('style')?.innerHTML;
 }
+
+export function getFocusedElement(
+  rootElement: Document | ShadowRoot = document
+): Element | null {
+  const activeElement = rootElement.activeElement;
+  if (activeElement?.shadowRoot) {
+    return getFocusedElement(activeElement.shadowRoot) ?? activeElement;
+  }
+  return activeElement;
+}

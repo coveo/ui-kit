@@ -76,23 +76,51 @@ const {defaultModuleExport, exportedStory} = defaultStory(
                   <atomic-result-section-excerpt
                     ><atomic-result-text field="excerpt"></atomic-result-text
                   ></atomic-result-section-excerpt>
-                  <atomic-table-element label="Description">
-                    <atomic-result-section-excerpt>
-                      <atomic-result-text field="excerpt"></atomic-result-text>
-                    </atomic-result-section-excerpt>
-                  </atomic-table-element>
-                  <atomic-table-element label="author">
-                    <atomic-result-text field="author"></atomic-result-text>
-                  </atomic-table-element>
-                  <atomic-table-element label="source">
-                    <atomic-result-text field="source"></atomic-result-text>
-                  </atomic-table-element>
-                  <atomic-table-element label="language">
-                    <atomic-result-text field="language"></atomic-result-text>
-                  </atomic-table-element>
-                  <atomic-table-element label="file-type">
-                    <atomic-result-text field="filetype"></atomic-result-text>
-                  </atomic-table-element>
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-fields-list>
+                      <atomic-field-condition class="field" if-defined="author">
+                        <span class="field-label"
+                          ><atomic-text value="author"></atomic-text>:</span
+                        >
+                        <atomic-result-text field="author"></atomic-result-text>
+                      </atomic-field-condition>
+
+                      <atomic-field-condition class="field" if-defined="source">
+                        <span class="field-label"
+                          ><atomic-text value="source"></atomic-text>:</span
+                        >
+                        <atomic-result-text field="source"></atomic-result-text>
+                      </atomic-field-condition>
+
+                      <atomic-field-condition
+                        class="field"
+                        if-defined="language"
+                      >
+                        <span class="field-label"
+                          ><atomic-text value="language"></atomic-text>:</span
+                        >
+                        <atomic-result-multi-value-text
+                          field="language"
+                        ></atomic-result-multi-value-text>
+                      </atomic-field-condition>
+
+                      <atomic-field-condition
+                        class="field"
+                        if-defined="filetype"
+                      >
+                        <span class="field-label"
+                          ><atomic-text value="fileType"></atomic-text>:</span
+                        >
+                        <atomic-result-text
+                          field="filetype"
+                        ></atomic-result-text>
+                      </atomic-field-condition>
+                    </atomic-result-fields-list>
+                  </atomic-result-section-bottom-metadata>
+                  <atomic-result-section-children>
+                    <atomic-result-children inherit-templates>
+                    </atomic-result-children>
+                  </atomic-result-section-children>
                 </template>
               </atomic-result-children-template>
             </atomic-result-children>

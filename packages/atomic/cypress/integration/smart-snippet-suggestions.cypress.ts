@@ -11,6 +11,7 @@ import {
   addSmartSnippetSuggestions,
   addSmartSnippetSuggestionsDefaultOptions,
 } from './smart-snippet-suggestions-actions';
+import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 const {remSize, relatedQuestions: defaultRelatedQuestions} =
   addSmartSnippetSuggestionsDefaultOptions;
@@ -272,6 +273,17 @@ describe('Smart Snippet Suggestions Test Suites', () => {
     SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsSource(
       true
     );
+
+    describe('then clicking the snippet url with the same snippet', () => {
+      beforeEach(() => {
+        AnalyticsTracker.reset();
+        SmartSnippetSuggestionsSelectors.sourceUrl().first().rightclick();
+      });
+
+      SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsSource(
+        false
+      );
+    });
 
     describe('then getting a new snippet and clicking on the title again', () => {
       beforeEach(() => {

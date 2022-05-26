@@ -8,7 +8,6 @@ import {
 import ArrowRight from '../../images/arrow-right.svg';
 import ArrowDown from '../../images/arrow-down.svg';
 import {
-  buildInteractiveResult,
   buildSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
@@ -19,7 +18,6 @@ import {Heading} from '../common/heading';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
 import {waitUntilAppLoaded} from '../../utils/store';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -70,9 +68,6 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
-   *
-   * We recommend setting this property in order to improve accessibility.
-   *
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
@@ -181,36 +176,31 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     if (!source) {
       return [];
     }
-    const interactiveResult = buildInteractiveResult(this.bindings.engine!, {
-      options: {result: source},
-    });
     return (
       <footer
         part="footer"
         aria-label={this.bindings.i18n.t('smart-snippet-source')}
       >
-        <LinkWithResultAnalytics
-          title={source.clickUri}
-          href={source.clickUri}
-          target="_self"
-          part="source-url"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {source.clickUri}
-        </LinkWithResultAnalytics>
-        <LinkWithResultAnalytics
-          title={source.title}
-          href={source.clickUri}
-          target="_self"
-          part="source-title"
-          onSelect={() => interactiveResult.select()}
-          onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
-          onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-        >
-          {source.title}
-        </LinkWithResultAnalytics>
+        {
+          <atomic-smart-snippet-source
+            source={source}
+            onSelectSource={() =>
+              this.smartSnippetQuestionsList.selectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+            onBeginDelayedSelectSource={() =>
+              this.smartSnippetQuestionsList.beginDelayedSelectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+            onCancelPendingSelectSource={() =>
+              this.smartSnippetQuestionsList.cancelPendingSelectSource(
+                relatedQuestion.questionAnswerId
+              )
+            }
+          ></atomic-smart-snippet-source>
+        }
       </footer>
     );
   }
