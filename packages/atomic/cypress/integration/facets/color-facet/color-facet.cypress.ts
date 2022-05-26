@@ -35,6 +35,7 @@ import {
 import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {addFacet} from '../facet/facet-actions';
 import {FacetSelectors} from '../facet/facet-selectors';
+import {FacetValue} from '@coveo/headless';
 
 describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {
@@ -475,21 +476,47 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('with custom css color', () => {
-    const colorFacetStyle = `atomic-color-facet::part(value-YouTubeVideo) {
-      background-color:red
-    }`;
+    describe('verify rendering with standard values', () => {
+      const colorFacetStyle = `atomic-color-facet::part(value-YouTubeVideo) {
+        background-color:red
+      }`;
 
-    function generateCustomCSS() {
-      new TestFixture()
-        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
-        .withStyle(colorFacetStyle)
-        .withHash(`f[${colorFacetField}]=YouTubeVideo`)
-        .init();
-    }
-    describe('verify rendering', () => {
+      function generateCustomCSS() {
+        new TestFixture()
+          .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+          .withStyle(colorFacetStyle)
+          .withHash(`f[${colorFacetField}]=YouTubeVideo`)
+          .init();
+      }
       before(generateCustomCSS);
       CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
-      ColorFacetAssertions.assertBackgroundButtonColorRed();
+      ColorFacetAssertions.assertButtonBackgroundColor(
+        'YouTubeVideo',
+        'rgb(255, 255, 255)'
+      );
+    });
+
+    describe('verify rendering with complex values', () => {
+      function generateCustomCSS() {
+        const colorFacetStyle = `atomic-color-facet::part(value-BlackRed) {
+          background-color:red
+        }`;
+
+        new TestFixture()
+          .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+          .withStyle(colorFacetStyle)
+          .withCustomResponse((r) => {
+            (r.facets[0].values[0] as FacetValue).value = 'Black / Red';
+            return r;
+          })
+          .init();
+      }
+      before(generateCustomCSS);
+      CommonFacetAssertions.assertDisplayFacet(ColorFacetSelectors, true);
+      ColorFacetAssertions.assertButtonBackgroundColor(
+        'Black / Red',
+        'rgb(255, 255, 255)'
+      );
     });
   });
 
