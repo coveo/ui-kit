@@ -3,7 +3,9 @@ const fs = require('fs');
 const mkdir = util.promisify(fs.mkdir);
 const rm = util.promisify(fs.rm);
 const readFile = util.promisify(fs.readFile);
+const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
+const ncp = util.promisify(require('ncp'));
 
 async function splitLocales() {
   const localesJSONData = await readFile('src/locales.json');
@@ -36,6 +38,21 @@ async function splitLocales() {
       `${langFolderPath}${localeKey}.json`,
       JSON.stringify(localeData)
     );
+  });
+
+  const dayjsLangFolderPath = `${langFolderPath}/dayjs`;
+  await mkdir(dayjsLangFolderPath);
+  await ncp('node_modules/dayjs/esm/locale', dayjsLangFolderPath);
+
+  const filePaths = await readdir(dayjsLangFolderPath);
+  filePaths.forEach(async (fileName) => {
+    const filePath = `${dayjsLangFolderPath}/${fileName}`;
+    const fileContent = await readFile(filePath, 'utf-8');
+    const updatedContent = fileContent
+      .replace("import dayjs from '../index';", '')
+      .replace('dayjs.locale(locale, null, true);', '');
+
+    await writeFile(filePath, updatedContent, 'utf-8');
   });
 }
 

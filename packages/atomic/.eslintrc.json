@@ -10,6 +10,7 @@
   },
   "ignorePatterns": [
     "src/external-builds/**/*",
+    "src/components/atomic-search-interface/lang/**/*",
     "dist/**/*",
     "www/**/*",
     "loader/**/*",

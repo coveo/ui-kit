@@ -194,7 +194,7 @@ export class AtomicSearchInterface {
       })
     );
 
-    loadDayjsLocale(this.language);
+    loadDayjsLocale(this.languageAssetPath, this.language);
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
       'translation',
@@ -458,8 +458,12 @@ export class AtomicSearchInterface {
 
   private get i18nBackendOptions(): BackendOptions {
     return {
-      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
+      loadPath: `${this.languageAssetPath}/{{lng}}.json`,
     };
+  }
+
+  private get languageAssetPath() {
+    return getAssetPath(this.languageAssetsPath);
   }
 
   private async internalInitialization(initEngine: () => void) {
@@ -472,7 +476,7 @@ export class AtomicSearchInterface {
     }
     this.updateIconAssetsPath();
     initEngine();
-    loadDayjsLocale(this.language);
+    loadDayjsLocale(this.languageAssetPath, this.language);
     await this.i18nPromise;
     this.initComponents();
     this.initSearchStatus();
