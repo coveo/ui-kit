@@ -40,6 +40,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -202,6 +203,9 @@ export class AtomicTimeframeFacet
   }
 
   private registerFacetToStore() {
+    if (!this.facet) {
+      return;
+    }
     registerFacetToStore(this.bindings.store, 'dateFacets', {
       label: this.label,
       facetId: this.facetId!,
@@ -216,6 +220,9 @@ export class AtomicTimeframeFacet
   }
 
   private inititalizeDependenciesManager() {
+    if (!this.facet && !this.filter) {
+      return;
+    }
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
@@ -360,9 +367,11 @@ export class AtomicTimeframeFacet
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <ul part="values" class="mt-3">
-        {children}
-      </ul>
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class="mt-3" part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 
