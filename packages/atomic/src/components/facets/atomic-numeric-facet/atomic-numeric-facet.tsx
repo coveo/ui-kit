@@ -93,8 +93,8 @@ export class AtomicNumericFacet
   implements InitializableComponent, BaseFacet<NumericFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
-  public facet?: NumericFacet;
-  public facetForCountsOnly?: NumericFacet;
+  public facetForRange?: NumericFacet;
+  public facetForInput?: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
   public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
@@ -114,7 +114,7 @@ export class AtomicNumericFacet
   @State() public error!: Error;
   @BindStateToController('facetForCountsOnly')
   @State()
-  public facetForCountsOnlyState?: NumericFacetState;
+  public facetForInputState?: NumericFacetState;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -234,14 +234,14 @@ export class AtomicNumericFacet
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges (manual or automatic) configured in the component
     if (this.numberOfValues > 0) {
-      const {facet: facetForDisplay, facetId: facetIDForDisplay} =
+      const {facet: facetForRange, facetId: facetIdForRange} =
         this.initializeFacetForDisplay();
-      this.facet = facetForDisplay;
-      this.facetId = facetIDForDisplay;
+      this.facetForRange = facetForRange;
+      this.facetId = facetIdForRange;
     }
     if (this.withInput) {
-      const {facet: facetForResultsMatch} = this.initializeFacetForCountsOnly();
-      this.facetForCountsOnly = facetForResultsMatch;
+      const {facet: facetForInput} = this.initializeFacetForCountsOnly();
+      this.facetForInput = facetForInput;
     }
   }
 
@@ -309,7 +309,8 @@ export class AtomicNumericFacet
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
-        facetId: this.facet?.state.facetId ?? this.filter!.state.facetId,
+        facetId:
+          this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
         conditions: parseDependsOn(this.dependsOn),
       }
     );
@@ -379,7 +380,7 @@ export class AtomicNumericFacet
             this.filter?.clear();
             return;
           }
-          this.facet?.deselectAll();
+          this.facetForRange?.deselectAll();
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
@@ -477,8 +478,8 @@ export class AtomicNumericFacet
       this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
-            ? this.facet!.toggleSingleSelect(value)
-            : this.facet!.toggleSelect(value)
+            ? this.facetForRange!.toggleSingleSelect(value)
+            : this.facetForRange!.toggleSelect(value)
         )
       )
     );
@@ -520,7 +521,7 @@ export class AtomicNumericFacet
       hasInputRange: this.hasInputRange,
       searchStatusState: this.searchStatusState,
       facetValues: this.getValuesWithResultsOrActive(
-        this.facetForCountsOnlyState?.values
+        this.facetForInputState?.values
       ),
       hasInput: !!this.withInput,
     });
