@@ -46,6 +46,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -419,9 +420,11 @@ export class AtomicNumericFacet
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <ul part="values" class="mt-3">
-        {children}
-      </ul>
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class="mt-3" part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 

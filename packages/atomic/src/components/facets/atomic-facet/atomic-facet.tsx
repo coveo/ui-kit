@@ -45,6 +45,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -377,14 +378,20 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     }
   }
 
-  private renderValuesContainer(children: VNode[]) {
+  private renderValuesContainer(children: VNode[], query?: string) {
     const classes = `mt-3 ${
       this.displayValuesAs === 'box' ? 'box-container' : ''
     }`;
     return (
-      <ul part="values" class={classes}>
-        {children}
-      </ul>
+      <FacetValuesGroup
+        i18n={this.bindings.i18n}
+        label={this.label}
+        query={query}
+      >
+        <ul class={classes} part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 
@@ -418,7 +425,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
               : this.facet.facetSearch.select(value),
           false
         )
-      )
+      ),
+      this.facetState.facetSearch.query
     );
   }
 

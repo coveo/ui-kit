@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -45,6 +45,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -539,13 +540,30 @@ export class AtomicCategoryFacet
         {this.renderHeader()}
         {!this.isCollapsed && [
           this.renderSearchInput(),
-          shouldDisplaySearchResults(this.facetState.facetSearch)
-            ? [this.renderSearchResults(), this.renderMatches()]
-            : [
-                this.renderParents(),
-                this.renderValues(),
-                this.renderShowMoreLess(),
-              ],
+          shouldDisplaySearchResults(this.facetState.facetSearch) ? (
+            <Fragment>
+              {this.facetState.facetSearch.values.length ? (
+                <FacetValuesGroup
+                  i18n={this.bindings.i18n}
+                  label={this.label}
+                  query={this.facetState.facetSearch.query}
+                >
+                  {this.renderSearchResults()}
+                </FacetValuesGroup>
+              ) : (
+                <div class="mt-3"></div>
+              )}
+              {this.renderMatches()}
+            </Fragment>
+          ) : (
+            <Fragment>
+              <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+                {this.renderParents()}
+                {this.renderValues()}
+              </FacetValuesGroup>
+              {this.renderShowMoreLess()}
+            </Fragment>
+          ),
         ]}
       </FacetContainer>
     );
