@@ -22,8 +22,8 @@ export function getAnalyticsConfig(
   const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
     enabled,
-    ...(document.referrer && {originLevel3: document.referrer}),
     documentLocation: document.location.href,
+    ...(document.referrer && {originLevel3: document.referrer}),
   };
 
   if (searchEngineConfig.analytics) {
