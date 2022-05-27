@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.7.7...@coveo/atomic-angular@1.8.0) (2022-05-26)
+
+
+### Features
+
+* **atomic:** added heading-level prop to facets ([#2025](https://github.com/coveo/ui-kit/issues/2025)) ([660ac63](https://github.com/coveo/ui-kit/commit/660ac637e58db47b0349aa8e36ba797c6e4d017d))
+
+
+
+
+
+## [1.7.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.7.6...@coveo/atomic-angular@1.7.7) (2022-05-26)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.7.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.7.5...@coveo/atomic-angular@1.7.6) (2022-05-26)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.7.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.7.4...@coveo/atomic-angular@1.7.5) (2022-05-25)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 ## [1.7.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.7.3...@coveo/atomic-angular@1.7.4) (2022-05-19)
 
 **Note:** Version bump only for package @coveo/atomic-angular

@@ -12,6 +12,7 @@ export class AtomicNumericRange {
 
   /**
    * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label?: string;
   /**

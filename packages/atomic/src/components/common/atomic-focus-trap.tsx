@@ -1,5 +1,6 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
+import {getFocusedElement} from '../../utils/utils';
 
 function getParent(element: Element | ShadowRoot) {
   if (element.parentNode) {
@@ -86,7 +87,9 @@ export class AtomicFocusTrap {
       return;
     }
 
-    if (contains(this.host, e.target as Element)) {
+    const focusedElement = getFocusedElement();
+
+    if (focusedElement && contains(this.host, focusedElement)) {
       return;
     }
 
