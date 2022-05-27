@@ -70,7 +70,7 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private onSuggestedQueryChange() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       const unsubscribe = this.instantResults.subscribe(() => {
         const state = this.instantResults.state;
         if (!state.isLoading) {
@@ -78,7 +78,7 @@ export class AtomicSearchBoxRecentQueries {
             this.results = state.results;
           }
           unsubscribe();
-          resolve(null);
+          resolve();
         }
       });
     });

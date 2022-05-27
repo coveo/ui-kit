@@ -23,6 +23,7 @@ export function getAnalyticsConfig(
     analyticsClientMiddleware,
     enabled,
     ...(document.referrer && {originLevel3: document.referrer}),
+    documentLocation: document.location.href,
   };
 
   if (searchEngineConfig.analytics) {

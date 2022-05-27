@@ -53,6 +53,7 @@ import {promiseTimeout} from '../../utils/promise-utils';
  * @part suggestions - A list of suggested query corrections on each panel.
  * @part suggestions-left - A list of suggested query corrections on the left panel.
  * @part suggestions-right - A list of suggested query corrections on the right panel.
+ * @part suggestions-wrapper - The wrapper that contains suggestions panels.
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
@@ -322,12 +323,13 @@ export class AtomicSearchBox {
       }
     });
 
-    this.leftSuggestions = fulfilledSuggestions
-      .filter((suggestion) => !suggestion.panel || suggestion.panel === 'left')
-      .sort(this.sortSuggestions);
-    this.rightSuggestions = fulfilledSuggestions
-      .filter((suggestion) => suggestion.panel === 'right')
-      .sort(this.sortSuggestions);
+    const splitSuggestions = (side: 'left' | 'right', isDefault = false) =>
+      fulfilledSuggestions
+        .filter((suggestion) => suggestion.panel === side || isDefault)
+        .sort(this.sortSuggestions);
+
+    this.leftSuggestions = splitSuggestions('left', true);
+    this.rightSuggestions = splitSuggestions('right');
 
     const defaultSuggestionQ =
       this.allSuggestionElements.find(isSuggestionElement)?.query;
@@ -549,6 +551,7 @@ export class AtomicSearchBox {
     const rightElements = this.getSuggestionElements(this.rightSuggestions);
     return (
       <div
+        part="suggestions-wrapper"
         class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
           this.showSuggestions ? '' : 'hidden'
         }`}
