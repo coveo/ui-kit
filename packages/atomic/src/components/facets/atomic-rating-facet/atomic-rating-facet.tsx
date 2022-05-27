@@ -35,6 +35,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -318,9 +319,11 @@ export class AtomicRatingFacet
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <ul part="values" class="mt-3">
-        {children}
-      </ul>
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class="mt-3" part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 
