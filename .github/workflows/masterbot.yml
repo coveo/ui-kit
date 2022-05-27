@@ -46,7 +46,7 @@ jobs:
           cypress-record-key: ${{ secrets.ATOMIC_CYPRESS_RECORD_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
   e2e-atomic-screenshots:
-    name: ''Run e2e screenshots tests on Atomic''
+    name: 'Run e2e screenshots tests on Atomic'
     needs: build
     runs-on: ubuntu-latest
     steps:

@@ -1,0 +1,41 @@
+<template>
+  <button class="slds-button slds-button_neutral refine-button slds-is-relative" onclick={openModal}
+    title={buttonLabel}>
+    <slot name="button-content">
+      {labels.sortAndFilters}
+      <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonLabel}
+        class="slds-current-color slds-var-p-vertical_x-small slds-button__icon_right">
+      </lightning-icon>
+    </slot>
+    <template if:true={activeFiltersCount}>
+      <div
+        class="refine-button_filters-badge slds-is-absolute slds-align_absolute-center slds-text-title slds-var-p-around_xxx-small">
+        <span class="slds-truncate">{activeFiltersCount}</span>
+      </div>
+    </template>
+  </button>
+  <c-quantic-modal data-id={modalId} full-screen={fullScreen}>
+    <div
+      class="slds-var-p-vertical_medium slds-is-relative slds-align_absolute-center slds-border_bottom refine-modal__header"
+      slot="header">
+      <slot name="refine-title">
+        <div class="slds-text-title_bold">{labels.sortAndFilters}</div>
+      </slot>
+      <lightning-button class="slds-is-absolute slds-align_absolute-center slds-var-m-right_large refine-modal__action"
+        onclick={closeModal} variant="base" title="Close" icon-name="utility:close">
+      </lightning-button>
+    </div>
+    <div class="slds-align_absolute-center" slot="content">
+      <div class="refine-modal__content">
+        <c-quantic-refine-modal-content engine-id={engineId} hide-sort={hideSort}></c-quantic-refine-modal-content>
+      </div>
+    </div>
+    <div class="slds-align_absolute-center slds-var-p-vertical_medium slds-border_top refine-modal__footer"
+      slot="footer">
+      <button onclick={closeModal} title={viewResultsLabel}
+        class="slds-button slds-button_brand slds-var-p-vertical_xxx-small refine-modal__footer-button">
+        {viewResultsLabel}
+      </button>
+    </div>
+  </c-quantic-modal>
+</template>
