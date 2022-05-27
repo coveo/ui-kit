@@ -1,4 +1,4 @@
-import {Component, Element, State, h, Watch} from '@stencil/core';
+import {Component, Element, State, h} from '@stencil/core';
 import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
 
 import {
@@ -9,7 +9,7 @@ import {
 } from '../suggestions-common';
 
 /**
- * TODO:
+ * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
  * @internal
  */
 @Component({
@@ -46,7 +46,7 @@ export class AtomicSearchBoxRecentQueries {
       query: '',
       content: <div class="flex items-center break-all">{result.title}</div>,
       onSelect: () => {
-        // TODO: ADD LOGS
+        // TODO: ADD LOGS?
       },
     }));
   }
