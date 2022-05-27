@@ -1,4 +1,3 @@
-// TODO: Add interface with flesh to it
 export interface InsightQueryResponse {
   results: SearchResult[];
   searchUid: string;
@@ -11,7 +10,7 @@ interface SearchResult {
   title: string;
   clickUri: string;
   excerpt: string;
-  fields: Record<string, string | number | string[]>; // TODO: make sure those types are correct
+  fields: Record<string, string | boolean | number | string[]>;
   uniqueId: string;
   hasHtmlVersion: boolean;
   percentScore: number;

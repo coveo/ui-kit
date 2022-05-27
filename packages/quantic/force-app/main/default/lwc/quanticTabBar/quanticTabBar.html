@@ -1,0 +1,29 @@
+<template>
+  <div class="tab-bar_container slds-theme_shade slds-size_1-of-1">
+    <ul class="tab-bar_list-container slds-tabs_default slds-tabs_default__nav slds-is-relative" role="tablist">
+      <slot></slot>
+      <li
+        class="tab-bar_more-button slds-tabs_default__item slds-tabs_default__overflow-button slds-is-absolute slds-p-right_none slds-p-left_none"
+        title={labels.moreTabs} role="presentation">
+        <div class={dropdownClasses}>
+          <button class="slds-button slds-var-p-horizontal_small" aria-haspopup="true" onclick={toggleCombobox}>{moreButtonLabel}
+            <lightning-icon
+              class={moreButtonIconClasses}
+              icon-name={arrowIconName} size="xx-small" aria-hidden="true"></lightning-icon>
+          </button>
+          <div class="slds-dropdown slds-dropdown_right">
+            <ul class="slds-dropdown__list slds-dropdown_length-with-icon-10" role="menu">
+              <template for:each={tabsInDropdown} for:item="tab">
+                <li class="slds-dropdown__item" role="presentation" key={tab.value}>
+                  <a role="menuitem" tabindex="-1" onclick={handleDropdownTabSelect} data-value={tab.value}>
+                    <span class="slds-truncate" title={tab.label}>{tab.label}</span>
+                  </a>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</template>

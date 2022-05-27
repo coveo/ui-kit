@@ -70,8 +70,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
-   *
-   * We recommend setting this property in order to improve accessibility.
    */
   @Prop({reflect: true}) public headingLevel = 0;
 

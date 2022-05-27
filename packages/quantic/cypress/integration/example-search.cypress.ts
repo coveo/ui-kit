@@ -83,4 +83,17 @@ describe('example-search', () => {
         .should('contain.text', 'Results 11-20');
     });
   });
+
+  describe('when narrowing the screen', () => {
+    it('should hide the sort and facet components and display the refine toggle component', () => {
+      cy.viewport(1000, 900)
+        .get(search.facetsContainer)
+        .should('not.be.visible')
+        .get(search.sort)
+        .eq(0)
+        .should('not.be.visible')
+        .get(search.refineToggle)
+        .should('be.visible');
+    });
+  });
 });

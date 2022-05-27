@@ -43,6 +43,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -85,7 +86,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicColorFacet
-  implements InitializableComponent, BaseFacet<Facet, FacetState>
+  implements InitializableComponent, BaseFacet<Facet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
@@ -107,6 +108,7 @@ export class AtomicColorFacet
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
+   * Used in the `atomic-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -138,6 +140,10 @@ export class AtomicColorFacet
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
+  /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
@@ -145,6 +151,7 @@ export class AtomicColorFacet
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    * Note: A high injectionDepth may negatively impact the facet request performance.
    * Minimum: `0`
+   * Default: `1000`
    */
   @Prop({reflect: true}) public injectionDepth = 1000;
   // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
@@ -253,6 +260,7 @@ export class AtomicColorFacet
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
+        headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
@@ -294,9 +302,8 @@ export class AtomicColorFacet
       this.bindings.i18n
     );
     const isSelected = facetValue.state === 'selected';
-    const partValue = displayValue
-      .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))
-      ?.toString();
+    const partValueWithDisplayValue = displayValue.replace(/[^a-z0-9]/gi, '');
+    const partValueWithAPIValue = facetValue.value.replace(/[^a-z0-9]/gi, '');
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
@@ -326,7 +333,7 @@ export class AtomicColorFacet
             searchQuery={this.facetState.facetSearch.query}
           >
             <div
-              part={`value-${partValue} default-color-value`}
+              part={`value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value`}
               class="value-box-color w-full h-12 bg-neutral-dark rounded-md mb-2"
             ></div>
             <FacetValueLabelHighlight
@@ -339,14 +346,20 @@ export class AtomicColorFacet
     }
   }
 
-  private renderValuesContainer(children: VNode[]) {
+  private renderValuesContainer(children: VNode[], query?: string) {
     const classes = `mt-3 ${
       this.displayValuesAs === 'box' ? 'box-color-container' : ''
     }`;
     return (
-      <ul part="values" class={classes}>
-        {children}
-      </ul>
+      <FacetValuesGroup
+        i18n={this.bindings.i18n}
+        label={this.label}
+        query={query}
+      >
+        <ul class={classes} part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 
@@ -369,7 +382,8 @@ export class AtomicColorFacet
           },
           () => this.facet.facetSearch.select(value)
         )
-      )
+      ),
+      this.facetState.facetSearch.query
     );
   }
 
