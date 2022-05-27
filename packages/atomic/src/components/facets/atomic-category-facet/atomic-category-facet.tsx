@@ -492,7 +492,7 @@ export class AtomicCategoryFacet
 
   private renderShowMoreLess() {
     if (this.facetState.canShowMoreValues) {
-      this.showLessFocus.disableForCurrentSearch();
+      this.showMoreFocus.disableForCurrentSearch();
     }
     return (
       <div class={this.hasParents ? 'pl-9' : ''}>
@@ -500,17 +500,17 @@ export class AtomicCategoryFacet
           label={this.label}
           i18n={this.bindings.i18n}
           onShowMore={() => {
-            this.showLessFocus.focusAfterSearch();
+            this.showMoreFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
-            this.showMoreFocus.focusAfterSearch();
+            this.showLessFocus.focusAfterSearch();
             this.facet.showLessValues();
           }}
           canShowLessValues={this.facetState.canShowLessValues}
           canShowMoreValues={this.facetState.canShowMoreValues}
-          showMoreRef={this.showMoreFocus.setTarget}
-          showLessRef={this.showLessFocus.setTarget}
+          showMoreRef={this.showLessFocus.setTarget}
+          showLessRef={this.showMoreFocus.setTarget}
         ></FacetShowMoreLess>
       </div>
     );

@@ -418,24 +418,24 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
 
   private renderShowMoreLess() {
     if (this.facetState.canShowMoreValues) {
-      this.showLessFocus.disableForCurrentSearch();
+      this.showMoreFocus.disableForCurrentSearch();
     }
     return (
       <FacetShowMoreLess
         label={this.label}
         i18n={this.bindings.i18n}
         onShowMore={() => {
-          this.showLessFocus.focusAfterSearch();
+          this.showMoreFocus.focusAfterSearch();
           this.facet.showMoreValues();
         }}
         onShowLess={() => {
-          this.showMoreFocus.focusAfterSearch();
+          this.showLessFocus.focusAfterSearch();
           this.facet.showLessValues();
         }}
         canShowMoreValues={this.facetState.canShowMoreValues}
         canShowLessValues={this.facetState.canShowLessValues}
-        showMoreRef={this.showMoreFocus.setTarget}
-        showLessRef={this.showLessFocus.setTarget}
+        showMoreRef={this.showLessFocus.setTarget}
+        showLessRef={this.showMoreFocus.setTarget}
       ></FacetShowMoreLess>
     );
   }
