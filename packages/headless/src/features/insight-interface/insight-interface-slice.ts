@@ -9,11 +9,13 @@ export const insightInterfaceReducer = createReducer(
       .addCase(fetchInterface.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchInterface.rejected, (state) => {
+      .addCase(fetchInterface.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
       })
       .addCase(fetchInterface.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = undefined;
         state.config = {
           contextFields: action.payload.response.contextFields,
           interface: action.payload.response.interface,
