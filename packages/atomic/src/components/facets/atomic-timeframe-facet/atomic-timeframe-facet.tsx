@@ -203,6 +203,9 @@ export class AtomicTimeframeFacet
   }
 
   private registerFacetToStore() {
+    if (!this.facet) {
+      return;
+    }
     registerFacetToStore(this.bindings.store, 'dateFacets', {
       label: this.label,
       facetId: this.facetId!,
@@ -217,6 +220,9 @@ export class AtomicTimeframeFacet
   }
 
   private inititalizeDependenciesManager() {
+    if (!this.facet && !this.filter) {
+      return;
+    }
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
