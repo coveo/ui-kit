@@ -51,7 +51,10 @@ describe('Search Box Test Suites', () => {
               maxWithoutQuery: maxRecentQueriesWithoutQuery,
               maxWithQuery: numOfRecentQueries,
             },
-            props: {'number-of-queries': numOfSuggestions + numOfRecentQueries},
+            props: {
+              'number-of-queries': numOfSuggestions + numOfRecentQueries,
+              'suggestion-timeout': 2000,
+            },
           })
         )
         .init();
