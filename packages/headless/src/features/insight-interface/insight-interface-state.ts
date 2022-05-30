@@ -9,7 +9,7 @@ export const getInsightInterfaceInitialState = (): InsightInterfaceState => ({
 export interface InsightInterfaceState {
   loading: boolean;
   config?: {
-    contextFields: Record<string, string | number | string[]>;
+    contextFields: Record<string, string>;
     interface?: InsightInterface;
   };
   error?: InsightAPIErrorStatusResponse;
