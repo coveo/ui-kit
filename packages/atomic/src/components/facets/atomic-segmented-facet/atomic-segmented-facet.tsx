@@ -22,6 +22,7 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * @internal
@@ -109,9 +110,11 @@ export class AtomicSegmentedFacet
   private renderValuesContainer(children: VNode[]) {
     const classes = 'box-container';
     return (
-      <ul part="values" class={classes}>
-        {children}
-      </ul>
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class={classes} part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 

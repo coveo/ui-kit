@@ -45,6 +45,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -139,6 +140,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -263,6 +268,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
+        headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
@@ -359,14 +365,20 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     }
   }
 
-  private renderValuesContainer(children: VNode[]) {
+  private renderValuesContainer(children: VNode[], query?: string) {
     const classes = `mt-3 ${
       this.displayValuesAs === 'box' ? 'box-container' : ''
     }`;
     return (
-      <ul part="values" class={classes}>
-        {children}
-      </ul>
+      <FacetValuesGroup
+        i18n={this.bindings.i18n}
+        label={this.label}
+        query={query}
+      >
+        <ul class={classes} part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 
@@ -396,7 +408,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
               ? this.facet.facetSearch.singleSelect(value)
               : this.facet.facetSearch.select(value)
         )
-      )
+      ),
+      this.facetState.facetSearch.query
     );
   }
 

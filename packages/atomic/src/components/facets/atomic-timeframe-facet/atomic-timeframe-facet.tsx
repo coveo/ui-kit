@@ -40,6 +40,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -113,6 +114,10 @@ export class AtomicTimeframeFacet
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -198,6 +203,9 @@ export class AtomicTimeframeFacet
   }
 
   private registerFacetToStore() {
+    if (!this.facet) {
+      return;
+    }
     registerFacetToStore(this.bindings.store, 'dateFacets', {
       label: this.label,
       facetId: this.facetId!,
@@ -212,6 +220,9 @@ export class AtomicTimeframeFacet
   }
 
   private inititalizeDependenciesManager() {
+    if (!this.facet && !this.filter) {
+      return;
+    }
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
@@ -282,6 +293,7 @@ export class AtomicTimeframeFacet
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
+        headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
@@ -355,9 +367,11 @@ export class AtomicTimeframeFacet
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <ul part="values" class="mt-3">
-        {children}
-      </ul>
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class="mt-3" part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 

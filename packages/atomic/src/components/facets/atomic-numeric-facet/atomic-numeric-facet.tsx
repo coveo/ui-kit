@@ -46,6 +46,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -149,6 +150,10 @@ export class AtomicNumericFacet
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -334,6 +339,7 @@ export class AtomicNumericFacet
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
+        headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         headerRef={this.headerFocus.setTarget}
       ></FacetHeader>
@@ -414,9 +420,11 @@ export class AtomicNumericFacet
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <ul part="values" class="mt-3">
-        {children}
-      </ul>
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class="mt-3" part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 

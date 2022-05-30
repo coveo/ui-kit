@@ -7,6 +7,7 @@ export interface ModalSelector extends ComponentSelector {
   modalHeader: () => CypressSelector;
   modalContent: () => CypressSelector;
   modalFooter: () => CypressSelector;
+  renderingError: () => CypressSelector;
 }
 
 export const ModalSelectors: ModalSelector = {
@@ -16,4 +17,5 @@ export const ModalSelectors: ModalSelector = {
   modalHeader: () => ModalSelectors.get().find('.modal-header'),
   modalContent: () => ModalSelectors.get().find('.modal-content'),
   modalFooter: () => ModalSelectors.get().find('.modal-footer'),
+  renderingError: () => ModalSelectors.get().find('.error-message'),
 };
