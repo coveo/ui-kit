@@ -68,7 +68,7 @@ describe('highlight', () => {
       const str = 'malicious <script/> string';
       const newHighlights: HighlightKeyword[] = [];
 
-      const expectedString = 'malicious &ltscript/&gt <span>str</span>ing';
+      const expectedString = 'malicious &ltscript/&gt string';
 
       expect(
         highlightString({
