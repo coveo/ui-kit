@@ -48,9 +48,11 @@ export function createRipple(event: MouseEvent, options: RippleOptions) {
 }
 
 async function cleanupAnimationOnFinish(ripple: HTMLSpanElement) {
-  const animationsFinished = ripple
-    .getAnimations()
-    .map((anim) => new Promise<void>((res) => (anim.onfinish = () => res())));
-  await Promise.all(animationsFinished);
-  ripple && ripple.remove();
+  if ('getAnimations' in ripple) {
+    const animationsFinished = ripple
+      .getAnimations()
+      .map((anim) => new Promise<void>((res) => (anim.onfinish = () => res())));
+    await Promise.all(animationsFinished);
+    ripple && ripple.remove();
+  }
 }
