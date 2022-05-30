@@ -303,11 +303,11 @@ export namespace Components {
     }
     interface AtomicHtml {
         /**
-          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
          */
         "sanitize": boolean;
         /**
-          * The string value containg HTML to display;
+          * The string value containing HTML to display;
          */
         "value": string;
     }
@@ -647,11 +647,11 @@ export namespace Components {
     }
     interface AtomicResultHtml {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches throught the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
          */
         "field": string;
         /**
-          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
          */
         "sanitize": boolean;
     }
@@ -1960,11 +1960,11 @@ declare namespace LocalJSX {
     }
     interface AtomicHtml {
         /**
-          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
          */
         "sanitize"?: boolean;
         /**
-          * The string value containg HTML to display;
+          * The string value containing HTML to display;
          */
         "value": string;
     }
@@ -2302,11 +2302,11 @@ declare namespace LocalJSX {
     }
     interface AtomicResultHtml {
         /**
-          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches throught the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
          */
         "field": string;
         /**
-          * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
          */
         "sanitize"?: boolean;
     }

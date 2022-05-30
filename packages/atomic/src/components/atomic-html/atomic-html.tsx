@@ -22,11 +22,11 @@ export class AtomicHtml implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * The string value containg HTML to display;
+   * The string value containing HTML to display;
    */
   @Prop({reflect: false}) public value!: string;
   /**
-   * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+   * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
    */
   @Prop({reflect: true}) public sanitize = true;
 

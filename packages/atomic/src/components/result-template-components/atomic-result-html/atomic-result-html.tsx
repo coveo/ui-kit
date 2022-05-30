@@ -6,7 +6,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {getStringValueFromResultORNull} from '../../../utils/result-utils';
+import {getStringValueFromResultOrNull} from '../../../utils/result-utils';
 
 /**
  * The `atomic-result-html` component renders the HTML value of a string result field.
@@ -28,18 +28,19 @@ export class AtomicResultHtml implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * The result field which the component should use.
-   * This will look in the Result object first, and then in the Result.raw object for the fields.
-   * It is important to include the necessary field in the ResultList component.
+   *  The result field which the component should use.
+   * If set, Atomic searches for the specified field in the `Result` object first.
+   * If there's no such a field, Atomic searches throught the `Result.raw` object.
+   * It's important to include the necessary field in the `ResultList` component.
    */
   @Prop({reflect: true}) public field!: string;
   /**
-   * Specify if the content should be sanitized, using `DOMPurify` (https://www.npmjs.com/package/dompurify).
+   * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
    */
   @Prop({reflect: true}) public sanitize = true;
 
   public render() {
-    const resultValue = getStringValueFromResultORNull(this.result, this.field);
+    const resultValue = getStringValueFromResultOrNull(this.result, this.field);
     if (!resultValue) {
       this.host.remove();
       return;

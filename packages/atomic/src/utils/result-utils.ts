@@ -72,7 +72,7 @@ export function buildStringTemplateFromResult(
   });
 }
 
-export function getStringValueFromResultORNull(result: Result, field: string) {
+export function getStringValueFromResultOrNull(result: Result, field: string) {
   const value = ResultTemplatesHelpers.getResultProperty(result, field);
 
   if (typeof value !== 'string' || value.trim() === '') {

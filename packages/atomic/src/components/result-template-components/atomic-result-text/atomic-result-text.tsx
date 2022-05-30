@@ -7,7 +7,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {getStringValueFromResultORNull} from '../../../utils/result-utils';
+import {getStringValueFromResultOrNull} from '../../../utils/result-utils';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.
@@ -64,7 +64,7 @@ export class AtomicResultText implements InitializableComponent {
   }
 
   public render() {
-    const resultValue = getStringValueFromResultORNull(this.result, this.field);
+    const resultValue = getStringValueFromResultOrNull(this.result, this.field);
     if (!resultValue && !this.default) {
       this.host.remove();
       return;
