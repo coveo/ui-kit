@@ -46,22 +46,38 @@ describe('highlight', () => {
     });
 
     it('should escape the string and return correctly highlighted string', () => {
-      const str = 'malicious <script/> string';
-      const newHighlights: HighlightKeyword[] = [
-        {offset: 3, length: 5},
-        {offset: 20, length: 3},
+      const testCases = [
+        {
+          input: 'malicious <script/> string',
+          output: 'mal<span>iciou</span>s &ltscript/&gt <span>str</span>ing',
+          highlights: [
+            {offset: 3, length: 5},
+            {offset: 20, length: 3},
+          ],
+        },
+        {
+          input: '<p>Chat test for SFCT 809</p>',
+          output:
+            '&ltp&gt<span>Chat</span> <span>test</span> <span>for</span> <span>SFCT</span> <span>809</span>&lt/p&gt',
+          highlights: [
+            {length: 4, offset: 3},
+            {length: 4, offset: 8},
+            {length: 3, offset: 13},
+            {length: 4, offset: 17},
+            {length: 3, offset: 22},
+          ],
+        },
       ];
 
-      const expectedString =
-        'mal<span>iciou</span>s &ltscript/&gt <span>str</span>ing';
-
-      expect(
-        highlightString({
-          ...highlightParams,
-          highlights: newHighlights,
-          content: str,
-        })
-      ).toBe(expectedString);
+      testCases.forEach(({highlights, input, output}) => {
+        expect(
+          highlightString({
+            ...highlightParams,
+            highlights,
+            content: input,
+          })
+        ).toBe(output);
+      });
     });
   });
 
