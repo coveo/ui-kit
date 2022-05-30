@@ -18,8 +18,12 @@
   @apply w-full;
 }
 
+.value-label {
+  @apply group-hover:!text-primary-light;
+}
+
 .value-box {
-  @apply hover:border-blue-400 rounded-none;
+  @apply hover:!border-primary-light hover:!bg-background rounded-none p-2;
 }
 
 .value-box-count {
@@ -27,9 +31,9 @@
 }
 
 .value-box.selected {
-  @apply border-blue-600;
+  @apply border-primary;
 }
 
 .value-box.selected .value-label {
-  @apply text-blue-600 font-normal;
+  @apply text-primary font-normal;
 }
