@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.1...@coveo/quantic@1.19.0) (2022-05-30)
+
+
+### Features
+
+* **atomic:** add atomic-result-html component ([#2014](https://github.com/coveo/ui-kit/issues/2014)) ([ce1d9c2](https://github.com/coveo/ui-kit/commit/ce1d9c299b16d736730d9e7731f4bfa9c782a369))
+* **headless:** add insight engine ([#2026](https://github.com/coveo/ui-kit/issues/2026)) ([aa79c31](https://github.com/coveo/ui-kit/commit/aa79c318226f4c297a4805d1d5f90444ab38c226))
+
+
+
+
+
 ## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.0...@coveo/quantic@1.18.1) (2022-05-30)
 
 
