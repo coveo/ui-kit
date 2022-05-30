@@ -4,6 +4,7 @@ export * from './force-app/main/default/staticresources/coveoheadless/definition
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
 
 import * as HeadlessCaseAssistTypes from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
+import * as HeadlessInsightTypes from './force-app/main/default/staticresources/coveoheadless/definitions/insight.index';
 
 import {LightningElement} from 'lwc';
 import {Deferred} from 'utils';
@@ -11,13 +12,17 @@ import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless
 import {ExternalEngineOptions} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine-configuration';
 
 interface Bindings {
-  engine?: HeadlessTypes<CoreEngine> | HeadlessCaseAssistTypes<CoreEngine>;
+  engine?:
+    | HeadlessTypes<CoreEngine>
+    | HeadlessCaseAssistTypes<CoreEngine>
+    | HeadlessInsightTypes<CoreEngine>;
   store?: Record<String, unknown>;
 }
 
 declare global {
   const CoveoHeadless: typeof HeadlessTypes;
   const CoveoHeadlessCaseAssist: typeof HeadlessCaseAssistTypes;
+  const CoveoHeadlessInsight: typeof HeadlessInsightTypes;
   interface Window {
     coveoHeadless: {
       [engineId: string]: {
