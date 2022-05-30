@@ -264,9 +264,9 @@ export class AtomicSearchBox {
       return;
     }
 
-    this.updateQueryFromSuggestion(this.nextOrFirstValue);
     this.updateActiveDescendant(this.nextOrFirstValue.id);
     this.scrollActiveDescendantIntoView();
+    this.updateQueryFromSuggestion(this.nextOrFirstValue);
   }
 
   private focusPreviousValue() {
@@ -274,9 +274,9 @@ export class AtomicSearchBox {
       return;
     }
 
-    this.updateQueryFromSuggestion(this.previousOrLastValue);
     this.updateActiveDescendant(this.previousOrLastValue.id);
     this.scrollActiveDescendantIntoView();
+    this.updateQueryFromSuggestion(this.previousOrLastValue);
   }
 
   private updateAriaMessage() {
