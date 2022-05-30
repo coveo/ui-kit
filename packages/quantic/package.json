@@ -63,5 +63,15 @@
     "ts-node": "10.7.0",
     "wait-on": "6.0.1",
     "xml2json": "0.12.0"
-  }
+  },
+  "files": [
+    "force-app/main/default/classes/*",
+    "force-app/main/default/labels/*",
+    "force-app/main/default/lwc/*",
+    "force-app/main/default/cspTrustedSites/*",
+    "force-app/main/default/staticresources/*",
+    "force-app/main/translations/*",
+    "setup-quantic.js",
+    "check-sfdx-project.js"
+  ]
 }
