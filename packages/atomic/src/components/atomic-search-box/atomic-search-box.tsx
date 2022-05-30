@@ -80,7 +80,9 @@ export class AtomicSearchBox {
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
+  @State() private leftSuggestionElements: SearchBoxSuggestionItem[] = [];
   @State() private rightSuggestions: SearchBoxSuggestions[] = [];
+  @State() private rightSuggestionElements: SearchBoxSuggestionItem[] = [];
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -248,10 +250,7 @@ export class AtomicSearchBox {
   }
 
   private get allSuggestionElements() {
-    return [
-      ...this.getSuggestionElements(this.leftSuggestions),
-      ...this.getSuggestionElements(this.rightSuggestions),
-    ];
+    return [...this.leftSuggestionElements, ...this.rightSuggestionElements];
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
@@ -274,8 +273,7 @@ export class AtomicSearchBox {
       return;
     }
 
-    const query = this.nextOrFirstValue.getAttribute('data-query');
-    !isNullOrUndefined(query) && this.updateQuery(query);
+    this.updateQueryFromSuggestion(this.nextOrFirstValue);
     this.updateActiveDescendant(this.nextOrFirstValue.id);
     this.scrollActiveDescendantIntoView();
   }
@@ -285,8 +283,7 @@ export class AtomicSearchBox {
       return;
     }
 
-    const query = this.previousOrLastValue.getAttribute('data-query');
-    !isNullOrUndefined(query) && this.updateQuery(query);
+    this.updateQueryFromSuggestion(this.previousOrLastValue);
     this.updateActiveDescendant(this.previousOrLastValue.id);
     this.scrollActiveDescendantIntoView();
   }
@@ -325,11 +322,20 @@ export class AtomicSearchBox {
 
     const splitSuggestions = (side: 'left' | 'right', isDefault = false) =>
       fulfilledSuggestions
-        .filter((suggestion) => suggestion.panel === side || isDefault)
+        .filter(
+          (suggestion) =>
+            suggestion.panel === side || (!suggestion.panel && isDefault)
+        )
         .sort(this.sortSuggestions);
 
     this.leftSuggestions = splitSuggestions('left', true);
+    this.leftSuggestionElements = this.getSuggestionElements(
+      this.leftSuggestions
+    );
     this.rightSuggestions = splitSuggestions('right');
+    this.rightSuggestionElements = this.getSuggestionElements(
+      this.rightSuggestions
+    );
 
     const defaultSuggestionQ =
       this.allSuggestionElements.find(isSuggestionElement)?.query;
@@ -382,6 +388,38 @@ export class AtomicSearchBox {
         query,
       })
     );
+  }
+
+  private isPanelInFocus(panel: 'right' | 'left') {
+    if (!this.activeDescendantElement) {
+      return false;
+    }
+    return this.activeDescendantElement
+      ?.closest('ul')
+      ?.getAttribute('part')
+      ?.includes(`suggestions-${panel}`);
+  }
+
+  private updateQueryFromSuggestion(el: Element | null) {
+    const query = el?.getAttribute('data-query');
+    if (!isNullOrUndefined(query)) {
+      this.updateQuery(query);
+      this.updateSuggestedQuery(query);
+      this.updateSuggestionElements();
+    }
+  }
+
+  private updateSuggestionElements() {
+    if (!this.isPanelInFocus('left')) {
+      this.leftSuggestionElements = this.getSuggestionElements(
+        this.leftSuggestions
+      );
+    }
+    if (!this.isPanelInFocus('right')) {
+      this.rightSuggestionElements = this.getSuggestionElements(
+        this.rightSuggestions
+      );
+    }
   }
 
   private onKeyDown(e: KeyboardEvent) {
@@ -469,8 +507,8 @@ export class AtomicSearchBox {
   }
 
   private clearSuggestionElements() {
-    this.leftSuggestions = [];
-    this.rightSuggestions = [];
+    this.leftSuggestionElements = [];
+    this.rightSuggestionElements = [];
     this.ariaMessage = '';
   }
 
@@ -540,15 +578,14 @@ export class AtomicSearchBox {
         )
       )
     );
-    forceUpdate(this);
+    this.updateSuggestionElements();
   }
 
   private renderSuggestions() {
     if (!this.hasSuggestions) {
       return null;
     }
-    const leftElements = this.getSuggestionElements(this.leftSuggestions);
-    const rightElements = this.getSuggestionElements(this.rightSuggestions);
+
     return (
       <div
         part="suggestions-wrapper"
@@ -556,7 +593,7 @@ export class AtomicSearchBox {
           this.showSuggestions ? '' : 'hidden'
         }`}
       >
-        {!!leftElements.length && (
+        {!!this.leftSuggestionElements.length && (
           <ul
             id={this.popupId}
             role="listbox"
@@ -565,22 +602,28 @@ export class AtomicSearchBox {
             ref={(el) => (this.listRef = el!)}
             class="flex-grow"
           >
-            {leftElements.map((suggestion, index) =>
-              this.renderSuggestion(suggestion, index, leftElements.length - 1)
+            {this.leftSuggestionElements.map((suggestion, index) =>
+              this.renderSuggestion(
+                suggestion,
+                index,
+                this.leftSuggestionElements.length - 1
+              )
             )}
           </ul>
         )}
-        {!!rightElements.length && (
+        {!!this.rightSuggestionElements.length && (
           <ul
-            id={this.popupId}
             role="listbox"
             part="suggestions suggestions-right"
             aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => (this.listRef = el!)}
             class="flex-grow"
           >
-            {rightElements.map((suggestion, index) =>
-              this.renderSuggestion(suggestion, index, rightElements.length - 1)
+            {this.rightSuggestionElements.map((suggestion, index) =>
+              this.renderSuggestion(
+                suggestion,
+                index,
+                this.rightSuggestionElements.length - 1
+              )
             )}
           </ul>
         )}
