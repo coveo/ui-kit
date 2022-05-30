@@ -5,12 +5,12 @@
   @apply flex items-stretch;
 }
 
-.box-container li:first-child .value-box:first-child {
-  border-radius: 3px 0px 0px 3px;
+.box-container li:first-child .value-box {
+  border-radius: var(--atomic-border-radius) 0px 0px var(--atomic-border-radius);
 }
 
-.box-container li:last-child .value-box:last-child {
-  border-radius: 0px 3px 3px 0px;
+.box-container li:last-child .value-box {
+  border-radius: 0px var(--atomic-border-radius) var(--atomic-border-radius) 0px;
 }
 
 .value-box .value-label,
@@ -18,12 +18,12 @@
   @apply w-full;
 }
 
-.value-label {
-  @apply group-hover:!text-primary-light;
+.value-box .value-label {
+  @apply group-hover:text-primary-light;
 }
 
-.value-box {
-  @apply hover:!border-primary-light hover:!bg-background rounded-none p-2;
+.box-container .value-box {
+  @apply hover:border-primary-light rounded-none p-2 border-2;
 }
 
 .value-box-count {
