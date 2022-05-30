@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.0...@coveo/quantic@1.18.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* **quantic:** property validation added for animation type in Quantic Modal ([#2021](https://github.com/coveo/ui-kit/issues/2021)) ([4c57b63](https://github.com/coveo/ui-kit/commit/4c57b63ae27ba56731080d264f2bba19a67f5186))
+
+
+
+
+
 # [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.17.1...@coveo/quantic@1.18.0) (2022-05-26)
 
 

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.63.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.63.1...@coveo/atomic@1.63.2) (2022-05-27)
+
+
+### Bug Fixes
+
+* **atomic:** handle timeframe-facet with no date picker and no timeframe configured ([#2032](https://github.com/coveo/ui-kit/issues/2032)) ([87f3d3f](https://github.com/coveo/ui-kit/commit/87f3d3f76c9b6fdc739bb71584dcbbb5acfa621b))
+
+
+
+
+
+## [1.63.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.63.0...@coveo/atomic@1.63.1) (2022-05-27)
+
+
+### Bug Fixes
+
+* **atomic:** added fieldset and legend around facet values ([#2020](https://github.com/coveo/ui-kit/issues/2020)) ([ca25656](https://github.com/coveo/ui-kit/commit/ca25656909205b5fd0e26596d0dfc8ef51114e58))
+
+
+
+
+
 # [1.63.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.2...@coveo/atomic@1.63.0) (2022-05-26)
 
 
