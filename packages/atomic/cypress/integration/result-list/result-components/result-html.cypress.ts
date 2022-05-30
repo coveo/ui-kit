@@ -65,7 +65,6 @@ describe('Result Html Component', () => {
   describe('when the field value exists & is an HTML string', () => {
     const field = 'hello_world';
     const rawValue = '<img src="google.com" onerror="console.log()" />';
-    const sanitizedValue = '<img src="google.com" />';
     function setupExistingFieldValue(sanitize: boolean) {
       new TestFixture()
         .with(
