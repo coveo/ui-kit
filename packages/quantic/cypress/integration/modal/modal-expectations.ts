@@ -75,6 +75,14 @@ function modalExpectations(selector: ModalSelector) {
           `${should(slideToLeftAnimation)} have slide to left animation.`
         );
     },
+
+    displayRenderingError: (display: boolean, error: string) => {
+      selector
+        .renderingError()
+        .should(display ? 'exist' : 'not.exist')
+        .should(display ? 'contain' : 'not.contain', error)
+        .logDetail(`${should(display)} display a rendering error`);
+    },
   };
 }
 
