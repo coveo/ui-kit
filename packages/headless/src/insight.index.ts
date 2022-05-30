@@ -25,3 +25,4 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
+export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
