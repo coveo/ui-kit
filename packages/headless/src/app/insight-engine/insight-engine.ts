@@ -18,7 +18,6 @@ import {
 } from './insight-engine-configuration';
 import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
-import {fetchInterface} from '../../features/insight-interface/insight-interface-actions';
 
 export type {InsightEngineConfiguration};
 
@@ -82,8 +81,6 @@ export function buildInsightEngine(
       insightId,
     })
   );
-
-  engine.dispatch(fetchInterface());
 
   return {
     ...engine,
