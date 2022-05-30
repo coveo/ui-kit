@@ -4,6 +4,7 @@
   "root": true,
   "globals": {
     "CoveoHeadless": "readonly",
-    "CoveoHeadlessCaseAssist": "readonly"
+    "CoveoHeadlessCaseAssist": "readonly",
+    "CoveoHeadlessInsight": "readonly"
   }
 }

@@ -40,6 +40,8 @@ import {CaseInputState} from '../features/case-input/case-input-state';
 import {DocumentSuggestionState} from '../features/document-suggestion/document-suggestion-state';
 import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
+import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
+import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
 
 export interface QuerySection {
   /**
@@ -357,4 +359,18 @@ export interface ExcerptLengthSection {
    * The index includes the top most interesting sentences (in the order they appear in the item) that fit in the specified number of characters.
    */
   excerptLength: ExcerptLengthState;
+}
+
+export interface InsightConfigurationSection {
+  /**
+   * The insight engine configuration.
+   */
+  insightConfiguration: InsightConfigurationState;
+}
+
+export interface InsightInterfaceSection {
+  /**
+   * The insight interface.
+   */
+  insightInterface: InsightInterfaceState;
 }

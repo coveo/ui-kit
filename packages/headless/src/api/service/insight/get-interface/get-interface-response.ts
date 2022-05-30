@@ -1,14 +1,16 @@
 export interface GetInsightInterfaceResponse {
   contextFields: Record<string, string>;
   searchHub: string;
-  interface: {
-    id: string;
-    name: string;
-    resultTemplates: InsightResultTemplate[];
-    facets: Facet[];
-    tabs: Tab[];
-    settings: SettingsSection;
-  };
+  interface?: InsightInterface;
+}
+
+export interface InsightInterface {
+  id: string;
+  name: string;
+  resultTemplates: InsightResultTemplate[];
+  facets: Facet[];
+  tabs: Tab[];
+  settings: SettingsSection;
 }
 
 interface InsightResultTemplate {

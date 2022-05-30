@@ -31,6 +31,9 @@ import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
 import {CaseAssistAppState} from '../state/case-assist-app-state';
 import {CaseAssistEngine} from '../case-assist.index';
 import {buildMockCaseAssistState} from './mock-case-assist-state';
+import {InsightEngine} from '../app/insight-engine/insight-engine';
+import {InsightAppState} from '../state/insight-app-state';
+import {buildMockInsightState} from './mock-insight-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -45,7 +48,8 @@ type AppState =
   | RecommendationAppState
   | ProductRecommendationsAppState
   | ProductListingAppState
-  | CaseAssistAppState;
+  | CaseAssistAppState
+  | InsightAppState;
 
 interface MockEngine {
   actions: AnyAction[];
@@ -141,6 +145,16 @@ export function buildMockCaseAssistEngine(
   config: Partial<CaseAssistEngine<CaseAssistAppState>> = {}
 ): MockCaseAssistEngine {
   return buildMockCoreEngine(config, buildMockCaseAssistState);
+}
+
+export interface MockInsightEngine
+  extends InsightEngine<InsightAppState>,
+    MockEngine {}
+
+export function buildMockInsightEngine(
+  config: Partial<InsightEngine<InsightAppState>> = {}
+): MockInsightEngine {
+  return buildMockCoreEngine(config, buildMockInsightState);
 }
 
 interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}

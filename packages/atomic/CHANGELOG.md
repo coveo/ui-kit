@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.63.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.2...@coveo/atomic@1.63.0) (2022-05-26)
+
+
+### Features
+
+* **atomic:** added heading-level prop to facets ([#2025](https://github.com/coveo/ui-kit/issues/2025)) ([660ac63](https://github.com/coveo/ui-kit/commit/660ac637e58db47b0349aa8e36ba797c6e4d017d))
+
+
+
+
+
+## [1.62.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.1...@coveo/atomic@1.62.2) (2022-05-26)
+
+
+### Bug Fixes
+
+* **atomic:** added aria-label to refine modal close button ([#2019](https://github.com/coveo/ui-kit/issues/2019)) ([d8a90af](https://github.com/coveo/ui-kit/commit/d8a90afea0e3328ce3f7178c799f8e6d1a81bc40))
+
+
+
+
+
+## [1.62.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.62.0...@coveo/atomic@1.62.1) (2022-05-26)
+
+
+### Bug Fixes
+
+* **atomic:** sanitize facet value to use them as parts ([#2024](https://github.com/coveo/ui-kit/issues/2024)) ([87259f0](https://github.com/coveo/ui-kit/commit/87259f097c39d26510024750f9714f88ff043066))
+
+
+
+
+
 # [1.62.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.61.0...@coveo/atomic@1.62.0) (2022-05-25)
 
 

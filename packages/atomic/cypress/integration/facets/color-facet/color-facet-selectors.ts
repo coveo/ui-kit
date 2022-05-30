@@ -28,6 +28,9 @@ export const ColorFacetSelectors = {
       `[part="value-box"][aria-pressed="true"]:contains("${text}")`
     );
   },
+  boxValueWithText(text: string) {
+    return this.shadow().find(`[part="value-box"]:contains("${text}")`);
+  },
   idleBoxValueLabel() {
     return this.idleBoxValue().find('[part="value-label"]');
   },
