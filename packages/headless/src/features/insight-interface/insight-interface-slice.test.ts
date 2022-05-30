@@ -7,6 +7,12 @@ import {
 
 describe('insight interface slice', () => {
   const requestId = 'some-request-id';
+  const errorResponse = {
+    message: 'something bad happened',
+    statusCode: 400,
+    type: 'badluck',
+  };
+
   let state: InsightInterfaceState;
 
   beforeEach(() => {
@@ -28,13 +34,21 @@ describe('insight interface slice', () => {
     expect(modifiedState.loading).toBe(true);
   });
 
-  describe('when fetching interface fails', () => {
-    const errorResponse = {
-      message: 'something bad happened',
-      statusCode: 400,
-      type: 'badluck',
+  it('should clear the #error when fetching the interface', () => {
+    const errorState = {
+      ...state,
+      error: errorResponse,
     };
 
+    const modifiedState = insightInterfaceReducer(
+      errorState,
+      fetchInterface.pending(requestId)
+    );
+
+    expect(modifiedState.error).toBeUndefined();
+  });
+
+  describe('when fetching interface fails', () => {
     const failedAction = fetchInterface.rejected(
       null,
       requestId,

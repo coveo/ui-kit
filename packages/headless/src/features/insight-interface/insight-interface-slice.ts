@@ -8,6 +8,7 @@ export const insightInterfaceReducer = createReducer(
     builder
       .addCase(fetchInterface.pending, (state) => {
         state.loading = true;
+        state.error = undefined;
       })
       .addCase(fetchInterface.rejected, (state, action) => {
         state.loading = false;
@@ -16,10 +17,9 @@ export const insightInterfaceReducer = createReducer(
       .addCase(fetchInterface.fulfilled, (state, action) => {
         state.loading = false;
         state.error = undefined;
-        state.config = {
-          contextFields: action.payload.response.contextFields,
-          interface: action.payload.response.interface,
-        };
+
+        const {searchHub, ...config} = action.payload.response;
+        state.config = config;
       });
   }
 );
