@@ -1,9 +1,16 @@
 @import '../../../global/global.pcss';
 @import '../facet-common.pcss';
-@import '../facet-search/facet-search.pcss';
 
 .box-container {
   @apply flex items-stretch inline-block;
+}
+
+.box-container li:first-child .value-box:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+
+.box-container li:last-child .value-box:last-child {
+  border-radius: 0px 5px 5px 0px;
 }
 
 .value-box .value-label,
@@ -11,6 +18,18 @@
   @apply w-full;
 }
 
+.value-box {
+  @apply hover:border-blue-400 rounded-none;
+}
+
+.value-box-count {
+  @apply pl-1;
+}
+
 .value-box.selected {
-  box-shadow: 0 0 0 1px var(--atomic-primary);
+  @apply border-blue-600;
+}
+
+.value-box.selected .value-label {
+  @apply text-blue-600 font-normal;
 }

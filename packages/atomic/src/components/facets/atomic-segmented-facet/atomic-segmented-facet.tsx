@@ -72,7 +72,7 @@ export class AtomicSegmentedFacet
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    */
-  @Prop({reflect: true}) public numberOfValues = 8;
+  @Prop({reflect: true}) public numberOfValues = 6;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
