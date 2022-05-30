@@ -3,7 +3,6 @@ import {
   NumericFacet,
   buildNumericFacet,
   NumericFacetState,
-  NumericFacetOptions,
   RangeFacetSortCriterion,
   SearchStatus,
   SearchStatusState,
@@ -102,7 +101,7 @@ export class AtomicNumericFacet
   private manualRanges: NumericRangeWithLabel[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
-  @BindStateToController('facet')
+  @BindStateToController('facetForRange')
   @State()
   public facetState!: NumericFacetState;
   @BindStateToController('filter')
@@ -112,7 +111,7 @@ export class AtomicNumericFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @BindStateToController('facetForCountsOnly')
+  @BindStateToController('facetForInput')
   @State()
   public facetForInputState?: NumericFacetState;
 
@@ -234,47 +233,43 @@ export class AtomicNumericFacet
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges (manual or automatic) configured in the component
     if (this.numberOfValues > 0) {
-      const {facet: facetForRange, facetId: facetIdForRange} =
-        this.initializeFacetForDisplay();
-      this.facetForRange = facetForRange;
-      this.facetId = facetIdForRange;
+      this.initializeFacetForRange();
     }
     if (this.withInput) {
-      const {facet: facetForInput} = this.initializeFacetForCountsOnly();
-      this.facetForInput = facetForInput;
+      this.initializeFacetForInput();
     }
   }
 
-  private initializeFacet(options: Partial<NumericFacetOptions>) {
-    const facet = buildNumericFacet(this.bindings.engine, {
+  private initializeFacetForRange() {
+    this.manualRanges = this.buildManualRanges();
+    this.facetForRange = buildNumericFacet(this.bindings.engine, {
       options: {
         facetId: this.facetId,
         field: this.field,
+        numberOfValues: this.numberOfValues,
+        sortCriteria: this.sortCriteria,
+        rangeAlgorithm: this.rangeAlgorithm,
+        currentValues: this.manualRanges,
+        generateAutomaticRanges: !this.manualRanges.length,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
-        generateAutomaticRanges: !this.manualRanges.length,
-        ...options,
       },
     });
-    const facetId = facet.state.facetId;
-    return {facet, facetId};
+    this.facetId = this.facetForRange.state.facetId;
   }
 
-  private initializeFacetForDisplay() {
-    this.manualRanges = this.buildManualRanges();
-    return this.initializeFacet({
-      numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
-      rangeAlgorithm: this.rangeAlgorithm,
-      currentValues: this.manualRanges,
-    });
-  }
-
-  private initializeFacetForCountsOnly() {
-    return this.initializeFacet({
-      numberOfValues: 1,
-      generateAutomaticRanges: true,
-      facetId: randomID(this.field),
+  private initializeFacetForInput() {
+    this.facetForInput = buildNumericFacet(this.bindings.engine, {
+      options: {
+        numberOfValues: 1,
+        generateAutomaticRanges: true,
+        facetId: randomID(this.facetId || this.field),
+        field: this.field,
+        sortCriteria: this.sortCriteria,
+        rangeAlgorithm: this.rangeAlgorithm,
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+      },
     });
   }
 
@@ -486,15 +481,8 @@ export class AtomicNumericFacet
   }
 
   private get valuesToRender() {
-    return this.getValuesWithResultsOrActive(this.facetState?.values);
-  }
-
-  private getValuesWithResultsOrActive(values?: NumericFacetValue[]) {
-    if (!values) {
-      return [];
-    }
     return (
-      values.filter(
+      this.facetState?.values.filter(
         (value) => value.numberOfResults || value.state !== 'idle'
       ) || []
     );
@@ -520,9 +508,7 @@ export class AtomicNumericFacet
     return shouldDisplayInputForFacetRange({
       hasInputRange: this.hasInputRange,
       searchStatusState: this.searchStatusState,
-      facetValues: this.getValuesWithResultsOrActive(
-        this.facetForInputState?.values
-      ),
+      facetValues: this.facetForInputState?.values || [],
       hasInput: !!this.withInput,
     });
   }

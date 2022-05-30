@@ -46,6 +46,7 @@ import {
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {randomID} from '../../../utils/utils';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -80,16 +81,21 @@ export class AtomicTimeframeFacet
   implements InitializableComponent, BaseFacet<DateFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
-  public facet?: DateFacet;
+  public facetForDateRange?: DateFacet;
+  public facetForDatePicker?: DateFacet;
+
   private dependenciesManager?: FacetConditionsManager;
   public filter?: DateFilter;
   public searchStatus!: SearchStatus;
   private manualTimeframes: Timeframe[] = [];
   @Element() private host!: HTMLElement;
 
-  @BindStateToController('facet')
+  @BindStateToController('facetForDateRange')
   @State()
   public facetState!: DateFacetState;
+  @BindStateToController('facetForDatePicker')
+  @State()
+  public facetForDatePickerState?: DateFacetState;
   @BindStateToController('filter')
   @State()
   public filterState?: DateFilterState;
@@ -167,7 +173,7 @@ export class AtomicTimeframeFacet
     this.validateProps();
     this.manualTimeframes = this.getManualTimeframes();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.manualTimeframes.length && this.initializeFacet();
+    this.initializeFacets();
     this.withDatePicker && this.initializeFilter();
     this.inititalizeDependenciesManager();
     this.registerFacetToStore();
@@ -180,7 +186,34 @@ export class AtomicTimeframeFacet
     this.dependenciesManager?.stopWatching();
   }
 
-  private initializeFacet() {
+  private initializeFacets() {
+    // Initialize two facets: One that is actually used to display values for end users, which only exists
+    // if we need to display something to the end user (ie: timeframes > 0)
+
+    // A second facet is initialized only to verify the results count. It is never used to display results to end user.
+    // It serves as a way to determine if the input should be rendered or not, independent of the ranges configured in the component
+    if (this.manualTimeframes.length > 0) {
+      this.initializeFacetForDateRange();
+    }
+    if (this.withDatePicker) {
+      this.initializeFacetForDatePicker();
+    }
+  }
+
+  private initializeFacetForDatePicker() {
+    this.facetForDatePicker = buildDateFacet(this.bindings.engine, {
+      options: {
+        numberOfValues: 1,
+        generateAutomaticRanges: true,
+        facetId: randomID(this.facetId || this.field),
+        field: this.field,
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+      },
+    });
+  }
+
+  private initializeFacetForDateRange() {
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
@@ -190,8 +223,8 @@ export class AtomicTimeframeFacet
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
     };
-    this.facet = buildDateFacet(this.bindings.engine, {options});
-    this.facetId = this.facet.state.facetId;
+    this.facetForDateRange = buildDateFacet(this.bindings.engine, {options});
+    this.facetId = this.facetForDateRange.state.facetId;
   }
 
   private initializeFilter() {
@@ -208,7 +241,7 @@ export class AtomicTimeframeFacet
   }
 
   private registerFacetToStore() {
-    if (!this.facet) {
+    if (!this.facetForDateRange) {
       return;
     }
     registerFacetToStore(this.bindings.store, 'dateFacets', {
@@ -225,13 +258,14 @@ export class AtomicTimeframeFacet
   }
 
   private inititalizeDependenciesManager() {
-    if (!this.facet && !this.filter) {
+    if (!this.facetForDateRange && !this.filter) {
       return;
     }
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
-        facetId: this.facet?.state.facetId ?? this.filter!.state.facetId,
+        facetId:
+          this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
         conditions: parseDependsOn(this.dependsOn),
       }
     );
@@ -294,7 +328,7 @@ export class AtomicTimeframeFacet
             this.filter?.clear();
             return;
           }
-          this.facet?.deselectAll();
+          this.facetForDateRange?.deselectAll();
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
@@ -360,7 +394,7 @@ export class AtomicTimeframeFacet
         isSelected={isSelected}
         numberOfResults={facetValue.numberOfResults}
         i18n={this.bindings.i18n}
-        onClick={() => this.facet!.toggleSingleSelect(facetValue)}
+        onClick={() => this.facetForDateRange!.toggleSingleSelect(facetValue)}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -415,7 +449,7 @@ export class AtomicTimeframeFacet
       hasInput: this.withDatePicker,
       hasInputRange: this.hasInputRange,
       searchStatusState: this.searchStatusState,
-      facetValues: this.valuesToRender,
+      facetValues: this.facetForDatePickerState?.values || [],
     });
   }
 

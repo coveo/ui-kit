@@ -1,8 +1,4 @@
-import {
-  buildSearchStatus,
-  NumericFacetValue,
-  SearchStatusState,
-} from '@coveo/headless';
+import {NumericFacetValue, SearchStatusState} from '@coveo/headless';
 import {shouldDisplayInputForFacetRange} from './facet-common';
 
 describe('facet common', () => {

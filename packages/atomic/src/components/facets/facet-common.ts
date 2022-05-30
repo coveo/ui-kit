@@ -16,8 +16,7 @@ import {
   FacetSortCriterion,
   CategoryFacetSortCriterion,
   RangeFacetSortCriterion,
-  NumericFacetValue,
-  DateFacetValue,
+  FacetValue,
 } from '@coveo/headless';
 import {i18n} from 'i18next';
 
@@ -180,7 +179,7 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;
   searchStatusState: SearchStatusState;
-  facetValues: NumericFacetValue[] | DateFacetValue[];
+  facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
 }) {
   const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
   if (!hasInput) {
@@ -195,7 +194,12 @@ export function shouldDisplayInputForFacetRange(facetRange: {
     return false;
   }
 
-  if (!facetValues.length) {
+  const onlyValuesWithResultsOrActive =
+    facetValues.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
+    ) || [];
+
+  if (!onlyValuesWithResultsOrActive.length) {
     return false;
   }
 
