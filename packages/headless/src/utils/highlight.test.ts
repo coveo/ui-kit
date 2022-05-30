@@ -63,6 +63,21 @@ describe('highlight', () => {
         })
       ).toBe(expectedString);
     });
+
+    it('should escape the string when there is nothing to highlight', () => {
+      const str = 'malicious <script/> string';
+      const newHighlights: HighlightKeyword[] = [];
+
+      const expectedString = 'malicious &ltscript/&gt string';
+
+      expect(
+        highlightString({
+          ...highlightParams,
+          highlights: newHighlights,
+          content: str,
+        })
+      ).toBe(expectedString);
+    });
   });
 
   describe('getHighlightedSuggestion', () => {

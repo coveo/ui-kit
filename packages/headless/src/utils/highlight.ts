@@ -74,6 +74,9 @@ export function highlightString(params: HighlightParams): string {
   if (isNullOrUndefined(params.content) || isEmptyString(params.content)) {
     return params.content;
   }
+  if (params.highlights.length === 0) {
+    return escape(params.content);
+  }
 
   const maxIndex = params.content.length;
   let highlighted = '';
