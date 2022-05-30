@@ -1,10 +1,10 @@
 import {BaseParam} from '../../../platform-service-params';
 import {baseInsightRequest, InsightIdParam} from '../insight-params';
 
-export type GetInsightInterfaceRequest = BaseParam & InsightIdParam;
+export type GetInsightInterfaceConfigRequest = BaseParam & InsightIdParam;
 
-export const buildGetInsightInterfaceRequest = (
-  req: GetInsightInterfaceRequest
+export const buildGetInsightInterfaceConfigRequest = (
+  req: GetInsightInterfaceConfigRequest
 ) => {
   return {
     ...baseInsightRequest(req, 'GET', 'application/json', '/interface'),
