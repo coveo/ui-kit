@@ -1,15 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Listen,
-  Watch,
-  VNode,
-  forceUpdate,
-} from '@stencil/core';
+import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
