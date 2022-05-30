@@ -1,7 +1,7 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client';
-import {GetInsightInterfaceRequest} from '../../api/service/insight/get-interface/get-interface-request';
-import {GetInsightInterfaceResponse} from '../../api/service/insight/get-interface/get-interface-response';
+import {GetInsightInterfaceConfigRequest} from '../../api/service/insight/get-interface/get-interface-config-request';
+import {GetInsightInterfaceConfigResponse} from '../../api/service/insight/get-interface/get-interface-config-response';
 import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
 import {
   ConfigurationSection,
@@ -11,7 +11,7 @@ import {setSearchHub} from '../search-hub/search-hub-actions';
 
 export interface FetchInterfaceThunkReturn {
   /** The successful get interface response. */
-  response: GetInsightInterfaceResponse;
+  response: GetInsightInterfaceConfigResponse;
 }
 
 export type StateNeededByFetchInterface = ConfigurationSection &
@@ -44,7 +44,7 @@ export const fetchInterface = createAsyncThunk<
 
 const buildGetInsightInterfaceRequest = (
   state: StateNeededByFetchInterface
-): GetInsightInterfaceRequest => ({
+): GetInsightInterfaceConfigRequest => ({
   accessToken: state.configuration.accessToken,
   organizationId: state.configuration.organizationId,
   url: state.configuration.platformUrl,
