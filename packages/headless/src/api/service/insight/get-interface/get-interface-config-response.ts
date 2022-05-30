@@ -1,7 +1,7 @@
-export interface GetInsightInterfaceResponse {
+export interface GetInsightInterfaceConfigResponse {
   contextFields: Record<string, string>;
   searchHub: string;
-  interface: {
+  interface?: {
     id: string;
     name: string;
     resultTemplates: InsightResultTemplate[];
