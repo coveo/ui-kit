@@ -31,7 +31,9 @@
     "deploy:examples": "node_modules/.bin/sfdx force:source:deploy -u LWC -p force-app/examples",
     "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json",
     "package:create": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
-    "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote"
+    "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote",
+    "preinstall": "node check-sfdx-project.js",
+    "postinstall": "node setup-quantic.js"
   },
   "dependencies": {
     "@coveo/headless": "1.66.3"
