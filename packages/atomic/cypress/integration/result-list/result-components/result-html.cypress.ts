@@ -93,8 +93,6 @@ describe('Result Html Component', () => {
           .find('img')
           .should('not.have.attr', 'onerror');
       });
-
-      CommonAssertions.assertAccessibility(ResultHtmlSelectors.firstInResult);
     });
 
     describe('when the "sanitize" prop is false', () => {
