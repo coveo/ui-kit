@@ -65,8 +65,11 @@ export const addResultList =
   };
 
 export const addFoldedResultList =
-  (template?: HTMLElement) => (fixture: TestFixture) => {
-    const foldedResultList = generateComponentHTML(foldedResultListComponent);
+  (template?: HTMLElement, tags?: TagProps) => (fixture: TestFixture) => {
+    const foldedResultList = generateComponentHTML(
+      foldedResultListComponent,
+      tags
+    );
     if (template) {
       foldedResultList.appendChild(template);
     }

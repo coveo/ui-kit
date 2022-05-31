@@ -316,6 +316,27 @@ export class AtomicFrequentlyBoughtTogether {
 }
 
 
+export declare interface AtomicHtml extends Components.AtomicHtml {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['sanitize', 'value']
+})
+@Component({
+  selector: 'atomic-html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['sanitize', 'value']
+})
+export class AtomicHtml {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicIcon extends Components.AtomicIcon {}
 
 @ProxyCmp({
@@ -749,6 +770,27 @@ export declare interface AtomicResultFieldsList extends Components.AtomicResultF
   template: '<ng-content></ng-content>'
 })
 export class AtomicResultFieldsList {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultHtml extends Components.AtomicResultHtml {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['field', 'sanitize']
+})
+@Component({
+  selector: 'atomic-result-html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['field', 'sanitize']
+})
+export class AtomicResultHtml {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();

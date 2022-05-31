@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.4.20...@coveo/atomic-react@1.5.0) (2022-05-30)
+
+
+### Features
+
+* **atomic:** add atomic-result-html component ([#2014](https://github.com/coveo/ui-kit/issues/2014)) ([ce1d9c2](https://github.com/coveo/ui-kit/commit/ce1d9c299b16d736730d9e7731f4bfa9c782a369))
+
+
+
+
+
 ## [1.4.20](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.4.19...@coveo/atomic-react@1.4.20) (2022-05-27)
 
 **Note:** Version bump only for package @coveo/atomic-react
