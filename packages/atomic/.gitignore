@@ -28,6 +28,7 @@ UserInterfaceState.xcuserstate
 
 src/external-builds
 src/components/atomic-search-interface/lang/
+src/utils/dayjs-locales-data.ts
 
 cypress/screenshots/*
 

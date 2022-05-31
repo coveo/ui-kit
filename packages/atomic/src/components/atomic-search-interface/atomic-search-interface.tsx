@@ -40,7 +40,7 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../utils/local-storage-utils';
-import {loadDayjsLocale} from '../../utils/day-js-locales';
+import {loadDayjsLocale} from '../../utils/dayjs-locales';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
