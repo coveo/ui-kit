@@ -39,7 +39,7 @@ export interface ExecuteTriggerState {
   /**
    * The functions to be executed.
    */
-  functionExecutions: FunctionExecutionTrigger[];
+  executions: FunctionExecutionTrigger[];
 }
 
 /**
@@ -68,16 +68,16 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
     subscribe(listener: () => void) {
       const strictListener = () => {
         const hasChanged = !arrayEqual(
-          this.state.functionExecutions,
+          this.state.executions,
           previousExecutions,
           (first, second) =>
             first.functionName === second.functionName &&
             arrayEqual(first.params, second.params)
         );
 
-        previousExecutions = this.state.functionExecutions;
+        previousExecutions = this.state.executions;
 
-        if (hasChanged && this.state.functionExecutions.length) {
+        if (hasChanged && this.state.executions.length) {
           listener();
           dispatch(logTriggerExecute());
         }
@@ -90,7 +90,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
       return {
         functionName: getState().triggers.execute.functionName,
         params: getState().triggers.execute.params,
-        functionExecutions: getState().triggers.executions,
+        executions: getState().triggers.executions,
       };
     },
   };
