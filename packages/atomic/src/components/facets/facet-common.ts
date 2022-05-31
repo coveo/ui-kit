@@ -16,6 +16,7 @@ import {
   FacetSortCriterion,
   CategoryFacetSortCriterion,
   RangeFacetSortCriterion,
+  FacetValue,
 } from '@coveo/headless';
 import {i18n} from 'i18next';
 
@@ -172,4 +173,35 @@ export function validateDependsOn(dependsOn: Record<string, string>) {
   if (Object.keys(dependsOn).length > 1) {
     throw "Depending on multiple facets isn't supported";
   }
+}
+
+export function shouldDisplayInputForFacetRange(facetRange: {
+  hasInput: boolean;
+  hasInputRange: boolean;
+  searchStatusState: SearchStatusState;
+  facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
+}) {
+  const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
+  if (!hasInput) {
+    return false;
+  }
+
+  if (hasInputRange) {
+    return true;
+  }
+
+  if (!searchStatusState.hasResults) {
+    return false;
+  }
+
+  const onlyValuesWithResultsOrActive =
+    facetValues.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
+    ) || [];
+
+  if (!onlyValuesWithResultsOrActive.length) {
+    return false;
+  }
+
+  return true;
 }
