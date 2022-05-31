@@ -56,7 +56,6 @@ const SearchPage: NextPage = () => {
   });
   return (
     <AtomicSearchInterface
-      language="fr"
       engine={engine}
       pipeline="Search"
       searchHub="MainSearch"

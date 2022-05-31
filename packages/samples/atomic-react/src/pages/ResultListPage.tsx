@@ -3,6 +3,7 @@ import React, {FunctionComponent} from 'react';
 import {
   AtomicFormatCurrency,
   AtomicResultBadge,
+  AtomicResultDate,
   AtomicResultFieldsList,
   AtomicResultImage,
   AtomicResultLink,
@@ -66,6 +67,7 @@ function MyTemplate(result: Result) {
       </AtomicResultSectionExcerpt>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
+          <AtomicResultDate format="ddd MMM D YYYY" />
           {result.raw.cat_platform !== undefined && (
             <>
               <span className="field-label">

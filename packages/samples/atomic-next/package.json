@@ -20,8 +20,8 @@
   },
   "scripts": {
     "build": "next build",
-    "start": "npm run copy:assets && npm run link:atomic-react && next dev",
-    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/atomic-next/node_modules/react/",
+    "dev": "npm run copy:assets && npm run link:atomic-react && next dev",
+    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/atomic-next/node_modules/react/ && ncp ../atomic/dist ../atomic-react/node_modules/@coveo/atomic/dist",
     "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang public/assets"
   }
 }
