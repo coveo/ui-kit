@@ -11,6 +11,7 @@ function copyFileSync(source, target) {
     fs.writeFileSync(targetFile, fs.readFileSync(source));
   } catch (err) {
     console.error(`Failed to copy file at the following path ${source}`);
+    console.error(err);
     process.exit(1);
   }
 }
@@ -35,6 +36,7 @@ function copyFolderRecursiveSync(source, target) {
     }
   } catch (err) {
     console.error(`Failed to copy folder at the following path ${source}`);
+    console.error(err);
     process.exit(1);
   }
 }
@@ -42,12 +44,12 @@ function copyFolderRecursiveSync(source, target) {
 function createQuanticDirectory(path) {
   try {
     const quanticDirectoryPath = pathlib.join(path, 'quantic');
-    if (fs.existsSync(quanticDirectoryPath)) {
-      fs.rmdirSync(quanticDirectoryPath, {recursive: true});
+    if (!fs.existsSync(quanticDirectoryPath)) {
+      fs.mkdirSync(quanticDirectoryPath);
     }
-    fs.mkdirSync(quanticDirectoryPath);
   } catch (err) {
     console.error('Failed to create Quantic directory');
+    console.error(err);
     process.exit(1);
   }
 }
@@ -65,30 +67,38 @@ function getPackageDirectory(projectDirectory) {
     return defaultPackageDirectory.path;
   } catch (err) {
     console.error('Failed to get the default package directory.');
+    console.error(err);
     process.exit(1);
   }
 }
 
-function getGrandParentPath(path) {
+function getProjectPath(path) {
   const directories = path.split(pathlib.sep);
   return directories.slice(0, directories.length - 2).join(pathlib.sep);
 }
 
 function main() {
   try {
+    // path to source directory: project_name/node_modules/quantic/force-app/main/default
     const sourceDirectory = pathlib.join(
       __dirname,
       'force-app',
       'main',
       'default'
     );
+
+    // path to translations directory: project_name/node_modules/quantic/force-app/main/translations
     const translationsDirectory = pathlib.join(
       __dirname,
       'force-app',
       'main',
       'translations'
     );
-    const projectDirectory = getGrandParentPath(__dirname);
+
+    // this script expects to be executed from: project_name/node_modules/quantic
+    const projectDirectory = getProjectPath(__dirname);
+
+    // the package directory is the directory to target when syncing source to and from an org.
     const defaultPackageDirectory = getPackageDirectory(projectDirectory);
     const defaultPackagePath = pathlib.join(
       projectDirectory,
@@ -101,6 +111,7 @@ function main() {
     copyFolderRecursiveSync(translationsDirectory, quanticDirectoryPath);
   } catch (err) {
     console.error('Failed to setup Quantic.');
+    console.error(err);
     process.exit(1);
   }
 }
