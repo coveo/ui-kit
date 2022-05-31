@@ -2,7 +2,7 @@
 @import '../facet-common.pcss';
 
 .box-container {
-  @apply flex items-stretch;
+  @apply flex flex-row;
 }
 
 .box-container li:first-child .value-box {
@@ -13,21 +13,24 @@
   border-radius: 0px var(--atomic-border-radius) var(--atomic-border-radius) 0px;
 }
 
+.box-container .value-box {
+  @apply hover:border-primary-light rounded-none p-2 border-2 flex truncate;
+  max-width: 20ch;
+}
+
 .value-box .value-label,
 .value-box-count {
-  @apply w-full;
+  @apply inline;
 }
 
 .value-box .value-label {
   @apply group-hover:text-primary-light;
 }
 
-.box-container .value-box {
-  @apply hover:border-primary-light rounded-none p-2 border-2;
-}
-
-.value-box-count {
+.value-box .value-box-count {
   @apply pl-1;
+  overflow: visible;
+  width: auto;
 }
 
 .value-box.selected {
