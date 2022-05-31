@@ -1,9 +1,6 @@
 import {fetchInterface} from './insight-interface-actions';
 import {insightInterfaceReducer} from './insight-interface-slice';
-import {
-  getInsightInterfaceInitialState,
-  InsightInterfaceState,
-} from './insight-interface-state';
+import {getInsightInterfaceInitialState} from './insight-interface-state';
 
 describe('insight interface slice', () => {
   const requestId = 'some-request-id';
@@ -13,12 +10,6 @@ describe('insight interface slice', () => {
     type: 'badluck',
   };
 
-  let state: InsightInterfaceState;
-
-  beforeEach(() => {
-    state = getInsightInterfaceInitialState();
-  });
-
   it('should have an initial state', () => {
     expect(insightInterfaceReducer(undefined, {type: 'foo'})).toEqual(
       getInsightInterfaceInitialState()
@@ -27,7 +18,7 @@ describe('insight interface slice', () => {
 
   it('should set #loading to #true when fetching the interface', () => {
     const modifiedState = insightInterfaceReducer(
-      state,
+      getInsightInterfaceInitialState(),
       fetchInterface.pending(requestId)
     );
 
@@ -36,7 +27,7 @@ describe('insight interface slice', () => {
 
   it('should clear the #error when fetching the interface', () => {
     const errorState = {
-      ...state,
+      ...getInsightInterfaceInitialState(),
       error: errorResponse,
     };
 
@@ -57,19 +48,28 @@ describe('insight interface slice', () => {
     );
 
     it('should set #loading to #false', () => {
-      const modifiedState = insightInterfaceReducer(state, failedAction);
+      const modifiedState = insightInterfaceReducer(
+        getInsightInterfaceInitialState(),
+        failedAction
+      );
 
       expect(modifiedState.loading).toBe(false);
     });
 
     it('should set #error', () => {
-      const modifiedState = insightInterfaceReducer(state, failedAction);
+      const modifiedState = insightInterfaceReducer(
+        getInsightInterfaceInitialState(),
+        failedAction
+      );
 
       expect(modifiedState.error).toStrictEqual(errorResponse);
     });
 
     it('should set #config to #undefined', () => {
-      const modifiedState = insightInterfaceReducer(state, failedAction);
+      const modifiedState = insightInterfaceReducer(
+        getInsightInterfaceInitialState(),
+        failedAction
+      );
 
       expect(modifiedState.config).toBeUndefined();
     });
@@ -119,7 +119,7 @@ describe('insight interface slice', () => {
 
     it('should set #loading to #false', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 
@@ -128,7 +128,7 @@ describe('insight interface slice', () => {
 
     it('should update the #config when no interface is returned', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 
@@ -139,7 +139,7 @@ describe('insight interface slice', () => {
 
     it('should update the #config when an interface is returned', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponseWithInterface, requestId)
       );
 
@@ -151,7 +151,7 @@ describe('insight interface slice', () => {
 
     it('should set #error to #undefined', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 
