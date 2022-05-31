@@ -192,10 +192,7 @@ export class AtomicCategoryFacet
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
-  private showMoreFocus!: FocusTargetController;
-
-  @FocusTarget()
-  private showLessFocus!: FocusTargetController;
+  private showMoreLessFocus!: FocusTargetController;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -422,7 +419,10 @@ export class AtomicCategoryFacet
     );
   }
 
-  private renderValue(facetValue: CategoryFacetValue) {
+  private renderValue(
+    facetValue: CategoryFacetValue,
+    isShowMoreLessFocusTarget: boolean
+  ) {
     const displayValue = getFieldValueCaption(
       this.field,
       facetValue.value,
@@ -440,6 +440,9 @@ export class AtomicCategoryFacet
           this.facet.toggleSelect(facetValue);
         }}
         searchQuery={this.facetState.facetSearch.query}
+        buttonRef={(element) =>
+          isShowMoreLessFocusTarget && this.showMoreLessFocus.setTarget(element)
+        }
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -456,7 +459,9 @@ export class AtomicCategoryFacet
 
     return (
       <ul part="values" class={this.hasParents ? 'pl-9' : 'mt-3'}>
-        {this.facetState.values.map((value) => this.renderValue(value))}
+        {this.facetState.values.map((value, i) =>
+          this.renderValue(value, i === 0)
+        )}
       </ul>
     );
   }
@@ -492,26 +497,21 @@ export class AtomicCategoryFacet
   }
 
   private renderShowMoreLess() {
-    if (this.facetState.canShowMoreValues) {
-      this.showMoreFocus.disableForCurrentSearch();
-    }
     return (
       <div class={this.hasParents ? 'pl-9' : ''}>
         <FacetShowMoreLess
           label={this.label}
           i18n={this.bindings.i18n}
           onShowMore={() => {
-            this.showMoreFocus.focusAfterSearch();
+            this.showMoreLessFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
-            this.showLessFocus.focusAfterSearch();
+            this.showMoreLessFocus.focusAfterSearch();
             this.facet.showLessValues();
           }}
           canShowLessValues={this.facetState.canShowLessValues}
           canShowMoreValues={this.facetState.canShowMoreValues}
-          showMoreRef={this.showLessFocus.setTarget}
-          showLessRef={this.showMoreFocus.setTarget}
         ></FacetShowMoreLess>
       </div>
     );
