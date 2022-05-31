@@ -266,7 +266,7 @@ export class AtomicSearchBox {
 
     this.updateActiveDescendant(this.nextOrFirstValue.id);
     this.scrollActiveDescendantIntoView();
-    this.updateQueryFromSuggestion(this.nextOrFirstValue);
+    this.updateQueryFromSuggestion();
   }
 
   private focusPreviousValue() {
@@ -276,7 +276,7 @@ export class AtomicSearchBox {
 
     this.updateActiveDescendant(this.previousOrLastValue.id);
     this.scrollActiveDescendantIntoView();
-    this.updateQueryFromSuggestion(this.previousOrLastValue);
+    this.updateQueryFromSuggestion();
   }
 
   private updateAriaMessage() {
@@ -391,8 +391,8 @@ export class AtomicSearchBox {
       ?.includes(`suggestions-${panel}`);
   }
 
-  private updateQueryFromSuggestion(el: Element | null) {
-    const query = el?.getAttribute('data-query');
+  private updateQueryFromSuggestion() {
+    const query = this.activeDescendantElement?.getAttribute('data-query');
     if (!isNullOrUndefined(query)) {
       this.updateQuery(query);
       this.updateSuggestedQuery(query);
@@ -406,6 +406,7 @@ export class AtomicSearchBox {
         this.leftSuggestions
       );
     }
+
     if (!this.isPanelInFocus('right')) {
       this.rightSuggestionElements = this.getSuggestionElements(
         this.rightSuggestions
