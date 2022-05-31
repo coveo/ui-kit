@@ -5,18 +5,92 @@ import {
   AnyFacetValueRequest,
   FacetValueRequest,
   CategoryFacetValueRequest,
+  Facet,
+  NumericFacet,
+  CategoryFacet,
+  DateFacet,
+  FacetState,
+  NumericFacetState,
+  CategoryFacetState,
+  DateFacetState,
+  FacetSortCriterion,
+  CategoryFacetSortCriterion,
+  RangeFacetSortCriterion,
+  FacetValue,
 } from '@coveo/headless';
 import {i18n} from 'i18next';
 
-export interface BaseFacet<Facet, FacetState> {
-  facet?: Facet;
-  facetState?: FacetState;
+type AnyFacetType = Facet | NumericFacet | CategoryFacet | DateFacet;
+
+export type BaseFacet<FacetType extends AnyFacetType> = {
+  facet?: FacetType;
   searchStatus: SearchStatus;
   searchStatusState: SearchStatusState;
   error: Error;
+} & PropsOnAllFacets &
+  StateProp<FacetType> &
+  SearchProp<FacetType> &
+  NumberOfValuesProp<FacetType> &
+  NumberOfIntervalsProp<FacetType> &
+  SortCriterionProp<FacetType> &
+  DisplayValuesAsProp &
+  CollapsedProp &
+  HeadingLevelProp;
+
+type PropsOnAllFacets = {
+  facetId?: string;
   label: string;
   field: string;
-}
+
+  filterFacetCount: boolean;
+  injectionDepth: number;
+  dependsOn: Record<string, string>;
+};
+
+type StateProp<FacetType extends AnyFacetType> = FacetType extends Facet
+  ? {facetState: FacetState}
+  : FacetType extends NumericFacet
+  ? {facetState: NumericFacetState}
+  : FacetType extends CategoryFacet
+  ? {facetState: CategoryFacetState}
+  : FacetType extends DateFacet
+  ? {facetState: DateFacetState}
+  : {facetState: never};
+
+type SearchProp<FacetType extends AnyFacetType> = FacetType extends
+  | Facet
+  | CategoryFacet
+  ? {withSearch: boolean}
+  : {};
+
+type NumberOfValuesProp<FacetType extends AnyFacetType> = FacetType extends
+  | Facet
+  | CategoryFacet
+  ? {numberOfValues: number}
+  : {};
+
+type NumberOfIntervalsProp<FacetType extends AnyFacetType> =
+  FacetType extends NumericFacet ? {numberOfIntervals?: number} : {};
+
+type SortCriterionProp<FacetType extends AnyFacetType> = FacetType extends
+  | Facet
+  | CategoryFacet
+  ? {
+      sortCriteria: FacetType extends Facet
+        ? FacetSortCriterion
+        : CategoryFacetSortCriterion;
+    }
+  : FacetType extends NumericFacet
+  ? {sortCriteria?: RangeFacetSortCriterion}
+  : {};
+
+type DisplayValuesAsProp = {
+  displayValueAs?: 'checkbox' | 'box' | 'link';
+};
+
+type CollapsedProp = {isCollapsed?: boolean};
+
+type HeadingLevelProp = {headingLevel?: number};
 
 export interface FacetValueProps {
   i18n: i18n;
@@ -99,4 +173,35 @@ export function validateDependsOn(dependsOn: Record<string, string>) {
   if (Object.keys(dependsOn).length > 1) {
     throw "Depending on multiple facets isn't supported";
   }
+}
+
+export function shouldDisplayInputForFacetRange(facetRange: {
+  hasInput: boolean;
+  hasInputRange: boolean;
+  searchStatusState: SearchStatusState;
+  facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
+}) {
+  const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
+  if (!hasInput) {
+    return false;
+  }
+
+  if (hasInputRange) {
+    return true;
+  }
+
+  if (!searchStatusState.hasResults) {
+    return false;
+  }
+
+  const onlyValuesWithResultsOrActive =
+    facetValues.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
+    ) || [];
+
+  if (!onlyValuesWithResultsOrActive.length) {
+    return false;
+  }
+
+  return true;
 }

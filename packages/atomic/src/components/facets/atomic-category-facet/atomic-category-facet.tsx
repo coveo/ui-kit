@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -45,6 +45,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -90,9 +91,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicCategoryFacet
-  implements
-    InitializableComponent,
-    BaseFacet<CategoryFacet, CategoryFacetState>
+  implements InitializableComponent, BaseFacet<CategoryFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
@@ -154,6 +153,10 @@ export class AtomicCategoryFacet
    * Specifies if the facet is collapsed.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
+  /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -276,6 +279,7 @@ export class AtomicCategoryFacet
           this.facetState.hasActiveValues && this.isCollapsed ? 1 : 0
         }
         isCollapsed={this.isCollapsed}
+        headingLevel={this.headingLevel}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
         onClearFilters={() => {
           this.headerFocus.focusAfterSearch();
@@ -536,13 +540,30 @@ export class AtomicCategoryFacet
         {this.renderHeader()}
         {!this.isCollapsed && [
           this.renderSearchInput(),
-          shouldDisplaySearchResults(this.facetState.facetSearch)
-            ? [this.renderSearchResults(), this.renderMatches()]
-            : [
-                this.renderParents(),
-                this.renderValues(),
-                this.renderShowMoreLess(),
-              ],
+          shouldDisplaySearchResults(this.facetState.facetSearch) ? (
+            <Fragment>
+              {this.facetState.facetSearch.values.length ? (
+                <FacetValuesGroup
+                  i18n={this.bindings.i18n}
+                  label={this.label}
+                  query={this.facetState.facetSearch.query}
+                >
+                  {this.renderSearchResults()}
+                </FacetValuesGroup>
+              ) : (
+                <div class="mt-3"></div>
+              )}
+              {this.renderMatches()}
+            </Fragment>
+          ) : (
+            <Fragment>
+              <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+                {this.renderParents()}
+                {this.renderValues()}
+              </FacetValuesGroup>
+              {this.renderShowMoreLess()}
+            </Fragment>
+          ),
         ]}
       </FacetContainer>
     );

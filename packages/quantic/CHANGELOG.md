@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.1...@coveo/quantic@1.19.0) (2022-05-30)
+
+
+### Features
+
+* **atomic:** add atomic-result-html component ([#2014](https://github.com/coveo/ui-kit/issues/2014)) ([ce1d9c2](https://github.com/coveo/ui-kit/commit/ce1d9c299b16d736730d9e7731f4bfa9c782a369))
+* **headless:** add insight engine ([#2026](https://github.com/coveo/ui-kit/issues/2026)) ([aa79c31](https://github.com/coveo/ui-kit/commit/aa79c318226f4c297a4805d1d5f90444ab38c226))
+
+
+
+
+
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.0...@coveo/quantic@1.18.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* **quantic:** property validation added for animation type in Quantic Modal ([#2021](https://github.com/coveo/ui-kit/issues/2021)) ([4c57b63](https://github.com/coveo/ui-kit/commit/4c57b63ae27ba56731080d264f2bba19a67f5186))
+
+
+
+
+
+# [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.17.1...@coveo/quantic@1.18.0) (2022-05-26)
+
+
+### Features
+
+* **quantic:** New Quantic Tab Bar component created ([#1960](https://github.com/coveo/ui-kit/issues/1960)) ([5cf3b41](https://github.com/coveo/ui-kit/commit/5cf3b4137aae801685af1f9a0637e54fe48b6d56))
+
+
+
+
+
+## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.17.0...@coveo/quantic@1.17.1) (2022-05-26)
+
+
+### Bug Fixes
+
+* **atomic:** sanitize facet value to use them as parts ([#2024](https://github.com/coveo/ui-kit/issues/2024)) ([87259f0](https://github.com/coveo/ui-kit/commit/87259f097c39d26510024750f9714f88ff043066))
+
+
+
+
+
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.3...@coveo/quantic@1.17.0) (2022-05-25)
+
+
+### Bug Fixes
+
+* **atomic:** vertical align feedback modal reasons ([#2008](https://github.com/coveo/ui-kit/issues/2008)) ([8f41383](https://github.com/coveo/ui-kit/commit/8f413834fd8d48a27c04e22367bc198b451f53d4))
+
+
+### Features
+
+* **quantic:** Creation of the Quantic Refine Toggle component ([#1970](https://github.com/coveo/ui-kit/issues/1970)) ([1ed44f2](https://github.com/coveo/ui-kit/commit/1ed44f2733ea2011d524aaf8a408da5756e67e48))
+
+
+
+
+
 ## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.16.2...@coveo/quantic@1.16.3) (2022-05-19)
 
 

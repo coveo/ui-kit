@@ -21,6 +21,8 @@ import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
+import {MapProp} from '../../../utils/props-utils';
+import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 /**
  * @internal
@@ -31,7 +33,7 @@ import {FacetValueBox} from '../facet-value-box/facet-value-box';
   shadow: true,
 })
 export class AtomicSegmentedFacet
-  implements InitializableComponent, BaseFacet<Facet, FacetState>
+  implements InitializableComponent, BaseFacet<Facet>
 {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
@@ -79,6 +81,12 @@ export class AtomicSegmentedFacet
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
 
+  // TODO
+  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
+
+  // TODO
+  @Prop({reflect: true}) public withSearch = true;
+
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
@@ -102,9 +110,11 @@ export class AtomicSegmentedFacet
   private renderValuesContainer(children: VNode[]) {
     const classes = 'box-container';
     return (
-      <ul part="values" class={classes}>
-        {children}
-      </ul>
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+        <ul class={classes} part="values">
+          {children}
+        </ul>
+      </FacetValuesGroup>
     );
   }
 
