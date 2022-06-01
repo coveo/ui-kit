@@ -72,43 +72,56 @@ function getPackageDirectory(projectDirectory) {
   }
 }
 
+function quanticIsDependency() {
+  const upperDirectories = __dirname.split(pathlib.sep);
+  const firstTwoUpperDirectories = upperDirectories.slice(
+    upperDirectories.length - 3
+  );
+  return (
+    firstTwoUpperDirectories.join(pathlib.sep) ===
+    pathlib.join('node_modules', '@coveo', 'quantic')
+  );
+}
+
 function getProjectPath(path) {
   const directories = path.split(pathlib.sep);
-  return directories.slice(0, directories.length - 2).join(pathlib.sep);
+  return directories.slice(0, directories.length - 3).join(pathlib.sep);
 }
 
 function main() {
   try {
-    // path to source directory: project_name/node_modules/quantic/force-app/main/default
-    const sourceDirectory = pathlib.join(
-      __dirname,
-      'force-app',
-      'main',
-      'default'
-    );
+    if (quanticIsDependency()) {
+      // path to source directory: project_name/node_modules/@coveo/quantic/force-app/main/default
+      const sourceDirectory = pathlib.join(
+        __dirname,
+        'force-app',
+        'main',
+        'default'
+      );
 
-    // path to translations directory: project_name/node_modules/quantic/force-app/main/translations
-    const translationsDirectory = pathlib.join(
-      __dirname,
-      'force-app',
-      'main',
-      'translations'
-    );
+      // path to translations directory: project_name/node_modules/@coveo/quantic/force-app/main/translations
+      const translationsDirectory = pathlib.join(
+        __dirname,
+        'force-app',
+        'main',
+        'translations'
+      );
 
-    // this script expects to be executed from: project_name/node_modules/quantic
-    const projectDirectory = getProjectPath(__dirname);
+      // this script expects to be executed from: project_name/node_modules/@coveo/quantic
+      const projectDirectory = getProjectPath(__dirname);
 
-    // the package directory is the directory to target when syncing source to and from an org.
-    const defaultPackageDirectory = getPackageDirectory(projectDirectory);
-    const defaultPackagePath = pathlib.join(
-      projectDirectory,
-      defaultPackageDirectory
-    );
-    const quanticDirectoryPath = pathlib.join(defaultPackagePath, 'quantic');
+      // the package directory is the directory to target when syncing source to and from an org.
+      const defaultPackageDirectory = getPackageDirectory(projectDirectory);
+      const defaultPackagePath = pathlib.join(
+        projectDirectory,
+        defaultPackageDirectory
+      );
+      const quanticDirectoryPath = pathlib.join(defaultPackagePath, 'quantic');
 
-    createQuanticDirectory(defaultPackagePath);
-    copyFolderRecursiveSync(sourceDirectory, quanticDirectoryPath);
-    copyFolderRecursiveSync(translationsDirectory, quanticDirectoryPath);
+      createQuanticDirectory(defaultPackagePath);
+      copyFolderRecursiveSync(sourceDirectory, quanticDirectoryPath);
+      copyFolderRecursiveSync(translationsDirectory, quanticDirectoryPath);
+    }
   } catch (err) {
     console.error('Failed to setup Quantic.');
     console.error(err);
