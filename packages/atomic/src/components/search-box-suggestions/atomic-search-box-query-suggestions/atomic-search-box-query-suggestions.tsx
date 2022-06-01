@@ -8,6 +8,7 @@ import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/sta
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
+  cleanUpString,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -114,7 +115,7 @@ export class AtomicSearchBoxQuerySuggestions {
           )}
         </div>
       ),
-      key: `qs-${suggestion.rawValue}`,
+      key: `qs-${cleanUpString(suggestion.rawValue)}`,
       query: suggestion.rawValue,
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);

@@ -3,6 +3,7 @@ import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
 
 import {
   dispatchSearchBoxSuggestionsEvent,
+  cleanUpString,
   SearchBoxSuggestionItem,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -41,8 +42,8 @@ export class AtomicSearchBoxRecentQueries {
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
-    return results.map((result, i) => ({
-      key: `instant-result-${i}`,
+    return results.map((result: Result) => ({
+      key: `instant-result-${cleanUpString(result.title)}`,
       query: '',
       content: <div class="flex items-center break-all">{result.title}</div>,
       onSelect: () => {

@@ -7,6 +7,7 @@ import {
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
+  cleanUpString,
   SearchBoxDividerElement,
   SearchBoxSuggestionElement,
   SearchBoxSuggestionItem,
@@ -156,7 +157,7 @@ export class AtomicSearchBoxRecentQueries {
   private renderItem(value: string): SearchBoxSuggestionElement {
     const query = this.bindings.searchBoxController.state.value;
     return {
-      key: `recent-${value}`,
+      key: `recent-${cleanUpString(value)}`,
       query: value,
       content: (
         <div class="flex items-center break-all">

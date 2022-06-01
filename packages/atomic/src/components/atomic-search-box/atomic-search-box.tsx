@@ -18,7 +18,6 @@ import {
 } from '../../utils/initialization-utils';
 import {Button} from '../common/button';
 import {randomID} from '../../utils/utils';
-import {isNullOrUndefined} from '@coveo/bueno';
 import {
   isDividerElement,
   isSuggestionElement,
@@ -48,6 +47,7 @@ import {promiseTimeout} from '../../utils/promise-utils';
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
+ * @part suggestion-with-query - An item in the list that will update the search box query.
  */
 @Component({
   tag: 'atomic-search-box',
@@ -59,7 +59,7 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
-  private listRef!: HTMLElement;
+  private listRefs: HTMLElement[] = [];
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
@@ -70,6 +70,7 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
+  @State() private previousActiveDescendantElement: HTMLLIElement | null = null;
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
   @State() private leftSuggestionElements: SearchBoxSuggestionItem[] = [];
   @State() private rightSuggestions: SearchBoxSuggestions[] = [];
@@ -208,15 +209,18 @@ export class AtomicSearchBox {
       return null;
     }
 
-    return this.listRef.querySelector(`#${this.activeDescendant}`);
+    return (
+      this.listRefs[0]?.querySelector(`#${this.activeDescendant}`) ||
+      this.listRefs[1]?.querySelector(`#${this.activeDescendant}`)
+    );
   }
 
   private get firstValue() {
-    return this.listRef.firstElementChild;
+    return this.panelInFocus?.firstElementChild;
   }
 
   private get lastValue() {
-    return this.listRef.lastElementChild;
+    return this.panelInFocus?.lastElementChild;
   }
 
   private get nextOrFirstValue() {
@@ -242,6 +246,14 @@ export class AtomicSearchBox {
 
   private get allSuggestionElements() {
     return [...this.leftSuggestionElements, ...this.rightSuggestionElements];
+  }
+
+  private get panelInFocus() {
+    return (
+      this.listRefs.find((ref) =>
+        ref?.contains(this.activeDescendantElement)
+      ) || this.listRefs.find((panel) => panel)
+    );
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
@@ -277,6 +289,24 @@ export class AtomicSearchBox {
     this.updateActiveDescendant(this.previousOrLastValue.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
+  }
+
+  private focusPanel(panel: HTMLElement) {
+    if (this.panelInFocus === panel) {
+      return;
+    }
+    if (panel && panel.firstElementChild) {
+      const newPrevDescendantElement = this.activeDescendantElement;
+      const panelHadActiveDescendant =
+        this.previousActiveDescendantElement &&
+        panel.contains(this.previousActiveDescendantElement);
+      this.updateActiveDescendant(
+        panelHadActiveDescendant
+          ? this.previousActiveDescendantElement!.id
+          : panel.firstElementChild.id
+      );
+      this.previousActiveDescendantElement = newPrevDescendantElement;
+    }
   }
 
   private updateAriaMessage() {
@@ -329,12 +359,9 @@ export class AtomicSearchBox {
     );
 
     const defaultSuggestionQ =
-      this.allSuggestionElements.find(isSuggestionElement)?.query;
+      this.allSuggestionElements.find(isSuggestionElement)?.query || '';
 
-    if (defaultSuggestionQ) {
-      this.updateSuggestedQuery(defaultSuggestionQ);
-    }
-
+    this.updateSuggestedQuery(defaultSuggestionQ);
     this.updateAriaMessage();
   }
 
@@ -393,10 +420,9 @@ export class AtomicSearchBox {
 
   private updateQueryFromSuggestion() {
     const query = this.activeDescendantElement?.getAttribute('data-query');
-    if (!isNullOrUndefined(query)) {
+    if (query && this.searchBoxState.value !== query) {
       this.updateQuery(query);
       this.updateSuggestedQuery(query);
-      this.updateSuggestionElements();
     }
   }
 
@@ -430,6 +456,14 @@ export class AtomicSearchBox {
         e.preventDefault();
         this.focusPreviousValue();
         break;
+      case 'ArrowRight':
+        e.preventDefault();
+        this.focusPanel(this.listRefs[1]);
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        this.focusPanel(this.listRefs[0]);
+        break;
     }
   }
 
@@ -444,11 +478,11 @@ export class AtomicSearchBox {
         aria-owns={this.popupId}
         aria-expanded={`${this.isExpanded}`}
         aria-activedescendant={this.activeDescendant}
+        aria-label={this.bindings.i18n.t('search-box')}
         autocomplete="off"
         autocapitalize="off"
         autocorrect="off"
         placeholder={this.bindings.i18n.t('search')}
-        aria-label={this.bindings.i18n.t('search-box')}
         type="text"
         class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
@@ -504,7 +538,11 @@ export class AtomicSearchBox {
     this.ariaMessage = '';
   }
 
-  private makeSuggestionPart(isSelected: boolean, isDivider: boolean) {
+  private makeSuggestionPart(
+    isSelected: boolean,
+    isDivider: boolean,
+    hasQuery: boolean
+  ) {
     let part = 'suggestion';
     if (isSelected) {
       part += ' active-suggestion';
@@ -512,29 +550,32 @@ export class AtomicSearchBox {
     if (isDivider) {
       part += ' suggestion-divider';
     }
+    if (hasQuery) {
+      part += ' suggestion-with-query';
+    }
     return part;
   }
 
   private renderSuggestion(
     item: SearchBoxSuggestionItem,
     index: number,
-    lastIndex: number
+    lastIndex: number,
+    side: 'left' | 'right'
   ) {
-    const id = `${this.id}-suggestion-${index}`;
+    const id = `${this.id}-${side}-suggestion-${item.key}`;
     const isSelected = id === this.activeDescendant;
     const isLast = index === lastIndex;
     const isDivider = isDividerElement(item);
     if (isLast && isDivider) {
       return null;
     }
+    const hasQuery = isSuggestionElement(item) && !!item.query;
     return (
       <li
         id={id}
-        role="option"
-        aria-selected={`${isSelected}`}
         key={item.key}
-        part={this.makeSuggestionPart(isSelected, isDivider)}
-        class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer first:rounded-t-md last:rounded-b-md ${
+        part={this.makeSuggestionPart(isSelected, isDivider, hasQuery)}
+        class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
@@ -543,7 +584,7 @@ export class AtomicSearchBox {
           this.clearSuggestions();
         }}
         onMouseOver={() => {
-          if (isSuggestionElement(item)) {
+          if (isSuggestionElement(item) && item.query) {
             this.updateSuggestedQuery(item.query);
           }
         }}
@@ -552,7 +593,11 @@ export class AtomicSearchBox {
             el?.replaceChildren(item.content);
           }
         }}
-        {...(isSuggestionElement(item) && {'data-query': item.query})}
+        {...(isSuggestionElement(item) && {
+          role: 'option',
+          'data-query': item.query,
+          'aria-selected': `${isSelected}`,
+        })}
       >
         {!isHTMLElement(item.content) && item.content}
       </li>
@@ -580,41 +625,47 @@ export class AtomicSearchBox {
 
     return (
       <div
+        id={this.popupId}
         part="suggestions-wrapper"
         class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
           this.showSuggestions ? '' : 'hidden'
         }`}
+        role="listbox"
       >
         {!!this.leftSuggestionElements.length && (
           <ul
-            id={this.popupId}
-            role="listbox"
             part="suggestions suggestions-left"
             aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => (this.listRef = el!)}
+            ref={(el) => {
+              this.listRefs[0] = el!;
+            }}
             class="flex-grow"
           >
             {this.leftSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
                 suggestion,
                 index,
-                this.leftSuggestionElements.length - 1
+                this.leftSuggestionElements.length - 1,
+                'left'
               )
             )}
           </ul>
         )}
         {!!this.rightSuggestionElements.length && (
           <ul
-            role="listbox"
             part="suggestions suggestions-right"
             aria-label={this.bindings.i18n.t('query-suggestion-list')}
+            ref={(el) => {
+              this.listRefs[1] = el!;
+            }}
             class="flex-grow"
           >
             {this.rightSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
                 suggestion,
                 index,
-                this.rightSuggestionElements.length - 1
+                this.rightSuggestionElements.length - 1,
+                'right'
               )
             )}
           </ul>
