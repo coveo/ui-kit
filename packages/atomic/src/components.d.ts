@@ -827,6 +827,8 @@ export namespace Components {
          */
         "suggestionTimeout": number;
     }
+    interface AtomicSearchBoxInstantResults {
+    }
     interface AtomicSearchBoxQuerySuggestions {
         /**
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
@@ -1489,6 +1491,12 @@ declare global {
         prototype: HTMLAtomicSearchBoxElement;
         new (): HTMLAtomicSearchBoxElement;
     };
+    interface HTMLAtomicSearchBoxInstantResultsElement extends Components.AtomicSearchBoxInstantResults, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxInstantResultsElement: {
+        prototype: HTMLAtomicSearchBoxInstantResultsElement;
+        new (): HTMLAtomicSearchBoxInstantResultsElement;
+    };
     interface HTMLAtomicSearchBoxQuerySuggestionsElement extends Components.AtomicSearchBoxQuerySuggestions, HTMLStencilElement {
     }
     var HTMLAtomicSearchBoxQuerySuggestionsElement: {
@@ -1657,6 +1665,7 @@ declare global {
         "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
+        "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
         "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
         "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
@@ -2473,6 +2482,8 @@ declare namespace LocalJSX {
          */
         "suggestionTimeout"?: number;
     }
+    interface AtomicSearchBoxInstantResults {
+    }
     interface AtomicSearchBoxQuerySuggestions {
         /**
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
@@ -2804,6 +2815,7 @@ declare namespace LocalJSX {
         "atomic-result-text": AtomicResultText;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
+        "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
         "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
         "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
         "atomic-search-interface": AtomicSearchInterface;
@@ -2892,6 +2904,7 @@ declare module "@stencil/core" {
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
+            "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
             "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
             "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;

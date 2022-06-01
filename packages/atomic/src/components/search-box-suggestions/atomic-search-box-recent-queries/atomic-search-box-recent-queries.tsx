@@ -10,6 +10,7 @@ import {
   SearchBoxDividerElement,
   SearchBoxSuggestionElement,
   SearchBoxSuggestionItem,
+  SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 import {once} from '../../../utils/utils';
@@ -67,7 +68,7 @@ export class AtomicSearchBoxRecentQueries {
     return this.icon || Clock;
   }
 
-  private initialize() {
+  private initialize(): SearchBoxSuggestions {
     this.storage = new SafeStorage();
     this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
       initialState: {queries: this.retrieveLocalStorage()},
@@ -78,7 +79,6 @@ export class AtomicSearchBoxRecentQueries {
 
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
-      onInput: () => {},
       renderItems: () => this.renderItems(),
     };
   }
