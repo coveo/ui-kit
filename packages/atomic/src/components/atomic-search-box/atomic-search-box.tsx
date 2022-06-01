@@ -586,8 +586,8 @@ export class AtomicSearchBox {
           this.clearSuggestions();
         }}
         onMouseOver={() => {
+          this.updateActiveDescendant(id);
           if (isSuggestionElement(item) && item.query) {
-            this.updateActiveDescendant(id);
             this.updateSuggestedQuery(item.query);
           }
         }}
