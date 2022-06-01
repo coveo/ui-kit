@@ -68,6 +68,7 @@ export class AtomicSearchBox {
   @State()
   private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
   @State() public error!: Error;
+  @State() private suggestedQuery = '';
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
   @State() private previousActiveDescendantElement: HTMLLIElement | null = null;
@@ -178,6 +179,7 @@ export class AtomicSearchBox {
       isStandalone: !!this.redirectionUrl,
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
+      suggestedQuery: () => this.suggestedQuery,
       clearSuggestions: () => this.clearSuggestions(),
       triggerSuggestions: () => this.triggerSuggestions(),
       getSuggestions: () => this.suggestions,
@@ -585,6 +587,7 @@ export class AtomicSearchBox {
         }}
         onMouseOver={() => {
           if (isSuggestionElement(item) && item.query) {
+            this.updateActiveDescendant(id);
             this.updateSuggestedQuery(item.query);
           }
         }}
@@ -615,6 +618,7 @@ export class AtomicSearchBox {
         )
       )
     );
+    this.suggestedQuery = q;
     this.updateSuggestionElements();
   }
 

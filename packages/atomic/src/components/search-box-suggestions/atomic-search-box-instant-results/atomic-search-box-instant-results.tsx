@@ -39,6 +39,9 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private renderItems(): SearchBoxSuggestionItem[] {
+    if (!this.bindings.suggestedQuery()) {
+      return [];
+    }
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
