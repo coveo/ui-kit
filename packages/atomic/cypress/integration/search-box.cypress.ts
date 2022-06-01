@@ -20,7 +20,7 @@ const setSuggestions = (count: number) => () => {
         response.send(200, newResponse);
       });
     }
-  );
+  ).as(TestFixture.interceptAliases.QuerySuggestions.substring(1));
 };
 
 const setRecentQueries = (count: number) => () => {
@@ -105,8 +105,12 @@ describe('Search Box Test Suites', () => {
         before(() => {
           setupWithSuggestionsAndRecentQueries();
 
+          SearchBoxSelectors.inputBox().focus();
           const downKeys = Array(9).fill('{downarrow}').join('');
-          SearchBoxSelectors.inputBox().type(`Rec${downKeys}`, {delay: 200});
+          SearchBoxSelectors.inputBox().type(`Rec${downKeys}`, {
+            delay: 200,
+            force: true,
+          });
         });
 
         SearchBoxAssertions.assertHasText('Recent query 1');
