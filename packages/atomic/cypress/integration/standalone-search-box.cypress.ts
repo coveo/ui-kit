@@ -32,7 +32,7 @@ describe('Standalone Search Box Test Suites', () => {
   });
 
   it('should redirect to the trigger url when there is a redirect trigger', () => {
-    const url = 'https://platformqa.cloud.coveo.com';
+    const url = 'https://platformstg.cloud.coveo.com';
     setupStandaloneSearchBox();
     SearchBoxSelectors.inputBox().type('redirect testing');
     SearchBoxSelectors.submitButton().click();
