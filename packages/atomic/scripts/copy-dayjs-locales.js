@@ -16,7 +16,7 @@ async function copyDayjsLocales() {
   });
 
   fileContent += '\n};\n';
-  const dayjsLocaleDataPath = 'src/utils/dayjs-locales-data.ts';
+  const dayjsLocaleDataPath = 'src/generated/dayjs-locales-data.ts';
   await rm(dayjsLocaleDataPath, {force: true});
   await writeFile(dayjsLocaleDataPath, fileContent);
 }
