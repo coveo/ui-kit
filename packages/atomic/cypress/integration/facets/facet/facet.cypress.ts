@@ -1057,4 +1057,10 @@ describe('Facet v1 Test Suites', () => {
       );
     });
   });
+
+  describe.skip('with allowed-values', () => {
+    it('returns only allowed values', () => {
+      // TODO when release done
+    });
+  });
 });

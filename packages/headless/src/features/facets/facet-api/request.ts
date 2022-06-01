@@ -96,3 +96,13 @@ export interface RangeAlgorithm<T extends 'even' | 'equiprobable'> {
   /** The range algorithm to apply to automatically generated ranges for range facet. */
   rangeAlgorithm: T;
 }
+
+export interface AllowedValues {
+  /**
+   * Specifies an explicit list of `allowedValues` in the request to the index.
+   *
+   * If you specify a list of values for this option, the facet uses only these values (if they are available in
+   * the current result set).
+   */
+  allowedValues?: string[];
+}

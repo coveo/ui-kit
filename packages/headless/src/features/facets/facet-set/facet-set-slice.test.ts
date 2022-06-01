@@ -88,13 +88,17 @@ describe('facet-set slice', () => {
 
   it('registers a facet request with the passed optional values', () => {
     const criterion = 'alphanumeric';
-    const options = buildRegistrationOptions({sortCriteria: criterion});
+    const options = buildRegistrationOptions({
+      sortCriteria: criterion,
+      allowedValues: ['foo', 'bar'],
+    });
 
     const action = registerFacet(options);
     const finalState = facetSetReducer(state, action);
     const facetRequest = finalState[options.facetId];
 
     expect(facetRequest.sortCriteria).toBe(criterion);
+    expect(facetRequest.allowedValues).toEqual(['foo', 'bar']);
   });
 
   it('if a facet request is already registered for an id, it does not overwrite the request', () => {

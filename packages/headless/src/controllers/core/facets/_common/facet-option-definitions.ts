@@ -38,3 +38,9 @@ const facetSearchOptionDefinitions: SchemaDefinition<FacetSearchRequestOptions> 
 export const facetSearch = new RecordValue({
   values: facetSearchOptionDefinitions,
 });
+
+export const allowedValues = new ArrayValue({
+  required: false,
+  max: 25,
+  each: new StringValue({emptyAllowed: false, required: true}),
+});

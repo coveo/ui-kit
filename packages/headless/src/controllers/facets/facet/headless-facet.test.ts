@@ -57,6 +57,7 @@ describe('facet', () => {
       field: 'author',
       sortCriteria: 'score',
       facetSearch: {},
+      allowedValues: ['foo', 'bar'],
     };
 
     state = createMockState();
@@ -101,6 +102,7 @@ describe('facet', () => {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
+      allowedValues: ['foo', 'bar'],
     });
 
     expect(engine.actions).toContainEqual(action);

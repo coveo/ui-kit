@@ -53,11 +53,11 @@ import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-o
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
-export interface FacetProps {
+export interface FacetProps<Options = FacetOptions> {
   /**
    * The options for the `Facet` controller.
    * */
-  options: FacetOptions;
+  options: Options;
 }
 
 export interface Facet extends CoreFacet {
@@ -282,11 +282,13 @@ export interface FacetValue {
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.
+ * @param optionsSchema - The facet options schema that should be used when validating options on creation
  * @returns A `Facet` controller instance.
  * */
 export function buildCoreFacet(
   engine: CoreEngine,
-  props: FacetProps
+  props: FacetProps,
+  optionsSchema = facetOptionsSchema
 ): CoreFacet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
@@ -303,7 +305,7 @@ export function buildCoreFacet(
     facetId,
   };
 
-  validateOptions(engine, facetOptionsSchema, options, 'buildFacet');
+  validateOptions(engine, optionsSchema, options, 'buildFacet');
 
   const getRequest = () => facetRequestSelector(engine.state, facetId);
   const getResponse = () => facetResponseSelector(engine.state, facetId);

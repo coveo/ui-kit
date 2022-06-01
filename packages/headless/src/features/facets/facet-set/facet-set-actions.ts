@@ -7,6 +7,7 @@ import {
   BooleanValue,
   RecordValue,
   Value,
+  ArrayValue,
 } from '@coveo/bueno';
 import {FacetValue} from './interfaces/response';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
@@ -62,6 +63,18 @@ export interface RegisterFacetActionCreatorPayload {
    * @defaultValue `automatic`
    */
   sortCriteria?: FacetSortCriterion;
+
+  /**
+   * Specifies an explicit list of `allowedValues` in the request to the index.
+   *
+   * If you specify a list of values for this option, the facet uses only these values (if they are available in
+   * the current result set).
+   *
+   * The maximum amount of allowed values is 25.
+   *
+   * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+   */
+  allowedValues?: string[];
 }
 
 const facetRegistrationOptionsDefinition = {
@@ -73,6 +86,11 @@ const facetRegistrationOptionsDefinition = {
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<FacetSortCriterion>({required: false}),
+  allowedValues: new ArrayValue({
+    required: false,
+    max: 25,
+    each: new StringValue({emptyAllowed: false, required: true}),
+  }),
 };
 
 export const registerFacet = createAction(
