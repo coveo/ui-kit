@@ -19,6 +19,10 @@ const main = async () => {
     {recursive: true}
   );
   await mkdir(
+    './force-app/main/default/staticresources/coveoheadless/browser/insight',
+    {recursive: true}
+  );
+  await mkdir(
     './force-app/main/default/staticresources/coveoheadless/definitions/',
     {recursive: true}
   );
@@ -29,6 +33,10 @@ const main = async () => {
   await copy(
     './node_modules/@coveo/headless/dist/browser/case-assist/headless.js',
     './force-app/main/default/staticresources/coveoheadless/browser/case-assist/headless.js'
+  );
+  await copy(
+    './node_modules/@coveo/headless/dist/browser/insight/headless.js',
+    './force-app/main/default/staticresources/coveoheadless/browser/insight/headless.js'
   );
   await copy(
     './node_modules/@coveo/headless/dist/definitions',

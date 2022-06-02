@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.67.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.67.0...@coveo/headless@1.67.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fix schema definition for foldedResultList controller ([#2038](https://github.com/coveo/ui-kit/issues/2038)) ([a058e11](https://github.com/coveo/ui-kit/commit/a058e1166fb2c5f0e4c219a61937d243053b8ad5))
+* **headless:** fix highlighting to escape last part of the value ([#2039](https://github.com/coveo/ui-kit/issues/2039)) ([06ae2c8](https://github.com/coveo/ui-kit/commit/06ae2c83d249cd42e66b8d9b0095b74b142e94f2))
+* **headless:** replace qa by stg ([#2046](https://github.com/coveo/ui-kit/issues/2046)) ([90ccce0](https://github.com/coveo/ui-kit/commit/90ccce0100140298ba94f72b949325bd7ebc7268))
+
+
+
+
+
+# [1.67.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.66.3...@coveo/headless@1.67.0) (2022-05-30)
+
+
+### Features
+
+* **atomic:** add atomic-result-html component ([#2014](https://github.com/coveo/ui-kit/issues/2014)) ([ce1d9c2](https://github.com/coveo/ui-kit/commit/ce1d9c299b16d736730d9e7731f4bfa9c782a369))
+* **headless:** add insight engine ([#2026](https://github.com/coveo/ui-kit/issues/2026)) ([aa79c31](https://github.com/coveo/ui-kit/commit/aa79c318226f4c297a4805d1d5f90444ab38c226))
+* **headless:** add Insight Panel API client ([#1996](https://github.com/coveo/ui-kit/issues/1996)) ([e73652f](https://github.com/coveo/ui-kit/commit/e73652f4fede3e8e43801afa3cafb6f8c6fc3868))
+
+
+
+
+
 ## [1.66.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.66.2...@coveo/headless@1.66.3) (2022-05-25)
 
 
