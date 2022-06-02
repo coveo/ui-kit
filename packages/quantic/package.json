@@ -32,8 +32,8 @@
     "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json",
     "package:create": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote",
-    "preinstall": "node check-sfdx-project.js",
-    "postinstall": "node setup-quantic.js"
+    "preinstall": "node scripts/npm/check-sfdx-project.js",
+    "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
     "@coveo/headless": "1.66.3"
@@ -72,8 +72,6 @@
     "force-app/main/default/lwc/*",
     "force-app/main/default/cspTrustedSites/*",
     "force-app/main/default/staticresources/*",
-    "force-app/main/translations/*",
-    "setup-quantic.js",
-    "check-sfdx-project.js"
+    "scripts/npm"
   ]
 }

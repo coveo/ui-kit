@@ -4,11 +4,11 @@ const fs = require('fs');
 function quanticIsDependency() {
   const upperDirectories = __dirname.split(pathlib.sep);
   const firstTwoUpperDirectories = upperDirectories.slice(
-    upperDirectories.length - 3
+    upperDirectories.length - 5
   );
   return (
     firstTwoUpperDirectories.join(pathlib.sep) ===
-    pathlib.join('node_modules', '@coveo', 'quantic')
+    pathlib.join('node_modules', '@coveo', 'quantic', 'scripts', 'npm')
   );
 }
 

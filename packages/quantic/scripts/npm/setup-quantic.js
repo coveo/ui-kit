@@ -75,11 +75,11 @@ function getPackageDirectory(projectDirectory) {
 function quanticIsDependency() {
   const upperDirectories = __dirname.split(pathlib.sep);
   const firstTwoUpperDirectories = upperDirectories.slice(
-    upperDirectories.length - 3
+    upperDirectories.length - 5
   );
   return (
     firstTwoUpperDirectories.join(pathlib.sep) ===
-    pathlib.join('node_modules', '@coveo', 'quantic')
+    pathlib.join('node_modules', '@coveo', 'quantic', 'scripts', 'npm')
   );
 }
 
@@ -93,17 +93,11 @@ function main() {
       // path to source directory: project_name/node_modules/@coveo/quantic/force-app/main/default
       const sourceDirectory = pathlib.join(
         __dirname,
+        '..',
+        '..',
         'force-app',
         'main',
         'default'
-      );
-
-      // path to translations directory: project_name/node_modules/@coveo/quantic/force-app/main/translations
-      const translationsDirectory = pathlib.join(
-        __dirname,
-        'force-app',
-        'main',
-        'translations'
       );
 
       const projectDirectory = getProjectPath();
@@ -118,7 +112,6 @@ function main() {
 
       createQuanticDirectory(defaultPackagePath);
       copyFolderRecursiveSync(sourceDirectory, quanticDirectoryPath);
-      copyFolderRecursiveSync(translationsDirectory, quanticDirectoryPath);
     }
   } catch (err) {
     console.error('Failed to setup Quantic.');
