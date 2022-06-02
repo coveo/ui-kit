@@ -42,7 +42,10 @@ import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-stat
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
-import { InsightCaseContextState, InsightSearchState } from '../features/insight-search/insight-search-state';
+import {
+  InsightCaseContextState,
+  InsightSearchState,
+} from '../features/insight-search/insight-search-state';
 
 export interface QuerySection {
   /**
@@ -368,7 +371,6 @@ export interface InsightConfigurationSection {
    */
   insightConfiguration: InsightConfigurationState;
 }
-
 
 export interface InsightInterfaceSection {
   /**

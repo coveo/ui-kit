@@ -1,7 +1,7 @@
 import {Logger} from 'pino';
-import { AsyncThunkOptions } from '../../../app/async-thunk-options';
-import { ClientThunkExtraArguments } from '../../../app/thunk-extra-arguments';
-import { InsightAppState } from '../../../state/insight-app-state';
+import {AsyncThunkOptions} from '../../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
+import {InsightAppState} from '../../../state/insight-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';

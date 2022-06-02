@@ -10,7 +10,12 @@ import {
 } from '../engine';
 import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments';
 import {buildLogger} from '../logger';
-import {insightConfiguration, insightInterface, searchHub} from '../reducers';
+import {
+  insightConfiguration,
+  insightInterface,
+  insightSearch,
+  searchHub,
+} from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   InsightEngineConfiguration,
@@ -19,15 +24,15 @@ import {
 import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
-import { logInterfaceLoad } from '../../features/analytics/analytics-actions';
-import { firstSearchExecutedSelector } from '../../features/insight-search/insight-search-selectors';
-import { insightExecuteSearch } from '../../features/insight-search/insight-search-actions';
+import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
+import {firstSearchExecutedSelector} from '../../features/insight-search/insight-search-selectors';
+import {insightExecuteSearch} from '../../features/insight-search/insight-search-actions';
 
 export type {InsightEngineConfiguration};
 
 const insightEngineReducers = {
   insightConfiguration,
-  insightSearch
+  insightSearch,
   insightInterface,
   searchHub,
 };
@@ -38,7 +43,7 @@ type InsightEngineState = StateFromReducersMapObject<InsightEngineReducers> &
 
 export interface InsightEngine<State extends object = {}>
   extends CoreEngine<State & InsightEngineState, InsightThunkExtraArguments> {
-    /**
+  /**
    * Executes the first search.
    *
    * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
@@ -104,13 +109,13 @@ export function buildInsightEngine(
     executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
       const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
 
-      if(firstSearchExecuted) {
+      if (firstSearchExecuted) {
         return;
       }
 
       const action = insightExecuteSearch(analyticsEvent);
       engine.dispatch(action);
-    }
+    },
   };
 }
 
