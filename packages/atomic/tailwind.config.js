@@ -27,6 +27,10 @@ module.exports = {
         md: 'var(--atomic-border-radius-md)',
         lg: 'var(--atomic-border-radius-lg)',
         xl: 'var(--atomic-border-radius-xl)',
+        //left-rounded
+        'lr': 'var(--atomic-border-radius) 0px 0px var(--atomic-border-radius)',
+        //right-rounded
+        'rr': '0px var(--atomic-border-radius) var(--atomic-border-radius) 0px',
       },
       boxShadow: {
         'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)'

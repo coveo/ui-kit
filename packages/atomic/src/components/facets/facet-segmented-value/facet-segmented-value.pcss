@@ -1,13 +1,9 @@
-.box-container {
-  @apply flex;
-}
-
 .box-container li:first-child .value-box {
-  border-radius: var(--atomic-border-radius) 0px 0px var(--atomic-border-radius);
+  @apply rounded-lr;
 }
 
 .box-container li:last-child .value-box {
-  border-radius: 0px var(--atomic-border-radius) var(--atomic-border-radius) 0px;
+  @apply rounded-rr;
 }
 
 .value-box .value-label {
@@ -16,7 +12,7 @@
 }
 
 .box-container .value-box.selected {
-  @apply border-primary group-hover:border-primary shadow-inner-primary;
+  @apply border-primary shadow-inner-primary;
 }
 
 .value-box.selected .value-label {
