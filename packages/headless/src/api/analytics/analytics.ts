@@ -15,6 +15,9 @@ import {
   CaseAssistConfigurationSection,
   ConfigurationSection,
   ContextSection,
+  FacetSection,
+  InsightCaseContextSection,
+  InsightConfigurationSection,
   PipelineSection,
   ProductListingSection,
   QuerySection,
@@ -46,6 +49,14 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
 export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseAssistConfigurationSection> &
   Partial<SearchHubSection>;
+
+export type StateNeededByInsightAnalytics = ConfigurationSection &
+  Partial<
+    InsightConfigurationSection &
+    QuerySection &
+    FacetSection &
+    InsightCaseContextSection
+  >;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}

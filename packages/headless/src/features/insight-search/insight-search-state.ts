@@ -1,26 +1,50 @@
 import { InsightAPIErrorStatusResponse } from "../../api/service/insight/insight-api-client";
-import { InsightQueryResponse } from "../../api/service/insight/query/query-response";
-
-export const getInsightSearchInitialState = (): InsightSearchState => ({
-    loading: false,
-    error:undefined,
-    response: undefined,
-    duration: 0,
-    queryExecuted: ''
-});
+import { InsightQueryResponse, SearchResult } from "../../api/service/insight/query/query-response";
 
 export interface InsightSearchState {
-    loading: boolean;
+    isLoading: boolean;
     error?: InsightAPIErrorStatusResponse;
     response: InsightQueryResponse;
     queryExecuted : string;
     duration : number;
+    results: SearchResult[];
+    searchResponseId: string;
+    requestId: string;
 }
 
-export const getInsightCaseContextSearchInitialState = (): InsightCaseContextState => ({
-    caseContext: null
-})
+export const getInsightSearchInitialState = (): InsightSearchState => ({
+    isLoading: false,
+    error:null,
+    response: {
+        facets: [],
+        results: [],
+        searchUid: '',
+        totalCount: 0,
+        executionReport: null
+    },
+    duration: 0,
+    queryExecuted: '',
+    results: [],
+    searchResponseId: '',
+    requestId: ''
+});
 
 export interface InsightCaseContextState {
     caseContext: Record<string, string>;
 }
+
+export const getInsightCaseContextSearchInitialState = (): InsightCaseContextState => ({
+    caseContext: null
+});
+
+export interface PaginationState {
+    firstResult: number;
+    numberOfResults: number;
+    totalCountFiltered: number;
+}
+  
+export const getPaginationInitialState = (): PaginationState => ({
+    firstResult: 0,
+    numberOfResults: 10,
+    totalCountFiltered: 0,
+});

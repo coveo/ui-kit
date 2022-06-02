@@ -6,7 +6,7 @@ export interface InsightQueryResponse {
   facets: Facet[];
 }
 
-interface SearchResult {
+export interface SearchResult {
   title: string;
   clickUri: string;
   excerpt: string;
