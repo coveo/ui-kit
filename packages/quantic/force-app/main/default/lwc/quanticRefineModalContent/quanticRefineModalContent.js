@@ -18,6 +18,12 @@ import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
 
 /**
+ * @typedef {Object} FacetObject
+ * @property {HTMLElement} element - The HTML element of the facet.
+ * @property {function} [format] - The formatting function of the facet.
+ */
+
+/**
  * The `QuanticRefineModalContent` component displays a copy of the search interface facets and sort components. This component is intended to be displayed inside the Quantic Modal to assure the responsiveness when the search interface is displayed on smaller screens.
  *
  * @category Search
@@ -89,61 +95,78 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   /**
    * Returns the data needed to create a copy of the numeric facet.
-   * @param {HTMLElement} facetElement
+   * @param {FacetObject} facetObject
    * @returns {object}
    */
-  toNumericFacet = (facetElement) => {
+  toNumericFacet = (facetObject) => {
     return {
       isNumeric: true,
-      ...this.extractFacetDataFromElement(facetElement, QuanticNumericFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticNumericFacet.attributes
+      ),
+      formattingFunction: facetObject.format,
     };
   };
 
   /**
    * Returns the data needed to create a copy of the default facet.
-   * @param {HTMLElement} facetElement
+   * @param {FacetObject} facetObject
    * @returns {object}
    */
-  toDefaultFacet = (facetElement) => {
+  toDefaultFacet = (facetObject) => {
     return {
       isDefault: true,
-      ...this.extractFacetDataFromElement(facetElement, QuanticFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticFacet.attributes
+      ),
     };
   };
 
   /**
    * Returns the data needed to create a copy of the category facet.
-   * @param {HTMLElement} facetElement
+   * @param {FacetObject} facetObject
    * @returns {object}
    */
-  toCategoryFacet = (facetElement) => {
+  toCategoryFacet = (facetObject) => {
     return {
       isCategory: true,
-      ...this.extractFacetDataFromElement(facetElement, QuanticCategoryFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticCategoryFacet.attributes
+      ),
     };
   };
 
   /**
    * Returns the data needed to create a copy of the timeframe facet.
-   * @param {HTMLElement} facetElement
+   * @param {FacetObject} facetObject
    * @returns {object}
    */
-  toTimeframeFacet = (facetElement) => {
+  toTimeframeFacet = (facetObject) => {
     return {
       isTimeframe: true,
-      ...this.extractFacetDataFromElement(facetElement, QuanticTimeframeFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticTimeframeFacet.attributes
+      ),
     };
   };
 
   /**
    * Returns the data needed to create a copy of the date facet.
-   * @param {HTMLElement} facetElement
+   * @param {FacetObject} facetObject
    * @returns {object}
    */
-  toDateFacet = (facetElement) => {
+  toDateFacet = (facetObject) => {
     return {
       isDate: true,
-      ...this.extractFacetDataFromElement(facetElement, QuanticDateFacet.attributes),
+      ...this.extractFacetDataFromElement(
+        facetObject.element,
+        QuanticDateFacet.attributes
+      ),
+      formattingFunction: facetObject.format,
     };
   };
 
@@ -164,9 +187,10 @@ export default class QuanticRefineModalContent extends LightningElement {
       return [];
     }
     const facetData = Object.keys(this.data).map((facetId) => {
-      const facetElement = this.data[facetId].element;
-      const selector = this.selectors[facetElement.localName];
-      return selector ? selector(facetElement) : null;
+      /** @type {FacetObject} */
+      const facetObject = this.data[facetId];
+      const selector = this.selectors[facetObject.element.localName];
+      return selector ? selector(facetObject) : null;
     });
 
     return facetData;

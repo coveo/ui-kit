@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.66.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.65.0...@coveo/atomic@1.66.0) (2022-06-02)
+
+
+### Features
+
+* **atomic:** change dayjs language when i18n language changes ([#2033](https://github.com/coveo/ui-kit/issues/2033)) ([f6093cd](https://github.com/coveo/ui-kit/commit/f6093cd9f575a26c821b7bf2698bdcf429871c12))
+
+
+
+
+
+# [1.65.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.64.0...@coveo/atomic@1.65.0) (2022-06-01)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fix schema definition for foldedResultList controller ([#2038](https://github.com/coveo/ui-kit/issues/2038)) ([a058e11](https://github.com/coveo/ui-kit/commit/a058e1166fb2c5f0e4c219a61937d243053b8ad5))
+* **atomic:** better logic for display of input on facet-range  ([#2030](https://github.com/coveo/ui-kit/issues/2030)) ([333db70](https://github.com/coveo/ui-kit/commit/333db7086e6bdfc98a567e62ea122f0752e3006c))
+
+
+### Features
+
+* **atomic:** initial implementation of atomic-search-box-internal-results ([#1999](https://github.com/coveo/ui-kit/issues/1999)) ([00de603](https://github.com/coveo/ui-kit/commit/00de603ca3feab0ab9b49eba9f657cbac0e55127))
+* **atomic:** Segmented facets styled partially ([#2031](https://github.com/coveo/ui-kit/issues/2031)) ([92252eb](https://github.com/coveo/ui-kit/commit/92252eb34594b28880d65e88f8983eed11eea1dd))
+
+
+
+
+
 # [1.64.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.63.2...@coveo/atomic@1.64.0) (2022-05-30)
 
 
