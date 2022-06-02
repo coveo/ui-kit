@@ -18,6 +18,7 @@ import {
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
+  InsightSearchSection,
   PipelineSection,
   ProductListingSection,
   QuerySection,
@@ -53,6 +54,7 @@ export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
 export type StateNeededByInsightAnalytics = ConfigurationSection &
   Partial<
     InsightConfigurationSection &
+    InsightSearchSection &
     QuerySection &
     FacetSection &
     InsightCaseContextSection

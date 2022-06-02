@@ -44,11 +44,9 @@ export const getInsightCaseContextSearchInitialState =
 export interface PaginationState {
   firstResult: number;
   numberOfResults: number;
-  totalCountFiltered: number;
 }
 
 export const getPaginationInitialState = (): PaginationState => ({
   firstResult: 0,
-  numberOfResults: 10,
-  totalCountFiltered: 0,
+  numberOfResults: 10
 });
