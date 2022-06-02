@@ -43,7 +43,7 @@ function handlePendingSearch(
     state.requestId = action.meta.requestId;
   }
 
-export const insightInterfaceReducer = createReducer(getInsightSearchInitialState(), (builder) => {
+export const insightSearchReducer = createReducer(getInsightSearchInitialState(), (builder) => {
     builder.addCase(insightExecuteSearch.rejected, (state, action) => {
         handleRejectedSearch(state, action)
     })
