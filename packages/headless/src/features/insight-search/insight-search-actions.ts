@@ -45,14 +45,12 @@ export interface InsightExecuteSearchThunkReturn {
 }
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
-  Partial<
-    InsightSearchSection &
-      InsightConfigurationSection &
-      QuerySection &
-      FacetSection &
-      InsightCaseContextSection &
-      PaginationSection
-  >;
+  InsightSearchSection &
+  InsightConfigurationSection &
+  QuerySection &
+  FacetSection &
+  InsightCaseContextSection &
+  PaginationSection;
 
 const fetchFromAPI = async (
   client: InsightAPIClient,
@@ -199,7 +197,7 @@ const buildInsightSearchRequest = (
     insightId: state.insightConfiguration.insightId,
     q: state.query?.q,
     facets: getFacetRequests(state.facetSet),
-    caseContext: state.insightCaseContext?.caseContext,
+    caseContext: state.insightCaseContext.caseContext,
   };
 };
 
