@@ -134,7 +134,7 @@ export default class QuanticRefineToggle extends LightningElement {
       0
     );
     const categoryFacetBreadcrumbKey = 'categoryFacetBreadcrumbs';
-    total = +this.getFiltersCountFromCategoryFacetBreadcrumb(
+    total += this.getFiltersCountFromCategoryFacetBreadcrumb(
       this.breadcrumbManager?.state?.[categoryFacetBreadcrumbKey]
     );
     return total;
@@ -149,7 +149,7 @@ export default class QuanticRefineToggle extends LightningElement {
       return 0;
     }
     return facetBreadcrumb.reduce(
-      (count, facet) => count + facet?.values?.length || 0,
+      (count, facet) => count + (facet?.values?.length || 0),
       0
     );
   }

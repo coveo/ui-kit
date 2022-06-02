@@ -39,12 +39,44 @@ const refineToggleActions = (selector: RefineToggleSelector) => {
           'when clicking the expand button of the duplicated default facet'
         );
     },
+    clickNumericFacetExpandButton: () => {
+      selector
+        .numericFacetExpandButton()
+        .click()
+        .logAction(
+          'when clicking the expand button of the duplicated numeric facet'
+        );
+    },
+    clickCategoryFacetExpandButton: () => {
+      selector
+        .categoryFacetExpandButton()
+        .click()
+        .logAction(
+          'when clicking the expand button of the duplicated category facet'
+        );
+    },
     clickFacetFirstOption: () => {
       selector
         .facetFirstOption()
         .click()
         .logAction(
           'when clicking the first option of the duplicated default facet'
+        );
+    },
+    clickNumericFacetFirstOption: () => {
+      selector
+        .numericFacetFirstOption()
+        .click()
+        .logAction(
+          'when clicking the first option of the duplicated numeric facet'
+        );
+    },
+    clickCategoryFacetFirstOption: () => {
+      selector
+        .categoryFacetFirstOption()
+        .click()
+        .logAction(
+          'when clicking the first option of the duplicated category facet'
         );
     },
     clickTimeframeFacetFirstOption: () => {
