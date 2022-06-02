@@ -1,15 +1,12 @@
 import {Logger} from 'pino';
-import {AsyncThunkOptions} from '../../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {InsightAppState} from '../../../state/insight-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
-  buildGetInsightInterfaceRequest,
-  GetInsightInterfaceRequest,
-} from './get-interface/get-interface-request';
-import {GetInsightInterfaceResponse} from './get-interface/get-interface-response';
+  buildGetInsightInterfaceConfigRequest,
+  GetInsightInterfaceConfigRequest,
+} from './get-interface/get-interface-config-request';
+import {GetInsightInterfaceConfigResponse} from './get-interface/get-interface-config-response';
 import {
   buildInsightQueryRequest,
   InsightQueryRequest,
@@ -27,11 +24,6 @@ import {InsightUserActionsResponse} from './user-actions/user-actions-response';
 interface InsightAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
-}
-
-export interface AsyncThunkInsightOptions<T extends Partial<InsightAppState>>
-  extends AsyncThunkOptions<T, ClientThunkExtraArguments<InsightAPIClient>> {
-  rejectValue: InsightAPIErrorStatusResponse;
 }
 
 export type InsightAPIResponse<TSuccessContent> =
@@ -59,10 +51,10 @@ export class InsightAPIClient {
   constructor(private options: InsightAPIClientOptions) {}
 
   async getInterface(
-    req: GetInsightInterfaceRequest
-  ): Promise<InsightAPIResponse<GetInsightInterfaceResponse>> {
+    req: GetInsightInterfaceConfigRequest
+  ): Promise<InsightAPIResponse<GetInsightInterfaceConfigResponse>> {
     const response = await PlatformClient.call({
-      ...buildGetInsightInterfaceRequest(req),
+      ...buildGetInsightInterfaceConfigRequest(req),
       ...this.options,
     });
 
@@ -72,7 +64,7 @@ export class InsightAPIClient {
 
     const body = await response.json();
     return response.ok
-      ? {success: body as GetInsightInterfaceResponse}
+      ? {success: body as GetInsightInterfaceConfigResponse}
       : {error: body as InsightAPIErrorStatusResponse};
   }
 

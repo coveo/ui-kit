@@ -1,5 +1,5 @@
 export type TestedRegion = 'us' | 'au' | 'eu';
-export type TestedEnvironment = 'dev' | 'qa' | 'prod' | 'hipaa';
+export type TestedEnvironment = 'dev' | 'stg' | 'prod' | 'hipaa';
 
 export interface TestedPlatformURL {
   region?: TestedRegion;
@@ -68,24 +68,17 @@ export const allValidPlatformCombination: () => TestedPlatformURL[] = () => [
   },
   {
     region: 'us',
-    environment: 'qa',
-    platform: 'https://platformqa.cloud.coveo.com',
-    search: 'https://platformqa.cloud.coveo.com/rest/search/v2',
-    analytics: 'https://analyticsqa.cloud.coveo.com/rest/ua',
+    environment: 'stg',
+    platform: 'https://platformstg.cloud.coveo.com',
+    search: 'https://platformstg.cloud.coveo.com/rest/search/v2',
+    analytics: 'https://analyticsstg.cloud.coveo.com/rest/ua',
   },
   {
     region: undefined,
-    environment: 'qa',
-    platform: 'https://platformqa.cloud.coveo.com',
-    search: 'https://platformqa.cloud.coveo.com/rest/search/v2',
-    analytics: 'https://analyticsqa.cloud.coveo.com/rest/ua',
-  },
-  {
-    region: 'eu',
-    environment: 'qa',
-    platform: 'https://platformqa-eu.cloud.coveo.com',
-    search: 'https://platformqa-eu.cloud.coveo.com/rest/search/v2',
-    analytics: 'https://analyticsqa-eu.cloud.coveo.com/rest/ua',
+    environment: 'stg',
+    platform: 'https://platformstg.cloud.coveo.com',
+    search: 'https://platformstg.cloud.coveo.com/rest/search/v2',
+    analytics: 'https://analyticsstg.cloud.coveo.com/rest/ua',
   },
   {
     region: 'us',

@@ -23,8 +23,10 @@ export type SearchBoxSuggestionItem =
 
 export interface SearchBoxSuggestions {
   position: number;
-  onInput(): Promise<unknown> | void;
+  panel?: 'left' | 'right';
   renderItems(): SearchBoxSuggestionItem[];
+  onInput?(): Promise<unknown> | void;
+  onSuggestedQueryChange?(q: string): Promise<unknown> | void;
 }
 
 export type SearchBoxSuggestionsEvent = (

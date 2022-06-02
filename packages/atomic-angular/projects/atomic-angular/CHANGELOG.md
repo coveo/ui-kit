@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.9.0...@coveo/atomic-angular@1.9.1) (2022-06-01)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.8.2...@coveo/atomic-angular@1.9.0) (2022-05-30)
+
+
+### Features
+
+* **atomic:** add atomic-result-html component ([#2014](https://github.com/coveo/ui-kit/issues/2014)) ([ce1d9c2](https://github.com/coveo/ui-kit/commit/ce1d9c299b16d736730d9e7731f4bfa9c782a369))
+
+
+
+
+
+## [1.8.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.8.1...@coveo/atomic-angular@1.8.2) (2022-05-27)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.8.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.8.0...@coveo/atomic-angular@1.8.1) (2022-05-27)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 # [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.7.7...@coveo/atomic-angular@1.8.0) (2022-05-26)
 
 
