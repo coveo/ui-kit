@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.68.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.67.1...@coveo/headless@1.68.0) (2022-06-02)
+
+
+### Features
+
+* **atomic:** change dayjs language when i18n language changes ([#2033](https://github.com/coveo/ui-kit/issues/2033)) ([f6093cd](https://github.com/coveo/ui-kit/commit/f6093cd9f575a26c821b7bf2698bdcf429871c12))
+
+
+
+
+
 ## [1.67.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.67.0...@coveo/headless@1.67.1) (2022-06-01)
 
 
