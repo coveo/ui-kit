@@ -48,7 +48,7 @@ function createQuanticDirectory(path) {
       fs.mkdirSync(quanticDirectoryPath);
     }
   } catch (err) {
-    console.error('Failed to create Quantic directory');
+    console.error('Failed to create Quantic directory.');
     console.error(err);
     process.exit(1);
   }
