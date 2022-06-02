@@ -33,7 +33,7 @@ export const getInsightSearchInitialState = (): InsightSearchState => ({
 });
 
 export interface InsightCaseContextState {
-  caseContext: Record<string, string>;
+  caseContext: Record<string, string> | null;
 }
 
 export const getInsightCaseContextSearchInitialState =

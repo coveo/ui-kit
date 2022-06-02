@@ -1,0 +1,47 @@
+import {
+  InsightQueryResponse,
+  SearchResult,
+  Facet,
+  FacetValue,
+} from '../api/service/insight/query/query-response';
+
+export const buildMockInsightQueryResponse = (
+  response: Partial<InsightQueryResponse> = {}
+): InsightQueryResponse => ({
+  searchUid: '',
+  facets: [],
+  results: [],
+  totalCount: 0,
+  executionReport: null,
+  ...response,
+});
+
+export const buildMockSearchResult = (
+  searchReseult: Partial<SearchResult> = {}
+): SearchResult => ({
+  clickUri: '',
+  excerpt: '',
+  fields: null,
+  hasHtmlVersion: false,
+  percentScore: 0,
+  title: '',
+  uniqueId: '',
+  ...searchReseult,
+});
+
+export const buildMockFacet = (facet: Partial<Facet> = {}): Facet => ({
+  field: '',
+  indexScore: 0,
+  moreValuesAvailable: false,
+  values: [],
+  ...facet,
+});
+
+export const buildMockFacetValue = (
+  facetValue: Partial<FacetValue> = {}
+): FacetValue => ({
+  numberOfResults: 0,
+  state: '',
+  value: '',
+  ...facetValue,
+});

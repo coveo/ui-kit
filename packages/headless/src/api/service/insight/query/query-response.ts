@@ -16,14 +16,14 @@ export interface SearchResult {
   percentScore: number;
 }
 
-interface Facet {
+export interface Facet {
   field: string;
   moreValuesAvailable: boolean;
   values: FacetValue[];
   indexScore: number;
 }
 
-interface FacetValue {
+export interface FacetValue {
   value: string;
   state: string;
   numberOfResults: number;
