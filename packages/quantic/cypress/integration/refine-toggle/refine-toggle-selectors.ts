@@ -15,11 +15,11 @@ export interface RefineToggleSelector extends ComponentSelector {
   sort: () => CypressSelector;
   filtersCountBadge: () => CypressSelector;
   timeframeFacetExpandButton: () => CypressSelector;
-  facetExpandButton: () => CypressSelector;
+  defaultFacetExpandButton: () => CypressSelector;
   numericFacetExpandButton: () => CypressSelector;
   categoryFacetExpandButton: () => CypressSelector;
   timeframeFacetFirstOption: () => CypressSelector;
-  facetFirstOption: () => CypressSelector;
+  defaultFacetFirstOption: () => CypressSelector;
   numericFacetFirstOption: () => CypressSelector;
   categoryFacetFirstOption: () => CypressSelector;
   clearAllFiltersButton: () => CypressSelector;
@@ -50,7 +50,7 @@ export const RefineToggleSelectors: RefineToggleSelector = {
     RefineToggleSelectors.modalContent().find(
       'c-quantic-timeframe-facet .facet__expand'
     ),
-  facetExpandButton: () =>
+  defaultFacetExpandButton: () =>
     RefineToggleSelectors.modalContent().find('c-quantic-facet .facet__expand'),
   numericFacetExpandButton: () =>
     RefineToggleSelectors.modalContent().find(
@@ -64,7 +64,7 @@ export const RefineToggleSelectors: RefineToggleSelector = {
     RefineToggleSelectors.modalContent()
       .find('c-quantic-timeframe-facet .facet__value-option')
       .eq(0),
-  facetFirstOption: () =>
+  defaultFacetFirstOption: () =>
     RefineToggleSelectors.modalContent()
       .find('c-quantic-facet .facet__value-option')
       .eq(0),

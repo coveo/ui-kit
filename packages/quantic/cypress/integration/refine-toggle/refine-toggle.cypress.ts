@@ -135,7 +135,7 @@ describe('quantic-refine-toggle', () => {
     });
   });
 
-  const facetTypes = ['Category', 'Timeframe', 'Numeric', ''];
+  const facetTypes = ['Category', 'Timeframe', 'Numeric', 'Default'];
 
   facetTypes.forEach((facetType) => {
     describe(`when filters are selected from a ${facetType.toLowerCase()} facet`, () => {
@@ -218,8 +218,8 @@ describe('quantic-refine-toggle', () => {
       });
 
       scope('when selecting filters', () => {
-        Actions.clickFacetExpandButton();
-        Actions.clickFacetFirstOption();
+        Actions.clickDefaultFacetExpandButton();
+        Actions.clickDefaultFacetFirstOption();
         Actions.clickTimeframeFacetExpandButton();
         Actions.clickTimeframeFacetFirstOption();
       });

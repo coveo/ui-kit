@@ -31,9 +31,9 @@ const refineToggleActions = (selector: RefineToggleSelector) => {
           'when clicking the expand button of the duplicated timeframe facet'
         );
     },
-    clickFacetExpandButton: () => {
+    clickDefaultFacetExpandButton: () => {
       selector
-        .facetExpandButton()
+        .defaultFacetExpandButton()
         .click()
         .logAction(
           'when clicking the expand button of the duplicated default facet'
@@ -55,9 +55,9 @@ const refineToggleActions = (selector: RefineToggleSelector) => {
           'when clicking the expand button of the duplicated category facet'
         );
     },
-    clickFacetFirstOption: () => {
+    clickDefaultFacetFirstOption: () => {
       selector
-        .facetFirstOption()
+        .defaultFacetFirstOption()
         .click()
         .logAction(
           'when clicking the first option of the duplicated default facet'
