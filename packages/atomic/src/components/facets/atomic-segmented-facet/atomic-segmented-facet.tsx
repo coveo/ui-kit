@@ -20,9 +20,9 @@ import {
 import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
-import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 
 /**
  * @internal
@@ -127,7 +127,7 @@ export class AtomicSegmentedFacet
     const isSelected = facetValue.state === 'selected';
 
     return (
-      <FacetValueBox
+      <FacetSegmentedValue
         displayValue={displayValue}
         numberOfResults={facetValue.numberOfResults}
         isSelected={isSelected}
@@ -140,7 +140,7 @@ export class AtomicSegmentedFacet
           isSelected={isSelected}
           searchQuery={this.facetState.facetSearch.query}
         ></FacetValueLabelHighlight>
-      </FacetValueBox>
+      </FacetSegmentedValue>
     );
   }
 

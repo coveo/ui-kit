@@ -1,0 +1,25 @@
+.box-container {
+  @apply flex;
+}
+
+.box-container li:first-child .value-box {
+  border-radius: var(--atomic-border-radius) 0px 0px var(--atomic-border-radius);
+}
+
+.box-container li:last-child .value-box {
+  border-radius: 0px var(--atomic-border-radius) var(--atomic-border-radius) 0px;
+}
+
+.value-box .value-label {
+  @apply group-hover:text-primary-light;
+  max-width: 15ch;
+}
+
+.value-box.selected {
+  @apply border-primary;
+  box-shadow: inset 0 0 0 1px var(--atomic-primary);
+}
+
+.value-box.selected .value-label {
+  @apply text-primary font-normal;
+}
