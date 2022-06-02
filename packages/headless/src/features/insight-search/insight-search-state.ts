@@ -23,7 +23,7 @@ export const getInsightSearchInitialState = (): InsightSearchState => ({
     results: [],
     searchUid: '',
     totalCount: 0,
-    executionReport: null,
+    executionReport: {},
   },
   duration: 0,
   queryExecuted: '',
@@ -33,12 +33,12 @@ export const getInsightSearchInitialState = (): InsightSearchState => ({
 });
 
 export interface InsightCaseContextState {
-  caseContext: Record<string, string> | null;
+  caseContext: Record<string, string>;
 }
 
 export const getInsightCaseContextSearchInitialState =
   (): InsightCaseContextState => ({
-    caseContext: null,
+    caseContext: {},
   });
 
 export interface PaginationState {

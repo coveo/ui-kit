@@ -12,7 +12,7 @@ export const buildMockInsightQueryResponse = (
   facets: [],
   results: [],
   totalCount: 0,
-  executionReport: null,
+  executionReport: {},
   ...response,
 });
 
@@ -21,7 +21,7 @@ export const buildMockSearchResult = (
 ): SearchResult => ({
   clickUri: '',
   excerpt: '',
-  fields: null,
+  fields: {},
   hasHtmlVersion: false,
   percentScore: 0,
   title: '',
