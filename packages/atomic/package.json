@@ -32,7 +32,7 @@
     "copy:headless": "node scripts/copy-headless.js",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
     "start:prod": "npx serve www -l 3333",
-    "test": "stencil test --spec",
+    "test": "npm run build:locales && stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
     "generate": "stencil generate",
     "cypress:test": "cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome",
