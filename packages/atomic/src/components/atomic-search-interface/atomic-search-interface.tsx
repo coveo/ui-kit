@@ -40,6 +40,7 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../utils/local-storage-utils';
+import {loadDayjsLocale} from '../../utils/dayjs-locales';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -193,6 +194,7 @@ export class AtomicSearchInterface {
       })
     );
 
+    loadDayjsLocale(this.language);
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
       'translation',
@@ -470,6 +472,7 @@ export class AtomicSearchInterface {
     }
     this.updateIconAssetsPath();
     initEngine();
+    loadDayjsLocale(this.language);
     await this.i18nPromise;
     this.initComponents();
     this.initSearchStatus();

@@ -10,7 +10,8 @@ let dependencyPromises = [];
 
 const HeadlessBundleNames = {
   search: 'search',
-  caseAssist: 'case-assist'
+  caseAssist: 'case-assist',
+  insight: 'insight',
 };
 
 const headlessBundles = {
@@ -22,6 +23,10 @@ const headlessBundles = {
     libPath: '/browser/case-assist/headless.js',
     bundle: () => CoveoHeadlessCaseAssist,
   },
+  [HeadlessBundleNames.insight]: {
+    libPath: '/browser/insight/headless.js',
+    bundle: () => CoveoHeadlessInsight,
+  }
 };
 
 /**

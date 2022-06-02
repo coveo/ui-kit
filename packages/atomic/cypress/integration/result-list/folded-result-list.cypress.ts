@@ -16,6 +16,7 @@ import {
 } from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
 import {assertRendersGrandchildren} from './folded-result-list-assertions';
+import * as CommonAssertions from '../common-assertions';
 
 const setSource = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
@@ -126,5 +127,25 @@ describe('Folded Result List Component', () => {
     });
 
     assertRendersGrandchildren();
+  });
+
+  describe('with an invalid configuration', () => {
+    before(() => {
+      new TestFixture()
+        .with(setSource)
+        .with(
+          addFoldedResultList(undefined, {
+            'child-field': '',
+            'collection-field': '',
+          })
+        )
+        .init();
+    });
+
+    CommonAssertions.assertConsoleError();
+    CommonAssertions.assertContainsComponentError(
+      FoldedResultListSelectors,
+      true
+    );
   });
 });

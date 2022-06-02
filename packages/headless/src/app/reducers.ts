@@ -45,6 +45,7 @@ import {caseFieldReducer} from '../features/case-field/case-field-slice';
 import {documentSuggestionReducer} from '../features/document-suggestion/document-suggestion-slice';
 import {excerptLengthReducer} from '../features/excerpt-length/excerpt-length-slice';
 import {instantResultsReducer} from '../features/instant-results/instant-results-slice';
+import {insightConfigurationReducer} from '../features/insight-configuration/insight-configuration-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -104,3 +105,5 @@ export const caseInput = caseInputReducer;
 export const caseField = caseFieldReducer;
 export const documentSuggestion = documentSuggestionReducer;
 export const excerptLength = excerptLengthReducer;
+
+export const insightConfiguration = insightConfigurationReducer;

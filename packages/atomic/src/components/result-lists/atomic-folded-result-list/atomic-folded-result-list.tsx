@@ -152,10 +152,14 @@ export class AtomicFoldedResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
     });
 
-    this.foldedResultList = this.initFolding(
-      this.resultListCommon.resultListControllerProps
-    );
-    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+    try {
+      this.foldedResultList = this.initFolding(
+        this.resultListCommon.resultListControllerProps
+      );
+      this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+    } catch (e) {
+      this.error = e as Error;
+    }
   }
 
   private initFolding(

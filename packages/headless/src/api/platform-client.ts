@@ -94,7 +94,7 @@ export class PlatformClient {
 
 type PlatformCombination =
   | {env: 'dev'; region: 'us' | 'eu'}
-  | {env: 'qa'; region: 'us' | 'eu'}
+  | {env: 'stg'; region: 'us'}
   | {env: 'hipaa'; region: 'us'}
   | {env: 'prod'; region: 'us' | 'eu' | 'au'};
 

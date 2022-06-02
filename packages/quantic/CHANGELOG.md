@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.19.1...@coveo/quantic@1.20.0) (2022-06-02)
+
+
+### Bug Fixes
+
+* **quantic:** formattingFunction passed correctly to duplicated numeric and date facets ([#2023](https://github.com/coveo/ui-kit/issues/2023)) ([e1ac27a](https://github.com/coveo/ui-kit/commit/e1ac27a485cd7a73c3ea73fab7d180cab2bc4747))
+
+
+### Features
+
+* **atomic:** change dayjs language when i18n language changes ([#2033](https://github.com/coveo/ui-kit/issues/2033)) ([f6093cd](https://github.com/coveo/ui-kit/commit/f6093cd9f575a26c821b7bf2698bdcf429871c12))
+
+
+
+
+
+## [1.19.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.19.0...@coveo/quantic@1.19.1) (2022-06-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.1...@coveo/quantic@1.19.0) (2022-05-30)
+
+
+### Features
+
+* **atomic:** add atomic-result-html component ([#2014](https://github.com/coveo/ui-kit/issues/2014)) ([ce1d9c2](https://github.com/coveo/ui-kit/commit/ce1d9c299b16d736730d9e7731f4bfa9c782a369))
+* **headless:** add insight engine ([#2026](https://github.com/coveo/ui-kit/issues/2026)) ([aa79c31](https://github.com/coveo/ui-kit/commit/aa79c318226f4c297a4805d1d5f90444ab38c226))
+
+
+
+
+
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.0...@coveo/quantic@1.18.1) (2022-05-30)
+
+
+### Bug Fixes
+
+* **quantic:** property validation added for animation type in Quantic Modal ([#2021](https://github.com/coveo/ui-kit/issues/2021)) ([4c57b63](https://github.com/coveo/ui-kit/commit/4c57b63ae27ba56731080d264f2bba19a67f5186))
+
+
+
+
+
 # [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.17.1...@coveo/quantic@1.18.0) (2022-05-26)
 
 

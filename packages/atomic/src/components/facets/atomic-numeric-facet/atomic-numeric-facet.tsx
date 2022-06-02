@@ -3,7 +3,6 @@ import {
   NumericFacet,
   buildNumericFacet,
   NumericFacetState,
-  NumericFacetOptions,
   RangeFacetSortCriterion,
   SearchStatus,
   SearchStatusState,
@@ -30,7 +29,12 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+import {
+  BaseFacet,
+  parseDependsOn,
+  shouldDisplayInputForFacetRange,
+  validateDependsOn,
+} from '../facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
@@ -46,6 +50,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {randomID} from '../../../utils/utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
@@ -87,7 +92,8 @@ export class AtomicNumericFacet
   implements InitializableComponent, BaseFacet<NumericFacet>
 {
   @InitializeBindings() public bindings!: Bindings;
-  public facet?: NumericFacet;
+  public facetForRange?: NumericFacet;
+  public facetForInput?: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
   public filter?: NumericFilter;
   public searchStatus!: SearchStatus;
@@ -95,7 +101,7 @@ export class AtomicNumericFacet
   private manualRanges: NumericRangeWithLabel[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
 
-  @BindStateToController('facet')
+  @BindStateToController('facetForRange')
   @State()
   public facetState!: NumericFacetState;
   @BindStateToController('filter')
@@ -105,6 +111,9 @@ export class AtomicNumericFacet
   @State()
   public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
+  @BindStateToController('facetForInput')
+  @State()
+  public facetForInputState?: NumericFacetState;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -204,7 +213,7 @@ export class AtomicNumericFacet
   public initialize() {
     this.validateProps();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.numberOfValues && this.initializeFacet();
+    this.initializeFacets();
     this.withInput && this.initializeFilter();
     this.inititalizeDependenciesManager();
     this.registerFacetToStore();
@@ -217,21 +226,51 @@ export class AtomicNumericFacet
     this.dependenciesManager?.stopWatching();
   }
 
-  private initializeFacet() {
+  private initializeFacets() {
+    // Initialize two facets: One that is actually used to display values for end users, which only exists
+    // if we need to display something to the end user (ie: numberOfValues > 0)
+
+    // A second facet is initialized only to verify the results count. It is never used to display results to end user.
+    // It serves as a way to determine if the input should be rendered or not, independent of the ranges (manual or automatic) configured in the component
+    if (this.numberOfValues > 0) {
+      this.initializeFacetForRange();
+    }
+    if (this.withInput) {
+      this.initializeFacetForInput();
+    }
+  }
+
+  private initializeFacetForRange() {
     this.manualRanges = this.buildManualRanges();
-    const options: NumericFacetOptions = {
-      facetId: this.facetId,
-      field: this.field,
-      numberOfValues: this.numberOfValues,
-      sortCriteria: this.sortCriteria,
-      rangeAlgorithm: this.rangeAlgorithm,
-      currentValues: this.manualRanges,
-      generateAutomaticRanges: !this.manualRanges.length,
-      filterFacetCount: this.filterFacetCount,
-      injectionDepth: this.injectionDepth,
-    };
-    this.facet = buildNumericFacet(this.bindings.engine, {options});
-    this.facetId = this.facet.state.facetId;
+    this.facetForRange = buildNumericFacet(this.bindings.engine, {
+      options: {
+        facetId: this.facetId,
+        field: this.field,
+        numberOfValues: this.numberOfValues,
+        sortCriteria: this.sortCriteria,
+        rangeAlgorithm: this.rangeAlgorithm,
+        currentValues: this.manualRanges,
+        generateAutomaticRanges: !this.manualRanges.length,
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+      },
+    });
+    this.facetId = this.facetForRange.state.facetId;
+  }
+
+  private initializeFacetForInput() {
+    this.facetForInput = buildNumericFacet(this.bindings.engine, {
+      options: {
+        numberOfValues: 1,
+        generateAutomaticRanges: true,
+        facetId: randomID(this.facetId || this.field),
+        field: this.field,
+        sortCriteria: this.sortCriteria,
+        rangeAlgorithm: this.rangeAlgorithm,
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+      },
+    });
   }
 
   private initializeFilter() {
@@ -265,7 +304,8 @@ export class AtomicNumericFacet
     this.dependenciesManager = buildFacetConditionsManager(
       this.bindings.engine,
       {
-        facetId: this.facet?.state.facetId ?? this.filter!.state.facetId,
+        facetId:
+          this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
         conditions: parseDependsOn(this.dependsOn),
       }
     );
@@ -335,7 +375,7 @@ export class AtomicNumericFacet
             this.filter?.clear();
             return;
           }
-          this.facet?.deselectAll();
+          this.facetForRange?.deselectAll();
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
@@ -433,8 +473,8 @@ export class AtomicNumericFacet
       this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
-            ? this.facet!.toggleSingleSelect(value)
-            : this.facet!.toggleSelect(value)
+            ? this.facetForRange!.toggleSingleSelect(value)
+            : this.facetForRange!.toggleSelect(value)
         )
       )
     );
@@ -457,27 +497,20 @@ export class AtomicNumericFacet
   }
 
   private get shouldRenderValues() {
-    return !this.hasInputRange && !!this.valuesToRender.length;
+    return (
+      !this.hasInputRange &&
+      this.numberOfValues > 0 &&
+      !!this.valuesToRender.length
+    );
   }
 
   private get shouldRenderInput() {
-    if (!this.withInput) {
-      return false;
-    }
-
-    if (this.hasInputRange) {
-      return true;
-    }
-
-    if (!this.searchStatusState.hasResults) {
-      return false;
-    }
-
-    if (!this.valuesToRender.length && this.numberOfValues > 0) {
-      return false;
-    }
-
-    return true;
+    return shouldDisplayInputForFacetRange({
+      hasInputRange: this.hasInputRange,
+      searchStatusState: this.searchStatusState,
+      facetValues: this.facetForInputState?.values || [],
+      hasInput: !!this.withInput,
+    });
   }
 
   public render() {
