@@ -90,7 +90,6 @@ export default class QuanticDateFacet extends LightningElement {
     'field',
     'label',
     'numberOfValues',
-    'formattingFunction',
   ]
 
   /** @type {DateFacetState} */
