@@ -83,9 +83,8 @@ function quanticIsDependency() {
   );
 }
 
-function getProjectPath(path) {
-  const directories = path.split(pathlib.sep);
-  return directories.slice(0, directories.length - 3).join(pathlib.sep);
+function getProjectPath() {
+  return __dirname.split('/node_modules')[0];
 }
 
 function main() {
@@ -107,8 +106,7 @@ function main() {
         'translations'
       );
 
-      // this script expects to be executed from: project_name/node_modules/@coveo/quantic
-      const projectDirectory = getProjectPath(__dirname);
+      const projectDirectory = getProjectPath();
 
       // the package directory is the directory to target when syncing source to and from an org.
       const defaultPackageDirectory = getPackageDirectory(projectDirectory);

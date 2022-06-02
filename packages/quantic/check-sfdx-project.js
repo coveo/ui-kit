@@ -12,16 +12,14 @@ function quanticIsDependency() {
   );
 }
 
-function getProjectPath(path) {
-  const directories = path.split(pathlib.sep);
-  return directories.slice(0, directories.length - 3).join(pathlib.sep);
+function getProjectPath() {
+  return __dirname.split('/node_modules')[0];
 }
 
 function main() {
   try {
     if (quanticIsDependency()) {
-      // this script expects to be executed from: project_name/node_modules/@coveo/quantic
-      const projectDirectory = getProjectPath(__dirname);
+      const projectDirectory = getProjectPath();
       fs.accessSync(
         pathlib.join(projectDirectory, 'sfdx-project.json'),
         fs.constants.R_OK
