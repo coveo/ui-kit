@@ -33,7 +33,7 @@ export interface TriggerState {
   execute: FunctionExecutionTrigger;
 
   /**
-   * The JavaScript functions to be executed after receiving execute triggers.
+   * The JavaScript functions to execute after receiving execution triggers.
    */
   executions: FunctionExecutionTrigger[];
 
