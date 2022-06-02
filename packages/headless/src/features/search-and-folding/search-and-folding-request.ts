@@ -1,5 +1,5 @@
 import {SearchAppState} from '../../state/search-app-state';
-import {getVisitorID, historyStore} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
 import {ConfigurationSection} from '../../state/state-sections';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 import {SearchRequest} from '../../api/search/search/search-request';
