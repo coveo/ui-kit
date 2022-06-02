@@ -179,7 +179,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   /**
-   * Specifies an explicit list of `allowedValues` in the request to the index, separated by commas.
+   * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.
    *
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
@@ -191,7 +191,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * those other values.
    *
    * ```html
-   *
    * <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div>
    * ```
    *

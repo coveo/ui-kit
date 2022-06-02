@@ -282,7 +282,7 @@ export interface FacetValue {
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.
- * @param optionsSchema - The facet options schema that should be used when validating options on creation
+ * @param optionsSchema - The facet options schema to use when validating options upon facet initialization.
  * @returns A `Facet` controller instance.
  * */
 export function buildCoreFacet(

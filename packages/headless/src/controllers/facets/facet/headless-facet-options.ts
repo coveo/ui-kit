@@ -71,7 +71,7 @@ export interface FacetOptions {
   sortCriteria?: FacetSortCriterion;
 
   /**
-   * Specifies an explicit list of `allowedValues` in the request to the index.
+   * Specifies an explicit list of `allowedValues` in the Search API request.
    *
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
