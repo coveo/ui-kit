@@ -1,17 +1,14 @@
 import {fetchInterface} from './insight-interface-actions';
 import {insightInterfaceReducer} from './insight-interface-slice';
-import {
-  getInsightInterfaceInitialState,
-  InsightInterfaceState,
-} from './insight-interface-state';
+import {getInsightInterfaceInitialState} from './insight-interface-state';
 
 describe('insight interface slice', () => {
   const requestId = 'some-request-id';
-  let state: InsightInterfaceState;
-
-  beforeEach(() => {
-    state = getInsightInterfaceInitialState();
-  });
+  const errorResponse = {
+    message: 'something bad happened',
+    statusCode: 400,
+    type: 'badluck',
+  };
 
   it('should have an initial state', () => {
     expect(insightInterfaceReducer(undefined, {type: 'foo'})).toEqual(
@@ -21,20 +18,28 @@ describe('insight interface slice', () => {
 
   it('should set #loading to #true when fetching the interface', () => {
     const modifiedState = insightInterfaceReducer(
-      state,
+      getInsightInterfaceInitialState(),
       fetchInterface.pending(requestId)
     );
 
     expect(modifiedState.loading).toBe(true);
   });
 
-  describe('when fetching interface fails', () => {
-    const errorResponse = {
-      message: 'something bad happened',
-      statusCode: 400,
-      type: 'badluck',
+  it('should clear the #error when fetching the interface', () => {
+    const errorState = {
+      ...getInsightInterfaceInitialState(),
+      error: errorResponse,
     };
 
+    const modifiedState = insightInterfaceReducer(
+      errorState,
+      fetchInterface.pending(requestId)
+    );
+
+    expect(modifiedState.error).toBeUndefined();
+  });
+
+  describe('when fetching interface fails', () => {
     const failedAction = fetchInterface.rejected(
       null,
       requestId,
@@ -43,19 +48,28 @@ describe('insight interface slice', () => {
     );
 
     it('should set #loading to #false', () => {
-      const modifiedState = insightInterfaceReducer(state, failedAction);
+      const modifiedState = insightInterfaceReducer(
+        getInsightInterfaceInitialState(),
+        failedAction
+      );
 
       expect(modifiedState.loading).toBe(false);
     });
 
     it('should set #error', () => {
-      const modifiedState = insightInterfaceReducer(state, failedAction);
+      const modifiedState = insightInterfaceReducer(
+        getInsightInterfaceInitialState(),
+        failedAction
+      );
 
       expect(modifiedState.error).toStrictEqual(errorResponse);
     });
 
     it('should set #config to #undefined', () => {
-      const modifiedState = insightInterfaceReducer(state, failedAction);
+      const modifiedState = insightInterfaceReducer(
+        getInsightInterfaceInitialState(),
+        failedAction
+      );
 
       expect(modifiedState.config).toBeUndefined();
     });
@@ -105,7 +119,7 @@ describe('insight interface slice', () => {
 
     it('should set #loading to #false', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 
@@ -114,7 +128,7 @@ describe('insight interface slice', () => {
 
     it('should update the #config when no interface is returned', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 
@@ -125,7 +139,7 @@ describe('insight interface slice', () => {
 
     it('should update the #config when an interface is returned', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponseWithInterface, requestId)
       );
 
@@ -137,7 +151,7 @@ describe('insight interface slice', () => {
 
     it('should set #error to #undefined', () => {
       const modifiedState = insightInterfaceReducer(
-        state,
+        getInsightInterfaceInitialState(),
         fetchInterface.fulfilled(fetchInterfaceResponse, requestId)
       );
 

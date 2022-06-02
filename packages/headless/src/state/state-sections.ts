@@ -369,12 +369,6 @@ export interface InsightConfigurationSection {
   insightConfiguration: InsightConfigurationState;
 }
 
-export interface InsightConfigurationSection {
-  /**
-   * The insight engine configuration.
-   */
-  insightConfiguration: InsightConfigurationState;
-}
 
 export interface InsightInterfaceSection {
   /**

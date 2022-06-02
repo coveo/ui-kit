@@ -1,7 +1,10 @@
 import pino from 'pino';
 import {PlatformClient} from '../../platform-client';
 import {NoopPreprocessRequest} from '../../preprocess-request';
-import {InsightAPIClient} from './insight-api-client';
+import {
+  InsightAPIClient,
+  InsightAPIErrorStatusResponse,
+} from './insight-api-client';
 
 describe('insight api client', () => {
   const insightRequest = {
@@ -13,7 +16,10 @@ describe('insight api client', () => {
 
   let client: InsightAPIClient;
 
-  const setupCallMock = (success: boolean, response: any) => {
+  const setupCallMock = (
+    success: boolean,
+    response: string | InsightAPIErrorStatusResponse
+  ) => {
     return jest.spyOn(PlatformClient, 'call').mockResolvedValue({
       ok: success,
       json: () => Promise.resolve(response),
