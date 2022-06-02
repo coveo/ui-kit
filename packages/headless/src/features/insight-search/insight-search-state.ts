@@ -1,50 +1,54 @@
-import { InsightAPIErrorStatusResponse } from "../../api/service/insight/insight-api-client";
-import { InsightQueryResponse, SearchResult } from "../../api/service/insight/query/query-response";
+import {InsightAPIErrorStatusResponse} from '../../api/service/insight/insight-api-client';
+import {
+  InsightQueryResponse,
+  SearchResult,
+} from '../../api/service/insight/query/query-response';
 
 export interface InsightSearchState {
-    isLoading: boolean;
-    error?: InsightAPIErrorStatusResponse;
-    response: InsightQueryResponse;
-    queryExecuted : string;
-    duration : number;
-    results: SearchResult[];
-    searchResponseId: string;
-    requestId: string;
+  isLoading: boolean;
+  error?: InsightAPIErrorStatusResponse;
+  response: InsightQueryResponse;
+  queryExecuted: string;
+  duration: number;
+  results: SearchResult[];
+  searchResponseId: string;
+  requestId: string;
 }
 
 export const getInsightSearchInitialState = (): InsightSearchState => ({
-    isLoading: false,
-    error:null,
-    response: {
-        facets: [],
-        results: [],
-        searchUid: '',
-        totalCount: 0,
-        executionReport: null
-    },
-    duration: 0,
-    queryExecuted: '',
+  isLoading: false,
+  error: null,
+  response: {
+    facets: [],
     results: [],
-    searchResponseId: '',
-    requestId: ''
+    searchUid: '',
+    totalCount: 0,
+    executionReport: null,
+  },
+  duration: 0,
+  queryExecuted: '',
+  results: [],
+  searchResponseId: '',
+  requestId: '',
 });
 
 export interface InsightCaseContextState {
-    caseContext: Record<string, string>;
+  caseContext: Record<string, string>;
 }
 
-export const getInsightCaseContextSearchInitialState = (): InsightCaseContextState => ({
-    caseContext: null
-});
+export const getInsightCaseContextSearchInitialState =
+  (): InsightCaseContextState => ({
+    caseContext: null,
+  });
 
 export interface PaginationState {
-    firstResult: number;
-    numberOfResults: number;
-    totalCountFiltered: number;
+  firstResult: number;
+  numberOfResults: number;
+  totalCountFiltered: number;
 }
-  
+
 export const getPaginationInitialState = (): PaginationState => ({
-    firstResult: 0,
-    numberOfResults: 10,
-    totalCountFiltered: 0,
+  firstResult: 0,
+  numberOfResults: 10,
+  totalCountFiltered: 0,
 });

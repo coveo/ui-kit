@@ -1,8 +1,17 @@
-import { createReducer, PayloadAction } from "@reduxjs/toolkit";
-import { insightExecuteSearch, insightFetchMoreResults, insightFetchFacetValues } from "./insight-search-actions";
-import { getInsightSearchInitialState, InsightSearchState } from "./insight-search-state";
+import {createReducer, PayloadAction} from '@reduxjs/toolkit';
+import {
+  insightExecuteSearch,
+  insightFetchMoreResults,
+  insightFetchFacetValues,
+} from './insight-search-actions';
+import {
+  getInsightSearchInitialState,
+  InsightSearchState,
+} from './insight-search-state';
 
-type SearchAction = typeof insightExecuteSearch | typeof insightFetchMoreResults;
+type SearchAction =
+  | typeof insightExecuteSearch
+  | typeof insightFetchMoreResults;
 
 function handleRejectedSearch(
   state: InsightSearchState,
@@ -30,43 +39,47 @@ function handleFulfilledSearch(
 }
 
 function handlePendingSearch(
-    state: InsightSearchState,
-    action: PayloadAction<
-      void,
-      string,
-      {
-        requestId: string;
-      }
-    >
-  ) {
-    state.isLoading = true;
-    state.requestId = action.meta.requestId;
-  }
+  state: InsightSearchState,
+  action: PayloadAction<
+    void,
+    string,
+    {
+      requestId: string;
+    }
+  >
+) {
+  state.isLoading = true;
+  state.requestId = action.meta.requestId;
+}
 
-export const insightSearchReducer = createReducer(getInsightSearchInitialState(), (builder) => {
-    builder.addCase(insightExecuteSearch.rejected, (state, action) => {
-        handleRejectedSearch(state, action)
-    })
-    .addCase(insightFetchMoreResults.rejected, (state, action) => {
-        handleRejectedSearch(state, action)
-    })
-    .addCase(insightFetchFacetValues.rejected, (state, action) => {
-        handleRejectedSearch(state, action)
-    })
-    .addCase(insightExecuteSearch.fulfilled, (state, action) => {
+export const insightSearchReducer = createReducer(
+  getInsightSearchInitialState(),
+  (builder) => {
+    builder
+      .addCase(insightExecuteSearch.rejected, (state, action) => {
+        handleRejectedSearch(state, action);
+      })
+      .addCase(insightFetchMoreResults.rejected, (state, action) => {
+        handleRejectedSearch(state, action);
+      })
+      .addCase(insightFetchFacetValues.rejected, (state, action) => {
+        handleRejectedSearch(state, action);
+      })
+      .addCase(insightExecuteSearch.fulfilled, (state, action) => {
         handleFulfilledSearch(state, action);
         state.results = action.payload.response.results;
         state.searchResponseId = action.payload.response.searchUid;
-    })
-    .addCase(insightFetchMoreResults.fulfilled, (state, action) => {
+      })
+      .addCase(insightFetchMoreResults.fulfilled, (state, action) => {
         handleFulfilledSearch(state, action);
         state.results = [...state.results, ...action.payload.response.results];
-    })
-    .addCase(insightFetchFacetValues.fulfilled, (state, action) => {
+      })
+      .addCase(insightFetchFacetValues.fulfilled, (state, action) => {
         state.response.facets = action.payload.response.facets;
         state.response.searchUid = action.payload.response.searchUid;
-    })
-    .addCase(insightExecuteSearch.pending, handlePendingSearch)
-    .addCase(insightFetchMoreResults.pending, handlePendingSearch)
-    .addCase(insightFetchFacetValues.pending, handlePendingSearch)
-})
+      })
+      .addCase(insightExecuteSearch.pending, handlePendingSearch)
+      .addCase(insightFetchMoreResults.pending, handlePendingSearch)
+      .addCase(insightFetchFacetValues.pending, handlePendingSearch);
+  }
+);
