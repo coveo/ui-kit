@@ -28,6 +28,9 @@ module.exports = {
         lg: 'var(--atomic-border-radius-lg)',
         xl: 'var(--atomic-border-radius-xl)',
       },
+      boxShadow: {
+        'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)'
+      },
       fontWeight: {
         normal: 'var(--atomic-font-normal)',
         bold: 'var(--atomic-font-bold)',
