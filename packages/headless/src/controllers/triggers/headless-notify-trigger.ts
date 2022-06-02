@@ -23,7 +23,7 @@ export interface NotifyTriggerState {
   /**
    * The notification to display to the user after receiving a notification trigger.
    *
-   * @deprecated
+   * @deprecated Use `notifications` instead.
    */
   notification: string;
   /**

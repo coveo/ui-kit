@@ -28,7 +28,7 @@ export interface TriggerState {
   /**
    * The JavaScript function to be executed after receiving an execute trigger.
    *
-   * @deprecated
+   * @deprecated Use `executions` instead.
    */
   execute: FunctionExecutionTrigger;
 
@@ -40,7 +40,7 @@ export interface TriggerState {
   /**
    * The notification to display to the user after receiving a notification trigger.
    *
-   * @deprecated
+   * @deprecated Use `notifications` instead.
    */
   notification: string;
 

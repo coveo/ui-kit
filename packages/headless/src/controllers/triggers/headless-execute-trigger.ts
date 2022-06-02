@@ -25,14 +25,14 @@ export interface ExecuteTriggerState {
   /**
    * The name of the function to be executed.
    *
-   * @deprecated
+   * @deprecated Use `executions` instead.
    */
   functionName: string;
 
   /**
    * The parameters of the function to be executed.
    *
-   * @deprecated
+   * @deprecated Use `executions` instead.
    */
   params: ExecuteTriggerParams;
 
