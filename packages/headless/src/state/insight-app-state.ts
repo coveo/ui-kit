@@ -10,6 +10,6 @@ import {
 export type InsightAppState = ConfigurationSection &
   VersionSection &
   InsightConfigurationSection &
-  InsightSearchSection;
+  InsightSearchSection &
   SearchHubSection &
   InsightInterfaceSection;

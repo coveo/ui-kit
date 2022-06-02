@@ -196,10 +196,10 @@ const buildInsightSearchRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
-    insightId: state.insightConfiguration.insightId,
-    q: state.query.q,
+    insightId: state.insightConfiguration?.insightId,
+    q: state.query?.q,
     facets: getFacetRequests(state.facetSet),
-    caseContext: state.insightCaseContext.caseContext,
+    caseContext: state.insightCaseContext?.caseContext,
   };
 };
 
