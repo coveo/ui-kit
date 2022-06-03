@@ -155,7 +155,7 @@ export default class QuanticRefineToggle extends LightningElement {
   }
 
   /**
-   *  Returns the number of active filters from a specific facet breadcrumb.
+   * Returns the number of active filters from a specific facet breadcrumb.
    * @param {Array<{path: Array}>} facetBreadcrumb
    */
   getFiltersCountFromCategoryFacetBreadcrumb(facetBreadcrumb) {
