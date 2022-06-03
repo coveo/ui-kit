@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.68.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.67.1...@coveo/headless@1.68.0) (2022-06-02)
+
+
+### Features
+
+* **atomic:** change dayjs language when i18n language changes ([#2033](https://github.com/coveo/ui-kit/issues/2033)) ([f6093cd](https://github.com/coveo/ui-kit/commit/f6093cd9f575a26c821b7bf2698bdcf429871c12))
+
+
+
+
+
+## [1.67.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.67.0...@coveo/headless@1.67.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fix schema definition for foldedResultList controller ([#2038](https://github.com/coveo/ui-kit/issues/2038)) ([a058e11](https://github.com/coveo/ui-kit/commit/a058e1166fb2c5f0e4c219a61937d243053b8ad5))
+* **headless:** fix highlighting to escape last part of the value ([#2039](https://github.com/coveo/ui-kit/issues/2039)) ([06ae2c8](https://github.com/coveo/ui-kit/commit/06ae2c83d249cd42e66b8d9b0095b74b142e94f2))
+* **headless:** replace qa by stg ([#2046](https://github.com/coveo/ui-kit/issues/2046)) ([90ccce0](https://github.com/coveo/ui-kit/commit/90ccce0100140298ba94f72b949325bd7ebc7268))
+
+
+
+
+
 # [1.67.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.66.3...@coveo/headless@1.67.0) (2022-05-30)
 
 

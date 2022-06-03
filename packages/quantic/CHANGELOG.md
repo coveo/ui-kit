@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.19.1...@coveo/quantic@1.20.0) (2022-06-02)
+
+
+### Bug Fixes
+
+* **quantic:** formattingFunction passed correctly to duplicated numeric and date facets ([#2023](https://github.com/coveo/ui-kit/issues/2023)) ([e1ac27a](https://github.com/coveo/ui-kit/commit/e1ac27a485cd7a73c3ea73fab7d180cab2bc4747))
+
+
+### Features
+
+* **atomic:** change dayjs language when i18n language changes ([#2033](https://github.com/coveo/ui-kit/issues/2033)) ([f6093cd](https://github.com/coveo/ui-kit/commit/f6093cd9f575a26c821b7bf2698bdcf429871c12))
+
+
+
+
+
+## [1.19.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.19.0...@coveo/quantic@1.19.1) (2022-06-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.18.1...@coveo/quantic@1.19.0) (2022-05-30)
 
 
