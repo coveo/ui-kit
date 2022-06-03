@@ -168,7 +168,6 @@ export const insightFetchFacetValues = createAsyncThunk<
     return {
       ...fetched,
       response: fetched.response.success,
-      automaticallyCorrected: false,
       originalQuery: getOriginalQuery(state),
       analyticsAction,
     };
@@ -198,6 +197,10 @@ const buildInsightSearchRequest = (
     q: state.query?.q,
     facets: getFacetRequests(state.facetSet),
     caseContext: state.insightCaseContext.caseContext,
+    ...(state.pagination && {
+      firstResult: state.pagination.firstResult,
+      numberOfResults: state.pagination.numberOfResults,
+    }),
   };
 };
 
@@ -208,7 +211,7 @@ const buildInsightFetchMoreResultsRequest = (
     ...buildInsightSearchRequest(state),
     firstResult:
       (state.pagination?.firstResult ?? 0) +
-      (state.insightSearch?.results.length ?? 0),
+      (state.pagination?.numberOfResults ?? 0),
   };
 };
 
@@ -222,7 +225,7 @@ const buildInsightFetchFacetValuesRequest = (
 };
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
-  state.query?.q !== undefined ? state.query.q : '';
+  state.query?.q || '';
 
 export const logFetchMoreResults = makeAnalyticsAction(
   'search/logFetchMoreResults',

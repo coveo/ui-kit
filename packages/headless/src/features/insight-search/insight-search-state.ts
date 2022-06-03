@@ -6,7 +6,7 @@ import {
 
 export interface InsightSearchState {
   isLoading: boolean;
-  error?: InsightAPIErrorStatusResponse | null;
+  error?: InsightAPIErrorStatusResponse;
   response: InsightQueryResponse;
   queryExecuted: string;
   duration: number;

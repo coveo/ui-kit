@@ -56,13 +56,8 @@ export const insightSearchReducer = createReducer(
   getInsightSearchInitialState(),
   (builder) => {
     builder
+      .addCase(insightExecuteSearch.pending, handlePendingSearch)
       .addCase(insightExecuteSearch.rejected, (state, action) => {
-        handleRejectedSearch(state, action);
-      })
-      .addCase(insightFetchMoreResults.rejected, (state, action) => {
-        handleRejectedSearch(state, action);
-      })
-      .addCase(insightFetchFacetValues.rejected, (state, action) => {
         handleRejectedSearch(state, action);
       })
       .addCase(insightExecuteSearch.fulfilled, (state, action) => {
@@ -70,16 +65,21 @@ export const insightSearchReducer = createReducer(
         state.results = action.payload.response.results;
         state.searchResponseId = action.payload.response.searchUid;
       })
+      .addCase(insightFetchMoreResults.pending, handlePendingSearch)
+      .addCase(insightFetchMoreResults.rejected, (state, action) => {
+        handleRejectedSearch(state, action);
+      })
       .addCase(insightFetchMoreResults.fulfilled, (state, action) => {
         handleFulfilledSearch(state, action);
         state.results = [...state.results, ...action.payload.response.results];
       })
+      .addCase(insightFetchFacetValues.pending, handlePendingSearch)
+      .addCase(insightFetchFacetValues.rejected, (state, action) => {
+        handleRejectedSearch(state, action);
+      })
       .addCase(insightFetchFacetValues.fulfilled, (state, action) => {
         state.response.facets = action.payload.response.facets;
         state.response.searchUid = action.payload.response.searchUid;
-      })
-      .addCase(insightExecuteSearch.pending, handlePendingSearch)
-      .addCase(insightFetchMoreResults.pending, handlePendingSearch)
-      .addCase(insightFetchFacetValues.pending, handlePendingSearch);
+      });
   }
 );

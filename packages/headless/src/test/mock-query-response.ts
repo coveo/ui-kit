@@ -17,7 +17,7 @@ export const buildMockInsightQueryResponse = (
 });
 
 export const buildMockSearchResult = (
-  searchReseult: Partial<SearchResult> = {}
+  searchResult: Partial<SearchResult> = {}
 ): SearchResult => ({
   clickUri: '',
   excerpt: '',
@@ -26,7 +26,7 @@ export const buildMockSearchResult = (
   percentScore: 0,
   title: '',
   uniqueId: '',
-  ...searchReseult,
+  ...searchResult,
 });
 
 export const buildMockFacet = (facet: Partial<Facet> = {}): Facet => ({
