@@ -97,7 +97,7 @@ export function highlightString(params: HighlightParams): string {
     last = end;
   }
   if (last !== maxIndex) {
-    highlighted += params.content.slice(last);
+    highlighted += escape(params.content.slice(last));
   }
   return highlighted;
 }

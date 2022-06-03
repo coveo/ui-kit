@@ -22,7 +22,7 @@ function analyticsUrlFromPlatformUrl(
   organizationId: string
 ) {
   const isCoveoPlatformURL =
-    /^https:\/\/platform(dev|qa|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/.test(
+    /^https:\/\/platform(dev|stg|hipaa)?(-)?(eu|au)?\.cloud\.coveo\.com/.test(
       platformUrl
     );
   if (isCoveoPlatformURL) {

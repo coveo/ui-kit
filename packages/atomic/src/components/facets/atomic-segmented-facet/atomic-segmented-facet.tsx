@@ -153,6 +153,11 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
-    return this.renderValues();
+    return (
+      <div class="flex">
+        <b class="inline-block my-3 mr-2">{this.label}</b>
+        {this.renderValues()}
+      </div>
+    );
   }
 }

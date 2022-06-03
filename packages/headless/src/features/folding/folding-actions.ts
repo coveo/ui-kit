@@ -58,10 +58,10 @@ export interface LoadCollectionFulfilledReturn {
 export const foldingOptionsSchemaDefinition: SchemaDefinition<
   Required<RegisterFoldingActionCreatorPayload>
 > = {
-  collectionField: new StringValue(),
-  parentField: new StringValue(),
-  childField: new StringValue(),
-  numberOfFoldedResults: new NumberValue({min: 0}),
+  collectionField: new StringValue({emptyAllowed: false, required: false}),
+  parentField: new StringValue({emptyAllowed: false, required: false}),
+  childField: new StringValue({emptyAllowed: false, required: false}),
+  numberOfFoldedResults: new NumberValue({min: 0, required: false}),
 };
 
 export const registerFolding = createAction(
