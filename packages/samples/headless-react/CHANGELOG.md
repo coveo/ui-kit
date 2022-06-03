@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.54.1](https://github.com/coveo/ui-kit/compare/headless-react@0.54.0...headless-react@0.54.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **atomic:** add getAnimations() check ([#2040](https://github.com/coveo/ui-kit/issues/2040)) ([47161a3](https://github.com/coveo/ui-kit/commit/47161a3ec2ef14b9c454a04bad6abbdd21f0ef0d))
+
+
+
+
+
 # [0.54.0](https://github.com/coveo/ui-kit/compare/headless-react@0.53.1...headless-react@0.54.0) (2022-06-02)
 
 
