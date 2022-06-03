@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.2.1...@coveo/auth@1.3.0) (2022-06-02)
+
+
+### Features
+
+* **atomic:** change dayjs language when i18n language changes ([#2033](https://github.com/coveo/ui-kit/issues/2033)) ([f6093cd](https://github.com/coveo/ui-kit/commit/f6093cd9f575a26c821b7bf2698bdcf429871c12))
+
+
+
+
+
+## [1.2.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.2.0...@coveo/auth@1.2.1) (2022-06-01)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+# [1.2.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.1.12...@coveo/auth@1.2.0) (2022-05-30)
+
+
+### Features
+
+* **atomic:** add atomic-result-html component ([#2014](https://github.com/coveo/ui-kit/issues/2014)) ([ce1d9c2](https://github.com/coveo/ui-kit/commit/ce1d9c299b16d736730d9e7731f4bfa9c782a369))
+
+
+
+
+
 ## [1.1.12](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.1.11...@coveo/auth@1.1.12) (2022-05-18)
 
 **Note:** Version bump only for package @coveo/auth

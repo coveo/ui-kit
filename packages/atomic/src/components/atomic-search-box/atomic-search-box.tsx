@@ -41,7 +41,10 @@ import {promiseTimeout} from '../../utils/promise-utils';
  * @part clear-icon - The clear button's icon.
  * @part submit-button - The search box submit button.
  * @part submit-icon - The search box submit button's icon.
- * @part suggestions - A list of suggested query corrections.
+ * @part suggestions - A list of suggested query corrections on each panel.
+ * @part suggestions-left - A list of suggested query corrections on the left panel.
+ * @part suggestions-right - A list of suggested query corrections on the right panel.
+ * @part suggestions-wrapper - The wrapper that contains suggestions panels.
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
@@ -67,7 +70,10 @@ export class AtomicSearchBox {
   @State() public error!: Error;
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
-  @State() private suggestionElements: SearchBoxSuggestionItem[] = [];
+  @State() private leftSuggestions: SearchBoxSuggestions[] = [];
+  @State() private leftSuggestionElements: SearchBoxSuggestionItem[] = [];
+  @State() private rightSuggestions: SearchBoxSuggestions[] = [];
+  @State() private rightSuggestionElements: SearchBoxSuggestionItem[] = [];
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -186,7 +192,7 @@ export class AtomicSearchBox {
   }
 
   private get hasSuggestions() {
-    return !!this.suggestionElements.length;
+    return !!this.allSuggestionElements.length;
   }
 
   private get hasActiveDescendant() {
@@ -230,6 +236,22 @@ export class AtomicSearchBox {
       this.activeDescendantElement?.previousElementSibling || this.lastValue
     );
   }
+  private get showSuggestions() {
+    return this.hasSuggestions && this.isExpanded;
+  }
+
+  private get allSuggestionElements() {
+    return [...this.leftSuggestionElements, ...this.rightSuggestionElements];
+  }
+
+  private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
+    const elements = suggestions
+      .map((suggestion) => suggestion.renderItems())
+      .flat();
+    const max = this.numberOfQueries + elements.filter(isDividerElement).length;
+
+    return elements.slice(0, max);
+  }
 
   private scrollActiveDescendantIntoView() {
     this.activeDescendantElement?.scrollIntoView({
@@ -242,10 +264,9 @@ export class AtomicSearchBox {
       return;
     }
 
-    const query = this.nextOrFirstValue.getAttribute('data-query');
-    !isNullOrUndefined(query) && this.updateQuery(query);
     this.updateActiveDescendant(this.nextOrFirstValue.id);
     this.scrollActiveDescendantIntoView();
+    this.updateQueryFromSuggestion();
   }
 
   private focusPreviousValue() {
@@ -253,16 +274,17 @@ export class AtomicSearchBox {
       return;
     }
 
-    const query = this.previousOrLastValue.getAttribute('data-query');
-    !isNullOrUndefined(query) && this.updateQuery(query);
     this.updateActiveDescendant(this.previousOrLastValue.id);
     this.scrollActiveDescendantIntoView();
+    this.updateQueryFromSuggestion();
   }
 
   private updateAriaMessage() {
-    this.ariaMessage = this.suggestionElements.length
+    const elsLength =
+      this.allSuggestionElements.filter(isSuggestionElement).length;
+    this.ariaMessage = elsLength
       ? this.bindings.i18n.t('query-suggestions-available', {
-          count: this.suggestionElements.filter(isSuggestionElement).length,
+          count: elsLength,
         })
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
@@ -270,7 +292,10 @@ export class AtomicSearchBox {
   private async triggerSuggestions() {
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
-        promiseTimeout(suggestion.onInput(), this.suggestionTimeout)
+        promiseTimeout(
+          suggestion.onInput ? suggestion.onInput() : Promise.resolve(),
+          this.suggestionTimeout
+        )
       )
     );
 
@@ -286,16 +311,35 @@ export class AtomicSearchBox {
       }
     });
 
-    const suggestionElements = fulfilledSuggestions
-      .sort((a, b) => a.position - b.position)
-      .map((suggestion) => suggestion.renderItems())
-      .flat();
+    const splitSuggestions = (side: 'left' | 'right', isDefault = false) =>
+      fulfilledSuggestions
+        .filter(
+          (suggestion) =>
+            suggestion.panel === side || (!suggestion.panel && isDefault)
+        )
+        .sort(this.sortSuggestions);
 
-    const max =
-      this.numberOfQueries + suggestionElements.filter(isDividerElement).length;
+    this.leftSuggestions = splitSuggestions('left', true);
+    this.leftSuggestionElements = this.getSuggestionElements(
+      this.leftSuggestions
+    );
+    this.rightSuggestions = splitSuggestions('right');
+    this.rightSuggestionElements = this.getSuggestionElements(
+      this.rightSuggestions
+    );
 
-    this.suggestionElements = suggestionElements.slice(0, max);
+    const defaultSuggestionQ =
+      this.allSuggestionElements.find(isSuggestionElement)?.query;
+
+    if (defaultSuggestionQ) {
+      this.updateSuggestedQuery(defaultSuggestionQ);
+    }
+
     this.updateAriaMessage();
+  }
+
+  private sortSuggestions(a: SearchBoxSuggestions, b: SearchBoxSuggestions) {
+    return a.position - b.position;
   }
 
   private onInput(value: string) {
@@ -335,6 +379,39 @@ export class AtomicSearchBox {
         query,
       })
     );
+  }
+
+  private isPanelInFocus(panel: 'right' | 'left') {
+    if (!this.activeDescendantElement) {
+      return false;
+    }
+    return this.activeDescendantElement
+      ?.closest('ul')
+      ?.getAttribute('part')
+      ?.includes(`suggestions-${panel}`);
+  }
+
+  private updateQueryFromSuggestion() {
+    const query = this.activeDescendantElement?.getAttribute('data-query');
+    if (!isNullOrUndefined(query)) {
+      this.updateQuery(query);
+      this.updateSuggestedQuery(query);
+      this.updateSuggestionElements();
+    }
+  }
+
+  private updateSuggestionElements() {
+    if (!this.isPanelInFocus('left')) {
+      this.leftSuggestionElements = this.getSuggestionElements(
+        this.leftSuggestions
+      );
+    }
+
+    if (!this.isPanelInFocus('right')) {
+      this.rightSuggestionElements = this.getSuggestionElements(
+        this.rightSuggestions
+      );
+    }
   }
 
   private onKeyDown(e: KeyboardEvent) {
@@ -422,7 +499,8 @@ export class AtomicSearchBox {
   }
 
   private clearSuggestionElements() {
-    this.suggestionElements = [];
+    this.leftSuggestionElements = [];
+    this.rightSuggestionElements = [];
     this.ariaMessage = '';
   }
 
@@ -464,6 +542,11 @@ export class AtomicSearchBox {
           item.onSelect && item.onSelect();
           this.clearSuggestions();
         }}
+        onMouseOver={() => {
+          if (isSuggestionElement(item)) {
+            this.updateSuggestedQuery(item.query);
+          }
+        }}
         ref={(el) => {
           if (isHTMLElement(item.content)) {
             el?.replaceChildren(item.content);
@@ -476,28 +559,67 @@ export class AtomicSearchBox {
     );
   }
 
+  private async updateSuggestedQuery(q: string) {
+    await Promise.allSettled(
+      this.suggestions.map((suggestion) =>
+        promiseTimeout(
+          suggestion.onSuggestedQueryChange
+            ? suggestion.onSuggestedQueryChange(q)
+            : Promise.resolve(),
+          this.suggestionTimeout
+        )
+      )
+    );
+    this.updateSuggestionElements();
+  }
+
   private renderSuggestions() {
-    const showSuggestions = this.hasSuggestions && this.isExpanded;
+    if (!this.hasSuggestions) {
+      return null;
+    }
 
     return (
-      <ul
-        id={this.popupId}
-        role="listbox"
-        part="suggestions"
-        aria-label={this.bindings.i18n.t('query-suggestion-list')}
-        ref={(el) => (this.listRef = el!)}
-        class={`w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
-          showSuggestions ? '' : 'hidden'
+      <div
+        part="suggestions-wrapper"
+        class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
+          this.showSuggestions ? '' : 'hidden'
         }`}
       >
-        {this.suggestionElements.map((suggestion, index) =>
-          this.renderSuggestion(
-            suggestion,
-            index,
-            this.suggestionElements.length - 1
-          )
+        {!!this.leftSuggestionElements.length && (
+          <ul
+            id={this.popupId}
+            role="listbox"
+            part="suggestions suggestions-left"
+            aria-label={this.bindings.i18n.t('query-suggestion-list')}
+            ref={(el) => (this.listRef = el!)}
+            class="flex-grow"
+          >
+            {this.leftSuggestionElements.map((suggestion, index) =>
+              this.renderSuggestion(
+                suggestion,
+                index,
+                this.leftSuggestionElements.length - 1
+              )
+            )}
+          </ul>
         )}
-      </ul>
+        {!!this.rightSuggestionElements.length && (
+          <ul
+            role="listbox"
+            part="suggestions suggestions-right"
+            aria-label={this.bindings.i18n.t('query-suggestion-list')}
+            class="flex-grow"
+          >
+            {this.rightSuggestionElements.map((suggestion, index) =>
+              this.renderSuggestion(
+                suggestion,
+                index,
+                this.rightSuggestionElements.length - 1
+              )
+            )}
+          </ul>
+        )}
+      </div>
     );
   }
 
@@ -526,9 +648,7 @@ export class AtomicSearchBox {
     return [
       <div
         part="wrapper"
-        class={
-          'relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary'
-        }
+        class="relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary"
       >
         {this.renderInputContainer()}
         {this.renderSuggestions()}
