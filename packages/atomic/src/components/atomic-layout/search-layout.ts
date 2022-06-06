@@ -27,11 +27,11 @@ export function buildSearchLayout(
     return `${mediaQuerySelector} {
       ${layoutSelector} {
         grid-template-areas:
-          '. .                     atomic-section-search .'
-          '. atomic-section-main atomic-section-main   .';
+        '. .                     atomic-section-search .'
+        '. atomic-section-main   atomic-section-main   .';
         grid-template-columns: 
           1fr minmax(${facetsMin}, ${facetsMax}) minmax(${mainMin}, ${mainMax}) 1fr;
-          column-gap: var(--atomic-layout-spacing-x);
+        column-gap: var(--atomic-layout-spacing-x);
       }
 
       ${cleanStatusSelector} ${layoutSelector} {
@@ -41,7 +41,7 @@ export function buildSearchLayout(
           '. atomic-section-facets .                     .';
       }
 
-      ${layoutSelector} ${sectionSelector('facets')} {
+      ${cleanStatusSelector} ${layoutSelector} ${sectionSelector('facets')} {
         display: block;
       }
     }`;
