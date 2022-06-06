@@ -19,7 +19,9 @@ export function initialSearchParameterSelector(
       state.advancedSearchQueries?.defaultFilters.cq ??
       getAdvancedSearchQueriesInitialState().defaultFilters.cq,
     firstResult: getPaginationInitialState().firstResult,
-    numberOfResults: getPaginationInitialState().numberOfResults,
+    numberOfResults:
+      state.pagination?.defaultNumberOfResults ??
+      getPaginationInitialState().numberOfResults,
     sortCriteria: getSortCriteriaInitialState(),
     f: {},
     cf: {},

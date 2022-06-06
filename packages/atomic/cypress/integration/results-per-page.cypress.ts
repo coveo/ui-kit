@@ -83,6 +83,17 @@ describe('Result Per Page Component', () => {
       it('should not add the initial choice to the URL', () => {
         cy.document().its('location').its('hash').should('be.empty');
       });
+
+      describe('then selecting another value, then pressing the back button', () => {
+        before(() => {
+          ResultsPerPageSelectors.buttons().last().click();
+          cy.go('back');
+        });
+
+        it('should not add the initial choice to the URL', () => {
+          cy.document().its('location').its('hash').should('be.empty');
+        });
+      });
     });
   });
 });
