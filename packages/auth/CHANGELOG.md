@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.3.0...@coveo/auth@1.3.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **atomic:** add getAnimations() check ([#2040](https://github.com/coveo/ui-kit/issues/2040)) ([47161a3](https://github.com/coveo/ui-kit/commit/47161a3ec2ef14b9c454a04bad6abbdd21f0ef0d))
+
+
+
+
+
 # [1.3.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.2.1...@coveo/auth@1.3.0) (2022-06-02)
 
 
