@@ -131,7 +131,6 @@ export default class QuanticNumericFacet extends LightningElement {
     'sortCriteria',
     'rangeAlgorithm',
     'withInput',
-    'formattingFunction',
   ]
 
   /** @type {NumericFacetState} */

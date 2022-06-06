@@ -1,9 +1,14 @@
 import {createCustomEqual} from 'fast-equals';
 
-export function arrayEqual<T>(firstArray: T[], secondArray: T[]) {
+export function arrayEqual<T>(
+  firstArray: T[],
+  secondArray: T[],
+  isEqual: (first: T, second: T) => boolean = (first, second) =>
+    first === second
+) {
   return (
     firstArray.length === secondArray.length &&
-    firstArray.findIndex((val, i) => secondArray[i] !== val) === -1
+    firstArray.findIndex((val, i) => !isEqual(secondArray[i], val)) === -1
   );
 }
 

@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.55.0](https://github.com/coveo/ui-kit/compare/headless-react@0.54.1...headless-react@0.55.0) (2022-06-06)
+
+
+### Features
+
+* **headless:** add insight "get interface" action ([#2036](https://github.com/coveo/ui-kit/issues/2036)) ([942dfe8](https://github.com/coveo/ui-kit/commit/942dfe8d72de29ad4b2ac619dc2f9704148325d3))
+
+
+
+
+
+## [0.54.1](https://github.com/coveo/ui-kit/compare/headless-react@0.54.0...headless-react@0.54.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **atomic:** add getAnimations() check ([#2040](https://github.com/coveo/ui-kit/issues/2040)) ([47161a3](https://github.com/coveo/ui-kit/commit/47161a3ec2ef14b9c454a04bad6abbdd21f0ef0d))
+
+
+
+
+
+# [0.54.0](https://github.com/coveo/ui-kit/compare/headless-react@0.53.1...headless-react@0.54.0) (2022-06-02)
+
+
+### Features
+
+* **atomic:** change dayjs language when i18n language changes ([#2033](https://github.com/coveo/ui-kit/issues/2033)) ([f6093cd](https://github.com/coveo/ui-kit/commit/f6093cd9f575a26c821b7bf2698bdcf429871c12))
+
+
+
+
+
 ## [0.53.1](https://github.com/coveo/ui-kit/compare/headless-react@0.53.0...headless-react@0.53.1) (2022-06-01)
 
 **Note:** Version bump only for package headless-react

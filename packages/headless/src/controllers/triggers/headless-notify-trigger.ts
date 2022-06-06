@@ -4,6 +4,7 @@ import {triggers} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logNotifyTrigger} from '../../features/triggers/trigger-analytics-actions';
+import {arrayEqual} from '../../utils/compare-utils';
 
 /**
  * The `NotifyTrigger` controller handles Notify triggers.
@@ -21,8 +22,14 @@ export interface NotifyTrigger extends Controller {
 export interface NotifyTriggerState {
   /**
    * The notification to display to the user after receiving a notification trigger.
+   *
+   * @deprecated Use `notifications` instead.
    */
   notification: string;
+  /**
+   * The notifications to display to the user after receiving notification triggers.
+   */
+  notifications: string[];
 }
 
 /**
@@ -41,17 +48,20 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
   const getState = () => engine.state;
 
-  let previousNotify = getState().triggers.notification;
+  let previousNotifications = getState().triggers.notifications;
 
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        const hasChanged = previousNotify !== this.state.notification;
-        previousNotify = this.state.notification;
+        const hasChanged = !arrayEqual(
+          previousNotifications,
+          this.state.notifications
+        );
+        previousNotifications = this.state.notifications;
 
-        if (hasChanged && getState().triggers.notification) {
+        if (hasChanged && getState().triggers.notifications.length) {
           listener();
           dispatch(logNotifyTrigger());
         }
@@ -63,6 +73,7 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
     get state() {
       return {
         notification: getState().triggers.notification,
+        notifications: getState().triggers.notifications,
       };
     },
   };

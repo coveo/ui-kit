@@ -27,7 +27,7 @@ export class MissingResultParentError extends Error {
  */
 export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   return (component: ComponentInterface, resultVariable: string) => {
-    const {connectedCallback, render} = component;
+    const {connectedCallback, componentWillRender, render} = component;
     component.connectedCallback = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
@@ -53,6 +53,14 @@ export function ResultContext(opts: {folded: boolean} = {folded: false}) {
         return;
       }
       return connectedCallback && connectedCallback.call(this);
+    };
+
+    component.componentWillRender = function () {
+      if (this.error) {
+        return;
+      }
+
+      return componentWillRender && componentWillRender.call(this);
     };
 
     component.render = function () {

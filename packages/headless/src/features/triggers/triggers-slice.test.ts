@@ -218,4 +218,62 @@ describe('trigger slice', () => {
 
     expect(finalState.notification).toEqual('Hello world');
   });
+
+  it('when an executeSearch fulfilled is received and the payload contains two of each Trigger objects, it updates all states members', () => {
+    const expectedRedirections = [
+      'https://google.com/search?q=coveo%20query%20triggers',
+      'https://docs.coveo.com/en/search/#q=coveo%20query%20triggers',
+    ];
+    const expectedQueries = ['Foo', 'Bar'];
+    const expectedExecutions = [
+      {functionName: 'info', params: ['String param', 1, false]},
+      {functionName: 'error', params: [2, true, 'No']},
+    ];
+    const expectedNotifications = ['Hello', 'World'];
+
+    const state = getTriggerInitialState();
+    const triggers = [
+      buildMockRedirectTrigger({content: expectedRedirections[0]}),
+      buildMockRedirectTrigger({content: expectedRedirections[1]}),
+      buildMockQueryTrigger({content: expectedQueries[0]}),
+      buildMockQueryTrigger({content: expectedQueries[1]}),
+      buildMockExecuteTrigger({
+        content: {
+          name: expectedExecutions[0].functionName,
+          params: expectedExecutions[0].params,
+        },
+      }),
+      buildMockExecuteTrigger({
+        content: {
+          name: expectedExecutions[1].functionName,
+          params: expectedExecutions[1].params,
+        },
+      }),
+      buildMockNotifyTrigger({content: expectedNotifications[0]}),
+      buildMockNotifyTrigger({content: expectedNotifications[1]}),
+    ];
+    const response = buildMockSearchResponse({
+      triggers,
+    });
+    const searchState = buildMockSearch({
+      response,
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = triggerReducer(state, action);
+
+    expect(finalState.redirectTo).toEqual(expectedRedirections[0]);
+
+    expect(finalState.query).toEqual(expectedQueries[0]);
+
+    expect(finalState.execute).toEqual(expectedExecutions[0]);
+    expect(finalState.executions).toEqual(expectedExecutions);
+
+    expect(finalState.notification).toEqual(expectedNotifications[0]);
+    expect(finalState.notifications).toEqual(expectedNotifications);
+  });
 });
