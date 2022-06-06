@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.65.0",
+  "version": "1.66.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -27,12 +27,12 @@
   "scripts": {
     "clean": "rimraf -rf dist/* headless/*",
     "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
-    "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
+    "build:locales": "node ./scripts/split-locales.js && node ./scripts/copy-dayjs-locales.js",
     "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
     "copy:headless": "node scripts/copy-headless.js",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
     "start:prod": "npx serve www -l 3333",
-    "test": "stencil test --spec",
+    "test": "npm run build:locales && stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
     "generate": "stencil generate",
     "cypress:test": "cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome",
@@ -52,8 +52,8 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@coveo/bueno": "0.35.1",
-    "@coveo/headless": "1.67.1",
+    "@coveo/bueno": "0.36.1",
+    "@coveo/headless": "1.68.1",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "2.15.2",
     "@stencil/store": "1.5.0",
