@@ -24,9 +24,7 @@
         }
       }
     ],
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "include": ["src", "types/jsx.d.ts"],
   "exclude": [
@@ -34,6 +32,5 @@
     "src/external-builds",
     "**/*.stories.tsx",
     "headless"
-  ],
-  "files": ["./node_modules/@applitools/eyes-cypress/index.d.ts"],
+  ]
 }
