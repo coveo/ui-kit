@@ -226,7 +226,7 @@ describe('Color Facet Test Suites', () => {
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2
       );
-      CommonFacetAssertions.assertFocusShowMore(ColorFacetSelectors);
+      CommonFacetAssertions.assertFocusFirstBoxValue(ColorFacetSelectors);
     });
     describe('verify analytics', () => {
       before(setupSelectShowMore);
@@ -258,7 +258,7 @@ describe('Color Facet Test Suites', () => {
           ColorFacetSelectors,
           true
         );
-        CommonFacetAssertions.assertFocusShowLess(ColorFacetSelectors);
+        CommonFacetAssertions.assertFocusFirstBoxValue(ColorFacetSelectors);
       });
     });
 
