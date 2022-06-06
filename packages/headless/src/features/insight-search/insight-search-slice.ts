@@ -17,7 +17,7 @@ function handleRejectedSearch(
   state: InsightSearchState,
   action: ReturnType<SearchAction['rejected']>
 ) {
-  const error = action.payload ?? null;
+  const error = action.payload ?? undefined;
   if (error) {
     state.response = getInsightSearchInitialState().response;
     state.results = [];
@@ -31,7 +31,7 @@ function handleFulfilledSearch(
   state: InsightSearchState,
   action: ReturnType<SearchAction['fulfilled']>
 ) {
-  state.error = null;
+  state.error = undefined;
   state.response = action.payload.response;
   state.queryExecuted = action.payload.queryExecuted;
   state.duration = action.payload.duration;

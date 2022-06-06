@@ -1,7 +1,7 @@
 import {
   InsightQueryResponse,
   SearchResult,
-  Facet,
+  AnyFacetResponse,
   FacetValue,
 } from '../api/service/insight/query/query-response';
 
@@ -29,7 +29,9 @@ export const buildMockSearchResult = (
   ...searchResult,
 });
 
-export const buildMockFacet = (facet: Partial<Facet> = {}): Facet => ({
+export const buildMockFacet = (
+  facet: Partial<AnyFacetResponse> = {}
+): AnyFacetResponse => ({
   field: '',
   indexScore: 0,
   moreValuesAvailable: false,

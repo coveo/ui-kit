@@ -1,5 +1,9 @@
 import {NumberOfResultsParam} from '../../../platform-service-params';
-import {FacetsParam, FirstResultParam, QueryParam} from '../../../search/search-api-params';
+import {
+  FacetsParam,
+  FirstResultParam,
+  QueryParam,
+} from '../../../search/search-api-params';
 import {
   baseInsightRequest,
   InsightParam,

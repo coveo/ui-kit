@@ -381,14 +381,14 @@ export interface InsightInterfaceSection {
 
 export interface InsightCaseContextSection {
   /**
-   * The insight case context
+   * The insight case context to use with the insight search query.
    */
   insightCaseContext: InsightCaseContextState;
 }
 
 export interface InsightSearchSection {
   /**
-   * The insight search
+   * The information related to the insight search endpoint.
    */
   insightSearch: InsightSearchState;
 }
