@@ -1,3 +1,5 @@
+import {AnyFacetResponse} from '../../../../features/facets/generic/interfaces/generic-facet-response';
+
 export interface InsightQueryResponse {
   results: SearchResult[];
   searchUid: string;
@@ -14,17 +16,4 @@ export interface SearchResult {
   uniqueId: string;
   hasHtmlVersion: boolean;
   percentScore: number;
-}
-
-export interface AnyFacetResponse {
-  field: string;
-  moreValuesAvailable: boolean;
-  values: FacetValue[];
-  indexScore: number;
-}
-
-export interface FacetValue {
-  value: string;
-  state: string;
-  numberOfResults: number;
 }
