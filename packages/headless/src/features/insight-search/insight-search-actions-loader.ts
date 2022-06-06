@@ -59,10 +59,17 @@ export interface InsightSearchActionCreaters {
   >;
 }
 
+/**
+ * Loads the `InsightSearch` reducer and returns possible action creators.
+ *
+ * @param engine - The headless engine.
+ * @returns An object holding the action creators.
+ */
 export function loadInsightSearchActions(
   engine: InsightEngine
 ): InsightSearchActionCreaters {
   engine.addReducers({insightSearch});
+
   return {
     insightExecuteSearch,
     insightFetchMoreResults,
