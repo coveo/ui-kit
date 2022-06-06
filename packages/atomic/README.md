@@ -84,6 +84,13 @@ Using Windows:
 setx APPLITOOLS_API_KEY *****
 ```
 
+Run the tests using either of these commands:
+
+```sh
+npm run cypress-visual:open
+npm run cypress-visual:test
+```
+
 ## Utilities
 
 ### Stencil decorators
