@@ -74,11 +74,11 @@ function getPackageDirectory(projectDirectory) {
 
 function quanticIsDependency() {
   const upperDirectories = __dirname.split(pathlib.sep);
-  const firstTwoUpperDirectories = upperDirectories.slice(
+  const firstUpperDirectories = upperDirectories.slice(
     upperDirectories.length - 5
   );
   return (
-    firstTwoUpperDirectories.join(pathlib.sep) ===
+    firstUpperDirectories.join(pathlib.sep) ===
     pathlib.join('node_modules', '@coveo', 'quantic', 'scripts', 'npm')
   );
 }
