@@ -3,11 +3,11 @@ import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
 
 import {
   dispatchSearchBoxSuggestionsEvent,
-  cleanUpString,
   SearchBoxSuggestionItem,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
+import {cleanUpString} from '../../../utils/string-utils';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.

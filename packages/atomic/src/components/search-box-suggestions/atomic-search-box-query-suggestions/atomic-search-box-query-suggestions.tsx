@@ -8,11 +8,11 @@ import {QuerySuggestionSection} from '@coveo/headless/dist/definitions/state/sta
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import {
   dispatchSearchBoxSuggestionsEvent,
-  cleanUpString,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
+import {cleanUpString} from '../../../utils/string-utils';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
