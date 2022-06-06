@@ -385,7 +385,7 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetSelectors,
           true
         );
-        CommonFacetAssertions.assertFocusShowLess(CategoryFacetSelectors);
+        CategoryFacetAssertions.assertFocusFirstChildValue();
       });
 
       describe('verify analytics', () => {
@@ -412,7 +412,7 @@ describe('Category Facet Test Suites', () => {
             CategoryFacetSelectors,
             false
           );
-          CommonFacetAssertions.assertFocusShowMore(CategoryFacetSelectors);
+          CategoryFacetAssertions.assertFocusFirstChildValue();
         });
 
         describe('verify analytics', () => {
