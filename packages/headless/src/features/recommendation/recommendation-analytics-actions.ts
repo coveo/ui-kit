@@ -1,3 +1,7 @@
+import {
+  RecommendationAnalyticsProvider,
+  StateNeededByRecommendationAnalyticsProvider,
+} from '../../api/analytics/recommendations-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   AnalyticsType,
@@ -10,7 +14,11 @@ import {
 export const logRecommendationUpdate = makeAnalyticsAction(
   'analytics/recommendation/update',
   AnalyticsType.Search,
-  (client) => client.logRecommendationInterfaceLoad()
+  (client) => client.logRecommendationInterfaceLoad(),
+  (s) =>
+    new RecommendationAnalyticsProvider(
+      s as StateNeededByRecommendationAnalyticsProvider
+    )
 );
 
 export const logRecommendationOpen = (result: Result) =>
@@ -23,5 +31,9 @@ export const logRecommendationOpen = (result: Result) =>
         partialRecommendationInformation(result, state),
         documentIdentifier(result)
       );
-    }
+    },
+    (s) =>
+      new RecommendationAnalyticsProvider(
+        s as StateNeededByRecommendationAnalyticsProvider
+      )
   )();

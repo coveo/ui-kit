@@ -1,5 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededByCaseAssistAnalytics} from '../../api/analytics/analytics';
+import {StateNeededByCaseAssistAnalytics} from '../../api/analytics/case-assist-analytics';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
 import {AsyncThunkAnalyticsOptions} from '../analytics/analytics-utils';
 import {
