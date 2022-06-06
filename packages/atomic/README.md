@@ -63,6 +63,25 @@ npm run cypress-hsp:open
 npm run cypress-hsp:test
 npm run cypress-hsp:test:firefox
 ```
+### Visual regression tests
+
+Visual regression test for the result templates use Applitools eyes. Results can ve viewed at
+https://eyes.applitools.com/app/test-results/.
+
+In order to run these locally, you will need to set an environment variable containing the Applitools api key.
+This key can be found by logging in to Applitools using the account `developers@qa.coveo.com` and clicking on **User** > **My Api Key**.
+
+When using Mac or Linux use a command like this in your terminal, `~/.bash-profile` or `~/.profile`:
+
+```sh
+export APPLITOOLS_API_KEY=*****
+```
+
+Using Windows:
+
+```bat
+setx APPLITOOLS_API_KEY *****
+```
 
 ## Utilities
 
