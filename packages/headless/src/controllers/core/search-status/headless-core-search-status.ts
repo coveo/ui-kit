@@ -9,13 +9,13 @@ import {
 } from '../../controller/headless-controller';
 
 export interface CoreSearchStatus extends Controller {
-  state: SearchStatusState;
+  state: CoreSearchStatusState;
 }
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchStatus` controller.
  */
-export interface SearchStatusState {
+export interface CoreSearchStatusState {
   /**
    * `true` if there is an error for the last executed query and `false` otherwise.
    */
