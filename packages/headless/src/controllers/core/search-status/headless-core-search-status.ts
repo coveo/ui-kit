@@ -1,17 +1,14 @@
-import {Controller} from '../controller/headless-controller';
-import {SearchSection} from '../../state/state-sections';
-import {search} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {buildCoreSearchStatus} from '../core/search-status/headless-core-search-status';
+import {CoreEngine} from '../../../app/engine';
+import {search} from '../../../app/reducers';
+import {firstSearchExecutedSelector} from '../../../features/search/search-selectors';
+import {SearchSection} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 
-/**
- * The `SearchStatus` controller provides information on the status of the search.
- */
-export interface SearchStatus extends Controller {
-  /**
-   * The state of the SearchStatus controller.
-   * */
+export interface CoreSearchStatus extends Controller {
   state: SearchStatusState;
 }
 
@@ -43,27 +40,33 @@ export interface SearchStatusState {
  * @param engine - The headless engine.
  * @returns A `SearchStatus` controller instance.
  * */
-export function buildSearchStatus(engine: SearchEngine): SearchStatus {
+export function buildCoreSearchStatus(engine: CoreEngine): CoreSearchStatus {
   if (!loadSearchStateReducers(engine)) {
     throw loadReducerError;
   }
 
-  const coreController = buildCoreSearchStatus(engine);
+  const controller = buildController(engine);
+  const getState = () => engine.state;
 
   return {
-    ...coreController,
+    ...controller,
 
     get state() {
+      const state = getState();
+
       return {
-        ...coreController.state,
+        hasError: state.search.error !== null,
+        isLoading: state.search.isLoading,
+        hasResults: !!state.search.results.length,
+        firstSearchExecuted: firstSearchExecutedSelector(state),
       };
     },
   };
 }
 
 function loadSearchStateReducers(
-  engine: SearchEngine
-): engine is SearchEngine<SearchSection> {
+  engine: CoreEngine
+): engine is CoreEngine<SearchSection> {
   engine.addReducers({search});
   return true;
 }

@@ -3,38 +3,19 @@ import {
   FieldsSection,
   SearchSection,
 } from '../../state/state-sections';
-import {buildController, Controller} from '../controller/headless-controller';
 import {fetchMoreResults} from '../../features/search/search-actions';
-import {registerFieldsToInclude} from '../../features/fields/fields-actions';
-import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
-import {validateOptions} from '../../utils/validate-payload';
-import {
-  buildSearchStatus,
-  SearchStatusState,
-} from '../search-status/headless-search-status';
+import {SearchStatusState} from '../search-status/headless-search-status';
 import {Result} from '../../api/search/search/result';
 import {configuration, fields, search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  buildCoreResultList,
+  CoreResultListOptions,
+} from '../core/result-list/headless-core-result-list';
+import {Controller} from '../controller/headless-controller';
 
-const optionsSchema = new Schema<ResultListOptions>({
-  fieldsToInclude: new ArrayValue({
-    required: false,
-    each: new StringValue<string>({
-      required: true,
-      emptyAllowed: false,
-    }),
-  }),
-});
-
-export interface ResultListOptions {
-  /**
-   * A list of indexed fields to include in the objects returned by the result list.
-   * These results are included in addition to the default fields.
-   * If this is left empty only the default fields are included.
-   */
-  fieldsToInclude?: string[];
-}
+export interface ResultListOptions extends CoreResultListOptions {}
 
 export interface ResultListProps {
   /**
@@ -101,80 +82,19 @@ export function buildResultList(
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
-  const searchStatus = buildSearchStatus(engine);
-  const {dispatch} = engine;
-  const getState = () => engine.state;
-
-  const options = validateOptions(
-    engine,
-    optionsSchema,
-    props?.options,
-    'buildResultList'
-  );
-
-  if (options.fieldsToInclude) {
-    dispatch(registerFieldsToInclude(options.fieldsToInclude));
-  }
-
-  const moreResultsAvailable = () =>
-    engine.state.search.results.length <
-    engine.state.search.response.totalCountFiltered;
-
-  let lastFetchCompleted = 0;
-  let consecutiveFetches = 0;
-  const maxConsecutiveFetches = 5;
-  const minDelayBetweenFetches = 200;
-  let errorLogged = false;
-
-  const triggerFetchMoreResult = () => {
-    if (engine.state.search.isLoading) {
-      return;
-    }
-
-    if (!moreResultsAvailable()) {
-      engine.logger.info(
-        'No more results are available for the result list to fetch.'
-      );
-      return;
-    }
-
-    const delayBetweenFetches = Date.now() - lastFetchCompleted;
-    if (delayBetweenFetches < minDelayBetweenFetches) {
-      consecutiveFetches++;
-      if (consecutiveFetches >= maxConsecutiveFetches) {
-        lastFetchCompleted = Date.now();
-        !errorLogged &&
-          engine.logger.error(
-            `The result list method "fetchMoreResults" execution prevented because it has been triggered consecutively ${maxConsecutiveFetches} times, with little delay. Please verify the conditions under which the function is called.`
-          );
-        errorLogged = true;
-        return;
-      }
-    } else {
-      consecutiveFetches = 0;
-    }
-
-    errorLogged = false;
-    dispatch(fetchMoreResults()).then(() => (lastFetchCompleted = Date.now()));
-  };
+  const coreController = buildCoreResultList(engine, {
+    ...props,
+    fetchMoreResultsActionCreator: fetchMoreResults,
+  });
 
   return {
-    ...controller,
+    ...coreController,
 
     get state() {
-      const state = getState();
-
       return {
-        ...searchStatus.state,
-        results: state.search.results,
-        searchUid: state.search.response.searchUid,
-        moreResultsAvailable: moreResultsAvailable(),
-        searchResponseId: state.search.searchResponseId,
+        ...coreController.state,
       };
     },
-
-    fetchMoreResults: triggerFetchMoreResult,
   };
 }
 
