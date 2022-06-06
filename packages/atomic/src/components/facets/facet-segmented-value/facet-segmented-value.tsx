@@ -20,11 +20,10 @@ export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (
   return (
     <li key={props.displayValue}>
       <Button
-        style="outline-bg-neutral"
+        style="square-neutral"
         part="value-box"
         onClick={() => props.onClick()}
-        class={`value-box flex box-border h-full items-center 
-        p-2 group hover:border-primary-light rounded-none ${
+        class={`value-box flex box-border h-full items-center p-2 group ${
           props.isSelected ? 'selected' : ''
         }`}
         ariaPressed={props.isSelected.toString()}
