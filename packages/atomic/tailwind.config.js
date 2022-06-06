@@ -4,6 +4,9 @@ module.exports = {
   content: ['./src/**/*.tsx'],
   theme: {
     extend: {
+      variants: {
+        textColor: ['group-hover']
+      },
       colors: {
         // Primary
         primary: 'var(--atomic-primary)',

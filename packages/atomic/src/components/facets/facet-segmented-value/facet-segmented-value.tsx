@@ -3,8 +3,7 @@ import {Button} from '../../common/button';
 import {FacetValueProps} from '../facet-common';
 
 export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (
-  props,
-  children
+  props
 ) => {
   const compactCount = new Intl.NumberFormat(props.i18n.language, {
     notation: 'compact',
@@ -24,12 +23,24 @@ export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (
         part="value-box"
         onClick={() => props.onClick()}
         class={`value-box flex box-border h-full items-center p-2 group ${
-          props.isSelected ? 'selected' : ''
+          props.isSelected
+            ? 'selected border-primary shadow-inner-primary'
+            : 'hover:border-primary-light focus-visible:border-primary-light'
         }`}
         ariaPressed={props.isSelected.toString()}
         ariaLabel={ariaLabel}
       >
-        {children}
+        <span
+          title={props.displayValue}
+          part="value-label"
+          class={`value-label truncate ${
+            props.isSelected
+              ? 'text-primary'
+              : 'group-hover:text-primary-light group-focus:text-primary'
+          }`}
+        >
+          {props.displayValue}
+        </span>
         <span
           title={count}
           part="value-count"

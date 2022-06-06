@@ -19,7 +19,6 @@ import {
 } from '@coveo/headless';
 import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
-import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
@@ -134,13 +133,7 @@ export class AtomicSegmentedFacet
         i18n={this.bindings.i18n}
         onClick={onClick}
         searchQuery={this.facetState.facetSearch.query}
-      >
-        <FacetValueLabelHighlight
-          displayValue={displayValue}
-          isSelected={isSelected}
-          searchQuery={this.facetState.facetSearch.query}
-        ></FacetValueLabelHighlight>
-      </FacetSegmentedValue>
+      ></FacetSegmentedValue>
     );
   }
 
