@@ -71,9 +71,18 @@ describe('Result Per Page Component', () => {
       shouldRenderErrorComponent(resultsPerPageComponent);
     });
 
-    it('should select the initialChoice correctly', () => {
-      setup('initial-choice=25');
-      ResultsPerPageSelectors.activeButton().should('have.value', 25);
+    describe('when the prop is valid', () => {
+      before(() => {
+        setup('initial-choice=25');
+      });
+
+      it('should select the initialChoice correctly', () => {
+        ResultsPerPageSelectors.activeButton().should('have.value', 25);
+      });
+
+      it('should not add the initial choice to the URL', () => {
+        cy.document().its('location').its('hash').should('be.empty');
+      });
     });
   });
 });
