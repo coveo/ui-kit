@@ -415,6 +415,11 @@ export class AtomicSearchInterface {
         hasNoResultsAfterInitialSearch
       );
 
+      this.host.classList.toggle(
+        'atomic-search-interface-error',
+        this.searchStatus.state.hasError
+      );
+
       if (
         this.searchStatus.state.firstSearchExecuted &&
         hasLoadingFlag(this.store, FirstSearchExecutedFlag)
