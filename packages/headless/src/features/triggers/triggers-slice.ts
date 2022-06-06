@@ -1,39 +1,47 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from '../search/search-actions';
-import {getTriggerInitialState} from './triggers-state';
 import {
-  isRedirectTrigger,
-  isQueryTrigger,
-  isExecuteTrigger,
-  isNotifyTrigger,
-} from './../../api/search/trigger';
+  FunctionExecutionTrigger,
+  getTriggerInitialState,
+} from './triggers-state';
 
 export const triggerReducer = createReducer(
   getTriggerInitialState(),
   (builder) =>
     builder.addCase(executeSearch.fulfilled, (state, action) => {
-      const redirectTriggers =
-        action.payload.response.triggers.filter(isRedirectTrigger);
-      state.redirectTo = redirectTriggers.length
-        ? redirectTriggers[0].content
-        : '';
+      const redirectTriggers: string[] = [];
+      const queryTriggers: string[] = [];
+      const executeTriggers: FunctionExecutionTrigger[] = [];
+      const notifyTriggers: string[] = [];
 
-      const queryTriggers =
-        action.payload.response.triggers.filter(isQueryTrigger);
-      state.query = queryTriggers.length ? queryTriggers[0].content : '';
+      action.payload.response.triggers.forEach((trigger) => {
+        switch (trigger.type) {
+          case 'redirect':
+            redirectTriggers.push(trigger.content);
+            break;
+          case 'query':
+            queryTriggers.push(trigger.content);
+            break;
+          case 'execute':
+            executeTriggers.push({
+              functionName: trigger.content.name,
+              params: trigger.content.params,
+            });
+            break;
+          case 'notify':
+            notifyTriggers.push(trigger.content);
+            break;
+        }
+      });
 
-      const executeTriggers =
-        action.payload.response.triggers.filter(isExecuteTrigger);
-      state.execute = executeTriggers.length
-        ? {
-            functionName: executeTriggers[0].content.name,
-            params: executeTriggers[0].content.params,
-          }
-        : {functionName: '', params: []};
-      const notifyTriggers =
-        action.payload.response.triggers.filter(isNotifyTrigger);
-      state.notification = notifyTriggers.length
-        ? notifyTriggers[0].content
-        : '';
+      state.redirectTo = redirectTriggers[0] ?? '';
+
+      state.query = queryTriggers[0] ?? '';
+
+      state.execute = executeTriggers[0] ?? {functionName: '', params: []};
+      state.executions = executeTriggers;
+
+      state.notification = notifyTriggers[0] ?? '';
+      state.notifications = notifyTriggers;
     })
 );
