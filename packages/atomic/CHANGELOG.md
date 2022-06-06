@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.67.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.66.1...@coveo/atomic@1.67.0) (2022-06-06)
+
+
+### Features
+
+* **headless:** add insight "get interface" action ([#2036](https://github.com/coveo/ui-kit/issues/2036)) ([942dfe8](https://github.com/coveo/ui-kit/commit/942dfe8d72de29ad4b2ac619dc2f9704148325d3))
+
+
+
+
+
 ## [1.66.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.66.0...@coveo/atomic@1.66.1) (2022-06-03)
 
 
