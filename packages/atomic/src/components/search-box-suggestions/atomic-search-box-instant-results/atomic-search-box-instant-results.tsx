@@ -17,7 +17,7 @@ import {
   tag: 'atomic-search-box-instant-results',
   shadow: true,
 })
-export class AtomicSearchBoxRecentQueries {
+export class AtomicSearchBoxInstantResults {
   private bindings!: SearchBoxSuggestionsBindings;
 
   @Element() private host!: HTMLElement;

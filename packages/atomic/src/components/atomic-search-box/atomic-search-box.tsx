@@ -59,7 +59,8 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
-  private listRefs: HTMLElement[] = [];
+  private leftPanelRef: HTMLElement | undefined;
+  private rightPanelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
@@ -212,8 +213,9 @@ export class AtomicSearchBox {
     }
 
     return (
-      this.listRefs[0]?.querySelector(`#${this.activeDescendant}`) ||
-      this.listRefs[1]?.querySelector(`#${this.activeDescendant}`)
+      this.leftPanelRef?.querySelector(`#${this.activeDescendant}`) ||
+      this.rightPanelRef?.querySelector(`#${this.activeDescendant}`) ||
+      null
     );
   }
 
@@ -251,11 +253,13 @@ export class AtomicSearchBox {
   }
 
   private get panelInFocus() {
-    return (
-      this.listRefs.find((ref) =>
-        ref?.contains(this.activeDescendantElement)
-      ) || this.listRefs.find((panel) => panel)
-    );
+    if (this.leftPanelRef?.contains(this.activeDescendantElement)) {
+      return this.leftPanelRef;
+    }
+    if (this.rightPanelRef?.contains(this.activeDescendantElement)) {
+      return this.rightPanelRef;
+    }
+    return this.leftPanelRef || this.rightPanelRef;
   }
 
   private getSuggestionElements(suggestions: SearchBoxSuggestions[]) {
@@ -293,7 +297,7 @@ export class AtomicSearchBox {
     this.updateQueryFromSuggestion();
   }
 
-  private focusPanel(panel: HTMLElement) {
+  private focusPanel(panel: HTMLElement | undefined) {
     if (this.panelInFocus === panel) {
       return;
     }
@@ -460,11 +464,11 @@ export class AtomicSearchBox {
         break;
       case 'ArrowRight':
         e.preventDefault();
-        this.focusPanel(this.listRefs[1]);
+        this.focusPanel(this.rightPanelRef);
         break;
       case 'ArrowLeft':
         e.preventDefault();
-        this.focusPanel(this.listRefs[0]);
+        this.focusPanel(this.leftPanelRef);
         break;
     }
   }
@@ -596,7 +600,7 @@ export class AtomicSearchBox {
             el?.replaceChildren(item.content);
           }
         }}
-        {...(isSuggestionElement(item) && {
+        {...(hasQuery && {
           role: 'option',
           'data-query': item.query,
           'aria-selected': `${isSelected}`,
@@ -641,7 +645,7 @@ export class AtomicSearchBox {
             part="suggestions suggestions-left"
             aria-label={this.bindings.i18n.t('query-suggestion-list')}
             ref={(el) => {
-              this.listRefs[0] = el!;
+              this.leftPanelRef = el!;
             }}
             class="flex-grow"
           >
@@ -660,7 +664,7 @@ export class AtomicSearchBox {
             part="suggestions suggestions-right"
             aria-label={this.bindings.i18n.t('query-suggestion-list')}
             ref={(el) => {
-              this.listRefs[1] = el!;
+              this.rightPanelRef = el!;
             }}
             class="flex-grow"
           >
