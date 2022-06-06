@@ -28,6 +28,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
         }`}
         ariaPressed={props.isSelected.toString()}
         ariaLabel={ariaLabel}
+        ref={props.buttonRef}
       >
         {children}
         <span

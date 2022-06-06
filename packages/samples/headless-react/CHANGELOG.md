@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.55.1](https://github.com/coveo/ui-kit/compare/headless-react@0.55.0...headless-react@0.55.1) (2022-06-06)
+
+
+### Bug Fixes
+
+* **atomic:** made facet values focus when pressing show more/show less ([#2043](https://github.com/coveo/ui-kit/issues/2043)) ([1e77f3e](https://github.com/coveo/ui-kit/commit/1e77f3e8bbd23c97f240e11685fcabb5029bb50d))
+
+
+
+
+
+# [0.55.0](https://github.com/coveo/ui-kit/compare/headless-react@0.54.1...headless-react@0.55.0) (2022-06-06)
+
+
+### Features
+
+* **headless:** add insight "get interface" action ([#2036](https://github.com/coveo/ui-kit/issues/2036)) ([942dfe8](https://github.com/coveo/ui-kit/commit/942dfe8d72de29ad4b2ac619dc2f9704148325d3))
+
+
+
+
+
+## [0.54.1](https://github.com/coveo/ui-kit/compare/headless-react@0.54.0...headless-react@0.54.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **atomic:** add getAnimations() check ([#2040](https://github.com/coveo/ui-kit/issues/2040)) ([47161a3](https://github.com/coveo/ui-kit/commit/47161a3ec2ef14b9c454a04bad6abbdd21f0ef0d))
+
+
+
+
+
 # [0.54.0](https://github.com/coveo/ui-kit/compare/headless-react@0.53.1...headless-react@0.54.0) (2022-06-02)
 
 

@@ -110,6 +110,7 @@ export {
   EcommerceDefaultFieldsToInclude,
 } from './features/fields/fields-state';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
+export type {FunctionExecutionTrigger} from './features/triggers/triggers-state';
 export type {HighlightKeyword} from './utils/highlight';
 export {VERSION} from './utils/version';
 export type {

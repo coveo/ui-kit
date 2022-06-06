@@ -1,3 +1,5 @@
+import {listenOnce} from './event-utils';
+
 interface RippleOptions {
   color: string;
   /**
@@ -48,9 +50,7 @@ export function createRipple(event: MouseEvent, options: RippleOptions) {
 }
 
 async function cleanupAnimationOnFinish(ripple: HTMLSpanElement) {
-  const animationsFinished = ripple
-    .getAnimations()
-    .map((anim) => new Promise<void>((res) => (anim.onfinish = () => res())));
-  await Promise.all(animationsFinished);
-  ripple && ripple.remove();
+  listenOnce(ripple, 'animationend', () => {
+    ripple && ripple.remove();
+  });
 }
