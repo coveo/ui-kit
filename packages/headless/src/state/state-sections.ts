@@ -41,6 +41,7 @@ import {DocumentSuggestionState} from '../features/document-suggestion/document-
 import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-state';
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
+import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
 
 export interface QuerySection {
   /**
@@ -365,4 +366,11 @@ export interface InsightConfigurationSection {
    * The insight engine configuration.
    */
   insightConfiguration: InsightConfigurationState;
+}
+
+export interface InsightInterfaceSection {
+  /**
+   * The insight interface.
+   */
+  insightInterface: InsightInterfaceState;
 }

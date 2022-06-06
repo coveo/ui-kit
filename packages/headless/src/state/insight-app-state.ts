@@ -1,7 +1,13 @@
 import {
   ConfigurationSection,
   InsightConfigurationSection,
+  InsightInterfaceSection,
+  SearchHubSection,
+  VersionSection,
 } from './state-sections';
 
 export type InsightAppState = ConfigurationSection &
-  InsightConfigurationSection;
+  VersionSection &
+  InsightConfigurationSection &
+  SearchHubSection &
+  InsightInterfaceSection;
