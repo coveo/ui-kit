@@ -26,7 +26,7 @@ import {setInsightConfiguration} from '../../features/insight-configuration/insi
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/insight-search/insight-search-selectors';
-import {insightExecuteSearch} from '../../features/insight-search/insight-search-actions';
+import { insightExecuteSearch } from '../../features/insight-search/insight-search-actions';
 
 export type {InsightEngineConfiguration};
 
@@ -113,8 +113,8 @@ export function buildInsightEngine(
         return;
       }
 
-      const action = insightExecuteSearch(analyticsEvent);
-      engine.dispatch(action);
+      insightExecuteSearch(analyticsEvent);
+      //engine.dispatch(action);
     },
   };
 }

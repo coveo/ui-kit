@@ -38,8 +38,6 @@ export interface InsightExecuteSearchThunkReturn {
   duration: number;
   /** The query that was executed. */
   queryExecuted: string;
-  /** The original query that was performed when an automatic correction is executed.*/
-  originalQuery: string;
   /** The analytics action to log after the query. */
   analyticsAction: SearchAction;
 }
@@ -105,7 +103,6 @@ export const insightExecuteSearch = createAsyncThunk<
     return {
       ...fetched,
       response: fetched.response.success,
-      originalQuery: getOriginalQuery(state),
       analyticsAction,
     };
   }
@@ -135,7 +132,6 @@ export const insightFetchMoreResults = createAsyncThunk<
     return {
       ...fetched,
       response: fetched.response.success,
-      originalQuery: getOriginalQuery(state),
       analyticsAction: logFetchMoreResults(),
     };
   }
@@ -168,7 +164,6 @@ export const insightFetchFacetValues = createAsyncThunk<
     return {
       ...fetched,
       response: fetched.response.success,
-      originalQuery: getOriginalQuery(state),
       analyticsAction,
     };
   }
@@ -223,9 +218,6 @@ const buildInsightFetchFacetValuesRequest = (
     numberOfResults: 0,
   };
 };
-
-const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
-  state.query?.q || '';
 
 export const logFetchMoreResults = makeAnalyticsAction(
   'search/logFetchMoreResults',

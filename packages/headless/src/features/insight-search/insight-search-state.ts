@@ -17,7 +17,7 @@ export interface InsightSearchState {
 
 export const getInsightSearchInitialState = (): InsightSearchState => ({
   isLoading: false,
-  error: null,
+  error: undefined,
   response: {
     facets: [],
     results: [],
@@ -40,13 +40,3 @@ export const getInsightCaseContextSearchInitialState =
   (): InsightCaseContextState => ({
     caseContext: {},
   });
-
-export interface PaginationState {
-  firstResult: number;
-  numberOfResults: number;
-}
-
-export const getPaginationInitialState = (): PaginationState => ({
-  firstResult: 0,
-  numberOfResults: 10
-});

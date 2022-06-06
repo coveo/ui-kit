@@ -2,8 +2,8 @@ export interface InsightQueryResponse {
   results: SearchResult[];
   searchUid: string;
   totalCount: number;
-  executionReport?: Record<string, unknown> | null;
-  facets: Facet[];
+  executionReport?: Record<string, unknown>;
+  facets: AnyFacetResponse[];
 }
 
 export interface SearchResult {
@@ -16,7 +16,7 @@ export interface SearchResult {
   percentScore: number;
 }
 
-export interface Facet {
+export interface AnyFacetResponse {
   field: string;
   moreValuesAvailable: boolean;
   values: FacetValue[];
