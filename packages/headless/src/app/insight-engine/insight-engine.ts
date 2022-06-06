@@ -10,7 +10,7 @@ import {
 } from '../engine';
 import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments';
 import {buildLogger} from '../logger';
-import {insightConfiguration} from '../reducers';
+import {insightConfiguration, insightInterface, searchHub} from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   InsightEngineConfiguration,
@@ -23,6 +23,8 @@ export type {InsightEngineConfiguration};
 
 const insightEngineReducers = {
   insightConfiguration,
+  insightInterface,
+  searchHub,
 };
 type InsightEngineReducers = typeof insightEngineReducers;
 
