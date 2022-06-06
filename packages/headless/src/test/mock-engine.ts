@@ -149,12 +149,17 @@ export function buildMockCaseAssistEngine(
 
 export interface MockInsightEngine
   extends InsightEngine<InsightAppState>,
-    MockEngine {}
+    MockEngine {
+    }
 
 export function buildMockInsightEngine(
   config: Partial<InsightEngine<InsightAppState>> = {}
 ): MockInsightEngine {
-  return buildMockCoreEngine(config, buildMockInsightState);
+  const engine = buildMockCoreEngine(config, buildMockInsightState);
+  return {
+    ...engine,
+    executeFirstSearch: jest.fn(),
+  }
 }
 
 interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}

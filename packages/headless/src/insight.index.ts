@@ -21,6 +21,7 @@ export type {LogLevel} from './app/logger';
 
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader';
+export * from './features/insight-search/insight-search-actions-loader';
 
 // Controllers
 export type {
@@ -30,5 +31,6 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
+export type {InsightSearchState} from './features/insight-search/insight-search-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';

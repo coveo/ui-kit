@@ -3,10 +3,10 @@ export interface InsightQueryResponse {
   searchUid: string;
   totalCount: number;
   executionReport?: Record<string, unknown>;
-  facets: Facet[];
+  facets: AnyFacetResponse[];
 }
 
-interface SearchResult {
+export interface SearchResult {
   title: string;
   clickUri: string;
   excerpt: string;
@@ -16,14 +16,14 @@ interface SearchResult {
   percentScore: number;
 }
 
-interface Facet {
+export interface AnyFacetResponse {
   field: string;
   moreValuesAvailable: boolean;
   values: FacetValue[];
   indexScore: number;
 }
 
-interface FacetValue {
+export interface FacetValue {
   value: string;
   state: string;
   numberOfResults: number;
