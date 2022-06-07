@@ -11,11 +11,6 @@ import {getSearchInitialState} from '../../features/search/search-state';
 import {
   ConfigurationSection,
   ContextSection,
-  FacetSection,
-  InsightCaseContextSection,
-  InsightConfigurationSection,
-  InsightSearchSection,
-  PaginationSection,
   PipelineSection,
   ProductListingSection,
   QuerySection,
@@ -51,16 +46,6 @@ export class SearchAnalyticsProvider
   constructor(private state: StateNeededBySearchAnalyticsProvider) {
     super(state);
   }
-
-export type StateNeededByInsightAnalytics = ConfigurationSection &
-  InsightConfigurationSection &
-  Partial<
-    InsightCaseContextSection &
-      InsightSearchSection &
-      QuerySection &
-      FacetSection &
-      PaginationSection
-  >;
 
   public getFacetState() {
     return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.state));

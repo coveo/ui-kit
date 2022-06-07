@@ -13,15 +13,7 @@ import {
   getInsightSearchInitialState,
   InsightSearchState,
 } from './insight-search-state';
-import {
-  buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../test/mock-engine';
-import {buildMockInsightState} from '../../test/mock-insight-state';
-import {PlatformClient} from '../../api/platform-client';
-
-jest.mock('../../api/platform-client');
-let e: MockInsightEngine;
+import {buildMockFacetResponse} from '../../test/mock-facet-response';
 
 describe('insight search slice', () => {
   let state: InsightSearchState;
@@ -141,33 +133,14 @@ describe('insight search slice', () => {
       expect(finalState.error).toEqual(undefined);
     });
 
-    it('when the action rejected is received, it should dispatch a logQueryError action', async () => {
-      e = buildMockInsightEngine({state: buildMockInsightState()});
-      PlatformClient.call = jest.fn().mockImplementation(() => {
-        const body = JSON.stringify({
-          message: 'message',
-          statusCode: 500,
-          type: 'type',
-        });
-        const response = new Response(body);
-
-        return Promise.resolve(response);
-      });
-      await e.dispatch(insightExecuteSearch(logSearchboxSubmit()));
-      expect(e.actions).toContainEqual(
-        expect.objectContaining({
-          type: 'search/queryError/pending',
-        })
-      );
-    });
-
-    it('set the isloading state to true during executeSearch.pending', () => {
+    it('update state during executeSearch.pending', () => {
       const pendingAction = insightExecuteSearch.pending(
         'asd',
         logSearchboxSubmit()
       );
       const finalState = insightSearchReducer(state, pendingAction);
       expect(finalState.isLoading).toBe(true);
+      expect(finalState.requestId).toBe(pendingAction.meta.requestId);
     });
   });
 
@@ -216,7 +189,42 @@ describe('insight search slice', () => {
       expect(finalState.isLoading).toBe(false);
       expect(finalState.error).toEqual(err);
     });
+
+    it('update state during fetchMoreResults.pending', () => {
+      const pendingAction = insightFetchMoreResults.pending('asd');
+      const finalState = insightSearchReducer(state, pendingAction);
+      expect(finalState.isLoading).toBe(true);
+      expect(finalState.requestId).toBe(pendingAction.meta.requestId);
+    });
   });
 
-  describe('insightFetchFacetValues', () => {});
+  describe('insightFetchFacetValues', () => {
+    it('updates the facet state', () => {
+      const response = buildMockInsightQueryResponse({
+        facets: [buildMockFacetResponse()],
+      });
+      const initialState = buildMockInsightSearch({
+        response,
+      });
+      const action = insightFetchMoreResults.fulfilled(initialState, '');
+
+      const finalState = insightSearchReducer(state, action);
+      expect(finalState.response.facets).toEqual(response.facets);
+    });
+
+    it('updates the searchUid, but not the searchResponseId', () => {
+      const response = buildMockInsightQueryResponse({
+        facets: [buildMockFacetResponse()],
+      });
+      const initialState = buildMockInsightSearch({
+        response,
+        searchResponseId: 'test',
+      });
+      const action = insightFetchMoreResults.fulfilled(initialState, '');
+
+      const finalState = insightSearchReducer(state, action);
+      expect(finalState.response.searchUid).toEqual(response.searchUid);
+      expect(finalState.searchResponseId).not.toEqual('test');
+    });
+  });
 });
