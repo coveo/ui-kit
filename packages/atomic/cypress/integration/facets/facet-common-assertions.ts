@@ -27,6 +27,13 @@ export interface FacetWithLinkSelector extends ComponentSelector {
   idleLinkValueLabel: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }
 
+export interface FacetWithBoxSelector extends ComponentSelector {
+  selectedBoxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  idleBoxValue: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  boxValueWithText: (text: string) => Cypress.Chainable<JQuery<HTMLElement>>;
+  idleBoxValueLabel: () => Cypress.Chainable<JQuery<HTMLElement>>;
+}
+
 export interface FacetWithSearchSelector extends ComponentSelector {
   searchInput: () => Cypress.Chainable<JQuery<HTMLElement>>;
   searchClearButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
@@ -287,18 +294,20 @@ export function assertFocusHeader(BaseFacetSelector: BaseFacetSelector) {
   });
 }
 
-export function assertFocusShowMore(
-  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector
+export function assertFocusFirstCheckboxValue(
+  FacetWithShowMoreLessSelector: FacetWithCheckboxSelector
 ) {
-  it('should focus on the show more button', () => {
-    FacetWithShowMoreLessSelector.showMoreButton().should('be.focused');
+  it('should focus on the first value', () => {
+    FacetWithShowMoreLessSelector.idleCheckboxValue()
+      .first()
+      .should('be.focused');
   });
 }
 
-export function assertFocusShowLess(
-  FacetWithShowMoreLessSelector: FacetWithShowMoreLessSelector
+export function assertFocusFirstBoxValue(
+  FacetWithShowMoreLessSelector: FacetWithBoxSelector
 ) {
-  it('should focus on the show less button', () => {
-    FacetWithShowMoreLessSelector.showLessButton().should('be.focused');
+  it('should focus on the first value', () => {
+    FacetWithShowMoreLessSelector.idleBoxValue().first().should('be.focused');
   });
 }
