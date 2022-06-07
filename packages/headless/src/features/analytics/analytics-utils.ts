@@ -13,13 +13,6 @@ import {
 } from '@coveo/bueno';
 import {Raw} from '../../api/search/search/raw';
 import {
-  AnalyticsProvider,
-  configureAnalytics,
-  configureCaseAssistAnalytics,
-  StateNeededByAnalyticsProvider,
-  StateNeededByCaseAssistAnalytics,
-} from '../../api/analytics/analytics';
-import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
   CaseAssistClient,
@@ -36,6 +29,15 @@ import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {ResultWithFolding} from '../folding/folding-slice';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
+import {
+  configureAnalytics,
+  SearchAnalyticsProvider,
+  StateNeededBySearchAnalyticsProvider,
+} from '../../api/analytics/search-analytics';
+import {
+  configureCaseAssistAnalytics,
+  StateNeededByCaseAssistAnalytics,
+} from '../../api/analytics/case-assist-analytics';
 
 export enum AnalyticsType {
   Search,
@@ -46,7 +48,7 @@ export enum AnalyticsType {
 export type SearchAction = AsyncThunkAction<
   {analyticsType: AnalyticsType.Search},
   void | {},
-  AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
 >;
 
 export type CustomAction = AsyncThunkAction<
@@ -65,7 +67,7 @@ const searchPageState = (getState: () => unknown) =>
   getState() as SearchAppState;
 
 export interface AsyncThunkAnalyticsOptions<
-  T extends Partial<StateNeededByAnalyticsProvider>
+  T extends Partial<StateNeededBySearchAnalyticsProvider>
 > {
   state: T;
   extra: ThunkExtraArguments;
@@ -80,12 +82,12 @@ export const makeAnalyticsAction = <T extends AnalyticsType>(
   ) => Promise<void | SearchEventResponse> | void,
   provider: (state: Partial<SearchAppState>) => SearchPageClientProvider = (
     s
-  ) => new AnalyticsProvider(s as StateNeededByAnalyticsProvider)
+  ) => new SearchAnalyticsProvider(s as StateNeededBySearchAnalyticsProvider)
 ) => {
   return createAsyncThunk<
     {analyticsType: T},
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >(
     prefix,
     async (
@@ -116,7 +118,7 @@ export const makeNoopAnalyticsAction = <T extends AnalyticsType>(
   return createAsyncThunk<
     {analyticsType: T},
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >('analytics/noop', async () => {
     return {analyticsType};
   });
