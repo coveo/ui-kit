@@ -207,6 +207,13 @@ export class AtomicSearchBox {
     this.activeDescendant = activeDescendant;
   }
 
+  private updateActiveDescendantWithHistory(activeDescendant = '') {
+    const newPrevDescendantElement = this.activeDescendantElement;
+
+    this.updateActiveDescendant(activeDescendant);
+    this.previousActiveDescendantElement = newPrevDescendantElement;
+  }
+
   private get activeDescendantElement(): HTMLLIElement | null {
     if (!this.hasActiveDescendant) {
       return null;
@@ -302,16 +309,14 @@ export class AtomicSearchBox {
       return;
     }
     if (panel && panel.firstElementChild) {
-      const newPrevDescendantElement = this.activeDescendantElement;
-      const panelHadActiveDescendant =
+      const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
-      this.updateActiveDescendant(
-        panelHadActiveDescendant
+      this.updateActiveDescendantWithHistory(
+        panelHasActiveDescendant
           ? this.previousActiveDescendantElement!.id
           : panel.firstElementChild.id
       );
-      this.previousActiveDescendantElement = newPrevDescendantElement;
     }
   }
 
@@ -595,7 +600,7 @@ export class AtomicSearchBox {
           this.clearSuggestions();
         }}
         onMouseOver={() => {
-          this.updateActiveDescendant(id);
+          this.updateActiveDescendantWithHistory(id);
           if (isSuggestionElement(item) && item.query) {
             this.updateSuggestedQuery(item.query);
           }
