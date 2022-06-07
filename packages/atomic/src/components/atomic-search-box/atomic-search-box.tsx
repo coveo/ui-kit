@@ -364,10 +364,10 @@ export class AtomicSearchBox {
       this.rightSuggestions
     );
 
-    const defaultSuggestionQ =
+    const defaultSuggestedQ =
       this.allSuggestionElements.find(isSuggestionElement)?.query || '';
 
-    this.updateSuggestedQuery(defaultSuggestionQ);
+    this.updateSuggestedQuery(defaultSuggestedQ);
     this.updateAriaMessage();
   }
 
@@ -414,32 +414,37 @@ export class AtomicSearchBox {
     );
   }
 
-  private isPanelInFocus(panel: 'right' | 'left') {
+  private isPanelInFocus(
+    panel: HTMLElement | undefined,
+    query?: string
+  ): boolean {
     if (!this.activeDescendantElement) {
       return false;
     }
-    return this.activeDescendantElement
-      ?.closest('ul')
-      ?.getAttribute('part')
-      ?.includes(`suggestions-${panel}`);
+
+    if (query) {
+      return !!panel?.querySelector(`li[data-query="${query}"]`);
+    }
+    return this.activeDescendantElement?.closest('ul') === panel;
   }
 
   private updateQueryFromSuggestion() {
-    const query = this.activeDescendantElement?.getAttribute('data-query');
-    if (query && this.searchBoxState.value !== query) {
-      this.updateQuery(query);
-      this.updateSuggestedQuery(query);
+    const suggestedQuery =
+      this.activeDescendantElement?.getAttribute('data-query');
+    if (suggestedQuery && this.searchBoxState.value !== suggestedQuery) {
+      this.updateQuery(suggestedQuery);
+      this.updateSuggestedQuery(suggestedQuery);
     }
   }
 
-  private updateSuggestionElements() {
-    if (!this.isPanelInFocus('left')) {
+  private updateSuggestionElements(query: string) {
+    if (!this.isPanelInFocus(this.leftPanelRef, query)) {
       this.leftSuggestionElements = this.getSuggestionElements(
         this.leftSuggestions
       );
     }
 
-    if (!this.isPanelInFocus('right')) {
+    if (!this.isPanelInFocus(this.rightPanelRef, query)) {
       this.rightSuggestionElements = this.getSuggestionElements(
         this.rightSuggestions
       );
@@ -611,19 +616,19 @@ export class AtomicSearchBox {
     );
   }
 
-  private async updateSuggestedQuery(q: string) {
+  private async updateSuggestedQuery(suggestedQuery: string) {
     await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(
           suggestion.onSuggestedQueryChange
-            ? suggestion.onSuggestedQueryChange(q)
+            ? suggestion.onSuggestedQueryChange(suggestedQuery)
             : Promise.resolve(),
           this.suggestionTimeout
         )
       )
     );
-    this.suggestedQuery = q;
-    this.updateSuggestionElements();
+    this.suggestedQuery = suggestedQuery;
+    this.updateSuggestionElements(suggestedQuery);
   }
 
   private renderSuggestions() {
