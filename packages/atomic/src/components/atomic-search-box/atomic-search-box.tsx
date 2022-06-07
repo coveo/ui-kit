@@ -1,6 +1,15 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Listen,
+  Watch,
+  VNode,
+  Element,
+} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -17,7 +26,7 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {Button} from '../common/button';
-import {randomID} from '../../utils/utils';
+import {once, randomID} from '../../utils/utils';
 import {
   isDividerElement,
   isSuggestionElement,
@@ -29,6 +38,10 @@ import {
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
 import {promiseTimeout} from '../../utils/promise-utils';
+import {
+  DEFAULT_MOBILE_BREAKPOINT,
+  updateBreakpoints,
+} from '../../utils/replace-breakpoint';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -64,6 +77,7 @@ export class AtomicSearchBox {
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('searchBox')
   @State()
@@ -78,6 +92,17 @@ export class AtomicSearchBox {
   @State() private rightSuggestions: SearchBoxSuggestions[] = [];
   @State() private rightSuggestionElements: SearchBoxSuggestionItem[] = [];
 
+  private searchLayout: HTMLAtomicSearchLayoutElement | null = null;
+  private get isMobile() {
+    return (
+      window.innerWidth <=
+      Number(
+        (
+          this.searchLayout?.mobileBreakpoint || DEFAULT_MOBILE_BREAKPOINT
+        ).match(/\d*/)?.[0]
+      )
+    );
+  }
   /**
    * The amount of queries displayed when the user interacts with the search box.
    * By default, a mix of query suggestions and recent queries will be shown.
@@ -106,6 +131,7 @@ export class AtomicSearchBox {
   protected ariaMessage!: string;
 
   public initialize() {
+    this.searchLayout = this.host.closest('atomic-search-layout');
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
 
@@ -186,6 +212,7 @@ export class AtomicSearchBox {
       getSuggestions: () => this.suggestions,
     };
   }
+  private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   private get popupId() {
     return `${this.id}-popup`;
@@ -581,9 +608,11 @@ export class AtomicSearchBox {
         id={id}
         key={item.key}
         part={this.makeSuggestionPart(isSelected, isDivider, hasQuery)}
-        class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
+        class={`flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
+        // TODO: ideally would replace the below with the min-h-[40px] class above
+        style={{minHeight: '40px'}}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
           item.onSelect && item.onSelect();
@@ -612,18 +641,20 @@ export class AtomicSearchBox {
   }
 
   private async updateSuggestedQuery(q: string) {
-    await Promise.allSettled(
-      this.suggestions.map((suggestion) =>
-        promiseTimeout(
-          suggestion.onSuggestedQueryChange
-            ? suggestion.onSuggestedQueryChange(q)
-            : Promise.resolve(),
-          this.suggestionTimeout
+    if (!this.isMobile) {
+      await Promise.allSettled(
+        this.suggestions.map((suggestion) =>
+          promiseTimeout(
+            suggestion.onSuggestedQueryChange
+              ? suggestion.onSuggestedQueryChange(q)
+              : Promise.resolve(),
+            this.suggestionTimeout
+          )
         )
-      )
-    );
-    this.suggestedQuery = q;
-    this.updateSuggestionElements();
+      );
+      this.suggestedQuery = q;
+      this.updateSuggestionElements();
+    }
   }
 
   private renderSuggestions() {
@@ -666,7 +697,9 @@ export class AtomicSearchBox {
             ref={(el) => {
               this.rightPanelRef = el!;
             }}
-            class="flex-grow"
+            class="flex-grow basis-1/2"
+            // TODO: ideally would replace the below with the basis-1/2 class above
+            style={{flexBasis: '50%'}}
           >
             {this.rightSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
@@ -704,6 +737,8 @@ export class AtomicSearchBox {
   }
 
   public render() {
+    this.updateBreakpoints();
+
     return [
       <div
         part="wrapper"
