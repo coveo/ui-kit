@@ -600,7 +600,13 @@ export class AtomicSearchBox {
           this.clearSuggestions();
         }}
         onMouseOver={() => {
-          this.updateActiveDescendantWithHistory(id);
+          const thisPanel =
+            side === 'left' ? this.leftPanelRef : this.rightPanelRef;
+          if (this.panelInFocus === thisPanel) {
+            this.updateActiveDescendant(id);
+          } else {
+            this.updateActiveDescendantWithHistory(id);
+          }
           if (isSuggestionElement(item) && item.query) {
             this.updateSuggestedQuery(item.query);
           }
