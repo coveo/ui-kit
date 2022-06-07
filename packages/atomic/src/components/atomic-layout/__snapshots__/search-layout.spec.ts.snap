@@ -7,11 +7,11 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 @media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {
         grid-template-areas:
-          '. .                     atomic-section-search .'
-          '. atomic-section-main atomic-section-main   .';
+        '. .                     atomic-section-search .'
+        '. atomic-section-main   atomic-section-main   .';
         grid-template-columns: 
           1fr minmax(17rem, 22rem) minmax(50%, 70rem) 1fr;
-          column-gap: var(--atomic-layout-spacing-x);
+        column-gap: var(--atomic-layout-spacing-x);
       }
 
       atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc {
@@ -21,7 +21,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
           '. atomic-section-facets .                     .';
       }
 
-      atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
         display: block;
       }
     }"
@@ -56,11 +56,11 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
 @media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {
         grid-template-areas:
-          '. .                     atomic-section-search .'
-          '. atomic-section-main atomic-section-main   .';
+        '. .                     atomic-section-search .'
+        '. atomic-section-main   atomic-section-main   .';
         grid-template-columns: 
           1fr minmax(250px, 300px) minmax(300px, 1200px) 1fr;
-          column-gap: var(--atomic-layout-spacing-x);
+        column-gap: var(--atomic-layout-spacing-x);
       }
 
       atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc {
@@ -70,7 +70,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
           '. atomic-section-facets .                     .';
       }
 
-      atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
+      atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error) atomic-search-layout#abc atomic-layout-section[section=\\"facets\\"] {
         display: block;
       }
     }"
