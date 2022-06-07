@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.21.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.21.0...@coveo/quantic@1.21.1) (2022-06-06)
+
+
+### Bug Fixes
+
+* **atomic:** made facet values focus when pressing show more/show less ([#2043](https://github.com/coveo/ui-kit/issues/2043)) ([1e77f3e](https://github.com/coveo/ui-kit/commit/1e77f3e8bbd23c97f240e11685fcabb5029bb50d))
+
+
+
+
+
 # [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.20.1...@coveo/quantic@1.21.0) (2022-06-06)
 
 
