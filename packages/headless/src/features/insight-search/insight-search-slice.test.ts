@@ -22,19 +22,6 @@ import {PlatformClient} from '../../api/platform-client';
 
 jest.mock('../../api/platform-client');
 let e: MockInsightEngine;
-function buildMockInsightEngineError() {
-  //e = buildMockInsightEngine({state: buildMockInsightState()});
-  PlatformClient.call = jest.fn().mockImplementation(() => {
-    const body = JSON.stringify({
-      message: 'message',
-      statusCode: 500,
-      type: 'type',
-    });
-    const response = new Response(body);
-
-    return Promise.resolve(response);
-  });
-}
 
 describe('insight search slice', () => {
   let state: InsightSearchState;
@@ -154,8 +141,18 @@ describe('insight search slice', () => {
       expect(finalState.error).toEqual(undefined);
     });
 
-    it('when thw action rejected is received, it should dispatch a logQueryError action', async () => {
-      buildMockInsightEngineError();
+    it('when the action rejected is received, it should dispatch a logQueryError action', async () => {
+      e = buildMockInsightEngine({state: buildMockInsightState()});
+      PlatformClient.call = jest.fn().mockImplementation(() => {
+        const body = JSON.stringify({
+          message: 'message',
+          statusCode: 500,
+          type: 'type',
+        });
+        const response = new Response(body);
+
+        return Promise.resolve(response);
+      });
       await e.dispatch(insightExecuteSearch(logSearchboxSubmit()));
       expect(e.actions).toContainEqual(
         expect.objectContaining({

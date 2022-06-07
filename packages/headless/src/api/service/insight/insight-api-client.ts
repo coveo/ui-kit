@@ -24,7 +24,7 @@ import {InsightUserActionsResponse} from './user-actions/user-actions-response';
 /**
  * Initialization options for the `InsightAPIClient`.
  */
-interface InsightAPIClientOptions {
+export interface InsightAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
 }

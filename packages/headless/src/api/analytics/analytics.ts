@@ -53,12 +53,14 @@ export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<SearchHubSection>;
 
 export type StateNeededByInsightAnalytics = ConfigurationSection &
-  InsightSearchSection &
   InsightConfigurationSection &
-  QuerySection &
-  FacetSection &
-  InsightCaseContextSection &
-  PaginationSection;
+  Partial<
+    InsightCaseContextSection &
+      InsightSearchSection &
+      QuerySection &
+      FacetSection &
+      PaginationSection
+  >;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}

@@ -18,7 +18,7 @@ export type InsightQueryRequest = InsightParam &
   NumberOfResultsParam;
 
 interface CaseContextParam {
-  caseContext: Record<string, string>;
+  caseContext?: Record<string, string>;
 }
 
 export const buildInsightQueryRequest = (req: InsightQueryRequest) => {

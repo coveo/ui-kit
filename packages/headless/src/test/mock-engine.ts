@@ -34,6 +34,8 @@ import {buildMockCaseAssistState} from './mock-case-assist-state';
 import {InsightEngine} from '../app/insight-engine/insight-engine';
 import {InsightAppState} from '../state/insight-app-state';
 import {buildMockInsightState} from './mock-insight-state';
+import {buildMockInsightAPIClient} from './mock-insight-api-client';
+import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -50,6 +52,8 @@ type AppState =
   | ProductListingAppState
   | CaseAssistAppState
   | InsightAppState;
+
+type EngineType = 'search' | 'insight';
 
 interface MockEngine {
   actions: AnyAction[];
@@ -154,7 +158,7 @@ export interface MockInsightEngine
 export function buildMockInsightEngine(
   config: Partial<InsightEngine<InsightAppState>> = {}
 ): MockInsightEngine {
-  const engine = buildMockCoreEngine(config, buildMockInsightState);
+  const engine = buildMockCoreEngine(config, buildMockInsightState, 'insight');
   return {
     ...engine,
     executeFirstSearch: jest.fn(),
@@ -165,10 +169,14 @@ interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}
 
 function buildMockCoreEngine<T extends AppState>(
   config: Partial<CoreEngine<T>> = {},
-  mockState: () => T
+  mockState: () => T,
+  type: EngineType = 'search'
 ): MockCoreEngine<T> {
   const logger = pino({level: 'silent'});
-  const storeConfiguration = configureMockStore(logger);
+  const storeConfiguration =
+    type === 'search'
+      ? configureMockStore(logger)
+      : configureInsightMockStore(logger);
   const coreState = buildCoreState(config, mockState);
   const store = storeConfiguration(coreState);
   const unsubscribe = () => {};
@@ -213,6 +221,24 @@ const configureMockStore = (logger: Logger) => {
   > = {
     searchAPIClient: buildMockSearchAPIClient({logger}),
     apiClient: buildMockSearchAPIClient({logger}),
+    validatePayload: validatePayloadAndThrow,
+    logger,
+  };
+  return configureStore<AppState, DispatchExts>([
+    logActionErrorMiddleware(logger),
+    analyticsMiddleware,
+    thunk.withExtraArgument(thunkExtraArguments),
+    ...getDefaultMiddleware(),
+    logActionMiddleware(logger),
+  ]);
+};
+
+const configureInsightMockStore = (logger: Logger) => {
+  const thunkExtraArguments: Omit<
+    InsightThunkExtraArguments,
+    'analyticsClientMiddleware'
+  > = {
+    apiClient: buildMockInsightAPIClient({logger}),
     validatePayload: validatePayloadAndThrow,
     logger,
   };
