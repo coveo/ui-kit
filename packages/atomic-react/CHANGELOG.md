@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.7.1...@coveo/atomic-react@1.8.0) (2022-06-07)
+
+
+### Features
+
+* **atomic:** hide facets on "no results" & "error" status (search layout) ([#2053](https://github.com/coveo/ui-kit/issues/2053)) ([5d75cd2](https://github.com/coveo/ui-kit/commit/5d75cd2e6f73777b44dda0e20a5c01b001315e8b))
+
+
+
+
+
 ## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.7.0...@coveo/atomic-react@1.7.1) (2022-06-06)
 
 
