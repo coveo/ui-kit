@@ -97,9 +97,8 @@ export class AtomicSearchBoxInstantResults {
     this.resultListCommon = new ResultListCommon({
       host: this.host,
       bindings: this.bindings,
-      templateElements: this.host.querySelectorAll(
-        'atomic-instant-result-template'
-      ),
+      templateElements: this.host.querySelectorAll('atomic-result-template'),
+      includeDefaultTemplate: false,
       onReady: () => {},
       onError: () => {
         this.templateHasError = true;
