@@ -1,5 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
+import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
@@ -25,7 +25,7 @@ export interface ClickAnalyticsActionCreators {
       analyticsType: AnalyticsType.Click;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
   /**
    * The event to log when the source of a smart snippet is clicked.
@@ -38,7 +38,7 @@ export interface ClickAnalyticsActionCreators {
       analyticsType: AnalyticsType.Click;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
   /**
    * The event to log when the source of a smart snippet suggestion, or related question, is clicked.
@@ -53,7 +53,7 @@ export interface ClickAnalyticsActionCreators {
       analyticsType: AnalyticsType.Click;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 }
 
