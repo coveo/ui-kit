@@ -21,7 +21,7 @@ export function initialSearchParameterSelector(
     firstResult: getPaginationInitialState().firstResult,
     numberOfResults:
       state.pagination?.defaultNumberOfResults ??
-      getPaginationInitialState().numberOfResults,
+      getPaginationInitialState().defaultNumberOfResults,
     sortCriteria: getSortCriteriaInitialState(),
     f: {},
     cf: {},
