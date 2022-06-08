@@ -30,6 +30,7 @@ import {
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
 import {promiseTimeout} from '../../utils/promise-utils';
+import escape from 'escape-html';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -429,7 +430,8 @@ export class AtomicSearchBox {
     }
 
     if (query) {
-      return !!panel?.querySelector(`[${queryDataAttribute}="${query}"]`);
+      const escaped = query.replace(/"/g, '\\"');
+      return !!panel?.querySelector(`[${queryDataAttribute}="${escaped}"]`);
     }
 
     return this.activeDescendantElement?.closest('ul') === panel;
