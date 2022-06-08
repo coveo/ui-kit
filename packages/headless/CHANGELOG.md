@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.71.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.70.1...@coveo/headless@1.71.0) (2022-06-08)
+
+
+### Bug Fixes
+
+* **atomic:** fix issue with changing panels while results load ([#2060](https://github.com/coveo/ui-kit/issues/2060)) ([d10a8e9](https://github.com/coveo/ui-kit/commit/d10a8e90d170bc23dda19b3dd59aa9bf70f61a70))
+
+
+### Features
+
+* **atomic,headless:** added custom default value for search parameters' numberOfResults ([#2058](https://github.com/coveo/ui-kit/issues/2058)) ([fd419a1](https://github.com/coveo/ui-kit/commit/fd419a1ae7d4606bd6772b231097f8ff85da18d7))
+
+
+
+
+
 ## [1.70.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.70.0...@coveo/headless@1.70.1) (2022-06-08)
 
 
