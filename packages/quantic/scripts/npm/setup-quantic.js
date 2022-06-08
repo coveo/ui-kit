@@ -27,14 +27,14 @@ function createQuanticDirectory(path) {
 
 function getPackageDirectory(projectDirectory) {
   try {
-    const sfdxProjectJson = fs.readFileSync(
-      pathlib.join(projectDirectory, 'sfdx-project.json')
-    );
-    const sfdxProjectObject = JSON.parse(sfdxProjectJson);
+    const sfdxProjectJson = require(pathlib.join(
+      projectDirectory,
+      'sfdx-project.json'
+    ));
     const defaultPackageDirectory =
-      sfdxProjectObject.packageDirectories.find(
+      sfdxProjectJson.packageDirectories.find(
         (directory) => directory.default
-      ) || sfdxProjectObject.packageDirectories[0];
+      ) || sfdxProjectJson.packageDirectories[0];
     return defaultPackageDirectory.path;
   } catch (err) {
     console.error('Failed to get the default package directory.');
