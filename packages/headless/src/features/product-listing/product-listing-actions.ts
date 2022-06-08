@@ -13,7 +13,7 @@ import {
   ProductListingSection,
   StructuredSortSection,
 } from '../../state/state-sections';
-import {getVisitorID} from '../../api/analytics/analytics';
+import {getVisitorID} from '../../api/analytics/search-analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {sortFacets} from '../../utils/facet-utils';

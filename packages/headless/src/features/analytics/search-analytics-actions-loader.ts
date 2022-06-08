@@ -1,5 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
+import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
 import {
   logInterfaceChange,
@@ -108,7 +108,7 @@ export interface SearchAnalyticsActionCreators {
   logClearBreadcrumbs(): AsyncThunkAction<
     {analyticsType: AnalyticsType.Search},
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -121,7 +121,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -134,7 +134,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -148,7 +148,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -161,7 +161,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -174,7 +174,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -190,7 +190,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -206,7 +206,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -220,7 +220,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -236,7 +236,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -250,7 +250,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -264,7 +264,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -278,7 +278,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -294,7 +294,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -310,7 +310,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -326,7 +326,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -339,7 +339,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -352,7 +352,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -365,7 +365,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -378,7 +378,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -391,7 +391,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -404,7 +404,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -417,7 +417,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -433,7 +433,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -446,7 +446,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -459,7 +459,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -472,7 +472,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -485,7 +485,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -498,7 +498,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -511,7 +511,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -524,7 +524,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -538,7 +538,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -552,7 +552,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -570,7 +570,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -588,7 +588,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -602,7 +602,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -618,7 +618,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -634,7 +634,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -650,7 +650,7 @@ export interface SearchAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 }
 

@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import {AnalyticsParam} from '../../api/search/search-api-params';
-import {getPageID, getVisitorID} from '../../api/analytics/analytics';
+import {getPageID, getVisitorID} from '../../api/analytics/search-analytics';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

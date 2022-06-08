@@ -84,6 +84,7 @@ describe('history slice', () => {
         firstResult: 123,
         numberOfResults: 456,
         totalCountFiltered: 789,
+        defaultNumberOfResults: 0xabc,
       },
       query: buildMockQueryState({q: 'foo'}),
       advancedSearchQueries: {
@@ -125,6 +126,7 @@ describe('history slice', () => {
             numberOfResults: 1,
             totalCountFiltered: 1,
             firstResult: 1,
+            defaultNumberOfResults: 1,
           },
         }),
         getSnapshot({
@@ -132,6 +134,7 @@ describe('history slice', () => {
             numberOfResults: 1,
             totalCountFiltered: 2,
             firstResult: 1,
+            defaultNumberOfResults: 1,
           },
         })
       );
@@ -391,6 +394,7 @@ describe('history slice', () => {
             numberOfResults: 1,
             totalCountFiltered: 1,
             firstResult: 1,
+            defaultNumberOfResults: 1,
           },
         }),
         getSnapshot({
@@ -398,6 +402,7 @@ describe('history slice', () => {
             numberOfResults: 2,
             totalCountFiltered: 1,
             firstResult: 1,
+            defaultNumberOfResults: 1,
           },
         })
       );
@@ -410,6 +415,7 @@ describe('history slice', () => {
             numberOfResults: 1,
             totalCountFiltered: 1,
             firstResult: 1,
+            defaultNumberOfResults: 1,
           },
         }),
         getSnapshot({
@@ -417,6 +423,7 @@ describe('history slice', () => {
             numberOfResults: 1,
             totalCountFiltered: 1,
             firstResult: 2,
+            defaultNumberOfResults: 1,
           },
         })
       );

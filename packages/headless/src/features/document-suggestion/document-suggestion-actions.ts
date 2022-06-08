@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/analytics';
+import {getVisitorID} from '../../api/analytics/search-analytics';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client';
 import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params';

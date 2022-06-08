@@ -29,7 +29,7 @@ export class RedirectionTrigger extends Component<{}, RedirectionTriggerState> {
       if (!this.controller.state.redirectTo) {
         return;
       }
-      window.location.href = this.controller.state.redirectTo;
+      window.location.replace(this.controller.state.redirectTo);
     });
   }
 

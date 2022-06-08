@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.70.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.70.0...@coveo/headless@1.70.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* **headless:** triggered notify-trigger subscriber when notifications are removed ([#2055](https://github.com/coveo/ui-kit/issues/2055)) ([8061479](https://github.com/coveo/ui-kit/commit/80614791c447451707bef8f52d78e9fb5de7c37e))
+
+
+
+
+
+# [1.70.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.69.1...@coveo/headless@1.70.0) (2022-06-07)
+
+
+### Bug Fixes
+
+* **headless:** fix invalid number of results for recommendations ([#2052](https://github.com/coveo/ui-kit/issues/2052)) ([b46e50e](https://github.com/coveo/ui-kit/commit/b46e50e2e12d2e2db2cd4e4bec10efdcae7d3111))
+
+
+### Features
+
+* **atomic:** hide facets on "no results" & "error" status (search layout) ([#2053](https://github.com/coveo/ui-kit/issues/2053)) ([5d75cd2](https://github.com/coveo/ui-kit/commit/5d75cd2e6f73777b44dda0e20a5c01b001315e8b))
+
+
+
+
+
+## [1.69.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.69.0...@coveo/headless@1.69.1) (2022-06-06)
+
+
+### Bug Fixes
+
+* **atomic:** made facet values focus when pressing show more/show less ([#2043](https://github.com/coveo/ui-kit/issues/2043)) ([1e77f3e](https://github.com/coveo/ui-kit/commit/1e77f3e8bbd23c97f240e11685fcabb5029bb50d))
+
+
+
+
+
 # [1.69.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.68.1...@coveo/headless@1.69.0) (2022-06-06)
 
 
