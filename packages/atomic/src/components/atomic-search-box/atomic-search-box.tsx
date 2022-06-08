@@ -576,6 +576,40 @@ export class AtomicSearchBox {
     return part;
   }
 
+  private onSuggestionClick(item: SearchBoxSuggestionItem) {
+    item.onSelect && item.onSelect();
+    this.clearSuggestions();
+  }
+  private onSuggestionMouseOver(
+    item: SearchBoxSuggestionItem,
+    side: 'left' | 'right',
+    id: string
+  ) {
+    const thisPanel = side === 'left' ? this.leftPanelRef : this.rightPanelRef;
+    if (this.panelInFocus === thisPanel) {
+      this.updateActiveDescendant(id);
+    } else {
+      this.updateDescendants(id);
+    }
+    if (isSuggestionElement(item) && item.query) {
+      this.updateSuggestedQuery(item.query);
+    }
+  }
+
+  private getAriaAttributes(
+    item: SearchBoxSuggestionItem,
+    isSelected: boolean
+  ) {
+    if (isSuggestionElement(item) && !!item.query) {
+      return {
+        role: 'option',
+        [queryDataAttribute]: item.query,
+        'aria-selected': `${isSelected}`,
+      };
+    }
+    return {};
+  }
+
   private renderSuggestion(
     item: SearchBoxSuggestionItem,
     index: number,
@@ -600,31 +634,17 @@ export class AtomicSearchBox {
         }`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
-          item.onSelect && item.onSelect();
-          this.clearSuggestions();
+          this.onSuggestionClick(item);
         }}
         onMouseOver={() => {
-          const thisPanel =
-            side === 'left' ? this.leftPanelRef : this.rightPanelRef;
-          if (this.panelInFocus === thisPanel) {
-            this.updateActiveDescendant(id);
-          } else {
-            this.updateDescendants(id);
-          }
-          if (isSuggestionElement(item) && item.query) {
-            this.updateSuggestedQuery(item.query);
-          }
+          this.onSuggestionMouseOver(item, side, id);
         }}
         ref={(el) => {
           if (isHTMLElement(item.content)) {
             el?.replaceChildren(item.content);
           }
         }}
-        {...(hasQuery && {
-          role: 'option',
-          [queryDataAttribute]: item.query,
-          'aria-selected': `${isSelected}`,
-        })}
+        {...this.getAriaAttributes(item, isSelected)}
       >
         {!isHTMLElement(item.content) && item.content}
       </li>
