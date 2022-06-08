@@ -14,6 +14,7 @@ import {
   insightConfiguration,
   insightInterface,
   insightSearch,
+  resultPreview,
   searchHub,
 } from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
@@ -26,7 +27,7 @@ import {setInsightConfiguration} from '../../features/insight-configuration/insi
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/insight-search/insight-search-selectors';
-import { insightExecuteSearch } from '../../features/insight-search/insight-search-actions';
+import {insightExecuteSearch} from '../../features/insight-search/insight-search-actions';
 
 export type {InsightEngineConfiguration};
 
@@ -35,6 +36,7 @@ const insightEngineReducers = {
   insightSearch,
   insightInterface,
   searchHub,
+  resultPreview,
 };
 type InsightEngineReducers = typeof insightEngineReducers;
 
