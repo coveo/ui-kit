@@ -33,7 +33,7 @@ export class AtomicSearchBoxInstantResults {
   private instantResults!: InstantResults;
 
   private results: Result[] = [];
-  public resultListCommon!: ResultListCommon;
+  private resultListCommon!: ResultListCommon;
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
@@ -98,7 +98,6 @@ export class AtomicSearchBoxInstantResults {
       host: this.host,
       bindings: this.bindings,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
-      includeDefaultTemplate: false,
       onReady: () => {},
       onError: () => {
         this.templateHasError = true;
