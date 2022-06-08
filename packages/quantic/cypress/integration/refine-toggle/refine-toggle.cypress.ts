@@ -135,60 +135,7 @@ describe('quantic-refine-toggle', () => {
     });
   });
 
-  const facetTypes = ['Category', 'Timeframe', 'Numeric', 'Default'];
-
-  facetTypes.forEach((facetType) => {
-    describe(`when filters are selected from a ${facetType.toLowerCase()} facet`, () => {
-      it('should display the correct filters count in the filters count badge', () => {
-        visitPage();
-
-        scope('when loading the page', () => {
-          Expect.displayRefineToggle(true);
-          Expect.displayRefineToggleIcon(true);
-          Expect.displayModal(false);
-          Expect.refineToggleContains(customRefineToggleLabel);
-          Expect.displayFiltersCountBadge(false);
-        });
-
-        scope('when opening the refine modal', () => {
-          Actions.clickRefineButton();
-          Expect.displayModal(true);
-          Expect.displayModalFullScreen(false);
-          Expect.displayRefineModalTitle(true);
-          Expect.refineModalTitleContains(customRefineModalTitle);
-          Expect.displayModalContent(true);
-          Expect.displaySort(true);
-          Expect.displayModalFooter(true);
-          Expect.displayViewResultsButton(true);
-          cy.wait(InterceptAliases.Search).then((interception) => {
-            Expect.viewResultsButtonContains(
-              viewResultsLabel(interception.response?.body.totalCount)
-            );
-          });
-        });
-
-        scope('when selecting filters from a standard facet', () => {
-          Actions[`click${facetType}FacetExpandButton`]();
-          Actions[`click${facetType}FacetFirstOption`]();
-        });
-
-        scope('when closing the refine modal', () => {
-          Actions.clickRefineModalCloseButton();
-          Expect.displayFiltersCountBadge(true);
-          Expect.filtersCountBadgeContains(1);
-        });
-
-        scope('when clearing filters', () => {
-          Actions.clickRefineButton();
-          Actions.clickClearAllFilters();
-          Actions.clickRefineModalCloseButton();
-          Expect.displayFiltersCountBadge(false);
-        });
-      });
-    });
-  });
-
-  describe('when filters from multiple facets are selected in the refine modal', () => {
+  describe('when filters are selected in the refine modal', () => {
     it('should display the correct filters count in filters count badge', () => {
       visitPage();
 
@@ -218,8 +165,8 @@ describe('quantic-refine-toggle', () => {
       });
 
       scope('when selecting filters', () => {
-        Actions.clickDefaultFacetExpandButton();
-        Actions.clickDefaultFacetFirstOption();
+        Actions.clickFacetExpandButton();
+        Actions.clickFacetFirstOption();
         Actions.clickTimeframeFacetExpandButton();
         Actions.clickTimeframeFacetFirstOption();
       });

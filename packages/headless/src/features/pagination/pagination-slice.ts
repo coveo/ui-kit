@@ -44,8 +44,7 @@ export const paginationReducer = createReducer(
         const page = determineCurrentPage(state);
         const newNumberOfResults = action.payload;
 
-        state.defaultNumberOfResults = state.numberOfResults =
-          newNumberOfResults;
+        state.numberOfResults = newNumberOfResults;
         state.firstResult = calculateFirstResult(page, newNumberOfResults);
       })
       .addCase(updateNumberOfResults, (state, action) => {
@@ -87,7 +86,7 @@ export const paginationReducer = createReducer(
       .addCase(restoreSearchParameters, (state, action) => {
         state.firstResult = action.payload.firstResult ?? state.firstResult;
         state.numberOfResults =
-          action.payload.numberOfResults ?? state.defaultNumberOfResults;
+          action.payload.numberOfResults ?? state.numberOfResults;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {response} = action.payload;

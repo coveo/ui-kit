@@ -5,8 +5,7 @@ export type ButtonStyle =
   | 'outline-bg-neutral'
   | 'text-primary'
   | 'text-neutral'
-  | 'text-transparent'
-  | 'square-neutral';
+  | 'text-transparent';
 
 export function getClassNameForButtonStyle(buttonStyle: ButtonStyle) {
   switch (buttonStyle) {
@@ -24,8 +23,6 @@ export function getClassNameForButtonStyle(buttonStyle: ButtonStyle) {
       return 'btn-text-neutral';
     case 'text-transparent':
       return 'btn-text-transparent';
-    case 'square-neutral':
-      return 'btn-square-neutral';
   }
 }
 

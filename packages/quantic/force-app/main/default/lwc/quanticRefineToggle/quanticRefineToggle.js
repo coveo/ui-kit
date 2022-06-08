@@ -122,10 +122,11 @@ export default class QuanticRefineToggle extends LightningElement {
     const facetBreadcrumbKeys = [
       'facetBreadcrumbs',
       'numericFacetBreadcrumbs',
+      'categoryFacetBreadcrumbs',
       'dateFacetBreadcrumbs',
       'staticFilterBreadcrumbs',
     ];
-    let total = facetBreadcrumbKeys.reduce(
+    return facetBreadcrumbKeys.reduce(
       (count, facetKey) =>
         count +
         this.getFiltersCountFromFacetBreadcrumb(
@@ -133,11 +134,6 @@ export default class QuanticRefineToggle extends LightningElement {
         ),
       0
     );
-    const categoryFacetBreadcrumbKey = 'categoryFacetBreadcrumbs';
-    total += this.getFiltersCountFromCategoryFacetBreadcrumb(
-      this.breadcrumbManager?.state?.[categoryFacetBreadcrumbKey]
-    );
-    return total;
   }
 
   /**
@@ -149,21 +145,7 @@ export default class QuanticRefineToggle extends LightningElement {
       return 0;
     }
     return facetBreadcrumb.reduce(
-      (count, facet) => count + (facet?.values?.length || 0),
-      0
-    );
-  }
-
-  /**
-   * Returns the number of active filters from a specific facet breadcrumb.
-   * @param {Array<{path: Array}>} facetBreadcrumb
-   */
-  getFiltersCountFromCategoryFacetBreadcrumb(facetBreadcrumb) {
-    if (!facetBreadcrumb) {
-      return 0;
-    }
-    return facetBreadcrumb.reduce(
-      (count, facet) => count + (facet?.path?.length ? 1 : 0),
+      (count, facet) => count + facet.values.length,
       0
     );
   }

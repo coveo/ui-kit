@@ -41,6 +41,7 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
 
 async function main() {
   try {
+    // TODO Re-setup commit-lint when merging to master only
     if (commitHasIssueNumber(commitMessage, issueNumber)) {
       return;
     }

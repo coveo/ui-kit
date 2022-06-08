@@ -5,7 +5,6 @@ export function buildMockPagination(
 ): PaginationState {
   return {
     firstResult: 0,
-    defaultNumberOfResults: 0,
     numberOfResults: 0,
     totalCountFiltered: 0,
     ...config,

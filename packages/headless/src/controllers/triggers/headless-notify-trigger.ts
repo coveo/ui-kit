@@ -61,7 +61,7 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
         );
         previousNotifications = this.state.notifications;
 
-        if (hasChanged) {
+        if (hasChanged && getState().triggers.notifications.length) {
           listener();
           dispatch(logNotifyTrigger());
         }

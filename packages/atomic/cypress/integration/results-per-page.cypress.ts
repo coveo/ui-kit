@@ -71,52 +71,9 @@ describe('Result Per Page Component', () => {
       shouldRenderErrorComponent(resultsPerPageComponent);
     });
 
-    describe('when the prop is valid', () => {
-      const choicesDisplayed = [10, 25, 50];
-      before(() => {
-        setup(
-          `initial-choice="${
-            choicesDisplayed[1]
-          }" choices-displayed="${choicesDisplayed.join(',')}"`
-        );
-      });
-
-      it('should select the initialChoice correctly', () => {
-        ResultsPerPageSelectors.activeButton().should('have.value', 25);
-      });
-
-      it('should not add the initial choice to the URL', () => {
-        cy.document().its('location').its('hash').should('be.empty');
-      });
-
-      describe('then selecting another value', () => {
-        before(() => {
-          ResultsPerPageSelectors.buttons().last().click();
-        });
-
-        it('should add the choice to the URL', () => {
-          cy.document()
-            .its('location')
-            .its('hash')
-            .should(
-              'contain',
-              `numberOfResults=${choicesDisplayed.slice(-1)[0]}`
-            );
-        });
-
-        describe('then pressing the back button', () => {
-          before(() => {
-            cy.go('back');
-          });
-
-          it('should not add the initial choice to the URL', () => {
-            cy.document()
-              .its('location')
-              .its('hash')
-              .should('not.contain', 'numberOfResults');
-          });
-        });
-      });
+    it('should select the initialChoice correctly', () => {
+      setup('initial-choice=25');
+      ResultsPerPageSelectors.activeButton().should('have.value', 25);
     });
   });
 });

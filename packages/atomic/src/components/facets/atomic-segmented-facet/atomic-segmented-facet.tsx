@@ -19,9 +19,10 @@ import {
 } from '@coveo/headless';
 import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
-import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 
 /**
  * @internal
@@ -107,7 +108,7 @@ export class AtomicSegmentedFacet
   }
 
   private renderValuesContainer(children: VNode[]) {
-    const classes = 'box-container flex';
+    const classes = 'box-container';
     return (
       <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
         <ul class={classes} part="values">
@@ -126,14 +127,20 @@ export class AtomicSegmentedFacet
     const isSelected = facetValue.state === 'selected';
 
     return (
-      <FacetSegmentedValue
+      <FacetValueBox
         displayValue={displayValue}
         numberOfResults={facetValue.numberOfResults}
         isSelected={isSelected}
         i18n={this.bindings.i18n}
         onClick={onClick}
         searchQuery={this.facetState.facetSearch.query}
-      ></FacetSegmentedValue>
+      >
+        <FacetValueLabelHighlight
+          displayValue={displayValue}
+          isSelected={isSelected}
+          searchQuery={this.facetState.facetSearch.query}
+        ></FacetValueLabelHighlight>
+      </FacetValueBox>
     );
   }
 

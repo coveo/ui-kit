@@ -17,7 +17,7 @@ export const RedirectionTrigger: FunctionComponent<
   const redirect = () => {
     setState(props.controller.state);
     if (state.redirectTo) {
-      window.location.replace(controller.state.redirectTo);
+      window.location.href = controller.state.redirectTo!;
     }
   };
 
