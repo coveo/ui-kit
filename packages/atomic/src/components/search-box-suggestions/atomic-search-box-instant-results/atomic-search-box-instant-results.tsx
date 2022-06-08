@@ -1,4 +1,4 @@
-import {Component, Element, State, h} from '@stencil/core';
+import {Component, Element, State, h, Prop} from '@stencil/core';
 import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
 
 import {
@@ -8,6 +8,12 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 import {cleanUpString} from '../../../utils/string-utils';
+import {ResultListCommon} from '../../result-lists/result-list-common';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../atomic-result/atomic-result-display-options';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -23,9 +29,24 @@ export class AtomicSearchBoxInstantResults {
   @Element() private host!: HTMLElement;
 
   @State() public error!: Error;
+  @State() public templateHasError = false;
   private instantResults!: InstantResults;
 
   private results: Result[] = [];
+  private resultListCommon!: ResultListCommon;
+  /**
+   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+   */
+  @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
+
+  /**
+   * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+   */
+  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
+  /**
+   * The expected size of the image displayed in the results.
+   */
+  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
 
   componentWillLoad() {
     try {
@@ -48,7 +69,18 @@ export class AtomicSearchBoxInstantResults {
     return results.map((result: Result) => ({
       key: `instant-result-${cleanUpString(result.title)}`,
       query: '',
-      content: <div class="flex items-center break-all">{result.title}</div>,
+      content: (
+        <atomic-result
+          key={`instant-results-${result.uniqueId}`}
+          part="outline"
+          result={result}
+          engine={this.bindings.engine}
+          display={this.display}
+          density={this.density}
+          imageSize={this.imageSize}
+          content={this.resultListCommon.getContentOfResultTemplate(result)}
+        ></atomic-result>
+      ),
       onSelect: () => {
         // TODO: ADD LOGS?
       },
@@ -59,6 +91,16 @@ export class AtomicSearchBoxInstantResults {
     this.instantResults = buildInstantResults(this.bindings.engine, {
       options: {
         maxResultsPerQuery: 4,
+      },
+    });
+
+    this.resultListCommon = new ResultListCommon({
+      host: this.host,
+      bindings: this.bindings,
+      templateElements: this.host.querySelectorAll('atomic-result-template'),
+      onReady: () => {},
+      onError: () => {
+        this.templateHasError = true;
       },
     });
 
