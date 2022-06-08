@@ -72,7 +72,7 @@
   },
   "lint-staged": {
     "**/*.ts?(x)": [
-      "npm run lint:fix"
+      "eslint --fix"
     ],
     "**/*.{scss,css,pcss,html,mdx}": [
       "prettier --print-width 120 --write"

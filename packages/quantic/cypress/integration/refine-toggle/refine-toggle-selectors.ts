@@ -15,9 +15,13 @@ export interface RefineToggleSelector extends ComponentSelector {
   sort: () => CypressSelector;
   filtersCountBadge: () => CypressSelector;
   timeframeFacetExpandButton: () => CypressSelector;
-  facetExpandButton: () => CypressSelector;
+  defaultFacetExpandButton: () => CypressSelector;
+  numericFacetExpandButton: () => CypressSelector;
+  categoryFacetExpandButton: () => CypressSelector;
   timeframeFacetFirstOption: () => CypressSelector;
-  facetFirstOption: () => CypressSelector;
+  defaultFacetFirstOption: () => CypressSelector;
+  numericFacetFirstOption: () => CypressSelector;
+  categoryFacetFirstOption: () => CypressSelector;
   clearAllFiltersButton: () => CypressSelector;
   facetClearFiltersButton: () => CypressSelector;
 }
@@ -46,15 +50,31 @@ export const RefineToggleSelectors: RefineToggleSelector = {
     RefineToggleSelectors.modalContent().find(
       'c-quantic-timeframe-facet .facet__expand'
     ),
-  facetExpandButton: () =>
+  defaultFacetExpandButton: () =>
     RefineToggleSelectors.modalContent().find('c-quantic-facet .facet__expand'),
+  numericFacetExpandButton: () =>
+    RefineToggleSelectors.modalContent().find(
+      'c-quantic-numeric-facet .facet__expand'
+    ),
+  categoryFacetExpandButton: () =>
+    RefineToggleSelectors.modalContent().find(
+      'c-quantic-category-facet .facet__expand'
+    ),
   timeframeFacetFirstOption: () =>
     RefineToggleSelectors.modalContent()
       .find('c-quantic-timeframe-facet .facet__value-option')
       .eq(0),
-  facetFirstOption: () =>
+  defaultFacetFirstOption: () =>
     RefineToggleSelectors.modalContent()
       .find('c-quantic-facet .facet__value-option')
+      .eq(0),
+  numericFacetFirstOption: () =>
+    RefineToggleSelectors.modalContent()
+      .find('c-quantic-numeric-facet .facet__value-option')
+      .eq(0),
+  categoryFacetFirstOption: () =>
+    RefineToggleSelectors.modalContent()
+      .find('c-quantic-category-facet .facet__value-option')
       .eq(0),
   clearAllFiltersButton: () =>
     RefineToggleSelectors.modalContent().find(
