@@ -7,6 +7,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
+import {cleanUpString} from '../../../utils/string-utils';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -16,7 +17,7 @@ import {
   tag: 'atomic-search-box-instant-results',
   shadow: true,
 })
-export class AtomicSearchBoxRecentQueries {
+export class AtomicSearchBoxInstantResults {
   private bindings!: SearchBoxSuggestionsBindings;
 
   @Element() private host!: HTMLElement;
@@ -38,11 +39,14 @@ export class AtomicSearchBoxRecentQueries {
   }
 
   private renderItems(): SearchBoxSuggestionItem[] {
+    if (!this.bindings.suggestedQuery()) {
+      return [];
+    }
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
-    return results.map((result, i) => ({
-      key: `instant-result-${i}`,
+    return results.map((result: Result) => ({
+      key: `instant-result-${cleanUpString(result.title)}`,
       query: '',
       content: <div class="flex items-center break-all">{result.title}</div>,
       onSelect: () => {

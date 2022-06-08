@@ -37,8 +37,8 @@ import {
 } from '../../state/state-sections';
 import {
   historyStore,
-  StateNeededByAnalyticsProvider,
-} from '../../api/analytics/analytics';
+  StateNeededBySearchAnalyticsProvider,
+} from '../../api/analytics/search-analytics';
 import {getQueryInitialState} from '../query/query-state';
 import {SearchAction} from '../analytics/analytics-utils';
 import {extractHistory} from '../history/history-state';
@@ -382,7 +382,7 @@ const getStateAfterResponse: (
   duration: number,
   previousState: StateNeededByExecuteSearch,
   response: SearchResponseSuccess
-) => StateNeededByAnalyticsProvider = (
+) => StateNeededBySearchAnalyticsProvider = (
   query,
   duration,
   previousState,
