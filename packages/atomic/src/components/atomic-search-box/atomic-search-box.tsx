@@ -21,6 +21,7 @@ import {randomID} from '../../utils/utils';
 import {
   isDividerElement,
   isSuggestionElement,
+  queryDataAttribute,
   SearchBoxSuggestionItem,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -428,14 +429,15 @@ export class AtomicSearchBox {
     }
 
     if (query) {
-      return !!panel?.querySelector(`li[data-query="${query}"]`);
+      return !!panel?.querySelector(`[${queryDataAttribute}="${query}"]`);
     }
+
     return this.activeDescendantElement?.closest('ul') === panel;
   }
 
   private updateQueryFromSuggestion() {
     const suggestedQuery =
-      this.activeDescendantElement?.getAttribute('data-query');
+      this.activeDescendantElement?.getAttribute(queryDataAttribute);
     if (suggestedQuery && this.searchBoxState.value !== suggestedQuery) {
       this.updateQuery(suggestedQuery);
       this.updateSuggestedQuery(suggestedQuery);
@@ -618,7 +620,7 @@ export class AtomicSearchBox {
         }}
         {...(hasQuery && {
           role: 'option',
-          'data-query': item.query,
+          [queryDataAttribute]: item.query,
           'aria-selected': `${isSelected}`,
         })}
       >
