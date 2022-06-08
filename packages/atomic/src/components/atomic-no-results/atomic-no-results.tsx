@@ -77,7 +77,7 @@ export class AtomicNoResults {
       <atomic-icon
         part="icon"
         icon={MagnifyingGlass}
-        class="my-6 flex flex-col items-center w-1/2"
+        class="my-6 flex flex-col items-center w-1/2 max-w-lg"
       ></atomic-icon>
     );
   }
