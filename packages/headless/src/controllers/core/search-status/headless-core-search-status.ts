@@ -35,10 +35,10 @@ export interface CoreSearchStatusState {
 }
 
 /**
- * Creates a `SearchStatus` controller instance.
+ * Creates a `CoreSearchStatus` controller instance.
  *
  * @param engine - The headless engine.
- * @returns A `SearchStatus` controller instance.
+ * @returns A `CoreSearchStatus` controller instance.
  * */
 export function buildCoreSearchStatus(engine: CoreEngine): CoreSearchStatus {
   if (!loadSearchStateReducers(engine)) {

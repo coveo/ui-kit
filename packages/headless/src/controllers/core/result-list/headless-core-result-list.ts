@@ -50,7 +50,7 @@ export interface CoreResultListProps extends CommonResultListProps {
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
-  fetchMoreResultsActionCreator?: () => AsyncThunkAction<any, void, any>; // TODO: Find better typing for these generics.
+  fetchMoreResultsActionCreator?: () => AsyncThunkAction<any, void, any>;
 }
 
 /**
@@ -97,11 +97,11 @@ export interface CoreResultListState extends CoreSearchStatusState {
 }
 
 /**
- * Creates a `ResultList` controller instance.
+ * Creates a `CoreResultList` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ResultList` properties.
- * @returns A `ResultList` controller instance.
+ * @returns A `CoreResultList` controller instance.
  */
 export function buildCoreResultList(
   engine: CoreEngine,
