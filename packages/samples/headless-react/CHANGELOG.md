@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.56.1](https://github.com/coveo/ui-kit/compare/headless-react@0.56.0...headless-react@0.56.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* **headless:** triggered notify-trigger subscriber when notifications are removed ([#2055](https://github.com/coveo/ui-kit/issues/2055)) ([8061479](https://github.com/coveo/ui-kit/commit/80614791c447451707bef8f52d78e9fb5de7c37e))
+
+
+
+
+
 # [0.56.0](https://github.com/coveo/ui-kit/compare/headless-react@0.55.1...headless-react@0.56.0) (2022-06-07)
 
 
