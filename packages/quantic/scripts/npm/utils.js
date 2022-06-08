@@ -7,7 +7,7 @@ function quanticIsDependency() {
     const dirCountAfterNodeModulesParent = 5;
     const nodeModulesParent = upperDirectories.slice(
       0,
-      dirCountAfterNodeModulesParent
+      -dirCountAfterNodeModulesParent
     );
     require.resolve(
       pathlib.join(
