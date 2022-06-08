@@ -207,7 +207,7 @@ export class AtomicSearchBox {
     this.activeDescendant = activeDescendant;
   }
 
-  private updateActiveDescendantWithHistory(activeDescendant = '') {
+  private updateDescendants(activeDescendant = '') {
     const newPrevDescendantElement = this.activeDescendantElement;
 
     this.updateActiveDescendant(activeDescendant);
@@ -312,7 +312,7 @@ export class AtomicSearchBox {
       const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
-      this.updateActiveDescendantWithHistory(
+      this.updateDescendants(
         panelHasActiveDescendant
           ? this.previousActiveDescendantElement!.id
           : panel.firstElementChild.id
@@ -369,10 +369,10 @@ export class AtomicSearchBox {
       this.rightSuggestions
     );
 
-    const defaultSuggestedQ =
+    const defaultSuggestedQuery =
       this.allSuggestionElements.find(isSuggestionElement)?.query || '';
 
-    this.updateSuggestedQuery(defaultSuggestedQ);
+    this.updateSuggestedQuery(defaultSuggestedQuery);
     this.updateAriaMessage();
   }
 
@@ -421,7 +421,7 @@ export class AtomicSearchBox {
 
   private isPanelInFocus(
     panel: HTMLElement | undefined,
-    query?: string
+    query: string
   ): boolean {
     if (!this.activeDescendantElement) {
       return false;
@@ -605,7 +605,7 @@ export class AtomicSearchBox {
           if (this.panelInFocus === thisPanel) {
             this.updateActiveDescendant(id);
           } else {
-            this.updateActiveDescendantWithHistory(id);
+            this.updateDescendants(id);
           }
           if (isSuggestionElement(item) && item.query) {
             this.updateSuggestedQuery(item.query);
