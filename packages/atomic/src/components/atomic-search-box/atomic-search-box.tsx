@@ -98,7 +98,7 @@ export class AtomicSearchBox {
       window.innerWidth <=
       Number(
         (
-          this.searchLayout?.mobileBreakpoint || DEFAULT_MOBILE_BREAKPOINT
+          this.searchLayout?.mobileBreakpoint ?? DEFAULT_MOBILE_BREAKPOINT
         ).match(/\d*/)?.[0]
       )
     );
