@@ -1,5 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
+import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 import {
   logSearchEvent,
@@ -32,7 +32,7 @@ export interface GenericAnalyticsActionCreators {
       analyticsType: AnalyticsType.Search;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -46,7 +46,7 @@ export interface GenericAnalyticsActionCreators {
       analyticsType: AnalyticsType.Click;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 
   /**
@@ -60,7 +60,7 @@ export interface GenericAnalyticsActionCreators {
       analyticsType: AnalyticsType.Custom;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 }
 

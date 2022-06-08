@@ -38,9 +38,10 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   isStandalone: boolean;
   searchBoxController: SearchBox;
   numberOfQueries: number;
+  suggestedQuery(): string;
   clearSuggestions(): void;
   triggerSuggestions(): void;
-  getSuggestions: () => SearchBoxSuggestions[];
+  getSuggestions(): SearchBoxSuggestions[];
 }
 
 export const dispatchSearchBoxSuggestionsEvent = (
