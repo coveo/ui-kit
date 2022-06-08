@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID, historyStore} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
 import {
   AsyncThunkSearchOptions,

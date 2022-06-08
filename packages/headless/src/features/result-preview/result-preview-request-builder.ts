@@ -1,4 +1,4 @@
-import {getVisitorID} from '../../api/analytics/analytics';
+import {getVisitorID} from '../../api/analytics/search-analytics';
 import {
   HtmlRequest,
   HtmlRequestOptions,

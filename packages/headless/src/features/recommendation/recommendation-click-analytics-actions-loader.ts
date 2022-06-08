@@ -1,5 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
+import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
 import {
@@ -23,7 +23,7 @@ export interface ClickAnalyticsActionCreators {
       analyticsType: AnalyticsType.Click;
     },
     void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
 }
 

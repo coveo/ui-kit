@@ -1,8 +1,4 @@
 import {createAsyncThunk} from '../..';
-import {
-  historyStore,
-  StateNeededByInsightAnalytics,
-} from '../../api/analytics/analytics';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {
   AsyncThunkInsightOptions,
@@ -27,9 +23,7 @@ import {
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
-import {getQueryInitialState} from '../query/query-state';
 import {logQueryError} from '../search/search-analytics-actions';
-import {getInsightSearchInitialState} from './insight-search-state';
 
 export interface InsightExecuteSearchThunkReturn {
   /** The successful query response. */
@@ -43,12 +37,14 @@ export interface InsightExecuteSearchThunkReturn {
 }
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
-  InsightSearchSection &
   InsightConfigurationSection &
-  QuerySection &
-  FacetSection &
-  InsightCaseContextSection &
-  PaginationSection;
+  Partial<
+    InsightCaseContextSection &
+      InsightSearchSection &
+      QuerySection &
+      FacetSection &
+      PaginationSection
+  >;
 
 const fetchFromAPI = async (
   client: InsightAPIClient,
@@ -62,6 +58,7 @@ const fetchFromAPI = async (
   return {response, duration, queryExecuted, requestExecuted: request};
 };
 
+/** TODO: We need to dispatch analytics action, but first we have to create InsightClientProvider so the refactor will be available in  https://coveord.atlassian.net/browse/SVCC-2246*/
 export const insightExecuteSearch = createAsyncThunk<
   InsightExecuteSearchThunkReturn,
   SearchAction,
@@ -73,7 +70,6 @@ export const insightExecuteSearch = createAsyncThunk<
     {getState, dispatch, rejectWithValue, extra}
   ) => {
     const state = getState();
-    addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
@@ -84,19 +80,6 @@ export const insightExecuteSearch = createAsyncThunk<
       dispatch(logQueryError(fetched.response.error));
       return rejectWithValue(fetched.response.error);
     }
-
-    const fetchedResponse = fetched.response.success;
-    analyticsAction(
-      dispatch,
-      () =>
-        getStateAfterResponse(
-          fetched.queryExecuted,
-          fetched.duration,
-          state,
-          fetchedResponse
-        ),
-      extra
-    );
 
     dispatch(snapshot(extractHistory(getState())));
 
@@ -169,18 +152,6 @@ export const insightFetchFacetValues = createAsyncThunk<
   }
 );
 
-const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
-  if (state.configuration.analytics.enabled) {
-    historyStore.addElement({
-      name: 'Query',
-      ...(state.query?.q && {
-        value: state.query.q,
-      }),
-      time: JSON.stringify(new Date()),
-    });
-  }
-};
-
 const buildInsightSearchRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
@@ -191,7 +162,7 @@ const buildInsightSearchRequest = (
     insightId: state.insightConfiguration.insightId,
     q: state.query?.q,
     facets: getFacetRequests(state.facetSet),
-    caseContext: state.insightCaseContext.caseContext,
+    caseContext: state.insightCaseContext?.caseContext,
     ...(state.pagination && {
       firstResult: state.pagination.firstResult,
       numberOfResults: state.pagination.numberOfResults,
@@ -230,29 +201,3 @@ function getFacetRequests<T extends AnyFacetRequest>(
 ) {
   return Object.keys(requests).map((id) => requests[id]);
 }
-
-const getStateAfterResponse: (
-  query: string,
-  duration: number,
-  previousState: StateNeededByExecuteSearch,
-  response: InsightQueryResponse
-) => StateNeededByInsightAnalytics = (
-  query,
-  duration,
-  previousState,
-  response
-) => ({
-  ...previousState,
-  query: {
-    q: query,
-    enableQuerySyntax:
-      previousState.query?.enableQuerySyntax ??
-      getQueryInitialState().enableQuerySyntax,
-  },
-  search: {
-    ...getInsightSearchInitialState(),
-    duration,
-    response,
-    results: response.results,
-  },
-});
