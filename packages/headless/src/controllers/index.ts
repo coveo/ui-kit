@@ -156,6 +156,11 @@ export type {
 export {buildResultList} from './result-list/headless-result-list';
 
 export type {
+  CoreResultListOptions,
+  CoreResultListState,
+} from './core/result-list/headless-core-result-list';
+
+export type {
   InteractiveResultOptions,
   InteractiveResultProps,
   InteractiveResult,
@@ -271,6 +276,7 @@ export type {
   SearchStatusState,
 } from './search-status/headless-search-status';
 export {buildSearchStatus} from './search-status/headless-search-status';
+export type {CoreSearchStatusState} from './core/search-status/headless-core-search-status';
 
 export type {ErrorPayload} from './controller/error-payload';
 
