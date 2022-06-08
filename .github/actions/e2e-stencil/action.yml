@@ -16,7 +16,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/samples/stencil
-        start: npm start
+        start: npm run dev
         wait-on: 'http://localhost:3666'
         install: false
         record: false

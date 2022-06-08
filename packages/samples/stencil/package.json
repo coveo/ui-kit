@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run build && npx serve www -l 3666",
+    "dev": "npm run build && npx serve www -l 3666",
     "build": "stencil build",
     "cypress:open": "cypress open"
   },
