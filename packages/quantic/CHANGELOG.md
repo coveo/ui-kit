@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.22.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.22.0...@coveo/quantic@1.22.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* **headless:** triggered notify-trigger subscriber when notifications are removed ([#2055](https://github.com/coveo/ui-kit/issues/2055)) ([8061479](https://github.com/coveo/ui-kit/commit/80614791c447451707bef8f52d78e9fb5de7c37e))
+* **quantic:**  updated the way to get the number of active filters from a category facet ([#2051](https://github.com/coveo/ui-kit/issues/2051)) ([a8133b8](https://github.com/coveo/ui-kit/commit/a8133b844248caa21d8c1c8b35afabfcdf44f635))
+
+
+
+
+
+# [1.22.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.21.1...@coveo/quantic@1.22.0) (2022-06-07)
+
+
+### Features
+
+* **atomic:** hide facets on "no results" & "error" status (search layout) ([#2053](https://github.com/coveo/ui-kit/issues/2053)) ([5d75cd2](https://github.com/coveo/ui-kit/commit/5d75cd2e6f73777b44dda0e20a5c01b001315e8b))
+
+
+
+
+
 ## [1.21.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.21.0...@coveo/quantic@1.21.1) (2022-06-06)
 
 
