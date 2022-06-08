@@ -17,7 +17,7 @@ import {
 } from '../../controller/headless-controller';
 import {
   buildCoreSearchStatus,
-  SearchStatusState,
+  CoreSearchStatusState,
 } from '../search-status/headless-core-search-status';
 
 const optionsSchema = new Schema<CoreResultListOptions>({
@@ -48,7 +48,7 @@ export interface CoreResultListProps {
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
-  fetchMoreResultsActionCreator?: () => AsyncThunkAction<any, void, any>; // TODO: Find better typing for these generics.
+  fetchMoreResultsActionCreator?: () => AsyncThunkAction<any, void, any>;
 }
 
 /**
@@ -66,13 +66,13 @@ export interface CoreResultList extends Controller {
   /**
    * The state of the `ResultList` controller.
    */
-  state: ResultListState;
+  state: CoreResultListState;
 }
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultList` controller.
  * */
-export interface ResultListState extends SearchStatusState {
+export interface CoreResultListState extends CoreSearchStatusState {
   /**
    * The results of the last executed search.
    * */
@@ -95,11 +95,11 @@ export interface ResultListState extends SearchStatusState {
 }
 
 /**
- * Creates a `ResultList` controller instance.
+ * Creates a `CoreResultList` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ResultList` properties.
- * @returns A `ResultList` controller instance.
+ * @returns A `CoreResultList` controller instance.
  */
 export function buildCoreResultList(
   engine: CoreEngine,

@@ -4,14 +4,13 @@ import {
   SearchSection,
 } from '../../state/state-sections';
 import {fetchMoreResults} from '../../features/search/search-actions';
-import {SearchStatusState} from '../search-status/headless-search-status';
-import {Result} from '../../api/search/search/result';
 import {configuration, fields, search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   buildCoreResultList,
   CoreResultListOptions,
+  CoreResultListState,
 } from '../core/result-list/headless-core-result-list';
 import {Controller} from '../controller/headless-controller';
 
@@ -45,27 +44,7 @@ export interface ResultList extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultList` controller.
  * */
-export interface ResultListState extends SearchStatusState {
-  /**
-   * The results of the last executed search.
-   * */
-  results: Result[];
-  /**
-   * The unique identifier of the last executed search.
-   * @deprecated - Use the `searchResponseId` instead.
-   */
-  searchUid: string;
-  /**
-   * The unique identifier of the response where the results were fetched, this value does not change when loading more results.
-   */
-  searchResponseId: string;
-  /**
-   * Whether more results are available, using the same parameters as the last successful query.
-   *
-   * This property is not compatible with the `Pager` controller.
-   */
-  moreResultsAvailable: boolean;
-}
+export interface ResultListState extends CoreResultListState {}
 
 /**
  * Creates a `ResultList` controller instance.
