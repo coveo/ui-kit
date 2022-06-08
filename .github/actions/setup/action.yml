@@ -39,16 +39,14 @@ runs:
           !**/node_modules
         key: ${{ github.sha }}
     - uses: actions/cache@v2
-      id: node-modules-cache
+      id: npm-cache
       with:
-        path: |
-          node_modules
-          **/node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}
+        path: ~/.npm
+        key: npm-${{ hashFiles('**/package-lock.json') }}
     - uses: actions/cache@v2
       id: cypress-cache
       with:
-        path: cypress/cache
+        path: ~/.cache/Cypress
         key: cypress-binary-${{ hashFiles('**/package-lock.json') }}
     - run: |
         npm ci
