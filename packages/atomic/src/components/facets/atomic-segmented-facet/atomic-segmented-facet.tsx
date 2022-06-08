@@ -99,7 +99,7 @@ export class AtomicSegmentedFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'facets', {
+    registerFacetToStore(this.bindings.store, 'segmentedFacets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
@@ -140,7 +140,7 @@ export class AtomicSegmentedFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value) =>
-        this.renderValue(value, () => this.facet.toggleSelect(value))
+        this.renderValue(value, () => this.facet.toggleSingleSelect(value))
       )
     );
   }
