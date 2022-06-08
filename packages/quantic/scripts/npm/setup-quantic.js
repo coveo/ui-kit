@@ -1,39 +1,10 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const pathlib = require('path');
+const {quanticIsDependency, getProjectPath} = require('./utils');
 
-function copyFileSync(source, target) {
+function copyFolder(source, target) {
   try {
-    let targetFile = target;
-    if (fs.existsSync(target) && fs.lstatSync(target).isDirectory()) {
-      targetFile = pathlib.join(target, pathlib.basename(source));
-    }
-
-    fs.writeFileSync(targetFile, fs.readFileSync(source));
-  } catch (err) {
-    console.error(`Failed to copy file at the following path ${source}`);
-    console.error(err);
-    process.exit(1);
-  }
-}
-
-function copyFolderRecursiveSync(source, target) {
-  try {
-    const targetFolder = pathlib.join(target, pathlib.basename(source));
-    if (!fs.existsSync(targetFolder)) {
-      fs.mkdirSync(targetFolder);
-    }
-
-    if (fs.lstatSync(source).isDirectory()) {
-      const files = fs.readdirSync(source);
-      files.forEach(function (file) {
-        let sourceFilePath = pathlib.join(source, file);
-        if (fs.lstatSync(sourceFilePath).isDirectory()) {
-          copyFolderRecursiveSync(sourceFilePath, targetFolder);
-        } else {
-          copyFileSync(sourceFilePath, targetFolder);
-        }
-      });
-    }
+    fs.copySync(source, target);
   } catch (err) {
     console.error(`Failed to copy folder at the following path ${source}`);
     console.error(err);
@@ -72,21 +43,6 @@ function getPackageDirectory(projectDirectory) {
   }
 }
 
-function quanticIsDependency() {
-  const upperDirectories = __dirname.split(pathlib.sep);
-  const firstUpperDirectories = upperDirectories.slice(
-    upperDirectories.length - 5
-  );
-  return (
-    firstUpperDirectories.join(pathlib.sep) ===
-    pathlib.join('node_modules', '@coveo', 'quantic', 'scripts', 'npm')
-  );
-}
-
-function getProjectPath() {
-  return __dirname.split('/node_modules')[0];
-}
-
 function main() {
   try {
     if (quanticIsDependency()) {
@@ -111,7 +67,7 @@ function main() {
       const quanticDirectoryPath = pathlib.join(defaultPackagePath, 'quantic');
 
       createQuanticDirectory(defaultPackagePath);
-      copyFolderRecursiveSync(sourceDirectory, quanticDirectoryPath);
+      copyFolder(sourceDirectory, quanticDirectoryPath);
     }
   } catch (err) {
     console.error('Failed to setup Quantic.');

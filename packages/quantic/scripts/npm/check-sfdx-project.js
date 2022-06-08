@@ -1,20 +1,6 @@
 const pathlib = require('path');
-const fs = require('fs');
-
-function quanticIsDependency() {
-  const upperDirectories = __dirname.split(pathlib.sep);
-  const firstUpperDirectories = upperDirectories.slice(
-    upperDirectories.length - 5
-  );
-  return (
-    firstUpperDirectories.join(pathlib.sep) ===
-    pathlib.join('node_modules', '@coveo', 'quantic', 'scripts', 'npm')
-  );
-}
-
-function getProjectPath() {
-  return __dirname.split('/node_modules')[0];
-}
+const fs = require('fs-extra');
+const {quanticIsDependency, getProjectPath} = require('./utils');
 
 function main() {
   try {
