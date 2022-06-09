@@ -12,6 +12,7 @@ export interface ResultLinkProps {
   onCancelPendingSelect: () => void;
   ref?: (elm?: HTMLAnchorElement) => void;
   attributes?: Attr[];
+  accessible?: boolean;
 }
 
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
@@ -26,6 +27,7 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
     onCancelPendingSelect,
     ref,
     attributes,
+    accessible = true,
   },
   children
 ) => {
@@ -57,6 +59,8 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
           });
         }
       }}
+      tabIndex={accessible ? undefined : -1}
+      aria-hidden={accessible ? undefined : 'true'}
     >
       {children}
     </a>

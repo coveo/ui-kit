@@ -96,6 +96,14 @@ export class AtomicLoadMoreResults {
     );
   }
 
+  private onClick() {
+    (
+      this.bindings.interfaceElement.querySelector('atomic-result-list') ??
+      this.bindings.interfaceElement.querySelector('atomic-folded-result-list')
+    )?.focusOnNextNewResult();
+    this.resultList.fetchMoreResults();
+  }
+
   private renderLoadMoreResults() {
     return (
       <Button
@@ -103,7 +111,7 @@ export class AtomicLoadMoreResults {
         text={this.bindings.i18n.t('load-more-results')}
         part="load-more-results-button"
         class="font-bold my-2 p-3"
-        onClick={() => this.resultList.fetchMoreResults()}
+        onClick={() => this.onClick()}
       ></Button>
     );
   }

@@ -23,6 +23,10 @@ import {
 import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 import {randomID} from '../../../utils/utils';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -55,6 +59,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   @State() public error!: Error;
   @State() public templateHasError = false;
+
+  @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   public resultListCommon!: ResultListCommon;
   private renderingFunction: ((res: FoldedResult) => HTMLElement) | null = null;
@@ -112,6 +118,13 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.assignRenderingFunctionIfPossible();
   }
 
+  /**
+   * @internal
+   */
+  @Method() public focusOnNextNewResult() {
+    this.resultListCommon.focusOnNextNewResult(this.foldedResultListState);
+  }
+
   @Listen('scroll', {target: 'window'})
   handleInfiniteScroll() {
     if (
@@ -150,6 +163,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
         this.templateHasError = true;
       },
       loadingFlag: this.loadingFlag,
+      nextNewResultTarget: this.nextNewResultTarget,
     });
 
     try {

@@ -246,6 +246,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
+        "focusOnNextNewResult": () => Promise<void>;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -688,6 +689,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
+        "focusOnNextNewResult": () => Promise<void>;
         /**
           * @deprecated use `imageSize` instead.
          */

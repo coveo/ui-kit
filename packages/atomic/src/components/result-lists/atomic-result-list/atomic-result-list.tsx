@@ -21,6 +21,10 @@ import {
 } from '../../atomic-result/atomic-result-display-options';
 import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
 import {randomID} from '../../../utils/utils';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -71,6 +75,8 @@ export class AtomicResultList implements InitializableComponent {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
+  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+
   private resultListCommon!: ResultListCommon;
   private renderingFunction: ((res: Result) => HTMLElement) | null = null;
   private loadingFlag = randomID('firstResultLoaded-');
@@ -114,6 +120,13 @@ export class AtomicResultList implements InitializableComponent {
     this.assignRenderingFunctionIfPossible();
   }
 
+  /**
+   * @internal
+   */
+  @Method() public focusOnNextNewResult() {
+    this.resultListCommon.focusOnNextNewResult(this.resultListState);
+  }
+
   connectedCallback() {
     // to remove when `image` prop is removed;
     if (this.host.hasAttribute('image')) {
@@ -153,6 +166,7 @@ export class AtomicResultList implements InitializableComponent {
         this.templateHasError = true;
       },
       loadingFlag: this.loadingFlag,
+      nextNewResultTarget: this.nextNewResultTarget,
     });
 
     this.resultList = buildResultList(
