@@ -53,8 +53,6 @@ type AppState =
   | CaseAssistAppState
   | InsightAppState;
 
-type EngineType = 'search' | 'insight';
-
 interface MockEngine {
   actions: AnyAction[];
   findAsyncAction: <ThunkArg>(
