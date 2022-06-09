@@ -113,8 +113,7 @@ export function buildInsightEngine(
         return;
       }
 
-      const action = insightExecuteSearch(analyticsEvent);
-      engine.dispatch(action);
+      engine.dispatch(insightExecuteSearch(analyticsEvent));
     },
   };
 }

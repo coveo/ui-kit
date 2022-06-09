@@ -11,7 +11,7 @@ import {
   StateNeededByExecuteSearch,
 } from './insight-search-actions';
 
-export interface InsightSearchActionCreaters {
+export interface InsightSearchActionCreators {
   /**
    * Creates an action that executes a search query.
    *
@@ -67,8 +67,8 @@ export interface InsightSearchActionCreaters {
  */
 export function loadInsightSearchActions(
   engine: InsightEngine
-): InsightSearchActionCreaters {
-  engine.addReducers({insightSearch});
+): InsightSearchActionCreators {
+  engine.addReducers({search: insightSearch});
 
   return {
     insightExecuteSearch,

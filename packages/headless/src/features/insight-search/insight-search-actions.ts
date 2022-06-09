@@ -58,7 +58,6 @@ const fetchFromAPI = async (
   return {response, duration, queryExecuted, requestExecuted: request};
 };
 
-/** TODO: We need to dispatch analytics action, but first we have to create InsightClientProvider so the refactor will be available in  https://coveord.atlassian.net/browse/SVCC-2246*/
 export const insightExecuteSearch = createAsyncThunk<
   InsightExecuteSearchThunkReturn,
   SearchAction,
@@ -69,6 +68,7 @@ export const insightExecuteSearch = createAsyncThunk<
     analyticsAction: SearchAction,
     {getState, dispatch, rejectWithValue, extra}
   ) => {
+    /** TODO: We need to dispatch analytics action, but first we have to create InsightClientProvider so the refactor will be available in  https://coveord.atlassian.net/browse/SVCC-2246*/
     const state = getState();
     const fetched = await fetchFromAPI(
       extra.apiClient,
