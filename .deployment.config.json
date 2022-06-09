@@ -6,7 +6,7 @@
       "sequential": ["us-east-1"]
     },
     "environments_order": {
-      "sequential": ["dev", "qa", "prd"]
+      "sequential": ["dev", "stg", "prd"]
     },
     "team_jenkins": "searchuibuilds",
     "start_environment_automatically": false,
@@ -159,11 +159,11 @@
       }
     },
     {
-      "id": "qa-release",
+      "id": "stg-release",
       "team_jenkins": {
         "disabled": true,
-        "job_name": "ui-kit-qa-release",
-        "qa": {
+        "job_name": "ui-kit-stg-release",
+        "stg": {
           "disabled": false
         }
       }

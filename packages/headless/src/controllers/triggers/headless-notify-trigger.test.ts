@@ -14,6 +14,11 @@ describe('NotifyTrigger', () => {
     notifyTrigger = buildNotifyTrigger(engine);
   }
 
+  function setEngineTriggersState(notifications: string[]) {
+    engine.state.triggers.notifications = notifications;
+    engine.state.triggers.notification = notifications[0] ?? '';
+  }
+
   function getLogTriggerNotifyAction() {
     return engine.actions.find((a) => a.type === logNotifyTrigger.pending.type);
   }
@@ -41,7 +46,7 @@ describe('NotifyTrigger', () => {
     expect(notifyTrigger.subscribe).toBeTruthy();
   });
 
-  describe('when the #engine.state.triggers.notify is not updated', () => {
+  describe('when the #engine.state.triggers.notifications is not updated', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
@@ -60,13 +65,13 @@ describe('NotifyTrigger', () => {
     });
   });
 
-  describe('when the #engine.state.triggers.notify is updated', () => {
+  describe('when the #engine.state.triggers.notifications is updated', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
       initNotifyTrigger();
       notifyTrigger.subscribe(listener);
-      engine.state.triggers.notification = 'hello';
+      setEngineTriggersState(['hello']);
       const [firstListener] = registeredListeners();
       firstListener();
     });
@@ -80,13 +85,55 @@ describe('NotifyTrigger', () => {
     });
   });
 
-  describe('when the #engine.state.triggers.notify is updated with an empty string', () => {
+  describe('when the #engine.state.triggers.notifications is updated with an empty array', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
       initNotifyTrigger();
       notifyTrigger.subscribe(listener);
-      engine.state.triggers.notification = '';
+      setEngineTriggersState([]);
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
+
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
+
+    it('it does not dispatch #logNotifyTrigger', () => {
+      expect(getLogTriggerNotifyAction()).toBeFalsy();
+    });
+  });
+
+  describe('when a non-empty #engine.state.triggers.notifications is updated with an empty array', () => {
+    const listener = jest.fn();
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      setEngineTriggersState(['hello', 'world']);
+      initNotifyTrigger();
+      notifyTrigger.subscribe(listener);
+      setEngineTriggersState([]);
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
+
+    it('it calls the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
+
+    it('it dispatches #logNotifyTrigger', () => {
+      expect(getLogTriggerNotifyAction()).toBeTruthy();
+    });
+  });
+
+  describe('when a non-empty #engine.state.triggers.notifications is updated with the same array', () => {
+    const listener = jest.fn();
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      setEngineTriggersState(['hello', 'world']);
+      initNotifyTrigger();
+      notifyTrigger.subscribe(listener);
+      setEngineTriggersState(['hello', 'world']);
       const [firstListener] = registeredListeners();
       firstListener();
     });

@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "1.19.1",
+  "version": "1.24.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -32,10 +32,13 @@
     "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json",
     "package:create": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "package:create:publish": "node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "preinstall": "node scripts/npm/check-sfdx-project.js",
+    "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
-    "@coveo/headless": "1.67.1"
+    "@coveo/headless": "1.72.1",
+    "fs-extra": "^10.1.0"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -64,5 +67,13 @@
     "ts-node": "10.7.0",
     "wait-on": "6.0.1",
     "xml2json": "0.12.0"
-  }
+  },
+  "files": [
+    "force-app/main/default/classes/*",
+    "force-app/main/default/labels/*",
+    "force-app/main/default/lwc/*",
+    "force-app/main/default/cspTrustedSites/*",
+    "force-app/main/default/staticresources/*",
+    "scripts/npm"
+  ]
 }

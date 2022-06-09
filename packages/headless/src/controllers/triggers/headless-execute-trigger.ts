@@ -5,6 +5,8 @@ import {loadReducerError} from '../../utils/errors';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {ExecuteTriggerParams} from '../../api/search/trigger';
+import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
+import {arrayEqual} from '../../utils/compare-utils';
 
 /**
  * The `ExecuteTrigger` controller handles execute trigger actions.
@@ -22,13 +24,22 @@ export interface ExecuteTrigger extends Controller {
 export interface ExecuteTriggerState {
   /**
    * The name of the function to be executed.
+   *
+   * @deprecated Use `executions` instead.
    */
   functionName: string;
 
   /**
    * The parameters of the function to be executed.
+   *
+   * @deprecated Use `executions` instead.
    */
   params: ExecuteTriggerParams;
+
+  /**
+   * The functions to be executed.
+   */
+  executions: FunctionExecutionTrigger[];
 }
 
 /**
@@ -49,22 +60,24 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
 
   const getState = () => engine.state;
 
-  let previousName = getState().triggers.execute.functionName;
-  let previousParams = getState().triggers.execute.params;
+  let previousExecutions = getState().triggers.executions;
 
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        const hasChanged =
-          previousName !== this.state.functionName ||
-          previousParams !== this.state.params;
+        const hasChanged = !arrayEqual(
+          this.state.executions,
+          previousExecutions,
+          (first, second) =>
+            first.functionName === second.functionName &&
+            arrayEqual(first.params, second.params)
+        );
 
-        previousName = this.state.functionName;
-        previousParams = this.state.params;
+        previousExecutions = this.state.executions;
 
-        if (hasChanged && this.state.functionName) {
+        if (hasChanged && this.state.executions.length) {
           listener();
           dispatch(logTriggerExecute());
         }
@@ -77,6 +90,7 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
       return {
         functionName: getState().triggers.execute.functionName,
         params: getState().triggers.execute.params,
+        executions: getState().triggers.executions,
       };
     },
   };

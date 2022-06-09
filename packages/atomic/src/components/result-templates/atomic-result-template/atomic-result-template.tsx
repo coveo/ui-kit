@@ -55,7 +55,11 @@ export class AtomicResultTemplate {
       setError: (err) => {
         this.error = err;
       },
-      validParents: ['atomic-result-list', 'atomic-folded-result-list'],
+      validParents: [
+        'atomic-result-list',
+        'atomic-folded-result-list',
+        'atomic-search-box-instant-results',
+      ],
       allowEmpty: true,
     });
   }

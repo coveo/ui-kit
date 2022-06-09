@@ -4,6 +4,9 @@ module.exports = {
   content: ['./src/**/*.tsx'],
   theme: {
     extend: {
+      variants: {
+        textColor: ['group-hover']
+      },
       colors: {
         // Primary
         primary: 'var(--atomic-primary)',
@@ -27,6 +30,9 @@ module.exports = {
         md: 'var(--atomic-border-radius-md)',
         lg: 'var(--atomic-border-radius-lg)',
         xl: 'var(--atomic-border-radius-xl)',
+      },
+      boxShadow: {
+        'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)'
       },
       fontWeight: {
         normal: 'var(--atomic-font-normal)',

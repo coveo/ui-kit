@@ -151,7 +151,7 @@ export class AtomicQueryError implements InitializableComponent {
         <atomic-icon
           part="icon"
           icon={details.icon}
-          class="w-1/2 mt-8"
+          class="w-1/2 mt-8 max-w-lg"
         ></atomic-icon>
         <h3 part="title" class="text-2xl text-on-background mt-8">
           {details.title}

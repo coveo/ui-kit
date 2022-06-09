@@ -5,6 +5,7 @@ import {
 } from '../../test/mock-engine';
 import {triggers} from '../../app/reducers';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
+import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
 
 describe('ExecuteTrigger', () => {
   let engine: MockSearchEngine;
@@ -12,6 +13,14 @@ describe('ExecuteTrigger', () => {
 
   function initExecuteTrigger() {
     executeTrigger = buildExecuteTrigger(engine);
+  }
+
+  function setEngineTriggersState(executions: FunctionExecutionTrigger[]) {
+    engine.state.triggers.executions = executions;
+    engine.state.triggers.execute = executions[0] ?? {
+      functionName: '',
+      params: [],
+    };
   }
 
   function registeredListeners() {
@@ -43,7 +52,7 @@ describe('ExecuteTrigger', () => {
     expect(executeTrigger.subscribe).toBeTruthy();
   });
 
-  describe('when the #engine.state.triggers.execute is not updated', () => {
+  describe('when the #engine.state.triggers.executions is not updated', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
@@ -63,16 +72,18 @@ describe('ExecuteTrigger', () => {
     });
   });
 
-  describe('when the #engine.state.triggers.execute is updated', () => {
+  describe('when the #engine.state.triggers.executions is updated', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
       initExecuteTrigger();
       executeTrigger.subscribe(listener);
-      engine.state.triggers.execute = {
-        functionName: 'function',
-        params: ['hi'],
-      };
+      setEngineTriggersState([
+        {
+          functionName: 'function',
+          params: ['hi'],
+        },
+      ]);
 
       const [firstListener] = registeredListeners();
       firstListener();
@@ -92,13 +103,66 @@ describe('ExecuteTrigger', () => {
     });
   });
 
-  describe('when the #engine.state.triggers.excute.functionName is updated with an empty string', () => {
+  describe('when the #engine.state.triggers.executions is updated with an empty array', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
       initExecuteTrigger();
       executeTrigger.subscribe(listener);
-      engine.state.triggers.execute.functionName = '';
+      setEngineTriggersState([]);
+
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
+
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
+
+    it('it does not dispatch #logTriggerExecute', () => {
+      expect(getLogTriggerExecuteAction()).toBeFalsy();
+    });
+  });
+
+  describe('when a non-empty #engine.state.triggers.executions is updated with an empty array', () => {
+    const listener = jest.fn();
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      setEngineTriggersState([
+        {functionName: 'info', params: ['String param', 1, false]},
+        {functionName: 'error', params: [2, true, 'No']},
+      ]);
+      initExecuteTrigger();
+      executeTrigger.subscribe(listener);
+      setEngineTriggersState([]);
+
+      const [firstListener] = registeredListeners();
+      firstListener();
+    });
+
+    it('it does not call the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(0);
+    });
+
+    it('it does not dispatch #logTriggerExecute', () => {
+      expect(getLogTriggerExecuteAction()).toBeFalsy();
+    });
+  });
+
+  describe('when a non-empty #engine.state.triggers.executions is updated with the same array', () => {
+    const listener = jest.fn();
+    beforeEach(() => {
+      engine = buildMockSearchAppEngine();
+      setEngineTriggersState([
+        {functionName: 'info', params: ['String param', 1, false]},
+        {functionName: 'error', params: [2, true, 'No']},
+      ]);
+      initExecuteTrigger();
+      executeTrigger.subscribe(listener);
+      setEngineTriggersState([
+        {functionName: 'info', params: ['String param', 1, false]},
+        {functionName: 'error', params: [2, true, 'No']},
+      ]);
 
       const [firstListener] = registeredListeners();
       firstListener();

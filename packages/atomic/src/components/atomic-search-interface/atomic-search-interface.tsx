@@ -40,6 +40,7 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../utils/local-storage-utils';
+import {loadDayjsLocale} from '../../utils/dayjs-locales';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -144,6 +145,16 @@ export class AtomicSearchInterface {
   public connectedCallback() {
     this.i18nPromise = this.initI18n();
     setLoadingFlag(this.store, FirstSearchExecutedFlag);
+    this.updateMobileBreakpoint();
+  }
+
+  private updateMobileBreakpoint() {
+    const breakpoint = this.host.querySelector(
+      'atomic-search-layout'
+    )?.mobileBreakpoint;
+    if (breakpoint) {
+      this.store.set('mobileBreakpoint', breakpoint);
+    }
   }
 
   @Watch('searchHub')
@@ -193,6 +204,7 @@ export class AtomicSearchInterface {
       })
     );
 
+    loadDayjsLocale(this.language);
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
       'translation',
@@ -413,6 +425,11 @@ export class AtomicSearchInterface {
         hasNoResultsAfterInitialSearch
       );
 
+      this.host.classList.toggle(
+        'atomic-search-interface-error',
+        this.searchStatus.state.hasError
+      );
+
       if (
         this.searchStatus.state.firstSearchExecuted &&
         hasLoadingFlag(this.store, FirstSearchExecutedFlag)
@@ -470,6 +487,7 @@ export class AtomicSearchInterface {
     }
     this.updateIconAssetsPath();
     initEngine();
+    loadDayjsLocale(this.language);
     await this.i18nPromise;
     this.initComponents();
     this.initSearchStatus();
