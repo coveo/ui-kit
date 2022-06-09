@@ -22,13 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/commit-generated-files
-      - run: zip -r packages.zip packages
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: built-packages
-          path: packages.zip
   lint-check:
     name: 'Check with linter'
     needs: build
