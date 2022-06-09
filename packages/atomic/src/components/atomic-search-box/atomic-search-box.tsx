@@ -39,10 +39,8 @@ import {
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
 import {promiseTimeout} from '../../utils/promise-utils';
-import {
-  DEFAULT_MOBILE_BREAKPOINT,
-  updateBreakpoints,
-} from '../../utils/replace-breakpoint';
+import {updateBreakpoints} from '../../utils/replace-breakpoint';
+import {isMobile} from '../../utils/store';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -93,17 +91,6 @@ export class AtomicSearchBox {
   @State() private rightSuggestions: SearchBoxSuggestions[] = [];
   @State() private rightSuggestionElements: SearchBoxSuggestionItem[] = [];
 
-  private searchLayout: HTMLAtomicSearchLayoutElement | null = null;
-  private get isMobile() {
-    return (
-      window.innerWidth <=
-      Number(
-        (
-          this.searchLayout?.mobileBreakpoint ?? DEFAULT_MOBILE_BREAKPOINT
-        ).match(/\d*/)?.[0]
-      )
-    );
-  }
   /**
    * The amount of queries displayed when the user interacts with the search box.
    * By default, a mix of query suggestions and recent queries will be shown.
@@ -132,7 +119,6 @@ export class AtomicSearchBox {
   protected ariaMessage!: string;
 
   public initialize() {
-    this.searchLayout = this.host.closest('atomic-search-layout');
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
 
@@ -680,7 +666,7 @@ export class AtomicSearchBox {
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
-    if (!this.isMobile) {
+    if (!isMobile(this.bindings.store)) {
       await Promise.allSettled(
         this.suggestions.map((suggestion) =>
           promiseTimeout(

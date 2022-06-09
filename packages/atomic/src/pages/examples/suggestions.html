@@ -57,6 +57,7 @@
             }, this);
           }
         }
+        // To test this component, add it to `atomic-search-box`
         window.customElements.define('custom-suggestions', CustomSuggestions);
       }
 
@@ -94,6 +95,7 @@
         <atomic-layout-section section="search">
           <atomic-search-box suggestion-timeout="1000">
             <atomic-did-you-mean></atomic-did-you-mean>
+            <atomic-search-box-query-suggestions> </atomic-search-box-query-suggestions>
             <atomic-search-box-recent-queries icon="assets://xml.svg"> </atomic-search-box-recent-queries>
             <atomic-search-box-instant-results image-size="small">
               <atomic-result-template>

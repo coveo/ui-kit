@@ -1,4 +1,5 @@
 import {Component, Element, Prop} from '@stencil/core';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../utils/replace-breakpoint';
 import {randomID} from '../../utils/utils';
 import {buildSearchLayout} from './search-layout';
 
@@ -16,7 +17,7 @@ export class AtomicSearchLayout {
    * CSS valuethat defines where the layout goes from mobile to desktop.
    * e.g., 800px, 65rem.
    */
-  @Prop({reflect: true}) public mobileBreakpoint = '1024px';
+  @Prop({reflect: true}) public mobileBreakpoint = DEFAULT_MOBILE_BREAKPOINT;
 
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-search-layout-');
