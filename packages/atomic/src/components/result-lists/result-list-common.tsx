@@ -12,7 +12,10 @@ import {
   ResultListProps,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
-import {Bindings} from '../../utils/initialization-utils';
+import {
+  Bindings,
+  InitializableComponent,
+} from '../../utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -33,6 +36,24 @@ import {
   FocusTargetController,
   getFirstFocusableDescendant,
 } from '../../utils/accessibility-utils';
+
+export interface BaseResultList<T = FoldedResult | Result>
+  extends InitializableComponent {
+  host: HTMLElement;
+  templateHasError: boolean;
+  resultListCommon: ResultListCommon;
+
+  setRenderFunction?: SetRenderFunction<T>;
+
+  density?: ResultDisplayDensity;
+  imageSize?: ResultDisplayImageSize;
+  image?: ResultDisplayImageSize;
+  display?: ResultDisplayLayout;
+}
+
+export type SetRenderFunction<T = FoldedResult | Result> = (
+  render: (result: T) => HTMLElement
+) => Promise<void>;
 interface DisplayOptions {
   density: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;

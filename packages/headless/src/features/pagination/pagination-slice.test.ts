@@ -65,6 +65,7 @@ describe('pagination slice', () => {
   it('initializes the state correctly', () => {
     const finalState = paginationReducer(undefined, {type: ''});
     expect(finalState).toEqual({
+      defaultNumberOfResults: 10,
       numberOfResults: 10,
       firstResult: 0,
       totalCountFiltered: 0,
@@ -181,6 +182,7 @@ describe('pagination slice', () => {
       firstResult: 123,
       numberOfResults: 456,
       totalCountFiltered: 123,
+      defaultNumberOfResults: 0xabc,
     };
     const historyChange = {
       ...getHistoryInitialState(),
@@ -221,10 +223,11 @@ describe('pagination slice', () => {
       expect(finalState.numberOfResults).toEqual(0);
     });
 
-    it('when the object does not contain a #numberOfResults key, it does not update the property in state', () => {
+    it('when the object does not contain a #numberOfResults key, it restores the #defaultNumberOfResults', () => {
       state.numberOfResults = 1;
+      state.defaultNumberOfResults = 15;
       const finalState = paginationReducer(state, restoreSearchParameters({}));
-      expect(finalState.numberOfResults).toEqual(state.numberOfResults);
+      expect(finalState.numberOfResults).toEqual(state.defaultNumberOfResults);
     });
   });
 

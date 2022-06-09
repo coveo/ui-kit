@@ -11,7 +11,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
@@ -19,7 +18,11 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../atomic-result/atomic-result-display-options';
-import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
+import {
+  BaseResultList,
+  ResultListCommon,
+  ResultRenderingFunction,
+} from '../result-list-common';
 import {randomID} from '../../../utils/utils';
 import {
   FocusTarget,
@@ -48,7 +51,7 @@ import {
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicResultList implements InitializableComponent {
+export class AtomicResultList implements BaseResultList<Result> {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -77,7 +80,7 @@ export class AtomicResultList implements InitializableComponent {
 
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
-  private resultListCommon!: ResultListCommon;
+  public resultListCommon!: ResultListCommon;
   private renderingFunction: ((res: Result) => HTMLElement) | null = null;
   private loadingFlag = randomID('firstResultLoaded-');
 

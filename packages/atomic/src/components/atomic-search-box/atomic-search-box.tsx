@@ -21,6 +21,7 @@ import {randomID} from '../../utils/utils';
 import {
   isDividerElement,
   isSuggestionElement,
+  queryDataAttribute,
   SearchBoxSuggestionItem,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -207,6 +208,13 @@ export class AtomicSearchBox {
     this.activeDescendant = activeDescendant;
   }
 
+  private updateDescendants(activeDescendant = '') {
+    const newPrevDescendantElement = this.activeDescendantElement;
+
+    this.updateActiveDescendant(activeDescendant);
+    this.previousActiveDescendantElement = newPrevDescendantElement;
+  }
+
   private get activeDescendantElement(): HTMLLIElement | null {
     if (!this.hasActiveDescendant) {
       return null;
@@ -302,16 +310,14 @@ export class AtomicSearchBox {
       return;
     }
     if (panel && panel.firstElementChild) {
-      const newPrevDescendantElement = this.activeDescendantElement;
-      const panelHadActiveDescendant =
+      const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
-      this.updateActiveDescendant(
-        panelHadActiveDescendant
+      this.updateDescendants(
+        panelHasActiveDescendant
           ? this.previousActiveDescendantElement!.id
           : panel.firstElementChild.id
       );
-      this.previousActiveDescendantElement = newPrevDescendantElement;
     }
   }
 
@@ -364,10 +370,10 @@ export class AtomicSearchBox {
       this.rightSuggestions
     );
 
-    const defaultSuggestionQ =
+    const defaultSuggestedQuery =
       this.allSuggestionElements.find(isSuggestionElement)?.query || '';
 
-    this.updateSuggestedQuery(defaultSuggestionQ);
+    this.updateSuggestedQuery(defaultSuggestedQuery);
     this.updateAriaMessage();
   }
 
@@ -414,32 +420,39 @@ export class AtomicSearchBox {
     );
   }
 
-  private isPanelInFocus(panel: 'right' | 'left') {
+  private isPanelInFocus(
+    panel: HTMLElement | undefined,
+    query: string
+  ): boolean {
     if (!this.activeDescendantElement) {
       return false;
     }
-    return this.activeDescendantElement
-      ?.closest('ul')
-      ?.getAttribute('part')
-      ?.includes(`suggestions-${panel}`);
+
+    if (query) {
+      const escaped = query.replace(/"/g, '\\"');
+      return !!panel?.querySelector(`[${queryDataAttribute}="${escaped}"]`);
+    }
+
+    return this.activeDescendantElement?.closest('ul') === panel;
   }
 
   private updateQueryFromSuggestion() {
-    const query = this.activeDescendantElement?.getAttribute('data-query');
-    if (query && this.searchBoxState.value !== query) {
-      this.updateQuery(query);
-      this.updateSuggestedQuery(query);
+    const suggestedQuery =
+      this.activeDescendantElement?.getAttribute(queryDataAttribute);
+    if (suggestedQuery && this.searchBoxState.value !== suggestedQuery) {
+      this.updateQuery(suggestedQuery);
+      this.updateSuggestedQuery(suggestedQuery);
     }
   }
 
-  private updateSuggestionElements() {
-    if (!this.isPanelInFocus('left')) {
+  private updateSuggestionElements(query: string) {
+    if (!this.isPanelInFocus(this.leftPanelRef, query)) {
       this.leftSuggestionElements = this.getSuggestionElements(
         this.leftSuggestions
       );
     }
 
-    if (!this.isPanelInFocus('right')) {
+    if (!this.isPanelInFocus(this.rightPanelRef, query)) {
       this.rightSuggestionElements = this.getSuggestionElements(
         this.rightSuggestions
       );
@@ -562,6 +575,40 @@ export class AtomicSearchBox {
     return part;
   }
 
+  private onSuggestionClick(item: SearchBoxSuggestionItem) {
+    item.onSelect && item.onSelect();
+    this.clearSuggestions();
+  }
+  private onSuggestionMouseOver(
+    item: SearchBoxSuggestionItem,
+    side: 'left' | 'right',
+    id: string
+  ) {
+    const thisPanel = side === 'left' ? this.leftPanelRef : this.rightPanelRef;
+    if (this.panelInFocus === thisPanel) {
+      this.updateActiveDescendant(id);
+    } else {
+      this.updateDescendants(id);
+    }
+    if (isSuggestionElement(item) && item.query) {
+      this.updateSuggestedQuery(item.query);
+    }
+  }
+
+  private getAriaAttributes(
+    item: SearchBoxSuggestionItem,
+    isSelected: boolean
+  ) {
+    if (isSuggestionElement(item) && !!item.query) {
+      return {
+        role: 'option',
+        [queryDataAttribute]: item.query,
+        'aria-selected': `${isSelected}`,
+      };
+    }
+    return {};
+  }
+
   private renderSuggestion(
     item: SearchBoxSuggestionItem,
     index: number,
@@ -586,44 +633,36 @@ export class AtomicSearchBox {
         }`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
-          item.onSelect && item.onSelect();
-          this.clearSuggestions();
+          this.onSuggestionClick(item);
         }}
         onMouseOver={() => {
-          this.updateActiveDescendant(id);
-          if (isSuggestionElement(item) && item.query) {
-            this.updateSuggestedQuery(item.query);
-          }
+          this.onSuggestionMouseOver(item, side, id);
         }}
         ref={(el) => {
           if (isHTMLElement(item.content)) {
             el?.replaceChildren(item.content);
           }
         }}
-        {...(hasQuery && {
-          role: 'option',
-          'data-query': item.query,
-          'aria-selected': `${isSelected}`,
-        })}
+        {...this.getAriaAttributes(item, isSelected)}
       >
         {!isHTMLElement(item.content) && item.content}
       </li>
     );
   }
 
-  private async updateSuggestedQuery(q: string) {
+  private async updateSuggestedQuery(suggestedQuery: string) {
     await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(
           suggestion.onSuggestedQueryChange
-            ? suggestion.onSuggestedQueryChange(q)
+            ? suggestion.onSuggestedQueryChange(suggestedQuery)
             : Promise.resolve(),
           this.suggestionTimeout
         )
       )
     );
-    this.suggestedQuery = q;
-    this.updateSuggestionElements();
+    this.suggestedQuery = suggestedQuery;
+    this.updateSuggestionElements(suggestedQuery);
   }
 
   private renderSuggestions() {
