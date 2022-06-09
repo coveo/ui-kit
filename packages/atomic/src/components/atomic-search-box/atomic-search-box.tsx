@@ -665,15 +665,6 @@ export class AtomicSearchBox {
     this.updateSuggestionElements(suggestedQuery);
   }
 
-  private handleListMouseDown(
-    e: Event,
-    getRef: () => HTMLUListElement | undefined
-  ) {
-    if (e.target === getRef()) {
-      e.preventDefault();
-    }
-  }
-
   private renderPanel(
     elements: SearchBoxSuggestionItem[],
     side: 'left' | 'right',
@@ -690,7 +681,11 @@ export class AtomicSearchBox {
         aria-label={this.bindings.i18n.t('query-suggestion-list')}
         ref={setRef}
         class="flex-grow"
-        onMouseDown={(e) => this.handleListMouseDown(e, getRef)}
+        onMouseDown={(e) => {
+          if (e.target === getRef()) {
+            e.preventDefault();
+          }
+        }}
       >
         {elements.map((suggestion, index) =>
           this.renderSuggestion(suggestion, index, elements.length - 1, side)
