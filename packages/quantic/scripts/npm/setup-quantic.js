@@ -44,31 +44,33 @@ function getPackageDirectory(projectDirectory) {
 }
 
 function main() {
+  if (!quanticIsDependency()) {
+    return;
+  }
+
   try {
-    if (quanticIsDependency()) {
-      // path to source directory: project_name/node_modules/@coveo/quantic/force-app/main/default
-      const sourceDirectory = pathlib.join(
-        __dirname,
-        '..',
-        '..',
-        'force-app',
-        'main',
-        'default'
-      );
+    // path to source directory: project_name/node_modules/@coveo/quantic/force-app/main/default
+    const sourceDirectory = pathlib.join(
+      __dirname,
+      '..',
+      '..',
+      'force-app',
+      'main',
+      'default'
+    );
 
-      const projectDirectory = getProjectPath();
+    const projectDirectory = getProjectPath();
 
-      // the package directory is the directory to target when syncing source to and from an org.
-      const defaultPackageDirectory = getPackageDirectory(projectDirectory);
-      const defaultPackagePath = pathlib.join(
-        projectDirectory,
-        defaultPackageDirectory
-      );
-      const quanticDirectoryPath = pathlib.join(defaultPackagePath, 'quantic');
+    // the package directory is the directory to target when syncing source to and from an org.
+    const defaultPackageDirectory = getPackageDirectory(projectDirectory);
+    const defaultPackagePath = pathlib.join(
+      projectDirectory,
+      defaultPackageDirectory
+    );
+    const quanticDirectoryPath = pathlib.join(defaultPackagePath, 'quantic');
 
-      createQuanticDirectory(defaultPackagePath);
-      copyFolder(sourceDirectory, quanticDirectoryPath);
-    }
+    createQuanticDirectory(defaultPackagePath);
+    copyFolder(sourceDirectory, quanticDirectoryPath);
   } catch (err) {
     console.error('Failed to setup Quantic.');
     console.error(err);
