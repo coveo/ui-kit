@@ -8,7 +8,10 @@ import {
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
 import {cleanUpString} from '../../../utils/string-utils';
-import {ResultListCommon} from '../../result-lists/result-list-common';
+import {
+  BaseResultList,
+  ResultListCommon,
+} from '../../result-lists/result-list-common';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -23,17 +26,17 @@ import {
   tag: 'atomic-search-box-instant-results',
   shadow: true,
 })
-export class AtomicSearchBoxInstantResults {
-  private bindings!: SearchBoxSuggestionsBindings;
+export class AtomicSearchBoxInstantResults implements BaseResultList {
+  public bindings!: SearchBoxSuggestionsBindings;
 
-  @Element() private host!: HTMLElement;
+  @Element() public host!: HTMLElement;
 
   @State() public error!: Error;
   @State() public templateHasError = false;
   private instantResults!: InstantResults;
 
   private results: Result[] = [];
-  private resultListCommon!: ResultListCommon;
+  public resultListCommon!: ResultListCommon;
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */

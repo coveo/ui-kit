@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.39.0](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.38.2...@coveo/bueno@0.39.0) (2022-06-09)
+
+
+### Features
+
+* **atomic:** extract result list interface ([#2064](https://github.com/coveo/ui-kit/issues/2064)) ([4e0054d](https://github.com/coveo/ui-kit/commit/4e0054d4229fe594b8ab44954cf6941cf3745336))
+
+
+
+
+
 ## [0.38.2](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.38.1...@coveo/bueno@0.38.2) (2022-06-08)
 
 
