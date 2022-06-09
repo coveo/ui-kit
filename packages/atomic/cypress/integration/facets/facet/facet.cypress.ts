@@ -665,7 +665,7 @@ describe('Facet v1 Test Suites', () => {
         FacetSelectors,
         defaultNumberOfValues * 2
       );
-      CommonFacetAssertions.assertFocusShowMore(FacetSelectors);
+      CommonFacetAssertions.assertFocusFirstCheckboxValue(FacetSelectors);
     });
 
     describe('verify analytics', () => {
@@ -689,7 +689,7 @@ describe('Facet v1 Test Suites', () => {
           false
         );
         CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, true);
-        CommonFacetAssertions.assertFocusShowLess(FacetSelectors);
+        CommonFacetAssertions.assertFocusFirstCheckboxValue(FacetSelectors);
       });
     });
 

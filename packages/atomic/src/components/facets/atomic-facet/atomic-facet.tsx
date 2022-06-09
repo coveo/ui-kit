@@ -201,10 +201,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop() public allowedValues?: string;
 
   @FocusTarget()
-  private showMoreFocus!: FocusTargetController;
-
-  @FocusTarget()
-  private showLessFocus!: FocusTargetController;
+  private showMoreLessFocus!: FocusTargetController;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -326,7 +323,11 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     );
   }
 
-  private renderValue(facetValue: FacetValue, onClick: () => void) {
+  private renderValue(
+    facetValue: FacetValue,
+    onClick: () => void,
+    isShowMoreLessFocusTarget: boolean
+  ) {
     const displayValue = getFieldValueCaption(
       this.field,
       facetValue.value,
@@ -343,6 +344,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
+            buttonRef={(element) =>
+              isShowMoreLessFocusTarget &&
+              this.showMoreLessFocus.setTarget(element)
+            }
           >
             <FacetValueLabelHighlight
               displayValue={displayValue}
@@ -360,6 +365,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
+            buttonRef={(element) =>
+              isShowMoreLessFocusTarget &&
+              this.showMoreLessFocus.setTarget(element)
+            }
           >
             <FacetValueLabelHighlight
               displayValue={displayValue}
@@ -377,6 +386,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
+            buttonRef={(element) =>
+              isShowMoreLessFocusTarget &&
+              this.showMoreLessFocus.setTarget(element)
+            }
           >
             <FacetValueLabelHighlight
               displayValue={displayValue}
@@ -407,11 +420,14 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
 
   private renderValues() {
     return this.renderValuesContainer(
-      this.facetState.values.map((value) =>
-        this.renderValue(value, () =>
-          this.displayValuesAs === 'link'
-            ? this.facet.toggleSingleSelect(value)
-            : this.facet.toggleSelect(value)
+      this.facetState.values.map((value, i) =>
+        this.renderValue(
+          value,
+          () =>
+            this.displayValuesAs === 'link'
+              ? this.facet.toggleSingleSelect(value)
+              : this.facet.toggleSelect(value),
+          i === 0
         )
       )
     );
@@ -429,7 +445,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
           () =>
             this.displayValuesAs === 'link'
               ? this.facet.facetSearch.singleSelect(value)
-              : this.facet.facetSearch.select(value)
+              : this.facet.facetSearch.select(value),
+          false
         )
       ),
       this.facetState.facetSearch.query
@@ -448,25 +465,20 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   }
 
   private renderShowMoreLess() {
-    if (this.facetState.canShowMoreValues) {
-      this.showLessFocus.disableForCurrentSearch();
-    }
     return (
       <FacetShowMoreLess
         label={this.label}
         i18n={this.bindings.i18n}
         onShowMore={() => {
-          this.showLessFocus.focusAfterSearch();
+          this.showMoreLessFocus.focusAfterSearch();
           this.facet.showMoreValues();
         }}
         onShowLess={() => {
-          this.showMoreFocus.focusAfterSearch();
+          this.showMoreLessFocus.focusAfterSearch();
           this.facet.showLessValues();
         }}
         canShowMoreValues={this.facetState.canShowMoreValues}
         canShowLessValues={this.facetState.canShowLessValues}
-        showMoreRef={this.showMoreFocus.setTarget}
-        showLessRef={this.showLessFocus.setTarget}
       ></FacetShowMoreLess>
     );
   }

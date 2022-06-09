@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.22.2...@coveo/quantic@1.23.0) (2022-06-09)
+
+
+### Features
+
+* **atomic:** extract result list interface ([#2064](https://github.com/coveo/ui-kit/issues/2064)) ([4e0054d](https://github.com/coveo/ui-kit/commit/4e0054d4229fe594b8ab44954cf6941cf3745336))
+
+
+
+
+
+## [1.22.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.22.1...@coveo/quantic@1.22.2) (2022-06-08)
+
+
+### Bug Fixes
+
+* **atomic:** fix issue with changing panels while results load ([#2060](https://github.com/coveo/ui-kit/issues/2060)) ([d10a8e9](https://github.com/coveo/ui-kit/commit/d10a8e90d170bc23dda19b3dd59aa9bf70f61a70))
+
+
+
+
+
+## [1.22.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.22.0...@coveo/quantic@1.22.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* **headless:** triggered notify-trigger subscriber when notifications are removed ([#2055](https://github.com/coveo/ui-kit/issues/2055)) ([8061479](https://github.com/coveo/ui-kit/commit/80614791c447451707bef8f52d78e9fb5de7c37e))
+* **quantic:**  updated the way to get the number of active filters from a category facet ([#2051](https://github.com/coveo/ui-kit/issues/2051)) ([a8133b8](https://github.com/coveo/ui-kit/commit/a8133b844248caa21d8c1c8b35afabfcdf44f635))
+
+
+
+
+
+# [1.22.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.21.1...@coveo/quantic@1.22.0) (2022-06-07)
+
+
+### Features
+
+* **atomic:** hide facets on "no results" & "error" status (search layout) ([#2053](https://github.com/coveo/ui-kit/issues/2053)) ([5d75cd2](https://github.com/coveo/ui-kit/commit/5d75cd2e6f73777b44dda0e20a5c01b001315e8b))
+
+
+
+
+
+## [1.21.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.21.0...@coveo/quantic@1.21.1) (2022-06-06)
+
+
+### Bug Fixes
+
+* **atomic:** made facet values focus when pressing show more/show less ([#2043](https://github.com/coveo/ui-kit/issues/2043)) ([1e77f3e](https://github.com/coveo/ui-kit/commit/1e77f3e8bbd23c97f240e11685fcabb5029bb50d))
+
+
+
+
+
+# [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.20.1...@coveo/quantic@1.21.0) (2022-06-06)
+
+
+### Features
+
+* **headless:** add insight "get interface" action ([#2036](https://github.com/coveo/ui-kit/issues/2036)) ([942dfe8](https://github.com/coveo/ui-kit/commit/942dfe8d72de29ad4b2ac619dc2f9704148325d3))
+
+
+
+
+
+## [1.20.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.20.0...@coveo/quantic@1.20.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **atomic:** add getAnimations() check ([#2040](https://github.com/coveo/ui-kit/issues/2040)) ([47161a3](https://github.com/coveo/ui-kit/commit/47161a3ec2ef14b9c454a04bad6abbdd21f0ef0d))
+
+
+
+
+
 # [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.19.1...@coveo/quantic@1.20.0) (2022-06-02)
 
 

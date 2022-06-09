@@ -19,7 +19,7 @@ import {
   SearchHubSection,
 } from '../../state/state-sections';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
-import {getVisitorID, historyStore} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
 

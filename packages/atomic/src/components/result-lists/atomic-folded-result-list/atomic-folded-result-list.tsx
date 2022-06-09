@@ -13,14 +13,17 @@ import {
 import {
   Bindings,
   BindStateToController,
-  InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../atomic-result/atomic-result-display-options';
-import {ResultListCommon, ResultRenderingFunction} from '../result-list-common';
+import {
+  BaseResultList,
+  ResultListCommon,
+  ResultRenderingFunction,
+} from '../result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 import {randomID} from '../../../utils/utils';
 
@@ -35,7 +38,7 @@ import {randomID} from '../../../utils/utils';
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList implements InitializableComponent {
+export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
   @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
