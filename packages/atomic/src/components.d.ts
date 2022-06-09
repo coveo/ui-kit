@@ -612,7 +612,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize": ResultDisplayImageSize | null;
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -2292,7 +2292,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize | null;
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
