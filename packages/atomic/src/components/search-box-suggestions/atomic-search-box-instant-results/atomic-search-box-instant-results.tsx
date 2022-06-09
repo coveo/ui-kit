@@ -66,8 +66,8 @@ export class AtomicSearchBoxInstantResults {
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
-    return results.map((result: Result) => ({
-      key: `instant-result-${cleanUpString(result.title)}`,
+    return results.map((result: Result, i: number) => ({
+      key: `instant-result-${cleanUpString(result.title)}-${i}`,
       query: '',
       content: (
         <atomic-result
@@ -81,9 +81,6 @@ export class AtomicSearchBoxInstantResults {
           content={this.resultListCommon.getContentOfResultTemplate(result)}
         ></atomic-result>
       ),
-      onSelect: () => {
-        // TODO: ADD LOGS?
-      },
     }));
   }
 

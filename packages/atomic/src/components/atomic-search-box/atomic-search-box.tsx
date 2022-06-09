@@ -506,7 +506,6 @@ export class AtomicSearchBox {
         class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
-        onBlur={() => this.clearSuggestions()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
         onKeyDown={(e) => this.onKeyDown(e)}
       />
@@ -747,6 +746,7 @@ export class AtomicSearchBox {
       <div
         part="wrapper"
         class="relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary"
+        onFocus={() => this.onFocus()}
       >
         {this.renderInputContainer()}
         {this.renderSuggestions()}
