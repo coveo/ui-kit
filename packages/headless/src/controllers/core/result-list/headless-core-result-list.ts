@@ -15,10 +15,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {
-  buildCoreSearchStatus,
-  CoreSearchStatusState,
-} from '../search-status/headless-core-search-status';
+import {buildCoreStatus, CoreStatusState} from '../status/headless-core-status';
 
 const optionsSchema = new Schema<CoreResultListOptions>({
   fieldsToInclude: new ArrayValue({
@@ -74,7 +71,7 @@ export interface CoreResultList extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultList` controller.
  * */
-export interface CoreResultListState extends CoreSearchStatusState {
+export interface CoreResultListState extends CoreStatusState {
   /**
    * The results of the last executed search.
    * */
@@ -112,7 +109,7 @@ export function buildCoreResultList(
   }
 
   const controller = buildController(engine);
-  const searchStatus = buildCoreSearchStatus(engine);
+  const status = buildCoreStatus(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
 
@@ -180,7 +177,7 @@ export function buildCoreResultList(
       const state = getState();
 
       return {
-        ...searchStatus.state,
+        ...status.state,
         results: state.search.results,
         searchUid: state.search.response.searchUid,
         moreResultsAvailable: moreResultsAvailable(),

@@ -8,14 +8,17 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 
-export interface CoreSearchStatus extends Controller {
-  state: CoreSearchStatusState;
+export interface CoreStatus extends Controller {
+  /**
+   * The state of the `CoreStatus` controller.
+   */
+  state: CoreStatusState;
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `SearchStatus` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `CoreStatus` controller.
  */
-export interface CoreSearchStatusState {
+export interface CoreStatusState {
   /**
    * `true` if there is an error for the last executed query and `false` otherwise.
    */
@@ -35,12 +38,12 @@ export interface CoreSearchStatusState {
 }
 
 /**
- * Creates a `CoreSearchStatus` controller instance.
+ * Creates a `CoreStatus` controller instance.
  *
  * @param engine - The headless engine.
- * @returns A `CoreSearchStatus` controller instance.
+ * @returns A `CoreStatus` controller instance.
  * */
-export function buildCoreSearchStatus(engine: CoreEngine): CoreSearchStatus {
+export function buildCoreStatus(engine: CoreEngine): CoreStatus {
   if (!loadSearchStateReducers(engine)) {
     throw loadReducerError;
   }
