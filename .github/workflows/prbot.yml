@@ -64,7 +64,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-visual-tests
+      - uses: ./.github/actions/e2e-atomic-visual-tests
     env:
       APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
   e2e-quantic-test:
