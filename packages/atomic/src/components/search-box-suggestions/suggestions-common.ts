@@ -72,3 +72,5 @@ export function isDividerElement(
 ): el is SearchBoxDividerElement {
   return !('query' in el);
 }
+
+export const queryDataAttribute = 'data-query';

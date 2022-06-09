@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.2](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.38.1...@coveo/bueno@0.38.2) (2022-06-08)
+
+
+### Bug Fixes
+
+* **atomic:** fix issue with changing panels while results load ([#2060](https://github.com/coveo/ui-kit/issues/2060)) ([d10a8e9](https://github.com/coveo/ui-kit/commit/d10a8e90d170bc23dda19b3dd59aa9bf70f61a70))
+
+
+
+
+
 ## [0.38.1](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.38.0...@coveo/bueno@0.38.1) (2022-06-08)
 
 
