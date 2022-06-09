@@ -576,7 +576,7 @@ export class AtomicSearchBox {
 
   private onSuggestionClick(item: SearchBoxSuggestionItem) {
     item.onSelect && item.onSelect();
-    this.clearSuggestions();
+    isSuggestionElement(item) && item.query && this.clearSuggestions();
   }
   private onSuggestionMouseOver(
     item: SearchBoxSuggestionItem,
