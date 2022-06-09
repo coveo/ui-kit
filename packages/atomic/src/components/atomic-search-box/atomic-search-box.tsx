@@ -666,8 +666,8 @@ export class AtomicSearchBox {
   }
 
   private renderPanel(
-    elements: SearchBoxSuggestionItem[],
     side: 'left' | 'right',
+    elements: SearchBoxSuggestionItem[],
     setRef: (el: HTMLUListElement | undefined) => void,
     getRef: () => HTMLUListElement | undefined
   ) {
@@ -709,14 +709,14 @@ export class AtomicSearchBox {
         role="listbox"
       >
         {this.renderPanel(
-          this.leftSuggestionElements,
           'left',
+          this.leftSuggestionElements,
           (el) => (this.leftPanelRef = el),
           () => this.leftPanelRef
         )}
         {this.renderPanel(
-          this.rightSuggestionElements,
           'right',
+          this.rightSuggestionElements,
           (el) => (this.rightPanelRef = el),
           () => this.rightPanelRef
         )}
