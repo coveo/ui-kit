@@ -214,6 +214,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+      hasBreadcrumbs: true,
     });
   }
 

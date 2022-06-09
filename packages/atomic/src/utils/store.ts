@@ -8,6 +8,7 @@ import {ObservableMap} from '@stencil/store';
 
 interface FacetInfo {
   label: string;
+  hasBreadcrumbs: boolean;
 }
 
 interface FacetValueFormat<ValueType> {
@@ -15,12 +16,7 @@ interface FacetValueFormat<ValueType> {
   content?(facetValue: ValueType): VNode;
 }
 
-type FacetType =
-  | 'facets'
-  | 'numericFacets'
-  | 'dateFacets'
-  | 'categoryFacets'
-  | 'segmentedFacets';
+type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
 type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export interface SortDropdownOption {
@@ -34,7 +30,6 @@ export type AtomicStore = {
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  segmentedFacets: FacetStore<FacetInfo>;
   facetElements: HTMLElement[];
   sortOptions: SortDropdownOption[];
   iconAssetsPath: string;
@@ -52,7 +47,6 @@ export const initialStore: () => AtomicStore = () => ({
   numericFacets: {},
   dateFacets: {},
   categoryFacets: {},
-  segmentedFacets: {},
   facetElements: [],
   sortOptions: [],
   iconAssetsPath: '',
@@ -96,7 +90,6 @@ export const getAllFacets = (store: ObservableMap<AtomicStore>) => ({
   ...store.state.dateFacets,
   ...store.state.categoryFacets,
   ...store.state.numericFacets,
-  ...store.state.segmentedFacets,
 });
 
 export const setLoadingFlag = (

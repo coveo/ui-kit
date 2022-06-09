@@ -16,7 +16,7 @@ import {
   FacetValue,
   SearchStatus,
   SearchStatusState,
-} from '@coveo/headless';
+} from '../../../../headless';
 import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {MapProp} from '../../../utils/props-utils';
@@ -99,10 +99,11 @@ export class AtomicSegmentedFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'segmentedFacets', {
+    registerFacetToStore(this.bindings.store, 'facets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+      hasBreadcrumbs: false,
     });
   }
 
