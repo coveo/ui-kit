@@ -1,11 +1,4 @@
-import {
-  ConfigurationSection,
-  FieldsSection,
-  SearchSection,
-} from '../../state/state-sections';
 import {fetchMoreResults} from '../../features/search/search-actions';
-import {configuration, fields, search} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   buildCoreResultList,
@@ -57,31 +50,8 @@ export function buildResultList(
   engine: SearchEngine,
   props?: ResultListProps
 ): ResultList {
-  if (!loadResultListReducers(engine)) {
-    throw loadReducerError;
-  }
-
-  const coreController = buildCoreResultList(engine, {
+  return buildCoreResultList(engine, {
     ...props,
     fetchMoreResultsActionCreator: fetchMoreResults,
   });
-
-  return {
-    ...coreController,
-
-    get state() {
-      return {
-        ...coreController.state,
-      };
-    },
-  };
-}
-
-function loadResultListReducers(
-  engine: SearchEngine
-): engine is SearchEngine<
-  SearchSection & ConfigurationSection & FieldsSection
-> {
-  engine.addReducers({search, configuration, fields});
-  return true;
 }

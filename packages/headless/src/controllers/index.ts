@@ -276,7 +276,7 @@ export type {
   SearchStatusState,
 } from './search-status/headless-search-status';
 export {buildSearchStatus} from './search-status/headless-search-status';
-export type {CoreSearchStatusState} from './core/search-status/headless-core-search-status';
+export type {CoreStatusState} from './core/status/headless-core-status';
 
 export type {ErrorPayload} from './controller/error-payload';
 
