@@ -19,7 +19,7 @@ import {
   ResultDisplayConfigContext,
   DisplayConfig,
 } from '../../result-template-components/result-template-decorators';
-import {ResultListCommon} from '../result-list-common';
+import {BaseResultList, ResultListCommon} from '../result-list-common';
 import {TemplateContent} from '../../result-templates/result-template-common';
 import {
   FoldedResultListContext,
@@ -44,7 +44,7 @@ const componentTag = 'atomic-result-children';
   styleUrl: 'atomic-result-children.pcss',
   shadow: true,
 })
-export class AtomicResultChildren {
+export class AtomicResultChildren implements BaseResultList<FoldedResult> {
   @InitializeBindings() public bindings!: Bindings;
   @ChildTemplatesContext()
   public templatesManager!: ResultTemplatesManager<TemplateContent>;
@@ -53,7 +53,7 @@ export class AtomicResultChildren {
   @ResultDisplayConfigContext()
   private displayConfig!: DisplayConfig;
 
-  public resultListCommon?: ResultListCommon;
+  public resultListCommon!: ResultListCommon;
 
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
@@ -80,7 +80,7 @@ export class AtomicResultChildren {
   /**
    * The expected size of the image displayed in the children results.
    */
-  @Prop({reflect: true}) imageSize: ResultDisplayImageSize | null = null;
+  @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
   /**
    * The copy for an empty result state.
    *
