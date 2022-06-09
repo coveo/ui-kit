@@ -1,30 +1,36 @@
 import {SearchPageClientProvider} from 'coveo.analytics';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {
   ConfigurationSection,
   ProductRecommendationsSection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {getLanguage} from './shared-analytics';
+import {BaseAnalyticsProvider} from './base-analytics';
 
 export type StateNeededByProductRecommendationsAnalyticsProvider =
   ConfigurationSection &
     Partial<SearchHubSection & ProductRecommendationsSection>;
 
 export class ProductRecommendationAnalyticsProvider
+  extends BaseAnalyticsProvider
   implements SearchPageClientProvider
 {
   private initialState = getProductRecommendationsInitialState();
   constructor(
     private state: StateNeededByProductRecommendationsAnalyticsProvider
-  ) {}
-
-  public getLanguage() {
-    return getLanguage(this.state);
+  ) {
+    super(state);
   }
 
-  public getSearchEventRequestPayload() {
+  public getPipeline(): string {
+    return '';
+  }
+
+  public getSearchEventRequestPayload(): Omit<
+    SearchEventRequest,
+    'actionCause' | 'searchQueryUid'
+  > {
     return {
       queryText: '',
       responseTime: this.responseTime,
@@ -33,42 +39,11 @@ export class ProductRecommendationAnalyticsProvider
     };
   }
 
-  public getBaseMetadata() {
-    return {
-      recommendation:
-        this.state.productRecommendations?.id || this.initialState.id,
-    };
-  }
-
   public getSearchUID() {
     return (
       this.state.productRecommendations?.searchUid ||
       this.initialState.searchUid
     );
-  }
-
-  public getPipeline() {
-    return '';
-  }
-
-  public getOriginContext() {
-    return this.state.configuration.analytics.originContext;
-  }
-
-  public getOriginLevel1() {
-    return this.state.searchHub || getSearchHubInitialState();
-  }
-
-  public getOriginLevel2() {
-    return this.state.configuration.analytics.originLevel2;
-  }
-
-  public getOriginLevel3() {
-    return this.state.configuration.analytics.originLevel3;
-  }
-
-  public getIsAnonymous() {
-    return this.state.configuration.analytics.anonymous;
   }
 
   private mapResultsToAnalyticsDocument() {

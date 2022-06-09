@@ -209,9 +209,8 @@ function getNumberOfResults(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const numberOfResults = state.pagination.numberOfResults;
-  const shouldInclude =
-    numberOfResults !== getPaginationInitialState().numberOfResults;
+  const {numberOfResults, defaultNumberOfResults} = state.pagination;
+  const shouldInclude = numberOfResults !== defaultNumberOfResults;
   return shouldInclude ? {numberOfResults} : {};
 }
 
