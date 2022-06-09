@@ -10,14 +10,18 @@ import {loadReducerError} from '../../../utils/errors';
 import {Controller} from '../../controller/headless-controller';
 import {
   buildCoreResultList,
-  CommonResultListProps,
   CoreResultListOptions,
   CoreResultListState,
 } from '../../core/result-list/headless-core-result-list';
 
 export interface InsightResultListOptions extends CoreResultListOptions {}
 
-export interface InsightResultListProps extends CommonResultListProps {}
+export interface InsightResultListProps {
+  /**
+   * The options for the `ResultList` controller.
+   */
+  options?: CoreResultListOptions;
+}
 
 export interface InsightResultList extends Controller {
   /**
