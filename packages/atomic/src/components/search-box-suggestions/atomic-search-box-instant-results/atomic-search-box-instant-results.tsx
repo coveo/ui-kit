@@ -66,8 +66,8 @@ export class AtomicSearchBoxInstantResults {
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
-    return results.map((result: Result, i: number) => ({
-      key: `instant-result-${cleanUpString(result.title)}-${i}`,
+    return results.map((result: Result) => ({
+      key: `instant-result-${cleanUpString(result.uniqueId)}`,
       query: '',
       content: (
         <atomic-result
