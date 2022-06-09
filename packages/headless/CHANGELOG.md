@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.72.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.71.0...@coveo/headless@1.72.0) (2022-06-09)
+
+
+### Bug Fixes
+
+* **headless:** restoreSearchParameters action deletes the unselected values of the standard facet ([#2054](https://github.com/coveo/ui-kit/issues/2054)) ([8fad395](https://github.com/coveo/ui-kit/commit/8fad39512e689b8d25b42d18931620939e930084))
+
+
+### Features
+
+* **atomic:** extract result list interface ([#2064](https://github.com/coveo/ui-kit/issues/2064)) ([4e0054d](https://github.com/coveo/ui-kit/commit/4e0054d4229fe594b8ab44954cf6941cf3745336))
+
+
+
+
+
+# [1.71.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.70.1...@coveo/headless@1.71.0) (2022-06-08)
+
+
+### Bug Fixes
+
+* **atomic:** fix issue with changing panels while results load ([#2060](https://github.com/coveo/ui-kit/issues/2060)) ([d10a8e9](https://github.com/coveo/ui-kit/commit/d10a8e90d170bc23dda19b3dd59aa9bf70f61a70))
+
+
+### Features
+
+* **atomic,headless:** added custom default value for search parameters' numberOfResults ([#2058](https://github.com/coveo/ui-kit/issues/2058)) ([fd419a1](https://github.com/coveo/ui-kit/commit/fd419a1ae7d4606bd6772b231097f8ff85da18d7))
+
+
+
+
+
+## [1.70.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.70.0...@coveo/headless@1.70.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* **headless:** triggered notify-trigger subscriber when notifications are removed ([#2055](https://github.com/coveo/ui-kit/issues/2055)) ([8061479](https://github.com/coveo/ui-kit/commit/80614791c447451707bef8f52d78e9fb5de7c37e))
+
+
+
+
+
+# [1.70.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.69.1...@coveo/headless@1.70.0) (2022-06-07)
+
+
+### Bug Fixes
+
+* **headless:** fix invalid number of results for recommendations ([#2052](https://github.com/coveo/ui-kit/issues/2052)) ([b46e50e](https://github.com/coveo/ui-kit/commit/b46e50e2e12d2e2db2cd4e4bec10efdcae7d3111))
+
+
+### Features
+
+* **atomic:** hide facets on "no results" & "error" status (search layout) ([#2053](https://github.com/coveo/ui-kit/issues/2053)) ([5d75cd2](https://github.com/coveo/ui-kit/commit/5d75cd2e6f73777b44dda0e20a5c01b001315e8b))
+
+
+
+
+
 ## [1.69.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.69.0...@coveo/headless@1.69.1) (2022-06-06)
 
 

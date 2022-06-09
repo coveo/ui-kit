@@ -36,14 +36,11 @@ export interface CoreResultListOptions {
   fieldsToInclude?: string[];
 }
 
-export interface CommonResultListProps {
+export interface CoreResultListProps {
   /**
    * The options for the `ResultList` controller.
    * */
   options?: CoreResultListOptions;
-}
-
-export interface CoreResultListProps extends CommonResultListProps {
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
