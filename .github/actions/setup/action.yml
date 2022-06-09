@@ -32,32 +32,24 @@ runs:
           packages/atomic/www
           packages/quantic/docs/out
           packages/atomic-react/dist
-          packages/atomic-angular/.angular
           packages/atomic-angular/projects/atomic-angular/dist
-          packages/samples/angular/.angular
-          packages/samples/headless-react/public/assets/
-          packages/samples/headless-react/public/lang/
+          packages/samples/headless-react
           packages/quantic/force-app/main/default/staticresources/coveoheadless
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}
     - uses: actions/cache@v2
-      id: npm-cache
       with:
-        path: ~/.npm
-        key: npm-${{ hashFiles('**/package-lock.json') }}
-    - uses: actions/cache@v2
-      id: cypress-cache
-      with:
-        path: ~/.cache/Cypress
-        key: cypress-${{ hashFiles('**/package-lock.json') }}
+        path: |
+          node_modules
+          **/node_modules
+        key: ${{ hashFiles('**/package-lock.json') }}
     - run: |
         npm ci
         npx --no-install lerna bootstrap --ci
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
-
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run doc:generate

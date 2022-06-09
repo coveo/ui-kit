@@ -6,7 +6,7 @@
     "dev": "npm run copy:assets && ng serve",
     "watch": "ng build --watch --configuration development",
     "link:local": "npm link ../../atomic-angular/projects/atomic-angular/dist/",
-    "copy:assets": "ncp node_modules/@coveo/atomic-angular/dist/assets src/assets && ncp node_modules/@coveo/atomic-angular/dist/lang src/lang"
+    "copy:assets": "ncp node_modules/@coveo/atomic-angular/assets src/assets && ncp node_modules/@coveo/atomic-angular/lang src/lang"
   },
   "private": true,
   "dependencies": {

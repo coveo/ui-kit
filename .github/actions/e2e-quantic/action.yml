@@ -40,7 +40,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
-        install: false
+        install: true
         record: ${{ github.ref == 'refs/heads/master' && true || false }}
         config: reporter=cypress/reporters/detailed-reporter.js
       env:
