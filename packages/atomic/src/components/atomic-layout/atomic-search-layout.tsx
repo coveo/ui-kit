@@ -14,7 +14,7 @@ import {buildSearchLayout} from './search-layout';
 export class AtomicSearchLayout {
   @Element() private host!: HTMLElement;
   /**
-   * CSS valuethat defines where the layout goes from mobile to desktop.
+   * CSS value that defines where the layout goes from mobile to desktop.
    * e.g., 800px, 65rem.
    */
   @Prop({reflect: true}) public mobileBreakpoint = DEFAULT_MOBILE_BREAKPOINT;

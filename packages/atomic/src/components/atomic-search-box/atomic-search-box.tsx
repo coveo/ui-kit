@@ -644,8 +644,6 @@ export class AtomicSearchBox {
         class={`flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
-        // TODO: ideally would replace the below with the min-h-[40px] class above
-        style={{minHeight: '40px'}}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => {
           this.onSuggestionClick(item);
@@ -723,8 +721,6 @@ export class AtomicSearchBox {
               this.rightPanelRef = el!;
             }}
             class="flex-grow basis-1/2"
-            // TODO: ideally would replace the below with the basis-1/2 class above
-            style={{flexBasis: '50%'}}
           >
             {this.rightSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
