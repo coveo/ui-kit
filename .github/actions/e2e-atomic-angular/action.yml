@@ -16,7 +16,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/samples/angular
-        start: npm run start
+        start: npm run dev
         wait-on: 'http://localhost:4200'
         install: false
         record: false
