@@ -612,7 +612,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize": ResultDisplayImageSize | null;
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -828,6 +828,18 @@ export namespace Components {
         "suggestionTimeout": number;
     }
     interface AtomicSearchBoxInstantResults {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -2280,7 +2292,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize | null;
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -2483,6 +2495,18 @@ declare namespace LocalJSX {
         "suggestionTimeout"?: number;
     }
     interface AtomicSearchBoxInstantResults {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**

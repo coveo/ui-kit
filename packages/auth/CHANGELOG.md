@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.5.2...@coveo/auth@1.6.0) (2022-06-09)
+
+
+### Features
+
+* **atomic:** extract result list interface ([#2064](https://github.com/coveo/ui-kit/issues/2064)) ([4e0054d](https://github.com/coveo/ui-kit/commit/4e0054d4229fe594b8ab44954cf6941cf3745336))
+
+
+
+
+
+## [1.5.2](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.5.1...@coveo/auth@1.5.2) (2022-06-08)
+
+
+### Bug Fixes
+
+* **atomic:** fix issue with changing panels while results load ([#2060](https://github.com/coveo/ui-kit/issues/2060)) ([d10a8e9](https://github.com/coveo/ui-kit/commit/d10a8e90d170bc23dda19b3dd59aa9bf70f61a70))
+
+
+
+
+
 ## [1.5.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.5.0...@coveo/auth@1.5.1) (2022-06-08)
 
 
