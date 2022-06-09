@@ -1,6 +1,15 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Listen,
+  Watch,
+  VNode,
+  Element,
+} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -65,6 +74,8 @@ export class AtomicSearchBox {
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
+
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('searchBox')
   @State()
@@ -506,6 +517,7 @@ export class AtomicSearchBox {
         class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
+        onBlur={() => this.clearSuggestions()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
         onKeyDown={(e) => this.onKeyDown(e)}
       />
@@ -686,6 +698,11 @@ export class AtomicSearchBox {
               this.leftPanelRef = el!;
             }}
             class="flex-grow"
+            onMouseDown={(e) => {
+              if (e.target === this.leftPanelRef) {
+                e.preventDefault();
+              }
+            }}
           >
             {this.leftSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
@@ -705,6 +722,11 @@ export class AtomicSearchBox {
               this.rightPanelRef = el!;
             }}
             class="flex-grow"
+            onMouseDown={(e) => {
+              if (e.target === this.rightPanelRef) {
+                e.preventDefault();
+              }
+            }}
           >
             {this.rightSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
@@ -746,7 +768,6 @@ export class AtomicSearchBox {
       <div
         part="wrapper"
         class="relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary"
-        onFocus={() => this.onFocus()}
       >
         {this.renderInputContainer()}
         {this.renderSuggestions()}
