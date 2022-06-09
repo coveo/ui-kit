@@ -1,5 +1,5 @@
 import {createMockState} from './mock-state';
-import configureStore from 'redux-mock-store';
+import configureStore, {MockStoreCreator} from 'redux-mock-store';
 import {
   AnyAction,
   ThunkDispatch,
@@ -158,7 +158,11 @@ export interface MockInsightEngine
 export function buildMockInsightEngine(
   config: Partial<InsightEngine<InsightAppState>> = {}
 ): MockInsightEngine {
-  const engine = buildMockCoreEngine(config, buildMockInsightState, 'insight');
+  const engine = buildMockCoreEngine(
+    config,
+    buildMockInsightState,
+    configureInsightMockStore
+  );
   return {
     ...engine,
     executeFirstSearch: jest.fn(),
@@ -170,14 +174,14 @@ interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}
 function buildMockCoreEngine<T extends AppState>(
   config: Partial<CoreEngine<T>> = {},
   mockState: () => T,
-  type: EngineType = 'search'
+  buildStore: (
+    logger: pino.Logger,
+    state: AppState
+  ) => MockStoreCreator<AppState, DispatchExts> = configureMockStore
 ): MockCoreEngine<T> {
   const logger = pino({level: 'silent'});
-  const storeConfiguration =
-    type === 'search'
-      ? configureMockStore(logger)
-      : configureInsightMockStore(logger);
   const coreState = buildCoreState(config, mockState);
+  const storeConfiguration = buildStore(logger, coreState);
   const store = storeConfiguration(coreState);
   const unsubscribe = () => {};
 
