@@ -42,14 +42,15 @@ runs:
           !**/node_modules
         key: ${{ github.sha }}
     - uses: actions/cache@v2
-        id: npm-cache
+      id: npm-cache
       with:
         path: ~/.npm
         key: npm-${{ hashFiles('**/package-lock.json') }}
     - uses: actions/cache@v2
       id: cypress-cache
+      with:
         path: ~/.cache/Cypress
-        key: cypress-binary-${{ hashFiles('**/package-lock.json') }}
+        key: cypress-${{ hashFiles('**/package-lock.json') }}
     - run: |
         npm ci
         npx --no-install lerna bootstrap --ci
