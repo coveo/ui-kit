@@ -1,7 +1,7 @@
 module.exports = {
     batchName: 'Atomic visual tests',
     showLogs: false,
-    failCypressOnDiff: true,
+    failCypressOnDiff: false,
     apiKey: `${process.env.APPLITOOLS_API_KEY}`,
     isDisabled: false,
     browser: [
