@@ -5,6 +5,7 @@ import {InsightAppState} from '../../../state/insight-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
+import {SearchResponseSuccess} from '../../search/search/search-response';
 import {
   buildGetInsightInterfaceConfigRequest,
   GetInsightInterfaceConfigRequest,
@@ -14,7 +15,6 @@ import {
   buildInsightQueryRequest,
   InsightQueryRequest,
 } from './query/query-request';
-import {InsightQueryResponse} from './query/query-response';
 import {
   buildInsightUserActionsRequest,
   InsightUserActionsRequest,
@@ -78,7 +78,7 @@ export class InsightAPIClient {
 
   async query(
     req: InsightQueryRequest
-  ): Promise<InsightAPIResponse<InsightQueryResponse>> {
+  ): Promise<InsightAPIResponse<SearchResponseSuccess>> {
     const response = await PlatformClient.call({
       ...buildInsightQueryRequest(req),
       ...this.options,
@@ -90,7 +90,7 @@ export class InsightAPIClient {
 
     const body = await response.json();
     return response.ok
-      ? {success: body as InsightQueryResponse}
+      ? {success: body as SearchResponseSuccess}
       : {error: body as InsightAPIErrorStatusResponse};
   }
 

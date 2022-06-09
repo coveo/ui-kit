@@ -31,6 +31,5 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
-export type {InsightSearchState} from './features/insight-search/insight-search-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';

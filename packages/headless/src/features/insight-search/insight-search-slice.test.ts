@@ -1,56 +1,53 @@
-import {insightSearchReducer} from './insight-search-slice';
-import {buildMockInsightSearch} from '../../test/mock-insight-search';
-import {
-  buildMockInsightQueryResponse,
-  buildMockSearchResult,
-} from '../../test/mock-query-response';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
-  insightExecuteSearch,
-  insightFetchMoreResults,
+  executeSearch,
+  fetchFacetValues,
+  fetchMoreResults,
 } from './insight-search-actions';
-import {
-  getInsightSearchInitialState,
-  InsightSearchState,
-} from './insight-search-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
+import {getSearchInitialState, SearchState} from '../search/search-state';
+import {buildMockResult} from '../../test';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {searchReducer} from '../search/search-slice';
+import {buildMockSearch} from '../../test/mock-search';
 
 describe('insight search slice', () => {
-  let state: InsightSearchState;
+  let state: SearchState;
 
   beforeEach(() => {
-    state = getInsightSearchInitialState();
+    state = getSearchInitialState();
   });
 
   it('loads with an initial state', () => {
-    const finalState = insightSearchReducer(undefined, {type: ''});
-    expect(finalState).toEqual(getInsightSearchInitialState());
+    const finalState = searchReducer(undefined, {type: ''});
+    expect(finalState).toEqual(getSearchInitialState());
   });
 
   it('the initial isloading state is set to false', () => {
     expect(state.isLoading).toBe(false);
   });
 
-  describe('insightExecuteSearch', () => {
+  describe('executeSearch', () => {
     beforeEach(() => {
-      state = getInsightSearchInitialState();
+      state = getSearchInitialState();
     });
 
     it('when the action fulfilled is received, it updates the state to the received payload', () => {
-      const result = buildMockSearchResult();
-      const response = buildMockInsightQueryResponse({results: [result]});
-      const insightSearchState = buildMockInsightSearch({
+      const result = buildMockResult();
+      const response = buildMockSearchResponse({results: [result]});
+      const insightSearchState = buildMockSearch({
         response: response,
         duration: 123,
         queryExecuted: 'foo',
       });
 
-      const action = insightExecuteSearch.fulfilled(
+      const action = executeSearch.fulfilled(
         insightSearchState,
         '',
         logSearchboxSubmit()
       );
-      const finalState = insightSearchReducer(state, action);
+      const finalState = searchReducer(state, action);
 
       expect(finalState.response).toEqual(response);
       expect(finalState.duration).toEqual(123);
@@ -59,15 +56,15 @@ describe('insight search slice', () => {
     });
 
     it('with an existing result , when the action fulfilled is received, it overwrites the old search results', () => {
-      const initialResult = buildMockSearchResult({title: 'initial result'});
-      const newResult = buildMockSearchResult({title: 'new result'});
+      const initialResult = buildMockResult({title: 'initial result'});
+      const newResult = buildMockResult({title: 'new result'});
       state.results = [initialResult];
 
-      const finalState = insightSearchReducer(
+      const finalState = searchReducer(
         state,
-        insightExecuteSearch.fulfilled(
-          buildMockInsightSearch({
-            response: buildMockInsightQueryResponse({results: [newResult]}),
+        executeSearch.fulfilled(
+          buildMockSearch({
+            response: buildMockSearchResponse({results: [newResult]}),
           }),
           '',
           logSearchboxSubmit()
@@ -78,19 +75,19 @@ describe('insight search slice', () => {
     });
 
     it('with an existing result , when the action fulfilled is received, it overwrites the #searchResponseId', () => {
-      const initialResult = buildMockSearchResult({title: 'initial result'});
-      const newResult = buildMockSearchResult({title: 'new result'});
+      const initialResult = buildMockResult({title: 'initial result'});
+      const newResult = buildMockResult({title: 'new result'});
       state.results = [initialResult];
       state.searchResponseId = 'an_initial_id';
-      const response = buildMockInsightQueryResponse({results: [newResult]});
+      const response = buildMockSearchResponse({results: [newResult]});
       response.searchUid = 'a_new_id';
-      const search = buildMockInsightSearch({
+      const search = buildMockSearch({
         response,
       });
 
-      const finalState = insightSearchReducer(
+      const finalState = searchReducer(
         state,
-        insightExecuteSearch.fulfilled(search, '', logSearchboxSubmit())
+        executeSearch.fulfilled(search, '', logSearchboxSubmit())
       );
 
       expect(finalState.searchResponseId).toBe('a_new_id');
@@ -103,14 +100,12 @@ describe('insight search slice', () => {
         type: 'type',
       };
       const action = {
-        type: 'insight/search/executeSearch/rejected',
+        type: 'search/executeSearch/rejected',
         payload: err,
       };
-      const finalState = insightSearchReducer(state, action);
+      const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(
-        getInsightSearchInitialState().response
-      );
+      expect(finalState.response).toEqual(getSearchInitialState().response);
       expect(finalState.results).toEqual([]);
       expect(finalState.isLoading).toBe(false);
       expect(finalState.error).toEqual(err);
@@ -118,50 +113,43 @@ describe('insight search slice', () => {
 
     it('when the action rejected is received without an error', () => {
       const action = {
-        type: 'insight/search/executeSearch/rejected',
+        type: 'search/executeSearch/rejected',
         payload: null,
       };
-      const finalState = insightSearchReducer(state, action);
+      const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(
-        getInsightSearchInitialState().response
-      );
-      expect(finalState.results).toEqual(
-        getInsightSearchInitialState().results
-      );
+      expect(finalState.response).toEqual(getSearchInitialState().response);
+      expect(finalState.results).toEqual(getSearchInitialState().results);
       expect(finalState.isLoading).toBe(false);
-      expect(finalState.error).toEqual(undefined);
+      expect(finalState.error).toEqual(null);
     });
 
     it('update state during executeSearch.pending', () => {
-      const pendingAction = insightExecuteSearch.pending(
-        'asd',
-        logSearchboxSubmit()
-      );
-      const finalState = insightSearchReducer(state, pendingAction);
+      const pendingAction = executeSearch.pending('asd', logSearchboxSubmit());
+      const finalState = searchReducer(state, pendingAction);
       expect(finalState.isLoading).toBe(true);
       expect(finalState.requestId).toBe(pendingAction.meta.requestId);
     });
   });
 
-  describe('insightFetchMoreResults', () => {
+  describe('fetchMoreResults', () => {
     beforeEach(() => {
-      state = getInsightSearchInitialState();
+      state = getSearchInitialState();
     });
 
     it('when the action fulfilled is received, it updates the state to the received payload', () => {
       state.searchResponseId = 'the_initial_id';
-      const result = buildMockSearchResult();
-      const response = buildMockInsightQueryResponse({results: [result]});
-      const searchState = buildMockInsightSearch({
+      const result = buildMockResult();
+      const response = buildMockSearchResponse({results: [result]});
+      const searchState = buildMockSearch({
         response,
         duration: 123,
         queryExecuted: 'foo',
         searchResponseId: 'a_new_id',
       });
 
-      const action = insightFetchMoreResults.fulfilled(searchState, '');
-      const finalState = insightSearchReducer(state, action);
+      const action = fetchMoreResults.fulfilled(searchState, '');
+      const finalState = searchReducer(state, action);
 
       expect(finalState.response).toEqual(response);
       expect(finalState.duration).toEqual(123);
@@ -177,52 +165,58 @@ describe('insight search slice', () => {
         type: 'type',
       };
       const action = {
-        type: 'insight/search/fetchMoreResults/rejected',
+        type: 'search/fetchMoreResults/rejected',
         payload: err,
       };
-      const finalState = insightSearchReducer(state, action);
+      const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(
-        getInsightSearchInitialState().response
-      );
+      expect(finalState.response).toEqual(getSearchInitialState().response);
       expect(finalState.results).toEqual([]);
       expect(finalState.isLoading).toBe(false);
       expect(finalState.error).toEqual(err);
     });
 
     it('update state during fetchMoreResults.pending', () => {
-      const pendingAction = insightFetchMoreResults.pending('asd');
-      const finalState = insightSearchReducer(state, pendingAction);
+      const pendingAction = fetchMoreResults.pending('asd');
+      const finalState = searchReducer(state, pendingAction);
       expect(finalState.isLoading).toBe(true);
       expect(finalState.requestId).toBe(pendingAction.meta.requestId);
     });
   });
 
-  describe('insightFetchFacetValues', () => {
+  describe('fetchFacetValues', () => {
     it('updates the facet state', () => {
-      const response = buildMockInsightQueryResponse({
+      const response = buildMockSearchResponse({
         facets: [buildMockFacetResponse()],
       });
-      const initialState = buildMockInsightSearch({
+      const initialState = buildMockSearch({
         response,
       });
-      const action = insightFetchMoreResults.fulfilled(initialState, '');
+      const action = fetchFacetValues.fulfilled(
+        initialState,
+        '',
+        logFacetShowMore('')
+      );
 
-      const finalState = insightSearchReducer(state, action);
+      const finalState = searchReducer(state, action);
       expect(finalState.response.facets).toEqual(response.facets);
     });
 
     it('updates the searchUid, but not the searchResponseId', () => {
-      const response = buildMockInsightQueryResponse({
+      const response = buildMockSearchResponse({
         facets: [buildMockFacetResponse()],
       });
-      const initialState = buildMockInsightSearch({
+      const initialState = buildMockSearch({
         response,
         searchResponseId: 'test',
       });
-      const action = insightFetchMoreResults.fulfilled(initialState, '');
+      const action = fetchFacetValues.fulfilled(
+        initialState,
+        '',
+        logFacetShowMore('')
+      );
 
-      const finalState = insightSearchReducer(state, action);
+      const finalState = searchReducer(state, action);
       expect(finalState.response.searchUid).toEqual(response.searchUid);
       expect(finalState.searchResponseId).not.toEqual('test');
     });

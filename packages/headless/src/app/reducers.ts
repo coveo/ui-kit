@@ -47,7 +47,6 @@ import {excerptLengthReducer} from '../features/excerpt-length/excerpt-length-sl
 import {instantResultsReducer} from '../features/instant-results/instant-results-slice';
 import {insightConfigurationReducer} from '../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer} from '../features/insight-interface/insight-interface-slice';
-import {insightSearchReducer} from '../features/insight-search/insight-search-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
@@ -110,4 +109,3 @@ export const excerptLength = excerptLengthReducer;
 
 export const insightConfiguration = insightConfigurationReducer;
 export const insightInterface = insightInterfaceReducer;
-export const insightSearch = insightSearchReducer;

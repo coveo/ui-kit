@@ -5,15 +5,14 @@ import {
   InsightAPIClient,
 } from '../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
-import {InsightQueryResponse} from '../../api/service/insight/query/query-response';
 import {
   ConfigurationSection,
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
-  InsightSearchSection,
   PaginationSection,
   QuerySection,
+  SearchSection,
 } from '../../state/state-sections';
 import {
   AnalyticsType,
@@ -23,24 +22,14 @@ import {
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
+import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {logQueryError} from '../search/search-analytics-actions';
-
-export interface InsightExecuteSearchThunkReturn {
-  /** The successful query response. */
-  response: InsightQueryResponse;
-  /** The number of milliseconds it took to receive the response. */
-  duration: number;
-  /** The query that was executed. */
-  queryExecuted: string;
-  /** The analytics action to log after the query. */
-  analyticsAction: SearchAction;
-}
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   InsightConfigurationSection &
   Partial<
     InsightCaseContextSection &
-      InsightSearchSection &
+      SearchSection &
       QuerySection &
       FacetSection &
       PaginationSection
@@ -58,12 +47,12 @@ const fetchFromAPI = async (
   return {response, duration, queryExecuted, requestExecuted: request};
 };
 
-export const insightExecuteSearch = createAsyncThunk<
-  InsightExecuteSearchThunkReturn,
+export const executeSearch = createAsyncThunk<
+  ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
-  'insight/search/executeSearch',
+  'search/executeSearch',
   async (
     analyticsAction: SearchAction,
     {getState, dispatch, rejectWithValue, extra}
@@ -86,17 +75,19 @@ export const insightExecuteSearch = createAsyncThunk<
     return {
       ...fetched,
       response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
       analyticsAction,
     };
   }
 );
 
-export const insightFetchMoreResults = createAsyncThunk<
-  InsightExecuteSearchThunkReturn,
+export const fetchMoreResults = createAsyncThunk<
+  ExecuteSearchThunkReturn,
   void,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
-  'insight/search/fetchMoreResults',
+  'search/fetchMoreResults',
   async (_, {getState, dispatch, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const fetched = await fetchFromAPI(
@@ -115,17 +106,19 @@ export const insightFetchMoreResults = createAsyncThunk<
     return {
       ...fetched,
       response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
       analyticsAction: logFetchMoreResults(),
     };
   }
 );
 
-export const insightFetchFacetValues = createAsyncThunk<
-  InsightExecuteSearchThunkReturn,
+export const fetchFacetValues = createAsyncThunk<
+  ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
-  'insight/search/fetchFacetValues',
+  'search/fetchFacetValues',
   async (
     analyticsAction: SearchAction,
     {getState, dispatch, rejectWithValue, extra: {apiClient}}
@@ -147,6 +140,8 @@ export const insightFetchFacetValues = createAsyncThunk<
     return {
       ...fetched,
       response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
       analyticsAction,
     };
   }
@@ -201,3 +196,6 @@ function getFacetRequests<T extends AnyFacetRequest>(
 ) {
   return Object.keys(requests).map((id) => requests[id]);
 }
+
+const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
+  state.query?.q !== undefined ? state.query.q : '';

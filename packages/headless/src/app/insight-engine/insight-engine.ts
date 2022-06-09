@@ -13,7 +13,7 @@ import {buildLogger} from '../logger';
 import {
   insightConfiguration,
   insightInterface,
-  insightSearch,
+  search,
   searchHub,
 } from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
@@ -25,14 +25,14 @@ import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
-import {firstSearchExecutedSelector} from '../../features/insight-search/insight-search-selectors';
-import {insightExecuteSearch} from '../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../features/insight-search/insight-search-actions';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 
 export type {InsightEngineConfiguration};
 
 const insightEngineReducers = {
   insightConfiguration,
-  insightSearch,
+  search,
   insightInterface,
   searchHub,
 };
@@ -113,7 +113,7 @@ export function buildInsightEngine(
         return;
       }
 
-      engine.dispatch(insightExecuteSearch(analyticsEvent));
+      engine.dispatch(executeSearch(analyticsEvent));
     },
   };
 }

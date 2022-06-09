@@ -1,13 +1,13 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-client';
-import {insightSearch} from '../../app/reducers';
+import {search} from '../../app/reducers';
 import {InsightEngine} from '../../insight.index';
 import {SearchAction} from '../analytics/analytics-utils';
+import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {
-  insightExecuteSearch,
-  InsightExecuteSearchThunkReturn,
-  insightFetchFacetValues,
-  insightFetchMoreResults,
+  executeSearch,
+  fetchFacetValues,
+  fetchMoreResults,
   StateNeededByExecuteSearch,
 } from './insight-search-actions';
 
@@ -19,16 +19,16 @@ export interface InsightSearchActionCreators {
    *
    * ```js
    * const {logInterfaceLoad} = loadSearchAnalyticsActions(engine);
-   * const {insightExecuteSearch} = loadInsightSearchActions(engine);
+   * const {executeSearch} = loadInsightSearchActions(engine);
    *
    * engine.dispatch(insightExecuteSearch(interfaceLoad()));
    * @param analyticsSearchAction  - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
    * @returns A dispatchable action.
    */
-  insightExecuteSearch(
+  executeSearch(
     analyticsSearchAction: SearchAction
   ): AsyncThunkAction<
-    InsightExecuteSearchThunkReturn,
+    ExecuteSearchThunkReturn,
     SearchAction,
     AsyncThunkInsightOptions<StateNeededByExecuteSearch>
   >;
@@ -38,8 +38,8 @@ export interface InsightSearchActionCreators {
    *
    * @returns A dispatchable action.
    */
-  insightFetchMoreResults(): AsyncThunkAction<
-    InsightExecuteSearchThunkReturn,
+  fetchMoreResults(): AsyncThunkAction<
+    ExecuteSearchThunkReturn,
     void,
     AsyncThunkInsightOptions<StateNeededByExecuteSearch>
   >;
@@ -50,17 +50,17 @@ export interface InsightSearchActionCreators {
    * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
    * @returns A dispatchable action.
    */
-  insightFetchFacetValues(
+  fetchFacetValues(
     analyticsSearchAction: SearchAction
   ): AsyncThunkAction<
-    InsightExecuteSearchThunkReturn,
+    ExecuteSearchThunkReturn,
     SearchAction,
     AsyncThunkInsightOptions<StateNeededByExecuteSearch>
   >;
 }
 
 /**
- * Loads the `InsightSearch` reducer and returns possible action creators.
+ * Loads the `search` reducer and returns possible action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
@@ -68,11 +68,11 @@ export interface InsightSearchActionCreators {
 export function loadInsightSearchActions(
   engine: InsightEngine
 ): InsightSearchActionCreators {
-  engine.addReducers({search: insightSearch});
+  engine.addReducers({search});
 
   return {
-    insightExecuteSearch,
-    insightFetchMoreResults,
-    insightFetchFacetValues,
+    executeSearch,
+    fetchFacetValues,
+    fetchMoreResults,
   };
 }
