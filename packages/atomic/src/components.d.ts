@@ -612,7 +612,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize": ResultDisplayImageSize | null;
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -936,7 +936,7 @@ export namespace Components {
     }
     interface AtomicSearchLayout {
         /**
-          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
          */
         "mobileBreakpoint": string;
     }
@@ -2292,7 +2292,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize | null;
+        "imageSize"?: ResultDisplayImageSize;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -2591,7 +2591,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchLayout {
         /**
-          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
          */
         "mobileBreakpoint"?: string;
     }

@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.72.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.72.0...@coveo/headless@1.72.1) (2022-06-09)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.72.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.71.0...@coveo/headless@1.72.0) (2022-06-09)
+
+
+### Bug Fixes
+
+* **headless:** restoreSearchParameters action deletes the unselected values of the standard facet ([#2054](https://github.com/coveo/ui-kit/issues/2054)) ([8fad395](https://github.com/coveo/ui-kit/commit/8fad39512e689b8d25b42d18931620939e930084))
+
+
+### Features
+
+* **atomic:** extract result list interface ([#2064](https://github.com/coveo/ui-kit/issues/2064)) ([4e0054d](https://github.com/coveo/ui-kit/commit/4e0054d4229fe594b8ab44954cf6941cf3745336))
+
+
+
+
+
 # [1.71.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.70.1...@coveo/headless@1.71.0) (2022-06-08)
 
 

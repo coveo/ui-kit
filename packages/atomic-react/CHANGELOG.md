@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.9.0...@coveo/atomic-react@1.9.1) (2022-06-09)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+# [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.8.2...@coveo/atomic-react@1.9.0) (2022-06-09)
+
+
+### Features
+
+* **atomic:** add result templates to instant results ([#2061](https://github.com/coveo/ui-kit/issues/2061)) ([968acd2](https://github.com/coveo/ui-kit/commit/968acd27dd5e25435a41208d88294166e4117aed))
+* **atomic:** extract result list interface ([#2064](https://github.com/coveo/ui-kit/issues/2064)) ([4e0054d](https://github.com/coveo/ui-kit/commit/4e0054d4229fe594b8ab44954cf6941cf3745336))
+
+
+
+
+
 ## [1.8.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.8.1...@coveo/atomic-react@1.8.2) (2022-06-08)
 
 

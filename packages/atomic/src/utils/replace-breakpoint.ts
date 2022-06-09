@@ -1,6 +1,6 @@
 import {closest} from './utils';
 
-const DEFAULT_MOBILE_BREAKPOINT = '1024px';
+export const DEFAULT_MOBILE_BREAKPOINT = '1024px';
 
 function replaceMediaQuery(style: string, mobileBreakpoint: string) {
   return style.replace(
