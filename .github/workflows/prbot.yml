@@ -23,7 +23,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/commit-generated-files
-
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: built-packages
+          path: packages
   lint-check:
     name: 'Check with linter'
     needs: build
