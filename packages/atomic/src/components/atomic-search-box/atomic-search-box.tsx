@@ -676,6 +676,12 @@ export class AtomicSearchBox {
     this.updateSuggestionElements(suggestedQuery);
   }
 
+  private handleListMouseDown(e: Event, panel?: HTMLElement) {
+    if (e.target === panel) {
+      e.preventDefault();
+    }
+  }
+
   private renderSuggestions() {
     if (!this.hasSuggestions) {
       return null;
@@ -698,11 +704,7 @@ export class AtomicSearchBox {
               this.leftPanelRef = el!;
             }}
             class="flex-grow"
-            onMouseDown={(e) => {
-              if (e.target === this.leftPanelRef) {
-                e.preventDefault();
-              }
-            }}
+            onMouseDown={(e) => this.handleListMouseDown(e, this.leftPanelRef)}
           >
             {this.leftSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
@@ -722,11 +724,7 @@ export class AtomicSearchBox {
               this.rightPanelRef = el!;
             }}
             class="flex-grow"
-            onMouseDown={(e) => {
-              if (e.target === this.rightPanelRef) {
-                e.preventDefault();
-              }
-            }}
+            onMouseDown={(e) => this.handleListMouseDown(e, this.rightPanelRef)}
           >
             {this.rightSuggestionElements.map((suggestion, index) =>
               this.renderSuggestion(
