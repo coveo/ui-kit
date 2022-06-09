@@ -1,15 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Listen,
-  Watch,
-  VNode,
-  Element,
-} from '@stencil/core';
+import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -69,13 +60,11 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
-  private leftPanelRef: HTMLElement | undefined;
-  private rightPanelRef: HTMLElement | undefined;
+  private leftPanelRef: HTMLUListElement | undefined;
+  private rightPanelRef: HTMLUListElement | undefined;
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
-
-  @Element() private host!: HTMLElement;
 
   @BindStateToController('searchBox')
   @State()
@@ -676,10 +665,38 @@ export class AtomicSearchBox {
     this.updateSuggestionElements(suggestedQuery);
   }
 
-  private handleListMouseDown(e: Event, panel?: HTMLElement) {
-    if (e.target === panel) {
+  private handleListMouseDown(
+    e: Event,
+    getRef: () => HTMLUListElement | undefined
+  ) {
+    if (e.target === getRef()) {
       e.preventDefault();
     }
+  }
+
+  private renderPanel(
+    elements: SearchBoxSuggestionItem[],
+    side: 'left' | 'right',
+    setRef: (el: HTMLUListElement | undefined) => void,
+    getRef: () => HTMLUListElement | undefined
+  ) {
+    if (!elements.length) {
+      return null;
+    }
+
+    return (
+      <ul
+        part={`suggestions suggestions-${side}`}
+        aria-label={this.bindings.i18n.t('query-suggestion-list')}
+        ref={setRef}
+        class="flex-grow"
+        onMouseDown={(e) => this.handleListMouseDown(e, getRef)}
+      >
+        {elements.map((suggestion, index) =>
+          this.renderSuggestion(suggestion, index, elements.length - 1, side)
+        )}
+      </ul>
+    );
   }
 
   private renderSuggestions() {
@@ -696,45 +713,17 @@ export class AtomicSearchBox {
         }`}
         role="listbox"
       >
-        {!!this.leftSuggestionElements.length && (
-          <ul
-            part="suggestions suggestions-left"
-            aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => {
-              this.leftPanelRef = el!;
-            }}
-            class="flex-grow"
-            onMouseDown={(e) => this.handleListMouseDown(e, this.leftPanelRef)}
-          >
-            {this.leftSuggestionElements.map((suggestion, index) =>
-              this.renderSuggestion(
-                suggestion,
-                index,
-                this.leftSuggestionElements.length - 1,
-                'left'
-              )
-            )}
-          </ul>
+        {this.renderPanel(
+          this.leftSuggestionElements,
+          'left',
+          (el) => (this.leftPanelRef = el),
+          () => this.leftPanelRef
         )}
-        {!!this.rightSuggestionElements.length && (
-          <ul
-            part="suggestions suggestions-right"
-            aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => {
-              this.rightPanelRef = el!;
-            }}
-            class="flex-grow"
-            onMouseDown={(e) => this.handleListMouseDown(e, this.rightPanelRef)}
-          >
-            {this.rightSuggestionElements.map((suggestion, index) =>
-              this.renderSuggestion(
-                suggestion,
-                index,
-                this.rightSuggestionElements.length - 1,
-                'right'
-              )
-            )}
-          </ul>
+        {this.renderPanel(
+          this.rightSuggestionElements,
+          'right',
+          (el) => (this.rightPanelRef = el),
+          () => this.rightPanelRef
         )}
       </div>
     );
