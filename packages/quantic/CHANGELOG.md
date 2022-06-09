@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.22.2...@coveo/quantic@1.23.0) (2022-06-09)
+
+
+### Features
+
+* **atomic:** extract result list interface ([#2064](https://github.com/coveo/ui-kit/issues/2064)) ([4e0054d](https://github.com/coveo/ui-kit/commit/4e0054d4229fe594b8ab44954cf6941cf3745336))
+
+
+
+
+
 ## [1.22.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.22.1...@coveo/quantic@1.22.2) (2022-06-08)
 
 
