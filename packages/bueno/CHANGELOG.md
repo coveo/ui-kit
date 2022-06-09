@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.38.2](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.38.1...@coveo/bueno@0.38.2) (2022-06-08)
+
+
+### Bug Fixes
+
+* **atomic:** fix issue with changing panels while results load ([#2060](https://github.com/coveo/ui-kit/issues/2060)) ([d10a8e9](https://github.com/coveo/ui-kit/commit/d10a8e90d170bc23dda19b3dd59aa9bf70f61a70))
+
+
+
+
+
+## [0.38.1](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.38.0...@coveo/bueno@0.38.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* **headless:** triggered notify-trigger subscriber when notifications are removed ([#2055](https://github.com/coveo/ui-kit/issues/2055)) ([8061479](https://github.com/coveo/ui-kit/commit/80614791c447451707bef8f52d78e9fb5de7c37e))
+
+
+
+
+
 # [0.38.0](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.37.1...@coveo/bueno@0.38.0) (2022-06-07)
 
 
