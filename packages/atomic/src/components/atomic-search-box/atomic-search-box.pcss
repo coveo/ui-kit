@@ -10,3 +10,18 @@
   content: '';
   @apply absolute w-5/6 h-5/6 bg-background rounded-full;
 }
+
+[part~='suggestion-show-all'] {
+  border-top: 1px solid var(--atomic-neutral);
+  justify-content: center;
+  margin-top: auto;
+  padding: 2px 0;
+  box-sizing: content-box;
+  button {
+    background-color: transparent;
+  }
+}
+
+[part~='suggestions-left'] + [part~='suggestions-right'] {
+  border-left: 1px solid var(--atomic-neutral);
+}
