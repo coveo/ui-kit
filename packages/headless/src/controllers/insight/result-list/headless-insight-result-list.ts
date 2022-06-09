@@ -1,4 +1,4 @@
-import {configuration, fields, search} from '../../../app/reducers';
+import {insightSearch} from '../../../app/reducers';
 import {insightFetchMoreResults} from '../../../features/insight-search/insight-search-actions';
 import {InsightEngine} from '../../../insight.index';
 import {
@@ -47,20 +47,10 @@ export function buildInsightResultList(
     throw loadReducerError;
   }
 
-  const coreController = buildCoreResultList(engine, {
+  return buildCoreResultList(engine, {
     ...props,
     fetchMoreResultsActionCreator: insightFetchMoreResults,
   });
-
-  return {
-    ...coreController,
-
-    get state() {
-      return {
-        ...coreController.state,
-      };
-    },
-  };
 }
 
 function loadResultListReducers(
@@ -68,6 +58,7 @@ function loadResultListReducers(
 ): engine is InsightEngine<
   SearchSection & ConfigurationSection & FieldsSection
 > {
-  engine.addReducers({search, configuration, fields});
+  // TODO: We'll eventually remove the `insightSearch` reducer from there.
+  engine.addReducers({insightSearch});
   return true;
 }

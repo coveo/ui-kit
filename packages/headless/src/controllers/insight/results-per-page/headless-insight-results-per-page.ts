@@ -1,5 +1,5 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {configuration, pagination} from '../../../app/reducers';
+import {insightSearch} from '../../../app/reducers';
 import {insightExecuteSearch} from '../../../features/insight-search/insight-search-actions';
 import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions';
 import {
@@ -53,6 +53,6 @@ export function buildInsightResultsPerPage(
 function loadResultsPerPageReducers(
   engine: InsightEngine
 ): engine is InsightEngine<PaginationSection & ConfigurationSection> {
-  engine.addReducers({pagination, configuration});
+  engine.addReducers({insightSearch});
   return true;
 }
