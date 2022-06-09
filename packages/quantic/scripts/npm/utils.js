@@ -21,7 +21,10 @@ function quanticIsDependency() {
       )
     );
     return true;
-  } catch {
+  } catch (err) {
+    if (err.code !== 'MODULE_NOT_FOUND') {
+      console.error(err);
+    }
     return false;
   }
 }
