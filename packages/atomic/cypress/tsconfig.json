@@ -5,7 +5,10 @@
     "baseUrl": "../node_modules",
     "target": "es6",
     "lib": ["esnext", "dom"],
-    "types": ["cypress", "cypress-axe"]
+    "types": ["cypress", "cypress-axe"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
-  "include": ["**/*.ts", "**/*.js"]
+  "include": ["**/*.ts", "**/*.js"],
+  "files": ["../node_modules/@applitools/eyes-cypress/index.d.ts"],
 }

@@ -62,12 +62,18 @@ export const facetSetReducer = createReducer(
 
         facetIds.forEach((id) => {
           const request = state[id];
-          const values = f[id] || [];
+          const selectedValues = f[id] || [];
+          const idleValues = request.currentValues.filter(
+            (facetValue) => !selectedValues.includes(facetValue.value)
+          );
 
-          request.currentValues = values.map(buildSelectedFacetValueRequest);
-          request.preventAutoSelect = values.length > 0;
+          request.currentValues = [
+            ...selectedValues.map(buildSelectedFacetValueRequest),
+            ...idleValues.map(restoreFacetValueToIdleState),
+          ];
+          request.preventAutoSelect = selectedValues.length > 0;
           request.numberOfValues = Math.max(
-            values.length,
+            selectedValues.length,
             request.numberOfValues
           );
         });
@@ -268,4 +274,10 @@ export function convertFacetValueToRequest(
 
 function buildSelectedFacetValueRequest(value: string): FacetValueRequest {
   return {value, state: 'selected'};
+}
+
+function restoreFacetValueToIdleState(
+  facetValue: FacetValueRequest
+): FacetValueRequest {
+  return {...facetValue, state: 'idle'};
 }

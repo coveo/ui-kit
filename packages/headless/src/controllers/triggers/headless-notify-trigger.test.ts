@@ -117,12 +117,12 @@ describe('NotifyTrigger', () => {
       firstListener();
     });
 
-    it('it does not call the listener', () => {
-      expect(listener).toHaveBeenCalledTimes(0);
+    it('it calls the listener', () => {
+      expect(listener).toHaveBeenCalledTimes(1);
     });
 
-    it('it does not dispatch #logNotifyTrigger', () => {
-      expect(getLogTriggerNotifyAction()).toBeFalsy();
+    it('it dispatches #logNotifyTrigger', () => {
+      expect(getLogTriggerNotifyAction()).toBeTruthy();
     });
   });
 
