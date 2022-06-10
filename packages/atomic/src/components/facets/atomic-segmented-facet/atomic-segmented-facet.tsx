@@ -147,13 +147,19 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
-    if (!this.facetState.values.length) {
+    if (
+      this.searchStatus.state.hasError ||
+      !this.facetState.values.length ||
+      !this.facet.state.enabled
+    ) {
       return <Hidden></Hidden>;
     }
 
     return (
       <div class="flex">
-        <b class="inline-block my-3 mr-2">{this.label}</b>
+        <b class="inline-block my-3 mr-2">
+          {this.label !== 'no-label' ? this.label.concat(':') : ''}
+        </b>
         {this.renderValues()}
       </div>
     );
