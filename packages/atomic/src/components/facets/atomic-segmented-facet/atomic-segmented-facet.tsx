@@ -99,12 +99,6 @@ export class AtomicSegmentedFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'facets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-      hasBreadcrumbs: false,
-    });
   }
 
   private renderValuesContainer(children: VNode[]) {

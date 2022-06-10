@@ -79,7 +79,6 @@ describe('analyticsConfig', () => {
         facetId: 'some_id',
         label: 'This is a label',
         element: jest.fn() as unknown as HTMLElement,
-        hasBreadcrumbs: true,
       });
 
       const out = resultingConfig.analyticsClientMiddleware!('an_event', {

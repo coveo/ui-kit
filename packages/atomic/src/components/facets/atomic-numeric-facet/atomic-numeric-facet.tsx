@@ -291,7 +291,6 @@ export class AtomicNumericFacet
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
-      hasBreadcrumbs: true,
       format: (value) => this.formatFacetValue(value),
     });
 

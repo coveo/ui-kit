@@ -8,7 +8,6 @@ import {ObservableMap} from '@stencil/store';
 
 interface FacetInfo {
   label: string;
-  hasBreadcrumbs: boolean;
 }
 
 interface FacetValueFormat<ValueType> {

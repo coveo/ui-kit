@@ -205,7 +205,6 @@ export class AtomicColorFacet
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
-      hasBreadcrumbs: true,
     });
     this.inititalizeDependenciesManager();
   }

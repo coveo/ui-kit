@@ -281,9 +281,7 @@ export class AtomicBreadbox implements InitializableComponent {
         values.map((value) => ({value, facetId, field}))
       )
       .flat()
-      .filter(
-        ({facetId}) => this.bindings.store.state.facets[facetId].hasBreadcrumbs
-      )
+      .filter(({facetId}) => this.bindings.store.state.facets[facetId])
       .map(({value, facetId, field}) => ({
         facetId,
         label: this.bindings.store.state.facets[facetId].label,
