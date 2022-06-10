@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
