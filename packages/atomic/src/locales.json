@@ -203,7 +203,9 @@
   },
   "page-number": {
     "en": "Page {{page}}",
-    "fr": "Page {{page}}"
+    "fr": "Page {{page}}",
+    "zh-CN":"第{{page}}页",
+    "zh-TW":"第{{page}}頁"
   },
   "no-values-found": {
     "en": "No values found.",
@@ -563,7 +565,9 @@
   },
   "cancel": {
     "en": "Cancel",
-    "fr": "Annuler"
+    "fr": "Annuler",
+    "zh-CN":"取消",
+    "zh-TW": "取消"
   },
   "check-spelling": {
     "en": "Check the spelling of your keywords.",
@@ -969,11 +973,15 @@
   },
   "min": {
     "en": "Min",
-    "fr": "Min"
+    "fr": "Min",
+    "zh-CN":"最小值",
+    "zh-TW": "最小值"
   },
   "max": {
     "en": "Max",
-    "fr": "Max"
+    "fr": "Max",
+    "zh-CN":"最大值",
+    "zh-TW": "最大值"
   },
   "apply": {
     "en": "Apply",
@@ -1185,15 +1193,21 @@
   },
   "with-colon": {
     "en": "{{text}}:",
-    "fr": "{{text}}\u00A0:"
+    "fr": "{{text}}\u00A0:",
+    "zh-CN":"{{text}}：",
+    "zh-TW": "{{text}}："
   },
   "between-quotations": {
     "en": "\"{{text}}\"",
-    "fr": "«\u00A0{{text}}\u00A0»"
+    "fr": "«\u00A0{{text}}\u00A0»",
+    "zh-CN": "\"{{text}}\"",
+    "zh-TW": "「{{text}}」"
   },
   "between-parentheses": {
     "en": "({{text}})",
-    "fr": "({{text}})"
+    "fr": "({{text}})",
+    "zh-CN": "（{{text}}）",
+    "zh-TW": "（{{text}}）"
   },
   "smart-snippet": {
     "en": "Potential answer to your question",
