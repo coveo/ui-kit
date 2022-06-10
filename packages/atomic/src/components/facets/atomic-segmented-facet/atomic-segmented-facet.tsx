@@ -22,6 +22,7 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
+import {Hidden} from '../../common/hidden';
 
 /**
  * @internal
@@ -146,6 +147,10 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
+    if (!this.facetState.values.length) {
+      return <Hidden></Hidden>;
+    }
+
     return (
       <div class="flex">
         <b class="inline-block my-3 mr-2">{this.label}</b>
