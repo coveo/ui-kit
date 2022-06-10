@@ -27,6 +27,7 @@ import {setInsightConfiguration} from '../../features/insight-configuration/insi
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
+import {executeSearch} from '../../features/insight-search/insight-search-actions';
 
 export type {InsightEngineConfiguration};
 
@@ -114,7 +115,7 @@ export function buildInsightEngine(
         return;
       }
 
-      engine.dispatch(insightExecuteSearch(analyticsEvent));
+      engine.dispatch(executeSearch(analyticsEvent));
     },
   };
 }
@@ -138,9 +139,4 @@ function createInsightAPIClient(
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function insightExecuteSearch(_analyticsEvent: SearchAction): any {
-  throw new Error('Function not implemented.');
 }
