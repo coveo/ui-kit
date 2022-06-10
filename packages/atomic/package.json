@@ -43,6 +43,8 @@
     "cypress-hsp:open": "cypress open --config-file cypress-hsp.json",
     "cypress-screenshots:test": "cypress run --config-file cypress-screenshots.json --browser chrome",
     "cypress-screenshots:open": "cypress open --config-file cypress-screenshots.json --browser chrome",
+    "cypress-visual:test": "cypress run --config-file cypress-visual-tests.json --browser chrome",
+    "cypress-visual:open": "cypress open --config-file cypress-visual-tests.json --browser chrome",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
@@ -68,6 +70,7 @@
     "stencil-inline-svg": "^1.1.0"
   },
   "devDependencies": {
+    "@applitools/eyes-cypress": "^3.26.1",
     "@babel/core": "7.17.10",
     "@fullhuman/postcss-purgecss": "4.1.3",
     "@monaco-editor/react": "4.3.1",
