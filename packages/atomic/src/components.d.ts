@@ -938,7 +938,7 @@ export namespace Components {
     }
     interface AtomicSearchLayout {
         /**
-          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
          */
         "mobileBreakpoint": string;
     }
@@ -2593,7 +2593,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchLayout {
         /**
-          * CSS valuethat defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
          */
         "mobileBreakpoint"?: string;
     }

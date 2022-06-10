@@ -1,6 +1,6 @@
 {
   "name": "headless-react",
-  "version": "0.57.0",
+  "version": "0.57.1",
   "dependencies": {
     "@coveo/auth": "1.6.0",
     "@coveo/headless": "1.72.0",

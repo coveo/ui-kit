@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.24.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.23.0...@coveo/quantic@1.24.0) (2022-06-09)
+
+
+### Features
+
+* **quantic:** pre/post install npm scripts added ([#2035](https://github.com/coveo/ui-kit/issues/2035)) ([4fd7792](https://github.com/coveo/ui-kit/commit/4fd77922cc1f86b83f3705429ddca5eb95f0d81c))
+
+
+
+
+
 # [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.22.2...@coveo/quantic@1.23.0) (2022-06-09)
 
 
