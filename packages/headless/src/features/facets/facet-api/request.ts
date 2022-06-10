@@ -104,5 +104,8 @@ export interface AllowedValues {
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
    */
-  allowedValues?: string[];
+  allowedValues?: {
+    type: 'simple';
+    values: string[];
+  };
 }

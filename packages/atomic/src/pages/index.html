@@ -141,56 +141,8 @@
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
-            <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
-            </atomic-category-facet>
-            <atomic-facet field="source" label="Source"></atomic-facet>
-            <atomic-facet field="author" label="Authors"></atomic-facet>
-            <atomic-facet field="language" label="Language"></atomic-facet>
-            <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
-            <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
-            <atomic-numeric-facet
-              field="ytviewcount"
-              label="Youtube Views"
-              depends-on-filetype="YouTubeVideo"
-              with-input="integer"
-            ></atomic-numeric-facet>
-            <atomic-numeric-facet
-              field="ytlikecount"
-              label="Youtube Likes"
-              depends-on-filetype="YouTubeVideo"
-              display-values-as="link"
-            >
-              <atomic-numeric-range start="0" end="1000" label="Unpopular"></atomic-numeric-range>
-              <atomic-numeric-range start="1000" end="8000" label="Well liked"></atomic-numeric-range>
-              <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
-              <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
-            </atomic-numeric-facet>
-            <atomic-numeric-facet field="sncost" label="Cost">
-              <atomic-format-currency currency="CAD"></atomic-format-currency>
-            </atomic-numeric-facet>
-            <atomic-timeframe-facet label="Timeframe" with-date-picker>
-              <atomic-timeframe unit="hour"></atomic-timeframe>
-              <atomic-timeframe unit="day"></atomic-timeframe>
-              <atomic-timeframe unit="week"></atomic-timeframe>
-              <atomic-timeframe unit="month"></atomic-timeframe>
-              <atomic-timeframe unit="quarter"></atomic-timeframe>
-              <atomic-timeframe unit="year"></atomic-timeframe>
-              <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
-            </atomic-timeframe-facet>
-            <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet>
-            <atomic-rating-range-facet
-              facet-id="snrating_range"
-              field="snrating"
-              label="Rating Range"
-              number-of-intervals="5"
-            >
-            </atomic-rating-range-facet>
-            <atomic-color-facet
-              field="filetype"
-              label="Files"
-              number-of-values="6"
-              sort-criteria="occurrences"
-            ></atomic-color-facet>
+            <atomic-facet field="objecttype" label="Object type"></atomic-facet>
+            <atomic-facet field="filetype" label="File type"></atomic-facet>
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">

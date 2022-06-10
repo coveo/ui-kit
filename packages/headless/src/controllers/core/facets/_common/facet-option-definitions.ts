@@ -39,8 +39,18 @@ export const facetSearch = new RecordValue({
   values: facetSearchOptionDefinitions,
 });
 
-export const allowedValues = new ArrayValue({
-  required: false,
-  max: 25,
-  each: new StringValue({emptyAllowed: false, required: true}),
+export const allowedValues = new RecordValue({
+  options: {required: false},
+  values: {
+    type: new StringValue({
+      constrainTo: ['simple'],
+      emptyAllowed: false,
+      required: true,
+    }),
+    values: new ArrayValue({
+      required: true,
+      max: 25,
+      each: new StringValue({emptyAllowed: false, required: true}),
+    }),
+  },
 });

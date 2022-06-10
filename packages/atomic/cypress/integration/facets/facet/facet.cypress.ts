@@ -1058,9 +1058,16 @@ describe('Facet v1 Test Suites', () => {
     });
   });
 
-  describe.skip('with allowed-values', () => {
+  describe('with allowed-values', () => {
     it('returns only allowed values', () => {
-      // TODO when release done
+      new TestFixture()
+        .with(addFacet({field: 'objecttype', 'allowed-values': 'FAQ,File'}))
+        .init();
+
+      FacetSelectors.values()
+        .should('contain.text', 'FAQ')
+        .should('contain.text', 'File')
+        .should('not.contain.text', 'Message');
     });
   });
 });

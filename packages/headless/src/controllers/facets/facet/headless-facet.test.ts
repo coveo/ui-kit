@@ -88,10 +88,10 @@ describe('facet', () => {
 
     initFacet();
 
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
-      engine,
-      options
-    );
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, {
+      ...options,
+      allowedValues: {type: 'simple', values: ['foo', 'bar']},
+    });
   });
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
@@ -102,7 +102,7 @@ describe('facet', () => {
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,
-      allowedValues: ['foo', 'bar'],
+      allowedValues: {type: 'simple', values: ['foo', 'bar']},
     });
 
     expect(engine.actions).toContainEqual(action);

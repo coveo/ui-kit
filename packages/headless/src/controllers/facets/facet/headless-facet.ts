@@ -79,7 +79,22 @@ export function buildFacet(
   }
 
   const {dispatch} = engine;
-  const coreController = buildCoreFacet(engine, props, facetOptionsSchema);
+  const coreController = buildCoreFacet(
+    engine,
+    {
+      ...props,
+      options: {
+        ...props.options,
+        ...(props.options.allowedValues && {
+          allowedValues: {
+            type: 'simple',
+            values: props.options.allowedValues,
+          },
+        }),
+      },
+    },
+    facetOptionsSchema
+  );
   const getFacetId = () => coreController.state.facetId;
 
   const createFacetSearch = () => {

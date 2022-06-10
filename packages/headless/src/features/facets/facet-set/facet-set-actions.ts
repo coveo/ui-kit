@@ -7,11 +7,11 @@ import {
   BooleanValue,
   RecordValue,
   Value,
-  ArrayValue,
 } from '@coveo/bueno';
 import {FacetValue} from './interfaces/response';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
+import {allowedValues} from '../../../controllers/core/facets/_common/facet-option-definitions';
 
 export interface RegisterFacetActionCreatorPayload {
   /**
@@ -74,7 +74,10 @@ export interface RegisterFacetActionCreatorPayload {
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  allowedValues?: string[];
+  allowedValues?: {
+    type: 'simple';
+    values: string[];
+  };
 }
 
 const facetRegistrationOptionsDefinition = {
@@ -86,11 +89,7 @@ const facetRegistrationOptionsDefinition = {
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<FacetSortCriterion>({required: false}),
-  allowedValues: new ArrayValue({
-    required: false,
-    max: 25,
-    each: new StringValue({emptyAllowed: false, required: true}),
-  }),
+  allowedValues: allowedValues,
 };
 
 export const registerFacet = createAction(
