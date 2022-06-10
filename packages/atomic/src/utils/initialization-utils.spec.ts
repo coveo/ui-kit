@@ -1,3 +1,7 @@
+jest.mock('./replace-breakpoint.ts', () => ({
+  ...jest.requireActual('./replace-breakpoint.ts'),
+  updateBreakpoints: () => {},
+}));
 import {
   BindStateToController,
   InitializableComponent,
@@ -14,7 +18,7 @@ import {createStore} from '@stencil/store';
 import {AtomicStore, initialStore} from './store';
 
 describe('InitializeBindings decorator', () => {
-  it(`when using the decorator with a property other than bindings 
+  it(`when using the decorator with a property other than bindings
   should log an error`, () => {
     console.error = jest.fn();
     const component: InitializableComponent = new AtomicSearchBox();

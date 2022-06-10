@@ -5,6 +5,8 @@ import {
 } from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {ObservableMap} from '@stencil/store';
+import {makeDesktopQuery} from '../components/atomic-layout/search-layout';
+import {DEFAULT_MOBILE_BREAKPOINT} from './replace-breakpoint';
 
 interface FacetInfo {
   label: string;
@@ -32,6 +34,7 @@ export type AtomicStore = {
   facetElements: HTMLElement[];
   sortOptions: SortDropdownOption[];
   iconAssetsPath: string;
+  mobileBreakpoint: string;
   /**
    * Dynamic list of flags that allows for syncing various components loading state on initialization.
    * E.g., waiting for result template component to be rendered.
@@ -49,6 +52,7 @@ export const initialStore: () => AtomicStore = () => ({
   facetElements: [],
   sortOptions: [],
   iconAssetsPath: '',
+  mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
   loadingFlags: [],
 });
 
@@ -128,3 +132,6 @@ export const waitUntilAppLoaded = (
 
 export const isAppLoaded = (store: ObservableMap<AtomicStore>) =>
   !store.get('loadingFlags').length;
+
+export const isMobile = (store: ObservableMap<AtomicStore>) =>
+  !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint)).matches;

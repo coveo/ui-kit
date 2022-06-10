@@ -10,3 +10,10 @@
   content: '';
   @apply absolute w-5/6 h-5/6 bg-background rounded-full;
 }
+
+[part='suggestions-wrapper'] {
+  flex-direction: column;
+  @media only screen and (min-width: 1024px) {
+    flex-direction: row;
+  }
+}

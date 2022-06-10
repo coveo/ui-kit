@@ -70,7 +70,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       ? this.instantResults.state.results
       : this.results;
     return results.map((result: Result) => ({
-      key: `instant-result-${cleanUpString(result.title)}`,
+      key: `instant-result-${cleanUpString(result.uniqueId)}`,
       query: '',
       content: (
         <atomic-result
@@ -106,7 +106,6 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
         this.templateHasError = true;
       },
     });
-
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
       panel: 'right',

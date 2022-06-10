@@ -1,7 +1,6 @@
 import {
   ConfigurationSection,
   InsightConfigurationSection,
-  InsightSearchSection,
   InsightInterfaceSection,
   SearchHubSection,
   VersionSection,
@@ -20,7 +19,7 @@ export type InsightAppState = InsightSearchParametersState &
   ConfigurationSection &
   VersionSection &
   InsightConfigurationSection &
-  InsightSearchSection &
+  SearchSection &
   SearchHubSection &
   InsightInterfaceSection &
   InsightCaseContextSection &

@@ -13,8 +13,8 @@ import {buildLogger} from '../logger';
 import {
   insightConfiguration,
   insightInterface,
-  insightSearch,
   resultPreview,
+  search,
   searchHub,
 } from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
@@ -26,14 +26,13 @@ import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
-import {firstSearchExecutedSelector} from '../../features/insight-search/insight-search-selectors';
-import {insightExecuteSearch} from '../../features/insight-search/insight-search-actions';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 
 export type {InsightEngineConfiguration};
 
 const insightEngineReducers = {
   insightConfiguration,
-  insightSearch,
+  search,
   insightInterface,
   searchHub,
   resultPreview,
@@ -115,8 +114,7 @@ export function buildInsightEngine(
         return;
       }
 
-      insightExecuteSearch(analyticsEvent);
-      //engine.dispatch(action);
+      engine.dispatch(insightExecuteSearch(analyticsEvent));
     },
   };
 }
@@ -132,7 +130,6 @@ function validateConfiguration(
     throw error;
   }
 }
-
 function createInsightAPIClient(
   configuration: InsightEngineConfiguration,
   logger: Logger
@@ -141,4 +138,7 @@ function createInsightAPIClient(
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });
+}
+function insightExecuteSearch(analyticsEvent: SearchAction): any {
+  throw new Error('Function not implemented.');
 }

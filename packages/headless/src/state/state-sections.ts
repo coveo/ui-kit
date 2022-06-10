@@ -42,10 +42,7 @@ import {ExcerptLengthState} from '../features/excerpt-length/excerpt-length-stat
 import {InstantResultsState} from '../features/instant-results/instant-results-state';
 import {InsightConfigurationState} from '../features/insight-configuration/insight-configuration-state';
 import {InsightInterfaceState} from '../features/insight-interface/insight-interface-state';
-import {
-  InsightCaseContextState,
-  InsightSearchState,
-} from '../features/insight-search/insight-search-state';
+import {InsightCaseContextState} from '../features/insight-search/insight-case-context-state';
 
 export interface QuerySection {
   /**
@@ -384,11 +381,4 @@ export interface InsightCaseContextSection {
    * The insight case context to use with the insight search query.
    */
   insightCaseContext: InsightCaseContextState;
-}
-
-export interface InsightSearchSection {
-  /**
-   * The information related to the insight search endpoint.
-   */
-  insightSearch: InsightSearchState;
 }
