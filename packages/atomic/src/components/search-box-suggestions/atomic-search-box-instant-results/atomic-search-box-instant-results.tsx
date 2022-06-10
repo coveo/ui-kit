@@ -72,7 +72,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       : this.results;
     const elements: SearchBoxSuggestionElement[] = results.map(
       (result: Result) => ({
-        key: `instant-result-${cleanUpString(result.title)}`,
+        key: `instant-result-${cleanUpString(result.uniqueId)}`,
         content: (
           <atomic-result
             key={`instant-result-${cleanUpString(result.title)}`}
@@ -127,7 +127,6 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
         this.templateHasError = true;
       },
     });
-
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
       panel: 'right',

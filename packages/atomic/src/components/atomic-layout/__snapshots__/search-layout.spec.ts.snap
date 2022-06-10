@@ -9,7 +9,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
         grid-template-areas:
         '. .                     atomic-section-search .'
         '. atomic-section-main   atomic-section-main   .';
-        grid-template-columns: 
+        grid-template-columns:
           1fr minmax(17rem, 22rem) minmax(50%, 70rem) 1fr;
         column-gap: var(--atomic-layout-spacing-x);
       }
@@ -58,7 +58,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
         grid-template-areas:
         '. .                     atomic-section-search .'
         '. atomic-section-main   atomic-section-main   .';
-        grid-template-columns: 
+        grid-template-columns:
           1fr minmax(250px, 300px) minmax(300px, 1200px) 1fr;
         column-gap: var(--atomic-layout-spacing-x);
       }
