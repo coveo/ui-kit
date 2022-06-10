@@ -20,7 +20,7 @@ async function bumpVersionAndPush() {
   try {
     // But wait, there's more! https://github.com/lerna/lerna/blob/main/commands/version/README.md#lifecycle-scripts
     await exec(
-      `npx lerna version --conventional-commits --conventional-graduate --no-private --yes --exact`
+      `npx lerna version --conventional-commits --conventional-graduate --no-private --yes --exact --force-git-tag`
     );
   } catch (e) {
     console.error(
