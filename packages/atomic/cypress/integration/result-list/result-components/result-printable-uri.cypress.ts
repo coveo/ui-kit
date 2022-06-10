@@ -6,8 +6,9 @@ import {
 import {
   resultPrintableUriComponent,
   ResultPrintableUriSelectors,
-} from './result-printable-uri-selector';
+} from './result-printable-uri-selectors';
 import * as CommonAssertions from '../../common-assertions';
+import * as ResultPrintableUriAssertions from './result-printable-uri-assertions';
 import {
   addResultList,
   buildTemplateWithoutSections,
@@ -16,20 +17,20 @@ import {resultTextComponent} from './result-text-selectors';
 
 describe('Result Printable Uri Component', () => {
   describe('when not used inside a result template', () => {
-    beforeEach(() => {
+    before(() => {
       new TestFixture()
         .with((e) => addTag(e, resultPrintableUriComponent, {}))
         .init();
     });
 
+    CommonAssertions.assertConsoleError();
     CommonAssertions.assertRemovesComponent(() =>
       cy.get(resultPrintableUriComponent)
     );
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the "max-number-of-parts" prop is not a number', () => {
-    beforeEach(() => {
+    before(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -43,14 +44,14 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
+    CommonAssertions.assertConsoleError();
     CommonAssertions.assertRemovesComponent(
       ResultPrintableUriSelectors.firstInResult
     );
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when the "max-number-of-parts" prop is less than 3', () => {
-    beforeEach(() => {
+    before(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -64,14 +65,14 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
+    CommonAssertions.assertConsoleError();
     CommonAssertions.assertRemovesComponent(() =>
       cy.get(resultPrintableUriComponent)
     );
-    CommonAssertions.assertConsoleError();
   });
 
   describe('when there is no "parents" property in the result object', () => {
-    beforeEach(() => {
+    before(() => {
       new TestFixture()
         .with(
           addResultList(
@@ -105,7 +106,7 @@ describe('Result Printable Uri Component', () => {
 
   describe('when there is a "parents" property in the result object', () => {
     describe('when the number of parts is lower than or equal to the "max-number-of-parts" prop', () => {
-      beforeEach(() => {
+      before(() => {
         new TestFixture()
           .with(
             addResultList(
@@ -143,7 +144,7 @@ describe('Result Printable Uri Component', () => {
     });
 
     describe('when the number of parts is higher than the "max-number-of-parts" prop', () => {
-      beforeEach(() => {
+      before(() => {
         new TestFixture()
           .with(
             addResultList(
@@ -163,24 +164,28 @@ describe('Result Printable Uri Component', () => {
           .init();
       });
 
-      it('should add an ellipsis before the last part', () => {
+      ResultPrintableUriAssertions.assertDisplayEllipsis(true);
+
+      it('should only display 2 values', () => {
         ResultPrintableUriSelectors.uriListElements().eq(2);
-
-        ResultPrintableUriSelectors.ellipsisButton()
-          .should('exist')
-          .should('have.text', '...');
-      });
-
-      it('clicking on the ellipsis should render all parts', () => {
-        ResultPrintableUriSelectors.ellipsisButton().click();
-        ResultPrintableUriSelectors.ellipsisButton().should('not.exist');
-        ResultPrintableUriSelectors.links().should('have.length.above', 3);
-        ResultPrintableUriSelectors.links().eq(3).should('be.focused');
       });
 
       CommonAssertions.assertAccessibility(
         ResultPrintableUriSelectors.firstInResult
       );
+
+      describe('after clicking on the ellipsis', () => {
+        before(() => {
+          ResultPrintableUriSelectors.ellipsisButton().click();
+        });
+
+        ResultPrintableUriAssertions.assertFocusLink(2);
+        ResultPrintableUriAssertions.assertDisplayEllipsis(false);
+
+        it('should render all parts', () => {
+          ResultPrintableUriSelectors.links().should('have.length.above', 3);
+        });
+      });
     });
   });
 });

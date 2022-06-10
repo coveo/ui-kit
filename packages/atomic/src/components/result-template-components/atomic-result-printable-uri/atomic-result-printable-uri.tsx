@@ -72,8 +72,8 @@ export class AtomicResultPrintableUri {
     });
   }
 
-  private getIndexOfEllipsis(parentsCount: number) {
-    return Math.min(parentsCount - 1, this.maxNumberOfParts);
+  private getIndexOfEllipsis() {
+    return this.maxNumberOfParts - 1;
   }
 
   private renderEllipsis() {
@@ -97,7 +97,7 @@ export class AtomicResultPrintableUri {
   private get allParents() {
     const parentsXml = parseXML(`${this.result.raw.parents}`);
     const parents = Array.from(parentsXml.getElementsByTagName('parent'));
-    const ellipsisIndex = this.getIndexOfEllipsis(parents.length);
+    const ellipsisIndex = this.getIndexOfEllipsis();
     return parents.map((parent, i) => {
       const name = parent.getAttribute('name');
       const uri = parent.getAttribute('uri')!;
@@ -126,9 +126,8 @@ export class AtomicResultPrintableUri {
       return parents;
     }
 
-    const lastIndexBeforeEllipsis = this.getIndexOfEllipsis(parents.length) - 1;
     return [
-      parents.slice(0, lastIndexBeforeEllipsis),
+      parents.slice(0, this.getIndexOfEllipsis()),
       this.renderEllipsis(),
       parents.slice(-1),
     ];
