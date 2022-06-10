@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.13.1...@coveo/atomic-angular@1.13.1) (2022-06-10)
+
+
+### Bug Fixes
+
+* commit package-lock files right when bumping, undo last bump & fix region ([#2074](https://github.com/coveo/ui-kit/issues/2074)) ([28ad872](https://github.com/coveo/ui-kit/commit/28ad872363d2b84711865cda0c6d61bba7354927))
+
+
+
+
+
 ## [1.13.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.13.0...@coveo/atomic-angular@1.13.1) (2022-06-09)
 
 **Note:** Version bump only for package @coveo/atomic-angular
