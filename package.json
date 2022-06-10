@@ -15,7 +15,7 @@
     "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
     "bump:version": "node ./scripts/deploy/bump-version.js",
-    "version": "npm run lockLernaDependencies && git add \"**/package-lock.json\"",
+    "version": "git add \"**/package-lock.json\"",
     "npm:publish:alpha": "lerna run npm:publish:alpha",
     "npm:tag": "node ./scripts/deploy/update-npm-tag.js",
     "npm:tag:beta": "npm run npm:tag -- beta",
