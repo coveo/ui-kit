@@ -96,10 +96,9 @@ export class AtomicLoadMoreResults {
     );
   }
 
-  private onClick() {
+  private async onClick() {
     (
-      this.bindings.interfaceElement.querySelector('atomic-result-list') ??
-      this.bindings.interfaceElement.querySelector('atomic-folded-result-list')
+      await this.bindings.interfaceElement.getResultList()
     )?.focusOnNextNewResult();
     this.resultList.fetchMoreResults();
   }

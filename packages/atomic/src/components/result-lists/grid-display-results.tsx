@@ -28,7 +28,8 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
           href={props.resultListCommon.getUnfoldedResult(result).clickUri}
           target="_self"
           title={props.resultListCommon.getUnfoldedResult(result).title}
-          accessible={false}
+          tabIndex={-1}
+          ariaHidden={true}
         />
         <atomic-result
           key={props.resultListCommon.getResultId(

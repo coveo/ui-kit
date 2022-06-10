@@ -124,7 +124,7 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
   /**
    * @internal
    */
-  @Method() public focusOnNextNewResult() {
+  @Method() public async focusOnNextNewResult() {
     this.resultListCommon.focusOnNextNewResult(this.foldedResultListState);
   }
 

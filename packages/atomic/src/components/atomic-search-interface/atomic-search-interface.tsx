@@ -64,7 +64,7 @@ export class AtomicSearchInterface {
   private store = createStore<AtomicStore>(initialStore());
   private i18nPromise!: Promise<TFunction>;
 
-  @Element() private host!: HTMLElement;
+  @Element() private host!: HTMLAtomicSearchInterfaceElement;
 
   @State() private error?: Error;
 
@@ -307,6 +307,16 @@ export class AtomicSearchInterface {
     const {value, analytics} = standaloneSearchBoxData;
     this.engine!.dispatch(updateQuery({q: value}));
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
+  }
+
+  /**
+   * @internal
+   */
+  @Method() public async getResultList() {
+    return (
+      this.host.querySelector('atomic-result-list') ??
+      this.host.querySelector('atomic-folded-result-list')
+    );
   }
 
   private engineIsCreated(engine?: SearchEngine): engine is SearchEngine {

@@ -126,7 +126,7 @@ export class AtomicResultList implements BaseResultList<Result> {
   /**
    * @internal
    */
-  @Method() public focusOnNextNewResult() {
+  @Method() public async focusOnNextNewResult() {
     this.resultListCommon.focusOnNextNewResult(this.resultListState);
   }
 
