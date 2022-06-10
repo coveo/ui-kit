@@ -1309,6 +1309,25 @@ export class AtomicSearchLayout {
 }
 
 
+export declare interface AtomicSegmentedFacetScrollable extends Components.AtomicSegmentedFacetScrollable {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-segmented-facet-scrollable',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicSegmentedFacetScrollable {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippet {}
 
 @ProxyCmp({

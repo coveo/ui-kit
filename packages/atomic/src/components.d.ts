@@ -972,6 +972,8 @@ export namespace Components {
         "sortCriteria": FacetSortCriterion;
         "withSearch": boolean;
     }
+    interface AtomicSegmentedFacetScrollable {
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -1539,6 +1541,12 @@ declare global {
         prototype: HTMLAtomicSegmentedFacetElement;
         new (): HTMLAtomicSegmentedFacetElement;
     };
+    interface HTMLAtomicSegmentedFacetScrollableElement extends Components.AtomicSegmentedFacetScrollable, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetScrollableElement: {
+        prototype: HTMLAtomicSegmentedFacetScrollableElement;
+        new (): HTMLAtomicSegmentedFacetScrollableElement;
+    };
     interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
     }
     var HTMLAtomicSmartSnippetElement: {
@@ -1683,6 +1691,7 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
+        "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
@@ -2627,6 +2636,8 @@ declare namespace LocalJSX {
         "sortCriteria"?: FacetSortCriterion;
         "withSearch"?: boolean;
     }
+    interface AtomicSegmentedFacetScrollable {
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -2845,6 +2856,7 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
         "atomic-segmented-facet": AtomicSegmentedFacet;
+        "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
@@ -2934,6 +2946,7 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
+            "atomic-segmented-facet-scrollable": LocalJSX.AtomicSegmentedFacetScrollable & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetScrollableElement>;
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
