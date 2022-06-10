@@ -3,7 +3,7 @@ import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
 
 import {
   dispatchSearchBoxSuggestionsEvent,
-  SearchBoxSuggestionItem,
+  SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
@@ -17,6 +17,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../atomic-result/atomic-result-display-options';
+import {Button} from '../../common/button';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -62,29 +63,49 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     }
   }
 
-  private renderItems(): SearchBoxSuggestionItem[] {
+  private renderItems(): SearchBoxSuggestionElement[] {
     if (!this.bindings.suggestedQuery()) {
       return [];
     }
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
-    return results.map((result: Result) => ({
-      key: `instant-result-${cleanUpString(result.uniqueId)}`,
-      query: '',
-      content: (
-        <atomic-result
-          key={`instant-results-${result.uniqueId}`}
-          part="outline"
-          result={result}
-          engine={this.bindings.engine}
-          display={this.display}
-          density={this.density}
-          imageSize={this.imageSize}
-          content={this.resultListCommon.getContentOfResultTemplate(result)}
-        ></atomic-result>
-      ),
-    }));
+    const elements: SearchBoxSuggestionElement[] = results.map(
+      (result: Result) => ({
+        key: `instant-result-${cleanUpString(result.uniqueId)}`,
+        content: (
+          <atomic-result
+            key={`instant-result-${cleanUpString(result.uniqueId)}`}
+            part="outline"
+            result={result}
+            engine={this.bindings.engine}
+            display={this.display}
+            density={this.density}
+            imageSize={this.imageSize}
+            content={this.resultListCommon.getContentOfResultTemplate(result)}
+          ></atomic-result>
+        ),
+      })
+    );
+    if (elements.length) {
+      elements.push({
+        key: 'instant-result-show-all-button',
+        content: (
+          <Button style="text-primary">
+            {this.bindings.i18n.t('show-all-results')}
+          </Button>
+        ),
+        part: 'suggestion-show-all',
+        onSelect: () => {
+          this.bindings.clearSuggestions();
+          this.bindings.searchBoxController.updateText(
+            this.instantResults.state.q
+          );
+          this.bindings.searchBoxController.submit();
+        },
+      });
+    }
+    return elements;
   }
 
   public initialize(): SearchBoxSuggestions {
