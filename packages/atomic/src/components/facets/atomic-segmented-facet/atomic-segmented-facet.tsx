@@ -16,8 +16,7 @@ import {
   FacetValue,
   SearchStatus,
   SearchStatusState,
-} from '../../../../headless';
-import {registerFacetToStore} from '../../../utils/store';
+} from '@coveo/headless';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
