@@ -7,6 +7,7 @@ const links = [
   {href: '/examples/standalone.html', label: 'Standalone'},
   {href: '/examples/modal.html', label: 'Modal'},
   {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
+  {href: '/examples/instantResults.html', label: 'Instant Results'},
 ];
 
 const header = document.createElement('header');
