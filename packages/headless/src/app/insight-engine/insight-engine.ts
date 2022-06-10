@@ -139,6 +139,8 @@ function createInsightAPIClient(
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
   });
 }
-function insightExecuteSearch(analyticsEvent: SearchAction): any {
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function insightExecuteSearch(_analyticsEvent: SearchAction): any {
   throw new Error('Function not implemented.');
 }

@@ -25,7 +25,6 @@ export function buildMockInsightState(
     facetSet: getFacetSetInitialState(),
     pagination: getPaginationInitialState(),
     resultPreview: getResultPreviewInitialState(),
-    search: getSearchInitialState(),
     ...config,
   };
 }

@@ -1,12 +1,6 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {insightSearch} from '../../../app/reducers';
-import {insightExecuteSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {logPagerResize} from '../../../features/pagination/pagination-analytics-actions';
-import {
-  ConfigurationSection,
-  PaginationSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
@@ -33,10 +27,6 @@ export function buildInsightResultsPerPage(
   engine: InsightEngine,
   props: ResultsPerPageProps = {}
 ): ResultsPerPage {
-  if (!loadResultsPerPageReducers(engine)) {
-    throw loadReducerError;
-  }
-
   const coreController = buildCoreResultsPerPage(engine, props);
   const {dispatch} = engine;
 
@@ -45,14 +35,7 @@ export function buildInsightResultsPerPage(
 
     set(num: number) {
       coreController.set(num);
-      dispatch(insightExecuteSearch(logPagerResize()));
+      dispatch(executeSearch(logPagerResize()));
     },
   };
-}
-
-function loadResultsPerPageReducers(
-  engine: InsightEngine
-): engine is InsightEngine<PaginationSection & ConfigurationSection> {
-  engine.addReducers({insightSearch});
-  return true;
 }

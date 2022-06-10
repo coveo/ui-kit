@@ -4,7 +4,7 @@ import {
   MockInsightEngine,
 } from '../../../test/mock-engine';
 import {buildMockResult} from '../../../test';
-import {insightFetchMoreResults} from '../../../features/insight-search/insight-search-actions';
+import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
 
 describe('InsightResultList', () => {
   let engine: MockInsightEngine;
@@ -21,11 +21,11 @@ describe('InsightResultList', () => {
     jest.useRealTimers();
   });
 
-  it('fetchMoreResults should dispatch an insightFetchMoreResults action', () => {
+  it('fetchMoreResults should dispatch a fetchMoreResults action', () => {
     buildInsightResultList(engine).fetchMoreResults();
     expect(
       engine.actions.find(
-        (action) => action.type === insightFetchMoreResults.pending.type
+        (action) => action.type === fetchMoreResults.pending.type
       )
     ).toBeTruthy();
   });

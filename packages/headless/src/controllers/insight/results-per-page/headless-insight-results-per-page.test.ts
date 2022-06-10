@@ -8,7 +8,7 @@ import {
   buildMockInsightEngine,
 } from '../../../test/mock-engine';
 import {updateNumberOfResults} from '../../../features/pagination/pagination-actions';
-import {insightExecuteSearch} from '../../../features/insight-search/insight-search-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 
 describe('InsightResultsPerPage', () => {
   let engine: MockInsightEngine;
@@ -35,11 +35,11 @@ describe('InsightResultsPerPage', () => {
     expect(engine.actions).toContainEqual(updateNumberOfResults(num));
   });
 
-  it('calling #set executes an insightExecuteSearch', () => {
+  it('calling #set executes an executeSearch', () => {
     resultsPerPage.set(10);
 
     const action = engine.actions.find(
-      (a) => a.type === insightExecuteSearch.pending.type
+      (a) => a.type === executeSearch.pending.type
     );
     expect(action).toBeTruthy();
   });
