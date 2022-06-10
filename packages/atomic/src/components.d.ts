@@ -15,7 +15,6 @@ import { AtomicStore } from "./utils/store";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-import { FacetSortCriterion as FacetSortCriterion1 } from "../headless";
 export namespace Components {
     interface AtomicAriaLive {
         "updateMessage": (region: string, message: string) => Promise<void>;
@@ -958,7 +957,7 @@ export namespace Components {
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
-        "sortCriteria": FacetSortCriterion1;
+        "sortCriteria": FacetSortCriterion;
         "withSearch": boolean;
     }
     interface AtomicSmartSnippet {
@@ -2601,7 +2600,7 @@ declare namespace LocalJSX {
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
-        "sortCriteria"?: FacetSortCriterion1;
+        "sortCriteria"?: FacetSortCriterion;
         "withSearch"?: boolean;
     }
     interface AtomicSmartSnippet {
