@@ -1,6 +1,15 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Component, h, State, Prop, Listen, Watch, VNode} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Listen,
+  Watch,
+  VNode,
+  Element,
+} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -17,7 +26,7 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {Button} from '../common/button';
-import {randomID} from '../../utils/utils';
+import {once, randomID} from '../../utils/utils';
 import {
   isDividerElement,
   isSuggestionElement,
@@ -30,6 +39,8 @@ import {
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
 import {promiseTimeout} from '../../utils/promise-utils';
+import {updateBreakpoints} from '../../utils/replace-breakpoint';
+import {isMobile} from '../../utils/store';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -65,6 +76,7 @@ export class AtomicSearchBox {
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
+  @Element() private host!: HTMLElement;
 
   @BindStateToController('searchBox')
   @State()
@@ -187,6 +199,7 @@ export class AtomicSearchBox {
       getSuggestions: () => this.suggestions,
     };
   }
+  private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   private get popupId() {
     return `${this.id}-popup`;
@@ -628,7 +641,7 @@ export class AtomicSearchBox {
         id={id}
         key={item.key}
         part={this.makeSuggestionPart(isSelected, isDivider, hasQuery)}
-        class={`flex px-4 h-10 items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
+        class={`flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
@@ -651,18 +664,20 @@ export class AtomicSearchBox {
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
-    await Promise.allSettled(
-      this.suggestions.map((suggestion) =>
-        promiseTimeout(
-          suggestion.onSuggestedQueryChange
-            ? suggestion.onSuggestedQueryChange(suggestedQuery)
-            : Promise.resolve(),
-          this.suggestionTimeout
+    if (!isMobile(this.bindings.store)) {
+      await Promise.allSettled(
+        this.suggestions.map((suggestion) =>
+          promiseTimeout(
+            suggestion.onSuggestedQueryChange
+              ? suggestion.onSuggestedQueryChange(suggestedQuery)
+              : Promise.resolve(),
+            this.suggestionTimeout
+          )
         )
-      )
-    );
-    this.suggestedQuery = suggestedQuery;
-    this.updateSuggestionElements(suggestedQuery);
+      );
+      this.suggestedQuery = suggestedQuery;
+      this.updateSuggestionElements(suggestedQuery);
+    }
   }
 
   private renderPanel(
@@ -680,7 +695,7 @@ export class AtomicSearchBox {
         part={`suggestions suggestions-${side}`}
         aria-label={this.bindings.i18n.t('query-suggestion-list')}
         ref={setRef}
-        class="flex-grow"
+        class="flex-grow basis-1/2"
         onMouseDown={(e) => {
           if (e.target === getRef()) {
             e.preventDefault();
@@ -746,6 +761,8 @@ export class AtomicSearchBox {
   }
 
   public render() {
+    this.updateBreakpoints();
+
     return [
       <div
         part="wrapper"

@@ -1,5 +1,8 @@
 import {findSection, sectionSelector} from '../atomic-layout-section/sections';
 
+export function makeDesktopQuery(mobileBreakpoint: string) {
+  return `only screen and (min-width: ${mobileBreakpoint})`;
+}
 export function buildSearchLayout(
   element: HTMLElement,
   mobileBreakpoint: string
@@ -8,7 +11,7 @@ export function buildSearchLayout(
   const layoutSelector = `atomic-search-layout#${id}`;
   const cleanStatusSelector =
     'atomic-search-interface:not(.atomic-search-interface-no-results, .atomic-search-interface-error)';
-  const mediaQuerySelector = `@media only screen and (min-width: ${mobileBreakpoint})`;
+  const mediaQuerySelector = `@media ${makeDesktopQuery(mobileBreakpoint)}`;
 
   const display = `${layoutSelector} { display: grid }`;
 
@@ -29,7 +32,7 @@ export function buildSearchLayout(
         grid-template-areas:
         '. .                     atomic-section-search .'
         '. atomic-section-main   atomic-section-main   .';
-        grid-template-columns: 
+        grid-template-columns:
           1fr minmax(${facetsMin}, ${facetsMax}) minmax(${mainMin}, ${mainMax}) 1fr;
         column-gap: var(--atomic-layout-spacing-x);
       }

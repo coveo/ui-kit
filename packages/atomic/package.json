@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.69.0",
+  "version": "1.70.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -43,6 +43,8 @@
     "cypress-hsp:open": "cypress open --config-file cypress-hsp.json",
     "cypress-screenshots:test": "cypress run --config-file cypress-screenshots.json --browser chrome",
     "cypress-screenshots:open": "cypress open --config-file cypress-screenshots.json --browser chrome",
+    "cypress-visual:test": "cypress run --config-file cypress-visual-tests.json --browser chrome",
+    "cypress-visual:open": "cypress open --config-file cypress-visual-tests.json --browser chrome",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
@@ -52,8 +54,8 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@coveo/bueno": "0.38.2",
-    "@coveo/headless": "1.71.0",
+    "@coveo/bueno": "0.39.1",
+    "@coveo/headless": "1.72.1",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "2.15.2",
     "@stencil/store": "1.5.0",
@@ -68,6 +70,7 @@
     "stencil-inline-svg": "^1.1.0"
   },
   "devDependencies": {
+    "@applitools/eyes-cypress": "^3.26.1",
     "@babel/core": "7.17.10",
     "@fullhuman/postcss-purgecss": "4.1.3",
     "@monaco-editor/react": "4.3.1",
