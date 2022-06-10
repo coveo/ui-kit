@@ -178,6 +178,28 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
+  /**
+   * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.
+   *
+   * If you specify a list of values for this option, the facet uses only these values (if they are available in
+   * the current result set).
+   *
+   * Example:
+   *
+   * The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the
+   * current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use
+   * those other values.
+   *
+   * ```html
+   * <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div>
+   * ```
+   *
+   * The maximum amount of allowed values is 25.
+   *
+   * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+   */
+  @Prop() public allowedValues?: string;
+
   @FocusTarget()
   private showMoreLessFocus!: FocusTargetController;
 
@@ -206,6 +228,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
+      allowedValues: this.allowedValues?.trim().split(','),
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
