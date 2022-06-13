@@ -48,7 +48,7 @@ runs:
       shell: bash
     # Runs on subsequent setups
     - id: subsequent-install
-      if: steps.build-cache.outputs.cache-hit = 'true'
+      if: steps.build-cache.outputs.cache-hit
       run: |
         npm ci
         npx --no-install lerna bootstrap --ci
