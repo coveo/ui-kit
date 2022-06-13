@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       # Prevents possible "npm ci" failures in subpackages
-      - run: npm run lockLernaDependencies
+      - run: npm run lockLernaDependenciesNoScripts
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/commit-generated-files
   lint-check:
