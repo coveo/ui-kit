@@ -21,8 +21,7 @@
     "npm:tag:latest": "npm run npm:tag -- latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.js",
     "doc:generate": "lerna run doc:generate",
-    "lockLernaDependencies": "lerna exec \"npm install --package-lock-only\"",
-    "lockLernaDependenciesNoScripts": "lerna exec \"npm install --package-lock-only --ignore-scripts\""
+    "lockLernaDependencies": "lerna exec \"npm install --package-lock-only\""
   },
   "devDependencies": {
     "@actions/core": "1.8.2",
