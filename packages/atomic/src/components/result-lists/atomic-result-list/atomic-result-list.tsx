@@ -28,6 +28,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {registerResultListToStore, ResultListInfo} from '../../../utils/store';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -51,7 +52,9 @@ import {
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicResultList implements BaseResultList<Result> {
+export class AtomicResultList
+  implements BaseResultList<Result>, ResultListInfo
+{
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -177,6 +180,7 @@ export class AtomicResultList implements BaseResultList<Result> {
       this.resultListCommon.resultListControllerProps
     );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+    registerResultListToStore(this.bindings.store, this);
   }
 
   public getContentOfResultTemplate(

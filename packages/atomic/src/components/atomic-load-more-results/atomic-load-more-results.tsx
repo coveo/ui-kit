@@ -97,9 +97,7 @@ export class AtomicLoadMoreResults {
   }
 
   private async onClick() {
-    (
-      await this.bindings.interfaceElement.getResultList()
-    )?.focusOnNextNewResult();
+    this.bindings.store.state.resultList?.focusOnNextNewResult();
     this.resultList.fetchMoreResults();
   }
 

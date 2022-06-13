@@ -30,6 +30,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {registerResultListToStore, ResultListInfo} from '../../../utils/store';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -42,7 +43,9 @@ import {
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
+export class AtomicFoldedResultList
+  implements BaseResultList<FoldedResult>, ResultListInfo
+{
   @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -177,6 +180,7 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
     } catch (e) {
       this.error = e as Error;
     }
+    registerResultListToStore(this.bindings.store, this);
   }
 
   private initFolding(

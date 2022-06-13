@@ -309,16 +309,6 @@ export class AtomicSearchInterface {
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
-  /**
-   * @internal
-   */
-  @Method() public async getResultList() {
-    return (
-      this.host.querySelector('atomic-result-list') ??
-      this.host.querySelector('atomic-folded-result-list')
-    );
-  }
-
   private engineIsCreated(engine?: SearchEngine): engine is SearchEngine {
     if (!engine) {
       console.error(

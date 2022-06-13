@@ -884,7 +884,6 @@ export namespace Components {
           * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
-        "getResultList": () => Promise<HTMLAtomicResultListElement | HTMLAtomicFoldedResultListElement | null>;
         /**
           * The search interface i18next instance.
          */
