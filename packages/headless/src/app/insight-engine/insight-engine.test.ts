@@ -40,4 +40,8 @@ describe('buildInsightEngine', () => {
       options.configuration.insightId
     );
   });
+
+  it('exposes an #executeFirstSearch method', () => {
+    expect(engine.executeFirstSearch).toBeTruthy();
+  });
 });
