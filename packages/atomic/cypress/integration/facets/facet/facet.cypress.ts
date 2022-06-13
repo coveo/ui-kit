@@ -1057,4 +1057,17 @@ describe('Facet v1 Test Suites', () => {
       );
     });
   });
+
+  describe('with allowed-values', () => {
+    it('returns only allowed values', () => {
+      new TestFixture()
+        .with(addFacet({field: 'objecttype', 'allowed-values': 'FAQ,File'}))
+        .init();
+
+      FacetSelectors.values()
+        .should('contain.text', 'FAQ')
+        .should('contain.text', 'File')
+        .should('not.contain.text', 'Message');
+    });
+  });
 });

@@ -3,28 +3,19 @@ import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../utils/event-utils';
 import {Bindings} from '../../utils/initialization-utils';
 import {closest} from '../../utils/utils';
-
-export interface SearchBoxDividerElement {
-  key: string;
-  content: Element | VNode;
-  onSelect?(): void;
-}
-
 export interface SearchBoxSuggestionElement {
   key: string;
-  query: string;
   content: Element | VNode;
   onSelect(): void;
+
+  query?: string;
+  part?: string;
+  hideIfLast?: boolean;
 }
-
-export type SearchBoxSuggestionItem =
-  | SearchBoxDividerElement
-  | SearchBoxSuggestionElement;
-
 export interface SearchBoxSuggestions {
   position: number;
   panel?: 'left' | 'right';
-  renderItems(): SearchBoxSuggestionItem[];
+  renderItems(): SearchBoxSuggestionElement[];
   onInput?(): Promise<unknown> | void;
   onSuggestedQueryChange?(q: string): Promise<unknown> | void;
 }
@@ -61,16 +52,11 @@ export const dispatchSearchBoxSuggestionsEvent = (
   }
 };
 
-export function isSuggestionElement(
-  el: SearchBoxSuggestionItem
-): el is SearchBoxSuggestionElement {
-  return 'query' in el;
+export function elementHasNoQuery(el: SearchBoxSuggestionElement) {
+  return !el.query;
 }
 
-export function isDividerElement(
-  el: SearchBoxSuggestionItem
-): el is SearchBoxDividerElement {
-  return !('query' in el);
+export function elementHasQuery(el: SearchBoxSuggestionElement) {
+  return !!el.query;
 }
-
 export const queryDataAttribute = 'data-query';

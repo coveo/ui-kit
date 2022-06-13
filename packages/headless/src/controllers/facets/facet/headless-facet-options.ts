@@ -11,6 +11,7 @@ import {
   injectionDepth,
   numberOfValues,
   facetSearch,
+  allowedValues,
 } from '../../core/facets/_common/facet-option-definitions';
 
 export interface FacetOptions {
@@ -68,6 +69,18 @@ export interface FacetOptions {
    * @defaultValue `automatic`
    */
   sortCriteria?: FacetSortCriterion;
+
+  /**
+   * Specifies an explicit list of `allowedValues` in the Search API request.
+   *
+   * If you specify a list of values for this option, the facet uses only these values (if they are available in
+   * the current result set).
+   *
+   * The maximum amount of allowed values is 25.
+   *
+   * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+   */
+  allowedValues?: string[];
 }
 
 export interface FacetSearchOptions {
@@ -98,4 +111,5 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   numberOfValues,
   sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
   facetSearch,
+  allowedValues,
 });
