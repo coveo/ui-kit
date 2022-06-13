@@ -33,8 +33,10 @@ runs:
           node_modules
           **/node_modules
         key: ${{ hashFiles('**/package-lock.json') }}
-    # First setup
-    - if: steps.build-cache.outputs.cache-hit != 'true'
+    # Runs on first setup
+    - id: first-install
+      if: steps.build-cache.outputs.cache-hit != 'true'
+      run: |
         npm install
         npx --no-install lerna bootstrap --no-ci
     - if: steps.build-cache.outputs.cache-hit != 'true'
@@ -43,10 +45,9 @@ runs:
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run doc:generate
       shell: bash
-    # Subsequent setups
-    - if: steps.build-cache.outputs.cache-hit = 'true'
+    # Runs on subsequent setups
+    - id: subsequent-install
+      if: steps.build-cache.outputs.cache-hit = 'true'
       run: |
         npm ci
         npx --no-install lerna bootstrap --ci
-      shell: bash
-
