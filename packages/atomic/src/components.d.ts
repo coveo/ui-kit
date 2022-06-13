@@ -961,7 +961,7 @@ export namespace Components {
         /**
           * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
-        "label": string;
+        "label"?: string;
         /**
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */

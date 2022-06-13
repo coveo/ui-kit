@@ -58,7 +58,7 @@ export class AtomicSegmentedFacet
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @Prop({reflect: true}) public label = 'no-label';
+  @Prop({reflect: true}) public label?: string;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -101,7 +101,7 @@ export class AtomicSegmentedFacet
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     registerFacetToStore(this.bindings.store, 'facets', {
-      label: this.label,
+      label: this.label !== undefined ? this.label : 'no-label',
       facetId: this.facetId!,
       element: this.host,
     });
@@ -110,7 +110,10 @@ export class AtomicSegmentedFacet
   private renderValuesContainer(children: VNode[]) {
     const classes = 'box-container flex';
     return (
-      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+      <FacetValuesGroup
+        i18n={this.bindings.i18n}
+        label={this.label !== undefined ? this.label : 'no-label'}
+      >
         <ul class={classes} part="values">
           {children}
         </ul>
@@ -158,7 +161,7 @@ export class AtomicSegmentedFacet
     return (
       <div class="flex">
         <b class="inline-block my-3 mr-2">
-          {this.label !== 'no-label' ? this.label.concat(':') : ''}
+          {this.label !== undefined ? this.label.concat(':') : ''}
         </b>
         {this.renderValues()}
       </div>
