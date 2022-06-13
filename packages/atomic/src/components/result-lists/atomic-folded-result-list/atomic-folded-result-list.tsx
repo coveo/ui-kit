@@ -71,6 +71,7 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
+   * @deprecated add it to atomic-search-interface instead
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**
@@ -143,7 +144,6 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
     this.resultListCommon = new ResultListCommon({
       host: this.host,
       bindings: this.bindings,
-      fieldsToInclude: this.fieldsToInclude,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
@@ -156,9 +156,14 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
     });
 
     try {
-      this.foldedResultList = this.initFolding(
-        this.resultListCommon.resultListControllerProps
+      const localFieldsToInclude = this.fieldsToInclude
+        ? this.fieldsToInclude.split(',').map((field) => field.trim())
+        : [];
+      const fieldsToInclude = localFieldsToInclude.concat(
+        this.bindings.store.state.fieldsToInclude
       );
+
+      this.foldedResultList = this.initFolding({options: {fieldsToInclude}});
       this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     } catch (e) {
       this.error = e as Error;

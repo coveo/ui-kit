@@ -248,6 +248,7 @@ export namespace Components {
         "density": ResultDisplayDensity;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
         /**
@@ -690,6 +691,7 @@ export namespace Components {
         "display": ResultDisplayLayout;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
         /**
@@ -712,7 +714,7 @@ export namespace Components {
          */
         "delimiter": string | null;
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -722,7 +724,7 @@ export namespace Components {
     }
     interface AtomicResultNumber {
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -841,10 +843,6 @@ export namespace Components {
          */
         "display": ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
-         */
-        "fieldsToInclude": string;
-        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
@@ -890,6 +888,10 @@ export namespace Components {
           * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
         /**
           * The search interface i18next instance.
          */
@@ -1939,6 +1941,7 @@ declare namespace LocalJSX {
         "density"?: ResultDisplayDensity;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude"?: string;
         /**
@@ -2374,6 +2377,7 @@ declare namespace LocalJSX {
         "display"?: ResultDisplayLayout;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude"?: string;
         /**
@@ -2391,7 +2395,7 @@ declare namespace LocalJSX {
          */
         "delimiter"?: string | null;
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -2401,7 +2405,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultNumber {
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -2516,10 +2520,6 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayLayout;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
-         */
-        "fieldsToInclude"?: string;
-        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -2561,6 +2561,10 @@ declare namespace LocalJSX {
           * The search interface headless engine.
          */
         "engine"?: SearchEngine;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
         /**
           * The search interface i18next instance.
          */

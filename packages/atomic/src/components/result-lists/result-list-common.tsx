@@ -10,7 +10,6 @@ import {
   ResultTemplate,
   buildResultTemplatesManager,
   ResultListProps,
-  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -32,7 +31,6 @@ import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder'
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {isAppLoaded, setLoadingFlag} from '../../utils/store';
-import {isNullOrUndefined} from '@coveo/bueno';
 
 export interface BaseResultList<T = FoldedResult | Result>
   extends InitializableComponent {
@@ -92,12 +90,10 @@ interface ResultListCommonOptions {
   host: HTMLElement;
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
-  fieldsToInclude?: string;
-  templateFieldsToInclude?: string;
   includeDefaultTemplate?: boolean;
+  loadingFlag?: string;
   onReady(): void;
   onError(): void;
-  loadingFlag?: string;
 }
 
 export class ResultListCommon {
@@ -109,29 +105,18 @@ export class ResultListCommon {
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
   public loadingFlag?: string;
-  public templateFieldsToInclude?: string;
 
   constructor(opts: ResultListCommonOptions) {
     this.host = opts.host;
     this.bindings = opts.bindings;
     this.loadingFlag = opts.loadingFlag;
-    this.templateFieldsToInclude = opts.templateFieldsToInclude;
+
     if (this.loadingFlag) {
       setLoadingFlag(this.bindings.store, this.loadingFlag);
     }
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
-
-    if (opts.fieldsToInclude) {
-      this.resultListControllerProps = {
-        options: {
-          fieldsToInclude: this.determineAllFieldsToInclude(
-            opts.fieldsToInclude
-          ),
-        },
-      };
-    }
 
     this.registerResultTemplates(
       opts.templateElements,
@@ -143,17 +128,6 @@ export class ResultListCommon {
 
   set renderingFunction(render: ResultRenderingFunction) {
     this.render = render;
-  }
-
-  private determineAllFieldsToInclude(
-    configuredFieldsToInclude: string
-  ): string[] {
-    if (configuredFieldsToInclude.trim() === '') {
-      return [...EcommerceDefaultFieldsToInclude];
-    }
-    return EcommerceDefaultFieldsToInclude.concat(
-      configuredFieldsToInclude.split(',').map((field) => field.trim())
-    );
   }
 
   public getTemplate(result: Result) {
@@ -206,14 +180,6 @@ export class ResultListCommon {
         (template) => template
       ) as ResultTemplate<DocumentFragment>[]
     );
-
-    const fieldsToInclude =
-      !isNullOrUndefined(this.templateFieldsToInclude) &&
-      this.determineAllFieldsToInclude(this.templateFieldsToInclude!);
-
-    if (fieldsToInclude) {
-      templates[0].fields = fieldsToInclude;
-    }
 
     this.resultTemplatesManager.registerTemplates(...templates);
     onReady();
