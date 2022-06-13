@@ -1,5 +1,10 @@
 import {Component, Element, State, h, Prop} from '@stencil/core';
-import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
+import {
+  buildInstantResults,
+  buildInteractiveResult,
+  InstantResults,
+  Result,
+} from '@coveo/headless';
 
 import {
   dispatchSearchBoxSuggestionsEvent,
@@ -85,6 +90,13 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
             content={this.resultListCommon.getContentOfResultTemplate(result)}
           ></atomic-result>
         ),
+        onSelect: () => {
+          buildInteractiveResult(this.bindings.engine, {
+            options: {result},
+          }).select();
+          this.bindings.clearSuggestions();
+          window.location.href = result.clickUri;
+        },
       })
     );
     if (elements.length) {
