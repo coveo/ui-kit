@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # Prevents possible "npm ci" failures in subpackages
+      - run: npm run lockLernaDependencies
       - uses: ./.github/actions/setup
   lint-check:
     name: 'Check with linter'
