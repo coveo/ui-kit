@@ -39,6 +39,10 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
   private results: Result[] = [];
   public resultListCommon!: ResultListCommon;
   /**
+   * A list of non-default fields to include in the query results, separated by commas.
+   */
+  @Prop({reflect: true}) public fieldsToInclude = '';
+  /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
   @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
@@ -122,6 +126,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       host: this.host,
       bindings: this.bindings,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
+      templateFieldsToInclude: this.fieldsToInclude,
       onReady: () => {},
       onError: () => {
         this.templateHasError = true;

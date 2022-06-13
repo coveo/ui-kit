@@ -32,6 +32,7 @@ import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder'
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {isAppLoaded, setLoadingFlag} from '../../utils/store';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 export interface BaseResultList<T = FoldedResult | Result>
   extends InitializableComponent {
@@ -92,6 +93,7 @@ interface ResultListCommonOptions {
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
   fieldsToInclude?: string;
+  templateFieldsToInclude?: string;
   includeDefaultTemplate?: boolean;
   onReady(): void;
   onError(): void;
@@ -107,11 +109,13 @@ export class ResultListCommon {
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
   public loadingFlag?: string;
+  public templateFieldsToInclude?: string;
 
   constructor(opts: ResultListCommonOptions) {
     this.host = opts.host;
     this.bindings = opts.bindings;
     this.loadingFlag = opts.loadingFlag;
+    this.templateFieldsToInclude = opts.templateFieldsToInclude;
     if (this.loadingFlag) {
       setLoadingFlag(this.bindings.store, this.loadingFlag);
     }
@@ -194,6 +198,7 @@ export class ResultListCommon {
         return template;
       })
     );
+
     const templates = (
       includeDefaultTemplate ? [this.makeDefaultTemplate()] : []
     ).concat(
@@ -201,6 +206,14 @@ export class ResultListCommon {
         (template) => template
       ) as ResultTemplate<DocumentFragment>[]
     );
+
+    const fieldsToInclude =
+      !isNullOrUndefined(this.templateFieldsToInclude) &&
+      this.determineAllFieldsToInclude(this.templateFieldsToInclude!);
+
+    if (fieldsToInclude) {
+      templates[0].fields = fieldsToInclude;
+    }
 
     this.resultTemplatesManager.registerTemplates(...templates);
     onReady();
