@@ -1,4 +1,4 @@
-import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {
   Bindings,
   BindStateToController,
@@ -41,7 +41,6 @@ export class AtomicSegmentedFacet
   @State()
   public facetState!: FacetState;
   public facet!: Facet;
-  @Element() private host!: HTMLElement;
   @State() public error!: Error;
 
   /**
