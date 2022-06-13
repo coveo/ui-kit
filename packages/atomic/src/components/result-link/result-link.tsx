@@ -60,9 +60,12 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
             el?.setAttribute(nodeName, nodeValue!);
           });
         }
+
+        if (ariaHidden && el) {
+          el.setAttribute('aria-hidden', 'true');
+        }
       }}
       tabIndex={tabIndex}
-      aria-hidden={ariaHidden}
     >
       {children}
     </a>
