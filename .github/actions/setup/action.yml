@@ -50,7 +50,6 @@ runs:
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
-
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run doc:generate
