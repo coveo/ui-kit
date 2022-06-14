@@ -45,6 +45,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         spec: ["cypress/integration/*", "cypress/integration/result-list/**/*", "cypress/integration/result-list/**/*"]
     steps:
