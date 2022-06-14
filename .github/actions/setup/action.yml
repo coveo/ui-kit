@@ -34,7 +34,7 @@ runs:
           **/node_modules
         key: ${{ hashFiles('**/package-lock.json') }}
     - run: |
-        npm i
+        npm install
         npx --no-install lerna bootstrap --no-ci
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
