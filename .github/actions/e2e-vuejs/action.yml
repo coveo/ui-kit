@@ -1,10 +1,6 @@
 name: 'Vue.js sample E2E tests'
 description: 'Runs Cypress tests for Vue.js sample'
 inputs:
-  cypress-record-key:
-    description: The Cypress record key for actions that must be recorded
-    required: false
-    default: ''
   github-token:
     description: The GitHub token for actions that must be recorded
     required: false
@@ -12,13 +8,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@a45da79a2ea5457403a080c4fcc0ea3daf6924a0
+    - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
         working-directory: ./packages/samples/vuejs
         start: npm run dev
         wait-on: 'http://localhost:8080'
-        install: true
+        install-command: npx cypress install
         record: false
     - uses: actions/upload-artifact@v2
       if: failure()
