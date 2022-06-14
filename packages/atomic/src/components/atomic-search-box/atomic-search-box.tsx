@@ -71,8 +71,8 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
-  private leftPanelRef: HTMLElement | undefined;
-  private rightPanelRef: HTMLElement | undefined;
+  private leftPanelRef: HTMLUListElement | undefined;
+  private rightPanelRef: HTMLUListElement | undefined;
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
@@ -590,7 +590,7 @@ export class AtomicSearchBox {
 
   private onSuggestionClick(item: SearchBoxSuggestionElement) {
     item.onSelect && item.onSelect();
-    this.clearSuggestions();
+    item.query && this.clearSuggestions();
   }
   private onSuggestionMouseOver(
     item: SearchBoxSuggestionElement,
@@ -677,6 +677,35 @@ export class AtomicSearchBox {
     }
   }
 
+  private renderPanel(
+    side: 'left' | 'right',
+    elements: SearchBoxSuggestionElement[],
+    setRef: (el: HTMLUListElement | undefined) => void,
+    getRef: () => HTMLUListElement | undefined
+  ) {
+    if (!elements.length) {
+      return null;
+    }
+
+    return (
+      <ul
+        part={`suggestions suggestions-${side}`}
+        aria-label={this.bindings.i18n.t('query-suggestion-list')}
+        ref={setRef}
+        class="flex flex-grow basis-1/2 flex-col"
+        onMouseDown={(e) => {
+          if (e.target === getRef()) {
+            e.preventDefault();
+          }
+        }}
+      >
+        {elements.map((suggestion, index) =>
+          this.renderSuggestion(suggestion, index, elements.length - 1, side)
+        )}
+      </ul>
+    );
+  }
+
   private renderSuggestions() {
     if (!this.hasSuggestions) {
       return null;
@@ -691,43 +720,17 @@ export class AtomicSearchBox {
         }`}
         role="listbox"
       >
-        {!!this.leftSuggestionElements.length && (
-          <ul
-            part="suggestions suggestions-left"
-            aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => {
-              this.leftPanelRef = el!;
-            }}
-            class="flex flex-grow basis-1/2 flex-col"
-          >
-            {this.leftSuggestionElements.map((suggestion, index) =>
-              this.renderSuggestion(
-                suggestion,
-                index,
-                this.leftSuggestionElements.length - 1,
-                'left'
-              )
-            )}
-          </ul>
+        {this.renderPanel(
+          'left',
+          this.leftSuggestionElements,
+          (el) => (this.leftPanelRef = el),
+          () => this.leftPanelRef
         )}
-        {!!this.rightSuggestionElements.length && (
-          <ul
-            part="suggestions suggestions-right"
-            aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => {
-              this.rightPanelRef = el!;
-            }}
-            class="flex flex-grow basis-1/2 flex-col"
-          >
-            {this.rightSuggestionElements.map((suggestion, index) =>
-              this.renderSuggestion(
-                suggestion,
-                index,
-                this.rightSuggestionElements.length - 1,
-                'right'
-              )
-            )}
-          </ul>
+        {this.renderPanel(
+          'right',
+          this.rightSuggestionElements,
+          (el) => (this.rightPanelRef = el),
+          () => this.rightPanelRef
         )}
       </div>
     );

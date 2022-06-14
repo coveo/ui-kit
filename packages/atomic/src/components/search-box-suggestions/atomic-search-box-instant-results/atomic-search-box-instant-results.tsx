@@ -2,6 +2,7 @@ import {Component, Element, State, h, Prop} from '@stencil/core';
 import {
   buildInstantResults,
   buildResultList,
+  buildInteractiveResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -80,7 +81,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
         key: `instant-result-${cleanUpString(result.uniqueId)}`,
         content: (
           <atomic-result
-            key={`instant-result-${cleanUpString(result.title)}`}
+            key={`instant-result-${cleanUpString(result.uniqueId)}`}
             part="outline"
             result={result}
             engine={this.bindings.engine}
@@ -91,7 +92,11 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
           ></atomic-result>
         ),
         onSelect: () => {
-          // TODO: ADD LOGS?
+          buildInteractiveResult(this.bindings.engine, {
+            options: {result},
+          }).select();
+          this.bindings.clearSuggestions();
+          window.location.href = result.clickUri;
         },
       })
     );

@@ -251,6 +251,7 @@ export namespace Components {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
+        "focusOnNextNewResult": () => Promise<void>;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -694,6 +695,7 @@ export namespace Components {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
+        "focusOnNextNewResult": () => Promise<void>;
         /**
           * @deprecated use `imageSize` instead.
          */
