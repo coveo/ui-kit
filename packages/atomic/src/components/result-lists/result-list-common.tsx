@@ -33,13 +33,12 @@ import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {isAppLoaded, setLoadingFlag} from '../../utils/store';
 
-export interface BaseResultList<T = FoldedResult | Result>
-  extends InitializableComponent {
+export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;
   templateHasError: boolean;
   resultListCommon: ResultListCommon;
 
-  setRenderFunction?: SetRenderFunction<T>;
+  setRenderFunction?: SetRenderFunction;
 
   density?: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
@@ -47,8 +46,8 @@ export interface BaseResultList<T = FoldedResult | Result>
   display?: ResultDisplayLayout;
 }
 
-export type SetRenderFunction<T = FoldedResult | Result> = (
-  render: (result: T) => HTMLElement
+export type SetRenderFunction = (
+  render: ResultRenderingFunction
 ) => Promise<void>;
 interface DisplayOptions {
   density: ResultDisplayDensity;
@@ -68,8 +67,8 @@ export interface ResultsProps extends DisplayOptions {
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
-
   classes: string;
+  renderingFunction?: ResultRenderingFunction;
 }
 
 interface TemplateElement extends HTMLElement {
@@ -101,7 +100,7 @@ interface ResultListCommonOptions {
 export class ResultListCommon {
   private host: HTMLElement;
   private bindings: Bindings;
-  private render?: ResultRenderingFunction;
+  private doRender?: ResultRenderingFunction;
   private updateBreakpoints?: (host: HTMLElement) => void;
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
@@ -138,7 +137,7 @@ export class ResultListCommon {
   }
 
   set renderingFunction(render: ResultRenderingFunction) {
-    this.render = render;
+    this.doRender = render;
   }
 
   private determineAllFieldsToInclude(
@@ -160,9 +159,7 @@ export class ResultListCommon {
     resultOrFolded: Result | FoldedResult
   ): HTMLElement | DocumentFragment {
     const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
-    return this.render
-      ? this.render(resultOrFolded)
-      : this.getTemplate(result)!;
+    return this.getTemplate(result)!;
   }
 
   private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
@@ -297,6 +294,7 @@ export class ResultListCommon {
                 resultListState={resultListState}
                 resultListCommon={this}
                 getContentOfResultTemplate={getContentOfResultTemplate}
+                renderingFunction={this.doRender}
               />
             )}
           </ResultDisplayWrapper>
@@ -307,8 +305,9 @@ export class ResultListCommon {
 }
 
 export type ResultRenderingFunction = (
-  result: Result | FoldedResult
-) => HTMLElement;
+  result: Result | FoldedResult,
+  root: HTMLElement
+) => string;
 
 const ResultDisplayWrapper: FunctionalComponent<{
   display?: ResultDisplayLayout;

@@ -9,6 +9,7 @@ import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCrite
 import { Bindings } from "./utils/initialization-utils";
 import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
+import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { Section } from "./components/atomic-layout-section/sections";
 import { ObservableMap } from "@stencil/store";
 import { AtomicStore } from "./utils/store";
@@ -263,7 +264,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
          */
-        "setRenderFunction": (render: (result: FoldedResult) => HTMLElement) => Promise<void>;
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicFormatCurrency {
         /**
@@ -567,7 +568,7 @@ export namespace Components {
         /**
           * The result content to display.
          */
-        "content": ParentNode;
+        "content"?: ParentNode;
         /**
           * How large or small results should be.
          */
@@ -589,6 +590,10 @@ export namespace Components {
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particular useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
         /**
           * The result item.
          */
@@ -704,7 +709,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
          */
-        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -2251,7 +2256,7 @@ declare namespace LocalJSX {
         /**
           * The result content to display.
          */
-        "content": ParentNode;
+        "content"?: ParentNode;
         /**
           * How large or small results should be.
          */
@@ -2273,6 +2278,10 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particular useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
         /**
           * The result item.
          */

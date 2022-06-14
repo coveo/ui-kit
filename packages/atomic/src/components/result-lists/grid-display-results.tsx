@@ -11,6 +11,27 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
       options: {result: props.resultListCommon.getUnfoldedResult(result)},
     });
 
+    const sharedPropsBetweenBothMode = {
+      key: props.resultListCommon.getResultId(result, props.resultListState),
+      result,
+      engine: props.bindings.engine,
+      store: props.bindings.store,
+      loadingFlag: props.resultListCommon.loadingFlag,
+      ...props,
+    };
+
+    const atomicResult = props.renderingFunction ? (
+      <atomic-result
+        renderingFunction={props.renderingFunction}
+        {...sharedPropsBetweenBothMode}
+      ></atomic-result>
+    ) : (
+      <atomic-result
+        content={props.getContentOfResultTemplate(result)}
+        {...sharedPropsBetweenBothMode}
+      ></atomic-result>
+    );
+
     return (
       <div part="result-list-grid-clickable-container outline">
         <LinkWithResultAnalytics
@@ -22,20 +43,8 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
           target="_self"
           title={props.resultListCommon.getUnfoldedResult(result).title}
         />
-        <atomic-result
-          key={props.resultListCommon.getResultId(
-            result,
-            props.resultListState
-          )}
-          result={result}
-          engine={props.bindings.engine}
-          store={props.bindings.store}
-          display={props.display}
-          density={props.density}
-          imageSize={props.imageSize}
-          content={props.getContentOfResultTemplate(result)}
-          loadingFlag={props.resultListCommon.loadingFlag}
-        ></atomic-result>
+
+        {atomicResult}
       </div>
     );
   });
