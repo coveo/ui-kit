@@ -199,7 +199,7 @@ export class AtomicBreadbox implements InitializableComponent {
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate text-neutral-dark mr-0.5 group-hover:text-primary group-focus:text-primary"
+            class="max-w-snippet truncate text-neutral-dark mr-0.5 group-hover:text-primary group-focus-visible:text-primary"
           >
             {this.bindings.i18n.t('with-colon', {text: breadcrumb.label})}
           </span>
