@@ -44,6 +44,10 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
   private results: Result[] = [];
   public resultListCommon!: ResultListCommon;
   /**
+   * The maximum number of results to show.
+   */
+  @Prop({reflect: true}) maxResultsPerQuery = 4;
+  /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
   @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
@@ -123,7 +127,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
   public initialize(): SearchBoxSuggestions {
     this.instantResults = buildInstantResults(this.bindings.engine, {
       options: {
-        maxResultsPerQuery: 4,
+        maxResultsPerQuery: this.maxResultsPerQuery,
       },
     });
 

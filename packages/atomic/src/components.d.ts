@@ -846,6 +846,10 @@ export namespace Components {
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
+        /**
+          * The maximum number of results to show.
+         */
+        "maxResultsPerQuery": number;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -2517,6 +2521,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The maximum number of results to show.
+         */
+        "maxResultsPerQuery"?: number;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
