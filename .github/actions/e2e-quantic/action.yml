@@ -2,7 +2,7 @@ name: "Quantic E2E tests"
 description: "Runs Cypress tests for Quantic"
 inputs:
   github-token:
-    description: The GitHub token for actions that must be recorded
+    description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
     default: ''
   clientid:
