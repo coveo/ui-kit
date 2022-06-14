@@ -37,7 +37,7 @@ runs:
       with:
         working-directory: ./packages/quantic
         install-command: npx cypress install
-        record: ${{ github.ref == 'refs/heads/master' && true || false }}
+        record: false
         config: reporter=cypress/reporters/detailed-reporter.js
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
