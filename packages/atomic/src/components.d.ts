@@ -592,7 +592,7 @@ export namespace Components {
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particular useful for Atomic React
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction"?: ResultRenderingFunction;
         /**
@@ -2281,7 +2281,7 @@ declare namespace LocalJSX {
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particular useful for Atomic React
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction"?: ResultRenderingFunction;
         /**
