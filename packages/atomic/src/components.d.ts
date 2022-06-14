@@ -143,6 +143,10 @@ export namespace Components {
     }
     interface AtomicFacet {
         /**
+          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+         */
+        "allowedValues"?: string;
+        /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
          */
         "dependsOn": Record<string, string>;
@@ -246,6 +250,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
+        "focusOnNextNewResult": () => Promise<void>;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -688,6 +693,7 @@ export namespace Components {
           * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
+        "focusOnNextNewResult": () => Promise<void>;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -1828,6 +1834,10 @@ declare namespace LocalJSX {
         "selector"?: string;
     }
     interface AtomicFacet {
+        /**
+          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+         */
+        "allowedValues"?: string;
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
          */
