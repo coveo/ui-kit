@@ -11,6 +11,7 @@ import {
 import {FacetValue} from './interfaces/response';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
+import {allowedValues} from '../../../controllers/core/facets/_common/facet-option-definitions';
 
 export interface RegisterFacetActionCreatorPayload {
   /**
@@ -62,6 +63,21 @@ export interface RegisterFacetActionCreatorPayload {
    * @defaultValue `automatic`
    */
   sortCriteria?: FacetSortCriterion;
+
+  /**
+   * Specifies an explicit list of `allowedValues` in the Search API request.
+   *
+   * If you specify a list of values for this option, the facet uses only these values (if they are available in
+   * the current result set).
+   *
+   * The maximum amount of allowed values is 25.
+   *
+   * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+   */
+  allowedValues?: {
+    type: 'simple';
+    values: string[];
+  };
 }
 
 const facetRegistrationOptionsDefinition = {
@@ -73,6 +89,7 @@ const facetRegistrationOptionsDefinition = {
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<FacetSortCriterion>({required: false}),
+  allowedValues: allowedValues,
 };
 
 export const registerFacet = createAction(

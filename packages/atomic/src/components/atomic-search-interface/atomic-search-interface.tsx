@@ -64,7 +64,7 @@ export class AtomicSearchInterface {
   private store = createStore<AtomicStore>(initialStore());
   private i18nPromise!: Promise<TFunction>;
 
-  @Element() private host!: HTMLElement;
+  @Element() private host!: HTMLAtomicSearchInterfaceElement;
 
   @State() private error?: Error;
 

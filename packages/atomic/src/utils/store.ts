@@ -12,6 +12,10 @@ interface FacetInfo {
   label: string;
 }
 
+export interface ResultListInfo {
+  focusOnNextNewResult(): void;
+}
+
 interface FacetValueFormat<ValueType> {
   format(facetValue: ValueType): string;
   content?(facetValue: ValueType): VNode;
@@ -42,6 +46,7 @@ export type AtomicStore = {
    * This is a better indicator than only the "firstSearchExecuted" of the Headless search state.
    */
   loadingFlags: string[];
+  resultList?: ResultListInfo;
 };
 
 export const initialStore: () => AtomicStore = () => ({
@@ -67,6 +72,13 @@ export const registerFacetToStore = <T extends FacetType, U extends string>(
 
   store.state[facetType][data.facetId] = data;
   store.state.facetElements.push(data.element);
+};
+
+export const registerResultListToStore = (
+  store: ObservableMap<AtomicStore>,
+  data: ResultListInfo
+) => {
+  store.set('resultList', data);
 };
 
 // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
