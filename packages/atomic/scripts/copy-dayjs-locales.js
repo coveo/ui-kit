@@ -5,14 +5,25 @@ const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
 
+function getI18nLocaleKey(key) {
+  if (!key.includes('-')) {
+    return key;
+  }
+
+  const splitKey = key.split('-');
+  splitKey[1] = splitKey[1].toUpperCase();
+  return splitKey.join('-');
+}
+
 async function copyDayjsLocales() {
   const localesJSONData = await readFile('node_modules/dayjs/locale.json');
   const localesData = JSON.parse(localesJSONData);
   let fileContent =
     'export const locales: Record<string, () => Promise<unknown>> = {';
   localesData.forEach((locale) => {
-    const key = locale.key.includes('-') ? `'${locale.key}'` : locale.key;
-    fileContent += `\n  ${key}: () => import('dayjs/locale/${locale.key}'),`;
+    const key = getI18nLocaleKey(locale.key);
+    const mapKey = key.includes('-') ? `'${key}'` : key;
+    fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
   });
   fileContent += '\n};\n';
 
