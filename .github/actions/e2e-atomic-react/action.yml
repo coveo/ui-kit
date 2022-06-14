@@ -18,7 +18,7 @@ runs:
         working-directory: ./packages/samples/atomic-react
         start: npm run dev
         wait-on: 'http://localhost:3000'
-        install-command: npm i
+        install-command: npm i && cypress install
         record: false
     - uses: actions/upload-artifact@v2
       if: failure()

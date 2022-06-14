@@ -10,6 +10,6 @@ runs:
         config-file: cypress-visual-tests.json
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
-        install-command: npm i
+        install-command: npm i && cypress install
         record: false
 
