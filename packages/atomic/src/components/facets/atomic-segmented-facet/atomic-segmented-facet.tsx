@@ -101,7 +101,7 @@ export class AtomicSegmentedFacet
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     registerFacetToStore(this.bindings.store, 'facets', {
-      label: this.label !== undefined ? this.label : 'no-label',
+      label: this.label,
       facetId: this.facetId!,
       element: this.host,
     });
@@ -110,10 +110,7 @@ export class AtomicSegmentedFacet
   private renderValuesContainer(children: VNode[]) {
     const classes = 'box-container flex';
     return (
-      <FacetValuesGroup
-        i18n={this.bindings.i18n}
-        label={this.label !== undefined ? this.label : 'no-label'}
-      >
+      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
         <ul class={classes} part="values">
           {children}
         </ul>
@@ -149,6 +146,13 @@ export class AtomicSegmentedFacet
     );
   }
 
+  private renderLabel() {
+    if (!this.label) {
+      return;
+    }
+    return <b class="inline-block my-3 mr-2">{this.label.concat(':')}</b>;
+  }
+
   public render() {
     if (
       this.searchStatus.state.hasError ||
@@ -160,9 +164,7 @@ export class AtomicSegmentedFacet
 
     return (
       <div class="flex">
-        <b class="inline-block my-3 mr-2">
-          {this.label !== undefined ? this.label.concat(':') : ''}
-        </b>
+        {this.renderLabel()}
         {this.renderValues()}
       </div>
     );

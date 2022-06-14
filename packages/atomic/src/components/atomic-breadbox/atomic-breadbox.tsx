@@ -24,7 +24,7 @@ import {
 
 interface Breadcrumb {
   facetId: string;
-  label: string;
+  label?: string;
   formattedValue: string[];
   content?: VNode;
   deselect: () => void;
