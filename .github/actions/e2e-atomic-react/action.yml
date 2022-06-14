@@ -1,10 +1,6 @@
 name: "Atomic React E2E tests"
 description: "Runs Cypress tests for Atomic React"
 inputs:
-  cypress-record-key:
-    description: The Cypress record key for actions that must be recorded
-    required: false
-    default: ''
   github-token:
     description: The GitHub token for actions that must be recorded
     required: false
