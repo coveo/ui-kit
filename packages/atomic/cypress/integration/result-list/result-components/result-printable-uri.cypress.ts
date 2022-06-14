@@ -127,30 +127,29 @@ describe('Result Printable Uri Component', () => {
     });
   });
 
-  describe('when there is a "parents" property in the result object and "max-number-of-parts" is 5', () => {
+  describe('when there is a "parents" property in the result object and "max-number-of-parts" is 3', () => {
     const addResultListWithPrintableUri = () => (fixture: TestFixture) => {
       fixture.with(
         addResultList(
           buildTemplateWithoutSections([
             generateComponentHTML(resultPrintableUriComponent, {
-              'max-number-of-parts': '5',
+              'max-number-of-parts': '3',
             }),
           ])
         )
       );
     };
 
-    describe('when the number of parts is 5', () => {
+    describe('when the number of parts is 3', () => {
       before(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
           .with(addUriParentsInResponse(3))
           .init();
       });
-      it('should render all parts', () => {
-        ResultPrintableUriSelectors.uriList().should('exist');
-        ResultPrintableUriSelectors.uriListElements().should('have.length', 3);
-      });
+
+      ResultPrintableUriAssertions.assertDisplayEllipsis(false);
+      ResultPrintableUriAssertions.assertDisplayParentsCount(3);
 
       it('should render href and link text based on parents property', () => {
         ResultPrintableUriSelectors.links()
@@ -161,16 +160,16 @@ describe('Result Printable Uri Component', () => {
       });
     });
 
-    describe('when the number of parts is 6', () => {
+    describe('when the number of parts is 4', () => {
       before(() => {
         new TestFixture()
           .with(addResultListWithPrintableUri())
-          .with(addUriParentsInResponse(6))
+          .with(addUriParentsInResponse(4))
           .init();
       });
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
-      ResultPrintableUriAssertions.assertDisplayParentsCount(4);
+      ResultPrintableUriAssertions.assertDisplayParentsCount(2);
       CommonAssertions.assertAccessibility(
         ResultPrintableUriSelectors.firstInResult
       );
@@ -180,12 +179,9 @@ describe('Result Printable Uri Component', () => {
           ResultPrintableUriSelectors.ellipsisButton().click();
         });
 
-        ResultPrintableUriAssertions.assertFocusLink(4);
+        ResultPrintableUriAssertions.assertFocusLink(1);
         ResultPrintableUriAssertions.assertDisplayEllipsis(false);
-
-        it('should render all parts', () => {
-          ResultPrintableUriSelectors.links().should('have.length', 6);
-        });
+        ResultPrintableUriAssertions.assertDisplayParentsCount(4);
       });
     });
 
@@ -198,7 +194,7 @@ describe('Result Printable Uri Component', () => {
       });
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
-      ResultPrintableUriAssertions.assertDisplayParentsCount(5);
+      ResultPrintableUriAssertions.assertDisplayParentsCount(3);
     });
   });
 });
