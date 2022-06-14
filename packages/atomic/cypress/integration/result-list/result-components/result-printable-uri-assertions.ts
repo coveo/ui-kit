@@ -14,3 +14,11 @@ export function assertDisplayEllipsis(display: boolean) {
     );
   });
 }
+
+export function assertDisplayParentsCount(numberOfParentsToDisplay: number) {
+  it(`should only display ${numberOfParentsToDisplay} values`, () => {
+    ResultPrintableUriSelectors.links()
+      .its('length')
+      .should('eq', numberOfParentsToDisplay);
+  });
+}

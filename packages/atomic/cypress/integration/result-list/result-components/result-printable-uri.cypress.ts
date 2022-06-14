@@ -15,6 +15,29 @@ import {
 } from '../result-list-actions';
 import {resultTextComponent} from './result-text-selectors';
 
+const getNameForPart = (index: number) => `Parent ${index + 1}`;
+
+const getUriForPart = (index: number) =>
+  'https://fakewebsite.com/' +
+  Array.from({length: index + 1}, (_, i) => `page${i + 1}`).join('/');
+
+const addUriParentsInResponse =
+  (numberOfParents: number) => (fixture: TestFixture) => {
+    const parents = Array.from(
+      {length: numberOfParents},
+      (_, i) =>
+        `<parent name="${getNameForPart(i)}" uri="${getUriForPart(i)}" />`
+    ).join('');
+
+    const fieldValue = `<?xml version="1.0" encoding="utf-16"?><parents>${parents}</parents>`;
+
+    fixture.withCustomResponse((response) => {
+      response.results.forEach((result) => {
+        result.raw.parents = fieldValue;
+      });
+    });
+  };
+
 describe('Result Printable Uri Component', () => {
   describe('when not used inside a result template', () => {
     before(() => {
@@ -104,25 +127,24 @@ describe('Result Printable Uri Component', () => {
     });
   });
 
-  describe('when there is a "parents" property in the result object', () => {
-    describe('when the number of parts is lower than or equal to the "max-number-of-parts" prop', () => {
+  describe('when there is a "parents" property in the result object and "max-number-of-parts" is 5', () => {
+    const addResultListWithPrintableUri = () => (fixture: TestFixture) => {
+      fixture.with(
+        addResultList(
+          buildTemplateWithoutSections([
+            generateComponentHTML(resultPrintableUriComponent, {
+              'max-number-of-parts': '5',
+            }),
+          ])
+        )
+      );
+    };
+
+    describe('when the number of parts is 5', () => {
       before(() => {
         new TestFixture()
-          .with(
-            addResultList(
-              buildTemplateWithoutSections([
-                generateComponentHTML(resultPrintableUriComponent, {
-                  'max-number-of-parts': '5',
-                }),
-              ])
-            )
-          )
-          .withCustomResponse((response) => {
-            response.results.forEach((result) => {
-              result.raw.parents =
-                '<?xml version="1.0" encoding="utf-16"?><parents><parent name="Organization" uri="https://lvu08-dev-ed.my.salesforce.com/home/home.jsp" /><parent name="Case" uri="https://lvu08-dev-ed.my.salesforce.com/500/o" /><parent name="lvu08-dev-ed.my.salesforce.com" uri="https://lvu08-dev-ed.my.salesforce.com/0D5f400002b7lEkCAI" /></parents>';
-            });
-          })
+          .with(addResultListWithPrintableUri())
+          .with(addUriParentsInResponse(3))
           .init();
       });
       it('should render all parts', () => {
@@ -134,42 +156,21 @@ describe('Result Printable Uri Component', () => {
         ResultPrintableUriSelectors.links()
           .should('exist')
           .first()
-          .should(
-            'have.attr',
-            'href',
-            'https://lvu08-dev-ed.my.salesforce.com/home/home.jsp'
-          )
-          .should('have.text', 'Organization');
+          .should('have.attr', 'href', getUriForPart(0))
+          .should('have.text', getNameForPart(0));
       });
     });
 
-    describe('when the number of parts is higher than the "max-number-of-parts" prop', () => {
+    describe('when the number of parts is 6', () => {
       before(() => {
         new TestFixture()
-          .with(
-            addResultList(
-              buildTemplateWithoutSections([
-                generateComponentHTML(resultPrintableUriComponent, {
-                  'max-number-of-parts': '3',
-                }),
-              ])
-            )
-          )
-          .withCustomResponse((response) => {
-            response.results.forEach((result) => {
-              result.raw.parents =
-                '<?xml version="1.0" encoding="utf-16"?><parents><parent name="atlas" uri="https://community.khoros.com/" /><parent name="atlas resources &amp; news" uri="https://community.khoros.com/t5/atlas-resources-news/ct-p/litho" /><parent name="khoros kudos awards" uri="https://community.khoros.com/t5/khoros-kudos-awards/ct-p/customerawards" /><parent name="khoros kudos awards 2020" uri="https://community.khoros.com/t5/khoros-kudos-awards-2020/con-p/kudosawards2020" /><parent name="2020 customer awards: united states postal service - keep calm and carry on" uri="https://community.khoros.com/t5/khoros-kudos-awards-2020/2020-customer-awards-united-states-postal-service-keep-calm-and/cns-p/600865" /><parent name="2020 customer awards: united states postal service - keep calm and carry on" uri="https://community.khoros.com/t5/khoros-kudos-awards-2020/2020-customer-awards-united-states-postal-service-keep-calm-and/cns-p/600865" /></parents>';
-            });
-          })
+          .with(addResultListWithPrintableUri())
+          .with(addUriParentsInResponse(6))
           .init();
       });
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
-
-      it('should only display 2 values', () => {
-        ResultPrintableUriSelectors.uriListElements().eq(2);
-      });
-
+      ResultPrintableUriAssertions.assertDisplayParentsCount(4);
       CommonAssertions.assertAccessibility(
         ResultPrintableUriSelectors.firstInResult
       );
@@ -179,13 +180,25 @@ describe('Result Printable Uri Component', () => {
           ResultPrintableUriSelectors.ellipsisButton().click();
         });
 
-        ResultPrintableUriAssertions.assertFocusLink(2);
+        ResultPrintableUriAssertions.assertFocusLink(4);
         ResultPrintableUriAssertions.assertDisplayEllipsis(false);
 
         it('should render all parts', () => {
-          ResultPrintableUriSelectors.links().should('have.length.above', 3);
+          ResultPrintableUriSelectors.links().should('have.length', 6);
         });
       });
+    });
+
+    describe('when the number of parts is 20', () => {
+      before(() => {
+        new TestFixture()
+          .with(addResultListWithPrintableUri())
+          .with(addUriParentsInResponse(20))
+          .init();
+      });
+
+      ResultPrintableUriAssertions.assertDisplayEllipsis(true);
+      ResultPrintableUriAssertions.assertDisplayParentsCount(5);
     });
   });
 });
