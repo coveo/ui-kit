@@ -18,7 +18,7 @@ runs:
         working-directory: ./packages/samples/stencil
         start: npm start
         wait-on: 'http://localhost:3666'
-        install-command: npm i && cypress install
+        install-command: cypress install
         record: false
     - uses: actions/upload-artifact@v2
       if: failure()

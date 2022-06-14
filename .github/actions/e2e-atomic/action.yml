@@ -18,7 +18,7 @@ runs:
         working-directory: ./packages/atomic
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
-        install-command: npm i && cypress install
+        install-command: cypress install
         record: ${{ github.ref == 'refs/heads/master' && true || false }}
       env:
         CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
