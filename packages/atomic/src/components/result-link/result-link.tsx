@@ -12,6 +12,8 @@ export interface ResultLinkProps {
   onCancelPendingSelect: () => void;
   ref?: (elm?: HTMLAnchorElement) => void;
   attributes?: Attr[];
+  tabIndex?: number;
+  ariaHidden?: boolean;
 }
 
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
@@ -26,6 +28,8 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
     onCancelPendingSelect,
     ref,
     attributes,
+    tabIndex,
+    ariaHidden,
   },
   children
 ) => {
@@ -56,7 +60,12 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
             el?.setAttribute(nodeName, nodeValue!);
           });
         }
+
+        if (ariaHidden && el) {
+          el.setAttribute('aria-hidden', 'true');
+        }
       }}
+      tabIndex={tabIndex}
     >
       {children}
     </a>

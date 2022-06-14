@@ -1,10 +1,6 @@
 name: "Quantic E2E tests"
 description: "Runs Cypress tests for Quantic"
 inputs:
-  cypress-record-key:
-    description: The Cypress record key for actions that must be recorded
-    required: false
-    default: ''
   github-token:
     description: The GitHub token for actions that must be recorded
     required: false
@@ -36,15 +32,14 @@ runs:
         SFDX_AUTH_JWT_KEY: ${{inputs.jwtkey}}
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
-    - uses: cypress-io/github-action@a45da79a2ea5457403a080c4fcc0ea3daf6924a0
+    - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
-        install: true
+        install-command: npx cypress install
         record: ${{ github.ref == 'refs/heads/master' && true || false }}
         config: reporter=cypress/reporters/detailed-reporter.js
       env:
-        CYPRESS_RECORD_KEY: ${{ inputs.cypress-record-key }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
     - uses: actions/upload-artifact@v2
       if: failure()

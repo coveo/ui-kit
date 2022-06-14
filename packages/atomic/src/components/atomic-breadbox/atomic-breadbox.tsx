@@ -281,6 +281,7 @@ export class AtomicBreadbox implements InitializableComponent {
         values.map((value) => ({value, facetId, field}))
       )
       .flat()
+      .filter(({facetId}) => this.bindings.store.state.facets[facetId])
       .map(({value, facetId, field}) => ({
         facetId,
         label: this.bindings.store.state.facets[facetId].label,
@@ -348,8 +349,8 @@ export class AtomicBreadbox implements InitializableComponent {
     ];
   }
 
-  private renderBreadcrumbs() {
-    const sortedBreadcrumbs = this.allBreadcrumbs.sort((a, b) => {
+  private renderBreadcrumbs(allBreadcrumbs: Breadcrumb[]) {
+    const sortedBreadcrumbs = allBreadcrumbs.sort((a, b) => {
       const indexA = this.facetManagerState.facetIds.indexOf(a.facetId);
       const indexB = this.facetManagerState.facetIds.indexOf(b.facetId);
       return indexA - indexB;
@@ -367,7 +368,9 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   public render() {
-    if (!this.breadcrumbManagerState.hasBreadcrumbs) {
+    const allBreadcrumbs = this.allBreadcrumbs;
+
+    if (!allBreadcrumbs.length) {
       return <Hidden></Hidden>;
     }
 
@@ -386,7 +389,7 @@ export class AtomicBreadbox implements InitializableComponent {
                 : 'flex-wrap'
             }`}
           >
-            {this.renderBreadcrumbs()}
+            {this.renderBreadcrumbs(allBreadcrumbs)}
           </ul>
         </div>
       </div>

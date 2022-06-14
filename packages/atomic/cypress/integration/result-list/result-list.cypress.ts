@@ -15,6 +15,8 @@ import {
   foldedResultListComponent,
   FoldedResultListSelectors,
 } from './folded-result-list-selectors';
+import {addLoadMoreResults} from '../load-more-results-actions';
+import {LoadMoreResultsSelectors} from '../load-more-results-selectors';
 
 const foldedResultListConfig = {
   componentSelectors: FoldedResultListSelectors,
@@ -192,6 +194,49 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
           densities: ['normal'],
           imageSizes: ['icon', 'small'],
           folded: componentTag === 'atomic-folded-result-list',
+        }
+      );
+    });
+
+    describe('after pressing a load more results button', () => {
+      const expectedFocusTargetSelector = () =>
+        cy.get('#expected-focus-target', {includeShadowDom: true});
+
+      beforeEach(() => {
+        const button = generateComponentHTML('button', {
+          id: 'expected-focus-target',
+        }) as HTMLButtonElement;
+        button.innerText = 'Click me';
+
+        new TestFixture()
+          .with(
+            addResultFn(
+              buildTemplateWithSections({
+                actions: button,
+              })
+            )
+          )
+          .with(addLoadMoreResults())
+          .init();
+        LoadMoreResultsSelectors.button()
+          .focus()
+          .should('be.focused')
+          .type('{enter}', {force: true});
+      });
+
+      const folded = componentTag === 'atomic-folded-result-list';
+      withAnySectionnableResultList(
+        () => {
+          it("should focus on the first new result's clickable element", () => {
+            expectedFocusTargetSelector().eq(10).should('be.focused');
+          });
+        },
+        {
+          layouts: folded ? ['list'] : undefined,
+          densities: ['normal'],
+          imageSizes: ['small'],
+          folded,
+          useBeforeEach: true,
         }
       );
     });

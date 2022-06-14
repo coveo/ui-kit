@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.73.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.72.1...@coveo/headless@1.73.0) (2022-06-13)
+
+
+### Bug Fixes
+
+* commit package-lock files right when bumping, undo last bump & fix region ([#2074](https://github.com/coveo/ui-kit/issues/2074)) ([28ad872](https://github.com/coveo/ui-kit/commit/28ad872363d2b84711865cda0c6d61bba7354927))
+
+
+### Features
+
+* **atomic,headless:** add support for allowed values for specific facets ([#2075](https://github.com/coveo/ui-kit/issues/2075)) ([5ad9bf1](https://github.com/coveo/ui-kit/commit/5ad9bf165813d3cc9d882ef8178da74f90260203))
+
+
+
+
+
 ## [1.72.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.72.0...@coveo/headless@1.72.1) (2022-06-09)
 
 **Note:** Version bump only for package @coveo/headless
