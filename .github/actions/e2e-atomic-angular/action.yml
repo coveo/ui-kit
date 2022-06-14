@@ -8,13 +8,20 @@ inputs:
 runs:
   using: composite
   steps:
+    # Atomic Angular requires special step
+    # - uses: cypress-io/github-action@v4
+    #   name: Prepare Cypress
+    #   with:
+    #     working-directory: ./packages/samples/angular
+    #     install-command: npm install
+    #     runTests: false
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
         working-directory: ./packages/samples/angular
         start: npm run dev
         wait-on: 'http://localhost:4200'
-        install-command: npx cypress install
+        install-command: npm install
         record: false
     - uses: actions/upload-artifact@v2
       if: failure()
