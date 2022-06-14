@@ -92,7 +92,7 @@ export class AtomicResult {
 
   /**
    * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system.
-   * Particular useful for Atomic React
+   * Particularly useful for Atomic React
    */
   @Prop() renderingFunction?: ResultRenderingFunction;
 
