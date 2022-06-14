@@ -15,7 +15,7 @@ runs:
         config-file: cypress-screenshots.json
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
-        install-command: npx cypress install
+        install: false
         record: false
     - uses: actions/upload-artifact@v2
       if: always()

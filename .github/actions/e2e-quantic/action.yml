@@ -36,7 +36,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
-        install-command: npx cypress install
+        install: false
         record: false
         config: reporter=cypress/reporters/detailed-reporter.js
       env:
