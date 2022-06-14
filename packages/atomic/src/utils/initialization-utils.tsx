@@ -31,7 +31,7 @@ export interface Bindings {
   /**
    * A reference to the `AtomicSearchInterface` element.
    */
-  interfaceElement: HTMLElement;
+  interfaceElement: HTMLAtomicSearchInterfaceElement;
 }
 
 export type InitializeEventHandler = (bindings: Bindings) => void;

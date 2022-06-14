@@ -12,6 +12,7 @@ interface WithAnySectionnableResultListOptions {
   imageSizes?: ResultDisplayImageSize[];
   densities?: ResultDisplayDensity[];
   folded?: boolean;
+  useBeforeEach?: boolean;
 }
 
 export function withAnySectionnableResultList(
@@ -34,7 +35,7 @@ export function withAnySectionnableResultList(
             describe(`with image-size="${image}"`, () =>
               densities.forEach((density) =>
                 describe(`with density="${density}"`, () => {
-                  before(() => {
+                  (options?.useBeforeEach ? beforeEach : before)(() => {
                     const aspectRatio = 16 / 9;
                     cy.viewport(width, width / aspectRatio);
                     cy.get(
