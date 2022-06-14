@@ -1,8 +1,5 @@
 name: PR Robot
-on:
-  push:
-    branches-ignore:
-      - master
+on: [pull_request]
 jobs:
   report-size:
     name: 'Report bundle size'
