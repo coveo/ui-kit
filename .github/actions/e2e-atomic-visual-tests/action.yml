@@ -3,7 +3,7 @@ description: 'Runs Applitools visual tests tests for Atomic'
 runs:
   using: composite
   steps:
-    - uses: cypress-io/github-action@a45da79a2ea5457403a080c4fcc0ea3daf6924a0
+    - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
         working-directory: ./packages/atomic
