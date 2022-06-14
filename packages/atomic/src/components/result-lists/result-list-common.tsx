@@ -100,7 +100,7 @@ interface ResultListCommonOptions {
 export class ResultListCommon {
   private host: HTMLElement;
   private bindings: Bindings;
-  private doRender?: ResultRenderingFunction;
+  private render?: ResultRenderingFunction;
   private updateBreakpoints?: (host: HTMLElement) => void;
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
@@ -137,7 +137,7 @@ export class ResultListCommon {
   }
 
   set renderingFunction(render: ResultRenderingFunction) {
-    this.doRender = render;
+    this.render = render;
   }
 
   private determineAllFieldsToInclude(
@@ -294,7 +294,7 @@ export class ResultListCommon {
                 resultListState={resultListState}
                 resultListCommon={this}
                 getContentOfResultTemplate={getContentOfResultTemplate}
-                renderingFunction={this.doRender}
+                renderingFunction={this.render}
               />
             )}
           </ResultDisplayWrapper>
