@@ -1,15 +1,15 @@
-import {should} from '../common-assertions';
+import {should} from './common-assertions';
 import {
   FacetWithCheckboxSelector,
   FacetWithLinkSelector,
-} from '../facets/facet-common-assertions';
+} from './facets/facet-common-assertions';
 import {BreadboxSelectors} from './breadbox-selectors';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
-import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
-import {label} from '../facets/facet/facet-actions';
-import {timeframeFacetLabel} from '../facets/timeframe-facet/timeframe-facet-action';
-import {colorFacetLabel} from '../facets/color-facet/color-facet-actions';
-import {categoryFacetLabel} from '../facets/category-facet/category-facet-actions';
+import {ColorFacetSelectors} from './facets/color-facet/color-facet-selectors';
+import {label} from './facets/facet/facet-actions';
+import {timeframeFacetLabel} from './facets/timeframe-facet/timeframe-facet-action';
+import {colorFacetLabel} from './facets/color-facet/color-facet-actions';
+import {categoryFacetLabel} from './facets/category-facet/category-facet-actions';
 
 export function assertDisplayBreadcrumb(display: boolean) {
   it(`${should(display)} display the breadcrumb`, () => {

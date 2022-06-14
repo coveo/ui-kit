@@ -1,17 +1,17 @@
-import {TestFixture} from '../../fixtures/test-fixture';
+import {TestFixture} from '../fixtures/test-fixture';
 import {
   addColorFacet,
   colorFacetField,
   colorFacetLabel,
   selectIdleBoxValueAt,
-} from '../facets/color-facet/color-facet-actions';
-import {addFacet, field, label} from '../facets/facet/facet-actions';
-import {FacetSelectors} from '../facets/facet/facet-selectors';
+} from './facets/color-facet/color-facet-actions';
+import {addFacet, field, label} from './facets/facet/facet-actions';
+import {FacetSelectors} from './facets/facet/facet-selectors';
 
 import {
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
-} from '../facets/facet-common-actions';
+} from './facets/facet-common-actions';
 import {
   addBreadbox,
   breadboxLabel,
@@ -19,29 +19,29 @@ import {
   deselectBreadcrumbAtIndex,
 } from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
-import * as CommonAssertions from '../common-assertions';
-import * as CommonFacetAssertions from '../facets/facet-common-assertions';
-import * as CategoryFacetAssertions from '../facets/category-facet/category-facet-assertions';
-import * as ColorFacetAssertions from '../facets/color-facet/color-facet-assertions';
+import * as CommonAssertions from './common-assertions';
+import * as CommonFacetAssertions from './facets/facet-common-assertions';
+import * as CategoryFacetAssertions from './facets/category-facet/category-facet-assertions';
+import * as ColorFacetAssertions from './facets/color-facet/color-facet-assertions';
 import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
 import {
   addCategoryFacet,
   canadaHierarchy,
   canadaHierarchyIndex,
   selectChildValueAt,
-} from '../facets/category-facet/category-facet-actions';
+} from './facets/category-facet/category-facet-actions';
 import {
   addNumericFacet,
   numericFacetField,
   numericFacetLabel,
-} from '../facets/numeric-facet/numeric-facet-actions';
+} from './facets/numeric-facet/numeric-facet-actions';
 import {
   addTimeframeFacet,
   timeframeFacetLabel,
   unitFrames,
-} from '../facets/timeframe-facet/timeframe-facet-action';
-import {TimeframeFacetSelectors} from '../facets/timeframe-facet/timeframe-facet-selectors';
-import {NumericFacetSelectors} from '../facets/numeric-facet/numeric-facet-selectors';
+} from './facets/timeframe-facet/timeframe-facet-action';
+import {TimeframeFacetSelectors} from './facets/timeframe-facet/timeframe-facet-selectors';
+import {NumericFacetSelectors} from './facets/numeric-facet/numeric-facet-selectors';
 
 describe('Breadbox Test Suites', () => {
   function setupBreadboxWithMultipleFacets() {
