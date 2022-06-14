@@ -29,10 +29,12 @@ runs:
         key: ${{ github.sha }}
     - uses: actions/cache@v2
       with:
-        path: |
-          node_modules
-          **/node_modules
-        key: ${{ hashFiles('**/package-lock.json') }}
+        path: ~/.npm
+        key: npm-${{ hashFiles('**/package-lock.json') }}
+    - uses: actions/cache@v2
+      with:
+        path: ~/.cache/Cypress
+        key: cy-${{ hashFiles('**/package-lock.json') }}
     - run: |
         npm install
         npx --no-install lerna bootstrap --no-ci
