@@ -4,7 +4,7 @@ import {ResultsProps} from './result-list-common';
 export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
   props
 ) => {
-  return props.resultListState.results.map((result) => {
+  return props.resultListState.results.map((result, index) => {
     const sharedPropsBetweenBothMode = {
       key: props.resultListCommon.getResultId(result, props.resultListState),
       part: 'outline',
@@ -12,6 +12,11 @@ export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
       engine: props.bindings.engine,
       store: props.bindings.store,
       loadingFlag: props.resultListCommon.loadingFlag,
+      ref: (element: HTMLElement) => {
+        element &&
+          props.indexOfResultToFocus === index &&
+          props.newResultRef?.(element);
+      },
       ...props,
     };
 

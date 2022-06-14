@@ -75,8 +75,10 @@ export function FocusTarget() {
           element = el;
           if (focusOnNextTarget) {
             focusOnNextTarget = false;
-            element.focus();
-            onFocusCallback?.();
+            setTimeout(() => {
+              el.focus();
+              onFocusCallback?.();
+            });
           }
         },
         focusAfterSearch: () => {

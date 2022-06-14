@@ -24,6 +24,11 @@ import {
   ResultRenderingFunction,
 } from '../result-list-common';
 import {randomID} from '../../../utils/utils';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
+import {registerResultListToStore, ResultListInfo} from '../../../utils/store';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -47,7 +52,7 @@ import {randomID} from '../../../utils/utils';
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicResultList implements BaseResultList {
+export class AtomicResultList implements BaseResultList, ResultListInfo {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -73,6 +78,8 @@ export class AtomicResultList implements BaseResultList {
 
   @State() public error!: Error;
   @State() public templateHasError = false;
+
+  @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   public resultListCommon!: ResultListCommon;
   private renderingFunction: ResultRenderingFunction | null = null;
@@ -115,6 +122,13 @@ export class AtomicResultList implements BaseResultList {
     this.assignRenderingFunctionIfPossible();
   }
 
+  /**
+   * @internal
+   */
+  @Method() public async focusOnNextNewResult() {
+    this.resultListCommon.focusOnNextNewResult(this.resultListState);
+  }
+
   connectedCallback() {
     // to remove when `image` prop is removed;
     if (this.host.hasAttribute('image')) {
@@ -154,6 +168,7 @@ export class AtomicResultList implements BaseResultList {
         this.templateHasError = true;
       },
       loadingFlag: this.loadingFlag,
+      nextNewResultTarget: this.nextNewResultTarget,
     });
 
     this.resultList = buildResultList(
@@ -161,6 +176,7 @@ export class AtomicResultList implements BaseResultList {
       this.resultListCommon.resultListControllerProps
     );
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+    registerResultListToStore(this.bindings.store, this);
   }
 
   public getContentOfResultTemplate(

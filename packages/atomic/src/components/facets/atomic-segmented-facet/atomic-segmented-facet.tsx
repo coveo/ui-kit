@@ -1,4 +1,4 @@
-import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {
   Bindings,
   BindStateToController,
@@ -17,7 +17,6 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
@@ -42,7 +41,6 @@ export class AtomicSegmentedFacet
   @State()
   public facetState!: FacetState;
   public facet!: Facet;
-  @Element() private host!: HTMLElement;
   @State() public error!: Error;
 
   /**
@@ -99,11 +97,6 @@ export class AtomicSegmentedFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'facets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-    });
   }
 
   private renderValuesContainer(children: VNode[]) {
@@ -140,7 +133,7 @@ export class AtomicSegmentedFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value) =>
-        this.renderValue(value, () => this.facet.toggleSelect(value))
+        this.renderValue(value, () => this.facet.toggleSingleSelect(value))
       )
     );
   }

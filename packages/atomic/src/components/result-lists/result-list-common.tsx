@@ -32,6 +32,10 @@ import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder'
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {isAppLoaded, setLoadingFlag} from '../../utils/store';
+import {
+  FocusTargetController,
+  getFirstFocusableDescendant,
+} from '../../utils/accessibility-utils';
 
 export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;
@@ -67,6 +71,9 @@ export interface ResultsProps extends DisplayOptions {
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
+  newResultRef?: (element: HTMLElement) => void;
+  indexOfResultToFocus?: number;
+
   classes: string;
   renderingFunction?: ResultRenderingFunction;
 }
@@ -95,6 +102,7 @@ interface ResultListCommonOptions {
   onReady(): void;
   onError(): void;
   loadingFlag?: string;
+  nextNewResultTarget?: FocusTargetController;
 }
 
 export class ResultListCommon {
@@ -102,6 +110,8 @@ export class ResultListCommon {
   private bindings: Bindings;
   private render?: ResultRenderingFunction;
   private updateBreakpoints?: (host: HTMLElement) => void;
+  private nextNewResultTarget?: FocusTargetController;
+  private indexOfResultToFocus?: number;
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
@@ -117,6 +127,7 @@ export class ResultListCommon {
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
+    this.nextNewResultTarget = opts.nextNewResultTarget;
 
     if (opts.fieldsToInclude) {
       this.resultListControllerProps = {
@@ -151,6 +162,16 @@ export class ResultListCommon {
     );
   }
 
+  public focusOnNextNewResult(
+    resultListState: FoldedResultListState | ResultListState
+  ) {
+    if (!this.nextNewResultTarget) {
+      throw "Cannot focus on next new result if nextNewResultTarget isn't defined";
+    }
+    this.indexOfResultToFocus = resultListState.results.length;
+    this.nextNewResultTarget.focusOnNextTarget();
+  }
+
   public getTemplate(result: Result) {
     return this.resultTemplatesManager.selectTemplate(result);
   }
@@ -160,6 +181,15 @@ export class ResultListCommon {
   ): HTMLElement | DocumentFragment {
     const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
     return this.getTemplate(result)!;
+  }
+
+  private onFirstNewResultRendered(element: HTMLElement) {
+    if (!element.children.length && !element.shadowRoot?.children.length) {
+      return;
+    }
+    this.indexOfResultToFocus = undefined;
+    const elementToFocus = getFirstFocusableDescendant(element) ?? element;
+    this.nextNewResultTarget?.setTarget(elementToFocus);
   }
 
   private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
@@ -295,6 +325,10 @@ export class ResultListCommon {
                 resultListCommon={this}
                 getContentOfResultTemplate={getContentOfResultTemplate}
                 renderingFunction={this.render}
+                indexOfResultToFocus={this.indexOfResultToFocus}
+                newResultRef={(element) =>
+                  this.onFirstNewResultRendered(element)
+                }
               />
             )}
           </ResultDisplayWrapper>

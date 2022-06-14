@@ -6,7 +6,7 @@ import {ResultsProps} from './result-list-common';
 export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
   props
 ) => {
-  return props.resultListState.results.map((result) => {
+  return props.resultListState.results.map((result, index) => {
     const interactiveResult = buildInteractiveResult(props.bindings.engine, {
       options: {result: props.resultListCommon.getUnfoldedResult(result)},
     });
@@ -33,7 +33,14 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
     );
 
     return (
-      <div part="result-list-grid-clickable-container outline">
+      <div
+        part="result-list-grid-clickable-container outline"
+        ref={(element) =>
+          element &&
+          props.indexOfResultToFocus === index &&
+          props.newResultRef?.(element)
+        }
+      >
         <LinkWithResultAnalytics
           part="result-list-grid-clickable"
           onSelect={() => interactiveResult.select()}
@@ -42,6 +49,8 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
           href={props.resultListCommon.getUnfoldedResult(result).clickUri}
           target="_self"
           title={props.resultListCommon.getUnfoldedResult(result).title}
+          tabIndex={-1}
+          ariaHidden={true}
         />
 
         {atomicResult}
