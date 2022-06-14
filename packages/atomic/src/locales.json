@@ -570,7 +570,7 @@
   "cancel": {
     "en": "Cancel",
     "fr": "Annuler",
-    "zh-CN":"取消",
+    "zh-CN": "取消",
     "zh-TW": "取消"
   },
   "check-spelling": {
@@ -978,7 +978,7 @@
   "min": {
     "en": "Min",
     "fr": "Min",
-    "zh-CN":"最小值",
+    "zh-CN": "最小值",
     "zh-TW": "最小值"
   },
   "max": {
