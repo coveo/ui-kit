@@ -1194,7 +1194,7 @@
   "with-colon": {
     "en": "{{text}}:",
     "fr": "{{text}}\u00A0:",
-    "zh-CN":"{{text}}：",
+    "zh-CN": "{{text}}：",
     "zh-TW": "{{text}}："
   },
   "between-quotations": {
