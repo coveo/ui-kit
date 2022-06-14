@@ -21,8 +21,9 @@ async function copyDayjsLocales() {
   let fileContent =
     'export const locales: Record<string, () => Promise<unknown>> = {';
   localesData.forEach((locale) => {
-    const key = getI18nLocaleKey(locale.key);
-    const mapKey = key.includes('-') ? `'${key}'` : key;
+    const key = locale.key;
+    const i18nKey = getI18nLocaleKey(locale.key);
+    const mapKey = i18nKey.includes('-') ? `'${i18nKey}'` : i18nKey;
     fileContent += `\n  ${mapKey}: () => import('dayjs/locale/${key}'),`;
   });
   fileContent += '\n};\n';
