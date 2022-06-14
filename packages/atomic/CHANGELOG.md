@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.71.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.70.1...@coveo/atomic@1.71.0) (2022-06-13)
+
+
+### Bug Fixes
+
+* commit package-lock files right when bumping, undo last bump & fix region ([#2074](https://github.com/coveo/ui-kit/issues/2074)) ([28ad872](https://github.com/coveo/ui-kit/commit/28ad872363d2b84711865cda0c6d61bba7354927))
+
+
+### Features
+
+* **atomic,headless:** add support for allowed values for specific facets ([#2075](https://github.com/coveo/ui-kit/issues/2075)) ([5ad9bf1](https://github.com/coveo/ui-kit/commit/5ad9bf165813d3cc9d882ef8178da74f90260203))
+* **atomic:** add default styling to instant results component ([#2063](https://github.com/coveo/ui-kit/issues/2063)) ([58ccb05](https://github.com/coveo/ui-kit/commit/58ccb057aee1d65483a0f50a81e5bbdba6ecba91)), closes [#2059](https://github.com/coveo/ui-kit/issues/2059) [#2056](https://github.com/coveo/ui-kit/issues/2056) [#2062](https://github.com/coveo/ui-kit/issues/2062) [#2044](https://github.com/coveo/ui-kit/issues/2044) [#2053](https://github.com/coveo/ui-kit/issues/2053) [#2051](https://github.com/coveo/ui-kit/issues/2051)
+* **atomic:** add show all button to instant results ([#2072](https://github.com/coveo/ui-kit/issues/2072)) ([1fd2570](https://github.com/coveo/ui-kit/commit/1fd25709fdb9c7ff46179b16b6160e44b6d2b6ba))
+* **atomic:** single select and hide breadcrumbs for segmented facets ([#2068](https://github.com/coveo/ui-kit/issues/2068)) ([01a104d](https://github.com/coveo/ui-kit/commit/01a104de8ab2523d212901017c428cca40e85161))
+
+
+
+
+
 ## [1.70.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.70.0...@coveo/atomic@1.70.1) (2022-06-09)
 
 **Note:** Version bump only for package @coveo/atomic

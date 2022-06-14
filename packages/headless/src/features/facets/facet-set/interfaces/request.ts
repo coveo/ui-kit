@@ -7,6 +7,7 @@ import {
   SortCriteria,
   BaseFacetValueRequest,
   Expandable,
+  AllowedValues,
 } from '../../facet-api/request';
 
 export const facetSortCriteria: FacetSortCriterion[] = [
@@ -32,6 +33,7 @@ export interface FacetRequest
     Freezable,
     Delimitable,
     Type<'specific'>,
+    AllowedValues,
     SortCriteria<FacetSortCriterion> {
   /** @defaultValue `automatic` */
   sortCriteria: FacetSortCriterion;
