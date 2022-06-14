@@ -19,10 +19,16 @@ interface Bindings {
   store?: Record<String, unknown>;
 }
 
+type AnyHeadless =
+  | typeof HeadlessTypes
+  | typeof HeadlessCaseAssistTypes
+  | typeof HeadlessInsightTypes;
+
 declare global {
   const CoveoHeadless: typeof HeadlessTypes;
   const CoveoHeadlessCaseAssist: typeof HeadlessCaseAssistTypes;
   const CoveoHeadlessInsight: typeof HeadlessInsightTypes;
+
   interface Window {
     coveoHeadless: {
       [engineId: string]: {
@@ -35,6 +41,7 @@ declare global {
         enginePromise: Promise;
         engineConstructor?: (options: ExternalEngineOptions) => unknown;
         initializedCallback?: Function;
+        bundle: AnyHeadless;
       };
     };
   }
