@@ -5,6 +5,9 @@ inputs:
     description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
     default: ''
+  spec:
+    description: Specify the spec files to run
+    required: true
 runs:
   using: composite
   steps:
@@ -12,6 +15,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/atomic
+        spec: ${{ inputs.spec }}
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
         install: false

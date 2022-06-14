@@ -44,10 +44,15 @@ jobs:
     name: 'Run e2e tests on Atomic'
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        spec: ["cypress/integration/*", "cypress/integration/result-list/**/*", "cypress/integration/result-list/**/*"]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
+        with:
+          spec: ${{ matrix.spec }}
   e2e-atomic-screenshots:
     name: 'Run e2e screenshots tests on Atomic'
     needs: build
