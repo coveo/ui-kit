@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {ObservableMap} from '@stencil/store';
-import {makeDesktopQuery} from '../components/atomic-layout/search-layout';
+import {makeDesktopQuery} from '../components/search/atomic-layout/search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from './replace-breakpoint';
 
 interface FacetInfo {
