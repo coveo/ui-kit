@@ -292,7 +292,12 @@
 
   <body>
     <atomic-aria-live></atomic-aria-live>
-    <atomic-search-interface id="search" pipeline="Search" search-hub="MainSearch">
+    <atomic-search-interface
+      id="search"
+      pipeline="Search"
+      search-hub="MainSearch"
+      fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+    >
       <div class="header-bg"></div>
       <div class="search">
         <div id="result-display-option">
@@ -311,7 +316,39 @@
           </select>
         </div>
         <h1 class="accessibility-header">Search</h1>
-        <atomic-search-box></atomic-search-box>
+        <atomic-search-box>
+          <atomic-search-box-recent-queries> </atomic-search-box-recent-queries>
+          <atomic-search-box-instant-results image-size="icon">
+            <atomic-result-template>
+              <template>
+                <style>
+                  .result-root {
+                    padding-top: 12px;
+                  }
+                  [field='title'] {
+                    font-size: 14px;
+                  }
+                </style>
+                <atomic-result-section-visual>
+                  <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                </atomic-result-section-visual>
+                <atomic-result-section-title>
+                  <atomic-result-link></atomic-result-link>
+                </atomic-result-section-title>
+                <atomic-result-section-title-metadata>
+                  <div class="rating-wrapper">
+                    <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  </div>
+                </atomic-result-section-title-metadata>
+                <atomic-result-section-bottom-metadata>
+                  <atomic-result-number field="ec_price">
+                    <atomic-format-currency currency="USD"></atomic-format-currency>
+                  </atomic-result-number>
+                </atomic-result-section-bottom-metadata>
+              </template>
+            </atomic-result-template>
+          </atomic-search-box-instant-results>
+        </atomic-search-box>
       </div>
       <atomic-facet-manager>
         <h1 class="accessibility-header">Filters</h1>
@@ -380,11 +417,7 @@
       <div class="results">
         <h1 class="accessibility-header">Results</h1>
         <atomic-did-you-mean></atomic-did-you-mean>
-        <atomic-result-list
-          fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
-          display="grid"
-          image-size="large"
-        >
+        <atomic-result-list display="grid" image-size="large">
           <atomic-result-template>
             <template>
               <style>
