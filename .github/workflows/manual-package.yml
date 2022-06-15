@@ -135,7 +135,7 @@ jobs:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: git add \"**/package-lock.json\""
+      - run: git add \"**/package-lock.json\"
       - name: Clean directory
         run: git clean -xfd -e node_modules/ -e .husky
       - name: Commit & push

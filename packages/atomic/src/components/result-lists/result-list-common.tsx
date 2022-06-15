@@ -10,7 +10,6 @@ import {
   ResultTemplate,
   buildResultTemplatesManager,
   ResultListProps,
-  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -97,11 +96,10 @@ interface ResultListCommonOptions {
   host: HTMLElement;
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
-  fieldsToInclude?: string;
   includeDefaultTemplate?: boolean;
+  loadingFlag?: string;
   onReady(): void;
   onError(): void;
-  loadingFlag?: string;
   nextNewResultTarget?: FocusTargetController;
 }
 
@@ -121,6 +119,7 @@ export class ResultListCommon {
     this.host = opts.host;
     this.bindings = opts.bindings;
     this.loadingFlag = opts.loadingFlag;
+
     if (this.loadingFlag) {
       setLoadingFlag(this.bindings.store, this.loadingFlag);
     }
@@ -128,16 +127,6 @@ export class ResultListCommon {
       updateBreakpoints(host);
     });
     this.nextNewResultTarget = opts.nextNewResultTarget;
-
-    if (opts.fieldsToInclude) {
-      this.resultListControllerProps = {
-        options: {
-          fieldsToInclude: this.determineAllFieldsToInclude(
-            opts.fieldsToInclude
-          ),
-        },
-      };
-    }
 
     this.registerResultTemplates(
       opts.templateElements,
@@ -149,17 +138,6 @@ export class ResultListCommon {
 
   set renderingFunction(render: ResultRenderingFunction) {
     this.render = render;
-  }
-
-  private determineAllFieldsToInclude(
-    configuredFieldsToInclude: string
-  ): string[] {
-    if (configuredFieldsToInclude.trim() === '') {
-      return [...EcommerceDefaultFieldsToInclude];
-    }
-    return EcommerceDefaultFieldsToInclude.concat(
-      configuredFieldsToInclude.split(',').map((field) => field.trim())
-    );
   }
 
   public focusOnNextNewResult(
@@ -223,6 +201,7 @@ export class ResultListCommon {
         return template;
       })
     );
+
     const templates = (
       includeDefaultTemplate ? [this.makeDefaultTemplate()] : []
     ).concat(

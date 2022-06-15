@@ -15,7 +15,7 @@ runs:
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
         install-command: npx cypress install
-        record: ${{ github.ref == 'refs/heads/master' && true || false }}
+        record: false
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
     - uses: actions/upload-artifact@v2
