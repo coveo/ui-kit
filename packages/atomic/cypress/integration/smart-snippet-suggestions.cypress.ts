@@ -5,8 +5,8 @@ import {
 } from './smart-snippet-suggestions-selectors';
 import * as SmartSnippetSuggestionsAssertions from './smart-snippet-suggestions-assertions';
 import * as CommonAssertions from './common-assertions';
-import {addSearchBox} from './search-box-actions';
-import {SearchBoxSelectors} from './search-box-selectors';
+import {addSearchBox} from './search-box/search-box-actions';
+import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippetSuggestions,
   addSmartSnippetSuggestionsDefaultOptions,

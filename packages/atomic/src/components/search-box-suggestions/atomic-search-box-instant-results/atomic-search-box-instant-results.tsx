@@ -1,6 +1,7 @@
 import {Component, Element, State, h, Prop} from '@stencil/core';
 import {
   buildInstantResults,
+  buildResultList,
   buildInteractiveResult,
   InstantResults,
   Result,
@@ -27,6 +28,8 @@ import {Button} from '../../common/button';
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
  * @internal
+ * @part instant-results-item - An instant result.
+ * @part instant-result-show-all-button - The button to show all items for the current instant results search.
  */
 @Component({
   tag: 'atomic-search-box-instant-results',
@@ -78,6 +81,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     const elements: SearchBoxSuggestionElement[] = results.map(
       (result: Result) => ({
         key: `instant-result-${cleanUpString(result.uniqueId)}`,
+        part: 'instant-results-item',
         content: (
           <atomic-result
             key={`instant-result-${cleanUpString(result.uniqueId)}`}
@@ -101,13 +105,13 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     );
     if (elements.length) {
       elements.push({
-        key: 'instant-result-show-all-button',
+        key: 'instant-results-show-all-button',
         content: (
           <Button style="text-primary">
             {this.bindings.i18n.t('show-all-results')}
           </Button>
         ),
-        part: 'suggestion-show-all',
+        part: 'instant-results-show-all',
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(
@@ -136,6 +140,11 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
         this.templateHasError = true;
       },
     });
+
+    buildResultList(this.bindings.engine, {
+      options: {fieldsToInclude: this.bindings.store.state.fieldsToInclude},
+    });
+
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
       panel: 'right',
