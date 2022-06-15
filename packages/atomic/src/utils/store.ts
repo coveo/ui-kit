@@ -9,7 +9,7 @@ import {makeDesktopQuery} from '../components/atomic-layout/search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from './replace-breakpoint';
 
 interface FacetInfo {
-  label?: string;
+  label: string;
 }
 
 interface FacetValueFormat<ValueType> {
