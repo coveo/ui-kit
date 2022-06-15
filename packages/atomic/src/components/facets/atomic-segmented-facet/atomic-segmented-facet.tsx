@@ -143,7 +143,7 @@ export class AtomicSegmentedFacet
     if (!this.label) {
       return;
     }
-    return <b class="inline-block my-3 mr-2">{this.label.concat(':')}</b>;
+    return <b class="inline-block my-3 mr-2">{this.label}:</b>;
   }
 
   public render() {

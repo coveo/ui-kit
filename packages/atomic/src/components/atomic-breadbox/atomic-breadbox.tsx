@@ -24,7 +24,7 @@ import {
 
 interface Breadcrumb {
   facetId: string;
-  label?: string;
+  label: string;
   formattedValue: string[];
   content?: VNode;
   deselect: () => void;
@@ -283,9 +283,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .flat()
       .map(({value, facetId, field}) => ({
         facetId,
-        label: this.bindings.store.state.facets[facetId]
-          ? this.bindings.store.state.facets[facetId].label
-          : undefined,
+        label: this.bindings.store.state.facets[facetId]?.label,
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),
