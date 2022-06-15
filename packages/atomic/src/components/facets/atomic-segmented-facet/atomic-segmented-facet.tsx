@@ -1,4 +1,4 @@
-import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {
   Bindings,
   BindStateToController,
@@ -17,11 +17,11 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {registerFacetToStore} from '../../../utils/store';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
+import {Hidden} from '../../common/hidden';
 
 /**
  * @internal
@@ -42,7 +42,6 @@ export class AtomicSegmentedFacet
   @State()
   public facetState!: FacetState;
   public facet!: Facet;
-  @Element() private host!: HTMLElement;
   @State() public error!: Error;
 
   /**
@@ -57,7 +56,7 @@ export class AtomicSegmentedFacet
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @Prop({reflect: true}) public label = 'no-label';
+  @Prop({reflect: true}) public label?: string;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -99,11 +98,6 @@ export class AtomicSegmentedFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'facets', {
-      label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
-    });
   }
 
   private renderValuesContainer(children: VNode[]) {
@@ -140,15 +134,32 @@ export class AtomicSegmentedFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value) =>
-        this.renderValue(value, () => this.facet.toggleSelect(value))
+        this.renderValue(value, () => this.facet.toggleSingleSelect(value))
       )
     );
   }
 
+  private renderLabel() {
+    if (!this.label) {
+      return;
+    }
+    return <b class="inline-block my-3 mr-2">{this.label}:</b>;
+  }
+
   public render() {
-    return [
-      <b class="inline-block my-3 mr-2">{this.label}</b>,
-      this.renderValues(),
-    ];
+    if (
+      this.searchStatus.state.hasError ||
+      !this.facetState.values.length ||
+      !this.facet.state.enabled
+    ) {
+      return <Hidden></Hidden>;
+    }
+
+    return (
+      <div class="flex">
+        {this.renderLabel()}
+        {this.renderValues()}
+      </div>
+    );
   }
 }

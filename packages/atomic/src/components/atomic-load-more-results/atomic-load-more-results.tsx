@@ -96,6 +96,11 @@ export class AtomicLoadMoreResults {
     );
   }
 
+  private async onClick() {
+    this.bindings.store.state.resultList?.focusOnNextNewResult();
+    this.resultList.fetchMoreResults();
+  }
+
   private renderLoadMoreResults() {
     return (
       <Button
@@ -103,7 +108,7 @@ export class AtomicLoadMoreResults {
         text={this.bindings.i18n.t('load-more-results')}
         part="load-more-results-button"
         class="font-bold my-2 p-3"
-        onClick={() => this.resultList.fetchMoreResults()}
+        onClick={() => this.onClick()}
       ></Button>
     );
   }

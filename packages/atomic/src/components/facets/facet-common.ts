@@ -39,7 +39,7 @@ export type BaseFacet<FacetType extends AnyFacetType> = {
 
 type PropsOnAllFacets = {
   facetId?: string;
-  label: string;
+  label?: string;
   field: string;
 
   filterFacetCount: boolean;

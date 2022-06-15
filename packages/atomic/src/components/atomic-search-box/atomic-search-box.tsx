@@ -28,13 +28,13 @@ import {
 import {Button} from '../common/button';
 import {once, randomID} from '../../utils/utils';
 import {
-  isDividerElement,
-  isSuggestionElement,
   queryDataAttribute,
-  SearchBoxSuggestionItem,
+  SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
+  elementHasNoQuery,
+  elementHasQuery,
 } from '../search-box-suggestions/suggestions-common';
 import {AriaLiveRegion} from '../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../utils/local-storage-utils';
@@ -71,8 +71,8 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
-  private leftPanelRef: HTMLElement | undefined;
-  private rightPanelRef: HTMLElement | undefined;
+  private leftPanelRef: HTMLUListElement | undefined;
+  private rightPanelRef: HTMLUListElement | undefined;
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
@@ -87,9 +87,9 @@ export class AtomicSearchBox {
   @State() private activeDescendant = '';
   @State() private previousActiveDescendantElement: HTMLLIElement | null = null;
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
-  @State() private leftSuggestionElements: SearchBoxSuggestionItem[] = [];
+  @State() private leftSuggestionElements: SearchBoxSuggestionElement[] = [];
   @State() private rightSuggestions: SearchBoxSuggestions[] = [];
-  @State() private rightSuggestionElements: SearchBoxSuggestionItem[] = [];
+  @State() private rightSuggestionElements: SearchBoxSuggestionElement[] = [];
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -287,7 +287,8 @@ export class AtomicSearchBox {
     const elements = suggestions
       .map((suggestion) => suggestion.renderItems())
       .flat();
-    const max = this.numberOfQueries + elements.filter(isDividerElement).length;
+    const max =
+      this.numberOfQueries + elements.filter(elementHasNoQuery).length;
 
     return elements.slice(0, max);
   }
@@ -335,8 +336,7 @@ export class AtomicSearchBox {
   }
 
   private updateAriaMessage() {
-    const elsLength =
-      this.allSuggestionElements.filter(isSuggestionElement).length;
+    const elsLength = this.allSuggestionElements.filter(elementHasQuery).length;
     this.ariaMessage = elsLength
       ? this.bindings.i18n.t('query-suggestions-available', {
           count: elsLength,
@@ -384,7 +384,7 @@ export class AtomicSearchBox {
     );
 
     const defaultSuggestedQuery =
-      this.allSuggestionElements.find(isSuggestionElement)?.query || '';
+      this.allSuggestionElements.find(elementHasQuery)?.query || '';
 
     this.updateSuggestedQuery(defaultSuggestedQuery);
     this.updateAriaMessage();
@@ -519,8 +519,8 @@ export class AtomicSearchBox {
         class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
-        onBlur={() => this.clearSuggestions()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+        onBlur={() => this.clearSuggestions()}
         onKeyDown={(e) => this.onKeyDown(e)}
       />
     );
@@ -572,28 +572,28 @@ export class AtomicSearchBox {
 
   private makeSuggestionPart(
     isSelected: boolean,
-    isDivider: boolean,
-    hasQuery: boolean
+    hasQuery: boolean,
+    itemPart?: string
   ) {
     let part = 'suggestion';
     if (isSelected) {
       part += ' active-suggestion';
     }
-    if (isDivider) {
-      part += ' suggestion-divider';
-    }
     if (hasQuery) {
       part += ' suggestion-with-query';
+    }
+    if (itemPart) {
+      part += ` ${itemPart}`;
     }
     return part;
   }
 
-  private onSuggestionClick(item: SearchBoxSuggestionItem) {
+  private onSuggestionClick(item: SearchBoxSuggestionElement) {
     item.onSelect && item.onSelect();
-    this.clearSuggestions();
+    item.query && this.clearSuggestions();
   }
   private onSuggestionMouseOver(
-    item: SearchBoxSuggestionItem,
+    item: SearchBoxSuggestionElement,
     side: 'left' | 'right',
     id: string
   ) {
@@ -603,16 +603,16 @@ export class AtomicSearchBox {
     } else {
       this.updateDescendants(id);
     }
-    if (isSuggestionElement(item) && item.query) {
+    if (item.query) {
       this.updateSuggestedQuery(item.query);
     }
   }
 
   private getAriaAttributes(
-    item: SearchBoxSuggestionItem,
+    item: SearchBoxSuggestionElement,
     isSelected: boolean
   ) {
-    if (isSuggestionElement(item) && !!item.query) {
+    if (item.query) {
       return {
         role: 'option',
         [queryDataAttribute]: item.query,
@@ -623,24 +623,21 @@ export class AtomicSearchBox {
   }
 
   private renderSuggestion(
-    item: SearchBoxSuggestionItem,
+    item: SearchBoxSuggestionElement,
     index: number,
     lastIndex: number,
     side: 'left' | 'right'
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
     const isSelected = id === this.activeDescendant;
-    const isLast = index === lastIndex;
-    const isDivider = isDividerElement(item);
-    if (isLast && isDivider) {
+    if (index === lastIndex && item.hideIfLast) {
       return null;
     }
-    const hasQuery = isSuggestionElement(item) && !!item.query;
     return (
       <li
         id={id}
         key={item.key}
-        part={this.makeSuggestionPart(isSelected, isDivider, hasQuery)}
+        part={this.makeSuggestionPart(isSelected, !!item.query, item.part)}
         class={`flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
           isSelected ? 'bg-neutral-light' : ''
         }`}
@@ -680,6 +677,35 @@ export class AtomicSearchBox {
     }
   }
 
+  private renderPanel(
+    side: 'left' | 'right',
+    elements: SearchBoxSuggestionElement[],
+    setRef: (el: HTMLUListElement | undefined) => void,
+    getRef: () => HTMLUListElement | undefined
+  ) {
+    if (!elements.length) {
+      return null;
+    }
+
+    return (
+      <ul
+        part={`suggestions suggestions-${side}`}
+        aria-label={this.bindings.i18n.t('query-suggestion-list')}
+        ref={setRef}
+        class="flex flex-grow basis-1/2 flex-col"
+        onMouseDown={(e) => {
+          if (e.target === getRef()) {
+            e.preventDefault();
+          }
+        }}
+      >
+        {elements.map((suggestion, index) =>
+          this.renderSuggestion(suggestion, index, elements.length - 1, side)
+        )}
+      </ul>
+    );
+  }
+
   private renderSuggestions() {
     if (!this.hasSuggestions) {
       return null;
@@ -694,43 +720,17 @@ export class AtomicSearchBox {
         }`}
         role="listbox"
       >
-        {!!this.leftSuggestionElements.length && (
-          <ul
-            part="suggestions suggestions-left"
-            aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => {
-              this.leftPanelRef = el!;
-            }}
-            class="flex-grow"
-          >
-            {this.leftSuggestionElements.map((suggestion, index) =>
-              this.renderSuggestion(
-                suggestion,
-                index,
-                this.leftSuggestionElements.length - 1,
-                'left'
-              )
-            )}
-          </ul>
+        {this.renderPanel(
+          'left',
+          this.leftSuggestionElements,
+          (el) => (this.leftPanelRef = el),
+          () => this.leftPanelRef
         )}
-        {!!this.rightSuggestionElements.length && (
-          <ul
-            part="suggestions suggestions-right"
-            aria-label={this.bindings.i18n.t('query-suggestion-list')}
-            ref={(el) => {
-              this.rightPanelRef = el!;
-            }}
-            class="flex-grow basis-1/2"
-          >
-            {this.rightSuggestionElements.map((suggestion, index) =>
-              this.renderSuggestion(
-                suggestion,
-                index,
-                this.rightSuggestionElements.length - 1,
-                'right'
-              )
-            )}
-          </ul>
+        {this.renderPanel(
+          'right',
+          this.rightSuggestionElements,
+          (el) => (this.rightPanelRef = el),
+          () => this.rightPanelRef
         )}
       </div>
     );

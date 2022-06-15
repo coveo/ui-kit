@@ -10,7 +10,11 @@ import {
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
-import {FacetOptions, FacetSearchOptions} from './headless-facet-options';
+import {
+  FacetOptions,
+  FacetSearchOptions,
+  facetOptionsSchema,
+} from './headless-facet-options';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
@@ -66,13 +70,31 @@ export type {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  * */
-export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
+export function buildFacet(
+  engine: SearchEngine,
+  props: FacetProps<FacetOptions>
+): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
 
   const {dispatch} = engine;
-  const coreController = buildCoreFacet(engine, props);
+  const coreController = buildCoreFacet(
+    engine,
+    {
+      ...props,
+      options: {
+        ...props.options,
+        ...(props.options.allowedValues && {
+          allowedValues: {
+            type: 'simple',
+            values: props.options.allowedValues,
+          },
+        }),
+      },
+    },
+    facetOptionsSchema
+  );
   const getFacetId = () => coreController.state.facetId;
 
   const createFacetSearch = () => {
