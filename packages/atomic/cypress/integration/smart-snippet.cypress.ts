@@ -3,8 +3,8 @@ import {SmartSnippetSelectors} from './smart-snippet-selectors';
 import * as CommonAssertions from './common-assertions';
 import * as SmartSnippetAssertions from './smart-snippet-assertions';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
-import {addSearchBox} from './search-box-actions';
-import {SearchBoxSelectors} from './search-box-selectors';
+import {addSearchBox} from './search-box/search-box-actions';
+import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippet,
   addSmartSnippetDefaultOptions,

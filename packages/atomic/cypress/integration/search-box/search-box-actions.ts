@@ -2,12 +2,13 @@ import {
   TagProps,
   TestFixture,
   generateComponentHTML,
-} from '../fixtures/test-fixture';
+} from '../../fixtures/test-fixture';
 import {searchBoxComponent} from './search-box-selectors';
 
 export interface AddSearchBoxOptions {
   suggestions?: {maxWithoutQuery: number; maxWithQuery: number};
   recentQueries?: {maxWithoutQuery: number; maxWithQuery: number};
+  instantResults?: boolean;
   props?: TagProps;
 }
 
@@ -32,6 +33,11 @@ export const addSearchBox =
           'max-without-query': options.recentQueries.maxWithoutQuery,
           'max-with-query': options.recentQueries.maxWithQuery,
         })
+      );
+    }
+    if (options?.instantResults !== undefined) {
+      searchBox.appendChild(
+        generateComponentHTML('atomic-search-box-instant-results')
       );
     }
     env.withElement(searchBox);
