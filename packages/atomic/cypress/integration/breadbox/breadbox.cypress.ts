@@ -171,6 +171,9 @@ describe('Breadbox Test Suites', () => {
         .with(addFacet({field, label}))
         .withHash(`f[${field}]=${activeValues.join(',')}`)
         .init();
+      BreadboxSelectors.breadcrumbButton().then((buttons) =>
+        cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')
+      );
     }
 
     describe('verify rendering', () => {
@@ -192,6 +195,10 @@ describe('Breadbox Test Suites', () => {
         BreadboxSelectors.breadcrumbShowMoreButton().click();
       });
 
+      describe('verify accessibility', () => {
+        BreadboxAssertions.assertFocusBreadcrumb('@numberOfVisibleButtons');
+      });
+
       describe('verify rendering', () => {
         BreadboxAssertions.assertRemoveBreadcrumbShowMoreInDOM();
         BreadboxAssertions.assertDisplayBreadcrumbShowLess(true);
@@ -204,6 +211,10 @@ describe('Breadbox Test Suites', () => {
         setupFacetWithMultipleSelectedValues();
         BreadboxSelectors.breadcrumbShowMoreButton().click();
         BreadboxSelectors.breadcrumbShowLessButton().click();
+      });
+
+      describe('verify accessibility', () => {
+        BreadboxAssertions.assertFocusShowMore();
       });
 
       describe('verify rendering', () => {

@@ -22,11 +22,10 @@
       }
 
       main();
-      resisterCustomSuggestions();
     </script>
   </head>
   <body>
-    <atomic-search-interface search-hub="MainSearch">
+    <atomic-search-interface search-hub="MainSearch" fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count">
       <atomic-search-layout mobile-breakpoint="700px">
         <atomic-layout-section section="search">
           <atomic-search-box suggestion-timeout="1000">
@@ -81,7 +80,7 @@
             <atomic-query-summary></atomic-query-summary>
           </atomic-layout-section>
           <atomic-layout-section section="results">
-            <atomic-result-list fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count"></atomic-result-list>
+            <atomic-result-list></atomic-result-list>
           </atomic-layout-section>
         </atomic-layout-section>
       </atomic-search-layout>
