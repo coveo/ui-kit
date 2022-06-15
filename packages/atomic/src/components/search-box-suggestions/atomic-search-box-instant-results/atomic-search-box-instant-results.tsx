@@ -1,6 +1,7 @@
 import {Component, Element, State, h, Prop} from '@stencil/core';
 import {
   buildInstantResults,
+  buildResultList,
   buildInteractiveResult,
   InstantResults,
   Result,
@@ -136,6 +137,11 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
         this.templateHasError = true;
       },
     });
+
+    buildResultList(this.bindings.engine, {
+      options: {fieldsToInclude: this.bindings.store.state.fieldsToInclude},
+    });
+
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
       panel: 'right',
