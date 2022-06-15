@@ -4,8 +4,10 @@ import {
   SearchBoxOptions,
   buildInsightSearchBox,
 } from './headless-insight-search-box';
-import {fetchQuerySuggestions} from '../../../features/query-suggest/query-suggest-actions';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {
+  executeSearch,
+  fetchQuerySuggestions,
+} from '../../../features/insight-search/insight-search-actions';
 import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
 import {
   buildMockInsightEngine,
@@ -68,14 +70,14 @@ describe('headless searchBox', () => {
 
   describe('#showSuggestions', () => {
     it(`when numberOfQuerySuggestions is greater than 0,
-    it does not dispatch fetchQuerySuggestions`, async () => {
+    it does dispatch fetchQuerySuggestions`, async () => {
       searchBox.showSuggestions();
 
-      const hasAction = engine.actions.some(
+      const action = engine.actions.find(
         (a) => a.type === fetchQuerySuggestions.pending.type
       );
 
-      expect(hasAction).toBe(false);
+      expect(action).toBeDefined();
     });
 
     it(`when numberOfQuerySuggestions is 0,
@@ -85,11 +87,11 @@ describe('headless searchBox', () => {
 
       searchBox.showSuggestions();
 
-      const hasAction = engine.actions.some(
+      const action = engine.actions.find(
         (a) => a.type === fetchQuerySuggestions.pending.type
       );
 
-      expect(hasAction).toBe(false);
+      expect(action).toBeUndefined();
     });
   });
 

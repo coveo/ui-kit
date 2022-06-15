@@ -55,11 +55,20 @@ export interface CoreSearchBoxProps {
    */
   options?: SearchBoxOptions;
 
-  executeSearchActionCreator?: (
+  /**
+   * The action creator for the `executeSearch` thunk action.
+   */
+  executeSearchActionCreator: (
     arg: SearchAction
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => AsyncThunkAction<any, SearchAction, any>;
-  fetchQuerySuggestionsActionCreator?: (
+
+  /**
+   * The action creator for the `fetchQuerySuggestions` thunk action.
+   */
+  fetchQuerySuggestionsActionCreator: (
     arg: FetchQuerySuggestionsActionCreatorPayload
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => AsyncThunkAction<any, FetchQuerySuggestionsActionCreatorPayload, any>;
 }
 
@@ -142,7 +151,7 @@ export interface CoreSearchBox extends Controller {
 
 export function buildCoreSearchBox(
   engine: CoreEngine,
-  props: CoreSearchBoxProps = {}
+  props: CoreSearchBoxProps
 ): CoreSearchBox {
   if (!loadSearchBoxReducers(engine)) {
     throw loadReducerError;
@@ -179,9 +188,7 @@ export function buildCoreSearchBox(
 
     dispatch(prepareForSearchWithQuery({q: getValue(), enableQuerySyntax}));
 
-    if (props.executeSearchActionCreator) {
-      await dispatch(props.executeSearchActionCreator(analytics));
-    }
+    await dispatch(props.executeSearchActionCreator(analytics));
   };
 
   return {
@@ -199,9 +206,7 @@ export function buildCoreSearchBox(
 
     showSuggestions() {
       if (options.numberOfSuggestions) {
-        if (props.fetchQuerySuggestionsActionCreator) {
-          dispatch(props.fetchQuerySuggestionsActionCreator({id}));
-        }
+        dispatch(props.fetchQuerySuggestionsActionCreator({id}));
       }
     },
 

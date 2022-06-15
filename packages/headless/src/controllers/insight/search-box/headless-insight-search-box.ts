@@ -1,5 +1,8 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {
+  executeSearch,
+  fetchQuerySuggestions,
+} from '../../../features/insight-search/insight-search-actions';
 import {Controller} from '../../controller/headless-controller';
 import {
   buildCoreSearchBox,
@@ -79,5 +82,6 @@ export function buildInsightSearchBox(
   return buildCoreSearchBox(engine, {
     ...props,
     executeSearchActionCreator: executeSearch,
+    fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
   });
 }
