@@ -24,6 +24,11 @@ import {
   ResultRenderingFunction,
 } from '../result-list-common';
 import {randomID} from '../../../utils/utils';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
+import {registerResultListToStore, ResultListInfo} from '../../../utils/store';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -47,7 +52,9 @@ import {randomID} from '../../../utils/utils';
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicResultList implements BaseResultList<Result> {
+export class AtomicResultList
+  implements BaseResultList<Result>, ResultListInfo
+{
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -74,12 +81,15 @@ export class AtomicResultList implements BaseResultList<Result> {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
+  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+
   public resultListCommon!: ResultListCommon;
   private renderingFunction: ((res: Result) => HTMLElement) | null = null;
   private loadingFlag = randomID('firstResultLoaded-');
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
+   * @deprecated add it to atomic-search-interface instead
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**
@@ -117,6 +127,13 @@ export class AtomicResultList implements BaseResultList<Result> {
     this.assignRenderingFunctionIfPossible();
   }
 
+  /**
+   * @internal
+   */
+  @Method() public async focusOnNextNewResult() {
+    this.resultListCommon.focusOnNextNewResult(this.resultListState);
+  }
+
   connectedCallback() {
     // to remove when `image` prop is removed;
     if (this.host.hasAttribute('image')) {
@@ -146,7 +163,6 @@ export class AtomicResultList implements BaseResultList<Result> {
     this.resultListCommon = new ResultListCommon({
       host: this.host,
       bindings: this.bindings,
-      fieldsToInclude: this.fieldsToInclude,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
@@ -156,13 +172,21 @@ export class AtomicResultList implements BaseResultList<Result> {
         this.templateHasError = true;
       },
       loadingFlag: this.loadingFlag,
+      nextNewResultTarget: this.nextNewResultTarget,
     });
 
-    this.resultList = buildResultList(
-      this.bindings.engine,
-      this.resultListCommon.resultListControllerProps
+    const localFieldsToInclude = this.fieldsToInclude
+      ? this.fieldsToInclude.split(',').map((field) => field.trim())
+      : [];
+    const fieldsToInclude = localFieldsToInclude.concat(
+      this.bindings.store.state.fieldsToInclude
     );
+
+    this.resultList = buildResultList(this.bindings.engine, {
+      options: {fieldsToInclude},
+    });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+    registerResultListToStore(this.bindings.store, this);
   }
 
   public getContentOfResultTemplate(

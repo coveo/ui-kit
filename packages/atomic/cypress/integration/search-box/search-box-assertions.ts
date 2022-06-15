@@ -18,6 +18,23 @@ export function assertHasSuggestionsCount(count: number) {
   });
 }
 
+export function assertSuggestionIsSelected(index: number) {
+  it(`should have selected suggestion ${index}`, () => {
+    SearchBoxSelectors.querySuggestions()
+      .eq(index)
+      .invoke('attr', 'part')
+      .should('contain', 'active-suggestion');
+  });
+}
+
+export function assertNoSuggestionIsSelected() {
+  it('should have no selected result', () => {
+    SearchBoxSelectors.querySuggestions().each((el) =>
+      expect(el.attr('part')).to.not.contain('active-suggestion')
+    );
+  });
+}
+
 export function assertLogSearchFromLink(query: string) {
   it('should log a searchFromLink event with the right query ', () => {
     cy.expectSearchEvent('searchFromLink').then((analyticsBody) => {

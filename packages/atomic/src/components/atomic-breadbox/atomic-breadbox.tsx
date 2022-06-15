@@ -58,6 +58,8 @@ export class AtomicBreadbox implements InitializableComponent {
   private showLess!: HTMLButtonElement;
   private lastRemovedBreadcrumbIndex = 0;
   private numberOfBreadcrumbs = 0;
+  private numberOfCollapsedBreadcrumbs = 0;
+  private firstExpandedBreadcrumbIndex?: number;
   facetManager!: FacetManager;
 
   @Element() private host!: HTMLElement;
@@ -72,7 +74,13 @@ export class AtomicBreadbox implements InitializableComponent {
   @State() private isCollapsed = true;
 
   @FocusTarget()
-  private breadcrumbFocus!: FocusTargetController;
+  private breadcrumbRemovedFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private breadcrumbShowMoreFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private breadcrumbShowLessFocus!: FocusTargetController;
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
@@ -175,20 +183,23 @@ export class AtomicBreadbox implements InitializableComponent {
           title={`${breadcrumb.label}: ${fullValue}`}
           onClick={() => {
             if (this.numberOfBreadcrumbs > 1) {
-              this.breadcrumbFocus.focusAfterSearch();
+              this.breadcrumbRemovedFocus.focusAfterSearch();
             }
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
           }}
-          ref={
-            this.lastRemovedBreadcrumbIndex === index
-              ? this.breadcrumbFocus.setTarget
-              : undefined
-          }
+          ref={(ref) => {
+            if (this.lastRemovedBreadcrumbIndex === index) {
+              this.breadcrumbRemovedFocus.setTarget(ref);
+            }
+            if (this.firstExpandedBreadcrumbIndex === index) {
+              this.breadcrumbShowMoreFocus.setTarget(ref);
+            }
+          }}
         >
           <span
             part="breadcrumb-label"
-            class="max-w-snippet truncate text-neutral-dark mr-0.5 group-hover:text-primary group-focus:text-primary"
+            class="max-w-snippet truncate text-neutral-dark mr-0.5 group-hover:text-primary group-focus-visible:text-primary"
           >
             {this.bindings.i18n.t('with-colon', {text: breadcrumb.label})}
           </span>
@@ -210,6 +221,7 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   private updateShowMoreValue(value: number) {
+    this.numberOfCollapsedBreadcrumbs = value;
     if (value === 0) {
       this.hide(this.showMore);
       return;
@@ -232,11 +244,19 @@ export class AtomicBreadbox implements InitializableComponent {
     return (
       <li key="show-more">
         <Button
-          ref={(ref) => (this.showMore = ref!)}
+          ref={(ref) => {
+            this.breadcrumbShowLessFocus.setTarget(ref!);
+            this.showMore = ref!;
+          }}
           part="show-more"
           style="outline-primary"
           class="p-2 btn-pill whitespace-nowrap"
-          onClick={() => (this.isCollapsed = false)}
+          onClick={() => {
+            this.firstExpandedBreadcrumbIndex =
+              this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
+            this.breadcrumbShowMoreFocus.focusOnNextTarget();
+            this.isCollapsed = false;
+          }}
         ></Button>
       </li>
     );
@@ -251,7 +271,10 @@ export class AtomicBreadbox implements InitializableComponent {
           style="outline-primary"
           text={this.bindings.i18n.t('show-less')}
           class="p-2 btn-pill"
-          onClick={() => (this.isCollapsed = true)}
+          onClick={() => {
+            this.breadcrumbShowLessFocus.focusOnNextTarget();
+            this.isCollapsed = true;
+          }}
         ></Button>
       </li>
     );
@@ -269,7 +292,9 @@ export class AtomicBreadbox implements InitializableComponent {
           class="p-2 btn-pill"
           ariaLabel={this.bindings.i18n.t('clear-all-filters')}
           onClick={() => this.breadcrumbManager.deselectAll()}
-          ref={isFocusTarget ? this.breadcrumbFocus.setTarget : undefined}
+          ref={
+            isFocusTarget ? this.breadcrumbRemovedFocus.setTarget : undefined
+          }
         ></Button>
       </li>
     );
@@ -281,6 +306,7 @@ export class AtomicBreadbox implements InitializableComponent {
         values.map((value) => ({value, facetId, field}))
       )
       .flat()
+      .filter(({facetId}) => this.bindings.store.state.facets[facetId])
       .map(({value, facetId, field}) => ({
         facetId,
         label: this.bindings.store.state.facets[facetId]?.label,
@@ -348,8 +374,8 @@ export class AtomicBreadbox implements InitializableComponent {
     ];
   }
 
-  private renderBreadcrumbs() {
-    const sortedBreadcrumbs = this.allBreadcrumbs.sort((a, b) => {
+  private renderBreadcrumbs(allBreadcrumbs: Breadcrumb[]) {
+    const sortedBreadcrumbs = allBreadcrumbs.sort((a, b) => {
       const indexA = this.facetManagerState.facetIds.indexOf(a.facetId);
       const indexB = this.facetManagerState.facetIds.indexOf(b.facetId);
       return indexA - indexB;
@@ -367,7 +393,9 @@ export class AtomicBreadbox implements InitializableComponent {
   }
 
   public render() {
-    if (!this.breadcrumbManagerState.hasBreadcrumbs) {
+    const allBreadcrumbs = this.allBreadcrumbs;
+
+    if (!allBreadcrumbs.length) {
       return <Hidden></Hidden>;
     }
 
@@ -386,7 +414,7 @@ export class AtomicBreadbox implements InitializableComponent {
                 : 'flex-wrap'
             }`}
           >
-            {this.renderBreadcrumbs()}
+            {this.renderBreadcrumbs(allBreadcrumbs)}
           </ul>
         </div>
       </div>

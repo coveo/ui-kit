@@ -1,9 +1,15 @@
 import {Component, Element, State, h, Prop} from '@stencil/core';
-import {buildInstantResults, InstantResults, Result} from '@coveo/headless';
+import {
+  buildInstantResults,
+  buildResultList,
+  buildInteractiveResult,
+  InstantResults,
+  Result,
+} from '@coveo/headless';
 
 import {
   dispatchSearchBoxSuggestionsEvent,
-  SearchBoxSuggestionItem,
+  SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
@@ -17,10 +23,13 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../atomic-result/atomic-result-display-options';
+import {Button} from '../../common/button';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
  * @internal
+ * @part instant-results-item - An instant result.
+ * @part instant-result-show-all-button - The button to show all items for the current instant results search.
  */
 @Component({
   tag: 'atomic-search-box-instant-results',
@@ -62,32 +71,57 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     }
   }
 
-  private renderItems(): SearchBoxSuggestionItem[] {
+  private renderItems(): SearchBoxSuggestionElement[] {
     if (!this.bindings.suggestedQuery()) {
       return [];
     }
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
-    return results.map((result: Result) => ({
-      key: `instant-result-${cleanUpString(result.uniqueId)}`,
-      query: '',
-      content: (
-        <atomic-result
-          key={`instant-results-${result.uniqueId}`}
-          part="outline"
-          result={result}
-          engine={this.bindings.engine}
-          display={this.display}
-          density={this.density}
-          imageSize={this.imageSize}
-          content={this.resultListCommon.getContentOfResultTemplate(result)}
-        ></atomic-result>
-      ),
-      onSelect: () => {
-        // TODO: ADD LOGS?
-      },
-    }));
+    const elements: SearchBoxSuggestionElement[] = results.map(
+      (result: Result) => ({
+        key: `instant-result-${cleanUpString(result.uniqueId)}`,
+        part: 'instant-results-item',
+        content: (
+          <atomic-result
+            key={`instant-result-${cleanUpString(result.uniqueId)}`}
+            part="outline"
+            result={result}
+            engine={this.bindings.engine}
+            display={this.display}
+            density={this.density}
+            imageSize={this.imageSize}
+            content={this.resultListCommon.getContentOfResultTemplate(result)}
+          ></atomic-result>
+        ),
+        onSelect: () => {
+          buildInteractiveResult(this.bindings.engine, {
+            options: {result},
+          }).select();
+          this.bindings.clearSuggestions();
+          window.location.href = result.clickUri;
+        },
+      })
+    );
+    if (elements.length) {
+      elements.push({
+        key: 'instant-results-show-all-button',
+        content: (
+          <Button style="text-primary">
+            {this.bindings.i18n.t('show-all-results')}
+          </Button>
+        ),
+        part: 'instant-results-show-all',
+        onSelect: () => {
+          this.bindings.clearSuggestions();
+          this.bindings.searchBoxController.updateText(
+            this.instantResults.state.q
+          );
+          this.bindings.searchBoxController.submit();
+        },
+      });
+    }
+    return elements;
   }
 
   public initialize(): SearchBoxSuggestions {
@@ -106,6 +140,11 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
         this.templateHasError = true;
       },
     });
+
+    buildResultList(this.bindings.engine, {
+      options: {fieldsToInclude: this.bindings.store.state.fieldsToInclude},
+    });
+
     return {
       position: Array.from(this.host.parentNode!.children).indexOf(this.host),
       panel: 'right',

@@ -134,7 +134,7 @@ export class AtomicSegmentedFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value) =>
-        this.renderValue(value, () => this.facet.toggleSelect(value))
+        this.renderValue(value, () => this.facet.toggleSingleSelect(value))
       )
     );
   }
