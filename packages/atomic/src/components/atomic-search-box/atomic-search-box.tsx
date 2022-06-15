@@ -197,6 +197,7 @@ export class AtomicSearchBox {
       clearSuggestions: () => this.clearSuggestions(),
       triggerSuggestions: () => this.triggerSuggestions(),
       getSuggestions: () => this.suggestions,
+      getSuggestionElements: () => this.allSuggestionElements,
     };
   }
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
