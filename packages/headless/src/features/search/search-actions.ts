@@ -48,7 +48,6 @@ import {
   MappedSearchRequest,
   mapSearchRequest,
   mapSearchResponse,
-  SuccessResponse,
 } from './search-mappings';
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {updatePage} from '../pagination/pagination-actions';
