@@ -22,16 +22,13 @@ import * as FacetAssertions from '../facet/facet-assertions';
 import * as ColorFacetAssertions from './color-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
+import * as BreadboxAssertions from '../../breadbox-assertions';
 import {
   addBreadbox,
   breadboxLabel,
   deselectBreadcrumbAtIndex,
-} from '../../breadbox/breadbox-actions';
-import {
-  breadboxComponent,
-  BreadboxSelectors,
-} from '../../breadbox/breadbox-selectors';
+} from '../../breadbox-actions';
+import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
 import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {addFacet} from '../facet/facet-actions';
 import {FacetSelectors} from '../facet/facet-selectors';
