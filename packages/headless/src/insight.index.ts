@@ -21,6 +21,7 @@ export type {LogLevel} from './app/logger';
 
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader';
+export * from './features/insight-search/insight-search-actions-loader';
 
 // Controllers
 export type {
