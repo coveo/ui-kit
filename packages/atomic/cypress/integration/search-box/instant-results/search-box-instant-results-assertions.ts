@@ -1,7 +1,7 @@
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 
 export function assertHasResultCount(count: number) {
-  it(`should display ${count} suggestions`, () => {
+  it(`should display ${count} results`, () => {
     InstantResultsSelectors.results().should('have.length', count);
   });
 }

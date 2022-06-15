@@ -8,24 +8,19 @@ import {addSearchBox} from '../search-box-actions';
 import * as CommonAssertions from '../../common-assertions';
 import * as SearchBoxAssertions from '../search-box-assertions';
 import * as InstantResultsAssertions from './search-box-instant-results-assertions';
-// import {Result} from '@coveo/headless';
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 
-// type PartialResultList = Partial<Result>[];
-const setInstantResults = (count: number) =>
-  (fixture: TestFixture) => {
-    fixture.withCustomResponse(response => {
-      response.results = Array.from({length: count}, (_, i) => ({
-        title: `Instant Result ${i}`,
-        uniqueId: `instant_result_${i}`,
-        uri: `about:blank?${i}`,
-        clickUri: `about:blank?${i}`,
-        raw: {
-          urihash: `${i}`,
-        },
-      }));
-    });
-  };
+const setInstantResults = (count: number) => (fixture: TestFixture) => {
+  fixture.withCustomResponse((response) => {
+    for (let i = 0; i < count; i++) {
+      response.results[i].title = `Instant Result ${i}`;
+      response.results[i].uniqueId = `instant_result_${i}`;
+      response.results[i].uri = `about:blank?${i}`;
+      response.results[i].clickUri = `about:blank?${i}`;
+    }
+    response.results = response.results.splice(0, count);
+  });
+};
 
 const setRecentQueries = (count: number) => () => {
   new SafeStorage().setJSON(
@@ -39,9 +34,11 @@ describe('Instant Results Test Suites', () => {
   const numOfInstantResults = 4;
   const maxRecentQueriesWithoutQuery = numOfRecentQueries - 1;
 
-  function setupWithSuggestionsAndRecentQueries() {
-    new TestFixture()
-      .with(setInstantResults(numOfInstantResults))
+  function setupWithSuggestionsAndRecentQueries(
+    resultsCount = numOfInstantResults
+  ) {
+    return new TestFixture()
+      .with(setInstantResults(resultsCount))
       .with(setRecentQueries(numOfRecentQueries))
       .with(
         addSearchBox({
@@ -60,26 +57,32 @@ describe('Instant Results Test Suites', () => {
   }
 
   describe('with keyboard navigation', () => {
-    before(() => {
-      setupWithSuggestionsAndRecentQueries();
-      SearchBoxSelectors.inputBox().type('{downarrow}{downarrow}{rightarrow}', {
-        delay: 500,
-        force: true,
-      });
-    });
-    SearchBoxAssertions.assertHasSuggestionsCount(maxRecentQueriesWithoutQuery);
-    InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
-    CommonAssertions.assertAriaLiveMessage(
-      maxRecentQueriesWithoutQuery.toString()
-    );
     describe('when navigating from query to results', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().type(
+          '{downarrow}{downarrow}{rightarrow}',
+          {
+            delay: 500,
+            force: true,
+          }
+        );
+      });
       after(() => {
         SearchBoxSelectors.inputBox().clear({force: true});
       });
+      SearchBoxAssertions.assertHasSuggestionsCount(
+        maxRecentQueriesWithoutQuery
+      );
+      InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
+      CommonAssertions.assertAriaLiveMessage(
+        maxRecentQueriesWithoutQuery.toString()
+      );
       InstantResultsAssertions.assertResultIsSelected(0);
     });
     describe('when navigating back from result to query', () => {
       before(() => {
+        setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           '{downarrow}{downarrow}{rightarrow}{leftarrow}',
           {
@@ -98,6 +101,7 @@ describe('Instant Results Test Suites', () => {
 
     describe('when navigating back from result to query', () => {
       before(() => {
+        setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           '{downarrow}{downarrow}{rightarrow}{leftarrow}',
           {
@@ -116,6 +120,7 @@ describe('Instant Results Test Suites', () => {
 
     describe('when pressing enter on a result', () => {
       before(() => {
+        setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
           '{downarrow}{downarrow}{rightarrow}{enter}',
           {
@@ -133,48 +138,44 @@ describe('Instant Results Test Suites', () => {
   });
 
   describe('with mouse navigation', () => {
-    before(() => {
-      setupWithSuggestionsAndRecentQueries();
-      SearchBoxSelectors.inputBox().click();
-    });
-
     describe('when hovering over a query', () => {
       before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().click();
         SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
       });
       SearchBoxAssertions.assertSuggestionIsSelected(0);
       SearchBoxAssertions.assertHasText('');
-
-      describe('when hovering over an instant result', () => {
-        before(() => {
-          cy.wait(1000);
-          InstantResultsSelectors.results().eq(1).trigger('mouseover');
-        });
-        InstantResultsAssertions.assertResultIsSelected(1);
-        SearchBoxAssertions.assertNoSuggestionIsSelected();
-
-        describe('when hovering over a different query', () => {
-          before(() => {
-            setInstantResults(numOfInstantResults - 1)();
-            SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
-            cy.wait(TestFixture.interceptAliases.Search);
-          });
-          InstantResultsAssertions.assertNoResultIsSelected();
-          InstantResultsAssertions.assertHasResultCount(
-            numOfInstantResults - 1
-          );
-          SearchBoxAssertions.assertSuggestionIsSelected(1);
-        });
-      });
     });
 
-    describe('when clicking a result', () => {
+    describe('when hovering over an instant result', () => {
       before(() => {
-        InstantResultsSelectors.results().eq(1).click();
+        setupWithSuggestionsAndRecentQueries(2);
+        SearchBoxSelectors.inputBox().click();
+        InstantResultsSelectors.results().eq(1).trigger('mouseover');
       });
-      it('redirects to new page', () => {
-        cy.window().then((win) => {
-          expect(win.location.href).to.equal('about:blank?1');
+      InstantResultsAssertions.assertHasResultCount(2);
+      InstantResultsAssertions.assertResultIsSelected(1);
+      SearchBoxAssertions.assertNoSuggestionIsSelected();
+
+      describe('when hovering over a different query', () => {
+        before(() => {
+          SearchBoxSelectors.querySuggestions().eq(1).trigger('mouseover');
+        });
+        InstantResultsAssertions.assertHasResultCount(4);
+        InstantResultsAssertions.assertNoResultIsSelected();
+        SearchBoxAssertions.assertSuggestionIsSelected(1);
+      });
+      describe('when clicking a result', () => {
+        before(() => {
+          setupWithSuggestionsAndRecentQueries();
+          SearchBoxSelectors.inputBox().click();
+          InstantResultsSelectors.results().eq(1).click();
+        });
+        it('redirects to new page', () => {
+          cy.window().then((win) => {
+            expect(win.location.href).to.equal('about:blank?1');
+          });
         });
       });
     });
