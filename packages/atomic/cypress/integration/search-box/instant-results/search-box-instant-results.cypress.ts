@@ -12,11 +12,10 @@ import * as InstantResultsAssertions from './search-box-instant-results-assertio
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 
 // type PartialResultList = Partial<Result>[];
-const setInstantResults = (count: number) => () => {
-  cy.intercept({method: 'POST', path: '**/rest/search/v2?*'}, (request) => {
-    request.reply((response) => {
-      const newResponse = response.body;
-      newResponse.results = Array.from({length: count}, (_, i) => ({
+const setInstantResults = (count: number) =>
+  (fixture: TestFixture) => {
+    fixture.withCustomResponse(response => {
+      response.results = Array.from({length: count}, (_, i) => ({
         title: `Instant Result ${i}`,
         uniqueId: `instant_result_${i}`,
         uri: `about:blank?${i}`,
@@ -25,11 +24,8 @@ const setInstantResults = (count: number) => () => {
           urihash: `${i}`,
         },
       }));
-
-      response.send(200, newResponse);
     });
-  }).as(TestFixture.interceptAliases.Search.substring(1));
-};
+  };
 
 const setRecentQueries = (count: number) => () => {
   new SafeStorage().setJSON(
