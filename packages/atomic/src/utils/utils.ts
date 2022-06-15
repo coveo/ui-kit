@@ -151,3 +151,7 @@ export function getFocusedElement(
   }
   return activeElement;
 }
+
+export async function defer() {
+  return new Promise<void>((resolve) => setTimeout(resolve));
+}
