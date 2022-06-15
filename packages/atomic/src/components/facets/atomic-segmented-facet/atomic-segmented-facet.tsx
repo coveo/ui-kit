@@ -155,11 +155,6 @@ export class AtomicSegmentedFacet
       return <Hidden></Hidden>;
     }
 
-    return (
-      <div class="flex">
-        {this.renderLabel()}
-        {this.renderValues()}
-      </div>
-    );
+    return [this.renderLabel(), this.renderValues()];
   }
 }
