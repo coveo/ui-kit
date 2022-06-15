@@ -46,6 +46,7 @@ export type AtomicStore = {
    * This is a better indicator than only the "firstSearchExecuted" of the Headless search state.
    */
   loadingFlags: string[];
+  fieldsToInclude: string[];
   resultList?: ResultListInfo;
 };
 
@@ -59,6 +60,7 @@ export const initialStore: () => AtomicStore = () => ({
   iconAssetsPath: '',
   mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
   loadingFlags: [],
+  fieldsToInclude: [],
 });
 
 export const registerFacetToStore = <T extends FacetType, U extends string>(

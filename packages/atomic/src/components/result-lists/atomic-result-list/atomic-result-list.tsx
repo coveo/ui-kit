@@ -89,6 +89,7 @@ export class AtomicResultList
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
+   * @deprecated add it to atomic-search-interface instead
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**
@@ -162,7 +163,6 @@ export class AtomicResultList
     this.resultListCommon = new ResultListCommon({
       host: this.host,
       bindings: this.bindings,
-      fieldsToInclude: this.fieldsToInclude,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
@@ -175,10 +175,16 @@ export class AtomicResultList
       nextNewResultTarget: this.nextNewResultTarget,
     });
 
-    this.resultList = buildResultList(
-      this.bindings.engine,
-      this.resultListCommon.resultListControllerProps
+    const localFieldsToInclude = this.fieldsToInclude
+      ? this.fieldsToInclude.split(',').map((field) => field.trim())
+      : [];
+    const fieldsToInclude = localFieldsToInclude.concat(
+      this.bindings.store.state.fieldsToInclude
     );
+
+    this.resultList = buildResultList(this.bindings.engine, {
+      options: {fieldsToInclude},
+    });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     registerResultListToStore(this.bindings.store, this);
   }

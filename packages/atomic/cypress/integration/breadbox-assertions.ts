@@ -200,9 +200,24 @@ export function assertDisplayAllBreadcrumb(display: boolean) {
   });
 }
 
-export function assertFocusBreadcrumb(index: number) {
+export function assertFocusShowMore() {
+  it('Should focus on the show more button', () => {
+    BreadboxSelectors.breadcrumbShowMoreButton().should('be.focused');
+  });
+}
+
+export function assertFocusBreadcrumb(index: number | string) {
   it(`Should focus on the breadcrumb at index ${index}`, () => {
-    BreadboxSelectors.breadcrumbButton().eq(index).should('be.focused');
+    function assert(indexAsNumber: number) {
+      BreadboxSelectors.breadcrumbButton()
+        .eq(indexAsNumber)
+        .should('be.focused');
+    }
+    if (typeof index === 'string') {
+      cy.get<number>(index).then((indexAsNumber) => assert(indexAsNumber));
+    } else {
+      assert(index);
+    }
   });
 }
 
