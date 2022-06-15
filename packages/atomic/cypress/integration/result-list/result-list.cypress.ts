@@ -227,7 +227,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
       const folded = componentTag === 'atomic-folded-result-list';
       withAnySectionnableResultList(
         () => {
-          it("should focus on the first new result's clickable element", () => {
+          it.skip("should focus on the first new result's clickable element", () => {
             expectedFocusTargetSelector().eq(10).should('be.focused');
           });
         },
