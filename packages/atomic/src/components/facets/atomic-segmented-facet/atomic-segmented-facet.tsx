@@ -143,7 +143,7 @@ export class AtomicSegmentedFacet
     if (!this.label) {
       return;
     }
-    return <b class="inline-block my-3 mr-2">{this.label}:</b>;
+    return <b class="inline-block my-3 mx-2">{this.label}:</b>;
   }
 
   public render() {
@@ -155,6 +155,13 @@ export class AtomicSegmentedFacet
       return <Hidden></Hidden>;
     }
 
-    return [this.renderLabel(), this.renderValues()];
+    // return [this.renderLabel(), this.renderValues()];
+
+    return (
+      <div class="flex">
+        {this.renderLabel()}
+        {this.renderValues()}
+      </div>
+    );
   }
 }

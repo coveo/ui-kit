@@ -1,7 +1,8 @@
-import {Component, Element, h, State} from '@stencil/core';
+import {Component, Element, h} from '@stencil/core';
 
 @Component({
   tag: 'atomic-segmented-facet-scrollable',
+  styleUrl: 'atomic-segmented-facet-scrollable.pcss',
   shadow: true,
 })
 export class AtomicSegmentedFacetScrollable {
@@ -18,27 +19,11 @@ export class AtomicSegmentedFacetScrollable {
     //     : this.host.shadowRoot;
 
     console.log(this.host.shadowRoot);
-
-    if (this.host.shadowRoot !== null) {
-      this.host.shadowRoot.innerHTML = `
-        <style>
-          .wrapper-segmented {
-            display: flex;
-            flex-direction: row;
-            overflow-x: scroll;
-            width: 80px;
-          }
-        </style>
-        <div>
-          <slot></slot>
-        </div>
-      `;
-    }
   }
 
   render() {
     return (
-      <div class="wrapper-segmented flex relative overflow-x-scroll">
+      <div class="wrapper-segmented flex flex-row overflow-x-scroll">
         <slot></slot>
       </div>
     );
