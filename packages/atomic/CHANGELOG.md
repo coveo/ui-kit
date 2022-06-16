@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.73.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.72.0...@coveo/atomic@1.73.0) (2022-06-16)
+
+
+### Features
+
+* **atomic:** allow user to configure number of results in instant re… ([#2095](https://github.com/coveo/ui-kit/issues/2095)) ([e709c91](https://github.com/coveo/ui-kit/commit/e709c91745dc3d85d95d579f4624415a329d9cd3))
+* **atomic:** Hide label when not defined and when the page is in error state ([#2077](https://github.com/coveo/ui-kit/issues/2077)) ([aafc226](https://github.com/coveo/ui-kit/commit/aafc226716950820d936045a6e95d68656c42293))
+
+
+
+
+
 # [1.72.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.70.1...@coveo/atomic@1.72.0) (2022-06-15)
 
 
