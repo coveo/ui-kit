@@ -49,8 +49,10 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   @api hideSort;
 
-  /**@type {object} */
+  /** @type {object} */
   data;
+  /** @type {boolean} */
+  hasActiveFilters = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -62,6 +64,7 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribeSearchStatus?.();
+    this.unsubscribeBreadcrumbManager?.();
   }
 
   /**
@@ -73,6 +76,9 @@ export default class QuanticRefineModalContent extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.gatherFacets()
     );
+    this.unsubscribeBreadcrumbManager = this.breadcrumbManager.subscribe(() =>
+      this.updateHasActiveFilters()
+    );
   };
 
   /**
@@ -83,6 +89,14 @@ export default class QuanticRefineModalContent extends LightningElement {
     if (!this.hasFacets) {
       this.data = getAllFacetsFromStore(this.engineId);
     }
+  }
+
+  /**
+   * Updates the hasActiveFilters properety
+   * @returns {void}
+   */
+  updateHasActiveFilters() {
+    this.hasActiveFilters = this.breadcrumbManager.state.hasBreadcrumbs;
   }
 
   /**
