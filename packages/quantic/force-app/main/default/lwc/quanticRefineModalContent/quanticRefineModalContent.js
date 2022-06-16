@@ -92,7 +92,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   }
 
   /**
-   * Updates the hasActiveFilters properety
+   * Updates the hasActiveFilters properety.
    * @returns {void}
    */
   updateHasActiveFilters() {
