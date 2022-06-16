@@ -1,15 +1,15 @@
-import {should} from '../common-assertions';
+import {should} from './common-assertions';
 import {
   FacetWithCheckboxSelector,
   FacetWithLinkSelector,
-} from '../facets/facet-common-assertions';
+} from './facets/facet-common-assertions';
 import {BreadboxSelectors} from './breadbox-selectors';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
-import {ColorFacetSelectors} from '../facets/color-facet/color-facet-selectors';
-import {label} from '../facets/facet/facet-actions';
-import {timeframeFacetLabel} from '../facets/timeframe-facet/timeframe-facet-action';
-import {colorFacetLabel} from '../facets/color-facet/color-facet-actions';
-import {categoryFacetLabel} from '../facets/category-facet/category-facet-actions';
+import {ColorFacetSelectors} from './facets/color-facet/color-facet-selectors';
+import {label} from './facets/facet/facet-actions';
+import {timeframeFacetLabel} from './facets/timeframe-facet/timeframe-facet-action';
+import {colorFacetLabel} from './facets/color-facet/color-facet-actions';
+import {categoryFacetLabel} from './facets/category-facet/category-facet-actions';
 
 export function assertDisplayBreadcrumb(display: boolean) {
   it(`${should(display)} display the breadcrumb`, () => {
@@ -200,9 +200,24 @@ export function assertDisplayAllBreadcrumb(display: boolean) {
   });
 }
 
-export function assertFocusBreadcrumb(index: number) {
+export function assertFocusShowMore() {
+  it('Should focus on the show more button', () => {
+    BreadboxSelectors.breadcrumbShowMoreButton().should('be.focused');
+  });
+}
+
+export function assertFocusBreadcrumb(index: number | string) {
   it(`Should focus on the breadcrumb at index ${index}`, () => {
-    BreadboxSelectors.breadcrumbButton().eq(index).should('be.focused');
+    function assert(indexAsNumber: number) {
+      BreadboxSelectors.breadcrumbButton()
+        .eq(indexAsNumber)
+        .should('be.focused');
+    }
+    if (typeof index === 'string') {
+      cy.get<number>(index).then((indexAsNumber) => assert(indexAsNumber));
+    } else {
+      assert(index);
+    }
   });
 }
 

@@ -20,6 +20,7 @@ export interface InsightSearchActionCreators {
    * ```js
    * const {logInterfaceLoad} = loadSearchAnalyticsActions(engine);
    * const {executeSearch} = loadInsightSearchActions(engine);
+   * ```
    *
    * engine.dispatch(executeSearch(interfaceLoad()));
    * @param analyticsSearchAction  - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
