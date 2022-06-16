@@ -27,7 +27,6 @@ import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
-import {setCoveoGlobal} from '../../global/environment';
 import {
   AtomicStore,
   hasLoadingFlag,
@@ -142,10 +141,6 @@ export class AtomicSearchInterface {
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
-
-  public constructor() {
-    setCoveoGlobal();
-  }
 
   public connectedCallback() {
     this.i18nPromise = this.initI18n();
