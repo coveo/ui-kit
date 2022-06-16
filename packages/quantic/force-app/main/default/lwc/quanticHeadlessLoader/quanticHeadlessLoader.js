@@ -42,6 +42,7 @@ const loadDependencies = async (element, headlessUseCase) => {
   ];
     
   await Promise.all(dependencyPromises);
+  /** @type {AnyHeadless} */
   return bundleInfo.bundle();
 }
 

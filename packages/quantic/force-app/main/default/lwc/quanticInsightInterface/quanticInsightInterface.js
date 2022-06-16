@@ -8,7 +8,7 @@ import {
 } from 'c/quanticHeadlessLoader';
 
 // @ts-ignore
-import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHeadlessConfiguration';
 
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
 /** @typedef {import("coveo").InsightEngineOptions} InsightEngineOptions */
@@ -28,10 +28,8 @@ export default class QuanticInsightInterface extends LightningElement {
   /** @type {InsightEngineOptions} */
   engineOptions;
 
-  // unsubscribeUpdateState;
-
   connectedCallback() {
-    loadDependencies(this, HeadlessBundleNames.insight).then((headless) => {
+    loadDependencies(this, HeadlessBundleNames.insight).then(() => {
       if (!getHeadlessBindings(this.engineId)?.engine) {
         getHeadlessConfiguration().then((data) => {
           if (data) {
@@ -43,10 +41,10 @@ export default class QuanticInsightInterface extends LightningElement {
             };
             setEngineOptions(
               this.engineOptions,
-              headless.buildInsightEngine,
+              CoveoHeadlessInsight.buildInsightEngine,
               this.engineId,
               this,
-              headless
+              CoveoHeadlessInsight
             );
             setInitializedCallback(this.initialize, this.engineId);
           }
@@ -59,7 +57,5 @@ export default class QuanticInsightInterface extends LightningElement {
 
   initialize = (engine) => {
     this.engine = engine;
-
-    this.engine.executeFirstSearch();
   };
 }

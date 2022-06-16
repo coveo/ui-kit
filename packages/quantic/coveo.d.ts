@@ -2,6 +2,7 @@
 import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
+export * from './force-app/main/default/staticresources/coveoheadless/definitions/insight.index';
 
 import * as HeadlessCaseAssistTypes from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
 import * as HeadlessInsightTypes from './force-app/main/default/staticresources/coveoheadless/definitions/insight.index';
@@ -19,15 +20,14 @@ interface Bindings {
   store?: Record<String, unknown>;
 }
 
-type AnyHeadless =
-  | typeof HeadlessTypes
-  | typeof HeadlessCaseAssistTypes
-  | typeof HeadlessInsightTypes;
-
 declare global {
   const CoveoHeadless: typeof HeadlessTypes;
   const CoveoHeadlessCaseAssist: typeof HeadlessCaseAssistTypes;
   const CoveoHeadlessInsight: typeof HeadlessInsightTypes;
+  type AnyHeadless =
+    | CoveoHeadless
+    | CoveoHeadlessCaseAssist
+    | CoveoHeadlessInsight;
 
   interface Window {
     coveoHeadless: {
