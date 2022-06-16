@@ -15,14 +15,14 @@ jobs:
     needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
   lint-check:
     name: 'Check with linter'
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: npm run lint:check
   unit-test:
@@ -30,7 +30,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
       - run: npm test
@@ -38,18 +38,23 @@ jobs:
     name: 'Run e2e tests on Atomic'
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        spec: ["cypress/integration/*", "cypress/integration/result-list/**/*", "cypress/integration/facets/**/*"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          spec: ${{ matrix.spec }}
   e2e-atomic-screenshots:
     name: 'Run e2e screenshots tests on Atomic'
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-screenshots
 
@@ -58,7 +63,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-angular
   e2e-atomic-vuejs-test:
@@ -66,7 +71,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-vuejs
   e2e-atomic-stencil-test:
@@ -74,7 +79,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
 
@@ -83,7 +88,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-react
 
@@ -92,7 +97,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-quantic
         with:
@@ -108,12 +113,12 @@ jobs:
       - 'e2e-quantic-test'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: git add \"**/package-lock.json\"
+      - run: git add '**package-lock.json'
       - name: Clean directory
         run: git clean -xfd -e node_modules/ -e .husky
       - name: Commit & push
