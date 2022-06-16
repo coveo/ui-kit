@@ -661,20 +661,19 @@ export class AtomicSearchBox {
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
-    if (!isMobile(this.bindings.store)) {
-      await Promise.allSettled(
-        this.suggestions.map((suggestion) =>
-          promiseTimeout(
-            suggestion.onSuggestedQueryChange
-              ? suggestion.onSuggestedQueryChange(suggestedQuery)
-              : Promise.resolve(),
-            this.suggestionTimeout
-          )
+    const query = isMobile(this.bindings.store) ? '' : suggestedQuery;
+    await Promise.allSettled(
+      this.suggestions.map((suggestion) =>
+        promiseTimeout(
+          suggestion.onSuggestedQueryChange
+            ? suggestion.onSuggestedQueryChange(query)
+            : Promise.resolve(),
+          this.suggestionTimeout
         )
-      );
-      this.suggestedQuery = suggestedQuery;
-      this.updateSuggestionElements(suggestedQuery);
-    }
+      )
+    );
+    this.suggestedQuery = query;
+    this.updateSuggestionElements(query);
   }
 
   private renderPanel(
