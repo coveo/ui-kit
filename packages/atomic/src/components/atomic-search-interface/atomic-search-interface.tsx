@@ -41,6 +41,7 @@ import {
   StorageItems,
 } from '../../utils/local-storage-utils';
 import {loadDayjsLocale} from '../../utils/dayjs-locales';
+import {loadGlobalScripts} from '../../global/global';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -141,6 +142,10 @@ export class AtomicSearchInterface {
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
+
+  public constructor() {
+    loadGlobalScripts();
+  }
 
   public connectedCallback() {
     this.i18nPromise = this.initI18n();

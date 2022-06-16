@@ -41,11 +41,7 @@ function loadFocusVisiblePolyfill() {
   }
 }
 
-export default function () {
-  if (!window) {
-    return;
-  }
-
+export function loadGlobalScripts() {
   setCoveoGlobal();
   loadFocusVisiblePolyfill();
 }

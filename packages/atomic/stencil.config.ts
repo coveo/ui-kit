@@ -62,7 +62,6 @@ export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
   sourceMap: true,
-  globalScript: 'src/global/global.ts',
   outputTargets: [
     react({
       componentCorePackage: '@coveo/atomic',
