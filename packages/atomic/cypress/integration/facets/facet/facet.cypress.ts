@@ -18,18 +18,15 @@ import {
   pressClearSearchButton,
 } from '../facet-common-actions';
 import * as FacetAssertions from './facet-assertions';
-import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
+import * as BreadboxAssertions from '../../breadbox-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import {
-  breadboxComponent,
-  BreadboxSelectors,
-} from '../../breadbox/breadbox-selectors';
+import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
 import {
   addBreadbox,
   breadboxLabel,
   deselectBreadcrumbAtIndex,
-} from '../../breadbox/breadbox-actions';
+} from '../../breadbox-actions';
 import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 
 describe('Facet v1 Test Suites', () => {
@@ -1055,6 +1052,19 @@ describe('Facet v1 Test Suites', () => {
         FacetSelectors.withId('ghi'),
         true
       );
+    });
+  });
+
+  describe('with allowed-values', () => {
+    it('returns only allowed values', () => {
+      new TestFixture()
+        .with(addFacet({field: 'objecttype', 'allowed-values': 'FAQ,File'}))
+        .init();
+
+      FacetSelectors.values()
+        .should('contain.text', 'FAQ')
+        .should('contain.text', 'File')
+        .should('not.contain.text', 'Message');
     });
   });
 });

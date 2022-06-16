@@ -10,7 +10,6 @@ import {
   ResultTemplate,
   buildResultTemplatesManager,
   ResultListProps,
-  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -32,6 +31,10 @@ import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder'
 import {once} from '../../utils/utils';
 import {updateBreakpoints} from '../../utils/replace-breakpoint';
 import {isAppLoaded, setLoadingFlag} from '../../utils/store';
+import {
+  FocusTargetController,
+  getFirstFocusableDescendant,
+} from '../../utils/accessibility-utils';
 
 export interface BaseResultList<T = FoldedResult | Result>
   extends InitializableComponent {
@@ -68,6 +71,8 @@ export interface ResultsProps extends DisplayOptions {
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
+  newResultRef?: (element: HTMLElement) => void;
+  indexOfResultToFocus?: number;
 
   classes: string;
 }
@@ -91,11 +96,11 @@ interface ResultListCommonOptions {
   host: HTMLElement;
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
-  fieldsToInclude?: string;
   includeDefaultTemplate?: boolean;
+  loadingFlag?: string;
   onReady(): void;
   onError(): void;
-  loadingFlag?: string;
+  nextNewResultTarget?: FocusTargetController;
 }
 
 export class ResultListCommon {
@@ -103,6 +108,8 @@ export class ResultListCommon {
   private bindings: Bindings;
   private render?: ResultRenderingFunction;
   private updateBreakpoints?: (host: HTMLElement) => void;
+  private nextNewResultTarget?: FocusTargetController;
+  private indexOfResultToFocus?: number;
 
   public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   public resultListControllerProps?: ResultListProps;
@@ -112,22 +119,14 @@ export class ResultListCommon {
     this.host = opts.host;
     this.bindings = opts.bindings;
     this.loadingFlag = opts.loadingFlag;
+
     if (this.loadingFlag) {
       setLoadingFlag(this.bindings.store, this.loadingFlag);
     }
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
-
-    if (opts.fieldsToInclude) {
-      this.resultListControllerProps = {
-        options: {
-          fieldsToInclude: this.determineAllFieldsToInclude(
-            opts.fieldsToInclude
-          ),
-        },
-      };
-    }
+    this.nextNewResultTarget = opts.nextNewResultTarget;
 
     this.registerResultTemplates(
       opts.templateElements,
@@ -141,15 +140,14 @@ export class ResultListCommon {
     this.render = render;
   }
 
-  private determineAllFieldsToInclude(
-    configuredFieldsToInclude: string
-  ): string[] {
-    if (configuredFieldsToInclude.trim() === '') {
-      return [...EcommerceDefaultFieldsToInclude];
+  public focusOnNextNewResult(
+    resultListState: FoldedResultListState | ResultListState
+  ) {
+    if (!this.nextNewResultTarget) {
+      throw "Cannot focus on next new result if nextNewResultTarget isn't defined";
     }
-    return EcommerceDefaultFieldsToInclude.concat(
-      configuredFieldsToInclude.split(',').map((field) => field.trim())
-    );
+    this.indexOfResultToFocus = resultListState.results.length;
+    this.nextNewResultTarget.focusOnNextTarget();
   }
 
   public getTemplate(result: Result) {
@@ -163,6 +161,15 @@ export class ResultListCommon {
     return this.render
       ? this.render(resultOrFolded)
       : this.getTemplate(result)!;
+  }
+
+  private onFirstNewResultRendered(element: HTMLElement) {
+    if (!element.children.length && !element.shadowRoot?.children.length) {
+      return;
+    }
+    this.indexOfResultToFocus = undefined;
+    const elementToFocus = getFirstFocusableDescendant(element) ?? element;
+    this.nextNewResultTarget?.setTarget(elementToFocus);
   }
 
   private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
@@ -194,6 +201,7 @@ export class ResultListCommon {
         return template;
       })
     );
+
     const templates = (
       includeDefaultTemplate ? [this.makeDefaultTemplate()] : []
     ).concat(
@@ -297,6 +305,10 @@ export class ResultListCommon {
                 resultListState={resultListState}
                 resultListCommon={this}
                 getContentOfResultTemplate={getContentOfResultTemplate}
+                indexOfResultToFocus={this.indexOfResultToFocus}
+                newResultRef={(element) =>
+                  this.onFirstNewResultRendered(element)
+                }
               />
             )}
           </ResultDisplayWrapper>

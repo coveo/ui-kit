@@ -12,7 +12,7 @@
       import {dispatchSearchBoxSuggestionsEvent} from '/build/index.esm.js';
       // CDN example: 'https://static.cloud.coveo.com/atomic/v1/index.esm.js'
 
-      function resisterCustomSuggestions() {
+      function registerCustomSuggestions() {
         class CustomSuggestions extends HTMLElement {
           constructor() {
             super();
@@ -21,7 +21,7 @@
           suggestions = [];
 
           renderSuggestions(bindings) {
-            return this.suggestions.slice(0, 3).map((suggestion) => {
+            return this.suggestions.slice(0, 2).map((suggestion) => {
               const content = document.createElement('div');
               content.innerText = suggestion;
               return {
@@ -42,7 +42,7 @@
             return fetch('https://pokeapi.co/api/v2/pokemon')
               .then((res) => res.json())
               .then((res) => {
-                const results = res.results.slice(0, 4).map((r) => r.name);
+                const results = res.results.slice(0, 2).map((r) => r.name);
                 this.suggestions = query ? results.filter((r) => r.includes(query[0])) : results;
               });
           }
@@ -57,7 +57,7 @@
             }, this);
           }
         }
-        // To test this component, add it to `atomic-search-box`
+
         window.customElements.define('custom-suggestions', CustomSuggestions);
       }
 
@@ -74,11 +74,11 @@
       }
 
       main();
-      resisterCustomSuggestions();
+      registerCustomSuggestions();
     </script>
   </head>
   <body>
-    <atomic-search-interface search-hub="MainSearch">
+    <atomic-search-interface search-hub="MainSearch" fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count">
       <atomic-search-layout mobile-breakpoint="700px">
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
@@ -94,52 +94,9 @@
         </atomic-layout-section>
         <atomic-layout-section section="search">
           <atomic-search-box suggestion-timeout="1000">
-            <atomic-did-you-mean></atomic-did-you-mean>
+            <custom-suggestions></custom-suggestions>
             <atomic-search-box-query-suggestions> </atomic-search-box-query-suggestions>
             <atomic-search-box-recent-queries icon="assets://xml.svg"> </atomic-search-box-recent-queries>
-            <atomic-search-box-instant-results image-size="small">
-              <atomic-result-template>
-                <template>
-                  <style>
-                    .result-root {
-                      padding: 12px;
-                    }
-                    div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
-                      height: 120px;
-                    }
-                    .rating-wrapper {
-                      display: flex;
-                      align-items: center;
-                    }
-                    .rating-wrapper span {
-                      margin-left: 5px;
-                      color: #8e959d;
-                    }
-                  </style>
-                  <atomic-result-section-visual>
-                    <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
-                  </atomic-result-section-visual>
-                  <atomic-result-section-title>
-                    <atomic-result-link></atomic-result-link>
-                  </atomic-result-section-title>
-                  <atomic-result-section-title-metadata>
-                    <div class="rating-wrapper">
-                      <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                      <atomic-field-condition class="field" if-defined="ec_rating">
-                        <span>
-                          <atomic-result-number field="cat_rating_count"></atomic-result-number>
-                        </span>
-                      </atomic-field-condition>
-                    </div>
-                  </atomic-result-section-title-metadata>
-                  <atomic-result-section-bottom-metadata>
-                    <atomic-result-number field="ec_price">
-                      <atomic-format-currency currency="USD"></atomic-format-currency>
-                    </atomic-result-number>
-                  </atomic-result-section-bottom-metadata>
-                </template>
-              </atomic-result-template>
-            </atomic-search-box-instant-results>
           </atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="main">
@@ -147,7 +104,7 @@
             <atomic-query-summary></atomic-query-summary>
           </atomic-layout-section>
           <atomic-layout-section section="results">
-            <atomic-result-list fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count"></atomic-result-list>
+            <atomic-result-list></atomic-result-list>
           </atomic-layout-section>
         </atomic-layout-section>
       </atomic-search-layout>

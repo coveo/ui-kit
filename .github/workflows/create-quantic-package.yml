@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 14.x
       - name: Check Out Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Create cache file
         run: |
           mkdir check-SHA
