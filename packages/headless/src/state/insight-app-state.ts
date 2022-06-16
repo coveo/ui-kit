@@ -4,10 +4,21 @@ import {
   InsightInterfaceSection,
   SearchHubSection,
   VersionSection,
+  InsightCaseContextSection,
+  FacetSection,
+  QuerySection,
+  PaginationSection,
+  SearchSection,
 } from './state-sections';
 
-export type InsightAppState = ConfigurationSection &
+export type InsightSearchParametersState = QuerySection &
+  FacetSection &
+  PaginationSection;
+export type InsightAppState = InsightSearchParametersState &
+  ConfigurationSection &
   VersionSection &
   InsightConfigurationSection &
+  SearchSection &
   SearchHubSection &
-  InsightInterfaceSection;
+  InsightInterfaceSection &
+  InsightCaseContextSection;

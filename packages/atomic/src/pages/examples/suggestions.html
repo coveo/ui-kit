@@ -12,7 +12,7 @@
       import {dispatchSearchBoxSuggestionsEvent} from '/build/index.esm.js';
       // CDN example: 'https://static.cloud.coveo.com/atomic/v1/index.esm.js'
 
-      function resisterCustomSuggestions() {
+      function registerCustomSuggestions() {
         class CustomSuggestions extends HTMLElement {
           constructor() {
             super();
@@ -74,11 +74,11 @@
       }
 
       main();
-      resisterCustomSuggestions();
+      registerCustomSuggestions();
     </script>
   </head>
   <body>
-    <atomic-search-interface search-hub="MainSearch">
+    <atomic-search-interface search-hub="MainSearch" fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count">
       <atomic-search-layout mobile-breakpoint="700px">
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
@@ -104,7 +104,7 @@
             <atomic-query-summary></atomic-query-summary>
           </atomic-layout-section>
           <atomic-layout-section section="results">
-            <atomic-result-list fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count"></atomic-result-list>
+            <atomic-result-list></atomic-result-list>
           </atomic-layout-section>
         </atomic-layout-section>
       </atomic-search-layout>

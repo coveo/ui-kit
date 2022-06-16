@@ -48,7 +48,6 @@ import {
   MappedSearchRequest,
   mapSearchRequest,
   mapSearchResponse,
-  SuccessResponse,
 } from './search-mappings';
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {updatePage} from '../pagination/pagination-actions';
@@ -328,22 +327,24 @@ export const fetchInstantResults = createAsyncThunk<
       }),
       cacheTimeout: new NumberValue(),
     });
-    const q = payload.q;
+    const {q, maxResultsPerQuery} = payload;
     const state = getState();
 
-    const response = await fetchInstantResultsFromAPI(apiClient, state, q);
+    const response = await fetchInstantResultsFromAPI(
+      apiClient,
+      state,
+      q,
+      maxResultsPerQuery
+    );
 
     if (isErrorResponse(response)) {
       dispatch(logQueryError(response.error));
       return rejectWithValue(response.error);
     }
 
-    const getSlicedResults = (response: SuccessResponse) =>
-      response.success.results.slice(0, payload.maxResultsPerQuery);
-
     if (!shouldReExecuteTheQueryWithCorrections(state, response.success)) {
       return {
-        results: getSlicedResults(response),
+        results: response.success.results,
       };
     }
 
@@ -354,7 +355,8 @@ export const fetchInstantResults = createAsyncThunk<
     const retried = await fetchInstantResultsFromAPI(
       apiClient,
       state,
-      correctedQuery
+      correctedQuery,
+      maxResultsPerQuery
     );
 
     if (isErrorResponse(retried)) {
@@ -363,7 +365,7 @@ export const fetchInstantResults = createAsyncThunk<
     }
 
     return {
-      results: getSlicedResults(retried),
+      results: retried.success.results,
     };
   }
 );
@@ -371,9 +373,14 @@ export const fetchInstantResults = createAsyncThunk<
 async function fetchInstantResultsFromAPI(
   apiClient: SearchAPIClient,
   state: StateNeededByExecuteSearch,
-  q: string
+  q: string,
+  numberOfResults: number
 ) {
-  const {request, mappings} = await buildInstantResultSearchRequest(state, q);
+  const {request, mappings} = await buildInstantResultSearchRequest(
+    state,
+    q,
+    numberOfResults
+  );
   return mapSearchResponse(await apiClient.search(request), mappings);
 }
 
@@ -454,7 +461,8 @@ const buildFetchMoreRequest = async (
 
 export const buildInstantResultSearchRequest = async (
   state: StateNeededByExecuteSearch,
-  q: string
+  q: string,
+  numberOfResults: number
 ) => {
   const sharedWithFoldingRequest =
     await buildSearchAndFoldingLoadCollectionRequest(state);
@@ -464,6 +472,7 @@ export const buildInstantResultSearchRequest = async (
     ...(state.didYouMean && {
       enableDidYouMean: state.didYouMean.enableDidYouMean,
     }),
+    numberOfResults,
     q,
   });
 };

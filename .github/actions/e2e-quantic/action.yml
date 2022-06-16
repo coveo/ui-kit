@@ -2,7 +2,7 @@ name: "Quantic E2E tests"
 description: "Runs Cypress tests for Quantic"
 inputs:
   github-token:
-    description: The GitHub token for actions that must be recorded
+    description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
     default: ''
   clientid:
@@ -36,8 +36,8 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
-        install-command: npx cypress install
-        record: ${{ github.ref == 'refs/heads/master' && true || false }}
+        install: false
+        record: false
         config: reporter=cypress/reporters/detailed-reporter.js
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}

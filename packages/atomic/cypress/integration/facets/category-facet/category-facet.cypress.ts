@@ -28,13 +28,13 @@ import {
   pressShowMore,
   selectIdleCheckboxValueAt,
 } from '../facet-common-actions';
-import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
-import {breadboxComponent} from '../../breadbox/breadbox-selectors';
+import * as BreadboxAssertions from '../../breadbox-assertions';
+import {breadboxComponent} from '../../breadbox-selectors';
 import {
   addBreadbox,
   breadboxLabel,
   deselectBreadcrumbAtIndex,
-} from '../../breadbox/breadbox-actions';
+} from '../../breadbox-actions';
 import {addFacet} from '../facet/facet-actions';
 import {FacetSelectors} from '../facet/facet-selectors';
 

@@ -2,7 +2,7 @@ name: 'Atomic E2E Screenshot tests'
 description: 'Runs Cypress Screenshots tests for Atomic'
 inputs:
   github-token:
-    description: The GitHub token for actions that must be recorded
+    description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
     default: ''
 runs:
@@ -15,7 +15,7 @@ runs:
         config-file: cypress-screenshots.json
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
-        install-command: npx cypress install
+        install: false
         record: false
     - uses: actions/upload-artifact@v2
       if: always()
