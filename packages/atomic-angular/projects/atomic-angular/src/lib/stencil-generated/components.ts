@@ -1224,6 +1224,28 @@ export class AtomicSearchBox {
 }
 
 
+export declare interface AtomicSearchBoxInstantResults extends Components.AtomicSearchBoxInstantResults {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['density', 'display', 'imageSize', 'maxResultsPerQuery'],
+  methods: ['setRenderFunction']
+})
+@Component({
+  selector: 'atomic-search-box-instant-results',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['density', 'display', 'imageSize', 'maxResultsPerQuery']
+})
+export class AtomicSearchBoxInstantResults {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicSearchBoxQuerySuggestions extends Components.AtomicSearchBoxQuerySuggestions {}
 
 @ProxyCmp({

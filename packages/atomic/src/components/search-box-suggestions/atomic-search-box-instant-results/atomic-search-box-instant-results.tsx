@@ -1,8 +1,9 @@
-import {Component, Element, State, h, Prop} from '@stencil/core';
+import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {
   buildInstantResults,
   buildResultList,
   buildInteractiveResult,
+  FoldedResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -17,6 +18,7 @@ import {cleanUpString} from '../../../utils/string-utils';
 import {
   BaseResultList,
   ResultListCommon,
+  ResultRenderingFunction,
 } from '../../result-lists/result-list-common';
 import {
   ResultDisplayDensity,
@@ -27,7 +29,6 @@ import {Button} from '../../common/button';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
- * @internal
  * @part instant-results-item - An instant result.
  * @part instant-result-show-all-button - The button to show all items for the current instant results search.
  */
@@ -46,6 +47,22 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
 
   private results: Result[] = [];
   public resultListCommon!: ResultListCommon;
+  private renderingFunction: ((res: Result) => HTMLElement) | null = null;
+
+  /**
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   *
+   * Do not use this method if you integrate Atomic in a plain HTML deployment.
+   *
+   * @param render
+   */
+  @Method() public async setRenderFunction(
+    render: (result: Result | FoldedResult) => HTMLElement
+  ) {
+    this.renderingFunction = render;
+    this.assignRenderingFunctionIfPossible();
+  }
   /**
    * The maximum number of results to show.
    */
@@ -139,7 +156,9 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       host: this.host,
       bindings: this.bindings,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
-      onReady: () => {},
+      onReady: () => {
+        this.assignRenderingFunctionIfPossible();
+      },
       onError: () => {
         this.templateHasError = true;
       },
@@ -175,6 +194,12 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     });
   }
 
+  private assignRenderingFunctionIfPossible() {
+    if (this.resultListCommon && this.renderingFunction) {
+      this.resultListCommon.renderingFunction = this
+        .renderingFunction as ResultRenderingFunction;
+    }
+  }
   public render() {
     if (this.error) {
       return (
