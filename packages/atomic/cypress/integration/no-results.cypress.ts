@@ -1,8 +1,8 @@
 import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 import {getAnalyticsAt} from '../utils/network';
-import {SearchBoxSelectors} from './search-box-selectors';
+import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import * as CommonAssertions from './common-assertions';
-import {addSearchBox} from './search-box-actions';
+import {addSearchBox} from './search-box/search-box-actions';
 
 describe('No Results Test Suites', () => {
   const tag = 'atomic-no-results';

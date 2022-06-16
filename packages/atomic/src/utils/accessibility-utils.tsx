@@ -1,5 +1,6 @@
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
+import {defer} from './utils';
 
 export const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
 
@@ -59,7 +60,8 @@ export function FocusTarget() {
           focusAfterSearch = false;
           if (element) {
             const el = element;
-            setTimeout(() => {
+            // The focus seems to be flaky without deferring, especially on iOS.
+            defer().then(() => {
               el.focus();
               onFocusCallback?.();
             });
@@ -75,8 +77,11 @@ export function FocusTarget() {
           element = el;
           if (focusOnNextTarget) {
             focusOnNextTarget = false;
-            element.focus();
-            onFocusCallback?.();
+            // The focus seems to be flaky without deferring, especially on iOS.
+            defer().then(() => {
+              el.focus();
+              onFocusCallback?.();
+            });
           }
         },
         focusAfterSearch: () => {
