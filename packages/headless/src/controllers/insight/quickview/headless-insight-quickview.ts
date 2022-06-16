@@ -14,10 +14,10 @@ export interface InsightQuickview extends QuickviewCore {}
 export interface InsightQuickviewState extends QuickviewCoreState {}
 
 /**
- * Creates a `Quickview` controller instance.
+ * Creates an `InsightQuickview` controller instance.
  * @param engine - The headless engine.
- * @param props - The configurable `Quickview` properties.
- * @returns A `Quickview` controller instance.
+ * @param props - The configurable `InsightQuickview` properties.
+ * @returns An `InsightQuickview` controller instance.
  */
 export function buildInsightQuickview(
   engine: InsightEngine,

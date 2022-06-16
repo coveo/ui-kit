@@ -11,9 +11,9 @@ export interface InsightResultListOptions extends CoreResultListOptions {}
 
 export interface InsightResultListProps {
   /**
-   * The options for the `ResultList` controller.
+   * The options for the `InsightResultList` controller.
    */
-  options?: CoreResultListOptions;
+  options?: InsightResultListOptions;
 }
 
 export interface InsightResultList extends Controller {
@@ -36,6 +36,12 @@ export interface InsightResultList extends Controller {
  * */
 export interface InsightResultListState extends CoreResultListState {}
 
+/**
+ * Creates an `InsightResultList` controller instance.
+ * @param engine - The headless engine.
+ * @param props - The `InsightResultList` controller properties.
+ * @returns An `InsightResultList` controller instance.
+ */
 export function buildInsightResultList(
   engine: InsightEngine,
   props?: InsightResultListProps
