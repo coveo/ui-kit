@@ -59,9 +59,11 @@ export class AtomicModal implements InitializableComponent {
   private headerId = randomID('atomic-modal-header-');
   private focusTrap?: HTMLAtomicFocusTrapElement;
   private animatableContainer?: HTMLElement;
+  private currentWatchToggleOpenExecution = 0;
 
   @Watch('isOpen')
   async watchToggleOpen(isOpen: boolean) {
+    const watchToggleOpenExecution = ++this.currentWatchToggleOpenExecution;
     const modalOpenedClass = 'atomic-modal-opened';
 
     if (isOpen) {
@@ -70,11 +72,17 @@ export class AtomicModal implements InitializableComponent {
       if (isIOS()) {
         await this.waitForAnimationEnded();
       }
+      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
+        return;
+      }
       this.focusTrap!.active = true;
     } else {
       document.body.classList.remove(modalOpenedClass);
       if (isIOS()) {
         await this.waitForAnimationEnded();
+      }
+      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
+        return;
       }
       this.focusTrap!.active = false;
     }
