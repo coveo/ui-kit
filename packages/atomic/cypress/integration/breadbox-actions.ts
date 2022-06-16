@@ -1,4 +1,4 @@
-import {addTag, TagProps, TestFixture} from '../../fixtures/test-fixture';
+import {addTag, TagProps, TestFixture} from '../fixtures/test-fixture';
 import {BreadboxSelectors} from './breadbox-selectors';
 
 export const breadboxLabel = 'Filters';

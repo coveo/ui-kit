@@ -21,6 +21,7 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
 import {MapProp} from '../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
+import {Hidden} from '../../common/hidden';
 
 /**
  * @internal
@@ -55,7 +56,7 @@ export class AtomicSegmentedFacet
    * The non-localized label for the facet.
    * Used in the `atomic-breadbox` component through the bindings store.
    */
-  @Prop({reflect: true}) public label = 'no-label';
+  @Prop({reflect: true}) public label?: string;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    */
@@ -138,10 +139,25 @@ export class AtomicSegmentedFacet
     );
   }
 
+  private renderLabel() {
+    if (!this.label) {
+      return;
+    }
+    return <b class="inline-block my-3 mr-2">{this.label}:</b>;
+  }
+
   public render() {
+    if (
+      this.searchStatus.state.hasError ||
+      !this.facetState.values.length ||
+      !this.facet.state.enabled
+    ) {
+      return <Hidden></Hidden>;
+    }
+
     return (
       <div class="flex">
-        <b class="inline-block my-3 mr-2">{this.label}</b>
+        {this.renderLabel()}
         {this.renderValues()}
       </div>
     );
