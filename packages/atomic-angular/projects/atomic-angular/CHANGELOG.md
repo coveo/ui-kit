@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.15.0...@coveo/atomic-angular@1.15.1) (2022-06-16)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.15.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.14.0...@coveo/atomic-angular@1.15.0) (2022-06-15)
+
+
+### Features
+
+* **atomic:** handle fields to include in instant results ([#2083](https://github.com/coveo/ui-kit/issues/2083)) ([243619a](https://github.com/coveo/ui-kit/commit/243619aa5fa2fe89a2b11d4d0230508af2aa70ab))
+
+
+
+
+
 # [1.14.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.13.1...@coveo/atomic-angular@1.14.0) (2022-06-13)
 
 

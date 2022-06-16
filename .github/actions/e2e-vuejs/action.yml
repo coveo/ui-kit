@@ -2,7 +2,7 @@ name: 'Vue.js sample E2E tests'
 description: 'Runs Cypress tests for Vue.js sample'
 inputs:
   github-token:
-    description: The GitHub token for actions that must be recorded
+    description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
     default: ''
 runs:
@@ -14,7 +14,7 @@ runs:
         working-directory: ./packages/samples/vuejs
         start: npm run dev
         wait-on: 'http://localhost:8080'
-        install-command: npx cypress install
+        install: false
         record: false
     - uses: actions/upload-artifact@v2
       if: failure()

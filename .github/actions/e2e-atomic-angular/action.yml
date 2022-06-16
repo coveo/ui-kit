@@ -2,7 +2,7 @@ name: 'Atomic Angular E2E tests'
 description: 'Runs Cypress tests for Atomic Angular'
 inputs:
   github-token:
-    description: The GitHub token for actions that must be recorded
+    description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
     default: ''
 runs:

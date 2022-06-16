@@ -2,7 +2,7 @@ name: "Atomic React E2E tests"
 description: "Runs Cypress tests for Atomic React"
 inputs:
   github-token:
-    description: The GitHub token for actions that must be recorded
+    description: The GitHub token for accurately detecting a build vs a re-run build
     required: false
     default: ''
 runs:
@@ -14,7 +14,7 @@ runs:
         working-directory: ./packages/samples/atomic-react
         start: npm run dev
         wait-on: 'http://localhost:3000'
-        install-command: npx cypress install
+        install: false
         record: false
     - uses: actions/upload-artifact@v2
       if: failure()
