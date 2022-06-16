@@ -3,7 +3,7 @@ import {
   SearchEngineConfiguration,
 } from '@coveo/headless';
 import {AnalyticsClientSendEventHook} from '@coveo/headless/node_modules/coveo.analytics';
-import {getAtomicEnvironment} from '../../global/environment';
+import {getAtomicEnvironment} from '../../global/global';
 import {ObservableMap} from '@stencil/store';
 import {AtomicStore, getAllFacets} from '../../utils/store';
 
