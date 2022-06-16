@@ -131,4 +131,32 @@ describe('quantic-tab-bar', () => {
       });
     });
   });
+
+  describe('when the dropdown loses focus', () => {
+    it('should automatically close the dropdown list', () => {
+      cy.viewport(mediumViewportWidth, 900);
+      visitPage();
+
+      scope('when loading the page', () => {
+        Expect.displayTabs(true);
+        Expect.displayedTabsEqual([TAB_1, TAB_2]);
+        Expect.tabsInDropdownEqual([TAB_3, TAB_4]);
+        Expect.activeTabContains(TAB_1);
+        Expect.displayMoreButton(true);
+        Expect.displayMoreButtonIcon(true);
+        Expect.displayMoreButtonLabel(moreButtonLabel);
+        Expect.displayDropdown(false);
+      });
+
+      scope('when opening the dropdown list', () => {
+        Actions.openDropdown();
+        Expect.displayDropdown(true);
+      });
+
+      scope('when a click is made outside the dropdown list', () => {
+        Actions.clickContainer();
+        Expect.displayDropdown(false);
+      });
+    });
+  });
 });

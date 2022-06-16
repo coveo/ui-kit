@@ -15,7 +15,7 @@
             <ul class="slds-dropdown__list slds-dropdown_length-with-icon-10" role="menu">
               <template for:each={tabsInDropdown} for:item="tab">
                 <li class="slds-dropdown__item" role="presentation" key={tab.value}>
-                  <a role="menuitem" tabindex="-1" onclick={handleDropdownTabSelect} data-value={tab.value}>
+                  <a role="menuitem" tabindex={optionTabIndex} onclick={handleDropdownTabSelect} data-value={tab.value}>
                     <span class="slds-truncate" title={tab.label}>{tab.label}</span>
                   </a>
                 </li>

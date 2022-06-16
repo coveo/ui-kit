@@ -29,6 +29,7 @@ export default class QuanticTabBar extends LightningElement {
   expandedMoreButton = true;
 
   connectedCallback() {
+    window.addEventListener('click', this.closeCombobox);
     window.addEventListener('resize', this.updateTabsDisplay);
     this.addEventListener('tab_rendered', this.updateTabsDisplay);
   }
@@ -296,8 +297,19 @@ export default class QuanticTabBar extends LightningElement {
    * Toggles the combobox.
    * @returns {void}
    */
-  toggleCombobox() {
+  toggleCombobox(event) {
+    event.stopPropagation();
     this.isComboboxOpen = !this.isComboboxOpen;
+  }
+
+  closeCombobox = () => {
+    if (this.isComboboxOpen) {
+      this.isComboboxOpen = false;
+    }
+  };
+
+  get optionTabIndex() {
+    return this.isComboboxOpen ? 0 : -1;
   }
 
   /**
@@ -305,6 +317,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   handleDropdownTabSelect = (event) => {
+    event.stopPropagation();
     const targetValue = event.currentTarget.getAttribute('data-value');
     const clickedtab = this.overflowingTabs.find(
       // @ts-ignore
