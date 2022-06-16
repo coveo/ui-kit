@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.74.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.73.0...@coveo/atomic@1.74.0) (2022-06-16)
+
+
+### Bug Fixes
+
+* **atomic:** hide instant results on mobile on page resize ([#2105](https://github.com/coveo/ui-kit/issues/2105)) ([94c4719](https://github.com/coveo/ui-kit/commit/94c471971f3ecbf1719cc2f31f1c5530b2ecdca5))
+
+
+### Features
+
+* **atomic:** release instant results and add react and angular support ([#2079](https://github.com/coveo/ui-kit/issues/2079)) ([06f715f](https://github.com/coveo/ui-kit/commit/06f715fc56c7063043ead5a40baa9278709f62ae))
+
+
+
+
+
 # [1.73.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.72.0...@coveo/atomic@1.73.0) (2022-06-16)
 
 
