@@ -1228,14 +1228,14 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'imageSize'],
+  inputs: ['density', 'display', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'imageSize']
+  inputs: ['density', 'display', 'imageSize', 'maxResultsPerQuery']
 })
 export class AtomicSearchBoxInstantResults {
   protected el: HTMLElement;
