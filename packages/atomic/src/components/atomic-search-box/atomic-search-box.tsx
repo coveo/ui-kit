@@ -194,9 +194,10 @@ export class AtomicSearchBox {
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
       suggestedQuery: () => this.suggestedQuery,
-      clearSuggestions: () => this.clearSuggestions(),
-      triggerSuggestions: () => this.triggerSuggestions(),
       getSuggestions: () => this.suggestions,
+      clearSuggestions: () => this.clearSuggestions(),
+      triggerSuggestions: (suggestedQuery?: string) =>
+        this.triggerSuggestions(suggestedQuery),
     };
   }
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
@@ -344,7 +345,7 @@ export class AtomicSearchBox {
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
-  private async triggerSuggestions() {
+  private async triggerSuggestions(suggestedQuery?: string) {
     const settled = await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(
@@ -386,7 +387,7 @@ export class AtomicSearchBox {
     const defaultSuggestedQuery =
       this.allSuggestionElements.find(elementHasQuery)?.query || '';
 
-    this.updateSuggestedQuery(defaultSuggestedQuery);
+    this.updateSuggestedQuery(suggestedQuery || defaultSuggestedQuery);
     this.updateAriaMessage();
   }
 
@@ -398,7 +399,7 @@ export class AtomicSearchBox {
     this.isExpanded = true;
     this.searchBox.updateText(value);
     this.updateActiveDescendant();
-    this.triggerSuggestions();
+    this.triggerSuggestions(value);
   }
 
   private onFocus() {
