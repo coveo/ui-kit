@@ -7,10 +7,10 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
+import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
+import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
 import { Section } from "./components/search/atomic-layout-section/sections";
-import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
-import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { ObservableMap } from "@stencil/store";
 import { AtomicStore } from "./utils/store";
 import { i18n } from "i18next";
