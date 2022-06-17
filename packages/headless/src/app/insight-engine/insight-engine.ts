@@ -13,6 +13,7 @@ import {buildLogger} from '../logger';
 import {
   insightConfiguration,
   insightInterface,
+  resultPreview,
   search,
   searchHub,
 } from '../reducers';
@@ -25,8 +26,8 @@ import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
-import {executeSearch} from '../../features/insight-search/insight-search-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
+import {executeSearch} from '../../features/insight-search/insight-search-actions';
 
 export type {InsightEngineConfiguration};
 
@@ -35,6 +36,7 @@ const insightEngineReducers = {
   search,
   insightInterface,
   searchHub,
+  resultPreview,
 };
 type InsightEngineReducers = typeof insightEngineReducers;
 
@@ -129,7 +131,6 @@ function validateConfiguration(
     throw error;
   }
 }
-
 function createInsightAPIClient(
   configuration: InsightEngineConfiguration,
   logger: Logger

@@ -41,7 +41,6 @@ export interface CoreResultListProps {
    * The options for the `ResultList` controller.
    * */
   options?: CoreResultListOptions;
-
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
