@@ -13,6 +13,7 @@ import {
 } from '../result-template-components/result-template-decorators';
 import {ObservableMap} from '@stencil/store';
 import {AtomicStore, unsetLoadingFlag} from '../../../utils/store';
+import {ResultRenderingFunction} from '../result-lists/result-list-common';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -55,7 +56,7 @@ export class AtomicResult {
   /**
    * The result content to display.
    */
-  @Prop() content!: ParentNode;
+  @Prop() content?: ParentNode;
 
   /**
    * How results should be displayed.
@@ -89,6 +90,17 @@ export class AtomicResult {
    */
   @Prop() loadingFlag?: string;
 
+  /**
+   * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system.
+   * Particularly useful for Atomic React
+   *
+   * @internal
+   */
+  @Prop() renderingFunction?: ResultRenderingFunction;
+
+  private resultRootRef?: HTMLElement;
+  private executedRenderingFunctionOnce = false;
+
   @Listen('atomic/resolveResult')
   public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
     event.preventDefault();
@@ -106,8 +118,12 @@ export class AtomicResult {
     });
   }
 
+  private get isCustomRenderFunctionMode() {
+    return this.renderingFunction !== undefined;
+  }
+
   private containsSections() {
-    return Array.from(this.content.children).some((child) =>
+    return Array.from(this.content!.children).some((child) =>
       (resultSectionTags as readonly string[]).includes(
         child.tagName.toLowerCase()
       )
@@ -115,7 +131,7 @@ export class AtomicResult {
   }
 
   private getSection(section: typeof resultSectionTags[number]) {
-    return Array.from(this.content.children).find(
+    return Array.from(this.content!.children).find(
       (element) => element.tagName.toLowerCase() === section
     );
   }
@@ -130,7 +146,7 @@ export class AtomicResult {
     return imageSize as ResultDisplayImageSize;
   }
 
-  private getClasses() {
+  private getClassesFromHTMLContent() {
     const classes = getResultDisplayClasses(
       this.display,
       this.density,
@@ -145,17 +161,52 @@ export class AtomicResult {
     return classes;
   }
 
+  private getClassesFromStringContent(content: string) {
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.imageSize || this.image
+    );
+    if (
+      resultSectionTags.some((resultSectionTag) =>
+        content.includes(resultSectionTag)
+      )
+    ) {
+      classes.push('with-sections');
+    }
+    if (this.classes) {
+      classes.push(this.classes);
+    }
+    return classes;
+  }
+
   private getContentHTML() {
-    return Array.from(this.content.children)
+    return Array.from(this.content!.children)
       .map((child) => child.outerHTML)
       .join('');
   }
 
+  private shouldExecuteRenderFunction() {
+    return (
+      this.isCustomRenderFunctionMode &&
+      this.resultRootRef &&
+      !this.executedRenderingFunctionOnce
+    );
+  }
+
   public render() {
+    if (this.isCustomRenderFunctionMode) {
+      return (
+        <div
+          class="result-root"
+          ref={(ref) => (this.resultRootRef = ref)}
+        ></div>
+      );
+    }
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
-        class={`result-root ${this.getClasses().join(' ')}`}
+        class={`result-root ${this.getClassesFromHTMLContent().join(' ')}`}
         innerHTML={this.getContentHTML()}
       ></div>
     );
@@ -166,5 +217,20 @@ export class AtomicResult {
       unsetLoadingFlag(this.store, this.loadingFlag);
     }
     applyFocusVisiblePolyfill(this.host);
+  }
+
+  public componentDidRender() {
+    if (this.shouldExecuteRenderFunction()) {
+      const customRenderOutputAsString = this.renderingFunction!(
+        this.result,
+        this.resultRootRef!
+      );
+
+      this.resultRootRef!.className += ` ${this.getClassesFromStringContent(
+        customRenderOutputAsString
+      ).join(' ')}`;
+
+      this.executedRenderingFunctionOnce = true;
+    }
   }
 }

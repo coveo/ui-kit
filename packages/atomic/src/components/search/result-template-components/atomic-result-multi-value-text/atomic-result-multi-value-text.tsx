@@ -38,7 +38,7 @@ export class AtomicResultMultiText {
   /**
    * The field that the component should use.
    * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
-   * Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+   * Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
    */
   @Prop({reflect: true}) public field!: string;
 

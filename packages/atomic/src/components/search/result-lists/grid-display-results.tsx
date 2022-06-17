@@ -39,11 +39,9 @@ export const GridDisplayResults: FunctionalComponent<ResultsProps> = (
           result={result}
           engine={props.bindings.engine}
           store={props.bindings.store}
-          display={props.display}
-          density={props.density}
-          imageSize={props.imageSize}
           content={props.getContentOfResultTemplate(result)}
           loadingFlag={props.resultListCommon.loadingFlag}
+          {...props}
         ></atomic-result>
       </div>
     );

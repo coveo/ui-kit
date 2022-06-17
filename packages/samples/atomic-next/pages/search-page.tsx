@@ -181,31 +181,33 @@ function MyTemplate(result: Result) {
       </AtomicResultSectionExcerpt>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>
-          <AtomicResultDate format="ddd MMM D YYYY" />
-          {result.raw.cat_platform && (
-            <>
-              <span className="field-label">
-                <AtomicText value="Platform" />
-              </span>
-              <AtomicResultText field="cat_platform" />
-            </>
-          )}
-          {result.raw.cat_condition && (
-            <>
-              <span className="field-label">
-                <AtomicText value="Condition" />
-              </span>
-              <AtomicResultText field="cat_condition" />
-            </>
-          )}
-          {result.raw.cat_categories && (
-            <>
-              <span className="field-label">
-                <AtomicText value="Tags" />
-              </span>
-              <AtomicResultMultiValueText field="cat_categories" />
-            </>
-          )}
+          <>
+            <AtomicResultDate format="ddd MMM D YYYY" />
+            {result.raw.cat_platform && (
+              <>
+                <span className="field-label">
+                  <AtomicText value="Platform" />
+                </span>
+                <AtomicResultText field="cat_platform" />
+              </>
+            )}
+            {result.raw.cat_condition && (
+              <>
+                <span className="field-label">
+                  <AtomicText value="Condition" />
+                </span>
+                <AtomicResultText field="cat_condition" />
+              </>
+            )}
+            {result.raw.cat_categories && (
+              <>
+                <span className="field-label">
+                  <AtomicText value="Tags" />
+                </span>
+                <AtomicResultMultiValueText field="cat_categories" />
+              </>
+            )}
+          </>
         </AtomicResultFieldsList>
       </AtomicResultSectionBottomMetadata>
     </>

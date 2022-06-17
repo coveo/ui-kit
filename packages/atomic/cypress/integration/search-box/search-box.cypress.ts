@@ -1,8 +1,11 @@
-import {TestFixture} from '../fixtures/test-fixture';
-import {SafeStorage, StorageItems} from '../../src/utils/local-storage-utils';
+import {TestFixture} from '../../fixtures/test-fixture';
+import {
+  SafeStorage,
+  StorageItems,
+} from '../../../src/utils/local-storage-utils';
 import {SearchBoxSelectors} from './search-box-selectors';
 import {addSearchBox} from './search-box-actions';
-import * as CommonAssertions from './common-assertions';
+import * as CommonAssertions from '../common-assertions';
 import * as SearchBoxAssertions from './search-box-assertions';
 
 const setSuggestions = (count: number) => () => {

@@ -25,16 +25,13 @@ import {
 import * as NumericFacetAssertions from './numeric-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import * as BreadboxAssertions from '../../breadbox/breadbox-assertions';
-import {
-  breadboxComponent,
-  BreadboxSelectors,
-} from '../../breadbox/breadbox-selectors';
+import * as BreadboxAssertions from '../../breadbox-assertions';
+import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
 import {
   addBreadbox,
   breadboxLabel,
   deselectBreadcrumbAtIndex,
-} from '../../breadbox/breadbox-actions';
+} from '../../breadbox-actions';
 import {addFacet} from '../facet/facet-actions';
 import {FacetSelectors} from '../facet/facet-selectors';
 

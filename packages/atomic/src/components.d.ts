@@ -7,9 +7,10 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
-import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
 import { Section } from "./components/search/atomic-layout-section/sections";
+import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
+import { ResultRenderingFunction } from "./components/result-lists/result-list-common";
 import { ObservableMap } from "@stencil/store";
 import { AtomicStore } from "./utils/store";
 import { i18n } from "i18next";
@@ -248,6 +249,7 @@ export namespace Components {
         "density": ResultDisplayDensity;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
         "focusOnNextNewResult": () => Promise<void>;
@@ -264,7 +266,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
          */
-        "setRenderFunction": (render: (result: FoldedResult) => HTMLElement) => Promise<void>;
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicFormatCurrency {
         /**
@@ -572,7 +574,7 @@ export namespace Components {
         /**
           * The result content to display.
          */
-        "content": ParentNode;
+        "content"?: ParentNode;
         /**
           * How large or small results should be.
          */
@@ -594,6 +596,10 @@ export namespace Components {
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
         /**
           * The result item.
          */
@@ -695,6 +701,7 @@ export namespace Components {
         "display": ResultDisplayLayout;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
         "focusOnNextNewResult": () => Promise<void>;
@@ -710,7 +717,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
          */
-        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -718,7 +725,7 @@ export namespace Components {
          */
         "delimiter": string | null;
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -728,7 +735,7 @@ export namespace Components {
     }
     interface AtomicResultNumber {
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -850,6 +857,15 @@ export namespace Components {
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
+        /**
+          * The maximum number of results to show.
+         */
+        "maxResultsPerQuery": number;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param render
+         */
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -892,6 +908,10 @@ export namespace Components {
           * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
         /**
           * The search interface i18next instance.
          */
@@ -971,7 +991,7 @@ export namespace Components {
         /**
           * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
          */
-        "label": string;
+        "label"?: string;
         /**
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
@@ -1955,6 +1975,7 @@ declare namespace LocalJSX {
         "density"?: ResultDisplayDensity;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude"?: string;
         /**
@@ -2275,7 +2296,7 @@ declare namespace LocalJSX {
         /**
           * The result content to display.
          */
-        "content": ParentNode;
+        "content"?: ParentNode;
         /**
           * How large or small results should be.
          */
@@ -2297,6 +2318,10 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
         /**
           * The result item.
          */
@@ -2394,6 +2419,7 @@ declare namespace LocalJSX {
         "display"?: ResultDisplayLayout;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
+          * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude"?: string;
         /**
@@ -2411,7 +2437,7 @@ declare namespace LocalJSX {
          */
         "delimiter"?: string | null;
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
         /**
@@ -2421,7 +2447,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultNumber {
         /**
-          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-result-list` component.
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
          */
         "field": string;
     }
@@ -2539,6 +2565,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The maximum number of results to show.
+         */
+        "maxResultsPerQuery"?: number;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -2577,6 +2607,10 @@ declare namespace LocalJSX {
           * The search interface headless engine.
          */
         "engine"?: SearchEngine;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
         /**
           * The search interface i18next instance.
          */

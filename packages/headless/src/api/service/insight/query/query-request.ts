@@ -1,4 +1,9 @@
-import {FacetsParam, QueryParam} from '../../../search/search-api-params';
+import {NumberOfResultsParam} from '../../../platform-service-params';
+import {
+  FacetsParam,
+  FirstResultParam,
+  QueryParam,
+} from '../../../search/search-api-params';
 import {
   baseInsightRequest,
   InsightParam,
@@ -8,10 +13,12 @@ import {
 export type InsightQueryRequest = InsightParam &
   CaseContextParam &
   FacetsParam &
-  QueryParam;
+  QueryParam &
+  FirstResultParam &
+  NumberOfResultsParam;
 
 interface CaseContextParam {
-  caseContext: Record<string, string>;
+  caseContext?: Record<string, string>;
 }
 
 export const buildInsightQueryRequest = (req: InsightQueryRequest) => {

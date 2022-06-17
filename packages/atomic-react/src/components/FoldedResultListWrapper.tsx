@@ -2,7 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {FoldedResult} from '@coveo/atomic/headless';
 import {AtomicFoldedResultList} from './stencil-generated';
-import ReactDOMServer from 'react-dom/server';
+import {renderToString} from 'react-dom/server';
+import {createRoot} from 'react-dom/client';
 
 /**
  * The properties of the AtomicFoldedResultList component
@@ -25,10 +26,9 @@ export const FoldedResultListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
   const foldedResultListRef = useRef<HTMLAtomicFoldedResultListElement>(null);
   useEffect(() => {
-    foldedResultListRef.current?.setRenderFunction((foldedResult) => {
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = ReactDOMServer.renderToString(template(foldedResult));
-      return wrapper;
+    foldedResultListRef.current?.setRenderFunction((foldedResult, root) => {
+      createRoot(root).render(template(foldedResult as FoldedResult));
+      return renderToString(template(foldedResult as FoldedResult));
     });
   }, [foldedResultListRef]);
   return <AtomicFoldedResultList ref={foldedResultListRef} {...otherProps} />;

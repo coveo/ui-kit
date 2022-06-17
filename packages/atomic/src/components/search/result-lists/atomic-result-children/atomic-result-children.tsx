@@ -44,7 +44,7 @@ const componentTag = 'atomic-result-children';
   styleUrl: 'atomic-result-children.pcss',
   shadow: true,
 })
-export class AtomicResultChildren implements BaseResultList<FoldedResult> {
+export class AtomicResultChildren implements BaseResultList {
   @InitializeBindings() public bindings!: Bindings;
   @ChildTemplatesContext()
   public templatesManager!: ResultTemplatesManager<TemplateContent>;

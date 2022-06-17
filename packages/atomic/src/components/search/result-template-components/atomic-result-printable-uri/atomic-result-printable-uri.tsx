@@ -73,7 +73,9 @@ export class AtomicResultPrintableUri {
   }
 
   private getIndexOfEllipsis(parentsCount: number) {
-    return Math.min(parentsCount - 1, this.maxNumberOfParts);
+    const valuesToHide = Math.max(2, parentsCount - this.maxNumberOfParts);
+    const valuesToShowBeforeEllipsis = parentsCount - valuesToHide - 1;
+    return valuesToShowBeforeEllipsis;
   }
 
   private renderEllipsis() {
@@ -126,9 +128,8 @@ export class AtomicResultPrintableUri {
       return parents;
     }
 
-    const lastIndexBeforeEllipsis = this.getIndexOfEllipsis(parents.length) - 1;
     return [
-      parents.slice(0, lastIndexBeforeEllipsis),
+      parents.slice(0, this.getIndexOfEllipsis(parents.length)),
       this.renderEllipsis(),
       parents.slice(-1),
     ];

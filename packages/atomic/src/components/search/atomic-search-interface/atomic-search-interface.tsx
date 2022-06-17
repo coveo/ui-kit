@@ -21,6 +21,7 @@ import {
   buildSearchStatus,
   loadSearchConfigurationActions,
   loadQueryActions,
+  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../../utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
@@ -68,6 +69,10 @@ export class AtomicSearchInterface {
 
   @State() private error?: Error;
 
+  /**
+   * A list of non-default fields to include in the query results, separated by commas.
+   */
+  @Prop({reflect: true}) public fieldsToInclude = '';
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    */
@@ -146,6 +151,15 @@ export class AtomicSearchInterface {
     this.i18nPromise = this.initI18n();
     setLoadingFlag(this.store, FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
+    this.updateFieldsToInclude();
+  }
+
+  private updateFieldsToInclude() {
+    const fields = [...EcommerceDefaultFieldsToInclude];
+    if (this.fieldsToInclude) {
+      this.fieldsToInclude.split(',').map((field) => field.trim());
+    }
+    this.store.set('fieldsToInclude', fields);
   }
 
   private updateMobileBreakpoint() {

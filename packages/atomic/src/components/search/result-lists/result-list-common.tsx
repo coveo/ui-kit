@@ -10,7 +10,6 @@ import {
   ResultTemplate,
   buildResultTemplatesManager,
   ResultListProps,
-  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -37,13 +36,12 @@ import {
   getFirstFocusableDescendant,
 } from '../../../utils/accessibility-utils';
 
-export interface BaseResultList<T = FoldedResult | Result>
-  extends InitializableComponent {
+export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;
   templateHasError: boolean;
   resultListCommon: ResultListCommon;
 
-  setRenderFunction?: SetRenderFunction<T>;
+  setRenderFunction?: SetRenderFunction;
 
   density?: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
@@ -51,8 +49,8 @@ export interface BaseResultList<T = FoldedResult | Result>
   display?: ResultDisplayLayout;
 }
 
-export type SetRenderFunction<T = FoldedResult | Result> = (
-  render: (result: T) => HTMLElement
+export type SetRenderFunction = (
+  render: ResultRenderingFunction
 ) => Promise<void>;
 interface DisplayOptions {
   density: ResultDisplayDensity;
@@ -76,6 +74,7 @@ export interface ResultsProps extends DisplayOptions {
   indexOfResultToFocus?: number;
 
   classes: string;
+  renderingFunction?: ResultRenderingFunction;
 }
 
 interface TemplateElement extends HTMLElement {
@@ -97,11 +96,10 @@ interface ResultListCommonOptions {
   host: HTMLElement;
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
-  fieldsToInclude?: string;
   includeDefaultTemplate?: boolean;
+  loadingFlag?: string;
   onReady(): void;
   onError(): void;
-  loadingFlag?: string;
   nextNewResultTarget?: FocusTargetController;
 }
 
@@ -121,6 +119,7 @@ export class ResultListCommon {
     this.host = opts.host;
     this.bindings = opts.bindings;
     this.loadingFlag = opts.loadingFlag;
+
     if (this.loadingFlag) {
       setLoadingFlag(this.bindings.store, this.loadingFlag);
     }
@@ -128,16 +127,6 @@ export class ResultListCommon {
       updateBreakpoints(host);
     });
     this.nextNewResultTarget = opts.nextNewResultTarget;
-
-    if (opts.fieldsToInclude) {
-      this.resultListControllerProps = {
-        options: {
-          fieldsToInclude: this.determineAllFieldsToInclude(
-            opts.fieldsToInclude
-          ),
-        },
-      };
-    }
 
     this.registerResultTemplates(
       opts.templateElements,
@@ -149,17 +138,6 @@ export class ResultListCommon {
 
   set renderingFunction(render: ResultRenderingFunction) {
     this.render = render;
-  }
-
-  private determineAllFieldsToInclude(
-    configuredFieldsToInclude: string
-  ): string[] {
-    if (configuredFieldsToInclude.trim() === '') {
-      return [...EcommerceDefaultFieldsToInclude];
-    }
-    return EcommerceDefaultFieldsToInclude.concat(
-      configuredFieldsToInclude.split(',').map((field) => field.trim())
-    );
   }
 
   public focusOnNextNewResult(
@@ -180,9 +158,7 @@ export class ResultListCommon {
     resultOrFolded: Result | FoldedResult
   ): HTMLElement | DocumentFragment {
     const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
-    return this.render
-      ? this.render(resultOrFolded)
-      : this.getTemplate(result)!;
+    return this.getTemplate(result)!;
   }
 
   private onFirstNewResultRendered(element: HTMLElement) {
@@ -223,6 +199,7 @@ export class ResultListCommon {
         return template;
       })
     );
+
     const templates = (
       includeDefaultTemplate ? [this.makeDefaultTemplate()] : []
     ).concat(
@@ -326,6 +303,7 @@ export class ResultListCommon {
                 resultListState={resultListState}
                 resultListCommon={this}
                 getContentOfResultTemplate={getContentOfResultTemplate}
+                renderingFunction={this.render}
                 indexOfResultToFocus={this.indexOfResultToFocus}
                 newResultRef={(element) =>
                   this.onFirstNewResultRendered(element)
@@ -340,8 +318,9 @@ export class ResultListCommon {
 }
 
 export type ResultRenderingFunction = (
-  result: Result | FoldedResult
-) => HTMLElement;
+  result: Result | FoldedResult,
+  root: HTMLElement
+) => string;
 
 const ResultDisplayWrapper: FunctionalComponent<{
   display?: ResultDisplayLayout;
