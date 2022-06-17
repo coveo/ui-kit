@@ -18,10 +18,10 @@ export interface InsightStatus extends Controller {
 export interface InsightStatusState extends CoreStatusState {}
 
 /**
- * Creates a `InsightStatus` controller instance.
+ * Creates an `InsightStatus` controller instance.
  *
  * @param engine - The headless engine.
- * @returns A `InsightStatus` controller instance.
+ * @returns An `InsightStatus` controller instance.
  */
 export function buildInsightStatus(engine: InsightEngine): InsightStatus {
   return buildCoreStatus(engine);

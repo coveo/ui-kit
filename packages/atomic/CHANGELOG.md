@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.74.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.74.0...@coveo/atomic@1.74.1) (2022-06-17)
+
+
+### Bug Fixes
+
+* **atomic-react:** allow atomic-react to use synthetic events in result templates ([#2091](https://github.com/coveo/ui-kit/issues/2091)) ([8cb7fdb](https://github.com/coveo/ui-kit/commit/8cb7fdbb1970a94d5b61a2697f8eb0d7a11bcc50))
+* **atomic:** only loads focus-visible polyfill on unsupported browsers ([#2107](https://github.com/coveo/ui-kit/issues/2107)) ([b5f4400](https://github.com/coveo/ui-kit/commit/b5f44000899d15637d8127da2e517f535efd2b6c))
+* **atomic:** various locale fixes ([#2093](https://github.com/coveo/ui-kit/issues/2093)) ([388d809](https://github.com/coveo/ui-kit/commit/388d80955fbff71f21b4631e02329cde9ffa719b))
+
+
+
+
+
+# [1.74.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.73.0...@coveo/atomic@1.74.0) (2022-06-16)
+
+
+### Bug Fixes
+
+* **atomic:** hide instant results on mobile on page resize ([#2105](https://github.com/coveo/ui-kit/issues/2105)) ([94c4719](https://github.com/coveo/ui-kit/commit/94c471971f3ecbf1719cc2f31f1c5530b2ecdca5))
+
+
+### Features
+
+* **atomic:** release instant results and add react and angular support ([#2079](https://github.com/coveo/ui-kit/issues/2079)) ([06f715f](https://github.com/coveo/ui-kit/commit/06f715fc56c7063043ead5a40baa9278709f62ae))
+
+
+
+
+
 # [1.73.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.72.0...@coveo/atomic@1.73.0) (2022-06-16)
 
 

@@ -3,7 +3,6 @@ import {
   buildInstantResults,
   buildResultList,
   buildInteractiveResult,
-  FoldedResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -26,6 +25,7 @@ import {
   ResultDisplayLayout,
 } from '../../atomic-result/atomic-result-display-options';
 import {Button} from '../../common/button';
+import {isMobile} from '../../../utils/store';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -47,7 +47,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
 
   private results: Result[] = [];
   public resultListCommon!: ResultListCommon;
-  private renderingFunction: ((res: Result) => HTMLElement) | null = null;
+  private renderingFunction: ResultRenderingFunction | null = null;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -57,9 +57,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
    *
    * @param render
    */
-  @Method() public async setRenderFunction(
-    render: (result: Result | FoldedResult) => HTMLElement
-  ) {
+  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
     this.renderingFunction = render;
     this.assignRenderingFunctionIfPossible();
   }
@@ -93,7 +91,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    if (!this.bindings.suggestedQuery()) {
+    if (!this.bindings.suggestedQuery() || isMobile(this.bindings.store)) {
       return [];
     }
     const results = this.instantResults.state.results.length
@@ -196,8 +194,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
 
   private assignRenderingFunctionIfPossible() {
     if (this.resultListCommon && this.renderingFunction) {
-      this.resultListCommon.renderingFunction = this
-        .renderingFunction as ResultRenderingFunction;
+      this.resultListCommon.renderingFunction = this.renderingFunction;
     }
   }
   public render() {

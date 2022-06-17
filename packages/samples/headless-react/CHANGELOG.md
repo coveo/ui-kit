@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.59.0](https://github.com/coveo/ui-kit/compare/headless-react@0.58.2...headless-react@0.59.0) (2022-06-17)
+
+
+### Features
+
+* **atomic-react:** add CommonJS output ([#2113](https://github.com/coveo/ui-kit/issues/2113)) ([2b1f7ca](https://github.com/coveo/ui-kit/commit/2b1f7cacd2c53399ec3a6189fdb08790b1419bac))
+
+
+
+
+
+## [0.58.2](https://github.com/coveo/ui-kit/compare/headless-react@0.58.1...headless-react@0.58.2) (2022-06-16)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 ## [0.58.1](https://github.com/coveo/ui-kit/compare/headless-react@0.58.0...headless-react@0.58.1) (2022-06-16)
 
 **Note:** Version bump only for package headless-react
