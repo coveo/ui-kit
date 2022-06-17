@@ -52,9 +52,7 @@ import {registerResultListToStore, ResultListInfo} from '../../../utils/store';
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicResultList
-  implements BaseResultList<Result>, ResultListInfo
-{
+export class AtomicResultList implements BaseResultList, ResultListInfo {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -84,7 +82,7 @@ export class AtomicResultList
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   public resultListCommon!: ResultListCommon;
-  private renderingFunction: ((res: Result) => HTMLElement) | null = null;
+  private renderingFunction: ResultRenderingFunction | null = null;
   private loadingFlag = randomID('firstResultLoaded-');
 
   /**
@@ -120,9 +118,7 @@ export class AtomicResultList
    *
    * @param render
    */
-  @Method() public async setRenderFunction(
-    render: (result: Result) => HTMLElement
-  ) {
+  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
     this.renderingFunction = render;
     this.assignRenderingFunctionIfPossible();
   }

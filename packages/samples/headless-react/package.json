@@ -28,7 +28,7 @@
   "scripts": {
     "prepublishOnly": "exit 1",
     "dev": "npm run copy:assets && npm run link:atomic-react && react-scripts start",
-    "build": "tsc --noEmit",
+    "build": "tsc --noEmit && tsc --module commonjs --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test --env=./jest.setup.js",
     "eject": "react-scripts eject",

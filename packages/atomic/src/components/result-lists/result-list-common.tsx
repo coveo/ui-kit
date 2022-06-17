@@ -36,13 +36,12 @@ import {
   getFirstFocusableDescendant,
 } from '../../utils/accessibility-utils';
 
-export interface BaseResultList<T = FoldedResult | Result>
-  extends InitializableComponent {
+export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;
   templateHasError: boolean;
   resultListCommon: ResultListCommon;
 
-  setRenderFunction?: SetRenderFunction<T>;
+  setRenderFunction?: SetRenderFunction;
 
   density?: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
@@ -50,8 +49,8 @@ export interface BaseResultList<T = FoldedResult | Result>
   display?: ResultDisplayLayout;
 }
 
-export type SetRenderFunction<T = FoldedResult | Result> = (
-  render: (result: T) => HTMLElement
+export type SetRenderFunction = (
+  render: ResultRenderingFunction
 ) => Promise<void>;
 interface DisplayOptions {
   density: ResultDisplayDensity;
@@ -75,6 +74,7 @@ export interface ResultsProps extends DisplayOptions {
   indexOfResultToFocus?: number;
 
   classes: string;
+  renderingFunction?: ResultRenderingFunction;
 }
 
 interface TemplateElement extends HTMLElement {
@@ -158,9 +158,7 @@ export class ResultListCommon {
     resultOrFolded: Result | FoldedResult
   ): HTMLElement | DocumentFragment {
     const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
-    return this.render
-      ? this.render(resultOrFolded)
-      : this.getTemplate(result)!;
+    return this.getTemplate(result)!;
   }
 
   private onFirstNewResultRendered(element: HTMLElement) {
@@ -305,6 +303,7 @@ export class ResultListCommon {
                 resultListState={resultListState}
                 resultListCommon={this}
                 getContentOfResultTemplate={getContentOfResultTemplate}
+                renderingFunction={this.render}
                 indexOfResultToFocus={this.indexOfResultToFocus}
                 newResultRef={(element) =>
                   this.onFirstNewResultRendered(element)
@@ -319,8 +318,9 @@ export class ResultListCommon {
 }
 
 export type ResultRenderingFunction = (
-  result: Result | FoldedResult
-) => HTMLElement;
+  result: Result | FoldedResult,
+  root: HTMLElement
+) => string;
 
 const ResultDisplayWrapper: FunctionalComponent<{
   display?: ResultDisplayLayout;
