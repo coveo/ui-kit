@@ -2,7 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {FoldedResult, Result} from '@coveo/atomic/headless';
 import {AtomicSearchBoxInstantResults} from './stencil-generated';
-import ReactDOMServer from 'react-dom/server';
+import {renderToString} from 'react-dom/server';
+import {createRoot} from 'react-dom/client';
 
 /**
  * The properties of the AtomicSearchBoxInstantResults component
@@ -28,13 +29,10 @@ export const SearchBoxInstantResultsWrapper: React.FC<WrapperProps> = (
   const instantResultsRef =
     useRef<HTMLAtomicSearchBoxInstantResultsElement>(null);
   useEffect(() => {
-    instantResultsRef.current?.setRenderFunction(
-      (result: Result | FoldedResult) => {
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = ReactDOMServer.renderToString(template(result));
-        return wrapper;
-      }
-    );
+    instantResultsRef.current?.setRenderFunction((result, root) => {
+      createRoot(root).render(template(result as Result));
+      return renderToString(template(result as Result));
+    });
   }, [instantResultsRef]);
   return (
     <AtomicSearchBoxInstantResults ref={instantResultsRef} {...otherProps} />

@@ -12,9 +12,6 @@ export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
         result={result}
         engine={props.bindings.engine}
         store={props.bindings.store}
-        display={props.display}
-        density={props.density}
-        imageSize={props.imageSize}
         content={props.getContentOfResultTemplate(result)}
         loadingFlag={props.resultListCommon.loadingFlag}
         ref={(element) =>
@@ -22,6 +19,7 @@ export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
           props.indexOfResultToFocus === index &&
           props.newResultRef?.(element)
         }
+        {...props}
       ></atomic-result>
     );
   });
