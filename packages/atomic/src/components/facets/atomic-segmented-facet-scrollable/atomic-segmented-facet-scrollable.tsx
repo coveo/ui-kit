@@ -1,4 +1,6 @@
 import {Component, Element, h} from '@stencil/core';
+import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
+import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 
 @Component({
   tag: 'atomic-segmented-facet-scrollable',
@@ -23,8 +25,22 @@ export class AtomicSegmentedFacetScrollable {
 
   render() {
     return (
-      <div class="wrapper-segmented flex flex-row overflow-x-scroll">
-        <slot></slot>
+      <div class="flex">
+        <div class="border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded">
+          <atomic-icon
+            class="w-3.5 mx-2 mt-[0.6rem]"
+            icon={ArrowLeftIcon}
+          ></atomic-icon>
+        </div>
+        <div class="wrapper-segmented flex flex-row overflow-x-scroll grow">
+          <slot></slot>
+        </div>
+        <div class="border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded">
+          <atomic-icon
+            class="w-3.5 mx-2 mt-[0.6rem]"
+            icon={ArrowRightIcon}
+          ></atomic-icon>
+        </div>
       </div>
     );
   }
