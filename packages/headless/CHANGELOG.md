@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.75.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.75.0...@coveo/headless@1.75.1) (2022-06-17)
+
+
+### Bug Fixes
+
+* **headless:** prevent facetSearch from being sent in the search request ([#2115](https://github.com/coveo/ui-kit/issues/2115)) ([4776650](https://github.com/coveo/ui-kit/commit/4776650020cdc8f73c59c34914e3a345d680a3cc))
+
+
+
+
+
 # [1.75.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.74.2...@coveo/headless@1.75.0) (2022-06-17)
 
 
