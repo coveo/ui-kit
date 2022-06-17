@@ -105,7 +105,6 @@ export class AtomicSearchBox {
    * Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).
    *
    * This option defines the default URL the user should be redirected to, when a query is submitted.
-   *
    * If a query pipeline redirect is triggered, it will redirect to that URL instead
    * (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
    */
