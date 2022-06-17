@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.0...@coveo/atomic-angular@1.16.1) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.15.1...@coveo/atomic-angular@1.16.0) (2022-06-16)
+
+
+### Features
+
+* **atomic:** release instant results and add react and angular support ([#2079](https://github.com/coveo/ui-kit/issues/2079)) ([06f715f](https://github.com/coveo/ui-kit/commit/06f715fc56c7063043ead5a40baa9278709f62ae))
+
+
+
+
+
+## [1.15.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.15.0...@coveo/atomic-angular@1.15.1) (2022-06-16)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.15.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.14.0...@coveo/atomic-angular@1.15.0) (2022-06-15)
+
+
+### Features
+
+* **atomic:** handle fields to include in instant results ([#2083](https://github.com/coveo/ui-kit/issues/2083)) ([243619a](https://github.com/coveo/ui-kit/commit/243619aa5fa2fe89a2b11d4d0230508af2aa70ab))
+
+
+
+
+
+# [1.14.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.13.1...@coveo/atomic-angular@1.14.0) (2022-06-13)
+
+
+### Bug Fixes
+
+* commit package-lock files right when bumping, undo last bump & fix region ([#2074](https://github.com/coveo/ui-kit/issues/2074)) ([28ad872](https://github.com/coveo/ui-kit/commit/28ad872363d2b84711865cda0c6d61bba7354927))
+
+
+### Features
+
+* **atomic,headless:** add support for allowed values for specific facets ([#2075](https://github.com/coveo/ui-kit/issues/2075)) ([5ad9bf1](https://github.com/coveo/ui-kit/commit/5ad9bf165813d3cc9d882ef8178da74f90260203))
+
+
+
+
+
 ## [1.13.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.13.0...@coveo/atomic-angular@1.13.1) (2022-06-09)
 
 **Note:** Version bump only for package @coveo/atomic-angular

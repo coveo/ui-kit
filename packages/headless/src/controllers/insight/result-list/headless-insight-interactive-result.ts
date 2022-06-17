@@ -20,22 +20,22 @@ export interface InsightInteractiveResultOptions
 export interface InsightInteractiveResultProps
   extends InteractiveResultCoreProps {
   /**
-   * The options for the `InteractiveResult` controller.
+   * The options for the `InsightInteractiveResult` controller.
    */
   options: InsightInteractiveResultOptions;
 }
 
 /**
- * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ * The `InsightInteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
  */
 export interface InsightInteractiveResult extends InteractiveResultCore {}
 
 /**
- * Creates an `InteractiveResult` controller instance.
+ * Creates an `InsightInteractiveResult` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `InteractiveResult` properties.
- * @returns An `InteractiveResult` controller instance.
+ * @param props - The configurable `InsightInteractiveResult` properties.
+ * @returns An `InsightInteractiveResult` controller instance.
  */
 export function buildInsightInteractiveResult(
   engine: InsightEngine,

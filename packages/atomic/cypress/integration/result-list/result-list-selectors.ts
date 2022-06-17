@@ -34,6 +34,8 @@ export const ResultListSelectors = {
   placeholder: () =>
     ResultListSelectors.shadow().find(resultPlaceholderComponent),
   result: () => ResultListSelectors.shadow().find(resultComponent),
+  resultGridClickable: () =>
+    ResultListSelectors.shadow().find('[part="result-list-grid-clickable"]'),
   firstResult: () => ResultListSelectors.result().first().shadow(),
   firstResultRoot: () => ResultListSelectors.firstResult().find(resultRoot),
   sections: {

@@ -62,7 +62,6 @@ export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
   sourceMap: true,
-  globalScript: 'node_modules/focus-visible/dist/focus-visible.min.js',
   outputTargets: [
     react({
       componentCorePackage: '@coveo/atomic',

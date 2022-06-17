@@ -6,3 +6,4 @@ export * from '@coveo/atomic/headless';
 export {SearchInterfaceWrapper as AtomicSearchInterface} from './SearchInterfaceWrapper';
 export {ResultListWrapper as AtomicResultList} from './ResultListWrapper';
 export {FoldedResultListWrapper as AtomicFoldedResultList} from './FoldedResultListWrapper';
+export {SearchBoxInstantResultsWrapper as AtomicSearchBoxInstantResults} from './SearchBoxInstantResultsWrapper';

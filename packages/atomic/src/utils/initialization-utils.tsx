@@ -31,7 +31,7 @@ export interface Bindings {
   /**
    * A reference to the `AtomicSearchInterface` element.
    */
-  interfaceElement: HTMLElement;
+  interfaceElement: HTMLAtomicSearchInterfaceElement;
 }
 
 export type InitializeEventHandler = (bindings: Bindings) => void;
@@ -82,10 +82,25 @@ export interface InitializableComponent extends ComponentInterface {
   error: Error;
 }
 
+/**
+ * Makes Shadow Dom elements compatible with the focus-visible polyfill https://github.com/WICG/focus-visible
+ * Necessary for Safari under version 15.4.
+ */
 export function applyFocusVisiblePolyfill(element: HTMLElement) {
-  if (window.applyFocusVisiblePolyfill && element.shadowRoot) {
-    window.applyFocusVisiblePolyfill(element.shadowRoot);
+  if (!element.shadowRoot) {
+    return;
   }
+
+  if (window.applyFocusVisiblePolyfill) {
+    window.applyFocusVisiblePolyfill(element.shadowRoot);
+    return;
+  }
+
+  window.addEventListener(
+    'focus-visible-polyfill-ready',
+    () => window.applyFocusVisiblePolyfill?.(element.shadowRoot!),
+    {once: true}
+  );
 }
 
 /**

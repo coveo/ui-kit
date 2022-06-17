@@ -5,10 +5,12 @@ import {ResultListPage} from './pages/ResultListPage';
 import {FoldedResultListPage} from './pages/FoldedResultListPage';
 import {HeaderLink} from './components/HeaderLink';
 import {FoldedResultListWithCustomChildrenPage} from './pages/FoldedResultListWithCustomChildrenPage';
+import {InstantResultsPage} from './pages/InstantResultsPage';
 
 const LIST_PAGE = 'Result list';
 const FOLDED_LIST_PAGE = 'Folded result list';
 const FOLDED_CUSTOM_CHILDREN_PAGE = 'Folded result list with custom children';
+const INSTANT_RESULTS_PAGE = 'Instant results';
 
 const App: FunctionComponent = () => {
   const [page, setPage] = useState(LIST_PAGE);
@@ -28,6 +30,11 @@ const App: FunctionComponent = () => {
             currentPage={page}
             setPage={setPage}
           />
+          <HeaderLink
+            page={INSTANT_RESULTS_PAGE}
+            currentPage={page}
+            setPage={setPage}
+          />
         </ul>
       </header>
       {page === LIST_PAGE && <ResultListPage />}
@@ -35,6 +42,7 @@ const App: FunctionComponent = () => {
       {page === FOLDED_CUSTOM_CHILDREN_PAGE && (
         <FoldedResultListWithCustomChildrenPage />
       )}
+      {page === INSTANT_RESULTS_PAGE && <InstantResultsPage />}
     </>
   );
 };

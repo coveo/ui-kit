@@ -2,7 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import type {JSX as AtomicJSX} from '@coveo/atomic';
 import type {Result} from '@coveo/atomic/headless';
 import {AtomicResultList} from './stencil-generated';
-import ReactDOMServer from 'react-dom/server';
+import {createRoot} from 'react-dom/client';
+import {renderToString} from 'react-dom/server';
 
 /**
  * The properties of the AtomicResultList component
@@ -25,10 +26,9 @@ export const ResultListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
   const resultListRef = useRef<HTMLAtomicResultListElement>(null);
   useEffect(() => {
-    resultListRef.current?.setRenderFunction((result) => {
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = ReactDOMServer.renderToString(template(result));
-      return wrapper;
+    resultListRef.current?.setRenderFunction((result, root) => {
+      createRoot(root).render(template(result as Result));
+      return renderToString(template(result as Result));
     });
   }, [resultListRef]);
   return <AtomicResultList ref={resultListRef} {...otherProps} />;

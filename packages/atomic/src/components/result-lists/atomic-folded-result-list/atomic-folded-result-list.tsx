@@ -26,6 +26,11 @@ import {
 } from '../result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 import {randomID} from '../../../utils/utils';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
+import {registerResultListToStore, ResultListInfo} from '../../../utils/store';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -38,7 +43,7 @@ import {randomID} from '../../../utils/utils';
   styleUrl: '../result-list-common.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
+export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {
   @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -59,8 +64,10 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
   @State() public error!: Error;
   @State() public templateHasError = false;
 
+  @FocusTarget() nextNewResultTarget!: FocusTargetController;
+
   public resultListCommon!: ResultListCommon;
-  private renderingFunction: ((res: FoldedResult) => HTMLElement) | null = null;
+  private renderingFunction: ResultRenderingFunction | null = null;
   private loadingFlag = randomID('firstResultLoaded-');
 
   /**
@@ -71,6 +78,7 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
+   * @deprecated add it to atomic-search-interface instead
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
   /**
@@ -108,11 +116,16 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
    *
    * @param render
    */
-  @Method() public async setRenderFunction(
-    render: (result: FoldedResult) => HTMLElement
-  ) {
+  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
     this.renderingFunction = render;
     this.assignRenderingFunctionIfPossible();
+  }
+
+  /**
+   * @internal
+   */
+  @Method() public async focusOnNextNewResult() {
+    this.resultListCommon.focusOnNextNewResult(this.foldedResultListState);
   }
 
   @Listen('scroll', {target: 'window'})
@@ -143,7 +156,6 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
     this.resultListCommon = new ResultListCommon({
       host: this.host,
       bindings: this.bindings,
-      fieldsToInclude: this.fieldsToInclude,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
       onReady: () => {
         this.ready = true;
@@ -153,16 +165,23 @@ export class AtomicFoldedResultList implements BaseResultList<FoldedResult> {
         this.templateHasError = true;
       },
       loadingFlag: this.loadingFlag,
+      nextNewResultTarget: this.nextNewResultTarget,
     });
 
     try {
-      this.foldedResultList = this.initFolding(
-        this.resultListCommon.resultListControllerProps
+      const localFieldsToInclude = this.fieldsToInclude
+        ? this.fieldsToInclude.split(',').map((field) => field.trim())
+        : [];
+      const fieldsToInclude = localFieldsToInclude.concat(
+        this.bindings.store.state.fieldsToInclude
       );
+
+      this.foldedResultList = this.initFolding({options: {fieldsToInclude}});
       this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     } catch (e) {
       this.error = e as Error;
     }
+    registerResultListToStore(this.bindings.store, this);
   }
 
   private initFolding(

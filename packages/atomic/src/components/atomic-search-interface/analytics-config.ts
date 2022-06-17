@@ -3,8 +3,8 @@ import {
   SearchEngineConfiguration,
 } from '@coveo/headless';
 import {AnalyticsClientSendEventHook} from '@coveo/headless/node_modules/coveo.analytics';
-import {getAtomicEnvironment} from '../../global/environment';
 import {ObservableMap} from '@stencil/store';
+import {getAtomicEnvironment} from '../../global/environment';
 import {AtomicStore, getAllFacets} from '../../utils/store';
 
 type AnalyticsPayload = Parameters<AnalyticsClientSendEventHook>[1];

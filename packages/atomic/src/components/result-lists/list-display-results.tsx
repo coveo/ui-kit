@@ -4,7 +4,7 @@ import {ResultsProps} from './result-list-common';
 export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
   props
 ) => {
-  return props.resultListState.results.map((result) => {
+  return props.resultListState.results.map((result, index) => {
     return (
       <atomic-result
         key={props.resultListCommon.getResultId(result, props.resultListState)}
@@ -12,11 +12,14 @@ export const ListDisplayResults: FunctionalComponent<ResultsProps> = (
         result={result}
         engine={props.bindings.engine}
         store={props.bindings.store}
-        display={props.display}
-        density={props.density}
-        imageSize={props.imageSize}
         content={props.getContentOfResultTemplate(result)}
         loadingFlag={props.resultListCommon.loadingFlag}
+        ref={(element) =>
+          element &&
+          props.indexOfResultToFocus === index &&
+          props.newResultRef?.(element)
+        }
+        {...props}
       ></atomic-result>
     );
   });

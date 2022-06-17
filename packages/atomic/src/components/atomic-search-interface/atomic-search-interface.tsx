@@ -21,12 +21,12 @@ import {
   buildSearchStatus,
   loadSearchConfigurationActions,
   loadQueryActions,
+  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
 import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
-import {setCoveoGlobal} from '../../global/environment';
 import {
   AtomicStore,
   hasLoadingFlag,
@@ -41,6 +41,7 @@ import {
   StorageItems,
 } from '../../utils/local-storage-utils';
 import {loadDayjsLocale} from '../../utils/dayjs-locales';
+import {loadGlobalScripts} from '../../global/global';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -64,10 +65,14 @@ export class AtomicSearchInterface {
   private store = createStore<AtomicStore>(initialStore());
   private i18nPromise!: Promise<TFunction>;
 
-  @Element() private host!: HTMLElement;
+  @Element() private host!: HTMLAtomicSearchInterfaceElement;
 
   @State() private error?: Error;
 
+  /**
+   * A list of non-default fields to include in the query results, separated by commas.
+   */
+  @Prop({reflect: true}) public fieldsToInclude = '';
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    */
@@ -139,13 +144,22 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
   public constructor() {
-    setCoveoGlobal();
+    loadGlobalScripts();
   }
 
   public connectedCallback() {
     this.i18nPromise = this.initI18n();
     setLoadingFlag(this.store, FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
+    this.updateFieldsToInclude();
+  }
+
+  private updateFieldsToInclude() {
+    const fields = [...EcommerceDefaultFieldsToInclude];
+    if (this.fieldsToInclude) {
+      this.fieldsToInclude.split(',').map((field) => field.trim());
+    }
+    this.store.set('fieldsToInclude', fields);
   }
 
   private updateMobileBreakpoint() {
@@ -364,11 +378,10 @@ export class AtomicSearchInterface {
   }
 
   private initI18n() {
-    const isLanguageComplete = ['en', 'fr'].includes(this.language);
     return this.i18n.use(Backend).init({
       debug: this.logLevel === 'debug',
       lng: this.language,
-      fallbackLng: isLanguageComplete ? false : 'en',
+      fallbackLng: 'en',
       backend: this.i18nBackendOptions,
     });
   }
