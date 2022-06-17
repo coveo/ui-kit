@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.75.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.74.2...@coveo/headless@1.75.0) (2022-06-17)
+
+
+### Features
+
+* **headless:** add Insight controllers to support the result list ([#2076](https://github.com/coveo/ui-kit/issues/2076)) ([f3e945f](https://github.com/coveo/ui-kit/commit/f3e945fd617f1ad326893e1b0a8e232e38502c64))
+
+
+
+
+
 ## [1.74.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.74.1...@coveo/headless@1.74.2) (2022-06-17)
 
 
