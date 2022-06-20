@@ -47,7 +47,7 @@ import {excerptLengthReducer} from '../features/excerpt-length/excerpt-length-sl
 import {instantResultsReducer} from '../features/instant-results/instant-results-slice';
 import {insightConfigurationReducer} from '../features/insight-configuration/insight-configuration-slice';
 import {insightInterfaceReducer} from '../features/insight-interface/insight-interface-slice';
-import { caseContextReducer } from '../features/case-context/case-context-slice';
+import {caseContextReducer} from '../features/case-context/case-context-slice';
 
 export const configuration = configurationReducer;
 export const pagination = paginationReducer;
