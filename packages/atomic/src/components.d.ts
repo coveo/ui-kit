@@ -832,6 +832,10 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch": boolean;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
@@ -2539,6 +2543,10 @@ declare namespace LocalJSX {
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
+        /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch"?: boolean;
         /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
