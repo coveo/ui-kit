@@ -231,6 +231,14 @@ export namespace Components {
     }
     interface AtomicFocusTrap {
         "active": boolean;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+         */
+        "container"?: HTMLElement;
+        /**
+          * The source to focus when the focus trap becomes inactive.
+         */
+        "source"?: HTMLElement;
     }
     interface AtomicFoldedResultList {
         /**
@@ -351,6 +359,10 @@ export namespace Components {
     }
     interface AtomicModal {
         "close": () => void;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
         "fullscreen": boolean;
         "isOpen": boolean;
         "source"?: HTMLElement;
@@ -1957,6 +1969,14 @@ declare namespace LocalJSX {
     }
     interface AtomicFocusTrap {
         "active"?: boolean;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+         */
+        "container"?: HTMLElement;
+        /**
+          * The source to focus when the focus trap becomes inactive.
+         */
+        "source"?: HTMLElement;
     }
     interface AtomicFoldedResultList {
         /**
@@ -2071,6 +2091,10 @@ declare namespace LocalJSX {
     }
     interface AtomicModal {
         "close"?: () => void;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: CustomEvent<never>) => void;
