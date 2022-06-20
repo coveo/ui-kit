@@ -94,23 +94,31 @@ export class AtomicFocusTrap {
     this.parentToHide.setAttribute('tabindex', '-1');
   }
 
+  async onDeactivated(isInitialLoad: boolean) {
+    this.showAll();
+    if (!isInitialLoad) {
+      await defer();
+      this.source?.focus();
+    }
+    this.hideSelf();
+  }
+
+  async onActivated(isInitialLoad: boolean) {
+    this.showSelf();
+    if (!isInitialLoad) {
+      await defer();
+      getFirstFocusableDescendant(this.host)?.focus();
+    }
+    this.hideSiblingsRecursively(this.host);
+  }
+
   @Watch('active')
   async activeChanged(active: boolean, wasActive: boolean) {
     const isInitialLoad = active === wasActive;
     if (active) {
-      this.showSelf();
-      if (!isInitialLoad) {
-        await defer();
-        getFirstFocusableDescendant(this.host)?.focus();
-      }
-      this.hideSiblingsRecursively(this.host);
+      await this.onActivated(isInitialLoad);
     } else {
-      this.showAll();
-      if (!isInitialLoad) {
-        await defer();
-        this.source?.focus();
-      }
-      this.hideSelf();
+      await this.onDeactivated(isInitialLoad);
     }
   }
 
@@ -129,7 +137,7 @@ export class AtomicFocusTrap {
     getFirstFocusableDescendant(this.host)?.focus();
   }
 
-  async connectedCallback() {
+  connectedCallback() {
     this.activeChanged(this.active, this.active);
   }
 
