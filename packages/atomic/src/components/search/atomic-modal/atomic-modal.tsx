@@ -9,8 +9,8 @@ import {
   EventEmitter,
   Host,
 } from '@stencil/core';
-import {isIOS} from '../../utils/device-utils';
-import {listenOnce} from '../../utils/event-utils';
+import {isIOS} from '../../../utils/device-utils';
+import {listenOnce} from '../../../utils/event-utils';
 import {
   Bindings,
   InitializableComponent,
