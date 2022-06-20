@@ -218,6 +218,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
           )
           .with(addLoadMoreResults())
           .init();
+        expectedFocusTargetSelector().should('exist', 10);
         LoadMoreResultsSelectors.button()
           .focus()
           .should('be.focused')
