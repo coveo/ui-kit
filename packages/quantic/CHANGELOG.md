@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.25.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.8...@coveo/quantic@1.25.9) (2022-06-20)
+
+
+### Bug Fixes
+
+* **quantic:** automatically  closing the tab dropdown when it loses focus ([#2114](https://github.com/coveo/ui-kit/issues/2114)) ([0488be6](https://github.com/coveo/ui-kit/commit/0488be63cb0981494eddfc9940ac77c976ab24b2))
+
+
+
+
+
 ## [1.25.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.7...@coveo/quantic@1.25.8) (2022-06-20)
 
 
