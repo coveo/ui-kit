@@ -6,11 +6,16 @@ import {
     DocumentSuggestion,
     FieldSuggestion,
 } from './caseAssistActions';
-
 import {mockFetch} from '../../tests/fetchMock';
 import {TicketProperties} from '../plugins/svc';
-
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
+import doNotTrack from '../donottrack';
+jest.mock('../donottrack', () => {
+    return {
+        default: jest.fn(),
+        doNotTrack: jest.fn(),
+    };
+});
 
 describe('CaseAssistClient', () => {
     const defaultSearchHub = 'origin-level-1';
@@ -143,6 +148,18 @@ describe('CaseAssistClient', () => {
         client = new CaseAssistClient({
             enableAnalytics: false,
         });
+
+        await client.logEnterInterface({
+            ticket: emptyTicket,
+        });
+
+        expect(fetchMock.called()).toBe(false);
+    });
+
+    it('should not send events when doNotTrack is enabled', async () => {
+        (doNotTrack as jest.Mock).mockImplementationOnce(() => true);
+
+        client = new CaseAssistClient({});
 
         await client.logEnterInterface({
             ticket: emptyTicket,

@@ -10,7 +10,13 @@ import {
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {mockFetch} from '../../tests/fetchMock';
-
+import doNotTrack from '../donottrack';
+jest.mock('../donottrack', () => {
+    return {
+        default: jest.fn(),
+        doNotTrack: jest.fn(),
+    };
+});
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 
 describe('SearchPageClient', () => {
@@ -648,6 +654,13 @@ describe('SearchPageClient', () => {
 
     it('should allow disabling analytics on initialization', () => {
         const c = new CoveoSearchPageClient({enableAnalytics: false}, provider);
+        expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+    });
+
+    it('should disable analytics when doNotTrack is enabled', async () => {
+        (doNotTrack as jest.Mock).mockImplementationOnce(() => true);
+
+        const c = new CoveoSearchPageClient({}, provider);
         expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
     });
 
