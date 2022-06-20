@@ -46,6 +46,7 @@ import {defaultFacetSearchOptions} from '../../../../features/facets/facet-searc
 import {CoreEngine} from '../../../../app/engine';
 import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {omit} from '../../../../utils/utils';
 
 export type {
   CategoryFacetValue,
@@ -265,11 +266,15 @@ export function buildCoreCategoryFacet(
   const {dispatch} = engine;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: Required<CategoryFacetOptions> = {
-    facetSearch: {...defaultFacetSearchOptions},
+  const registrationOptions = {
     ...defaultCategoryFacetOptions,
-    ...props.options,
+    ...omit('facetSearch', props.options),
+    field: props.options.field,
     facetId,
+  };
+  const options: Required<CategoryFacetOptions> = {
+    facetSearch: {...defaultFacetSearchOptions, ...props.options.facetSearch},
+    ...registrationOptions,
   };
 
   validateOptions(
@@ -290,7 +295,7 @@ export function buildCoreCategoryFacet(
   const getIsLoading = () => isFacetLoadingResponseSelector(engine.state);
   const getIsEnabled = () => isFacetEnabledSelector(engine.state, facetId);
 
-  dispatch(registerCategoryFacet(options));
+  dispatch(registerCategoryFacet(registrationOptions));
 
   return {
     ...controller,

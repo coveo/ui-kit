@@ -9,11 +9,11 @@ export {
   MissingInterfaceParentError,
 } from './utils/initialization-utils';
 
-export {resultContext} from './components/result-template-components/result-template-decorators';
+export {resultContext} from './components/search/result-template-components/result-template-decorators';
 export {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-} from './components/search-box-suggestions/suggestions-common';
+} from './components/search/search-box-suggestions/suggestions-common';

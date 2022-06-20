@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.76.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.0...@coveo/headless@1.76.1) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.76.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.75.3...@coveo/headless@1.76.0) (2022-06-20)
+
+
+### Features
+
+* **headless:** add search box controller to the Insight use case ([#2087](https://github.com/coveo/ui-kit/issues/2087)) ([231aa62](https://github.com/coveo/ui-kit/commit/231aa6223434df5a185ea709041bd98fd21125ed))
+
+
+
+
+
+## [1.75.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.75.2...@coveo/headless@1.75.3) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.75.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.75.1...@coveo/headless@1.75.2) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.75.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.75.0...@coveo/headless@1.75.1) (2022-06-17)
+
+
+### Bug Fixes
+
+* **headless:** prevent facetSearch from being sent in the search request ([#2115](https://github.com/coveo/ui-kit/issues/2115)) ([4776650](https://github.com/coveo/ui-kit/commit/4776650020cdc8f73c59c34914e3a345d680a3cc))
+
+
+
+
+
+# [1.75.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.74.2...@coveo/headless@1.75.0) (2022-06-17)
+
+
+### Features
+
+* **headless:** add Insight controllers to support the result list ([#2076](https://github.com/coveo/ui-kit/issues/2076)) ([f3e945f](https://github.com/coveo/ui-kit/commit/f3e945fd617f1ad326893e1b0a8e232e38502c64))
+
+
+
+
+
 ## [1.74.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.74.1...@coveo/headless@1.74.2) (2022-06-17)
 
 
