@@ -198,7 +198,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
     //   );
     // });
 
-    describe('after pressing a load more results button', () => {
+    describe('with a load more results button and a focusable element in each results', () => {
       const expectedFocusTargetSelector = () =>
         cy.get('#expected-focus-target', {includeShadowDom: true});
 
@@ -218,17 +218,17 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
           )
           .with(addLoadMoreResults())
           .init();
-        expectedFocusTargetSelector().should('exist', 10);
-        LoadMoreResultsSelectors.button()
-          .focus()
-          .should('be.focused')
-          .type('{enter}', {force: true});
+        expectedFocusTargetSelector().should('exist');
       });
 
       const folded = componentTag === 'atomic-folded-result-list';
       withAnySectionnableResultList(
         () => {
-          it("should focus on the first new result's clickable element", () => {
+          it("after pressing on the load more results button, should focus on the first new result's clickable element", () => {
+            LoadMoreResultsSelectors.button()
+              .focus()
+              .should('be.focused')
+              .type('{enter}', {force: true});
             expectedFocusTargetSelector().eq(10).should('be.focused');
           });
         },
