@@ -4,6 +4,8 @@ import {getInsightConfigurationInitialState} from '../features/insight-configura
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
 import {getInsightCaseContextSearchInitialState} from '../features/insight-search/insight-case-context-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
+import {getQuerySetInitialState} from '../features/query-set/query-set-state';
+import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
 import {getQueryInitialState} from '../features/query/query-state';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
@@ -25,6 +27,8 @@ export function buildMockInsightState(
     facetSet: getFacetSetInitialState(),
     pagination: getPaginationInitialState(),
     resultPreview: getResultPreviewInitialState(),
+    querySet: getQuerySetInitialState(),
+    querySuggest: getQuerySuggestSetInitialState(),
     ...config,
   };
 }

@@ -1,26 +1,28 @@
 import {
-  SearchBox,
-  SearchBoxProps,
+  InsightSearchBox,
+  InsightSearchBoxProps,
   SearchBoxOptions,
-  buildSearchBox,
-} from './headless-search-box';
-import {fetchQuerySuggestions} from '../../features/query-suggest/query-suggest-actions';
-import {createMockState} from '../../test/mock-state';
-import {executeSearch} from '../../features/search/search-actions';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
+  buildInsightSearchBox,
+} from './headless-insight-search-box';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+  executeSearch,
+  fetchQuerySuggestions,
+} from '../../../features/insight-search/insight-search-actions';
+import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
+import {
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../test/mock-engine';
+import {InsightAppState} from '../../../state/insight-app-state';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
-  let state: SearchAppState;
+  let state: InsightAppState;
 
-  let engine: MockSearchEngine;
-  let searchBox: SearchBox;
-  let props: SearchBoxProps;
+  let engine: MockInsightEngine;
+  let searchBox: InsightSearchBox;
+  let props: InsightSearchBoxProps;
 
   beforeEach(() => {
     const options: SearchBoxOptions = {
@@ -45,7 +47,7 @@ describe('headless searchBox', () => {
   });
 
   function initState() {
-    state = createMockState();
+    state = buildMockInsightState();
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({
       id,
@@ -62,25 +64,24 @@ describe('headless searchBox', () => {
   }
 
   function initController() {
-    engine = buildMockSearchAppEngine({state});
-    searchBox = buildSearchBox(engine, props);
+    engine = buildMockInsightEngine({state});
+    searchBox = buildInsightSearchBox(engine, props);
   }
 
   describe('#showSuggestions', () => {
     it(`when numberOfQuerySuggestions is greater than 0,
-    it dispatches fetchQuerySuggestions`, async () => {
+    it does dispatch fetchQuerySuggestions`, async () => {
       searchBox.showSuggestions();
 
       const action = engine.actions.find(
         (a) => a.type === fetchQuerySuggestions.pending.type
       );
-      expect(action).toEqual(
-        fetchQuerySuggestions.pending(action!.meta.requestId, {id})
-      );
+
+      expect(action).toBeDefined();
     });
 
     it(`when numberOfQuerySuggestions is 0,
-    it does not dispatch fetchQuerySuggestions`, () => {
+      it does not dispatch fetchQuerySuggestions`, () => {
       props.options!.numberOfSuggestions = 0;
       initController();
 
@@ -90,7 +91,7 @@ describe('headless searchBox', () => {
         (a) => a.type === fetchQuerySuggestions.pending.type
       );
 
-      expect(action).toBe(undefined);
+      expect(action).toBeUndefined();
     });
   });
 
