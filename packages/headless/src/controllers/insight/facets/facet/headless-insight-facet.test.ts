@@ -56,7 +56,6 @@ describe('InsightFacet', () => {
       facetId,
       field: 'author',
       sortCriteria: 'score',
-      facetSearch: {},
       allowedValues: ['foo', 'bar'],
     };
 
