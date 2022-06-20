@@ -11,9 +11,9 @@ import {
 } from './initialization-utils';
 import {buildSearchBox, Controller, TestUtils} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
-import {AtomicSearchInterface} from '../components/atomic-search-interface/atomic-search-interface';
+import {AtomicSearchInterface} from '../components/search/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
-import {AtomicSearchBox} from '../components/atomic-search-box/atomic-search-box';
+import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
 import {createStore} from '@stencil/store';
 import {AtomicStore, initialStore} from './store';
 
