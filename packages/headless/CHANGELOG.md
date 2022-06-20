@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.76.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.75.3...@coveo/headless@1.76.0) (2022-06-20)
+
+
+### Features
+
+* **headless:** add search box controller to the Insight use case ([#2087](https://github.com/coveo/ui-kit/issues/2087)) ([231aa62](https://github.com/coveo/ui-kit/commit/231aa6223434df5a185ea709041bd98fd21125ed))
+
+
+
+
+
 ## [1.75.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.75.2...@coveo/headless@1.75.3) (2022-06-20)
 
 **Note:** Version bump only for package @coveo/headless

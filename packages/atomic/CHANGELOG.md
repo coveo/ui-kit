@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.75.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.1...@coveo/atomic@1.75.2) (2022-06-20)
+
+
+### Bug Fixes
+
+* **atomic:** fixed modal focus with VoiceOver on iOS ([#2112](https://github.com/coveo/ui-kit/issues/2112)) ([13aecc8](https://github.com/coveo/ui-kit/commit/13aecc85653ad3664a2c63c488acd1095ef89919))
+
+
+
+
+
 ## [1.75.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.0...@coveo/atomic@1.75.1) (2022-06-20)
 
 **Note:** Version bump only for package @coveo/atomic

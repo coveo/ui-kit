@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.25.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.7...@coveo/quantic@1.25.8) (2022-06-20)
+
+
+### Bug Fixes
+
+* **quantic:** display clear all filters button only when there is active filters ([#2106](https://github.com/coveo/ui-kit/issues/2106)) ([9aabbf9](https://github.com/coveo/ui-kit/commit/9aabbf953c0803749f4cd34cda6385fa29ee6f16))
+
+
+
+
+
 ## [1.25.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.6...@coveo/quantic@1.25.7) (2022-06-20)
 
 **Note:** Version bump only for package @coveo/quantic
