@@ -33,6 +33,7 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   clearSuggestions(): void;
   triggerSuggestions(): void;
   getSuggestions(): SearchBoxSuggestions[];
+  getSuggestionElements(): SearchBoxSuggestionElement[];
 }
 
 export const dispatchSearchBoxSuggestionsEvent = (
