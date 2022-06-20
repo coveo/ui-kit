@@ -46,11 +46,11 @@ function refineContentExpectations(selector: RefineContentSelector) {
         .logDetail('should display the filters title');
     },
 
-    displayClearAllFiltersButton: () => {
+    displayClearAllFiltersButton: (display: boolean) => {
       selector
         .clearAllFiltersButton()
-        .should('exist')
-        .logDetail('should display the clear all filters button');
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} the clear all filters button`);
     },
 
     displayFacetManager: () => {
