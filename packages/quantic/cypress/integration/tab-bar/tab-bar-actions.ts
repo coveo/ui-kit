@@ -26,7 +26,7 @@ function tabBarActions(selector: TabBarSelector) {
       selector
         .get()
         .click()
-        .logAction('When clicking on the containerof the component');
+        .logAction('When clicking on the container of the component');
     },
   };
 }
