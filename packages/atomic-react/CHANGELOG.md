@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.11.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.11.2...@coveo/atomic-react@1.11.3) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.11.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.11.1...@coveo/atomic-react@1.11.2) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.11.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.11.0...@coveo/atomic-react@1.11.1) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+# [1.11.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.10.0...@coveo/atomic-react@1.11.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* **atomic-react:** allow atomic-react to use synthetic events in result templates ([#2091](https://github.com/coveo/ui-kit/issues/2091)) ([8cb7fdb](https://github.com/coveo/ui-kit/commit/8cb7fdbb1970a94d5b61a2697f8eb0d7a11bcc50))
+
+
+### Features
+
+* **atomic-react:** add CommonJS output ([#2113](https://github.com/coveo/ui-kit/issues/2113)) ([2b1f7ca](https://github.com/coveo/ui-kit/commit/2b1f7cacd2c53399ec3a6189fdb08790b1419bac))
+
+
+
+
+
 # [1.10.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.9.4...@coveo/atomic-react@1.10.0) (2022-06-16)
 
 

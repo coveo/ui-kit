@@ -35,7 +35,6 @@ import {
   search,
   facetOptions,
 } from '../../../../app/reducers';
-import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -94,7 +93,6 @@ describe('category facet', () => {
   it('registers a category facet with the passed options and default optional parameters', () => {
     const action = registerCategoryFacet({
       ...defaultCategoryFacetOptions,
-      facetSearch: {...defaultFacetSearchOptions},
       ...options,
       facetId,
     });

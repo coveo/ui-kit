@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "1.10.0",
+  "version": "1.11.3",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -12,27 +12,28 @@
     "build": "npm run clean && npm run compile && npm run copy:assets",
     "dev": "npm link ../samples/headless-react/node_modules/react",
     "clean": "rimraf -rf dist",
-    "compile": "npm run tsc",
-    "tsc": "tsc -p .",
+    "compile:esm": "tsc -p tsconfig.esm.json",
+    "compile:cjs": "tsc -p tsconfig.cjs.json",
+    "compile": "concurrently \"npm run compile:esm\" \"npm run compile:cjs\"",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets dist/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang dist/lang "
   },
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "1.74.0"
+    "@coveo/atomic": "1.75.0"
   },
   "devDependencies": {
     "@types/node": "15.14.9",
-    "@types/react": "17.0.45",
-    "@types/react-dom": "17.0.17",
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
     "ncp": "2.0.0",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "^18.1.0"
   },
   "peerDependencies": {
     "react": "^17.0.2 || ^18.0.0",
