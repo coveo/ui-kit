@@ -9,37 +9,18 @@ import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-round
 })
 export class AtomicSegmentedFacetScrollable {
   @Element() private host!: HTMLElement;
-  // @State() children: Array<any> = [];
-
-  connectedCallback() {
-    // this.children = Array.from(this.host.children);
-    // console.log(this.children);
-
-    // const shadowRoot =
-    //   this.host.shadowRoot === null
-    //     ? this.host.attachShadow({mode: 'open'})
-    //     : this.host.shadowRoot;
-
-    console.log(this.host.shadowRoot);
-  }
 
   render() {
     return (
-      <div class="flex">
-        <div class="border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded">
-          <atomic-icon
-            class="w-3.5 mx-2 mt-[0.6rem]"
-            icon={ArrowLeftIcon}
-          ></atomic-icon>
+      <div class="flex h-9">
+        <div class="flex shrink-0 basis-8 justify-center items-center border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded">
+          <atomic-icon class="w-3.5" icon={ArrowLeftIcon}></atomic-icon>
         </div>
-        <div class="wrapper-segmented flex flex-row overflow-x-scroll grow">
+        <div class="wrapper-segmented flex flex-row overflow-x-scroll">
           <slot></slot>
         </div>
-        <div class="border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded">
-          <atomic-icon
-            class="w-3.5 mx-2 mt-[0.6rem]"
-            icon={ArrowRightIcon}
-          ></atomic-icon>
+        <div class="flex shrink-0 basis-8 justify-center items-center border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded">
+          <atomic-icon class="w-3.5" icon={ArrowRightIcon}></atomic-icon>
         </div>
       </div>
     );
