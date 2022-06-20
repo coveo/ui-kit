@@ -142,7 +142,7 @@ describe('quantic-tab-bar', () => {
         Expect.displayDropdown(true);
       });
 
-      scope('when a click is made outside the dropdown list', () => {
+      scope('when clicking outside the dropdown list', () => {
         Actions.clickContainer();
         Expect.displayDropdown(false);
       });
