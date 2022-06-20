@@ -131,4 +131,21 @@ describe('quantic-tab-bar', () => {
       });
     });
   });
+
+  describe('when the dropdown loses focus', () => {
+    it('should automatically close the dropdown list', () => {
+      cy.viewport(mediumViewportWidth, 900);
+      visitPage();
+
+      scope('when opening the dropdown list', () => {
+        Actions.openDropdown();
+        Expect.displayDropdown(true);
+      });
+
+      scope('when clicking outside the dropdown list', () => {
+        Actions.clickContainer();
+        Expect.displayDropdown(false);
+      });
+    });
+  });
 });
