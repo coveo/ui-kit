@@ -2659,6 +2659,8 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     interface AtomicSegmentedFacetScrollable {
+        "onScrollLeft"?: (event: CustomEvent<any>) => void;
+        "onScrollRight"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicSmartSnippet {
         /**
