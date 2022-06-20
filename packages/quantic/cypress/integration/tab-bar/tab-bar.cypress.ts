@@ -137,17 +137,6 @@ describe('quantic-tab-bar', () => {
       cy.viewport(mediumViewportWidth, 900);
       visitPage();
 
-      scope('when loading the page', () => {
-        Expect.displayTabs(true);
-        Expect.displayedTabsEqual([TAB_1, TAB_2]);
-        Expect.tabsInDropdownEqual([TAB_3, TAB_4]);
-        Expect.activeTabContains(TAB_1);
-        Expect.displayMoreButton(true);
-        Expect.displayMoreButtonIcon(true);
-        Expect.displayMoreButtonLabel(moreButtonLabel);
-        Expect.displayDropdown(false);
-      });
-
       scope('when opening the dropdown list', () => {
         Actions.openDropdown();
         Expect.displayDropdown(true);
