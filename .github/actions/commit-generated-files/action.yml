@@ -4,6 +4,7 @@ runs:
   using: composite
   steps:
     - run: |
+        git status --porcelain  -- ':!*package-lock.json'
         if [ ! -z "$(git status --porcelain  -- ':!*package-lock.json')" ]; then  
           git stash
           git fetch --depth=1
