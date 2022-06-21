@@ -225,12 +225,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
       withAnySectionnableResultList(
         () => {
           it("after pressing on the load more results button, should focus on the first new result's clickable element", () => {
-            cy.wait(50);
-            LoadMoreResultsSelectors.button()
-              .focus()
-              .should('be.focused')
-              .wait(50)
-              .type('{enter}', {force: true});
+            LoadMoreResultsSelectors.button().click();
             expectedFocusTargetSelector().eq(10).should('be.focused');
           });
         },
