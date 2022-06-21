@@ -7,6 +7,7 @@ import {
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
 import {
   ConfigurationSection,
+  DateFacetSection,
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
@@ -39,6 +40,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchSection &
       QuerySection &
       FacetSection &
+      DateFacetSection &
       PaginationSection
   >;
 
@@ -188,7 +190,10 @@ const buildInsightSearchRequest = (
     url: state.configuration.platformUrl,
     insightId: state.insightConfiguration.insightId,
     q: state.query?.q,
-    facets: getFacetRequests(state.facetSet),
+    facets: getFacetRequests({
+      ...state.facetSet,
+      ...state.dateFacetSet,
+    }),
     caseContext: state.insightCaseContext?.caseContext,
     ...(state.pagination && {
       firstResult: state.pagination.firstResult,
