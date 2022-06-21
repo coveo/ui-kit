@@ -224,6 +224,8 @@ export type {
 } from './tab/headless-tab';
 export {buildTab} from './tab/headless-tab';
 
+export type {CoreFacetManager} from './core/facet-manager/headless-core-facet-manager';
+
 export type {
   FacetManagerPayload,
   FacetManagerState,
