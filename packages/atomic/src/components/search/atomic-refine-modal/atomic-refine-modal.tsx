@@ -248,6 +248,7 @@ export class AtomicRefineModal implements InitializableComponent {
         fullscreen
         isOpen={this.isOpen}
         source={this.openButton}
+        container={this.host}
         close={() => (this.isOpen = false)}
         onAnimationEnded={() => this.onAnimationEnded()}
         exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"

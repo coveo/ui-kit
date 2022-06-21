@@ -8,14 +8,18 @@
     </div>
   </template>
   <template if:true={hasFacets}>
-    <div class="slds-align_absolute-center filters-header slds-var-m-bottom_small">
+    <div
+      class="slds-align_absolute-center filters-header slds-var-m-bottom_small"
+    >
       <div class="slds-text-heading_small">{labels.filters}</div>
-      <lightning-button
-        variant="base"
-        label={labels.clearAllFilters}
-        title={labels.clearAllFilters}
-        onclick={clearAllFilters}
-      ></lightning-button>
+      <template if:true={hasActiveFilters}>
+        <lightning-button
+          variant="base"
+          label={labels.clearAllFilters}
+          title={labels.clearAllFilters}
+          onclick={clearAllFilters}
+        ></lightning-button>
+      </template>
     </div>
     <c-quantic-facet-manager engine-id={engineId}>
       <template for:each={facets} for:item="facet">

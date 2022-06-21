@@ -9,13 +9,13 @@ import {
   EventEmitter,
   Host,
 } from '@stencil/core';
+import {isIOS} from '../../../utils/device-utils';
+import {listenOnce} from '../../../utils/event-utils';
 import {
   Bindings,
   InitializableComponent,
   InitializeBindings,
-  DeferUntilRender,
 } from '../../../utils/initialization-utils';
-import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
 
@@ -46,6 +46,10 @@ export class AtomicModal implements InitializableComponent {
 
   @Prop({reflect: true, mutable: true}) fullscreen = false;
   @Prop({mutable: true}) source?: HTMLElement;
+  /**
+   * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+   */
+  @Prop({mutable: true}) container?: HTMLElement;
   @Prop({reflect: true, mutable: true}) isOpen = false;
   @Prop({mutable: true}) close: () => void = () => (this.isOpen = false);
 
@@ -53,33 +57,42 @@ export class AtomicModal implements InitializableComponent {
 
   private wasEverOpened = false;
   private headerId = randomID('atomic-modal-header-');
-
-  connectedCallback() {
-    this.watchToggleOpen(this.isOpen);
-  }
+  private focusTrap?: HTMLAtomicFocusTrapElement;
+  private animatableContainer?: HTMLElement;
+  private currentWatchToggleOpenExecution = 0;
 
   @Watch('isOpen')
-  watchToggleOpen(isOpen: boolean) {
+  async watchToggleOpen(isOpen: boolean) {
+    const watchToggleOpenExecution = ++this.currentWatchToggleOpenExecution;
     const modalOpenedClass = 'atomic-modal-opened';
 
     if (isOpen) {
       this.wasEverOpened = true;
       document.body.classList.add(modalOpenedClass);
-      this.focusOnFirstElement();
+      if (isIOS()) {
+        await this.waitForAnimationEnded();
+      }
+      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
+        return;
+      }
+      this.focusTrap!.active = true;
     } else {
       document.body.classList.remove(modalOpenedClass);
-      this.focusOnSource();
+      if (isIOS()) {
+        await this.waitForAnimationEnded();
+      }
+      if (watchToggleOpenExecution !== this.currentWatchToggleOpenExecution) {
+        return;
+      }
+      this.focusTrap!.active = false;
     }
   }
 
-  @DeferUntilRender()
-  private focusOnFirstElement() {
-    getFirstFocusableDescendant(this.host)?.focus();
-  }
-
-  @DeferUntilRender()
-  private focusOnSource() {
-    this.source?.focus();
+  private waitForAnimationEnded() {
+    // The focus trap focuses its first child when active. VoiceOver on iOS can't do it while an animation is ongoing.
+    return new Promise((resolve) =>
+      listenOnce(this.animatableContainer!, 'animationend', resolve)
+    );
   }
 
   private getClasses() {
@@ -95,18 +108,14 @@ export class AtomicModal implements InitializableComponent {
     return classes;
   }
 
-  public componentWillRender() {
-    this.wasEverOpened ||= this.isOpen;
+  public componentDidLoad() {
+    this.watchToggleOpen(this.isOpen);
   }
 
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
   public render() {
     this.updateBreakpoints();
-
-    if (!this.wasEverOpened) {
-      return;
-    }
 
     return (
       <Host class={this.getClasses().join(' ')}>
@@ -116,17 +125,20 @@ export class AtomicModal implements InitializableComponent {
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
           <atomic-focus-trap
-            active={this.isOpen}
             role="dialog"
             aria-modal={this.isOpen.toString()}
             aria-labelledby={this.headerId}
+            source={this.source}
+            container={this.container ?? this.host}
+            ref={(ref) => (this.focusTrap = ref)}
           >
             <article
               part="container"
               class={`flex flex-col justify-between bg-background text-on-background ${
                 this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
-              }`}
+              } ${this.wasEverOpened ? '' : 'animation-skip'}`}
               onAnimationEnd={() => this.animationEnded.emit()}
+              ref={(ref) => (this.animatableContainer = ref)}
             >
               <header part="header-wrapper" class="flex flex-col items-center">
                 <div

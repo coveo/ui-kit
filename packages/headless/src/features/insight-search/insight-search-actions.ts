@@ -14,6 +14,7 @@ import {
   QuerySection,
   SearchSection,
 } from '../../state/state-sections';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {
   AnalyticsType,
   makeAnalyticsAction,
@@ -22,6 +23,12 @@ import {
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
+import {
+  buildQuerySuggestRequest,
+  FetchQuerySuggestionsActionCreatorPayload,
+  FetchQuerySuggestionsThunkReturn,
+  StateNeededByQuerySuggest,
+} from '../query-suggest/query-suggest-actions';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {logQueryError} from '../search/search-analytics-actions';
 
@@ -143,6 +150,31 @@ export const fetchFacetValues = createAsyncThunk<
       automaticallyCorrected: false,
       originalQuery: getOriginalQuery(state),
       analyticsAction,
+    };
+  }
+);
+
+export const fetchQuerySuggestions = createAsyncThunk<
+  FetchQuerySuggestionsThunkReturn,
+  FetchQuerySuggestionsActionCreatorPayload,
+  AsyncThunkInsightOptions<StateNeededByQuerySuggest>
+>(
+  'querySuggest/fetch',
+
+  async (payload: {id: string}, {getState, extra: {validatePayload}}) => {
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+    });
+    const id = payload.id;
+    const request = await buildQuerySuggestRequest(id, getState());
+
+    // TODO: Fetch query suggestions from the platform when the back-end supports it.
+
+    return {
+      id,
+      q: request.q,
+      completions: [],
+      responseId: '',
     };
   }
 );
