@@ -21,7 +21,6 @@ import {
   buildStandaloneSearchBox,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -40,7 +39,7 @@ import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {isMobile} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -662,7 +661,7 @@ export class AtomicSearchBox {
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
-    const query = isMobile(this.bindings.store) ? '' : suggestedQuery;
+    const query = this.bindings.store.isMobile() ? '' : suggestedQuery;
     await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(

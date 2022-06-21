@@ -11,7 +11,6 @@ import {
   FoldedCollection,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
@@ -30,10 +29,8 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {
-  registerResultListToStore,
-  ResultListInfo,
-} from '../../../../utils/store';
+import {ResultListInfo} from '../../atomic-search-interface/store';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -184,7 +181,8 @@ export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {
     } catch (e) {
       this.error = e as Error;
     }
-    registerResultListToStore(this.bindings.store, this);
+
+    this.bindings.store.registerResultList(this);
   }
 
   private initFolding(
