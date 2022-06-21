@@ -38,6 +38,11 @@ export class AtomicResult {
   @Element() host!: HTMLElement;
 
   /**
+   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   */
+  @Prop() stopPropagation?: boolean;
+
+  /**
    * The result item.
    */
   @Prop() result!: Result | FoldedResult;
@@ -106,6 +111,11 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveStopPropagation')
+  public resolveStopPropagation(event: CustomEvent) {
+    event.detail(this.stopPropagation);
   }
 
   @Listen('atomic/resolveResultDisplayConfig')

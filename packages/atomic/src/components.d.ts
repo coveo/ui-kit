@@ -617,6 +617,10 @@ export namespace Components {
          */
         "result": Result | FoldedResult;
         /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
           * Global state for Atomic.
          */
         "store"?: ObservableMap<AtomicStore>;
@@ -2350,6 +2354,10 @@ declare namespace LocalJSX {
           * The result item.
          */
         "result": Result | FoldedResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
         /**
           * Global state for Atomic.
          */

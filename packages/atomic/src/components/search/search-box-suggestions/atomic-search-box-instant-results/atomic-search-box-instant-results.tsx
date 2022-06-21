@@ -2,7 +2,6 @@ import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {
   buildInstantResults,
   buildResultList,
-  buildInteractiveResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -26,7 +25,6 @@ import {
 } from '../../atomic-result/atomic-result-display-options';
 import {Button} from '../../../common/button';
 import {isMobile} from '../../../../utils/store';
-import {LinkWithResultAnalytics} from '../../result-link/result-link';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -91,6 +89,20 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     }
   }
 
+  private getLink(el: HTMLElement) {
+    return el?.querySelector('atomic-result')?.shadowRoot?.querySelector('a');
+  }
+  private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
+    const setTarget = (value: string) => el.setAttribute('target', value);
+    const initialTarget = el.getAttribute('target');
+
+    hasModifier && setTarget('_blank');
+    el.click();
+    hasModifier && setTarget(initialTarget || '');
+
+    return true;
+  }
+
   private renderItems(): SearchBoxSuggestionElement[] {
     if (!this.bindings.suggestedQuery() || isMobile(this.bindings.store)) {
       return [];
@@ -100,42 +112,29 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       : this.results;
     const elements: SearchBoxSuggestionElement[] = results.map(
       (result: Result) => {
-        const interactiveResult = buildInteractiveResult(this.bindings.engine, {
-          options: {result},
-        });
         return {
           key: `instant-result-${cleanUpString(result.uniqueId)}`,
           part: 'instant-results-item',
           content: (
-            <LinkWithResultAnalytics
-              href={result.uri}
-              target="_self"
-              onSelect={() => interactiveResult.select()}
-              onBeginDelayedSelect={() =>
-                interactiveResult.beginDelayedSelect()
-              }
-              onCancelPendingSelect={() =>
-                interactiveResult.cancelPendingSelect()
-              }
-            >
-              <atomic-result
-                key={`instant-result-${cleanUpString(result.uniqueId)}`}
-                part="outline"
-                result={result}
-                engine={this.bindings.engine}
-                display={this.display}
-                density={this.density}
-                imageSize={this.imageSize}
-                content={this.resultListCommon.getContentOfResultTemplate(
-                  result
-                )}
-              ></atomic-result>
-            </LinkWithResultAnalytics>
+            <atomic-result
+              key={`instant-result-${cleanUpString(result.uniqueId)}`}
+              part="outline"
+              result={result}
+              engine={this.bindings.engine}
+              display={this.display}
+              density={this.density}
+              imageSize={this.imageSize}
+              content={this.resultListCommon.getContentOfResultTemplate(result)}
+              stopPropagation={false}
+            ></atomic-result>
           ),
-          onSelect: (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            (e.target as HTMLElement)?.querySelector('a')?.click();
+          onSelect: (e: MouseEvent) => {
+            const link = this.getLink(e.target as HTMLElement);
+
+            if (!link) {
+              return;
+            }
+            this.handleLinkClick(link, e.ctrlKey || e.metaKey);
           },
         };
       }
