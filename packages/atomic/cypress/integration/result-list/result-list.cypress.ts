@@ -229,6 +229,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
             LoadMoreResultsSelectors.button()
               .focus()
               .should('be.focused')
+              .wait(50)
               .type('{enter}', {force: true});
             expectedFocusTargetSelector().eq(10).should('be.focused');
           });
