@@ -90,7 +90,8 @@ describe('facet', () => {
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
     const action = registerFacet({
-      ...options,
+      field: 'author',
+      sortCriteria: 'score',
       facetId,
       delimitingCharacter: '>',
       filterFacetCount: true,

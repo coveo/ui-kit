@@ -24,19 +24,34 @@ import {
   AtomicSortExpression,
   AtomicTimeframe,
   AtomicTimeframeFacet,
+  AtomicSearchBoxInstantResults,
   buildSearchEngine,
+  AtomicSearchBoxRecentQueries,
+  AtomicResultSectionVisual,
+  AtomicResultImage,
+  AtomicResultSectionTitle,
+  AtomicResultLink,
+  AtomicResultSectionTitleMetadata,
+  AtomicResultRating,
+  AtomicResultNumber,
 } from '@coveo/atomic-react';
 
+type Options = {
+  instantResults?: boolean;
+  recentQueries?: boolean;
+};
 type Props = {
   accessToken: string;
   organizationId: string;
   children: React.ReactNode;
+  options?: Options;
 };
 
 export const AtomicPageWrapper: FunctionComponent<Props> = ({
   accessToken,
   organizationId,
   children,
+  options = {},
 }) => {
   const engine = buildSearchEngine({
     configuration: {
@@ -52,7 +67,14 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
     >
       <AtomicSearchLayout>
         <AtomicLayoutSection section="search">
-          <AtomicSearchBox />
+          <AtomicSearchBox>
+            {options.recentQueries && <AtomicSearchBoxRecentQueries />}
+            {options.instantResults && (
+              <AtomicSearchBoxInstantResults
+                template={InstantResultsTemplate}
+              />
+            )}
+          </AtomicSearchBox>
         </AtomicLayoutSection>
         <AtomicLayoutSection section="facets">
           <AtomicFacetManager>
@@ -138,3 +160,23 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
     </AtomicSearchInterface>
   );
 };
+
+function InstantResultsTemplate() {
+  return (
+    <>
+      <style>{'.result-root{padding: 14px;}'}</style>
+      <AtomicResultSectionVisual>
+        <AtomicResultImage field="ec_images" />
+      </AtomicResultSectionVisual>
+      <AtomicResultSectionTitle>
+        <AtomicResultLink />
+      </AtomicResultSectionTitle>
+      <AtomicResultSectionTitleMetadata>
+        <AtomicResultRating field="ec_rating" />
+        <AtomicResultNumber field="ec_price">
+          <AtomicFormatCurrency currency="USD" />
+        </AtomicResultNumber>
+      </AtomicResultSectionTitleMetadata>
+    </>
+  );
+}

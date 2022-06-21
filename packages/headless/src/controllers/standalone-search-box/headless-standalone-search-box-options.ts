@@ -2,7 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {
   searchBoxOptionDefinitions,
   SearchBoxOptions,
-} from '../search-box/headless-search-box-options';
+} from '../core/search-box/headless-core-search-box-options';
 
 export interface StandaloneSearchBoxOptions extends SearchBoxOptions {
   /**
