@@ -143,7 +143,7 @@ export class AtomicSegmentedFacet
     if (!this.label) {
       return;
     }
-    return <b class="inline-block my-3 mr-2">{this.label}:</b>;
+    return <b class="inline-block my-3 mx-2">{this.label}:</b>;
   }
 
   public render() {
@@ -156,7 +156,7 @@ export class AtomicSegmentedFacet
     }
 
     return (
-      <div class="flex">
+      <div class="flex whitespace-nowrap h-9 items-center">
         {this.renderLabel()}
         {this.renderValues()}
       </div>
