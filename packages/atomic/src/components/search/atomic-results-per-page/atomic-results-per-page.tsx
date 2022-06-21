@@ -122,14 +122,14 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
     return (
       <div class="flex items-center">
-        <span part="label" class="text-on-background text-lg mr-3">
+        <span part="label" class="self-start text-on-background text-lg mr-3">
           {this.bindings.i18n.t('results-per-page')}
         </span>
         <div
           part="buttons"
           role="radiogroup"
           aria-label={this.bindings.i18n.t('results-per-page')}
-          class="flex flex-wrap space-x-2 h-10"
+          class="flex flex-wrap gap-2"
         >
           {this.choices.map((choice) => this.buildChoice(choice))}
         </div>

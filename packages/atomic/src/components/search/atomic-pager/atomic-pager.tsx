@@ -118,11 +118,7 @@ export class AtomicPager implements InitializableComponent {
   private get pages() {
     const pages = this.pager.state.currentPages;
     return (
-      <div
-        part="page-buttons"
-        role="radiogroup"
-        class="h-10 flex space-x-2 flex-wrap"
-      >
+      <div part="page-buttons" role="radiogroup" class="contents">
         {pages.map((page) => this.buildPage(page))}
       </div>
     );
@@ -161,7 +157,7 @@ export class AtomicPager implements InitializableComponent {
 
     return (
       <nav aria-label={this.bindings.i18n.t('pagination')}>
-        <div part="buttons" class="h-10 flex space-x-2 flex-wrap">
+        <div part="buttons" class="flex gap-2 flex-wrap">
           {this.previousButton}
           {this.pages}
           {this.nextButton}
