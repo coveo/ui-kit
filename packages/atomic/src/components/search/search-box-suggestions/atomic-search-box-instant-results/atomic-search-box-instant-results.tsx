@@ -111,33 +111,31 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       ? this.instantResults.state.results
       : this.results;
     const elements: SearchBoxSuggestionElement[] = results.map(
-      (result: Result) => {
-        return {
-          key: `instant-result-${cleanUpString(result.uniqueId)}`,
-          part: 'instant-results-item',
-          content: (
-            <atomic-result
-              key={`instant-result-${cleanUpString(result.uniqueId)}`}
-              part="outline"
-              result={result}
-              engine={this.bindings.engine}
-              display={this.display}
-              density={this.density}
-              imageSize={this.imageSize}
-              content={this.resultListCommon.getContentOfResultTemplate(result)}
-              stopPropagation={false}
-            ></atomic-result>
-          ),
-          onSelect: (e: MouseEvent) => {
-            const link = this.getLink(e.target as HTMLElement);
+      (result: Result) => ({
+        key: `instant-result-${cleanUpString(result.uniqueId)}`,
+        part: 'instant-results-item',
+        content: (
+          <atomic-result
+            key={`instant-result-${cleanUpString(result.uniqueId)}`}
+            part="outline"
+            result={result}
+            engine={this.bindings.engine}
+            display={this.display}
+            density={this.density}
+            imageSize={this.imageSize}
+            content={this.resultListCommon.getContentOfResultTemplate(result)}
+            stopPropagation={false}
+          ></atomic-result>
+        ),
+        onSelect: (e: MouseEvent) => {
+          const link = this.getLink(e.target as HTMLElement);
 
-            if (!link) {
-              return;
-            }
-            this.handleLinkClick(link, e.ctrlKey || e.metaKey);
-          },
-        };
-      }
+          if (!link) {
+            return;
+          }
+          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
+        },
+      })
     );
     if (elements.length) {
       elements.push({
