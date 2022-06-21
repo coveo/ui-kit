@@ -23,22 +23,16 @@ export class AtomicSegmentedFacetScrollable {
   @Listen('scrollRight')
   private slide(direction: Event) {
     const container = this.host.shadowRoot?.getElementById('horizontalScroll');
+    const pixelsToScroll = 780;
 
     if (container === null || !container) {
       return;
     }
-    let scrollCompleted = 0;
-    const slideVar = setInterval(() => {
-      if (direction.type === 'scrollLeft') {
-        container.scrollLeft -= 80;
-      } else {
-        container.scrollLeft += 80;
-      }
-      scrollCompleted += 10;
-      if (scrollCompleted >= 100) {
-        window.clearInterval(slideVar);
-      }
-    }, 40);
+    if (direction.type === 'scrollLeft') {
+      container.scrollLeft -= pixelsToScroll;
+    } else {
+      container.scrollLeft += pixelsToScroll;
+    }
   }
 
   render() {
@@ -52,7 +46,7 @@ export class AtomicSegmentedFacetScrollable {
         </div>
         <div
           id="horizontalScroll"
-          class="wrapper-segmented flex flex-row overflow-x-scroll"
+          class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
         >
           <slot></slot>
         </div>
