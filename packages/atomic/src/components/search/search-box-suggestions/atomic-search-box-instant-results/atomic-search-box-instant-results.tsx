@@ -26,6 +26,7 @@ import {
 } from '../../atomic-result/atomic-result-display-options';
 import {Button} from '../../../common/button';
 import {isMobile} from '../../../../utils/store';
+import {LinkWithResultAnalytics} from '../../result-link/result-link';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -98,29 +99,44 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       ? this.instantResults.state.results
       : this.results;
     const elements: SearchBoxSuggestionElement[] = results.map(
-      (result: Result) => ({
-        key: `instant-result-${cleanUpString(result.uniqueId)}`,
-        part: 'instant-results-item',
-        content: (
-          <atomic-result
-            key={`instant-result-${cleanUpString(result.uniqueId)}`}
-            part="outline"
-            result={result}
-            engine={this.bindings.engine}
-            display={this.display}
-            density={this.density}
-            imageSize={this.imageSize}
-            content={this.resultListCommon.getContentOfResultTemplate(result)}
-          ></atomic-result>
-        ),
-        onSelect: () => {
-          buildInteractiveResult(this.bindings.engine, {
-            options: {result},
-          }).select();
-          this.bindings.clearSuggestions();
-          window.location.href = result.clickUri;
-        },
-      })
+      (result: Result) => {
+        const interactiveResult = buildInteractiveResult(this.bindings.engine, {
+          options: {result},
+        });
+        return {
+          key: `instant-result-${cleanUpString(result.uniqueId)}`,
+          part: 'instant-results-item',
+          content: (
+            <LinkWithResultAnalytics
+              href={result.uri}
+              target="_self"
+              onSelect={() => interactiveResult.select()}
+              onBeginDelayedSelect={() =>
+                interactiveResult.beginDelayedSelect()
+              }
+              onCancelPendingSelect={() =>
+                interactiveResult.cancelPendingSelect()
+              }
+            >
+              <atomic-result
+                key={`instant-result-${cleanUpString(result.uniqueId)}`}
+                part="outline"
+                result={result}
+                engine={this.bindings.engine}
+                display={this.display}
+                density={this.density}
+                imageSize={this.imageSize}
+                content={this.resultListCommon.getContentOfResultTemplate(
+                  result
+                )}
+              ></atomic-result>
+            </LinkWithResultAnalytics>
+          ),
+          onSelect: (e) => {
+            (e.target as HTMLElement)?.querySelector('a')?.click();
+          },
+        };
+      }
     );
     if (elements.length) {
       elements.push({

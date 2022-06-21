@@ -6,7 +6,7 @@ import {closest} from '../../../utils/utils';
 export interface SearchBoxSuggestionElement {
   key: string;
   content: Element | VNode;
-  onSelect?(): void;
+  onSelect?(e: Event): void;
 
   query?: string;
   part?: string;
