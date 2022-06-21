@@ -133,6 +133,8 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
             </LinkWithResultAnalytics>
           ),
           onSelect: (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             (e.target as HTMLElement)?.querySelector('a')?.click();
           },
         };
