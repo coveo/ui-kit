@@ -1,5 +1,10 @@
 import {configure} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  mockSearchNoResults,
+  mockSearchWithResults,
+} from '../../page-objects/search';
 import {RecentQueriesListExpectations as Expect} from './recent-queries-list-expectations';
 import {scope} from '../../reporters/detailed-collector';
 import {
@@ -32,8 +37,16 @@ describe('quantic-recent-queries-list', () => {
   const pageUrl = 's/quantic-recent-queries-list';
   const defaultMaxLength = 10;
 
-  function visitRecentQueries(options: Partial<RecentQueriesListOptions> = {}) {
+  function visitRecentQueries(
+    options: Partial<RecentQueriesListOptions> = {},
+    returnResults = true
+  ) {
     interceptSearch();
+    if (returnResults) {
+      mockSearchWithResults();
+    } else {
+      mockSearchNoResults();
+    }
     cy.visit(pageUrl);
     configure(options);
   }
@@ -41,7 +54,7 @@ describe('quantic-recent-queries-list', () => {
     urlHash: string,
     options: Partial<RecentQueriesListOptions> = {}
   ) {
-    interceptSearch();
+    mockSearchWithResults();
     cy.visit(`${pageUrl}#${urlHash}`);
     configure(options);
     cy.wait(InterceptAliases.Search);
@@ -106,6 +119,23 @@ describe('quantic-recent-queries-list', () => {
         Expect.urlHashContains(query2);
         RecentQueriesListSelectors.query(query1).click();
         Expect.urlHashContains(query1);
+      });
+    });
+  });
+
+  describe('when there are no results', () => {
+    it('should work as expected', () => {
+      visitRecentQueries({}, false);
+
+      scope('when searching new queries', () => {
+        createRandomQueriesList(2).forEach((query) => {
+          setQuery(query);
+          performSearch().wait(InterceptAliases.Search);
+
+          Expect.displayQueries(false);
+          Expect.displayEmptyList(true);
+          clearInput();
+        });
       });
     });
   });

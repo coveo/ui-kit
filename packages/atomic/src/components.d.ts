@@ -7,13 +7,14 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
-import { NumberInputType } from "./components/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/atomic-result/atomic-result-display-options";
-import { Section } from "./components/atomic-layout-section/sections";
+import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
+import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
+import { Section } from "./components/search/atomic-layout-section/sections";
 import { ObservableMap } from "@stencil/store";
 import { AtomicStore } from "./utils/store";
 import { i18n } from "i18next";
-import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
@@ -230,6 +231,14 @@ export namespace Components {
     }
     interface AtomicFocusTrap {
         "active": boolean;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+         */
+        "container"?: HTMLElement;
+        /**
+          * The source to focus when the focus trap becomes inactive.
+         */
+        "source"?: HTMLElement;
     }
     interface AtomicFoldedResultList {
         /**
@@ -265,7 +274,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
          */
-        "setRenderFunction": (render: (result: FoldedResult) => HTMLElement) => Promise<void>;
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicFormatCurrency {
         /**
@@ -323,6 +332,8 @@ export namespace Components {
          */
         "icon": string;
     }
+    interface AtomicInsightInterface {
+    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -348,6 +359,10 @@ export namespace Components {
     }
     interface AtomicModal {
         "close": () => void;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
         "fullscreen": boolean;
         "isOpen": boolean;
         "source"?: HTMLElement;
@@ -549,6 +564,8 @@ export namespace Components {
          */
         "numberOfIntervals": number;
     }
+    interface AtomicRecsInterface {
+    }
     interface AtomicRefineModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
@@ -569,7 +586,7 @@ export namespace Components {
         /**
           * The result content to display.
          */
-        "content": ParentNode;
+        "content"?: ParentNode;
         /**
           * How large or small results should be.
          */
@@ -591,6 +608,10 @@ export namespace Components {
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
         /**
           * The result item.
          */
@@ -708,7 +729,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
          */
-        "setRenderFunction": (render: (result: Result) => HTMLElement) => Promise<void>;
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -856,7 +877,7 @@ export namespace Components {
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param render
          */
-        "setRenderFunction": (render: (result: Result | FoldedResult) => HTMLElement) => Promise<void>;
+        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -1254,6 +1275,12 @@ declare global {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
     };
+    interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightInterfaceElement: {
+        prototype: HTMLAtomicInsightInterfaceElement;
+        new (): HTMLAtomicInsightInterfaceElement;
+    };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
     var HTMLAtomicLayoutSectionElement: {
@@ -1325,6 +1352,12 @@ declare global {
     var HTMLAtomicRatingRangeFacetElement: {
         prototype: HTMLAtomicRatingRangeFacetElement;
         new (): HTMLAtomicRatingRangeFacetElement;
+    };
+    interface HTMLAtomicRecsInterfaceElement extends Components.AtomicRecsInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsInterfaceElement: {
+        prototype: HTMLAtomicRecsInterfaceElement;
+        new (): HTMLAtomicRecsInterfaceElement;
     };
     interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
     }
@@ -1653,6 +1686,7 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -1665,6 +1699,7 @@ declare global {
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
@@ -1934,6 +1969,14 @@ declare namespace LocalJSX {
     }
     interface AtomicFocusTrap {
         "active"?: boolean;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+         */
+        "container"?: HTMLElement;
+        /**
+          * The source to focus when the focus trap becomes inactive.
+         */
+        "source"?: HTMLElement;
     }
     interface AtomicFoldedResultList {
         /**
@@ -2021,6 +2064,8 @@ declare namespace LocalJSX {
          */
         "icon": string;
     }
+    interface AtomicInsightInterface {
+    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -2046,6 +2091,10 @@ declare namespace LocalJSX {
     }
     interface AtomicModal {
         "close"?: () => void;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
         "onAnimationEnded"?: (event: CustomEvent<never>) => void;
@@ -2249,6 +2298,8 @@ declare namespace LocalJSX {
          */
         "numberOfIntervals"?: number;
     }
+    interface AtomicRecsInterface {
+    }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
@@ -2269,7 +2320,7 @@ declare namespace LocalJSX {
         /**
           * The result content to display.
          */
-        "content": ParentNode;
+        "content"?: ParentNode;
         /**
           * How large or small results should be.
          */
@@ -2291,6 +2342,10 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
         /**
           * The result item.
          */
@@ -2829,6 +2884,7 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
+        "atomic-insight-interface": AtomicInsightInterface;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -2841,6 +2897,7 @@ declare namespace LocalJSX {
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-recs-interface": AtomicRecsInterface;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
@@ -2918,6 +2975,7 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
@@ -2930,6 +2988,7 @@ declare module "@stencil/core" {
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;

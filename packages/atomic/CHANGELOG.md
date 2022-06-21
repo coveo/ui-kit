@@ -3,6 +3,97 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.75.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.5...@coveo/atomic@1.75.6) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.75.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.4...@coveo/atomic@1.75.5) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.75.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.3...@coveo/atomic@1.75.4) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.75.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.2...@coveo/atomic@1.75.3) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.75.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.1...@coveo/atomic@1.75.2) (2022-06-20)
+
+
+### Bug Fixes
+
+* **atomic:** fixed modal focus with VoiceOver on iOS ([#2112](https://github.com/coveo/ui-kit/issues/2112)) ([13aecc8](https://github.com/coveo/ui-kit/commit/13aecc85653ad3664a2c63c488acd1095ef89919))
+
+
+
+
+
+## [1.75.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.0...@coveo/atomic@1.75.1) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.75.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.74.3...@coveo/atomic@1.75.0) (2022-06-20)
+
+
+### Features
+
+* **atomic:** warn user when instant results component is implemented… ([#2104](https://github.com/coveo/ui-kit/issues/2104)) ([81e94f4](https://github.com/coveo/ui-kit/commit/81e94f4def885b80846c6544d7df23f2ad3e962b))
+
+
+
+
+
+## [1.74.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.74.2...@coveo/atomic@1.74.3) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.74.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.74.1...@coveo/atomic@1.74.2) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.74.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.74.0...@coveo/atomic@1.74.1) (2022-06-17)
+
+
+### Bug Fixes
+
+* **atomic-react:** allow atomic-react to use synthetic events in result templates ([#2091](https://github.com/coveo/ui-kit/issues/2091)) ([8cb7fdb](https://github.com/coveo/ui-kit/commit/8cb7fdbb1970a94d5b61a2697f8eb0d7a11bcc50))
+* **atomic:** only loads focus-visible polyfill on unsupported browsers ([#2107](https://github.com/coveo/ui-kit/issues/2107)) ([b5f4400](https://github.com/coveo/ui-kit/commit/b5f44000899d15637d8127da2e517f535efd2b6c))
+* **atomic:** various locale fixes ([#2093](https://github.com/coveo/ui-kit/issues/2093)) ([388d809](https://github.com/coveo/ui-kit/commit/388d80955fbff71f21b4631e02329cde9ffa719b))
+
+
+
+
+
 # [1.74.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.73.0...@coveo/atomic@1.74.0) (2022-06-16)
 
 
