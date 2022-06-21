@@ -1,5 +1,6 @@
 import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
+import doNotTrack from '../donottrack';
 import {SVCPlugin} from '../plugins/svc';
 import {
     CaseAssistActions,
@@ -29,7 +30,7 @@ export class CaseAssistClient {
     private svc: SVCPlugin;
 
     constructor(private options: Partial<CaseAssistClientOptions>, private provider?: CaseAssistClientProvider) {
-        const analyticsEnabled = options.enableAnalytics ?? true;
+        const analyticsEnabled = (options.enableAnalytics ?? true) && !doNotTrack();
 
         this.coveoAnalyticsClient = analyticsEnabled ? new CoveoAnalyticsClient(options) : new NoopAnalytics();
         this.svc = new SVCPlugin({client: this.coveoAnalyticsClient});
