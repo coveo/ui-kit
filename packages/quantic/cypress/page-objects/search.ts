@@ -156,6 +156,19 @@ export function mockSearchNoResults() {
   }).as(InterceptAliases.Search.substring(1));
 }
 
+export function mockSearchWithResults() {
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.results = [
+        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
+      ];
+      res.body.totalCount = 1;
+      res.body.totalCountFiltered = 1;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}
+
 export function interceptResultHtmlContent() {
   cy.intercept('POST', routeMatchers.html).as(
     InterceptAliases.ResultHtml.substring(1)
