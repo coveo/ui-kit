@@ -4,14 +4,11 @@ import {
   buildMockInsightEngine,
 } from '../../../../test/mock-engine';
 import {
-  registerFacet,
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
-  updateFacetIsFieldExpanded,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
 import {buildMockFacetValue} from '../../../../test/mock-facet-value';
 import {
   executeSearch,
@@ -21,15 +18,7 @@ import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/req
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import * as FacetSearch from '../../../core/facets/facet-search/specific/headless-facet-search';
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  search,
-} from '../../../../app/reducers';
 import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {InsightAppState} from '../../../../state/insight-app-state';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
@@ -67,74 +56,6 @@ describe('InsightFacet', () => {
 
   it('renders', () => {
     expect(facet).toBeTruthy();
-  });
-
-  it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
-      facetSet,
-      configuration,
-      facetSearchSet,
-      search,
-    });
-  });
-
-  it('exposes a #subscribe method', () => {
-    expect(facet.subscribe).toBeTruthy();
-  });
-
-  it('it calls #determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
-
-    initFacet();
-
-    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(engine, {
-      ...options,
-      allowedValues: {type: 'simple', values: ['foo', 'bar']},
-    });
-  });
-
-  it('registers a facet with the passed options and the default values of unspecified options', () => {
-    const action = registerFacet({
-      ...options,
-      facetId,
-      delimitingCharacter: '>',
-      filterFacetCount: true,
-      injectionDepth: 1000,
-      numberOfValues: 8,
-      allowedValues: {type: 'simple', values: ['foo', 'bar']},
-    });
-
-    expect(engine.actions).toContainEqual(action);
-  });
-
-  it('registering a facet with #numberOfValues less than 1 throws', () => {
-    options.numberOfValues = 0;
-    expect(() => initFacet()).toThrow('Check the options of buildFacet');
-  });
-
-  it('registering a facet with a space in the id throws', () => {
-    options.facetId = 'bad id';
-    expect(() => initFacet()).toThrow('Check the options of buildFacet');
-  });
-
-  it('#state.facetId exposes the facet id', () => {
-    expect(facet.state.facetId).toBe(facetId);
-  });
-
-  it('when the search response is empty, the facet #state.values is an empty array', () => {
-    expect(state.search.response.facets).toEqual([]);
-    expect(facet.state.values).toEqual([]);
-  });
-
-  it('when the search response has a facet, the facet #state.values contains the same values', () => {
-    const values = [buildMockFacetValue()];
-    const facetResponse = buildMockFacetResponse({
-      facetId,
-      values,
-    });
-
-    state.search.response.facets = [facetResponse];
-    expect(facet.state.values).toBe(values);
   });
 
   describe('#toggleSelect', () => {
@@ -223,16 +144,6 @@ describe('InsightFacet', () => {
     });
   });
 
-  it('#isValueSelected returns true when the passed value is selected', () => {
-    const facetValue = buildMockFacetValue({state: 'selected'});
-    expect(facet.isValueSelected(facetValue)).toBe(true);
-  });
-
-  it('#isValueSelected returns false when the passed value is not selected (e.g. idle)', () => {
-    const facetValue = buildMockFacetValue({state: 'idle'});
-    expect(facet.isValueSelected(facetValue)).toBe(false);
-  });
-
   describe('#deselectAll', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
       facet.deselectAll();
@@ -254,24 +165,6 @@ describe('InsightFacet', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(engine.actions).toContainEqual(action);
-    });
-  });
-
-  describe('#state.hasActiveValues', () => {
-    it('when #state.values has a value with a non-idle state, it returns true', () => {
-      const facetResponse = buildMockFacetResponse({facetId});
-      facetResponse.values = [buildMockFacetValue({state: 'selected'})];
-      state.search.response.facets = [facetResponse];
-
-      expect(facet.state.hasActiveValues).toBe(true);
-    });
-
-    it('when #state.values only has idle values, it returns false', () => {
-      const facetResponse = buildMockFacetResponse({facetId});
-      facetResponse.values = [buildMockFacetValue({state: 'idle'})];
-      state.search.response.facets = [facetResponse];
-
-      expect(facet.state.hasActiveValues).toBe(false);
     });
   });
 
@@ -339,36 +232,6 @@ describe('InsightFacet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it(`when the numberOfValues on the request is not a multiple of the configured number,
-    it increases the number to make it a multiple`, () => {
-      const numberOfValuesInState = 7;
-      const configuredNumberOfValues = 5;
-      options.numberOfValues = configuredNumberOfValues;
-
-      setFacetRequest({numberOfValues: numberOfValuesInState});
-      initFacet();
-
-      facet.showMoreValues();
-
-      const action = updateFacetNumberOfValues({
-        facetId,
-        numberOfValues: 10,
-      });
-
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it('updates isFieldExpanded to true', () => {
-      facet.showMoreValues();
-
-      const action = updateFacetIsFieldExpanded({
-        facetId,
-        isFieldExpanded: true,
-      });
-
-      expect(engine.actions).toContainEqual(action);
-    });
-
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showMoreValues();
 
@@ -384,83 +247,10 @@ describe('InsightFacet', () => {
         (a) => a.type === fetchFacetValues.pending.type
       );
       expect(action).toBeTruthy();
-    });
-  });
-
-  describe('#state.canShowMoreValues', () => {
-    it('when there is no response, it returns false', () => {
-      expect(facet.state.canShowMoreValues).toBe(false);
-    });
-
-    it('when #moreValuesAvailable on the response is true, it returns true', () => {
-      const facetResponse = buildMockFacetResponse({
-        facetId,
-        moreValuesAvailable: true,
-      });
-
-      state.search.response.facets = [facetResponse];
-      expect(facet.state.canShowMoreValues).toBe(true);
-    });
-
-    it('when #moreValuesAvailable on the response is false, it returns false', () => {
-      const facetResponse = buildMockFacetResponse({
-        facetId,
-        moreValuesAvailable: false,
-      });
-
-      state.search.response.facets = [facetResponse];
-      expect(facet.state.canShowMoreValues).toBe(false);
     });
   });
 
   describe('#showLessValues', () => {
-    it('sets the number of values to the origial number', () => {
-      const originalNumberOfValues = 8;
-      options.numberOfValues = originalNumberOfValues;
-
-      setFacetRequest({numberOfValues: 25});
-      initFacet();
-
-      facet.showLessValues();
-
-      const action = updateFacetNumberOfValues({
-        facetId,
-        numberOfValues: originalNumberOfValues,
-      });
-
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it(`when the number of non-idle values is greater than the original number,
-    it sets the number of values to the non-idle number`, () => {
-      options.numberOfValues = 1;
-      const selectedValue = buildMockFacetValue({state: 'selected'});
-      const currentValues = [selectedValue, selectedValue];
-
-      setFacetRequest({currentValues, numberOfValues: 5});
-      initFacet();
-
-      facet.showLessValues();
-
-      const action = updateFacetNumberOfValues({
-        facetId,
-        numberOfValues: currentValues.length,
-      });
-
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it('updates isFieldExpanded to false', () => {
-      facet.showLessValues();
-
-      const action = updateFacetIsFieldExpanded({
-        facetId,
-        isFieldExpanded: false,
-      });
-
-      expect(engine.actions).toContainEqual(action);
-    });
-
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.showLessValues();
 
@@ -476,60 +266,5 @@ describe('InsightFacet', () => {
       );
       expect(action).toBeTruthy();
     });
-  });
-
-  describe('#state.canShowLessValues', () => {
-    it('when the number of currentValues is equal to the configured number, it returns false', () => {
-      options.numberOfValues = 1;
-
-      const currentValues = [buildMockFacetValue()];
-      setFacetRequest({currentValues});
-
-      initFacet();
-
-      expect(facet.state.canShowLessValues).toBe(false);
-    });
-
-    it('when the number of currentValues is greater than the configured number, it returns true', () => {
-      options.numberOfValues = 1;
-      const value = buildMockFacetValue();
-
-      setFacetRequest({currentValues: [value, value]});
-      initFacet();
-
-      expect(facet.state.canShowLessValues).toBe(true);
-    });
-
-    it(`when the number of currentValues is greater than the configured number,
-    when there are no idle values, it returns false`, () => {
-      options.numberOfValues = 1;
-      const selectedValue = buildMockFacetValue({state: 'selected'});
-
-      setFacetRequest({currentValues: [selectedValue, selectedValue]});
-      initFacet();
-
-      expect(facet.state.canShowLessValues).toBe(false);
-    });
-  });
-
-  it('exposes a #facetSearch property', () => {
-    jest.spyOn(FacetSearch, 'buildFacetSearch');
-    initFacet();
-    expect(facet.facetSearch).toBeTruthy();
-    expect(FacetSearch.buildFacetSearch).toHaveBeenCalled();
-  });
-
-  it('exposes a #facetSearch state', () => {
-    expect(facet.state.facetSearch).toBeTruthy();
-    expect(facet.state.facetSearch.values).toEqual([]);
-
-    const fakeResponseValue = {
-      count: 123,
-      displayValue: 'foo',
-      rawValue: 'foo',
-    };
-    engine.state.facetSearchSet[facetId].response.values = [fakeResponseValue];
-
-    expect(facet.state.facetSearch.values[0]).toMatchObject(fakeResponseValue);
   });
 });
