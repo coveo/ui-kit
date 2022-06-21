@@ -62,11 +62,11 @@ export type {
 };
 
 /**
- * Creates a `Facet` controller instance.
+ * Creates an `InsightFacet` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `Facet` properties.
- * @returns A `Facet` controller instance.
+ * @param props - The configurable `InsightFacet` properties.
+ * @returns An `InsightFacet` controller instance.
  * */
 export function buildInsightFacet(
   engine: InsightEngine,

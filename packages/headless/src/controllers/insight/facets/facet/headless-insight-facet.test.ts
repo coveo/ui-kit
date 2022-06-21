@@ -16,7 +16,7 @@ import {buildMockFacetValue} from '../../../../test/mock-facet-value';
 import {
   executeSearch,
   fetchFacetValues,
-} from '../../../../features/search/search-actions';
+} from '../../../../features/insight-search/insight-search-actions';
 import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 

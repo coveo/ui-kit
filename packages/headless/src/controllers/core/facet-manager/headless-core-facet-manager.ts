@@ -37,7 +37,7 @@ export interface CoreFacetManager extends Controller {
 
   /**
    * The state of the `CoreFacetManager` controller.
-   * */
+   */
   state: FacetManagerState;
 }
 
@@ -52,6 +52,7 @@ export interface FacetManagerState {
  * Creates a `CoreFacetManager` instance.
  *
  * @param engine - The headless engine.
+ * @returns The `CoreFacetManager` controller instance.
  */
 export function buildCoreFacetManager(engine: CoreEngine): CoreFacetManager {
   if (!loadFacetManagerReducers(engine)) {
