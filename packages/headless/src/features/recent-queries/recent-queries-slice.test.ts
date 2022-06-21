@@ -11,6 +11,14 @@ import {
   getRecentQueriesInitialState,
   RecentQueriesState,
 } from './recent-queries-state';
+import {Result} from '../../api/search/search/result';
+
+function withResult(rest = {}) {
+  return {
+    results: [{title: 'result'} as Result],
+    ...rest,
+  };
+}
 
 describe('recent-queries-slice', () => {
   let state: RecentQueriesState;
@@ -62,9 +70,11 @@ describe('recent-queries-slice', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: testQuery,
-        response: buildMockSearchResponse({
-          queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-        }),
+        response: buildMockSearchResponse(
+          withResult({
+            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+          })
+        ),
       }),
       '',
       logSearchEvent({evt: 'foo'})
@@ -82,9 +92,11 @@ describe('recent-queries-slice', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: otherTestQuery,
-        response: buildMockSearchResponse({
-          queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-        }),
+        response: buildMockSearchResponse(
+          withResult({
+            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+          })
+        ),
       }),
       '',
       logSearchEvent({evt: 'foo'})
@@ -102,7 +114,7 @@ describe('recent-queries-slice', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: '6',
-        response: buildMockSearchResponse({}),
+        response: buildMockSearchResponse(withResult()),
       }),
       '',
       logSearchEvent({evt: 'foo'})
@@ -118,14 +130,14 @@ describe('recent-queries-slice', () => {
   });
 
   it('should not add new recent query on search fulfilled if queue already contains the query', () => {
-    const duplicates = ['what is a query', ' what is a query      '];
+    const duplicates = [testQuery, ` ${testQuery}      `];
     for (const i in duplicates) {
       state.queries = testQueries;
       state.maxLength = 10;
       const searchAction = executeSearch.fulfilled(
         buildMockSearch({
           queryExecuted: duplicates[i],
-          response: buildMockSearchResponse({}),
+          response: buildMockSearchResponse(withResult()),
         }),
         '',
         logSearchEvent({evt: 'foo'})
@@ -137,13 +149,26 @@ describe('recent-queries-slice', () => {
     }
   });
 
+  it('should not add new recent query on search fulfilled if there are no results', () => {
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        queryExecuted: 'bloobloo',
+        response: buildMockSearchResponse({}),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(recentQueriesReducer(state, searchAction).queries).toEqual([]);
+  });
+
   it('should not add an empty query to the list', () => {
     const emptyQueries = ['', '     '];
     for (const i in emptyQueries) {
       const searchAction = executeSearch.fulfilled(
         buildMockSearch({
           queryExecuted: emptyQueries[i],
-          response: buildMockSearchResponse({}),
+          response: buildMockSearchResponse(withResult()),
         }),
         '',
         logSearchEvent({evt: 'foo'})
@@ -161,7 +186,7 @@ describe('recent-queries-slice', () => {
     const searchAction = executeSearch.fulfilled(
       buildMockSearch({
         queryExecuted: '3',
-        response: buildMockSearchResponse({}),
+        response: buildMockSearchResponse(withResult()),
       }),
       '',
       logSearchEvent({evt: 'foo'})
