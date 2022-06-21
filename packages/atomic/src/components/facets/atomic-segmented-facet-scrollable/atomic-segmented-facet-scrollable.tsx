@@ -8,6 +8,7 @@ import {
 } from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
+import {Button} from '../../common/button';
 
 @Component({
   tag: 'atomic-segmented-facet-scrollable',
@@ -21,7 +22,7 @@ export class AtomicSegmentedFacetScrollable {
 
   @Listen('scrollLeft')
   @Listen('scrollRight')
-  private slide(direction: Event) {
+  private horizonalSlider(direction: Event) {
     const container = this.host.shadowRoot?.getElementById('horizontalScroll');
     const pixelsToScroll = 780;
 
@@ -38,24 +39,28 @@ export class AtomicSegmentedFacetScrollable {
   render() {
     return (
       <div class="flex h-9">
-        <div
-          class="flex shrink-0 basis-8 justify-center items-center border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded"
+        <Button
+          style="square-neutral"
+          class="flex shrink-0 basis-8 justify-center items-center rounded"
+          ariaHidden="true"
           onClick={() => this.scrollLeft.emit()}
         >
           <atomic-icon class="w-3.5" icon={ArrowLeftIcon}></atomic-icon>
-        </div>
+        </Button>
         <div
           id="horizontalScroll"
           class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
         >
           <slot></slot>
         </div>
-        <div
-          class="flex shrink-0 basis-8 justify-center items-center border border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded"
+        <Button
+          style="square-neutral"
+          class="flex shrink-0 basis-8 justify-center items-center rounded"
+          ariaHidden="true"
           onClick={() => this.scrollRight.emit()}
         >
           <atomic-icon class="w-3.5" icon={ArrowRightIcon}></atomic-icon>
-        </div>
+        </Button>
       </div>
     );
   }

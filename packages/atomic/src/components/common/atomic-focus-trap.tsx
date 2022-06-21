@@ -1,6 +1,6 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
-import {getFocusedElement} from '../../utils/utils';
+import {defer, getFocusedElement} from '../../utils/utils';
 
 function getParent(element: Element | ShadowRoot) {
   if (element.parentNode) {
@@ -40,6 +40,14 @@ function contains(
 export class AtomicFocusTrap {
   @Element() private host!: HTMLElement;
   @Prop() public active = false;
+  /**
+   * The source to focus when the focus trap becomes inactive.
+   */
+  @Prop({mutable: true}) source?: HTMLElement;
+  /**
+   * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+   */
+  @Prop({mutable: true}) container?: HTMLElement;
   private readonly hiddenElements: Element[] = [];
 
   hide(element: Element) {
@@ -76,9 +84,42 @@ export class AtomicFocusTrap {
     }
   }
 
+  showSelf() {
+    this.parentToHide.removeAttribute('aria-hidden');
+    this.parentToHide.removeAttribute('tabindex');
+  }
+
+  hideSelf() {
+    this.parentToHide.setAttribute('aria-hidden', 'true');
+    this.parentToHide.setAttribute('tabindex', '-1');
+  }
+
+  async onDeactivated(isInitialLoad: boolean) {
+    this.showAll();
+    if (!isInitialLoad) {
+      await defer();
+      this.source?.focus();
+    }
+    this.hideSelf();
+  }
+
+  async onActivated(isInitialLoad: boolean) {
+    this.showSelf();
+    if (!isInitialLoad) {
+      await defer();
+      getFirstFocusableDescendant(this.host)?.focus();
+    }
+    this.hideSiblingsRecursively(this.host);
+  }
+
   @Watch('active')
-  activeChanged(active: boolean) {
-    active ? this.hideSiblingsRecursively(this.host) : this.showAll();
+  async activeChanged(active: boolean, wasActive: boolean) {
+    const isInitialLoad = active === wasActive;
+    if (active) {
+      await this.onActivated(isInitialLoad);
+    } else {
+      await this.onDeactivated(isInitialLoad);
+    }
   }
 
   @Listen('focusin', {target: 'document'})
@@ -97,10 +138,14 @@ export class AtomicFocusTrap {
   }
 
   connectedCallback() {
-    this.activeChanged(this.active);
+    this.activeChanged(this.active, this.active);
   }
 
   disconnectedCallback() {
     this.showAll();
+  }
+
+  private get parentToHide() {
+    return this.container ?? this.host;
   }
 }

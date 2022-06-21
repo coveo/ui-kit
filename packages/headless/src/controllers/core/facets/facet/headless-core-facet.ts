@@ -50,6 +50,7 @@ import {loadReducerError} from '../../../../utils/errors';
 import {CoreEngine} from '../../../../app/engine';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {omit} from '../../../../utils/utils';
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -298,11 +299,15 @@ export function buildCoreFacet(
   const controller = buildController(engine);
 
   const facetId = determineFacetId(engine, props.options);
-  const options: Required<FacetOptions> = {
-    facetSearch: {...defaultFacetSearchOptions},
+  const registrationOptions = {
     ...defaultFacetOptions,
-    ...props.options,
+    ...omit('facetSearch', props.options),
+    field: props.options.field,
     facetId,
+  };
+  const options: Required<FacetOptions> = {
+    facetSearch: {...defaultFacetSearchOptions, ...props.options.facetSearch},
+    ...registrationOptions,
   };
 
   validateOptions(engine, optionsSchema, options, 'buildFacet');
@@ -325,7 +330,7 @@ export function buildCoreFacet(
     return initialNumberOfValues < currentValues.length && hasIdleValues;
   };
 
-  dispatch(registerFacet(options));
+  dispatch(registerFacet(registrationOptions));
 
   return {
     ...controller,

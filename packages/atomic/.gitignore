@@ -27,7 +27,7 @@ UserInterfaceState.xcuserstate
 .env
 
 src/external-builds
-src/components/atomic-search-interface/lang/
+src/components/search/atomic-search-interface/lang/
 src/generated
 
 cypress/screenshots/*

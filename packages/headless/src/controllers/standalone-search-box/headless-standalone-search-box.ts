@@ -29,7 +29,7 @@ import {
   SearchBox,
   SearchBoxState,
 } from '../search-box/headless-search-box';
-import {defaultSearchBoxOptions} from '../search-box/headless-search-box-options';
+import {defaultSearchBoxOptions} from '../core/search-box/headless-core-search-box-options';
 import {
   StandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,
