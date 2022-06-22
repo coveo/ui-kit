@@ -69,7 +69,6 @@ describe('Search Interface Component', () => {
       setLanguageAndWait('es-ES');
 
       QuerySummarySelectors.text().should('contain', 'Resultados');
-      cy.get(TestFixture.consoleAliases.error).should('not.be.called');
     });
 
     it('should not log an error to the console when fetching non-existing languages', () => {
