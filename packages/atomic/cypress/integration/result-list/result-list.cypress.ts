@@ -36,167 +36,167 @@ const configs = [foldedResultListConfig, resultListConfig] as const;
 
 configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
   describe(title, () => {
-    // it('should load', () => {
-    //   new TestFixture().with(addResultFn()).init();
-    //   componentSelectors.result().should('have.length.above', 0);
-    // });
+    it('should load', () => {
+      new TestFixture().with(addResultFn()).init();
+      componentSelectors.result().should('have.length.above', 0);
+    });
 
-    // describe('when no first search has yet been executed', () => {
-    //   beforeEach(() => {
-    //     new TestFixture()
-    //       .withoutFirstAutomaticSearch()
-    //       .with(addResultFn())
-    //       .init();
-    //   });
+    describe('when no first search has yet been executed', () => {
+      beforeEach(() => {
+        new TestFixture()
+          .withoutFirstAutomaticSearch()
+          .with(addResultFn())
+          .init();
+      });
 
-    //   it('should render placeholder components', () => {
-    //     componentSelectors.placeholder().should('be.visible');
-    //   });
-    // });
+      it('should render placeholder components', () => {
+        componentSelectors.placeholder().should('be.visible');
+      });
+    });
 
-    // describe('when an initial search is executed', () => {
-    //   it('should render the correct number of results', () => {
-    //     new TestFixture().with(addResultFn()).init();
-    //     componentSelectors.result().should('have.length', 10);
-    //   });
-    // });
+    describe('when an initial search is executed', () => {
+      it('should render the correct number of results', () => {
+        new TestFixture().with(addResultFn()).init();
+        componentSelectors.result().should('have.length', 10);
+      });
+    });
 
-    // describe('when multiple searches are executed', () => {
-    //   beforeEach(() => {
-    //     new TestFixture()
-    //       .with(addResultFn())
-    //       .withElement(generateComponentHTML(pagerComponent))
-    //       .init();
-    //   });
+    describe('when multiple searches are executed', () => {
+      beforeEach(() => {
+        new TestFixture()
+          .with(addResultFn())
+          .withElement(generateComponentHTML(pagerComponent))
+          .init();
+      });
 
-    //   it('should update the results', () => {
-    //     let firstResultHtml: string;
+      it('should update the results', () => {
+        let firstResultHtml: string;
 
-    //     componentSelectors.firstResult().then((element) => {
-    //       firstResultHtml = element[0].innerHTML;
-    //     });
+        componentSelectors.firstResult().then((element) => {
+          firstResultHtml = element[0].innerHTML;
+        });
 
-    //     PagerSelectors.buttonNext().click();
-    //     cy.wait(500);
+        PagerSelectors.buttonNext().click();
+        cy.wait(500);
 
-    //     componentSelectors.firstResult().should((element) => {
-    //       const secondResultHtml = element[0].innerHTML;
-    //       expect(secondResultHtml).not.to.equal(firstResultHtml);
-    //     });
-    //   });
-    // });
+        componentSelectors.firstResult().should((element) => {
+          const secondResultHtml = element[0].innerHTML;
+          expect(secondResultHtml).not.to.equal(firstResultHtml);
+        });
+      });
+    });
 
-    // describe('with elements to measure line height', () => {
-    //   const lineHeightSelector = '#line-height-el';
+    describe('with elements to measure line height', () => {
+      const lineHeightSelector = '#line-height-el';
 
-    //   function generateLineHeightElement() {
-    //     return generateComponentHTML('div', {
-    //       id: lineHeightSelector.slice(1),
-    //       style:
-    //         'background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);',
-    //     });
-    //   }
+      function generateLineHeightElement() {
+        return generateComponentHTML('div', {
+          id: lineHeightSelector.slice(1),
+          style:
+            'background-color: red; width: var(--line-height, 0); height: var(--line-height, 0);',
+        });
+      }
 
-    //   before(() => {
-    //     new TestFixture()
-    //       .with(
-    //         addResultFn(
-    //           buildTemplateWithSections({
-    //             title: generateLineHeightElement(),
-    //             excerpt: generateLineHeightElement(),
-    //             bottomMetadata: generateLineHeightElement(),
-    //           })
-    //         )
-    //       )
-    //       .init();
-    //     componentSelectors.shadow().find('.list-wrapper:not(.placeholder)');
-    //   });
+      before(() => {
+        new TestFixture()
+          .with(
+            addResultFn(
+              buildTemplateWithSections({
+                title: generateLineHeightElement(),
+                excerpt: generateLineHeightElement(),
+                bottomMetadata: generateLineHeightElement(),
+              })
+            )
+          )
+          .init();
+        componentSelectors.shadow().find('.list-wrapper:not(.placeholder)');
+      });
 
-    //   withAnySectionnableResultList(
-    //     (display, imageSize, density) => {
-    //       it('should expose --line-height in the title section', () => {
-    //         componentSelectors.sections
-    //           .title()
-    //           .find(lineHeightSelector)
-    //           .should('be.visible');
-    //       });
+      withAnySectionnableResultList(
+        (display, imageSize, density) => {
+          it('should expose --line-height in the title section', () => {
+            componentSelectors.sections
+              .title()
+              .find(lineHeightSelector)
+              .should('be.visible');
+          });
 
-    //       it('should expose --line-height in the excerpt section', () => {
-    //         componentSelectors.sections
-    //           .excerpt()
-    //           .find(lineHeightSelector)
-    //           .should('be.visible');
-    //       });
+          it('should expose --line-height in the excerpt section', () => {
+            componentSelectors.sections
+              .excerpt()
+              .find(lineHeightSelector)
+              .should('be.visible');
+          });
 
-    //       it('should expose --line-height in the bottom-metadata section', () => {
-    //         componentSelectors.sections
-    //           .bottomMetadata()
-    //           .find(lineHeightSelector)
-    //           .should('be.visible');
-    //       });
+          it('should expose --line-height in the bottom-metadata section', () => {
+            componentSelectors.sections
+              .bottomMetadata()
+              .find(lineHeightSelector)
+              .should('be.visible');
+          });
 
-    //       if (!(componentTag === 'atomic-folded-result-list')) {
-    //         it(`should pass the display-${display} class to the list root`, () => {
-    //           componentSelectors
-    //             .root()
-    //             .should('have.class', `display-${display}`);
-    //         });
-    //       }
+          if (!(componentTag === 'atomic-folded-result-list')) {
+            it(`should pass the display-${display} class to the list root`, () => {
+              componentSelectors
+                .root()
+                .should('have.class', `display-${display}`);
+            });
+          }
 
-    //       it(`should pass the image-${imageSize} class to the list root`, () => {
-    //         componentSelectors
-    //           .root()
-    //           .should('have.class', `image-${imageSize}`);
-    //       });
+          it(`should pass the image-${imageSize} class to the list root`, () => {
+            componentSelectors
+              .root()
+              .should('have.class', `image-${imageSize}`);
+          });
 
-    //       it(`should pass the density-${density} class to the list root`, () => {
-    //         componentSelectors
-    //           .root()
-    //           .should('have.class', `density-${density}`);
-    //       });
-    //     },
-    //     {folded: componentTag === 'atomic-folded-result-list'}
-    //   );
-    // });
+          it(`should pass the density-${density} class to the list root`, () => {
+            componentSelectors
+              .root()
+              .should('have.class', `density-${density}`);
+          });
+        },
+        {folded: componentTag === 'atomic-folded-result-list'}
+      );
+    });
 
-    // describe('with a full result template', () => {
-    //   function generateSimpleTextElement() {
-    //     const element = generateComponentHTML('span');
-    //     element.innerText =
-    //       'I will not use meaningless placeholder text for testing';
-    //     return element;
-    //   }
+    describe('with a full result template', () => {
+      function generateSimpleTextElement() {
+        const element = generateComponentHTML('span');
+        element.innerText =
+          'I will not use meaningless placeholder text for testing';
+        return element;
+      }
 
-    //   before(() => {
-    //     new TestFixture()
-    //       .with(
-    //         addResultFn(
-    //           buildTemplateWithSections({
-    //             visual: generateSimpleTextElement(),
-    //             badges: generateSimpleTextElement(),
-    //             actions: generateSimpleTextElement(),
-    //             title: generateSimpleTextElement(),
-    //             titleMetadata: generateSimpleTextElement(),
-    //             emphasized: generateSimpleTextElement(),
-    //             excerpt: generateSimpleTextElement(),
-    //             bottomMetadata: generateSimpleTextElement(),
-    //           })
-    //         )
-    //       )
-    //       .init();
-    //   });
+      before(() => {
+        new TestFixture()
+          .with(
+            addResultFn(
+              buildTemplateWithSections({
+                visual: generateSimpleTextElement(),
+                badges: generateSimpleTextElement(),
+                actions: generateSimpleTextElement(),
+                title: generateSimpleTextElement(),
+                titleMetadata: generateSimpleTextElement(),
+                emphasized: generateSimpleTextElement(),
+                excerpt: generateSimpleTextElement(),
+                bottomMetadata: generateSimpleTextElement(),
+              })
+            )
+          )
+          .init();
+      });
 
-    //   withAnySectionnableResultList(
-    //     () => {
-    //       CommonAssertions.assertAccessibility(componentTag);
-    //     },
-    //     {
-    //       densities: ['normal'],
-    //       imageSizes: ['icon', 'small'],
-    //       folded: componentTag === 'atomic-folded-result-list',
-    //     }
-    //   );
-    // });
+      withAnySectionnableResultList(
+        () => {
+          CommonAssertions.assertAccessibility(componentTag);
+        },
+        {
+          densities: ['normal'],
+          imageSizes: ['icon', 'small'],
+          folded: componentTag === 'atomic-folded-result-list',
+        }
+      );
+    });
 
     describe('with a load more results button and a focusable element in each results', () => {
       const expectedFocusTargetSelector = () =>
