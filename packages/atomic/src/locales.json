@@ -220,6 +220,8 @@
   "page-number": {
     "en": "Page {{page}}",
     "fr": "Page {{page}}",
+    "pt": "Página {{page}}",
+    "pt-BR": "Página {{page}}",
     "zh": "第{{page}}页",
     "zh-CN": "第{{page}}页",
     "zh-TW": "第{{page}}頁"
@@ -605,6 +607,8 @@
   "cancel": {
     "en": "Cancel",
     "fr": "Annuler",
+    "pt": "Cancelar",
+    "pt-BR": "Cancelar",
     "zh": "取消",
     "zh-CN": "取消",
     "zh-TW": "取消"
@@ -687,6 +691,7 @@
     "th": "เลือกตัวกรองให้น้อยลงเพื่อขยายขอบเขตการค้นหาของคุณ",
     "tr": "Aramanızı genişletmek için daha az filtre seçin.",
     "zh": "选择较少的筛选条件以扩大您的搜索范围。",
+    "zh-CN": "选择较少的筛选条件以扩大您的搜索范围。",
     "zh-TW": "選擇較少的篩選條件以擴大您的搜尋範圍。"
   },
   "author": {
