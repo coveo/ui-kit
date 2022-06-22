@@ -114,6 +114,12 @@ export class AtomicSearchBox {
    */
   @Prop() public suggestionTimeout = 400;
 
+  /**
+   * Whether to prevent the user from triggering a search from the component.
+   * Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+   */
+  @Prop({reflect: true}) public disableSearch = false;
+
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
 
@@ -266,7 +272,7 @@ export class AtomicSearchBox {
     );
   }
   private get showSuggestions() {
-    return this.hasSuggestions && this.isExpanded;
+    return this.hasSuggestions && this.isExpanded && !this.disableSearch;
   }
 
   private get allSuggestionElements() {
@@ -473,6 +479,10 @@ export class AtomicSearchBox {
   }
 
   private onKeyDown(e: KeyboardEvent) {
+    if (this.disableSearch) {
+      return;
+    }
+
     switch (e.key) {
       case 'Enter':
         this.onSubmit();
@@ -516,7 +526,7 @@ export class AtomicSearchBox {
         autocorrect="off"
         placeholder={this.bindings.i18n.t('search')}
         type="text"
-        class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
+        class="h-full outline-none bg-transparent w-0 grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
@@ -741,6 +751,7 @@ export class AtomicSearchBox {
         style="primary"
         class="w-12 h-auto rounded-r-md rounded-l-none -my-px -mr-px"
         part="submit-button"
+        disabled={this.disableSearch}
         ariaLabel={this.bindings.i18n.t('search')}
         onClick={() => {
           this.searchBox.submit();
@@ -762,7 +773,11 @@ export class AtomicSearchBox {
     return [
       <div
         part="wrapper"
-        class="relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary"
+        class={`relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:ring ${
+          this.disableSearch
+            ? 'focus-within:border-disabled focus-within:ring-neutral'
+            : 'focus-within:border-primary focus-within:ring-ring-primary'
+        }`}
       >
         {this.renderInputContainer()}
         {this.renderSuggestions()}

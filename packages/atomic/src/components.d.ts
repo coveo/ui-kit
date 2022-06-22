@@ -876,6 +876,10 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch": boolean;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
@@ -1045,6 +1049,8 @@ export namespace Components {
          */
         "sortCriteria": FacetSortCriterion;
         "withSearch": boolean;
+    }
+    interface AtomicSegmentedFacetScrollable {
     }
     interface AtomicSmartSnippet {
         /**
@@ -1655,6 +1661,12 @@ declare global {
         prototype: HTMLAtomicSegmentedFacetElement;
         new (): HTMLAtomicSegmentedFacetElement;
     };
+    interface HTMLAtomicSegmentedFacetScrollableElement extends Components.AtomicSegmentedFacetScrollable, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetScrollableElement: {
+        prototype: HTMLAtomicSegmentedFacetScrollableElement;
+        new (): HTMLAtomicSegmentedFacetScrollableElement;
+    };
     interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
     }
     var HTMLAtomicSmartSnippetElement: {
@@ -1806,6 +1818,7 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
+        "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
@@ -2660,6 +2673,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch"?: boolean;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries"?: number;
@@ -2812,6 +2829,8 @@ declare namespace LocalJSX {
          */
         "sortCriteria"?: FacetSortCriterion;
         "withSearch"?: boolean;
+    }
+    interface AtomicSegmentedFacetScrollable {
     }
     interface AtomicSmartSnippet {
         /**
@@ -3064,6 +3083,7 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
         "atomic-segmented-facet": AtomicSegmentedFacet;
+        "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
@@ -3155,6 +3175,7 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
+            "atomic-segmented-facet-scrollable": LocalJSX.AtomicSegmentedFacetScrollable & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetScrollableElement>;
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;

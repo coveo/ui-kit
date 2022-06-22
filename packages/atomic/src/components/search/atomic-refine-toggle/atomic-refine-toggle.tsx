@@ -40,6 +40,10 @@ export class AtomicRefineToggle implements InitializableComponent {
   }
 
   private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+
     this.modalRef = document.createElement('atomic-refine-modal');
     this.host.insertAdjacentElement('beforebegin', this.modalRef);
     this.modalRef.openButton = this.buttonRef;
