@@ -1,4 +1,4 @@
-import {Component, Element, h, State} from '@stencil/core';
+import {Component, h} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../common/button';
@@ -9,12 +9,11 @@ import {Button} from '../../common/button';
   shadow: true,
 })
 export class AtomicSegmentedFacetScrollable {
-  @Element() private host!: HTMLElement;
   private horizontalScroll?: HTMLDivElement;
 
   private horizonalSlider(arrowDirection: string) {
     const container = this.horizontalScroll;
-    const pixelsToScroll = container ? container.clientWidth : 700;
+    const pixelsToScroll = container ? container.clientWidth * 0.75 : 700;
 
     if (container === null || !container) {
       return;
