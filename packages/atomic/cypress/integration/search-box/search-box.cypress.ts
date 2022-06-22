@@ -7,6 +7,8 @@ import {SearchBoxSelectors} from './search-box-selectors';
 import {addSearchBox} from './search-box-actions';
 import * as CommonAssertions from '../common-assertions';
 import * as SearchBoxAssertions from './search-box-assertions';
+import {addQuerySummary} from '../query-summary-actions';
+import * as QuerySummaryAssertions from '../query-summary-assertions';
 
 const setSuggestions = (count: number) => () => {
   cy.intercept(
@@ -140,5 +142,22 @@ describe('Search Box Test Suites', () => {
     });
 
     CommonAssertions.assertAriaLiveMessage(' no ');
+  });
+
+  describe('with disableSearch set to true', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addSearchBox({props: {'disable-search': 'true'}}))
+        .with(addQuerySummary())
+        .withoutFirstAutomaticSearch()
+        .init();
+      SearchBoxSelectors.inputBox().click();
+      SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
+      SearchBoxSelectors.submitButton().click({force: true});
+    });
+
+    SearchBoxAssertions.assertHasSuggestionsCount(0);
+    SearchBoxAssertions.assertHasText('test');
+    QuerySummaryAssertions.assertHasPlaceholder();
   });
 });
