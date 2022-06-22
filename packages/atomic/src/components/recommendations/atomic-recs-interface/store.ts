@@ -1,7 +1,7 @@
 import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
-} from '../../common/search-interface/store';
+} from '../../common/interface/store';
 
 export interface AtomicRecsStoreData extends AtomicCommonStoreData {}
 

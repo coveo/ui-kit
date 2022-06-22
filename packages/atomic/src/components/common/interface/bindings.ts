@@ -1,9 +1,9 @@
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n} from 'i18next';
-import {AnyEngineType} from './search-interface-common';
+import {AnyEngineType} from './interface-common';
 
 /**
- * Bindings passed from the `AtomicSearchInterface` to its children components.
+ * Bindings passed from an interface to its children components.
  */
 export interface CommonBindings<
   Engine extends AnyEngineType,

@@ -5,9 +5,9 @@ import i18next, {i18n, TFunction} from 'i18next';
 import {loadGlobalScripts} from '../../../global/global';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {CommonBindings} from '../../common/search-interface/bindings';
-import {initi18n} from '../../common/search-interface/i18n';
-import {BaseAtomicInterface} from '../../common/search-interface/search-interface-common';
+import {CommonBindings} from '../../common/interface/bindings';
+import {initi18n} from '../../common/interface/i18n';
+import {BaseAtomicInterface} from '../../common/interface/interface-common';
 import {createAtomicSvcInsightStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstInsightRequestExecuted';
@@ -18,7 +18,7 @@ export type Bindings = CommonBindings<
 >;
 
 /**
- * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
+ * The `atomic-svg-insight-interface` component is the parent to all other atomic components in an service insight panel interface. It handles the headless insight engine and localization configurations.
  *
  * @internal
  */

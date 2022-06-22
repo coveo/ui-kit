@@ -9,7 +9,7 @@ import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   createAtomicCommonStore,
   AtomicCommonStoreData,
-} from '../../common/search-interface/store';
+} from '../../common/interface/store';
 
 interface FacetInfo {
   label: string;
@@ -59,6 +59,21 @@ export function createAtomicStore() {
     fieldsToInclude: [],
   });
 
+  // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
+  const isInDocument = (element: Node) => {
+    let currentElement = element;
+    while (currentElement && currentElement.parentNode) {
+      if (currentElement.parentNode === document) {
+        return true;
+      } else if (currentElement.parentNode instanceof ShadowRoot) {
+        currentElement = currentElement.parentNode.host;
+      } else {
+        currentElement = currentElement.parentNode;
+      }
+    }
+    return false;
+  };
+
   return {
     ...commonStore,
     registerFacet<T extends FacetType, U extends string>(
@@ -98,19 +113,4 @@ export function createAtomicStore() {
       ).matches;
     },
   };
-}
-
-// https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
-function isInDocument(element: Node) {
-  let currentElement = element;
-  while (currentElement && currentElement.parentNode) {
-    if (currentElement.parentNode === document) {
-      return true;
-    } else if (currentElement.parentNode instanceof ShadowRoot) {
-      currentElement = currentElement.parentNode.host;
-    } else {
-      currentElement = currentElement.parentNode;
-    }
-  }
-  return false;
 }

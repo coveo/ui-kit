@@ -1,6 +1,6 @@
 import {getAssetPath} from '@stencil/core';
 import Backend from 'i18next-http-backend';
-import {AnyEngineType, BaseAtomicInterface} from './search-interface-common';
+import {AnyEngineType, BaseAtomicInterface} from './interface-common';
 
 export function initi18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
   return atomicInterface.i18n.use(Backend).init({

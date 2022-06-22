@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';

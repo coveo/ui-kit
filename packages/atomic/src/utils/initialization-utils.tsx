@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {buildCustomEvent} from './event-utils';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {TOptions} from 'i18next';
-import {buildCustomEvent} from './event-utils';
 import {Hidden} from '../components/common/hidden';
-import {CommonBindings} from '../components/common/search-interface/bindings';
-import {AnyEngineType} from '../components/common/search-interface/search-interface-common';
+import {CommonBindings} from '../components/common/interface/bindings';
+import {AnyEngineType} from '../components/common/interface/interface-common';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 
