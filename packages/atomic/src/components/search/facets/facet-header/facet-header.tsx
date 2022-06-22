@@ -54,6 +54,7 @@ export const FacetHeader: FunctionalComponent<FacetHeaderProps> = (props) => {
         part="clear-button"
         class="flex items-baseline max-w-full p-2 text-sm"
         title={clearFiltersForFacet}
+        ariaLabel={clearFiltersForFacet}
         onClick={() => props.onClearFilters!()}
       >
         <atomic-icon
