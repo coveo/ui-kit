@@ -9,5 +9,6 @@ export {IRuntimeEnvironment} from '../client/runtimeEnvironment';
 export {CoveoUA, getCurrentClient, handleOneAnalyticsEvent} from './simpleanalytics';
 export {CoveoSearchPageClient, SearchPageClientProvider} from '../searchPage/searchPageClient';
 export {CaseAssistClient, CaseAssistClientProvider} from '../caseAssist/caseAssistClient';
+export {CoveoInsightClient, InsightClientProvider} from '../insight/insightClient';
 
 export {analytics, donottrack, history, SimpleAnalytics, storage};
