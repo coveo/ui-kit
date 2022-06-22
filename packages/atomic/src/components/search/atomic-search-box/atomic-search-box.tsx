@@ -517,7 +517,7 @@ export class AtomicSearchBox {
         autocorrect="off"
         placeholder={this.bindings.i18n.t('search')}
         type="text"
-        class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
+        class="h-full outline-none bg-transparent w-0 grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
