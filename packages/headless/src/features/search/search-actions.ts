@@ -381,7 +381,7 @@ async function fetchInstantResultsFromAPI(
     q,
     numberOfResults
   );
-  return mapSearchResponse(await apiClient.search(request), mappings);
+  return mapSearchResponse(await apiClient.search(request, true), mappings);
 }
 
 const getStateAfterResponse: (

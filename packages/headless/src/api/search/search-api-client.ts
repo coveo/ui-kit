@@ -128,10 +128,12 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   private searchAbortController: AbortController | null = null;
 
   async search(
-    req: SearchRequest
+    req: SearchRequest,
+    disableAbortWarning?: boolean
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     if (this.searchAbortController) {
-      this.options.logger.warn('Cancelling current pending search query');
+      !disableAbortWarning &&
+        this.options.logger.warn('Cancelling current pending search query');
       this.searchAbortController.abort();
     }
     this.searchAbortController = this.getAbortControllerInstanceIfAvailable();
@@ -144,7 +146,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     });
 
     if (response instanceof Error) {
-      return buildAPIResponseFromErrorOrThrow(response);
+      return buildAPIResponseFromErrorOrThrow(response, disableAbortWarning);
     }
 
     this.searchAbortController = null;

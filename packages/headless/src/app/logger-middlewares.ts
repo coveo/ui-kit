@@ -10,11 +10,13 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
 
     const error: SerializedError = action.error;
 
-    logger.error(
-      error.stack || error.message || error.name || 'Error',
-      `Action dispatch error ${action.type}`,
-      action
-    );
+    if (!action.payload.ignore) {
+      logger.error(
+        error.stack || error.message || error.name || 'Error',
+        `Action dispatch error ${action.type}`,
+        action
+      );
+    }
 
     // Validation errors should prevent further dispatching
     if (action.error.name === 'SchemaValidationError') {
