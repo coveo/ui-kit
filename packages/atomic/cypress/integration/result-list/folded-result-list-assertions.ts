@@ -9,13 +9,13 @@ export function assertRendersGrandchildren() {
 
     FoldedResultListSelectors.childResultAtIndex(0)
       .find(resultLinkComponent)
-      .contains('Stubble Lichens');
+      .contains('Powdery Mildews');
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
-      .contains('Opercs');
+      .contains('common lichens');
 
     FoldedResultListSelectors.grandChildResultAtIndex(0, 1)
       .find(resultLinkComponent)
-      .contains('Elf Cups and Allies');
+      .contains('Specklebelly Lichens');
   });
 }
