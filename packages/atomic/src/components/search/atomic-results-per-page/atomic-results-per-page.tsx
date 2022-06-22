@@ -122,7 +122,10 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
     return (
       <div class="flex items-center">
-        <span part="label" class="self-start text-on-background text-lg mr-3">
+        <span
+          part="label"
+          class="self-start text-on-background text-lg mr-3 leading-10"
+        >
           {this.bindings.i18n.t('results-per-page')}
         </span>
         <div
