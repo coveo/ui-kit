@@ -10,7 +10,7 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
 
     const error: SerializedError = action.error;
 
-    if (!action.payload.ignore) {
+    if (!action.payload?.ignored) {
       logger.error(
         error.stack || error.message || error.name || 'Error',
         `Action dispatch error ${action.type}`,

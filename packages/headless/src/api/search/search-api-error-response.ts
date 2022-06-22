@@ -5,7 +5,7 @@ export interface SearchAPIErrorWithStatusCode {
   statusCode: number;
   message: string;
   type: string;
-  ignore?: boolean;
+  ignored?: boolean;
 }
 
 export interface SearchAPIErrorWithExceptionInBody {
@@ -29,20 +29,19 @@ function buildIgnoredAbortedError(
     statusCode: error.code,
     type: error.name,
     message: error.message,
-    ignore: true,
+    ignored: true,
   };
 }
 
 export function buildAPIResponseFromErrorOrThrow(
-  error: Error,
+  error: Error | DOMException,
   disableAbortWarning?: boolean
 ): {
   error: SearchAPIErrorWithStatusCode;
 } {
-  const asDOMException = error as DOMException;
-  if (disableAbortWarning && asDOMException.code === 20) {
+  if (disableAbortWarning && error.name === 'AbortError') {
     return {
-      error: buildIgnoredAbortedError(asDOMException),
+      error: buildIgnoredAbortedError(error as DOMException),
     };
   }
   if (error instanceof DisconnectedError) {

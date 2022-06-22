@@ -40,6 +40,10 @@ export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
 }
 
+export interface SearchOptions {
+  disableAbortWarning?: boolean;
+}
+
 export type AllSearchAPIResponse =
   | Plan
   | Search
@@ -129,10 +133,10 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async search(
     req: SearchRequest,
-    disableAbortWarning?: boolean
+    options: SearchOptions = {}
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     if (this.searchAbortController) {
-      !disableAbortWarning &&
+      !options.disableAbortWarning &&
         this.options.logger.warn('Cancelling current pending search query');
       this.searchAbortController.abort();
     }
@@ -146,7 +150,10 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     });
 
     if (response instanceof Error) {
-      return buildAPIResponseFromErrorOrThrow(response, disableAbortWarning);
+      return buildAPIResponseFromErrorOrThrow(
+        response,
+        options.disableAbortWarning
+      );
     }
 
     this.searchAbortController = null;
