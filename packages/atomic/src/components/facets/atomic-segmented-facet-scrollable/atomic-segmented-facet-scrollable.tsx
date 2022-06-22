@@ -29,7 +29,11 @@ export class AtomicSegmentedFacetScrollable {
     return (
       <Button
         style="square-neutral"
-        class="flex shrink-0 basis-8 justify-center items-center rounded"
+        class={`flex shrink-0 basis-8 justify-center items-center rounded ${
+          arrowDirection === ArrowLeftIcon
+            ? 'z-10 shadow-[15px_1px_10px_5px] [clip-path:inset(0 -35px 0 0)]'
+            : 'shadow-[-15px_1px_10px_5px] [clip-path:inset(0 0 0 -35px)] clipPath-right'
+        }`}
         ariaHidden="true"
         onClick={() => this.horizonalSlider(arrowDirection)}
       >

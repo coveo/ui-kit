@@ -3,6 +3,9 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   content: ['./src/**/*.tsx'],
   theme: {
+    clipPath: {
+      'right': 'inset(0 -35px 0 0)'
+    },
     extend: {
       variants: {
         textColor: ['group-hover']
