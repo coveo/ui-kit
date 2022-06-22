@@ -136,7 +136,7 @@ export class AtomicModal implements InitializableComponent {
               part="container"
               class={`flex flex-col justify-between bg-background text-on-background ${
                 this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
-              } ${this.wasEverOpened ? '' : 'animation-skip'}`}
+              } ${this.wasEverOpened ? '' : 'invisible'}`}
               onAnimationEnd={() => this.animationEnded.emit()}
               ref={(ref) => (this.animatableContainer = ref)}
             >
