@@ -29,7 +29,7 @@ describe('quantic-refine-content', () => {
 
       scope('when loading the page', () => {
         Expect.displayFiltersTitle();
-        Expect.displayClearAllFiltersButton();
+        Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager();
         Expect.displayDuplicatedNumericFacet();
         Expect.displayDuplicatedFacet();
@@ -44,10 +44,12 @@ describe('quantic-refine-content', () => {
         Actions.clickDuplicatedTimeframeFacetExpandButton();
         Expect.displayDuplicatedTimeframeFacetValues();
         Actions.clickDuplicatedTimeframeFacetFirstOption();
+        Expect.displayClearAllFiltersButton(true);
         Expect.displayDuplicatedTimeframeFacetClearFiltersButton(true);
         Expect.displayTimeframeFacetClearFiltersButton(true);
         Actions.clickDuplicatedFacetExpandButton();
         Actions.clickDuplicatedFacetFirstOption();
+        Expect.displayClearAllFiltersButton(true);
         Expect.displayDuplicatedFacetClearFiltersButton(true);
         Expect.displayFacetClearFiltersButton(true);
         Expect.correctFacetsOrder();
@@ -55,6 +57,7 @@ describe('quantic-refine-content', () => {
 
       scope('when clearing all filters', () => {
         Actions.clickClearAllFilters();
+        Expect.displayClearAllFiltersButton(false);
         Expect.displayDuplicatedTimeframeFacetClearFiltersButton(false);
         Expect.displayTimeframeFacetClearFiltersButton(false);
         Expect.displayDuplicatedFacetClearFiltersButton(false);
@@ -72,7 +75,7 @@ describe('quantic-refine-content', () => {
 
       scope('when loading the page', () => {
         Expect.displayFiltersTitle();
-        Expect.displayClearAllFiltersButton();
+        Expect.displayClearAllFiltersButton(false);
         Expect.displayFacetManager();
         Expect.displayDuplicatedNumericFacet();
         Expect.displayDuplicatedFacet();

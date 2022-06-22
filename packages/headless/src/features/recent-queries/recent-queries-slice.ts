@@ -22,7 +22,8 @@ export const recentQueriesReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const query = action.payload.queryExecuted.trim();
-        if (!query.length) {
+        const results = action.payload.response.results;
+        if (!query.length || !results.length) {
           return;
         }
         state.queries = state.queries.filter((q) => q !== query);

@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.10...@coveo/atomic-angular@1.17.0) (2022-06-22)
+
+
+### Features
+
+* **atomic:** add segmented scrollable component basic structure ([#2100](https://github.com/coveo/ui-kit/issues/2100)) ([7bb2d1c](https://github.com/coveo/ui-kit/commit/7bb2d1c17e60d4fd924f04b4b319fca3b62e3d8a))
+* **atomic:** disableSearch prop for search box ([#2126](https://github.com/coveo/ui-kit/issues/2126)) ([a3d2c64](https://github.com/coveo/ui-kit/commit/a3d2c645ea904bf27254ce4eac4f63f4e8318de9))
+
+
+
+
+
+## [1.16.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.9...@coveo/atomic-angular@1.16.10) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.8...@coveo/atomic-angular@1.16.9) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.7...@coveo/atomic-angular@1.16.8) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.6...@coveo/atomic-angular@1.16.7) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.5...@coveo/atomic-angular@1.16.6) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 ## [1.16.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.4...@coveo/atomic-angular@1.16.5) (2022-06-20)
 
 **Note:** Version bump only for package @coveo/atomic-angular
