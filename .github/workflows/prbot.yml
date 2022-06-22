@@ -115,16 +115,30 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
-
-  is-valid:
-    name: 'Confirm build is valid'
-    runs-on: ubuntu-latest
-    if: always()
+  required-jobs:
+    if: success()
     needs:
       - 'build'
       - 'lint-check'
       - 'unit-test'
       - 'e2e-atomic-test'
       - 'e2e-quantic-test'
+    runs-on: ubuntu-latest
     steps:
-      - run: echo 'Build has been verified'
+      - run: echo 'All required jobs have passed'
+  is-valid:
+    if: always()
+    name: 'Confirm build is valid'
+    needs:
+      - 'required-jobs'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          success="${{ needs.required-jobs.result == 'success' }}"
+          if [[ $success == "true" ]]; then
+            echo "Build is valid"
+            exit 0
+          else
+            echo "Build is invalid"
+            exit 1
+          fi
