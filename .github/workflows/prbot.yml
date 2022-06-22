@@ -119,7 +119,9 @@ jobs:
   is-valid:
     name: 'Confirm build is valid'
     runs-on: ubuntu-latest
+    if: always()
     needs:
+      - 'build'
       - 'lint-check'
       - 'unit-test'
       - 'e2e-atomic-test'
