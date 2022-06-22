@@ -60,7 +60,7 @@ describe('Search Interface Component', () => {
 
     it('should default back to english when language unavailable', () => {
       setLanguageAndWait('fr');
-      setLanguageAndWait('nope');
+      setLanguage('jo');
 
       QuerySummarySelectors.text().should('contain', 'Results');
     });
@@ -69,12 +69,28 @@ describe('Search Interface Component', () => {
       setLanguageAndWait('es-ES');
 
       QuerySummarySelectors.text().should('contain', 'Resultados');
+      cy.get(TestFixture.consoleAliases.error).should('not.be.called');
+    });
+
+    it('should not log an error to the console when fetching non-existing languages', () => {
+      setLanguageAndWait('es-ES');
+      setLanguage('jo');
+
+      cy.get(TestFixture.consoleAliases.error).should('not.be.called');
     });
 
     it('should work with lowercase regions', () => {
       setLanguageAndWait('zh-tw');
 
       QuerySummarySelectors.text().should('contain', '結果數');
+    });
+
+    it('should support adding a non-existing language', () => {
+      setTranslation('jo', 'showing-results-of', 'hello');
+      setLanguage('jo');
+      cy.wait(200);
+
+      QuerySummarySelectors.text().should('contain', 'hello');
     });
 
     it('should support changing a translation value without overriding other strings', () => {

@@ -42,6 +42,7 @@ import {
 } from '../../../utils/local-storage-utils';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {loadGlobalScripts} from '../../../global/global';
+import availableLocales from '../../../generated/availableLocales.json';
 
 export type InitializationOptions = SearchEngineConfiguration;
 
@@ -64,6 +65,7 @@ export class AtomicSearchInterface {
   private initialized = false;
   private store = createStore<AtomicStore>(initialStore());
   private i18nPromise!: Promise<TFunction>;
+  private i18nNamespace = 'translation';
 
   @Element() private host!: HTMLAtomicSearchInterfaceElement;
 
@@ -221,11 +223,11 @@ export class AtomicSearchInterface {
     loadDayjsLocale(this.language);
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
-      'translation',
+      this.i18nNamespace,
       (_, data) => {
         this.i18n.addResourceBundle(
           this.language,
-          'translation',
+          this.i18nNamespace,
           data,
           true,
           false
@@ -484,9 +486,45 @@ export class AtomicSearchInterface {
     ];
   }
 
+  private isI18nLocaleAvailable(locale: string) {
+    return availableLocales.includes(locale.toLowerCase());
+  }
+
   private get i18nBackendOptions(): BackendOptions {
     return {
-      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
+      loadPath: `${getAssetPath(
+        this.languageAssetsPath
+      )}/{{lng}}.json?lng={{lng}}&ns={{ns}}`,
+      request: async (_options, url, _payload, callback) => {
+        try {
+          const [fetchUrl, searchParams] = url.split('?');
+          const urlParams = new URLSearchParams(searchParams);
+          const lng = urlParams.get('lng')!;
+          const ns = urlParams.get('ns')!;
+
+          if (!this.isI18nLocaleAvailable(lng)) {
+            throw new Error(`Unsupported locale "${lng}"`);
+          }
+
+          if (ns !== this.i18nNamespace) {
+            throw new Error(`Unsupported namespace "${ns}"`);
+          }
+
+          const response = await fetch(fetchUrl);
+          if (response.status !== 200 && response.status !== 304) {
+            throw new Error(
+              `Unsuccessful request returned status "${response.status}"`
+            );
+          }
+
+          callback(null, {
+            status: response.status,
+            data: await response.json(),
+          });
+        } catch (error) {
+          callback(error, {status: 404, data: ''});
+        }
+      },
     };
   }
 
