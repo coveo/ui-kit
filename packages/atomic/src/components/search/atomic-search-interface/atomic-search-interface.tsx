@@ -33,7 +33,6 @@ import {
   initialStore,
   setLoadingFlag,
   unsetLoadingFlag,
-  ResultListInfo,
 } from '../../../utils/store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
