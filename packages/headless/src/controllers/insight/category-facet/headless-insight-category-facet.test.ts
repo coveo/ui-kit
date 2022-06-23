@@ -37,7 +37,7 @@ import {
 } from '../../../features/insight-search/insight-search-actions';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
-describe(' insight category facet', () => {
+describe('insight category facet', () => {
   const facetId = '1';
   let insightCategoryFacet: InsightCategoryFacet;
   let engine: MockInsightEngine;

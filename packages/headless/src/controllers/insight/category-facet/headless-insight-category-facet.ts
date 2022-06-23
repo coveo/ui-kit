@@ -1,10 +1,11 @@
 import {
   buildCoreCategoryFacet,
+  CategoryFacetSearch,
   CategoryFacetValue,
+  CoreCategoryFacet,
   CoreCategoryFacetState,
 } from '../../core/facets/category-facet/headless-core-category-facet';
 import {CategoryFacetOptions} from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {Controller} from '../../controller/headless-controller';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {InsightEngine} from '../../../insight.index';
 import {
@@ -42,7 +43,7 @@ export interface InsightCategoryFacetProps {
   options: InsightCategoryFacetOptions;
 }
 
-export interface InsightCategoryFacet extends Controller {
+export interface InsightCategoryFacet extends CoreCategoryFacet {
   /**
    * Toggles the specified facet value.
    *
@@ -91,6 +92,11 @@ export interface InsightCategoryFacet extends Controller {
   disable(): void;
 
   /**
+   * Provides methods to search the facet's values.
+   */
+  facetSearch: CategoryFacetSearch;
+
+  /**
    * The state of the `Facet` controller.
    * */
   state: InsightCategoryFacetState;
@@ -112,6 +118,29 @@ export function buildInsightCategoryFacet(
   const coreController = buildCoreCategoryFacet(engine, props);
   const {dispatch} = engine;
   const getFacetId = () => coreController.state.facetId;
+  const createNoopCategoryFacetSearch = () => {
+    return {
+      updateText() {},
+      showMoreResults() {},
+      search() {},
+      clear() {},
+      updateCaptions() {},
+      select() {},
+      singleSelect() {},
+      get state() {
+        return {
+          values: [],
+          isLoading: false,
+          moreValuesAvailable: false,
+          query: '',
+        };
+      },
+    };
+  };
+
+  const facetSearch = createNoopCategoryFacetSearch();
+
+  const {state, ...restOfFacetSearch} = facetSearch;
 
   if (!loadInsightCategoryFacetReducers(engine)) {
     throw loadReducerError;
@@ -119,6 +148,9 @@ export function buildInsightCategoryFacet(
 
   return {
     ...coreController,
+
+    facetSearch: restOfFacetSearch,
+
     toggleSelect(selection: CategoryFacetValue) {
       coreController.toggleSelect(selection);
       const analyticsAction = getToggleSelectInsightAnalyticsAction(
