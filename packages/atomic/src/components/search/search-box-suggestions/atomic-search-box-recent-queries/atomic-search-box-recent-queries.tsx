@@ -13,6 +13,7 @@ import {
 } from '../suggestions-common';
 import {once} from '../../../../utils/utils';
 import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
+import {cleanUpString} from '../../../../utils/string-utils';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
