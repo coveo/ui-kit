@@ -18,3 +18,8 @@
     height: $fallback-height;
   }
 }
+
+@define-mixin hide-scrollbar {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
