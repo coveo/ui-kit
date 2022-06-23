@@ -2,12 +2,6 @@ import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   FacetOptions,
@@ -42,6 +36,12 @@ import {
 import {loadReducerError} from '../../../../utils/errors';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
+import {
+  logFacetClearAll,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   FacetOptions,
