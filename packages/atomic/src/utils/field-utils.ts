@@ -15,11 +15,7 @@ export function getFieldValueCaption(
   facetValue: string,
   i18n: i18n
 ) {
-  const encodedColon = encodeURIComponent(':');
-
-  return i18n
-    .t(facetValue.replace(/:/g, encodedColon), {
-      ns: getFieldCaptionNamespace(field),
-    })
-    .replace(new RegExp(encodedColon, 'g'), ':');
+  return i18n.t(facetValue, {
+    ns: getFieldCaptionNamespace(field),
+  });
 }

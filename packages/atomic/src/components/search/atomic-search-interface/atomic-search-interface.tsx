@@ -37,6 +37,7 @@ import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {loadGlobalScripts} from '../../../global/global';
 import {BaseAtomicInterface} from '../../common/interface/interface-common';
 import {CommonBindings} from '../../common/interface/bindings';
+import {initi18n} from '../../common/interface/i18n';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -149,7 +150,7 @@ export class AtomicSearchInterface
   }
 
   public connectedCallback() {
-    this.i18nPromise = this.initI18n();
+    this.i18nPromise = initi18n(this);
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
     this.updateFieldsToInclude();
@@ -376,15 +377,6 @@ export class AtomicSearchInterface
     }
 
     return searchConfigFromProps;
-  }
-
-  private initI18n() {
-    return this.i18n.use(Backend).init({
-      debug: this.logLevel === 'debug',
-      lng: this.language,
-      fallbackLng: 'en',
-      backend: this.i18nBackendOptions,
-    });
   }
 
   private get bindings(): Bindings {
