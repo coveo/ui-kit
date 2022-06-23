@@ -11,7 +11,12 @@ export type {FacetManagerState, FacetManagerPayload};
 /**
  * The `InsightFacetManager` controller helps reorder facets to match the most recent search response.
  */
-export interface InsightFacetManager extends CoreFacetManager {}
+export interface InsightFacetManager extends CoreFacetManager {
+  /**
+   * The state of the `InsightFacetManager` controller.
+   */
+  state: FacetManagerState;
+}
 
 /**
  * Creates an `InsightFacetManager` instance.

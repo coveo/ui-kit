@@ -2,13 +2,6 @@ import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-  logFacetShowMore,
-  logFacetShowLess,
-  logFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   FacetOptions,
@@ -42,9 +35,13 @@ import {
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
 import {getAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils';
-import {buildFacetSearch} from '../../../core/facets/facet-search/specific/headless-facet-search';
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
+import {
+  logFacetClearAll,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   FacetOptions,
@@ -95,23 +92,27 @@ export function buildInsightFacet(
   );
   const getFacetId = () => coreController.state.facetId;
 
-  const createFacetSearch = () => {
-    const {facetSearch} = props.options;
-
-    return buildFacetSearch(engine, {
-      options: {facetId: getFacetId(), ...facetSearch},
-      select: (value) => {
-        dispatch(updateFacetOptions({freezeFacetOrder: true}));
-        dispatch(
-          executeSearch(
-            logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
-          )
-        );
+  const createNoopFacetSearch = () => {
+    return {
+      updateText() {},
+      showMoreResults() {},
+      search() {},
+      clear() {},
+      updateCaptions() {},
+      select() {},
+      singleSelect() {},
+      get state() {
+        return {
+          values: [],
+          isLoading: false,
+          moreValuesAvailable: false,
+          query: '',
+        };
       },
-    });
+    };
   };
 
-  const facetSearch = createFacetSearch();
+  const facetSearch = createNoopFacetSearch();
   const {state, ...restOfFacetSearch} = facetSearch;
 
   return {

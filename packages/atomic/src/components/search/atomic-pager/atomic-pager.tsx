@@ -8,7 +8,6 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -21,7 +20,7 @@ import {
 } from '../../../utils/accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {RadioButton} from '../../common/radio-button';
-import {isAppLoaded} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -118,11 +117,7 @@ export class AtomicPager implements InitializableComponent {
   private get pages() {
     const pages = this.pager.state.currentPages;
     return (
-      <div
-        part="page-buttons"
-        role="radiogroup"
-        class="h-10 flex space-x-2 flex-wrap"
-      >
+      <div part="page-buttons" role="radiogroup" class="contents">
         {pages.map((page) => this.buildPage(page))}
       </div>
     );
@@ -153,7 +148,7 @@ export class AtomicPager implements InitializableComponent {
 
   public render() {
     if (
-      !isAppLoaded(this.bindings.store) ||
+      !this.bindings.store.isAppLoaded() ||
       !this.searchStatusState.hasResults
     ) {
       return;
@@ -161,7 +156,7 @@ export class AtomicPager implements InitializableComponent {
 
     return (
       <nav aria-label={this.bindings.i18n.t('pagination')}>
-        <div part="buttons" class="h-10 flex space-x-2 flex-wrap">
+        <div part="buttons" class="flex gap-2 flex-wrap">
           {this.previousButton}
           {this.pages}
           {this.nextButton}

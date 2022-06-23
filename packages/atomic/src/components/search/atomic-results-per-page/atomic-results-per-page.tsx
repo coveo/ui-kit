@@ -8,14 +8,13 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {RadioButton} from '../../common/radio-button';
-import {isAppLoaded} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
@@ -114,7 +113,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
   public render() {
     if (
-      !isAppLoaded(this.bindings.store) ||
+      !this.bindings.store.isAppLoaded() ||
       !this.searchStatusState.hasResults
     ) {
       return;
@@ -122,14 +121,17 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
     return (
       <div class="flex items-center">
-        <span part="label" class="text-on-background text-lg mr-3">
+        <span
+          part="label"
+          class="self-start text-on-background text-lg mr-3 leading-10"
+        >
           {this.bindings.i18n.t('results-per-page')}
         </span>
         <div
           part="buttons"
           role="radiogroup"
           aria-label={this.bindings.i18n.t('results-per-page')}
-          class="flex flex-wrap space-x-2 h-10"
+          class="flex flex-wrap gap-2"
         >
           {this.choices.map((choice) => this.buildChoice(choice))}
         </div>

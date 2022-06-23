@@ -3,17 +3,12 @@ import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
-import {createStore, ObservableMap} from '@stencil/store';
-import {
-  AtomicStore,
-  initialStore,
-  registerFacetToStore,
-} from '../../../utils/store';
+import {createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 
 describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;
-  let store: ObservableMap<AtomicStore>;
+  let store: ReturnType<typeof createAtomicStore>;
   const originalReferrer = document.referrer;
   const setReferrer = (value: string) => {
     Object.defineProperty(document, 'referrer', {value, configurable: true});
@@ -21,7 +16,7 @@ describe('analyticsConfig', () => {
 
   beforeEach(() => {
     config = getSampleSearchEngineConfiguration();
-    store = createStore<AtomicStore>(initialStore());
+    store = createAtomicStore();
   });
 
   afterEach(() => {
@@ -75,7 +70,7 @@ describe('analyticsConfig', () => {
     (
       ['facets', 'numericFacets', 'dateFacets', 'categoryFacets'] as const
     ).forEach((typeOfFacet) => {
-      registerFacetToStore(store, typeOfFacet, {
+      store.registerFacet(typeOfFacet, {
         facetId: 'some_id',
         label: 'This is a label',
         element: jest.fn() as unknown as HTMLElement,
