@@ -37,11 +37,21 @@ export type BaseFacet<FacetType extends AnyFacetType> = {
   CollapsedProp &
   HeadingLevelProp;
 
+export type BaseFacetElement<FacetType extends AnyFacetType = AnyFacetType> =
+  HTMLElement &
+    Required<PropsOnAllFacets> &
+    SearchProp<FacetType> &
+    NumberOfValuesProp<FacetType> &
+    NumberOfIntervalsProp<FacetType> &
+    SortCriterionProp<FacetType> &
+    DisplayValuesAsProp &
+    CollapsedProp &
+    HeadingLevelProp;
+
 type PropsOnAllFacets = {
   facetId?: string;
   label?: string;
   field: string;
-
   filterFacetCount: boolean;
   injectionDepth: number;
   dependsOn: Record<string, string>;

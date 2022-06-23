@@ -1,6 +1,5 @@
 import {Component, h, State, Element, VNode} from '@stencil/core';
 import {
-  Bindings,
   InitializableComponent,
   BindStateToController,
   InitializeBindings,
@@ -21,6 +20,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 interface Breadcrumb {
   facetId: string;

@@ -9,7 +9,6 @@ import {
   EventEmitter,
 } from '@stencil/core';
 import {
-  Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -21,6 +20,7 @@ import {
 import {Button} from '../../common/button';
 import {once, randomID} from '../../../utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
@@ -240,6 +240,7 @@ export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
       <atomic-modal
         fullscreen={false}
         source={this.source}
+        container={this.host}
         isOpen={this.isOpen}
         close={() => this.close()}
         exportparts="backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"

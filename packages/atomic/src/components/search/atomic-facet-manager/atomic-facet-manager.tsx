@@ -8,16 +8,13 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {NumberValue, Schema} from '@coveo/bueno';
-
-interface FacetElement extends HTMLElement {
-  facetId: string;
-}
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {BaseFacetElement} from '../facets/facet-common';
 
 /**
  * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -70,20 +67,16 @@ export class AtomicFacetManager implements InitializableComponent {
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
     this.updateCollapsedState(sortedFacets);
-
     this.host.append(...sortedFacets);
   };
 
-  private updateCollapsedState(facets: FacetElement[]) {
+  private updateCollapsedState(facets: BaseFacetElement[]) {
     if (this.collapseFacetsAfter === -1) {
       return;
     }
 
     facets.forEach((facet, index) => {
-      facet.setAttribute(
-        'is-collapsed',
-        index + 1 > this.collapseFacetsAfter ? 'true' : 'false'
-      );
+      facet.isCollapsed = index + 1 > this.collapseFacetsAfter;
     });
   }
 
@@ -96,7 +89,7 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private get facets() {
-    const facets: FacetElement[] = [];
+    const facets: BaseFacetElement[] = [];
     const children = Array.from(this.host.children);
 
     children.forEach((child) => {
@@ -106,7 +99,7 @@ export class AtomicFacetManager implements InitializableComponent {
     return facets;
   }
 
-  private isPseudoFacet(el: Element): el is FacetElement {
+  private isPseudoFacet(el: Element): el is BaseFacetElement {
     return 'facetId' in el;
   }
 
