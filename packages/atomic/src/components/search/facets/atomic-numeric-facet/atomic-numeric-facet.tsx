@@ -19,7 +19,6 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -43,7 +42,6 @@ import {NumberInputType} from '../facet-number-input/number-input-type';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
-import {registerFacetToStore} from '../../../../utils/store';
 import {Hidden} from '../../../common/hidden';
 import {
   FocusTarget,
@@ -52,6 +50,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -287,7 +286,7 @@ export class AtomicNumericFacet
   }
 
   private registerFacetToStore() {
-    registerFacetToStore(this.bindings.store, 'numericFacets', {
+    this.bindings.store.registerFacet('numericFacets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,

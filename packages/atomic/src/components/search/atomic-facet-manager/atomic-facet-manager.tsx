@@ -8,12 +8,12 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {NumberValue, Schema} from '@coveo/bueno';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {BaseFacetElement} from '../facets/facet-common';
 
 /**
