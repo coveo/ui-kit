@@ -2,11 +2,11 @@ import {Component, Prop, h, Element, State} from '@stencil/core';
 import {Result} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {
-  Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-html` component renders the HTML value of a string result field.

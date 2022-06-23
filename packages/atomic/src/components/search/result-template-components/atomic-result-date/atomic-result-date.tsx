@@ -3,10 +3,10 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import dayjs from 'dayjs';
 import {ResultContext} from '../result-template-decorators';
 import {
-  Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-date` component renders the value of a date result field.
