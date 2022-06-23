@@ -6,16 +6,16 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
-import { Bindings } from "./utils/initialization-utils";
+import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
 import { Section } from "./components/search/atomic-layout-section/sections";
-import { ObservableMap } from "@stencil/store";
-import { AtomicStore } from "./utils/store";
+import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+import { InsightEngine } from "@coveo/headless/insight";
 export namespace Components {
     interface AtomicAriaLive {
         "updateMessage": (region: string, message: string) => Promise<void>;
@@ -332,8 +332,6 @@ export namespace Components {
          */
         "icon": string;
     }
-    interface AtomicInsightInterface {
-    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -565,6 +563,40 @@ export namespace Components {
         "numberOfIntervals": number;
     }
     interface AtomicRecsInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * The recommendation interface headless engine.
+         */
+        "engine"?: RecommendationEngine;
+        /**
+          * The recommendation interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with an already preconfigured headless recommendation engine.
+         */
+        "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
+        /**
+          * The search interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -619,7 +651,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store"?: ObservableMap<AtomicStore>;
+        "store"?: ReturnType<typeof createAtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -844,6 +876,10 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch": boolean;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries": number;
@@ -1014,6 +1050,8 @@ export namespace Components {
         "sortCriteria": FacetSortCriterion;
         "withSearch": boolean;
     }
+    interface AtomicSegmentedFacetScrollable {
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -1080,6 +1118,42 @@ export namespace Components {
           * The non-localized label to display for this expression.
          */
         "label": string;
+    }
+    interface AtomicSvcInsightInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * The service insight interface headless engine.
+         */
+        "engine"?: InsightEngine;
+        /**
+          * The service insight interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with an already preconfigured headless insight engine.
+         */
+        "initializeWithRecommendationEngine": (engine: InsightEngine) => Promise<void>;
+        /**
+          * The service insight interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
     }
     interface AtomicTableElement {
         /**
@@ -1274,12 +1348,6 @@ declare global {
     var HTMLAtomicIconElement: {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
-    };
-    interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightInterfaceElement: {
-        prototype: HTMLAtomicInsightInterfaceElement;
-        new (): HTMLAtomicInsightInterfaceElement;
     };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
@@ -1593,6 +1661,12 @@ declare global {
         prototype: HTMLAtomicSegmentedFacetElement;
         new (): HTMLAtomicSegmentedFacetElement;
     };
+    interface HTMLAtomicSegmentedFacetScrollableElement extends Components.AtomicSegmentedFacetScrollable, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetScrollableElement: {
+        prototype: HTMLAtomicSegmentedFacetScrollableElement;
+        new (): HTMLAtomicSegmentedFacetScrollableElement;
+    };
     interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
     }
     var HTMLAtomicSmartSnippetElement: {
@@ -1641,6 +1715,12 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    interface HTMLAtomicSvcInsightInterfaceElement extends Components.AtomicSvcInsightInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicSvcInsightInterfaceElement: {
+        prototype: HTMLAtomicSvcInsightInterfaceElement;
+        new (): HTMLAtomicSvcInsightInterfaceElement;
+    };
     interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
     }
     var HTMLAtomicTableElementElement: {
@@ -1686,7 +1766,6 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
-        "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -1739,6 +1818,7 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-search-layout": HTMLAtomicSearchLayoutElement;
         "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
+        "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
         "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
         "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
         "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
@@ -1747,6 +1827,7 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-svc-insight-interface": HTMLAtomicSvcInsightInterfaceElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -2064,8 +2145,6 @@ declare namespace LocalJSX {
          */
         "icon": string;
     }
-    interface AtomicInsightInterface {
-    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -2299,6 +2378,36 @@ declare namespace LocalJSX {
         "numberOfIntervals"?: number;
     }
     interface AtomicRecsInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * The recommendation interface headless engine.
+         */
+        "engine"?: RecommendationEngine;
+        /**
+          * The recommendation interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The search interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
     }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
@@ -2353,7 +2462,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store"?: ObservableMap<AtomicStore>;
+        "store"?: ReturnType<typeof createAtomicStore>;
     }
     interface AtomicResultBadge {
         /**
@@ -2564,6 +2673,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch"?: boolean;
+        /**
           * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
          */
         "numberOfQueries"?: number;
@@ -2717,6 +2830,8 @@ declare namespace LocalJSX {
         "sortCriteria"?: FacetSortCriterion;
         "withSearch"?: boolean;
     }
+    interface AtomicSegmentedFacetScrollable {
+    }
     interface AtomicSmartSnippet {
         /**
           * When the answer is partly hidden, how much of its height (in pixels) should be visible.
@@ -2790,6 +2905,38 @@ declare namespace LocalJSX {
           * The non-localized label to display for this expression.
          */
         "label": string;
+    }
+    interface AtomicSvcInsightInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * The service insight interface headless engine.
+         */
+        "engine"?: InsightEngine;
+        /**
+          * The service insight interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The service insight interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
     }
     interface AtomicTableElement {
         /**
@@ -2884,7 +3031,6 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
-        "atomic-insight-interface": AtomicInsightInterface;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -2937,6 +3083,7 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-search-layout": AtomicSearchLayout;
         "atomic-segmented-facet": AtomicSegmentedFacet;
+        "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
         "atomic-smart-snippet": AtomicSmartSnippet;
         "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
         "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
@@ -2945,6 +3092,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-svc-insight-interface": AtomicSvcInsightInterface;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -2975,7 +3123,6 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
-            "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
@@ -3028,6 +3175,7 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
             "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
+            "atomic-segmented-facet-scrollable": LocalJSX.AtomicSegmentedFacetScrollable & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetScrollableElement>;
             "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
             "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
             "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
@@ -3036,6 +3184,7 @@ declare module "@stencil/core" {
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            "atomic-svc-insight-interface": LocalJSX.AtomicSvcInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicSvcInsightInterfaceElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;

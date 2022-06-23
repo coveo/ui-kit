@@ -6,11 +6,11 @@ import {
 } from '@coveo/headless';
 import {
   InitializeBindings,
-  Bindings,
   InitializableComponent,
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
@@ -40,6 +40,10 @@ export class AtomicRefineToggle implements InitializableComponent {
   }
 
   private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+
     this.modalRef = document.createElement('atomic-refine-modal');
     this.host.insertAdjacentElement('beforebegin', this.modalRef);
     this.modalRef.openButton = this.buttonRef;

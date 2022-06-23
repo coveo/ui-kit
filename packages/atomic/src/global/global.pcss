@@ -40,7 +40,7 @@
   }
 
   .btn-primary {
-    @apply rounded bg-primary text-on-primary hover:bg-primary-light no-outline focus-visible:ring-2 focus-visible:ring-ring-primary;
+    @apply rounded bg-primary text-on-primary hover:bg-primary-light no-outline focus-visible:ring-2 focus-visible:ring-ring-primary disabled:cursor-not-allowed disabled:bg-disabled;
   }
 
   .btn-outline-primary {
@@ -116,10 +116,5 @@
   .shadow-t-lg {
     @apply shadow;
     --tw-shadow: 0px -2px 8px rgba(229, 232, 232, 0.75);
-  }
-
-  .animation-skip {
-    animation-duration: 0s;
-    animation-fill-mode: forwards;
   }
 }

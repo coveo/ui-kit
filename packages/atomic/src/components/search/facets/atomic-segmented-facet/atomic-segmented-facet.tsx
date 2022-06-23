@@ -1,6 +1,5 @@
 import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -22,6 +21,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 import {Hidden} from '../../../common/hidden';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
@@ -143,7 +143,7 @@ export class AtomicSegmentedFacet
     if (!this.label) {
       return;
     }
-    return <b class="inline-block my-3 mr-2">{this.label}:</b>;
+    return <b class="inline-block my-3 mx-2">{this.label}:</b>;
   }
 
   public render() {
@@ -156,7 +156,7 @@ export class AtomicSegmentedFacet
     }
 
     return (
-      <div class="flex">
+      <div class="flex whitespace-nowrap h-9 items-center">
         {this.renderLabel()}
         {this.renderValues()}
       </div>

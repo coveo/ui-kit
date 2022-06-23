@@ -22,6 +22,11 @@ export const decorators = [
 ];
 
 export const parameters = {
+  options: {
+    storySort: (firstStory, secondStory) => {
+      return firstStory[1].id.length - secondStory[1].id.length >= 0;
+    },
+  },
   controls: {expanded: true, hideNoControlsWarning: true},
   a11y: {
     element: 'atomic-search-interface',
@@ -33,7 +38,7 @@ export const parameters = {
   },
   previewTabs: {
     'storybook/docs/panel': {
-      hidden: true
-    }
-  }
+      hidden: true,
+    },
+  },
 };

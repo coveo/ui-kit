@@ -12,12 +12,12 @@ import {
 import {isIOS} from '../../../utils/device-utils';
 import {listenOnce} from '../../../utils/event-utils';
 import {
-  Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -136,7 +136,7 @@ export class AtomicModal implements InitializableComponent {
               part="container"
               class={`flex flex-col justify-between bg-background text-on-background ${
                 this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'
-              } ${this.wasEverOpened ? '' : 'animation-skip'}`}
+              } ${this.wasEverOpened ? '' : 'invisible'}`}
               onAnimationEnd={() => this.animationEnded.emit()}
               ref={(ref) => (this.animatableContainer = ref)}
             >
