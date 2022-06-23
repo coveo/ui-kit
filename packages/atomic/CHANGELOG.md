@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.76.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.76.0...@coveo/atomic@1.76.1) (2022-06-23)
+
+
+### Bug Fixes
+
+* **atomic:** actually include fieldsToInclude in search from interface ([#2149](https://github.com/coveo/ui-kit/issues/2149)) ([1675f33](https://github.com/coveo/ui-kit/commit/1675f33bb35b8ba56f433a23ccb6784446ab1eec))
+* **atomic:** changed focus style of primary buttons ([#2143](https://github.com/coveo/ui-kit/issues/2143)) ([60bdf73](https://github.com/coveo/ui-kit/commit/60bdf73ceb2682102fb9e39f192b9fade838523e))
+* **atomic:** improved aria labels in facets ([#2144](https://github.com/coveo/ui-kit/issues/2144)) ([9f2a51b](https://github.com/coveo/ui-kit/commit/9f2a51baf725ccaf288e8b912af2d4aa480878ea))
+
+
+
+
+
 # [1.76.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.6...@coveo/atomic@1.76.0) (2022-06-22)
 
 
