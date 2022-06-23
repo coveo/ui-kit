@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.12.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.11.9...@coveo/atomic-react@1.12.0) (2022-06-22)
+
+
+### Features
+
+* **atomic:** add segmented scrollable component basic structure ([#2100](https://github.com/coveo/ui-kit/issues/2100)) ([7bb2d1c](https://github.com/coveo/ui-kit/commit/7bb2d1c17e60d4fd924f04b4b319fca3b62e3d8a))
+
+
+
+
+
+## [1.11.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.11.8...@coveo/atomic-react@1.11.9) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.11.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.11.7...@coveo/atomic-react@1.11.8) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
 ## [1.11.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.11.6...@coveo/atomic-react@1.11.7) (2022-06-20)
 
 **Note:** Version bump only for package @coveo/atomic-react

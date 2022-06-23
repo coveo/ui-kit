@@ -688,19 +688,23 @@ describe('Facet Test Suite', () => {
 
   describe('with custom field, label, and number of results', () => {
     function setupCustomOptions() {
-      visitFacetPage({
-        field: 'language',
-        label: 'Language',
-        numberOfValues: 3,
-      });
+      visitFacetPage(
+        {
+          field: 'language',
+          label: 'Language',
+          numberOfValues: 3,
+        },
+        false
+      );
+      aliasFacetValues();
     }
 
     it('should render correctly', () => {
       setupCustomOptions();
 
       Expect.labelContains('Language');
-      Expect.facetValueContains('English');
       Expect.numberOfIdleCheckboxValues(3);
+      Expect.facetValuesEqual(indexFacetValuesAlias);
     });
   });
 

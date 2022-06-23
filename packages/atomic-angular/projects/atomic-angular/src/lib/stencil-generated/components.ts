@@ -1207,13 +1207,13 @@ export declare interface AtomicSearchBox extends Components.AtomicSearchBox {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;
@@ -1323,6 +1323,25 @@ export declare interface AtomicSearchLayout extends Components.AtomicSearchLayou
   inputs: ['mobileBreakpoint']
 })
 export class AtomicSearchLayout {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSegmentedFacetScrollable extends Components.AtomicSegmentedFacetScrollable {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-segmented-facet-scrollable',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicSegmentedFacetScrollable {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();

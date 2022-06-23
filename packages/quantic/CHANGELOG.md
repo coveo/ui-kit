@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.25.13](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.12...@coveo/quantic@1.25.13) (2022-06-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.12](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.11...@coveo/quantic@1.25.12) (2022-06-21)
+
+
+### Bug Fixes
+
+* **headless:** update recent queries only when query has results ([#2110](https://github.com/coveo/ui-kit/issues/2110)) ([623674b](https://github.com/coveo/ui-kit/commit/623674b6d64d0f03a129651fdfa859b570baff54))
+
+
+
+
+
+## [1.25.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.10...@coveo/quantic@1.25.11) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.25.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.9...@coveo/quantic@1.25.10) (2022-06-20)
 
 **Note:** Version bump only for package @coveo/quantic
