@@ -44,11 +44,13 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     'aria-checked': props.ariaChecked,
     'aria-current': props.ariaCurrent,
     'aria-controls': props.ariaControls,
-    'aria-hidden': props.ariaHidden,
     disabled: props.disabled,
     ref(buttonEl?: HTMLButtonElement) {
       if (props.form) {
         buttonEl?.setAttribute('form', props.form);
+      }
+      if (props.ariaHidden) {
+        buttonEl?.setAttribute('aria-hidden', props.ariaHidden);
       }
       props.ref?.(buttonEl);
     },

@@ -11,7 +11,7 @@ import {Button} from '../../common/button';
 export class AtomicSegmentedFacetScrollable {
   private horizontalScroll?: HTMLDivElement;
 
-  private horizonalSlider(arrowDirection: string) {
+  private slideHorizontally(arrowDirection: string) {
     const container = this.horizontalScroll;
     const pixelsToScroll = container ? container.clientWidth * 0.75 : 700;
 
@@ -31,7 +31,7 @@ export class AtomicSegmentedFacetScrollable {
         style="square-neutral"
         class="flex shrink-0 basis-8 justify-center items-center rounded"
         ariaHidden="true"
-        onClick={() => this.horizonalSlider(arrowDirection)}
+        onClick={() => this.slideHorizontally(arrowDirection)}
       >
         <atomic-icon class="w-3.5" icon={arrowDirection}></atomic-icon>
       </Button>
@@ -40,10 +40,10 @@ export class AtomicSegmentedFacetScrollable {
 
   render() {
     return (
-      <div class="flex h-9">
+      <div part="scrollableContainer" class="flex h-9">
         {this.renderArrow(ArrowLeftIcon)}
         <div
-          id="horizontalScroll"
+          part="horizontalScroll"
           class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
           ref={(el) => (this.horizontalScroll = el as HTMLDivElement)}
         >
