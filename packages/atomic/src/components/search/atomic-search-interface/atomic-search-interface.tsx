@@ -7,7 +7,6 @@ import {
   Watch,
   Element,
   State,
-  getAssetPath,
 } from '@stencil/core';
 import {
   LogLevel,
@@ -25,7 +24,7 @@ import {
 } from '@coveo/headless';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
-import Backend, {BackendOptions} from 'i18next-http-backend';
+import Backend from 'i18next-http-backend';
 import {createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
@@ -35,9 +34,13 @@ import {
 } from '../../../utils/local-storage-utils';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {loadGlobalScripts} from '../../../global/global';
-import availableLocales from '../../../generated/availableLocales.json';
 import {BaseAtomicInterface} from '../../common/interface/interface-common';
 import {CommonBindings} from '../../common/interface/bindings';
+import {
+  initi18n,
+  i18nBackendOptions,
+  i18nTranslationNamespace,
+} from '../../common/interface/i18n';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -66,7 +69,6 @@ export class AtomicSearchInterface
   private initialized = false;
   private store = createAtomicStore();
   private i18nPromise!: Promise<TFunction>;
-  private i18nNamespace = 'translation';
 
   @Element() private host!: HTMLAtomicSearchInterfaceElement;
 
@@ -151,7 +153,7 @@ export class AtomicSearchInterface
   }
 
   public connectedCallback() {
-    this.i18nPromise = this.initI18n();
+    this.i18nPromise = initi18n(this);
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
     this.updateFieldsToInclude();
@@ -224,13 +226,13 @@ export class AtomicSearchInterface
     );
 
     loadDayjsLocale(this.language);
-    new Backend(this.i18n.services, this.i18nBackendOptions).read(
+    new Backend(this.i18n.services, i18nBackendOptions(this)).read(
       this.language,
-      this.i18nNamespace,
+      i18nTranslationNamespace,
       (_, data) => {
         this.i18n.addResourceBundle(
           this.language,
-          this.i18nNamespace,
+          i18nTranslationNamespace,
           data,
           true,
           false
@@ -382,15 +384,6 @@ export class AtomicSearchInterface
     return searchConfigFromProps;
   }
 
-  private initI18n() {
-    return this.i18n.use(Backend).init({
-      debug: this.logLevel === 'debug',
-      lng: this.language,
-      fallbackLng: 'en',
-      backend: this.i18nBackendOptions,
-    });
-  }
-
   private get bindings(): Bindings {
     return {
       engine: this.engine!,
@@ -487,48 +480,6 @@ export class AtomicSearchInterface
       ),
       <slot></slot>,
     ];
-  }
-
-  private isI18nLocaleAvailable(locale: string) {
-    return availableLocales.includes(locale.toLowerCase());
-  }
-
-  private get i18nBackendOptions(): BackendOptions {
-    return {
-      loadPath: `${getAssetPath(
-        this.languageAssetsPath
-      )}/{{lng}}.json?lng={{lng}}&ns={{ns}}`,
-      request: async (_options, url, _payload, callback) => {
-        try {
-          const [fetchUrl, searchParams] = url.split('?');
-          const urlParams = new URLSearchParams(searchParams);
-          const lng = urlParams.get('lng')!;
-          const ns = urlParams.get('ns')!;
-
-          if (!this.isI18nLocaleAvailable(lng)) {
-            throw new Error(`Unsupported locale "${lng}"`);
-          }
-
-          if (ns !== this.i18nNamespace) {
-            throw new Error(`Unsupported namespace "${ns}"`);
-          }
-
-          const response = await fetch(fetchUrl);
-          if (response.status !== 200 && response.status !== 304) {
-            throw new Error(
-              `Unsuccessful request returned status "${response.status}"`
-            );
-          }
-
-          callback(null, {
-            status: response.status,
-            data: await response.json(),
-          });
-        } catch (error) {
-          callback(error, {status: 404, data: ''});
-        }
-      },
-    };
   }
 
   private async internalInitialization(initEngine: () => void) {
