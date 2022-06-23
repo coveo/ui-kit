@@ -89,9 +89,14 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     }
   }
 
-  private getLink(el: HTMLElement) {
-    return el?.querySelector('atomic-result')?.shadowRoot?.querySelector('a');
+  private getLink(el: HTMLElement): HTMLElement | null {
+    return (
+      el
+        ?.querySelector('atomic-result')
+        ?.shadowRoot?.querySelector('atomic-result-link a') || null
+    );
   }
+
   private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
     const setTarget = (value: string) => el.setAttribute('target', value);
     const initialTarget = el.getAttribute('target');
