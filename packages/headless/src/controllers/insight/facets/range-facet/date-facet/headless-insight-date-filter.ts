@@ -6,10 +6,6 @@ import {
 import {loadReducerError} from '../../../../../utils/errors';
 import {configuration, dateFacetSet, search} from '../../../../../app/reducers';
 import {
-  logFacetClearAll,
-  logFacetSelect,
-} from '../../../../../features/facets/facet-set/facet-set-analytics-actions';
-import {
   buildCoreDateFilter,
   DateFilter,
   DateFilterInitialState,
@@ -20,6 +16,10 @@ import {
 } from '../../../../core/facets/range-facet/date-facet/headless-core-date-filter';
 import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+import {
+  logFacetClearAll,
+  logFacetSelect,
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   DateFilterOptions,

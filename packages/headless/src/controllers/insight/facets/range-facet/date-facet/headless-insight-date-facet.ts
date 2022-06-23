@@ -12,13 +12,13 @@ import {
   DateRangeInput,
   DateRangeOptions,
 } from '../../../../core/facets/range-facet/date-facet/headless-core-date-facet';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-} from '../../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   DateFacetOptions,
