@@ -155,7 +155,7 @@ export class AtomicSearchBoxRecentQueries {
   private renderItem(value: string): SearchBoxSuggestionElement {
     const query = this.bindings.searchBoxController.state.value;
     return {
-      key: randomID('recent'),
+      key: `recent-${cleanUpString(value)}`,
       query: value,
       content: (
         <div class="flex items-center break-all">
