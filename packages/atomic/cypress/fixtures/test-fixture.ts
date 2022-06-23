@@ -269,6 +269,7 @@ export class TestFixture {
       QuerySuggestions: '@coveoQuerySuggest',
       Search: '@coveoSearch',
       FacetSearch: '@coveoFacetSearch',
+      Locale: '@locale',
     };
   }
 
@@ -329,6 +330,11 @@ export class TestFixture {
       method: 'POST',
       path: '**/rest/search/v2/facet?*',
     }).as(TestFixture.interceptAliases.FacetSearch.substring(1));
+
+    cy.intercept({
+      method: 'GET',
+      path: '/build/lang/**.json',
+    }).as(TestFixture.interceptAliases.Locale.substring(1));
   }
 
   private stubConsole() {
