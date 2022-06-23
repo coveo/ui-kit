@@ -8,14 +8,13 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {RadioButton} from '../../common/radio-button';
-import {isAppLoaded} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
@@ -114,7 +113,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
 
   public render() {
     if (
-      !isAppLoaded(this.bindings.store) ||
+      !this.bindings.store.isAppLoaded() ||
       !this.searchStatusState.hasResults
     ) {
       return;

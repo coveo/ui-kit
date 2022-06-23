@@ -11,17 +11,20 @@ import {
 } from './initialization-utils';
 import {buildSearchBox, Controller, TestUtils} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
-import {AtomicSearchInterface} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {
+  AtomicSearchInterface,
+  Bindings,
+} from '../components/search/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
 import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
-import {createStore} from '@stencil/store';
-import {AtomicStore, initialStore} from './store';
+
+import {createAtomicStore} from '../components/search/atomic-search-interface/store';
 
 describe('InitializeBindings decorator', () => {
   it(`when using the decorator with a property other than bindings
   should log an error`, () => {
     console.error = jest.fn();
-    const component: InitializableComponent = new AtomicSearchBox();
+    const component: InitializableComponent<Bindings> = new AtomicSearchBox();
     InitializeBindings()(component, 'anything');
 
     expect(console.error).toHaveBeenCalledWith(
@@ -69,7 +72,7 @@ describe('InitializeBindings decorator', () => {
   });
 
   describe('render method override', () => {
-    let component: InitializableComponent;
+    let component: InitializableComponent<Bindings>;
 
     beforeEach(() => {
       component = new AtomicSearchBox();
@@ -100,7 +103,7 @@ describe('InitializeBindings decorator', () => {
           state: TestUtils.createMockState(),
         }),
         i18n: i18next,
-        store: createStore<AtomicStore>(initialStore()),
+        store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
       };
       InitializeBindings()(component, 'bindings');
@@ -112,7 +115,7 @@ describe('InitializeBindings decorator', () => {
 });
 
 describe('BindStateToController decorator', () => {
-  let component: InitializableComponent;
+  let component: InitializableComponent<Bindings>;
 
   beforeEach(() => {
     console.error = jest.fn();
@@ -122,7 +125,7 @@ describe('BindStateToController decorator', () => {
           state: TestUtils.createMockState(),
         }),
         i18n: i18next,
-        store: createStore<AtomicStore>(initialStore()),
+        store: createAtomicStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
       },
       error: {} as Error,

@@ -12,12 +12,12 @@ import {
 import {isIOS} from '../../../utils/device-utils';
 import {listenOnce} from '../../../utils/event-utils';
 import {
-  Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
