@@ -15,6 +15,7 @@ import {
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
+  NumericFacetSection,
   PaginationSection,
   QuerySection,
   SearchSection,
@@ -45,6 +46,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchSection &
       QuerySection &
       FacetSection &
+      NumericFacetSection &
       PaginationSection
   >;
 
@@ -206,7 +208,10 @@ const buildInsightSearchRequest = (
     url: state.configuration.platformUrl,
     insightId: state.insightConfiguration.insightId,
     q: state.query?.q,
-    facets: getFacetRequests(state.facetSet),
+    facets: getFacetRequests({
+      ...state.facetSet,
+      ...state.numericFacetSet,
+    }),
     caseContext: state.insightCaseContext?.caseContext,
     ...(state.pagination && {
       firstResult: state.pagination.firstResult,
