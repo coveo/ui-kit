@@ -23,17 +23,10 @@ import {
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
-import {Bindings, InitializeEvent} from '../../../utils/initialization-utils';
+import {InitializeEvent} from '../../../utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
-import {createStore} from '@stencil/store';
-import {
-  AtomicStore,
-  hasLoadingFlag,
-  initialStore,
-  setLoadingFlag,
-  unsetLoadingFlag,
-} from '../../../utils/store';
+import {createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
   SafeStorage,
@@ -43,10 +36,16 @@ import {
 import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {loadGlobalScripts} from '../../../global/global';
 import availableLocales from '../../../generated/availableLocales.json';
-
-export type InitializationOptions = SearchEngineConfiguration;
+import {BaseAtomicInterface} from '../../common/interface/interface-common';
+import {CommonBindings} from '../../common/interface/bindings';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
+export type InitializationOptions = SearchEngineConfiguration;
+export type Bindings = CommonBindings<
+  SearchEngine,
+  ReturnType<typeof createAtomicStore>,
+  HTMLAtomicSearchInterfaceElement
+>;
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
@@ -56,14 +55,16 @@ const FirstSearchExecutedFlag = 'firstSearchExecuted';
   shadow: true,
   assetsDirs: ['lang'],
 })
-export class AtomicSearchInterface {
+export class AtomicSearchInterface
+  implements BaseAtomicInterface<SearchEngine>
+{
   private urlManager!: UrlManager;
   private searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
-  private store = createStore<AtomicStore>(initialStore());
+  private store = createAtomicStore();
   private i18nPromise!: Promise<TFunction>;
   private i18nNamespace = 'translation';
 
@@ -146,12 +147,12 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
   public constructor() {
-    loadGlobalScripts();
+    loadGlobalScripts('CoveoAtomic');
   }
 
   public connectedCallback() {
     this.i18nPromise = this.initI18n();
-    setLoadingFlag(this.store, FirstSearchExecutedFlag);
+    this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
     this.updateFieldsToInclude();
   }
@@ -159,7 +160,9 @@ export class AtomicSearchInterface {
   private updateFieldsToInclude() {
     const fields = [...EcommerceDefaultFieldsToInclude];
     if (this.fieldsToInclude) {
-      this.fieldsToInclude.split(',').map((field) => field.trim());
+      fields.push(
+        ...this.fieldsToInclude.split(',').map((field) => field.trim())
+      );
     }
     this.store.set('fieldsToInclude', fields);
   }
@@ -447,9 +450,9 @@ export class AtomicSearchInterface {
 
       if (
         this.searchStatus.state.firstSearchExecuted &&
-        hasLoadingFlag(this.store, FirstSearchExecutedFlag)
+        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
       ) {
-        unsetLoadingFlag(this.store, FirstSearchExecutedFlag);
+        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
       }
     });
   }
