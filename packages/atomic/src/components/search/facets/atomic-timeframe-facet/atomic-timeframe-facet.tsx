@@ -19,7 +19,6 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -38,7 +37,6 @@ import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {registerFacetToStore} from '../../../../utils/store';
 import {Hidden} from '../../../common/hidden';
 import {
   FocusTarget,
@@ -47,6 +45,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {randomID} from '../../../../utils/utils';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -244,7 +243,7 @@ export class AtomicTimeframeFacet
     if (!this.facetForDateRange) {
       return;
     }
-    registerFacetToStore(this.bindings.store, 'dateFacets', {
+    this.bindings.store.registerFacet('dateFacets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,

@@ -25,7 +25,6 @@ import {
   ResultDisplayLayout,
 } from '../../atomic-result/atomic-result-display-options';
 import {Button} from '../../../common/button';
-import {isMobile} from '../../../../utils/store';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -91,7 +90,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
-    if (!this.bindings.suggestedQuery() || isMobile(this.bindings.store)) {
+    if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
       return [];
     }
     const results = this.instantResults.state.results.length
