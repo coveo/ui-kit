@@ -46,7 +46,7 @@ export class AtomicSegmentedFacetScrollable {
       </Button>,
       <div
         part="fade"
-        class={`w-16 h-10 absolute top-0  z-[5] from-white-80 ${
+        class={`w-16 h-10 absolute top-0  z-[5] pointer-events-none from-background-80 ${
           isLeft ? 'bg-gradient-to-r left-0' : 'bg-gradient-to-l right-0'
         }`}
       ></div>,
@@ -59,7 +59,7 @@ export class AtomicSegmentedFacetScrollable {
         {this.renderArrow('left')}
         <div
           part="horizontalScroll"
-          class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
+          class="wrapper-segmented flex flex-row ml-10 mr-10 overflow-x-scroll scroll-smooth"
           ref={(el) => (this.horizontalScroll = el as HTMLDivElement)}
         >
           <slot></slot>
