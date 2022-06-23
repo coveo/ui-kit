@@ -154,6 +154,7 @@ export class TestFixture {
     cy.injectAxe();
     this.intercept();
     this.stubConsole();
+    this.spyOnFocus();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
@@ -268,7 +269,6 @@ export class TestFixture {
       QuerySuggestions: '@coveoQuerySuggest',
       Search: '@coveoSearch',
       FacetSearch: '@coveoFacetSearch',
-      Locale: '@locale',
     };
   }
 
@@ -329,11 +329,6 @@ export class TestFixture {
       method: 'POST',
       path: '**/rest/search/v2/facet?*',
     }).as(TestFixture.interceptAliases.FacetSearch.substring(1));
-
-    cy.intercept({
-      method: 'GET',
-      path: '/build/lang/**.json',
-    }).as(TestFixture.interceptAliases.Locale.substring(1));
   }
 
   private stubConsole() {
@@ -347,6 +342,12 @@ export class TestFixture {
       cy.stub(win.console, 'log').as(
         TestFixture.consoleAliases.log.substring(1)
       );
+    });
+  }
+
+  private spyOnFocus() {
+    cy.window().then((win) => {
+      cy.spy(win.HTMLElement.prototype, 'focus').as('focusSpy');
     });
   }
 }

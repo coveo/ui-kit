@@ -230,7 +230,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
               .should('be.focused')
               .type('{enter}', {force: true});
             expectedFocusTargetSelector().should('have.length.above', 10);
-            expectedFocusTargetSelector().eq(10).should('be.focused');
+            expectedFocusTargetSelector().eq(10).shouldBeFocusedWithSpy();
           });
         },
         {

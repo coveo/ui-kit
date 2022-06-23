@@ -18,6 +18,7 @@ declare global {
       // https://github.com/cypress-io/cypress-documentation/issues/108
       state(key: string): CypressRequest[];
       shouldBeCalled(urlPart: string, timesCalled: number): Chainable<unknown>;
+      shouldBeFocusedWithSpy(): Chainable<JQuery<HTMLElement>>;
       expectSearchEvent(actionCause: string): Chainable<SearchEventRequest>;
       expectClickEvent(actionCause: string): Chainable<ClickEventRequest>;
       expectCustomEvent(
@@ -91,6 +92,14 @@ Cypress.Commands.add('shouldBeCalled', (urlPart, timesCalled) => {
     `Url containing "${urlPart}"" should have been called ${timesCalled} times`
   ).to.have.length(timesCalled);
 });
+
+Cypress.Commands.add(
+  'shouldBeFocusedWithSpy',
+  {prevSubject: 'element'},
+  ([element]) => {
+    cy.get('@focusSpy').should('have.been.calledOn', element);
+  }
+);
 
 Cypress.Commands.add(
   'distanceTo',
