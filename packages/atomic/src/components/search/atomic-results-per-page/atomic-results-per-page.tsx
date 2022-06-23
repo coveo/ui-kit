@@ -105,7 +105,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
         checked={isSelected}
         ariaLabel={text}
         onChecked={() => this.resultPerPage.set(choice)}
-        class="btn-page"
+        class="btn-page focus-visible:bg-neutral-light"
         part={parts.join(' ')}
         text={text}
       ></RadioButton>
