@@ -3,6 +3,8 @@ import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rou
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../common/button';
 
+type ArrowDirection = 'right' | 'left';
+
 @Component({
   tag: 'atomic-segmented-facet-scrollable',
   styleUrl: 'atomic-segmented-facet-scrollable.pcss',
@@ -11,37 +13,41 @@ import {Button} from '../../common/button';
 export class AtomicSegmentedFacetScrollable {
   private horizontalScroll?: HTMLDivElement;
 
-  private slideHorizontally(arrowDirection: string) {
+  private slideHorizontally(direction: ArrowDirection) {
     const container = this.horizontalScroll;
     const pixelsToScroll = container ? container.clientWidth * 0.75 : 700;
 
     if (container === null || !container) {
       return;
     }
-    if (arrowDirection === ArrowLeftIcon) {
+    if (direction === 'left') {
       container.scrollLeft -= pixelsToScroll;
     } else {
       container.scrollLeft += pixelsToScroll;
     }
   }
 
-  private renderArrow(arrowDirection: string) {
+  private renderArrow(direction: ArrowDirection) {
+    const isLeft: boolean = direction === 'left';
     return [
       <Button
+        part="arrow"
         style="square-neutral"
         class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-10 w-10 top-0 bottom-0 ${
-          arrowDirection === ArrowLeftIcon ? 'left-0' : 'right-0'
+          isLeft ? 'left-0' : 'right-0'
         }`}
         ariaHidden="true"
-        onClick={() => this.slideHorizontally(arrowDirection)}
+        onClick={() => this.slideHorizontally(direction)}
       >
-        <atomic-icon class="w-3.5" icon={arrowDirection}></atomic-icon>
+        <atomic-icon
+          class="w-3.5"
+          icon={isLeft ? ArrowLeftIcon : ArrowRightIcon}
+        ></atomic-icon>
       </Button>,
       <div
-        class={`fade w-16 h-10 absolute top-0  z-[5] from-white-80 ${
-          arrowDirection === ArrowLeftIcon
-            ? 'bg-gradient-to-r left-0'
-            : 'bg-gradient-to-l right-0'
+        part="fade"
+        class={`w-16 h-10 absolute top-0  z-[5] from-white-80 ${
+          isLeft ? 'bg-gradient-to-r left-0' : 'bg-gradient-to-l right-0'
         }`}
       ></div>,
     ];
@@ -50,7 +56,7 @@ export class AtomicSegmentedFacetScrollable {
   render() {
     return (
       <div part="scrollableContainer" class="flex h-10 relative">
-        {this.renderArrow(ArrowLeftIcon)}
+        {this.renderArrow('left')}
         <div
           part="horizontalScroll"
           class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
@@ -58,7 +64,7 @@ export class AtomicSegmentedFacetScrollable {
         >
           <slot></slot>
         </div>
-        {this.renderArrow(ArrowRightIcon)}
+        {this.renderArrow('right')}
       </div>
     );
   }
