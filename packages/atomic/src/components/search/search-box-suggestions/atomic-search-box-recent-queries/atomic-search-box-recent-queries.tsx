@@ -11,7 +11,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {once, randomID} from '../../../../utils/utils';
+import {once} from '../../../../utils/utils';
 import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
 
 /**
