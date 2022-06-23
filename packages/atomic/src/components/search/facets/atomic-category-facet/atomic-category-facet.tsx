@@ -13,7 +13,6 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -37,7 +36,6 @@ import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
-import {registerFacetToStore} from '../../../../utils/store';
 import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {
@@ -46,6 +44,7 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -223,7 +222,7 @@ export class AtomicCategoryFacet
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'categoryFacets', {
+    this.bindings.store.registerFacet('categoryFacets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
