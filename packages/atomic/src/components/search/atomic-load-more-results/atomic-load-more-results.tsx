@@ -8,12 +8,11 @@ import {
 } from '@coveo/headless';
 import {Component, h, State} from '@stencil/core';
 import {
-  Bindings,
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {isAppLoaded} from '../../../utils/store';
 import {Button} from '../../common/button';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -115,7 +114,7 @@ export class AtomicLoadMoreResults {
 
   public render() {
     if (
-      !isAppLoaded(this.bindings.store) ||
+      !this.bindings.store.isAppLoaded() ||
       !this.querySummaryState.hasResults
     ) {
       return;

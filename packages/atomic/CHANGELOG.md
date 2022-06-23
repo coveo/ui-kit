@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.76.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.6...@coveo/atomic@1.76.0) (2022-06-22)
+
+
+### Bug Fixes
+
+* **atomic:** add region defaults ([#2139](https://github.com/coveo/ui-kit/issues/2139)) ([723e834](https://github.com/coveo/ui-kit/commit/723e834ed65732e09e8c26315fd9c9edacf1db0c))
+* **atomic:** hid modals when they were never opened ([#2132](https://github.com/coveo/ui-kit/issues/2132)) ([1801620](https://github.com/coveo/ui-kit/commit/18016201cdcf5d8fdefbff9ac0aec0e6c9e7e41e))
+* **atomic:** improved contrast between the stars and their background ([#2123](https://github.com/coveo/ui-kit/issues/2123)) ([4b8dfa0](https://github.com/coveo/ui-kit/commit/4b8dfa049934e229efeb7418f5e3919d8fe2db25))
+* **atomic:** make isCollapsed prop's value consistent ([#2138](https://github.com/coveo/ui-kit/issues/2138)) ([1dd0970](https://github.com/coveo/ui-kit/commit/1dd0970b3d43690ab5759e612397a2c6b655824f))
+* **atomic:** prevented additional refine modals being created when one already exists ([#2135](https://github.com/coveo/ui-kit/issues/2135)) ([c51fe4a](https://github.com/coveo/ui-kit/commit/c51fe4a29cb83d33780632dafa59c84fd31b5c79))
+
+
+### Features
+
+* **atomic:** add segmented scrollable component basic structure ([#2100](https://github.com/coveo/ui-kit/issues/2100)) ([7bb2d1c](https://github.com/coveo/ui-kit/commit/7bb2d1c17e60d4fd924f04b4b319fca3b62e3d8a))
+* **atomic:** allowed the page to be resized down to 320px ([#2136](https://github.com/coveo/ui-kit/issues/2136)) ([7461c43](https://github.com/coveo/ui-kit/commit/7461c43053ea24a5ee8ec2aec734c8fe435c4f69))
+* **atomic:** disableSearch prop for search box ([#2126](https://github.com/coveo/ui-kit/issues/2126)) ([a3d2c64](https://github.com/coveo/ui-kit/commit/a3d2c645ea904bf27254ce4eac4f63f4e8318de9))
+
+
+
+
+
 ## [1.75.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.5...@coveo/atomic@1.75.6) (2022-06-21)
 
 **Note:** Version bump only for package @coveo/atomic
