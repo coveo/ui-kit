@@ -1,4 +1,4 @@
-import {Component, h} from '@stencil/core';
+import {Component, h, Listen, State} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../common/button';
@@ -12,6 +12,29 @@ type ArrowDirection = 'right' | 'left';
 })
 export class AtomicSegmentedFacetScrollable {
   private horizontalScroll?: HTMLDivElement;
+  @State() private hideLeftArrow = false;
+  @State() private hideRightArrow = false;
+
+  @Listen('mousewheel')
+  handleScroll(ev: Event) {
+    console.log(
+      this.horizontalScroll?.scrollWidth,
+      this.horizontalScroll?.clientWidth,
+      this.horizontalScroll?.offsetWidth,
+      ev
+    );
+    if (
+      this.horizontalScroll &&
+      this.horizontalScroll?.clientWidth >= this.horizontalScroll?.scrollWidth
+    ) {
+      console.log('no overflow !!', ev);
+      this.hideLeftArrow = true;
+      this.hideRightArrow = true;
+    } else {
+      this.hideLeftArrow = false;
+      this.hideRightArrow = false;
+    }
+  }
 
   private slideHorizontally(direction: ArrowDirection) {
     const container = this.horizontalScroll;
@@ -34,7 +57,13 @@ export class AtomicSegmentedFacetScrollable {
         part="arrow"
         style="square-neutral"
         class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-10 w-10 top-0 bottom-0 ${
-          isLeft ? 'left-0' : 'right-0'
+          isLeft
+            ? this.hideLeftArrow
+              ? 'left-0 hidden'
+              : 'left-0'
+            : this.hideRightArrow
+            ? 'right-0 hidden'
+            : 'right-0'
         }`}
         ariaHidden="true"
         onClick={() => this.slideHorizontally(direction)}
