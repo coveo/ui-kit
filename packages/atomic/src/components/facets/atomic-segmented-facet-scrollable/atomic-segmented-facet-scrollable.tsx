@@ -26,25 +26,30 @@ export class AtomicSegmentedFacetScrollable {
   }
 
   private renderArrow(arrowDirection: string) {
-    return (
+    return [
       <Button
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded ${
-          arrowDirection === ArrowLeftIcon
-            ? 'z-10 shadow-[15px_1px_10px_5px] [clip-path:inset(0 -35px 0 0)]'
-            : 'shadow-[-15px_1px_10px_5px] [clip-path:inset(0 0 0 -35px)] clipPath-right'
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-10 w-10 top-0 bottom-0 ${
+          arrowDirection === ArrowLeftIcon ? 'left-0' : 'right-0'
         }`}
         ariaHidden="true"
         onClick={() => this.horizonalSlider(arrowDirection)}
       >
         <atomic-icon class="w-3.5" icon={arrowDirection}></atomic-icon>
-      </Button>
-    );
+      </Button>,
+      <div
+        class={`fade w-16 h-10 absolute top-0  z-[5] from-white-80 ${
+          arrowDirection === ArrowLeftIcon
+            ? 'bg-gradient-to-r left-0'
+            : 'bg-gradient-to-l right-0'
+        }`}
+      ></div>,
+    ];
   }
 
   render() {
     return (
-      <div class="flex h-9">
+      <div class="flex h-10 relative">
         {this.renderArrow(ArrowLeftIcon)}
         <div
           id="horizontalScroll"

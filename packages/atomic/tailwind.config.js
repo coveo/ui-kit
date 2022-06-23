@@ -3,9 +3,6 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   content: ['./src/**/*.tsx'],
   theme: {
-    clipPath: {
-      'right': 'inset(0 -35px 0 0)'
-    },
     extend: {
       variants: {
         textColor: ['group-hover']
@@ -52,6 +49,10 @@ module.exports = {
         'desktop-only': {min: '1024px'},
         'mobile-only': {raw: 'not all and (min-width: 1024px)'},
       },
+      gradientColorStops: (theme) => ({
+        ...theme("colors"),
+        'white-80': '#fff 80%',
+      }),
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
       },

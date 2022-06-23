@@ -101,7 +101,7 @@ export class AtomicSegmentedFacet
   }
 
   private renderValuesContainer(children: VNode[]) {
-    const classes = 'box-container flex';
+    const classes = 'box-container flex h-10';
     return (
       <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
         <ul class={classes} part="values">
@@ -156,7 +156,7 @@ export class AtomicSegmentedFacet
     }
 
     return (
-      <div class="flex whitespace-nowrap h-9 items-center">
+      <div class="flex whitespace-nowrap h-10 items-center">
         {this.renderLabel()}
         {this.renderValues()}
       </div>
