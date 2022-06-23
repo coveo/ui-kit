@@ -13,8 +13,8 @@ import {sanitize} from 'dompurify';
 import {
   InitializableComponent,
   InitializeBindings,
-  Bindings,
 } from '../../../utils/initialization-utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.

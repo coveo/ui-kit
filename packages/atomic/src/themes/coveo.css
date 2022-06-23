@@ -17,6 +17,7 @@
   --atomic-success: #12a244;
   --atomic-error: #ce3f00;
   --atomic-visited: #752e9c;
+  --atomic-disabled: #c5cacf;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
