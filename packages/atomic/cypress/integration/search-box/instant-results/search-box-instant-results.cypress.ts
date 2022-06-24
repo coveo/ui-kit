@@ -136,15 +136,15 @@ describe('Instant Results Test Suites', () => {
   });
 
   describe('with mouse navigation', () => {
-    // describe('when hovering over a query', () => {
-    //   before(() => {
-    //     setupWithSuggestionsAndRecentQueries();
-    //     SearchBoxSelectors.inputBox().click();
-    //     SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
-    //   });
-    //   SearchBoxAssertions.assertSuggestionIsSelected(0);
-    //   SearchBoxAssertions.assertHasText('');
-    // });
+    describe('when hovering over a query', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().click();
+        SearchBoxSelectors.querySuggestions().eq(0).trigger('mouseover');
+      });
+      SearchBoxAssertions.assertSuggestionIsSelected(0);
+      SearchBoxAssertions.assertHasText('');
+    });
 
     describe('when hovering over an instant result', () => {
       before(() => {

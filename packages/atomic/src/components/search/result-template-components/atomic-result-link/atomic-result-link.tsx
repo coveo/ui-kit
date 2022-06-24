@@ -6,7 +6,6 @@ import {
 } from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {
-  Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
@@ -16,6 +15,7 @@ import {isUndefined} from '@coveo/bueno';
 import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
 import {buildCustomEvent} from '../../../../utils/event-utils';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
