@@ -496,15 +496,23 @@ export class AtomicSearchBox {
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.focusPreviousValue();
+        if (this.firstValue === this.activeDescendantElement) {
+          this.updateActiveDescendant();
+        } else {
+          this.focusPreviousValue();
+        }
         break;
       case 'ArrowRight':
-        e.preventDefault();
-        this.focusPanel(this.rightPanelRef);
+        if (this.activeDescendant || !this.searchBox.state.value) {
+          e.preventDefault();
+          this.focusPanel(this.rightPanelRef);
+        }
         break;
       case 'ArrowLeft':
-        e.preventDefault();
-        this.focusPanel(this.leftPanelRef);
+        if (this.activeDescendant || !this.searchBox.state.value) {
+          e.preventDefault();
+          this.focusPanel(this.leftPanelRef);
+        }
         break;
     }
   }
