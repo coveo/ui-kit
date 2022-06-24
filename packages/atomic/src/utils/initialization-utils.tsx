@@ -2,11 +2,11 @@
 import {buildCustomEvent} from './event-utils';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {TOptions} from 'i18next';
-import {Hidden} from '../components/common/hidden';
-import {CommonBindings} from '../components/common/interface/bindings';
-import {AnyEngineType} from '../components/common/interface/interface-common';
+import {Hidden} from '@components/common/hidden';
+import {CommonBindings} from '@components/common/interface/bindings';
+import {AnyEngineType} from '@components/common/interface/interface-common';
 import {HTMLStencilElement} from '@stencil/core/internal';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {Bindings} from '@components/search/atomic-search-interface/atomic-search-interface';
 
 declare global {
   interface Window {
