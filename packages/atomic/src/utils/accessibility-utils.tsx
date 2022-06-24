@@ -60,10 +60,9 @@ export function FocusTarget() {
         ) {
           focusAfterSearch = false;
           if (element) {
-            const el = element;
             // The focus seems to be flaky without deferring, especially on iOS.
             defer().then(() => {
-              el.focus();
+              element?.focus();
               onFocusCallback?.();
             });
           }

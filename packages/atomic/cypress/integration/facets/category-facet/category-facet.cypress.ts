@@ -256,6 +256,8 @@ describe('Category Facet Test Suites', () => {
         function setupSelectFirstParent() {
           setupGoDeeperLastLevel();
           pressParentButton(0);
+          cy.wait(TestFixture.interceptAliases.Search);
+          cy.wait(TestFixture.interceptAliases.UA);
         }
 
         const selectedPath = canadaHierarchy.slice(0, 1);
