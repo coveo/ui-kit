@@ -138,7 +138,16 @@ export const config: Config = {
     inlineSvg(),
     postcss({
       plugins: [
-        atImport(),
+        atImport({
+          resolve: (id) => {
+            const aliases = createSrcAliases();
+            const match = aliases.find((al) => id.startsWith(al.find));
+            if (match) {
+              return id.replace(match.find, match.replacement);
+            }
+            return id;
+          },
+        }),
         mixins(),
         tailwindNesting(),
         tailwind(),

@@ -2,7 +2,7 @@ import {LogLevel} from '@coveo/headless';
 import {InsightEngine} from '@coveo/headless/insight';
 import {Component, Element, h, Method, Prop, Watch} from '@stencil/core';
 import i18next, {i18n, TFunction} from 'i18next';
-import {loadGlobalScripts} from '../../../global/global';
+import {loadGlobalScripts} from '@global/global';
 import {loadDayjsLocale} from '@utils/dayjs-locales';
 import {InitializeEvent} from '@utils/initialization-utils';
 import {CommonBindings} from '../../common/interface/bindings';
