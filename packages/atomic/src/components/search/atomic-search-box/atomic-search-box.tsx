@@ -606,8 +606,8 @@ export class AtomicSearchBox {
     return part;
   }
 
-  private onSuggestionClick(item: SearchBoxSuggestionElement) {
-    item.onSelect && item.onSelect();
+  private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
+    item.onSelect && item.onSelect(e);
     item.query && this.clearSuggestions();
   }
   private onSuggestionMouseOver(
@@ -660,8 +660,8 @@ export class AtomicSearchBox {
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => {
-          this.onSuggestionClick(item);
+        onClick={(e: Event) => {
+          this.onSuggestionClick(item, e);
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
