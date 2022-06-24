@@ -381,7 +381,10 @@ async function fetchInstantResultsFromAPI(
     q,
     numberOfResults
   );
-  return mapSearchResponse(await apiClient.search(request), mappings);
+  return mapSearchResponse(
+    await apiClient.search(request, {disableAbortWarning: true}),
+    mappings
+  );
 }
 
 const getStateAfterResponse: (
