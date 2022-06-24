@@ -19,6 +19,14 @@ import {generateAngularModuleDefinition as angularModule} from './stencil-plugin
 
 const isProduction = process.env.BUILD === 'production';
 
+const toAlias = ['global', 'images', 'utils', 'components'];
+function createSrcAliases() {
+  return toAlias.map((folder) => ({
+    find: `@${folder}`,
+    replacement: path.resolve(__dirname, `./src/${folder}`),
+  }));
+}
+
 function getPackageVersion(): string {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
@@ -174,6 +182,7 @@ export const config: Config = {
                 './src/external-builds/headless.esm.js'
               ),
             },
+            ...createSrcAliases(),
           ],
         }),
       html({
