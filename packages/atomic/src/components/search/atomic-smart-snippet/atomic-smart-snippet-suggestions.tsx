@@ -4,8 +4,8 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '@utils/initialization-utils';
-import ArrowRight from '../../../images/arrow-right.svg';
-import ArrowDown from '../../../images/arrow-down.svg';
+import ArrowRight from '@images/arrow-right.svg';
+import ArrowDown from '@images/arrow-down.svg';
 import {
   buildSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,

@@ -8,7 +8,7 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core';
-import ArrowDown from '../../../images/arrow-down.svg';
+import ArrowDown from '@images/arrow-down.svg';
 import {listenOnce} from '@utils/event-utils';
 import {InitializeBindings} from '@utils/initialization-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';

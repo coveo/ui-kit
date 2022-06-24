@@ -24,7 +24,7 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
-import Star from '../../../../images/star.svg';
+import Star from '@images/star.svg';
 import {Hidden} from '../../../common/hidden';
 import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {MapProp} from '@utils/props-utils';

@@ -14,7 +14,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '@utils/initialization-utils';
-import MagnifyingGlass from '../../../images/magnifying-glass.svg';
+import MagnifyingGlass from '@images/magnifying-glass.svg';
 import escape from 'escape-html';
 import {Button} from '../../common/button';
 import {AriaLiveRegion} from '@utils/accessibility-utils';

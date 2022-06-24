@@ -6,11 +6,11 @@ import {
   InitializeBindings,
 } from '@utils/initialization-utils';
 import {Button} from '../../common/button';
-import CannotAccess from '../../../images/cannot-access.svg';
-import SomethingWrong from '../../../images/something-wrong.svg';
-import SearchInactive from '../../../images/search-inactive.svg';
-import NoConnection from '../../../images/no-connection.svg';
-import Indexing from '../../../images/indexing.svg';
+import CannotAccess from '@images/cannot-access.svg';
+import SomethingWrong from '@images/something-wrong.svg';
+import SearchInactive from '@images/search-inactive.svg';
+import NoConnection from '@images/no-connection.svg';
+import Indexing from '@images/indexing.svg';
 import {AriaLiveRegion} from '@utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 

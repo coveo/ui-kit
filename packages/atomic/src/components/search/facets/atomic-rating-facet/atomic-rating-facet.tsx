@@ -25,7 +25,7 @@ import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
-import Star from '../../../../images/star.svg';
+import Star from '@images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
 import {Hidden} from '../../../common/hidden';
 import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';

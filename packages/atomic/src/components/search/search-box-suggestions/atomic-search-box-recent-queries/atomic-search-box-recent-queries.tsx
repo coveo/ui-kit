@@ -1,4 +1,4 @@
-import Clock from '../../../../images/clock.svg';
+import Clock from '@images/clock.svg';
 import {
   buildRecentQueriesList,
   HighlightUtils,

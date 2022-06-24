@@ -12,7 +12,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '@utils/initialization-utils';
-import ArrowRight from '../../../images/arrow-right.svg';
+import ArrowRight from '@images/arrow-right.svg';
 import {Button} from '../../common/button';
 import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {randomID} from '@utils/utils';
