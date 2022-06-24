@@ -5,7 +5,7 @@ import {
   Unsubscribe,
   buildRelevanceInspector,
 } from '@coveo/headless';
-import {Bindings} from '../../../utils/initialization-utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance, as well as information to help troubleshoot issues during development.

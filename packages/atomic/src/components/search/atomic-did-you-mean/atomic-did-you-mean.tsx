@@ -1,13 +1,13 @@
 import {Component, h, State} from '@stencil/core';
 import {DidYouMean, DidYouMeanState, buildDidYouMean} from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import escape from 'escape-html';
 import {Hidden} from '../../common/hidden';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.

@@ -4,15 +4,14 @@ import {
 } from '@coveo/headless';
 import {AnalyticsClientSendEventHook} from '@coveo/headless/node_modules/coveo.analytics';
 import {getAtomicEnvironment} from '../../../global/environment';
-import {ObservableMap} from '@stencil/store';
-import {AtomicStore, getAllFacets} from '../../../utils/store';
+import {createAtomicStore} from './store';
 
 type AnalyticsPayload = Parameters<AnalyticsClientSendEventHook>[1];
 
 export function getAnalyticsConfig(
   searchEngineConfig: SearchEngineConfiguration,
   enabled: boolean,
-  store: ObservableMap<AtomicStore>
+  store: ReturnType<typeof createAtomicStore>
 ): AnalyticsConfiguration {
   const analyticsClientMiddleware = (
     event: string,
@@ -38,7 +37,7 @@ export function getAnalyticsConfig(
 function augmentAnalytics(
   event: string,
   payload: AnalyticsPayload,
-  store: ObservableMap<AtomicStore>,
+  store: ReturnType<typeof createAtomicStore>,
   config: SearchEngineConfiguration
 ) {
   let result = augmentWithExternalMiddleware(event, payload, config);
@@ -67,9 +66,9 @@ function augmentAnalyticsWithAtomicVersion(payload: AnalyticsPayload) {
 
 function augmentAnalyticsWithFacetTitles(
   payload: AnalyticsPayload,
-  store: ObservableMap<AtomicStore>
+  store: ReturnType<typeof createAtomicStore>
 ) {
-  const allFacets = getAllFacets(store);
+  const allFacets = store.getAllFacets();
   const getAtomicFacetLabelOrOriginalTitle = (
     facetId: string,
     originalTitle: string
