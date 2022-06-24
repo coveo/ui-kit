@@ -27,7 +27,7 @@ import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import Star from '@images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '@components/common/hidden';
 import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {MapProp} from '@utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';

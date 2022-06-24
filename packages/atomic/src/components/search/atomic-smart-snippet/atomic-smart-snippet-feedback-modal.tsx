@@ -17,7 +17,7 @@ import {
   SmartSnippet,
   SmartSnippetFeedback,
 } from '@coveo/headless';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import {once, randomID} from '@utils/utils';
 import {updateBreakpoints} from '@utils/replace-breakpoint';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';

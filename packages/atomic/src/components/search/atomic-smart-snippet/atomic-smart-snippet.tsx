@@ -9,8 +9,8 @@ import {
   SmartSnippet,
   SmartSnippetState,
 } from '@coveo/headless';
-import {Hidden} from '../../common/hidden';
-import {Heading} from '../../common/heading';
+import {Hidden} from '@components/common/hidden';
+import {Heading} from '@components/common/heading';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '@utils/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';

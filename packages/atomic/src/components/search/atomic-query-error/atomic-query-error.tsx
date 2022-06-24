@@ -5,7 +5,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '@utils/initialization-utils';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import CannotAccess from '@images/cannot-access.svg';
 import SomethingWrong from '@images/something-wrong.svg';
 import SearchInactive from '@images/search-inactive.svg';

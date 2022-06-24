@@ -24,7 +24,7 @@ import {
 } from '../result-list-decorators';
 import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
 import {ListDisplayResultsPlaceholder} from '../list-display-results-placeholder';
-import {Button} from '../../../common/button';
+import {Button} from '@components/common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 const childTemplateComponent = 'atomic-result-children-template';

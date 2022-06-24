@@ -5,9 +5,9 @@ import i18next, {i18n, TFunction} from 'i18next';
 import {loadGlobalScripts} from '@global/global';
 import {loadDayjsLocale} from '@utils/dayjs-locales';
 import {InitializeEvent} from '@utils/initialization-utils';
-import {CommonBindings} from '../../common/interface/bindings';
-import {initi18n} from '../../common/interface/i18n';
-import {BaseAtomicInterface} from '../../common/interface/interface-common';
+import {CommonBindings} from '@components/common/interface/bindings';
+import {initi18n} from '@components/common/interface/i18n';
+import {BaseAtomicInterface} from '@components/common/interface/interface-common';
 import {createAtomicRecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';

@@ -16,7 +16,7 @@ import {
 } from '@utils/initialization-utils';
 import MagnifyingGlass from '@images/magnifying-glass.svg';
 import escape from 'escape-html';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import {AriaLiveRegion} from '@utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 

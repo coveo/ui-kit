@@ -11,7 +11,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '@utils/initialization-utils';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

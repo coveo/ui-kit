@@ -20,7 +20,7 @@ import {getFieldValueCaption} from '@utils/field-utils';
 import {MapProp} from '@utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '@components/common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

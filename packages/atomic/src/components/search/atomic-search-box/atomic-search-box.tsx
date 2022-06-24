@@ -24,7 +24,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '@utils/initialization-utils';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import {once, randomID} from '@utils/utils';
 import {
   queryDataAttribute,

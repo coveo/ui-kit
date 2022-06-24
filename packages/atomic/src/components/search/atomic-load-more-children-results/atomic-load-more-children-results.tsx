@@ -3,7 +3,7 @@ import {Component, Element, h, Prop, State} from '@stencil/core';
 import {buildCustomEvent} from '@utils/event-utils';
 import {InitializeBindings} from '@utils/initialization-utils';
 import {getResultDisplayClasses} from '../atomic-result/atomic-result-display-options';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import {
   DisplayConfig,
   ResultContext,

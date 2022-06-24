@@ -6,7 +6,7 @@ import {
   InitializeBindings,
 } from '@utils/initialization-utils';
 import escape from 'escape-html';
-import {Hidden} from '../../common/hidden';
+import {Hidden} from '@components/common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

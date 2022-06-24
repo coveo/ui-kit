@@ -2,8 +2,8 @@ import {h, FunctionalComponent} from '@stencil/core';
 import Checkmark from '@images/checkmark.svg';
 import Cross from '@images/cross.svg';
 import {i18n} from 'i18next';
-import {RadioButton} from '../../common/radio-button';
-import {Button} from '../../common/button';
+import {RadioButton} from '@components/common/radio-button';
+import {Button} from '@components/common/button';
 
 interface SmartSnippetFeedbackBannerProps {
   i18n: i18n;

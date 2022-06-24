@@ -12,10 +12,10 @@ import {
   FacetManagerState,
   buildFacetManager,
 } from '@coveo/headless';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {getFieldValueCaption} from '@utils/field-utils';
-import {Hidden} from '../../common/hidden';
+import {Hidden} from '@components/common/hidden';
 import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 

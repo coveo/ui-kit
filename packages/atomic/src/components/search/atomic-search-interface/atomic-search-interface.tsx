@@ -35,8 +35,8 @@ import {
 } from '@utils/local-storage-utils';
 import {loadDayjsLocale} from '@utils/dayjs-locales';
 import {loadGlobalScripts} from '@global/global';
-import {BaseAtomicInterface} from '../../common/interface/interface-common';
-import {CommonBindings} from '../../common/interface/bindings';
+import {BaseAtomicInterface} from '@components/common/interface/interface-common';
+import {CommonBindings} from '@components/common/interface/bindings';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;

@@ -32,7 +32,7 @@ import {
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {getFieldCaptions, getFieldValueCaption} from '@utils/field-utils';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '@components/common/hidden';
 import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {MapProp} from '@utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';

@@ -1,7 +1,7 @@
 import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
-} from '../../common/interface/store';
+} from '@components/common/interface/store';
 
 export interface AtomicSvgInsightStoreData extends AtomicCommonStoreData {}
 
