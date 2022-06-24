@@ -3,7 +3,7 @@ import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
-} from '../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import {
   buildSmartSnippet,
   SmartSnippet,
@@ -12,7 +12,7 @@ import {
 import {Hidden} from '../../common/hidden';
 import {Heading} from '../../common/heading';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '@utils/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

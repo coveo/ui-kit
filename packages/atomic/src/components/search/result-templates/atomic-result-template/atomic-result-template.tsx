@@ -1,6 +1,6 @@
 import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
-import {MapProp} from '../../../../utils/props-utils';
+import {MapProp} from '@utils/props-utils';
 import {ResultTemplateCommon} from '../result-template-common';
 
 /**

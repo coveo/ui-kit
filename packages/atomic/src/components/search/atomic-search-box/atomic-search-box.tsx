@@ -23,9 +23,9 @@ import {
 import {
   BindStateToController,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import {Button} from '../../common/button';
-import {once, randomID} from '../../../utils/utils';
+import {once, randomID} from '@utils/utils';
 import {
   queryDataAttribute,
   SearchBoxSuggestionElement,
@@ -35,11 +35,12 @@ import {
   elementHasNoQuery,
   elementHasQuery,
 } from '../search-box-suggestions/suggestions-common';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
-import {promiseTimeout} from '../../../utils/promise-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {AriaLiveRegion} from '@utils/accessibility-utils';
+import {SafeStorage, StorageItems} from '@utils/local-storage-utils';
+import {promiseTimeout} from '@utils/promise-utils';
+import {updateBreakpoints} from '@utils/replace-breakpoint';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {getAtomicEnvironment} from '@global/environment';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -124,6 +125,7 @@ export class AtomicSearchBox {
   protected ariaMessage!: string;
 
   public initialize() {
+    console.log(getAtomicEnvironment);
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
 

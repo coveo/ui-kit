@@ -4,10 +4,10 @@ export {Bindings} from './components/search/atomic-search-interface/atomic-searc
 export {Components, JSX} from './components';
 export type {i18n} from 'i18next';
 
-export {bindLogDocumentOpenOnResult} from './utils/result-utils';
+export {bindLogDocumentOpenOnResult} from '@utils/result-utils';
 
-export {MissingInterfaceParentError} from './utils/initialization-utils';
-import {initializeBindings as genericInitializeBindings} from './utils/initialization-utils';
+export {MissingInterfaceParentError} from '@utils/initialization-utils';
+import {initializeBindings as genericInitializeBindings} from '@utils/initialization-utils';
 
 export function initializeBindings(element: Element) {
   return genericInitializeBindings<Bindings>(element);

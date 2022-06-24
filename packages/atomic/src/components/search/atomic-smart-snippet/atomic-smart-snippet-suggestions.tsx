@@ -3,7 +3,7 @@ import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
-} from '../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import ArrowRight from '../../../images/arrow-right.svg';
 import ArrowDown from '../../../images/arrow-down.svg';
 import {
@@ -15,7 +15,7 @@ import {
 import {Hidden} from '../../common/hidden';
 import {Heading} from '../../common/heading';
 import {Button} from '../../common/button';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '@utils/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

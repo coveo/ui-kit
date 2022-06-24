@@ -3,7 +3,7 @@ import {
   InitializableComponent,
   BindStateToController,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
@@ -14,12 +14,9 @@ import {
 } from '@coveo/headless';
 import {Button} from '../../common/button';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
-import {getFieldValueCaption} from '../../../utils/field-utils';
+import {getFieldValueCaption} from '@utils/field-utils';
 import {Hidden} from '../../common/hidden';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
+import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 interface Breadcrumb {

@@ -13,11 +13,11 @@ import {Component, h, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import MagnifyingGlass from '../../../images/magnifying-glass.svg';
 import escape from 'escape-html';
 import {Button} from '../../common/button';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
+import {AriaLiveRegion} from '@utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

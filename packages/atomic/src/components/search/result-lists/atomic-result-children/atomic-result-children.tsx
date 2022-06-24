@@ -7,8 +7,8 @@ import {
   ResultTemplatesManager,
 } from '@coveo/headless';
 import {Component, Element, State, h, Listen, Prop, Host} from '@stencil/core';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {elementHasAncestorTag} from '../../../../utils/utils';
+import {InitializeBindings} from '@utils/initialization-utils';
+import {elementHasAncestorTag} from '@utils/utils';
 import {
   ResultContext,
   ChildTemplatesContext,

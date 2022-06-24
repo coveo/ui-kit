@@ -3,7 +3,7 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import Star from '../../../../images/star.svg';
 import {ResultContext} from '../result-template-decorators';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {InitializeBindings} from '@utils/initialization-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

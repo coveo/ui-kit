@@ -11,8 +11,8 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+} from '@utils/initialization-utils';
+import {randomID} from '@utils/utils';
 import {RadioButton} from '../../common/radio-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 

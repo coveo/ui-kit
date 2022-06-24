@@ -16,7 +16,7 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
@@ -32,17 +32,11 @@ import {
 } from '../facet-search/facet-search-utils';
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
-import {
-  getFieldCaptions,
-  getFieldValueCaption,
-} from '../../../../utils/field-utils';
+import {getFieldCaptions, getFieldValueCaption} from '@utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
 import {Hidden} from '../../../common/hidden';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
+import {MapProp} from '@utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

@@ -23,7 +23,7 @@ import {
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
-import {InitializeEvent} from '../../../utils/initialization-utils';
+import {InitializeEvent} from '@utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createAtomicStore} from './store';
@@ -32,8 +32,8 @@ import {
   SafeStorage,
   StandaloneSearchBoxData,
   StorageItems,
-} from '../../../utils/local-storage-utils';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
+} from '@utils/local-storage-utils';
+import {loadDayjsLocale} from '@utils/dayjs-locales';
 import {loadGlobalScripts} from '../../../global/global';
 import {BaseAtomicInterface} from '../../common/interface/interface-common';
 import {CommonBindings} from '../../common/interface/bindings';

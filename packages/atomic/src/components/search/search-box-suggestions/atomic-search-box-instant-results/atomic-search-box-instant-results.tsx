@@ -12,7 +12,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {cleanUpString} from '../../../../utils/string-utils';
+import {cleanUpString} from '@utils/string-utils';
 import {
   BaseResultList,
   ResultListCommon,
