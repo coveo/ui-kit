@@ -10,6 +10,9 @@ import * as SearchBoxAssertions from '../search-box-assertions';
 import * as InstantResultsAssertions from './search-box-instant-results-assertions';
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 
+const delay = (force = false) => ({delay: 200, force});
+const downKeys = (count: number) => Array(count).fill('{downarrow}').join('');
+
 const setInstantResults = (count: number) => (fixture: TestFixture) => {
   fixture.withCustomResponse((response) => {
     for (let i = 0; i < count; i++) {
@@ -61,11 +64,8 @@ describe('Instant Results Test Suites', () => {
       before(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
-          '{downarrow}{downarrow}{rightarrow}',
-          {
-            delay: 500,
-            force: true,
-          }
+          `${downKeys(2)}{rightarrow}`,
+          delay()
         );
       });
       after(() => {
@@ -84,11 +84,8 @@ describe('Instant Results Test Suites', () => {
       before(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
-          '{downarrow}{downarrow}{rightarrow}{leftarrow}',
-          {
-            delay: 200,
-            force: true,
-          }
+          `${downKeys(2)}{rightarrow}{leftarrow}`,
+          delay()
         );
       });
       after(() => {
@@ -103,11 +100,8 @@ describe('Instant Results Test Suites', () => {
       before(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
-          '{downarrow}{downarrow}{rightarrow}{leftarrow}',
-          {
-            delay: 200,
-            force: true,
-          }
+          `${downKeys(2)}{rightarrow}{leftarrow}`,
+          delay()
         );
       });
       after(() => {
@@ -122,11 +116,8 @@ describe('Instant Results Test Suites', () => {
       before(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type(
-          '{downarrow}{downarrow}{rightarrow}{enter}',
-          {
-            delay: 200,
-            force: true,
-          }
+          `${downKeys(2)}{rightarrow}{enter}`,
+          delay()
         );
       });
       it('redirects to new page', () => {
@@ -134,6 +125,64 @@ describe('Instant Results Test Suites', () => {
           expect(win.location.href).to.equal('about:blank?0');
         });
       });
+    });
+    describe('when navigating to first suggestion and back with up arrow', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().type(
+          'Rec{downarrow}{uparrow}{leftarrow}{del}',
+          delay()
+        );
+      });
+
+      SearchBoxAssertions.assertNoSuggestionIsSelected();
+      SearchBoxAssertions.assertHasText('Re');
+    });
+
+    describe('when navigating with the down arrow only', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().type(downKeys(6), delay());
+      });
+
+      SearchBoxAssertions.assertSuggestionIsSelected(0);
+    });
+
+    describe('when navigating up from results', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().type('{moveToStart}');
+        InstantResultsSelectors.results();
+        SearchBoxSelectors.inputBox().type(
+          '{rightarrow}{uparrow}',
+          delay(true)
+        );
+      });
+
+      SearchBoxAssertions.assertNoSuggestionIsSelected();
+      InstantResultsAssertions.assertNoResultIsSelected();
+    });
+
+    describe('when navigating up from input', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().type('{moveToStart}{uparrow}', delay());
+      });
+
+      SearchBoxAssertions.assertSuggestionIsSelected(2);
+    });
+
+    describe('when typing when a query is selected', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().type(
+          `${downKeys(2)}{backspace}`,
+          delay()
+        );
+      });
+
+      SearchBoxAssertions.assertNoSuggestionIsSelected();
+      SearchBoxAssertions.assertHasText('Recent query ');
     });
   });
 
