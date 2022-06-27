@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "setup": "npm i && husky install && lerna bootstrap --no-ci && npm run lockLernaDependencies",
+    "setup": "npm i && husky install && lerna bootstrap && npm run lockLernaDependencies",
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run clean && lerna run build",
