@@ -39,8 +39,8 @@ runs:
     - if: steps.npm-cache.outputs.cache-hit != 'true'
       run: |
         npm install
-        npx --no-install lerna exec \"npm install --package-lock-only\"
         npx --no-install lerna bootstrap --no-ci
+        npx --no-install lerna exec \"npm install\"
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
