@@ -11,6 +11,7 @@ export interface ResultLinkProps {
   onBeginDelayedSelect: () => void;
   onCancelPendingSelect: () => void;
   ref?: (elm?: HTMLAnchorElement) => void;
+  stopPropagation?: boolean;
   attributes?: Attr[];
   tabIndex?: number;
   ariaHidden?: boolean;
@@ -30,11 +31,12 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
     attributes,
     tabIndex,
     ariaHidden,
+    stopPropagation = true,
   },
   children
 ) => {
   const stopPropagationAndProcess = (e: Event, process: () => void) => {
-    e.stopPropagation();
+    stopPropagation && e.stopPropagation();
     process();
   };
   return (

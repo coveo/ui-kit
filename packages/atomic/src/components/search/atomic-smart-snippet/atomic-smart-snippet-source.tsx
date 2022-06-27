@@ -11,11 +11,11 @@ import {
 import {Result} from '@coveo/headless';
 import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {
-  Bindings,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {ResultContextEvent} from '../result-template-components/result-template-decorators';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * @part source-url

@@ -6,11 +6,11 @@ import {
 } from '@coveo/headless';
 import {
   InitializeBindings,
-  Bindings,
   InitializableComponent,
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.

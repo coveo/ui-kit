@@ -9,7 +9,6 @@ import {
   buildResultsPerPage,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
@@ -28,10 +27,8 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {
-  registerResultListToStore,
-  ResultListInfo,
-} from '../../../../utils/store';
+import {ResultListInfo} from '../../atomic-search-interface/store';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -185,7 +182,7 @@ export class AtomicResultList implements BaseResultList, ResultListInfo {
       options: {fieldsToInclude},
     });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    registerResultListToStore(this.bindings.store, this);
+    this.bindings.store.registerResultList(this);
   }
 
   public getContentOfResultTemplate(
