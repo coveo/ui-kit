@@ -1,4 +1,4 @@
-import {getCaseContexttInitialState} from '../features/case-context/case-context-state';
+import {getCaseContextInitialState} from '../features/case-context/case-context-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
@@ -22,7 +22,7 @@ export function buildMockInsightState(
     insightInterface: getInsightInterfaceInitialState(),
     searchHub: getSearchHubInitialState(),
     version: 'unit-testing-version',
-    insightCaseContext: getCaseContexttInitialState(),
+    insightCaseContext: getCaseContextInitialState(),
     query: getQueryInitialState(),
     facetSet: getFacetSetInitialState(),
     pagination: getPaginationInitialState(),

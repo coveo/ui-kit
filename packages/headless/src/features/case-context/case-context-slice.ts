@@ -1,9 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {getCaseContexttInitialState} from './case-context-state';
+import {getCaseContextInitialState} from './case-context-state';
 import {setCaseContext} from './case-context-actions';
 
 export const caseContextReducer = createReducer(
-  getCaseContexttInitialState(),
+  getCaseContextInitialState(),
   (builder) => {
     builder.addCase(setCaseContext, (state, action) => {
       state.caseContext = action.payload;

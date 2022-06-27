@@ -3,6 +3,9 @@ import {CoreEngine} from '../..';
 import {caseContext} from '../../app/reducers';
 import {setCaseContext} from './case-context-actions';
 
+/**
+ * The case context action creators.
+ */
 export interface CaseContextActionCreators {
   /**
    * Sets the case context.
@@ -15,6 +18,12 @@ export interface CaseContextActionCreators {
   ): PayloadAction<Record<string, string>>;
 }
 
+/**
+ * Loads the `case context` reducer and returns possible action creators.
+ *
+ * @param engine - The headless engine.
+ * @returns An object holding the action creators.
+ */
 export function loadCaseContextActions(
   engine: CoreEngine
 ): CaseContextActionCreators {
