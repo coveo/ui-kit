@@ -40,7 +40,7 @@ runs:
       run: |
         npm install
         npx --no-install lerna bootstrap --no-ci
-        npx --no-install lerna exec \"npm install\"
+        npx --no-install lerna exec -- npm install
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build
