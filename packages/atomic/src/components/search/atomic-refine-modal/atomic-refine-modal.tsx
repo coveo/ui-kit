@@ -14,15 +14,15 @@ import {
   SortState,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
-import {getFacetElements, SortDropdownOption} from '../../../utils/store';
+import {SortDropdownOption} from '../atomic-search-interface/store';
 import SortIcon from '../../../images/sort.svg';
 import {Button} from '../../common/button';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {BaseFacetElement} from '../facets/facet-common';
 
 /**
@@ -104,9 +104,9 @@ export class AtomicRefineModal implements InitializableComponent {
     divSlot.style.flexDirection = 'column';
     divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
 
-    const facetElementsPayload = getFacetElements(this.bindings.store).map(
-      (f) => ({facetId: f.getAttribute('facet-id')!, payload: f})
-    );
+    const facetElementsPayload = this.bindings.store
+      .getFacetElements()
+      .map((f) => ({facetId: f.getAttribute('facet-id')!, payload: f}));
     const sortedFacetsElements = this.facetManager
       .sort(facetElementsPayload)
       .map((f) => f.payload);
@@ -187,7 +187,7 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   private renderFilters() {
-    if (!getFacetElements(this.bindings.store).length) {
+    if (!this.bindings.store.getFacetElements().length) {
       return;
     }
 

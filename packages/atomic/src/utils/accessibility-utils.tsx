@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
@@ -55,7 +56,7 @@ export function FocusTarget() {
         }
         if (
           focusAfterSearch &&
-          this.bindings.engine.state.search.response.searchUid !== lastSearchId
+          getSearchUIDFromState(this.bindings) !== lastSearchId
         ) {
           focusAfterSearch = false;
           if (element) {
@@ -85,7 +86,7 @@ export function FocusTarget() {
           }
         },
         focusAfterSearch: () => {
-          lastSearchId = this.bindings.engine.state.search.response.searchUid;
+          lastSearchId = getSearchUIDFromState(this.bindings);
           focusAfterSearch = true;
           return new Promise((resolve) => (onFocusCallback = resolve));
         },
@@ -94,8 +95,8 @@ export function FocusTarget() {
           return new Promise((resolve) => (onFocusCallback = resolve));
         },
         disableForCurrentSearch: () =>
-          this.bindings.engine.state.search.response.searchUid !==
-            lastSearchId && (focusAfterSearch = false),
+          getSearchUIDFromState(this.bindings) !== lastSearchId &&
+          (focusAfterSearch = false),
       };
       this[setterName] = focusTargetController;
     };
@@ -148,4 +149,10 @@ export function getFirstFocusableDescendant(
     }
   }
   return null;
+}
+
+function getSearchUIDFromState(bindings: any): string {
+  // TODO: This is a temporary dirty hack while refactoring Atomic for generic use cases
+  // Needs to be a generic function enforced at the interface level (BaseAtomicInterface)
+  return bindings?.engine?.state?.search?.response?.searchUid;
 }

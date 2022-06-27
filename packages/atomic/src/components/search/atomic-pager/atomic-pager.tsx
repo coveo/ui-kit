@@ -8,7 +8,6 @@ import {
   SearchStatusState,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -21,7 +20,7 @@ import {
 } from '../../../utils/accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {RadioButton} from '../../common/radio-button';
-import {isAppLoaded} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -139,7 +138,7 @@ export class AtomicPager implements InitializableComponent {
         ariaCurrent={isSelected ? 'page' : 'false'}
         ariaLabel={this.bindings.i18n.t('page-number', {page})}
         onChecked={() => this.selectPage(page)}
-        class="btn-page"
+        class="btn-page focus-visible:bg-neutral-light"
         part={parts.join(' ')}
         text={page.toLocaleString(this.bindings.i18n.language)}
         ref={isSelected ? this.activePage.setTarget : undefined}
@@ -149,7 +148,7 @@ export class AtomicPager implements InitializableComponent {
 
   public render() {
     if (
-      !isAppLoaded(this.bindings.store) ||
+      !this.bindings.store.isAppLoaded() ||
       !this.searchStatusState.hasResults
     ) {
       return;

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.17.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.1...@coveo/atomic-angular@1.17.2) (2022-06-24)
+
+
+### Bug Fixes
+
+* **atomic:** improve click interaction in instant result ([#2129](https://github.com/coveo/ui-kit/issues/2129)) ([f7df573](https://github.com/coveo/ui-kit/commit/f7df57332f90941aee2be85224c6d1dd79c01a70))
+
+
+
+
+
+## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.0...@coveo/atomic-angular@1.17.1) (2022-06-23)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 # [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.10...@coveo/atomic-angular@1.17.0) (2022-06-22)
 
 

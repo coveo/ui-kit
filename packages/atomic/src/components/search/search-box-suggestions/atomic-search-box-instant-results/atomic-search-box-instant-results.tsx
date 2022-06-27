@@ -2,7 +2,6 @@ import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {
   buildInstantResults,
   buildResultList,
-  buildInteractiveResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -25,7 +24,6 @@ import {
   ResultDisplayLayout,
 } from '../../atomic-result/atomic-result-display-options';
 import {Button} from '../../../common/button';
-import {isMobile} from '../../../../utils/store';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -90,8 +88,27 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     }
   }
 
+  private getLink(el: HTMLElement): HTMLElement | null {
+    return (
+      el
+        ?.querySelector('atomic-result')
+        ?.shadowRoot?.querySelector('atomic-result-link a') || null
+    );
+  }
+
+  private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
+    const setTarget = (value: string) => el.setAttribute('target', value);
+    const initialTarget = el.getAttribute('target');
+
+    hasModifier && setTarget('_blank');
+    el.click();
+    hasModifier && setTarget(initialTarget || '');
+
+    return true;
+  }
+
   private renderItems(): SearchBoxSuggestionElement[] {
-    if (!this.bindings.suggestedQuery() || isMobile(this.bindings.store)) {
+    if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
       return [];
     }
     const results = this.instantResults.state.results.length
@@ -111,14 +128,16 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
             density={this.density}
             imageSize={this.imageSize}
             content={this.resultListCommon.getContentOfResultTemplate(result)}
+            stopPropagation={false}
           ></atomic-result>
         ),
-        onSelect: () => {
-          buildInteractiveResult(this.bindings.engine, {
-            options: {result},
-          }).select();
-          this.bindings.clearSuggestions();
-          window.location.href = result.clickUri;
+        onSelect: (e: MouseEvent) => {
+          const link = this.getLink(e.target as HTMLElement);
+
+          if (!link) {
+            return;
+          }
+          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
         },
       })
     );
