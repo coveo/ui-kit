@@ -28,7 +28,6 @@ runs:
           !**/node_modules
         key: ${{ github.sha }}
     - uses: actions/cache@v3
-      id: npm-cache
       with:
         path: ~/.npm
         key: npm-${{ hashFiles('**/package-lock.json') }}
@@ -36,8 +35,7 @@ runs:
       with:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('**/package-lock.json') }}
-    - if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: |
+    - run: |
         npm install
         npx --no-install lerna bootstrap --no-ci
         npx --no-install lerna exec -- npm install
