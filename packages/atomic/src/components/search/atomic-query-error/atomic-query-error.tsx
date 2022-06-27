@@ -1,7 +1,6 @@
 import {Component, h, State} from '@stencil/core';
 import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -13,6 +12,7 @@ import SearchInactive from '../../../images/search-inactive.svg';
 import NoConnection from '../../../images/no-connection.svg';
 import Indexing from '../../../images/indexing.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 const disconnectedException = 'Disconnected';
 const noEndpointsException = 'NoEndpointsException';

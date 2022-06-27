@@ -2,7 +2,6 @@ import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
-  Bindings,
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import ArrowRight from '../../../images/arrow-right.svg';
@@ -17,7 +16,7 @@ import {Hidden} from '../../common/hidden';
 import {Heading} from '../../common/heading';
 import {Button} from '../../common/button';
 import {randomID} from '../../../utils/utils';
-import {waitUntilAppLoaded} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -93,7 +92,7 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     );
 
     this.hideDuringRender = true;
-    waitUntilAppLoaded(this.bindings.store, () => {
+    this.bindings.store.waitUntilAppLoaded(() => {
       this.hideDuringRender = false;
     });
   }

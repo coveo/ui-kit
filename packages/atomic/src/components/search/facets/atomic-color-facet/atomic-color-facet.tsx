@@ -13,7 +13,6 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -36,7 +35,6 @@ import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../../utils/field-utils';
-import {registerFacetToStore} from '../../../../utils/store';
 import {Hidden} from '../../../common/hidden';
 import {
   FocusTarget,
@@ -44,6 +42,7 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -201,7 +200,7 @@ export class AtomicColorFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'facets', {
+    this.bindings.store.registerFacet('facets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,

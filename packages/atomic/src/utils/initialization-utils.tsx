@@ -1,10 +1,12 @@
-import {SearchEngine} from '@coveo/headless';
-import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
-import {i18n, TOptions} from 'i18next';
-import {ObservableMap} from '@stencil/store';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildCustomEvent} from './event-utils';
-import {AtomicStore} from './store';
+import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
+import {TOptions} from 'i18next';
 import {Hidden} from '../components/common/hidden';
+import {CommonBindings} from '../components/common/interface/bindings';
+import {AnyEngineType} from '../components/common/interface/interface-common';
+import {HTMLStencilElement} from '@stencil/core/internal';
+import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 
 declare global {
   interface Window {
@@ -12,29 +14,11 @@ declare global {
   }
 }
 
-/**
- * Bindings passed from the `AtomicSearchInterface` to its children components.
- */
-export interface Bindings {
-  /**
-   * A headless search engine instance.
-   */
-  engine: SearchEngine;
-  /**
-   * i18n instance, for localization.
-   */
-  i18n: i18n;
-  /**
-   * Global state for Atomic
-   */
-  store: ObservableMap<AtomicStore>;
-  /**
-   * A reference to the `AtomicSearchInterface` element.
-   */
-  interfaceElement: HTMLAtomicSearchInterfaceElement;
-}
+type AnyBindings = CommonBindings<AnyEngineType, any, HTMLStencilElement>;
 
-export type InitializeEventHandler = (bindings: Bindings) => void;
+export type InitializeEventHandler = <SpecificBindings extends AnyBindings>(
+  bindings: SpecificBindings
+) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
 const initializableElements = ['atomic-search-interface', 'atomic-external'];
@@ -44,11 +28,13 @@ const initializableElements = ['atomic-search-interface', 'atomic-external'];
  * @param event Element on which to dispatch the event, which must be the child of a configured "atomic-search-interface" or "atomic-external" element.
  * @returns A promise that resolves on initialization of the parent "atomic-search-interface" or "atomic-external" element, and rejects when it's not the case.
  */
-export const initializeBindings = (element: Element) =>
-  new Promise<Bindings>((resolve, reject) => {
+export function initializeBindings<SpecificBindings extends AnyBindings>(
+  element: Element
+) {
+  return new Promise<SpecificBindings>((resolve, reject) => {
     const event = buildCustomEvent<InitializeEventHandler>(
       initializeEventName,
-      (bindings: Bindings) => resolve(bindings)
+      (bindings: any) => resolve(bindings)
     );
     element.dispatchEvent(event);
 
@@ -56,6 +42,7 @@ export const initializeBindings = (element: Element) =>
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
     }
   });
+}
 
 export class MissingInterfaceParentError extends Error {
   constructor(elementName: string) {
@@ -69,12 +56,16 @@ export class MissingInterfaceParentError extends Error {
 
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.
+ *
+ * TODO: Move InitializableComponent definition close to their specific use case; Remove generic need for specific use cases
  */
-export interface InitializableComponent extends ComponentInterface {
+export interface InitializableComponent<
+  SpecificBindings extends AnyBindings = Bindings
+> extends ComponentInterface {
   /**
    * Bindings passed from the `AtomicSearchInterface` to its children components.
    */
-  bindings: Bindings;
+  bindings: SpecificBindings;
   /**
    * Method called right after the `bindings` property is defined. This is the method where Headless Framework controllers should be initialized.
    */
@@ -118,8 +109,11 @@ export function applyFocusVisiblePolyfill(element: HTMLElement) {
  *
  * For more information and examples, view the "Utilities" section of the readme.
  */
-export function InitializeBindings() {
-  return (component: InitializableComponent, bindingsProperty: string) => {
+export function InitializeBindings<SpecificBindings extends AnyBindings>() {
+  return (
+    component: InitializableComponent<SpecificBindings>,
+    bindingsProperty: string
+  ) => {
     const {
       componentWillLoad,
       render,
@@ -138,25 +132,22 @@ export function InitializeBindings() {
 
     component.componentWillLoad = function () {
       const element = getElement(this);
-      const event = buildCustomEvent(
-        initializeEventName,
-        (bindings: Bindings) => {
-          this.bindings = bindings;
+      const event = buildCustomEvent(initializeEventName, (bindings: any) => {
+        this.bindings = bindings;
 
-          const updateLanguage = () => forceUpdate(this);
-          this.bindings.i18n.on('languageChanged', updateLanguage);
-          unsubscribeLanguage = () =>
-            this.bindings.i18n.off('languageChanged', updateLanguage);
+        const updateLanguage = () => forceUpdate(this);
+        this.bindings.i18n.on('languageChanged', updateLanguage);
+        unsubscribeLanguage = () =>
+          this.bindings.i18n.off('languageChanged', updateLanguage);
 
-          try {
-            // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
-            // In this case, we have to manually trigger it.
-            this.initialize ? this.initialize() : forceUpdate(this);
-          } catch (e) {
-            this.error = e as Error;
-          }
+        try {
+          // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
+          // In this case, we have to manually trigger it.
+          this.initialize ? this.initialize() : forceUpdate(this);
+        } catch (e) {
+          this.error = e as Error;
         }
-      );
+      });
 
       const canceled = element.dispatchEvent(event);
       if (canceled) {
@@ -236,7 +227,10 @@ export function BindStateToController(
     onUpdateCallbackMethod?: string;
   }
 ) {
-  return (component: InitializableComponent, stateProperty: string) => {
+  return (
+    component: InitializableComponent<AnyBindings>,
+    stateProperty: string
+  ) => {
     const {disconnectedCallback, initialize} = component;
     let unsubscribeController = () => {};
 
