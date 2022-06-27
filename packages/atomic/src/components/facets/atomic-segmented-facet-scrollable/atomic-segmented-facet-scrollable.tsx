@@ -3,11 +3,17 @@ import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rou
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../common/button';
 
+type ArrowDirection = 'right' | 'left';
+
 /**
  * @internal
  * An 'atomic-segmented-facet-scrollable' wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities
  * @part scrollableContainer - wrapper for the entire component including the horizontalScroll and the arrow buttons
  * @part horizontalScroll - The scrollable container for the segmented facets
+ * @part left-arrow-box - The left arrow box containing both the left arrow button and the fade
+ * @part right-arrow-box - The right arrow box containing both the right arrow button and the fade
+ * @part arrow-button - The arrow button used to scroll left or right
+ * @part fade - The white to transparent gradient
  */
 
 @Component({
@@ -18,45 +24,60 @@ import {Button} from '../../common/button';
 export class AtomicSegmentedFacetScrollable {
   private horizontalScroll?: HTMLDivElement;
 
-  private slideHorizontally(arrowDirection: string) {
+  private slideHorizontally(direction: ArrowDirection) {
     const container = this.horizontalScroll;
     const pixelsToScroll = container ? container.clientWidth * 0.75 : 700;
 
     if (container === null || !container) {
       return;
     }
-    if (arrowDirection === ArrowLeftIcon) {
+    if (direction === 'left') {
       container.scrollLeft -= pixelsToScroll;
     } else {
       container.scrollLeft += pixelsToScroll;
     }
   }
 
-  private renderArrow(arrowDirection: string) {
+  private renderArrow(direction: ArrowDirection) {
+    const isLeft: boolean = direction === 'left';
     return (
-      <Button
-        style="square-neutral"
-        class="flex shrink-0 basis-8 justify-center items-center rounded"
-        ariaHidden="true"
-        onClick={() => this.slideHorizontally(arrowDirection)}
-      >
-        <atomic-icon class="w-3.5" icon={arrowDirection}></atomic-icon>
-      </Button>
+      <div part={`${direction}-arrow-box`}>
+        <Button
+          part="arrow-button"
+          style="square-neutral"
+          class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-10 w-10 top-0 bottom-0 ${
+            isLeft ? 'left-0' : 'right-0'
+          }`}
+          ariaHidden="true"
+          onClick={() => this.slideHorizontally(direction)}
+        >
+          <atomic-icon
+            class="w-3.5"
+            icon={isLeft ? ArrowLeftIcon : ArrowRightIcon}
+          ></atomic-icon>
+        </Button>
+        <div
+          part="fade"
+          class={`w-16 h-10 absolute top-0  z-[5] pointer-events-none from-background-80 ${
+            isLeft ? 'bg-gradient-to-r left-0' : 'bg-gradient-to-l right-0'
+          }`}
+        ></div>
+      </div>
     );
   }
 
   render() {
     return (
-      <div part="scrollableContainer" class="flex h-9">
-        {this.renderArrow(ArrowLeftIcon)}
+      <div part="scrollableContainer" class="flex h-10 relative">
+        {this.renderArrow('left')}
         <div
           part="horizontalScroll"
-          class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
+          class="wrapper-segmented flex flex-row ml-10 mr-10 overflow-x-scroll scroll-smooth"
           ref={(el) => (this.horizontalScroll = el as HTMLDivElement)}
         >
           <slot></slot>
         </div>
-        {this.renderArrow(ArrowRightIcon)}
+        {this.renderArrow('right')}
       </div>
     );
   }
