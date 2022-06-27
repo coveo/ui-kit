@@ -21,7 +21,6 @@ import {
   buildStandaloneSearchBox,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -40,7 +39,7 @@ import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {isMobile} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -497,15 +496,23 @@ export class AtomicSearchBox {
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.focusPreviousValue();
+        if (this.firstValue === this.activeDescendantElement) {
+          this.updateActiveDescendant();
+        } else {
+          this.focusPreviousValue();
+        }
         break;
       case 'ArrowRight':
-        e.preventDefault();
-        this.focusPanel(this.rightPanelRef);
+        if (this.activeDescendant || !this.searchBox.state.value) {
+          e.preventDefault();
+          this.focusPanel(this.rightPanelRef);
+        }
         break;
       case 'ArrowLeft':
-        e.preventDefault();
-        this.focusPanel(this.leftPanelRef);
+        if (this.activeDescendant || !this.searchBox.state.value) {
+          e.preventDefault();
+          this.focusPanel(this.leftPanelRef);
+        }
         break;
     }
   }
@@ -599,8 +606,8 @@ export class AtomicSearchBox {
     return part;
   }
 
-  private onSuggestionClick(item: SearchBoxSuggestionElement) {
-    item.onSelect && item.onSelect();
+  private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
+    item.onSelect && item.onSelect(e);
     item.query && this.clearSuggestions();
   }
   private onSuggestionMouseOver(
@@ -653,8 +660,8 @@ export class AtomicSearchBox {
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => {
-          this.onSuggestionClick(item);
+        onClick={(e: Event) => {
+          this.onSuggestionClick(item, e);
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
@@ -672,7 +679,7 @@ export class AtomicSearchBox {
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
-    const query = isMobile(this.bindings.store) ? '' : suggestedQuery;
+    const query = this.bindings.store.isMobile() ? '' : suggestedQuery;
     await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(

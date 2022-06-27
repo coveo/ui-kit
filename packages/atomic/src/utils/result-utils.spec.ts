@@ -3,7 +3,7 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import {TestUtils} from '@coveo/headless';
-import {Bindings} from './initialization-utils';
+import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildStringTemplateFromResult} from './result-utils';
 
 describe('buildStringTemplateFromResult', () => {

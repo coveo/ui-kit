@@ -1,12 +1,12 @@
 import {SearchBox} from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {Bindings} from '../../../utils/initialization-utils';
 import {closest} from '../../../utils/utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 export interface SearchBoxSuggestionElement {
   key: string;
   content: Element | VNode;
-  onSelect?(): void;
+  onSelect?(e: Event): void;
 
   query?: string;
   part?: string;
