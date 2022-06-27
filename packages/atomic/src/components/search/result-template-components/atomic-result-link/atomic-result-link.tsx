@@ -14,6 +14,7 @@ import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
 import {isUndefined} from '@coveo/bueno';
 import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
+import {buildCustomEvent} from '../../../../utils/event-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -63,11 +64,20 @@ export class AtomicResultLink implements InitializableComponent {
   private interactiveResult!: InteractiveResult;
   private hasDefaultSlot!: boolean;
   private linkAttributes?: Attr[];
+  private stopPropagation?: boolean;
 
   public initialize() {
     this.interactiveResult = buildInteractiveResult(this.bindings.engine, {
       options: {result: this.result},
     });
+    this.host.dispatchEvent(
+      buildCustomEvent(
+        'atomic/resolveStopPropagation',
+        (stopPropagation: boolean) => {
+          this.stopPropagation = stopPropagation;
+        }
+      )
+    );
   }
 
   public connectedCallback() {
@@ -95,6 +105,7 @@ export class AtomicResultLink implements InitializableComponent {
           this.interactiveResult.cancelPendingSelect()
         }
         attributes={this.linkAttributes}
+        stopPropagation={this.stopPropagation}
       >
         {this.hasDefaultSlot ? (
           <slot />

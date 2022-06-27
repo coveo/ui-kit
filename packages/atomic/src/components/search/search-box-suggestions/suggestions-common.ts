@@ -6,7 +6,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 export interface SearchBoxSuggestionElement {
   key: string;
   content: Element | VNode;
-  onSelect?(): void;
+  onSelect?(e: Event): void;
 
   query?: string;
   part?: string;
