@@ -14,6 +14,5 @@ runs:
           git commit -m "Add generated files"
 
           git push origin ${{ github.head_ref }}
-          git stash pop
         fi
       shell: bash
