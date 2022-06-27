@@ -64,7 +64,6 @@ export function FocusTarget() {
             // The focus seems to be flaky without deferring, especially on iOS.
             defer().then(() => {
               el.focus();
-              element?.focus();
               onFocusCallback?.();
             });
           }
