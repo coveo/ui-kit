@@ -37,6 +37,20 @@ async function splitLocales() {
       JSON.stringify(localeData)
     );
   });
+
+  saveAvailableLocales(localesMap);
+}
+
+async function saveAvailableLocales(localesMap) {
+  const generatedPath = 'src/generated';
+  const localesArray = Object.entries(localesMap).map(
+    ([localeKey]) => localeKey.toLowerCase()
+  );
+
+  await writeFile(
+    `${generatedPath}/availableLocales.json`,
+    JSON.stringify(localesArray)
+  );
 }
 
 splitLocales();
