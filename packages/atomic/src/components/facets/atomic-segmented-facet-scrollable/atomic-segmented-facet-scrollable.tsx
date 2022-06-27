@@ -3,6 +3,12 @@ import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rou
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../common/button';
 
+/**
+ * An 'atomic-segmented-facet-scrollable' wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities
+ * @part scrollableContainer - wrapper for the entire component including the horizontalScroll and the arrow buttons
+ * @part horizontalScroll - The scrollable container for the segmented facets
+ */
+
 @Component({
   tag: 'atomic-segmented-facet-scrollable',
   styleUrl: 'atomic-segmented-facet-scrollable.pcss',
