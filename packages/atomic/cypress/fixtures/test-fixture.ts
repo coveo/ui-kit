@@ -154,7 +154,6 @@ export class TestFixture {
     cy.injectAxe();
     this.intercept();
     this.stubConsole();
-    this.spyOnFocus();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
@@ -348,12 +347,6 @@ export class TestFixture {
       cy.stub(win.console, 'log').as(
         TestFixture.consoleAliases.log.substring(1)
       );
-    });
-  }
-
-  private spyOnFocus() {
-    cy.window().then((win) => {
-      cy.spy(win.HTMLElement.prototype, 'focus').as('focusSpy');
     });
   }
 }

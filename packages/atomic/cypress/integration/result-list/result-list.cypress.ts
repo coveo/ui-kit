@@ -15,8 +15,6 @@ import {
   foldedResultListComponent,
   FoldedResultListSelectors,
 } from './folded-result-list-selectors';
-import {addLoadMoreResults} from '../load-more-results-actions';
-import {LoadMoreResultsSelectors} from '../load-more-results-selectors';
 
 const foldedResultListConfig = {
   componentSelectors: FoldedResultListSelectors,
@@ -194,51 +192,6 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
           densities: ['normal'],
           imageSizes: ['icon', 'small'],
           folded: componentTag === 'atomic-folded-result-list',
-        }
-      );
-    });
-
-    describe('with a load more results button and a focusable element in each results', () => {
-      const expectedFocusTargetSelector = () =>
-        cy.get('#expected-focus-target', {includeShadowDom: true});
-
-      beforeEach(() => {
-        const button = generateComponentHTML('button', {
-          id: 'expected-focus-target',
-        }) as HTMLButtonElement;
-        button.innerText = 'Click me';
-
-        new TestFixture()
-          .with(
-            addResultFn(
-              buildTemplateWithSections({
-                actions: button,
-              })
-            )
-          )
-          .with(addLoadMoreResults())
-          .init();
-        expectedFocusTargetSelector().should('exist');
-      });
-
-      const folded = componentTag === 'atomic-folded-result-list';
-      withAnySectionnableResultList(
-        () => {
-          it("after pressing on the load more results button, should focus on the first new result's clickable element", () => {
-            LoadMoreResultsSelectors.button()
-              .focus()
-              .should('be.focused')
-              .type('{enter}', {force: true});
-            expectedFocusTargetSelector().should('have.length.above', 10);
-            expectedFocusTargetSelector().eq(10).shouldBeFocusedWithSpy();
-          });
-        },
-        {
-          layouts: folded ? ['list'] : undefined,
-          densities: ['normal'],
-          imageSizes: ['small'],
-          folded,
-          useBeforeEach: true,
         }
       );
     });
