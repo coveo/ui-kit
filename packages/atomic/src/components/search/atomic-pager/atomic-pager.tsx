@@ -138,7 +138,7 @@ export class AtomicPager implements InitializableComponent {
         ariaCurrent={isSelected ? 'page' : 'false'}
         ariaLabel={this.bindings.i18n.t('page-number', {page})}
         onChecked={() => this.selectPage(page)}
-        class="btn-page"
+        class="btn-page focus-visible:bg-neutral-light"
         part={parts.join(' ')}
         text={page.toLocaleString(this.bindings.i18n.language)}
         ref={isSelected ? this.activePage.setTarget : undefined}
