@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.77.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.77.0...@coveo/atomic@1.77.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* **atomic:** improved aria label for rating facet values ([#2166](https://github.com/coveo/ui-kit/issues/2166)) ([6b2c386](https://github.com/coveo/ui-kit/commit/6b2c386183c597a95150775e231daae8f5595550))
+
+
+
+
+
 # [1.77.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.76.2...@coveo/atomic@1.77.0) (2022-06-27)
 
 
