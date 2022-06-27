@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@coveo/headless": "1.76.8",
-    "fs-extra": "^10.1.0"
+    "fs-extra": "10.1.0"
   },
   "engines": {
     "node": ">=14.0.0"
