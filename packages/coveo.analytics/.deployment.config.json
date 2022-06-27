@@ -3,18 +3,20 @@
     "team_name": "commerce",
     "general": {
         "environments_order": {
-            "sequential": ["dev", "prd"]
+            "sequential": [
+                "dev",
+                "prd"
+            ]
         },
         "notifications": {
-            "slack_channels": ["commerceteambuilds"]
+            "slack_channels": [
+                "commerceteambuilds"
+            ]
         },
         "team_jenkins": "commercebuilds"
     },
     "package_rollout": {
         "only_consider_changesets_after": "688b6873442721d61e2a0ac492b9da808ddb0ef0"
-    },
-    "veracode": {
-        "no_scan": true
     },
     "snyk_code": {
         "no_scan": false,
@@ -103,15 +105,15 @@
             }
         }
     ],
-    "deployment_config_version": 1,
+    "deployment_config_version": 7,
     "certifiers": {
         "dev": [
             {
                 "job_name": "coveoanalyticsjs_fts",
-                "tag_suffix": "FTs",
                 "extra_parameters": {
                     "VERSION": "$[PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION]"
-                }
+                },
+                "name": "FTs"
             }
         ]
     }
