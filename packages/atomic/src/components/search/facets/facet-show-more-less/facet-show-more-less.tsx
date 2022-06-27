@@ -39,7 +39,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         style="text-primary"
         part="show-less"
         class={`${btnClasses} ${props.canShowLessValues ? '' : 'hidden'}`}
-        aria-label={showLessFacetValues}
+        ariaLabel={showLessFacetValues}
         onClick={() => props.onShowLess()}
         ref={props.showLessRef}
       >
@@ -54,7 +54,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
         style="text-primary"
         part="show-more"
         class={`${btnClasses} ${props.canShowMoreValues ? '' : 'hidden'}`}
-        aria-label={showMoreFacetValues}
+        ariaLabel={showMoreFacetValues}
         onClick={() => props.onShowMore()}
         ref={props.showMoreRef}
       >

@@ -7,7 +7,6 @@ import {
   Watch,
   Element,
   State,
-  getAssetPath,
 } from '@stencil/core';
 import {
   LogLevel,
@@ -25,7 +24,7 @@ import {
 } from '@coveo/headless';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
-import Backend, {BackendOptions} from 'i18next-http-backend';
+import Backend from 'i18next-http-backend';
 import {createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
@@ -37,7 +36,11 @@ import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {loadGlobalScripts} from '../../../global/global';
 import {BaseAtomicInterface} from '../../common/interface/interface-common';
 import {CommonBindings} from '../../common/interface/bindings';
-import {initi18n} from '../../common/interface/i18n';
+import {
+  initi18n,
+  i18nBackendOptions,
+  i18nTranslationNamespace,
+} from '../../common/interface/i18n';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -159,7 +162,9 @@ export class AtomicSearchInterface
   private updateFieldsToInclude() {
     const fields = [...EcommerceDefaultFieldsToInclude];
     if (this.fieldsToInclude) {
-      this.fieldsToInclude.split(',').map((field) => field.trim());
+      fields.push(
+        ...this.fieldsToInclude.split(',').map((field) => field.trim())
+      );
     }
     this.store.set('fieldsToInclude', fields);
   }
@@ -221,13 +226,13 @@ export class AtomicSearchInterface
     );
 
     loadDayjsLocale(this.language);
-    new Backend(this.i18n.services, this.i18nBackendOptions).read(
+    new Backend(this.i18n.services, i18nBackendOptions(this)).read(
       this.language,
-      'translation',
+      i18nTranslationNamespace,
       (_, data) => {
         this.i18n.addResourceBundle(
           this.language,
-          'translation',
+          i18nTranslationNamespace,
           data,
           true,
           false
@@ -475,12 +480,6 @@ export class AtomicSearchInterface
       ),
       <slot></slot>,
     ];
-  }
-
-  private get i18nBackendOptions(): BackendOptions {
-    return {
-      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
-    };
   }
 
   private async internalInitialization(initEngine: () => void) {

@@ -54,8 +54,8 @@
     "zh-TW": "無標題"
   },
   "search-box": {
-    "en": "Insert a query. Press enter to send.",
-    "fr": "Insérer une requête. Appuyez sur Entrée pour envoyer."
+    "en": "Input field to perform a search. Insert a query. Press enter to send.",
+    "fr": "Champ de texte pour performer une recherche. Insérer une requête. Appuyez sur Entrée pour envoyer."
   },
   "facet-search": {
     "en": "Search for values in the {{label}} facet",
@@ -1053,6 +1053,7 @@
   "max": {
     "en": "Max",
     "fr": "Max",
+    "zn": "最大值",
     "zh-CN": "最大值",
     "zh-TW": "最大值"
   },
@@ -1259,6 +1260,10 @@
   "stars_plural": {
     "en": "{{count}} stars out of {{max}}",
     "fr": "{{count}} étoiles sur {{max}}"
+  },
+  "stars-only": {
+    "en": "only {{count}} stars out of {{count}}",
+    "fr": "seulement {{count}} étoiles sur {{count}}"
   },
   "stars-range": {
     "en": "{{value}} to {{count}} stars",
