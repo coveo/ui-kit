@@ -4,9 +4,9 @@ import {ResultContext} from '../result-template-decorators';
 import {filterProtocol} from '../../../../utils/xss-utils';
 import {
   InitializeBindings,
-  Bindings,
   InitializableComponent,
 } from '../../../../utils/initialization-utils';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-image` component renders an image from a result field.
