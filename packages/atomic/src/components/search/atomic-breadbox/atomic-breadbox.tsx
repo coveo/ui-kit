@@ -401,7 +401,7 @@ export class AtomicBreadbox implements InitializableComponent {
 
     return (
       <div class="text-on-background text-sm flex">
-        <span part="label" class="font-bold p-2 pl-0">
+        <span part="label" class="font-bold py-[0.625rem] pl-0 pr-2">
           {this.bindings.i18n.t('with-colon', {
             text: this.bindings.i18n.t('filters'),
           })}
@@ -409,9 +409,7 @@ export class AtomicBreadbox implements InitializableComponent {
         <div class="relative grow">
           <ul
             class={`flex gap-1 ${
-              this.isCollapsed
-                ? 'flex-nowrap overflow-hidden absolute w-full'
-                : 'flex-wrap'
+              this.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
             }`}
           >
             {this.renderBreadcrumbs(allBreadcrumbs)}

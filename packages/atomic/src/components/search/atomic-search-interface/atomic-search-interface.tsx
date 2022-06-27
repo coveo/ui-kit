@@ -158,7 +158,9 @@ export class AtomicSearchInterface
   private updateFieldsToInclude() {
     const fields = [...EcommerceDefaultFieldsToInclude];
     if (this.fieldsToInclude) {
-      this.fieldsToInclude.split(',').map((field) => field.trim());
+      fields.push(
+        ...this.fieldsToInclude.split(',').map((field) => field.trim())
+      );
     }
     this.store.set('fieldsToInclude', fields);
   }

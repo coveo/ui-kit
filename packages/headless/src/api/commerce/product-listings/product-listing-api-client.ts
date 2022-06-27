@@ -53,6 +53,7 @@ export interface ProductListingAPIErrorStatusResponse {
   statusCode: number;
   message: string;
   type: string;
+  ignored?: boolean;
 }
 
 /**
