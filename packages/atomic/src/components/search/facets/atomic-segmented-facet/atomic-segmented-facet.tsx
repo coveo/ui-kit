@@ -25,6 +25,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
+ * An `atomic-segmented-facet` displays a facet of the results for the current query in a horizontal aspect
+ * @part segmentedContainer - A container that holds the segmented facets
  */
 @Component({
   tag: 'atomic-segmented-facet',
