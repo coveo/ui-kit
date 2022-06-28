@@ -7,7 +7,7 @@ type ArrowDirection = 'right' | 'left';
 
 /**
  * @internal
- * An 'atomic-segmented-facet-scrollable' wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities
+ * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
  * @part scrollableContainer - wrapper for the entire component including the horizontalScroll and the arrow buttons
  * @part horizontal-scroll - The scrollable container for the segmented facets.
  * @part left-arrow-box - The left arrow box containing both the left arrow button and the fade
