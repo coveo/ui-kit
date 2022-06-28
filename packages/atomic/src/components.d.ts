@@ -649,6 +649,10 @@ export namespace Components {
          */
         "result": Result | FoldedResult;
         /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
           * Global state for Atomic.
          */
         "store"?: ReturnType<typeof createAtomicStore>;
@@ -884,7 +888,7 @@ export namespace Components {
          */
         "numberOfQueries": number;
         /**
-          * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
         /**
@@ -2460,6 +2464,10 @@ declare namespace LocalJSX {
          */
         "result": Result | FoldedResult;
         /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
           * Global state for Atomic.
          */
         "store"?: ReturnType<typeof createAtomicStore>;
@@ -2681,7 +2689,7 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
         /**
-          * Defining this option makes the search box standalone.  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
         /**

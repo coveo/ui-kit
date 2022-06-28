@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@coveo%2Fatomic-angular.svg)](https://badge.fury.io/js/@coveo%2Fatomic-angular)
+
 # Atomic Angular
 
 An Angular component library for building modern UIs interfacing with the Coveo platform. Atomic Angular is a wrapper around the core [Atomic](https://docs.coveo.com/en/atomic/latest/) web component library.
@@ -66,6 +68,7 @@ export class AppComponent implements AfterViewInit {
   }
 }
 ```
+
 ```html
 <!-- app.component.html  -->
 <atomic-search-interface>
