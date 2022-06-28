@@ -27,14 +27,17 @@ export class AtomicSegmentedFacetScrollable {
   @State() private hideRightArrow = false;
 
   @Listen('mousewheel')
-  handleScroll() {
+  handleScroll(ev?: Event, pixelsToScroll?: number) {
+    const pixelsScrolled = pixelsToScroll !== undefined ? pixelsToScroll : 0;
     const isOverflowing =
       this.horizontalScroll &&
       this.horizontalScroll?.clientWidth < this.horizontalScroll?.scrollWidth;
-    const isLeftEdge = this.horizontalScroll?.scrollLeft === 0;
+    const isLeftEdge =
+      this.horizontalScroll &&
+      this.horizontalScroll?.scrollLeft + pixelsScrolled <= 0;
     const isRightEdge =
       this.horizontalScroll &&
-      this.horizontalScroll.scrollLeft >=
+      this.horizontalScroll.scrollLeft + pixelsScrolled >=
         this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
 
     if (!isOverflowing) {
@@ -62,7 +65,10 @@ export class AtomicSegmentedFacetScrollable {
     } else {
       container.scrollLeft += pixelsToScroll;
     }
-    this.handleScroll();
+    this.handleScroll(
+      undefined,
+      direction === 'left' ? -pixelsToScroll : pixelsToScroll
+    );
   }
 
   private renderDirectionClass(direction: ArrowDirection) {
@@ -89,9 +95,9 @@ export class AtomicSegmentedFacetScrollable {
       <Button
         part={`${direction}-arrow-button`}
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[1] w-10 top-0 bottom-0 ${
-          isLeft ? 'left-0' : 'right-0'
-        }`}
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[1] w-10 top-0 bottom-0 ${this.renderDirectionClass(
+          direction
+        )}`}
         ariaHidden="true"
         tabIndex="-1"
         onClick={() => this.slideHorizontally(direction)}
@@ -104,9 +110,9 @@ export class AtomicSegmentedFacetScrollable {
       </Button>,
       <div
         part={`${direction}-fade`}
-        class={`w-16 h-10 absolute top-0  z-0 pointer-events-none from-background-80 ${
-          isLeft ? 'bg-gradient-to-r left-0' : 'bg-gradient-to-l right-0'
-        }`}
+        class={`w-16 h-10 absolute top-0  z-0 pointer-events-none from-background-80 ${this.renderFadeClass(
+          direction
+        )}`}
       ></div>,
     ];
   }
