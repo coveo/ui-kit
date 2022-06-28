@@ -203,9 +203,6 @@
       }
     ]
   },
-  "veracode": {
-    "no_scan": true
-  },
   "observatory": {
     "no_endpoint": true
   },
