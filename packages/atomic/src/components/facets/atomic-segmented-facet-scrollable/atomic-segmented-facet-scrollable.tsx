@@ -48,6 +48,7 @@ export class AtomicSegmentedFacetScrollable {
           isLeft ? 'left-0' : 'right-0'
         }`}
         ariaHidden="true"
+        tabIndex="-1"
         onClick={() => this.slideHorizontally(direction)}
       >
         <atomic-icon
