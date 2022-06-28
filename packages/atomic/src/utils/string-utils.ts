@@ -2,14 +2,6 @@ export function regexEncode(value: string): string {
   return value.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
 
-export function cleanUpString(str: string) {
-  return str
-    .match(/(\d|\w|\s)+/g)
-    ?.join('')
-    .replace(/\s/g, '-')
-    .toLocaleLowerCase();
-}
-
 // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript/52171480#52171480/
 export function hashString(str: string, seed = 0) {
   let h1 = 0xdeadbeef ^ seed,
