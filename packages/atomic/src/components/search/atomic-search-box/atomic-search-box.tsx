@@ -59,6 +59,9 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
  * @part suggestion-with-query - An item in the list that will update the search box query.
+ * @part instant-results-item - An instant result rendered by an `atomic-search-box-instant-results` component.
+ * @part instant-result-show-all-button - The button to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
+
  */
 @Component({
   tag: 'atomic-search-box',
