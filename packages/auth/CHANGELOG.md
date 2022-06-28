@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.6.20](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.19...@coveo/auth@1.6.20) (2022-06-28)
+
+
+### Bug Fixes
+
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
 ## [1.6.19](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.18...@coveo/auth@1.6.19) (2022-06-27)
 
 **Note:** Version bump only for package @coveo/auth
