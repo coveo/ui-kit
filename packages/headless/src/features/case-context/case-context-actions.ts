@@ -6,7 +6,7 @@ import {
 } from '../../utils/validate-payload';
 
 /**
- * set case context action
+ * Set case context action
  */
 export const setCaseContext = createAction(
   'insight/caseContext/set',

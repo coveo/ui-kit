@@ -1,12 +1,12 @@
 export interface CaseContextState {
   /**
-   * the case context
+   * The case context
    */
   caseContext: Record<string, string>;
 }
 
 /**
- * get the initial state of case context
+ * Get the initial state of case context
  * @returns Case Context State
  */
 export const getCaseContextInitialState = (): CaseContextState => ({
