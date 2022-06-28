@@ -23,6 +23,7 @@ export interface ButtonProps {
   ariaCurrent?: string;
   ariaControls?: string;
   ariaHidden?: string;
+  tabIndex?: string;
   title?: string;
   ref?(element?: HTMLButtonElement): void;
 }
@@ -44,6 +45,7 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     'aria-checked': props.ariaChecked,
     'aria-current': props.ariaCurrent,
     'aria-controls': props.ariaControls,
+    'aria-hidden': props.ariaHidden,
     disabled: props.disabled,
     ref(buttonEl?: HTMLButtonElement) {
       if (props.form) {
@@ -51,6 +53,9 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
       }
       if (props.ariaHidden) {
         buttonEl?.setAttribute('aria-hidden', props.ariaHidden);
+      }
+      if (props.tabIndex) {
+        buttonEl?.setAttribute('tabindex', props.tabIndex);
       }
       props.ref?.(buttonEl);
     },

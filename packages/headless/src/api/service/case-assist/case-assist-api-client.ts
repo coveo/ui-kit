@@ -48,6 +48,7 @@ export interface CaseAssistAPIErrorStatusResponse {
   statusCode: number;
   message: string;
   type: string;
+  ignored?: boolean;
 }
 
 /**

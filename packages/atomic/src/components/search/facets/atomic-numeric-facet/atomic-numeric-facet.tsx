@@ -19,7 +19,6 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -43,7 +42,6 @@ import {NumberInputType} from '../facet-number-input/number-input-type';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
-import {registerFacetToStore} from '../../../../utils/store';
 import {Hidden} from '../../../common/hidden';
 import {
   FocusTarget,
@@ -52,6 +50,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -77,6 +76,9 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  *
+ * @part input-form - The form that comprises the labels, inputs, and 'apply' button for the custom numeric range.
+ * @part label-start - The label for the starting value of the custom numeric range.
+ * @part label-end - The label for the ending value of the custom numeric range.
  * @part input-start - The input for the starting value of the custom numeric range.
  * @part input-end - The input for the ending value of the custom numeric range.
  * @part input-apply-button - The apply button for the custom range.
@@ -287,7 +289,7 @@ export class AtomicNumericFacet
   }
 
   private registerFacetToStore() {
-    registerFacetToStore(this.bindings.store, 'numericFacets', {
+    this.bindings.store.registerFacet('numericFacets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,

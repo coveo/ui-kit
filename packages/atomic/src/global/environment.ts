@@ -5,8 +5,14 @@ export interface AtomicEnvironment {
   headlessVersion: string;
 }
 
+declare global {
+  interface Window {
+    [anyGlobalVariable: string]: AtomicEnvironment;
+  }
+}
+
 function getWindow() {
-  return window as unknown as {CoveoAtomic: AtomicEnvironment};
+  return window;
 }
 
 export function getAtomicEnvironment(): AtomicEnvironment {
@@ -16,9 +22,9 @@ export function getAtomicEnvironment(): AtomicEnvironment {
   };
 }
 
-export function setCoveoGlobal() {
-  if (getWindow().CoveoAtomic) {
+export function setCoveoGlobal(globalVariableName: string) {
+  if (getWindow()[globalVariableName]) {
     return;
   }
-  getWindow().CoveoAtomic = getAtomicEnvironment();
+  getWindow()[globalVariableName] = getAtomicEnvironment();
 }

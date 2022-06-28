@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.76.10](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.9...@coveo/headless@1.76.10) (2022-06-28)
+
+
+### Bug Fixes
+
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
+## [1.76.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.8...@coveo/headless@1.76.9) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.76.8](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.7...@coveo/headless@1.76.8) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.76.7](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.6...@coveo/headless@1.76.7) (2022-06-24)
+
+
+### Bug Fixes
+
+* **headless:** stop logging errors when user aborts request in instan… ([#2119](https://github.com/coveo/ui-kit/issues/2119)) ([c4a2394](https://github.com/coveo/ui-kit/commit/c4a239477ba0677185ecbbbc4e007b08cedcab96))
+
+
+
+
+
+## [1.76.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.5...@coveo/headless@1.76.6) (2022-06-23)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.76.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.4...@coveo/headless@1.76.5) (2022-06-22)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.76.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.3...@coveo/headless@1.76.4) (2022-06-21)
 
 

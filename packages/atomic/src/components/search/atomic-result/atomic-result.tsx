@@ -11,9 +11,8 @@ import {
   DisplayConfig,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
-import {ObservableMap} from '@stencil/store';
-import {AtomicStore, unsetLoadingFlag} from '../../../utils/store';
 import {ResultRenderingFunction} from '../result-lists/result-list-common';
+import {createAtomicStore} from '../atomic-search-interface/store';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -38,6 +37,11 @@ export class AtomicResult {
   @Element() host!: HTMLElement;
 
   /**
+   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   */
+  @Prop() stopPropagation?: boolean;
+
+  /**
    * The result item.
    */
   @Prop() result!: Result | FoldedResult;
@@ -51,7 +55,7 @@ export class AtomicResult {
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: ObservableMap<AtomicStore>;
+  @Prop() store?: ReturnType<typeof createAtomicStore>;
 
   /**
    * The result content to display.
@@ -106,6 +110,11 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveStopPropagation')
+  public resolveStopPropagation(event: CustomEvent) {
+    event.detail(this.stopPropagation);
   }
 
   @Listen('atomic/resolveResultDisplayConfig')
@@ -214,7 +223,7 @@ export class AtomicResult {
 
   public componentDidLoad() {
     if (this.loadingFlag && this.store) {
-      unsetLoadingFlag(this.store, this.loadingFlag);
+      this.store.unsetLoadingFlag(this.loadingFlag);
     }
     applyFocusVisiblePolyfill(this.host);
   }

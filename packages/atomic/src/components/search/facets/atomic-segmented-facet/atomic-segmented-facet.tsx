@@ -1,6 +1,5 @@
 import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -22,9 +21,12 @@ import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 import {Hidden} from '../../../common/hidden';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
+ * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
+ * @part segmented-container - The container that holds the segmented facets.
  */
 @Component({
   tag: 'atomic-segmented-facet',
@@ -157,7 +159,7 @@ export class AtomicSegmentedFacet
 
     return (
       <div
-        part="segmentedContainer"
+        part="segmented-container"
         class="flex whitespace-nowrap h-10 items-center"
       >
         {this.renderLabel()}

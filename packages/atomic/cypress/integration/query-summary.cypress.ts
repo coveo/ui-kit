@@ -3,6 +3,7 @@ import {addQuerySummary} from './query-summary-actions';
 import {QuerySummarySelectors} from './query-summary-selectors';
 import * as CommonAssertions from './common-assertions';
 import {addSearchBox} from './search-box/search-box-actions';
+import * as QuerySummaryAssertions from './query-summary-assertions';
 
 const addResultsPerPage = (count: number) => (fixture: TestFixture) => {
   fixture.withElement(
@@ -14,10 +15,6 @@ const addResultsPerPage = (count: number) => (fixture: TestFixture) => {
 };
 
 describe('Query Summary Test Suites', () => {
-  function contentShouldMatch(content: RegExp | string) {
-    QuerySummarySelectors.text().should('match', content);
-  }
-
   describe('when search has not been executed', () => {
     beforeEach(() => {
       new TestFixture()
@@ -27,7 +24,7 @@ describe('Query Summary Test Suites', () => {
     });
 
     it('placeholder should be displayed', () => {
-      QuerySummarySelectors.placeholder().should('be.visible');
+      QuerySummaryAssertions.assertHasPlaceholder();
     });
   });
 
@@ -42,9 +39,7 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    it('container should be empty', () => {
-      QuerySummarySelectors.container().should('be.empty');
-    });
+    QuerySummaryAssertions.assertEmpty();
   });
 
   describe('when search yields 27 results', () => {
@@ -65,7 +60,9 @@ describe('Query Summary Test Suites', () => {
         .with(addSearchBox())
         .withHash('q=test')
         .init();
-      contentShouldMatch(/^Results 1-10 of [\d,]+ for test in [\d.]+ seconds$/);
+      QuerySummaryAssertions.assertContentShouldMatch(
+        /^Results 1-10 of [\d,]+ for test in [\d.]+ seconds$/
+      );
     });
 
     it('with a query yielding a single result', () => {
@@ -76,12 +73,13 @@ describe('Query Summary Test Suites', () => {
           "q=Queen's%20Gambit%20sparks%20world%20of%20online%20chess%20celebrities"
         )
         .init();
-      contentShouldMatch(
+      QuerySummaryAssertions.assertContentShouldMatch(
         /^Result 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities in [\d.]+ seconds$/
       );
     });
   });
 
+  // TODO: remove v2, deprecated prop
   it('when "enableDuration" is false, should not show duration', () => {
     new TestFixture()
       .with(addQuerySummary())

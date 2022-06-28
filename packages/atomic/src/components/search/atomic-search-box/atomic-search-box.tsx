@@ -21,7 +21,6 @@ import {
   buildStandaloneSearchBox,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -40,7 +39,7 @@ import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {isMobile} from '../../../utils/store';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -60,6 +59,9 @@ import {isMobile} from '../../../utils/store';
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
  * @part suggestion-with-query - An item in the list that will update the search box query.
+ * @part instant-results-item - An instant result rendered by an `atomic-search-box-instant-results` component.
+ * @part instant-result-show-all-button - The button to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
+
  */
 @Component({
   tag: 'atomic-search-box',
@@ -101,7 +103,8 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public numberOfQueries = 8;
 
   /**
-   * Defining this option makes the search box standalone.
+   * Defining this option makes the search box standalone (see [Use a
+   * Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).
    *
    * This option defines the default URL the user should be redirected to, when a query is submitted.
    * If a query pipeline redirect is triggered, it will redirect to that URL instead
@@ -114,6 +117,12 @@ export class AtomicSearchBox {
    * If a suggestion query times out, the suggestions from that particular query won't be shown.
    */
   @Prop() public suggestionTimeout = 400;
+
+  /**
+   * Whether to prevent the user from triggering a search from the component.
+   * Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+   */
+  @Prop({reflect: true}) public disableSearch = false;
 
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
@@ -267,7 +276,7 @@ export class AtomicSearchBox {
     );
   }
   private get showSuggestions() {
-    return this.hasSuggestions && this.isExpanded;
+    return this.hasSuggestions && this.isExpanded && !this.disableSearch;
   }
 
   private get allSuggestionElements() {
@@ -474,6 +483,10 @@ export class AtomicSearchBox {
   }
 
   private onKeyDown(e: KeyboardEvent) {
+    if (this.disableSearch) {
+      return;
+    }
+
     switch (e.key) {
       case 'Enter':
         this.onSubmit();
@@ -487,15 +500,23 @@ export class AtomicSearchBox {
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.focusPreviousValue();
+        if (this.firstValue === this.activeDescendantElement) {
+          this.updateActiveDescendant();
+        } else {
+          this.focusPreviousValue();
+        }
         break;
       case 'ArrowRight':
-        e.preventDefault();
-        this.focusPanel(this.rightPanelRef);
+        if (this.activeDescendant || !this.searchBox.state.value) {
+          e.preventDefault();
+          this.focusPanel(this.rightPanelRef);
+        }
         break;
       case 'ArrowLeft':
-        e.preventDefault();
-        this.focusPanel(this.leftPanelRef);
+        if (this.activeDescendant || !this.searchBox.state.value) {
+          e.preventDefault();
+          this.focusPanel(this.leftPanelRef);
+        }
         break;
     }
   }
@@ -517,7 +538,7 @@ export class AtomicSearchBox {
         autocorrect="off"
         placeholder={this.bindings.i18n.t('search')}
         type="text"
-        class="h-full outline-none bg-transparent grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
+        class="h-full outline-none bg-transparent w-0 grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
         value={this.searchBoxState.value}
         onFocus={() => this.onFocus()}
         onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
@@ -589,8 +610,8 @@ export class AtomicSearchBox {
     return part;
   }
 
-  private onSuggestionClick(item: SearchBoxSuggestionElement) {
-    item.onSelect && item.onSelect();
+  private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
+    item.onSelect && item.onSelect(e);
     item.query && this.clearSuggestions();
   }
   private onSuggestionMouseOver(
@@ -643,8 +664,8 @@ export class AtomicSearchBox {
           isSelected ? 'bg-neutral-light' : ''
         }`}
         onMouseDown={(e) => e.preventDefault()}
-        onClick={() => {
-          this.onSuggestionClick(item);
+        onClick={(e: Event) => {
+          this.onSuggestionClick(item, e);
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
@@ -662,7 +683,7 @@ export class AtomicSearchBox {
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
-    const query = isMobile(this.bindings.store) ? '' : suggestedQuery;
+    const query = this.bindings.store.isMobile() ? '' : suggestedQuery;
     await Promise.allSettled(
       this.suggestions.map((suggestion) =>
         promiseTimeout(
@@ -742,6 +763,7 @@ export class AtomicSearchBox {
         style="primary"
         class="w-12 h-auto rounded-r-md rounded-l-none -my-px -mr-px"
         part="submit-button"
+        disabled={this.disableSearch}
         ariaLabel={this.bindings.i18n.t('search')}
         onClick={() => {
           this.searchBox.submit();
@@ -763,7 +785,11 @@ export class AtomicSearchBox {
     return [
       <div
         part="wrapper"
-        class="relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:border-primary focus-within:ring focus-within:ring-ring-primary"
+        class={`relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:ring ${
+          this.disableSearch
+            ? 'focus-within:border-disabled focus-within:ring-neutral'
+            : 'focus-within:border-primary focus-within:ring-ring-primary'
+        }`}
       >
         {this.renderInputContainer()}
         {this.renderSuggestions()}

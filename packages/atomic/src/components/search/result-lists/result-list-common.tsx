@@ -11,10 +11,7 @@ import {
   buildResultTemplatesManager,
   ResultListProps,
 } from '@coveo/headless';
-import {
-  Bindings,
-  InitializableComponent,
-} from '../../../utils/initialization-utils';
+import {InitializableComponent} from '../../../utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -30,11 +27,11 @@ import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder'
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
 import {once} from '../../../utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {isAppLoaded, setLoadingFlag} from '../../../utils/store';
 import {
   FocusTargetController,
   getFirstFocusableDescendant,
 } from '../../../utils/accessibility-utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;
@@ -121,7 +118,7 @@ export class ResultListCommon {
     this.loadingFlag = opts.loadingFlag;
 
     if (this.loadingFlag) {
-      setLoadingFlag(this.bindings.store, this.loadingFlag);
+      this.bindings.store.setLoadingFlag(this.loadingFlag);
     }
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
@@ -269,7 +266,7 @@ export class ResultListCommon {
       return;
     }
 
-    const displayPlaceholders = !isAppLoaded(this.bindings.store);
+    const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
     const classes = this.getClasses(
       display,

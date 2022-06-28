@@ -14,7 +14,6 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {
-  Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
@@ -26,7 +25,6 @@ import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
 import Star from '../../../../images/star.svg';
-import {registerFacetToStore} from '../../../../utils/store';
 import {Hidden} from '../../../common/hidden';
 import {
   FocusTarget,
@@ -34,6 +32,7 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -194,7 +193,7 @@ export class AtomicRatingRangeFacet
     };
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    registerFacetToStore(this.bindings.store, 'numericFacets', {
+    this.bindings.store.registerFacet('numericFacets', {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
@@ -238,9 +237,8 @@ export class AtomicRatingRangeFacet
 
   private formatFacetValue(facetValue: NumericFacetValue) {
     if (facetValue.start === this.maxValueInIndex) {
-      return this.bindings.i18n.t('stars', {
+      return this.bindings.i18n.t('stars-only', {
         count: facetValue.start,
-        max: this.maxValueInIndex,
       });
     }
     return this.bindings.i18n.t('stars-range', {

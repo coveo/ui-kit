@@ -24,6 +24,7 @@ module.exports = {
         success: 'var(--atomic-success)',
         error: 'var(--atomic-error)',
         visited: 'var(--atomic-visited)',
+        disabled: 'var(--atomic-disabled)',
       },
       borderRadius: {
         DEFAULT: 'var(--atomic-border-radius)',

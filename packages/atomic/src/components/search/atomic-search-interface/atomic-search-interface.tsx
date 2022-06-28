@@ -7,7 +7,6 @@ import {
   Watch,
   Element,
   State,
-  getAssetPath,
 } from '@stencil/core';
 import {
   LogLevel,
@@ -23,17 +22,10 @@ import {
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
-import {Bindings, InitializeEvent} from '../../../utils/initialization-utils';
+import {InitializeEvent} from '../../../utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
-import Backend, {BackendOptions} from 'i18next-http-backend';
-import {createStore} from '@stencil/store';
-import {
-  AtomicStore,
-  hasLoadingFlag,
-  initialStore,
-  setLoadingFlag,
-  unsetLoadingFlag,
-} from '../../../utils/store';
+import Backend from 'i18next-http-backend';
+import {createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
   SafeStorage,
@@ -42,10 +34,21 @@ import {
 } from '../../../utils/local-storage-utils';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {loadGlobalScripts} from '../../../global/global';
-
-export type InitializationOptions = SearchEngineConfiguration;
+import {BaseAtomicInterface} from '../../common/interface/interface-common';
+import {CommonBindings} from '../../common/interface/bindings';
+import {
+  initi18n,
+  i18nBackendOptions,
+  i18nTranslationNamespace,
+} from '../../common/interface/i18n';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
+export type InitializationOptions = SearchEngineConfiguration;
+export type Bindings = CommonBindings<
+  SearchEngine,
+  ReturnType<typeof createAtomicStore>,
+  HTMLAtomicSearchInterfaceElement
+>;
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
@@ -55,14 +58,16 @@ const FirstSearchExecutedFlag = 'firstSearchExecuted';
   shadow: true,
   assetsDirs: ['lang'],
 })
-export class AtomicSearchInterface {
+export class AtomicSearchInterface
+  implements BaseAtomicInterface<SearchEngine>
+{
   private urlManager!: UrlManager;
   private searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
-  private store = createStore<AtomicStore>(initialStore());
+  private store = createAtomicStore();
   private i18nPromise!: Promise<TFunction>;
 
   @Element() private host!: HTMLAtomicSearchInterfaceElement;
@@ -144,12 +149,12 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
   public constructor() {
-    loadGlobalScripts();
+    loadGlobalScripts('CoveoAtomic');
   }
 
   public connectedCallback() {
-    this.i18nPromise = this.initI18n();
-    setLoadingFlag(this.store, FirstSearchExecutedFlag);
+    this.i18nPromise = initi18n(this);
+    this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
     this.updateFieldsToInclude();
   }
@@ -157,7 +162,9 @@ export class AtomicSearchInterface {
   private updateFieldsToInclude() {
     const fields = [...EcommerceDefaultFieldsToInclude];
     if (this.fieldsToInclude) {
-      this.fieldsToInclude.split(',').map((field) => field.trim());
+      fields.push(
+        ...this.fieldsToInclude.split(',').map((field) => field.trim())
+      );
     }
     this.store.set('fieldsToInclude', fields);
   }
@@ -219,13 +226,13 @@ export class AtomicSearchInterface {
     );
 
     loadDayjsLocale(this.language);
-    new Backend(this.i18n.services, this.i18nBackendOptions).read(
+    new Backend(this.i18n.services, i18nBackendOptions(this)).read(
       this.language,
-      'translation',
+      i18nTranslationNamespace,
       (_, data) => {
         this.i18n.addResourceBundle(
           this.language,
-          'translation',
+          i18nTranslationNamespace,
           data,
           true,
           false
@@ -377,15 +384,6 @@ export class AtomicSearchInterface {
     return searchConfigFromProps;
   }
 
-  private initI18n() {
-    return this.i18n.use(Backend).init({
-      debug: this.logLevel === 'debug',
-      lng: this.language,
-      fallbackLng: 'en',
-      backend: this.i18nBackendOptions,
-    });
-  }
-
   private get bindings(): Bindings {
     return {
       engine: this.engine!,
@@ -445,9 +443,9 @@ export class AtomicSearchInterface {
 
       if (
         this.searchStatus.state.firstSearchExecuted &&
-        hasLoadingFlag(this.store, FirstSearchExecutedFlag)
+        this.store.hasLoadingFlag(FirstSearchExecutedFlag)
       ) {
-        unsetLoadingFlag(this.store, FirstSearchExecutedFlag);
+        this.store.unsetLoadingFlag(FirstSearchExecutedFlag);
       }
     });
   }
@@ -482,12 +480,6 @@ export class AtomicSearchInterface {
       ),
       <slot></slot>,
     ];
-  }
-
-  private get i18nBackendOptions(): BackendOptions {
-    return {
-      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
-    };
   }
 
   private async internalInitialization(initEngine: () => void) {
