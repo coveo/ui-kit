@@ -13,7 +13,7 @@ type ArrowDirection = 'right' | 'left';
  * @part left-arrow-box - The left arrow box containing both the left arrow button and the fade
  * @part right-arrow-box - The right arrow box containing both the right arrow button and the fade
  * @part arrow-button - The arrow button used to scroll left or right
- * @part fade - The white to transparent gradient
+ * @part fade - The white to transparent gradient.
  */
 
 @Component({
