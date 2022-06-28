@@ -1,9 +1,7 @@
 const util = require('util');
 const fs = require('fs');
-const rm = util.promisify(fs.rm);
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
-const mkdir = util.promisify(fs.mkdir);
 
 function getI18nLocaleKey(key) {
   if (!key.includes('-')) {
@@ -30,8 +28,6 @@ async function copyDayjsLocales() {
 
   const generatedPath = 'src/generated';
   const dayjsLocaleDataPath = `${generatedPath}/dayjs-locales-data.ts`;
-  await rm(generatedPath, {recursive: true, force: true});
-  await mkdir(generatedPath);
   await writeFile(dayjsLocaleDataPath, fileContent);
 }
 

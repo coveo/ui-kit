@@ -27,8 +27,6 @@ import {Button} from '../../../common/button';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
- * @part instant-results-item - An instant result.
- * @part instant-result-show-all-button - The button to show all items for the current instant results search.
  */
 @Component({
   tag: 'atomic-search-box-instant-results',

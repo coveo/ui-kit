@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@coveo%2Fbueno.svg)](https://badge.fury.io/js/@coveo%2Fbueno)
+
 # Bueno
 
 A simple validator.

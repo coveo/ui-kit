@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.76.1",
+  "version": "1.77.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -27,7 +27,7 @@
   "scripts": {
     "clean": "rimraf -rf dist/* headless/*",
     "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
-    "build:locales": "node ./scripts/split-locales.js && node ./scripts/copy-dayjs-locales.js",
+    "build:locales": "node ./scripts/create-generated-folder.js && node ./scripts/split-locales.js && node ./scripts/copy-dayjs-locales.js",
     "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ./node_modules/@stencil/core/bin/stencil build",
     "copy:headless": "node scripts/copy-headless.js",
     "start": "npm run build:locales && npm run build:stencil -- --dev --watch --serve",
@@ -54,20 +54,20 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@coveo/bueno": "0.39.15",
-    "@coveo/headless": "1.76.6",
+    "@coveo/bueno": "0.39.19",
+    "@coveo/headless": "1.76.10",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "2.15.2",
     "@stencil/store": "1.5.0",
-    "coveo-styleguide": "^9.26.0",
-    "dayjs": "^1.10.4",
-    "dompurify": "^2.3.0",
-    "escape-html": "^1.0.3",
-    "focus-visible": "^5.2.0",
-    "i18next": "^20.2.2",
-    "i18next-http-backend": "^1.2.2",
-    "patch-package": "^6.4.7",
-    "stencil-inline-svg": "^1.1.0"
+    "coveo-styleguide": "9.34.0",
+    "dayjs": "1.11.3",
+    "dompurify": "2.3.8",
+    "escape-html": "1.0.3",
+    "focus-visible": "5.2.0",
+    "i18next": "20.6.1",
+    "i18next-http-backend": "1.4.1",
+    "patch-package": "6.4.7",
+    "stencil-inline-svg": "1.1.0"
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.26.1",
