@@ -110,4 +110,4 @@ export const excerptLength = excerptLengthReducer;
 
 export const insightConfiguration = insightConfigurationReducer;
 export const insightInterface = insightInterfaceReducer;
-export const caseContext = caseContextReducer;
+export const insightCaseContext = caseContextReducer;
