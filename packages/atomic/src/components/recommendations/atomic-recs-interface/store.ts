@@ -1,3 +1,4 @@
+import {RecommendationEngine} from '@coveo/headless/recommendation';
 import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
@@ -6,8 +7,14 @@ import {
 export interface AtomicRecsStoreData extends AtomicCommonStoreData {}
 
 export function createAtomicRecsStore() {
-  return createAtomicCommonStore<AtomicRecsStoreData>({
+  const commonStore = createAtomicCommonStore<AtomicRecsStoreData>({
     loadingFlags: [],
     iconAssetsPath: '',
   });
+  return {
+    ...commonStore,
+    getUniqueIDFromEngine(engine: RecommendationEngine): string {
+      return engine.state.recommendation.searchUid;
+    },
+  };
 }

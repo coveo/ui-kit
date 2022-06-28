@@ -2,6 +2,7 @@ import {
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
+  SearchEngine,
 } from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
@@ -111,6 +112,10 @@ export function createAtomicStore() {
       return !window.matchMedia(
         makeDesktopQuery(commonStore.state.mobileBreakpoint)
       ).matches;
+    },
+
+    getUniqueIDFromEngine(engine: SearchEngine): string {
+      return engine.state.search.response.searchUid;
     },
   };
 }

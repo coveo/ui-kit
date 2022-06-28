@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildCustomEvent} from './event-utils';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {TOptions} from 'i18next';
 import {Hidden} from '../components/common/hidden';
-import {CommonBindings} from '../components/common/interface/bindings';
-import {AnyEngineType} from '../components/common/interface/interface-common';
-import {HTMLStencilElement} from '@stencil/core/internal';
+import {AnyBindings} from '../components/common/interface/bindings';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 
 declare global {
@@ -14,11 +11,7 @@ declare global {
   }
 }
 
-type AnyBindings = CommonBindings<AnyEngineType, any, HTMLStencilElement>;
-
-export type InitializeEventHandler = <SpecificBindings extends AnyBindings>(
-  bindings: SpecificBindings
-) => void;
+export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
 const initializableElements = ['atomic-search-interface', 'atomic-external'];
@@ -34,7 +27,7 @@ export function initializeBindings<SpecificBindings extends AnyBindings>(
   return new Promise<SpecificBindings>((resolve, reject) => {
     const event = buildCustomEvent<InitializeEventHandler>(
       initializeEventName,
-      (bindings: any) => resolve(bindings)
+      (bindings) => resolve(bindings as SpecificBindings)
     );
     element.dispatchEvent(event);
 

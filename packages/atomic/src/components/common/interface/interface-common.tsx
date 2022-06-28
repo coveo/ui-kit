@@ -2,11 +2,25 @@ import type {SearchEngine} from '@coveo/headless';
 import {LogLevel} from '@coveo/headless';
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
 import type {InsightEngine} from '@coveo/headless/insight';
-import {i18n} from 'i18next';
+import {i18n, TFunction} from 'i18next';
+import {ComponentInterface, h} from '@stencil/core';
+import {setCoveoGlobal} from '../../../global/environment';
+import {loadFocusVisiblePolyfill} from '../../../global/focus-visible';
+import {initi18n} from './i18n';
+import {HTMLStencilElement} from '@stencil/core/internal';
+import {loadDayjsLocale} from '../../../utils/dayjs-locales';
+import {InitializeEvent} from '../../../utils/initialization-utils';
+import {AnyBindings} from './bindings';
+import {
+  i18nBackendOptions,
+  i18nTranslationNamespace,
+} from '../../common/interface/i18n';
+import Backend from 'i18next-http-backend';
 
 export type AnyEngineType = SearchEngine | RecommendationEngine | InsightEngine;
 
-export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
+export interface BaseAtomicInterface<EngineType extends AnyEngineType>
+  extends ComponentInterface {
   analytics: boolean;
   i18n: i18n;
   engine?: EngineType;
@@ -14,6 +28,132 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
   iconAssetsPath: string;
   logLevel?: LogLevel;
   language: string;
+  host: HTMLStencilElement;
+  bindings: AnyBindings;
+  error?: Error;
 
   updateIconAssetsPath(): void;
+}
+
+export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
+  private i18nPromise!: Promise<TFunction>;
+  private hangingComponentsInitialization: InitializeEvent[] = [];
+
+  constructor(
+    private atomicInterface: BaseAtomicInterface<Engine>,
+    globalVariableName: string
+  ) {
+    setCoveoGlobal(globalVariableName);
+    loadFocusVisiblePolyfill();
+
+    const {
+      connectedCallback: originalConnectedCallback,
+      render: originalRender,
+    } = atomicInterface;
+
+    atomicInterface.connectedCallback = () => {
+      this.i18nPromise = initi18n(atomicInterface);
+
+      return (
+        originalConnectedCallback &&
+        originalConnectedCallback.call(atomicInterface)
+      );
+    };
+
+    atomicInterface.render = () => {
+      if (atomicInterface.error) {
+        return (
+          <atomic-component-error
+            element={atomicInterface.host}
+            error={atomicInterface.error}
+          ></atomic-component-error>
+        );
+      }
+
+      return originalRender && originalRender.call(atomicInterface);
+    };
+  }
+
+  public async onComponentInitializing(event: InitializeEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.atomicInterface.engine) {
+      event.detail(this.atomicInterface.bindings);
+      return;
+    }
+
+    this.hangingComponentsInitialization.push(event);
+  }
+
+  public async onInitialization(initEngine: () => void) {
+    if (this.atomicInterface.engine) {
+      this.atomicInterface.engine.logger.warn(
+        `The ${this.interfaceTagname} component "initialize" has already been called.`,
+        this.atomicInterface.host
+      );
+      return;
+    }
+    this.atomicInterface.updateIconAssetsPath();
+    initEngine();
+    loadDayjsLocale(this.atomicInterface.language);
+    await this.i18nPromise;
+    this.initComponents();
+  }
+
+  public onAnalyticsChange() {
+    const {engine, analytics} = this.atomicInterface;
+    if (!this.engineIsCreated(engine)) {
+      return;
+    }
+
+    if (!analytics) {
+      engine.disableAnalytics();
+      return;
+    }
+
+    engine.enableAnalytics();
+  }
+
+  public onLanguageChange() {
+    const {i18n, language} = this.atomicInterface;
+
+    loadDayjsLocale(language);
+    new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
+      language,
+      i18nTranslationNamespace,
+      (_, data) => {
+        i18n.addResourceBundle(
+          language,
+          i18nTranslationNamespace,
+          data,
+          true,
+          false
+        );
+        i18n.changeLanguage(language);
+      }
+    );
+  }
+
+  public engineIsCreated(engine?: Engine): engine is Engine {
+    if (!engine) {
+      console.error(
+        `You have to call "initialize" on the ${this.interfaceTagname} component before modifying the props or calling other public methods.`,
+        this.atomicInterface.host
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  private get interfaceTagname() {
+    return this.atomicInterface.host.tagName.toLowerCase();
+  }
+
+  private initComponents() {
+    this.hangingComponentsInitialization.forEach((event) =>
+      event.detail(this.atomicInterface.bindings)
+    );
+  }
 }

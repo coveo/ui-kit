@@ -1,3 +1,4 @@
+import {InsightEngine} from '@coveo/headless/insight';
 import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
@@ -6,8 +7,14 @@ import {
 export interface AtomicSvgInsightStoreData extends AtomicCommonStoreData {}
 
 export function createAtomicSvcInsightStore() {
-  return createAtomicCommonStore<AtomicSvgInsightStoreData>({
+  const commonStore = createAtomicCommonStore<AtomicSvgInsightStoreData>({
     loadingFlags: [],
     iconAssetsPath: '',
   });
+  return {
+    ...commonStore,
+    getUniqueIDFromEngine(engine: InsightEngine): string {
+      return engine.state.search.searchResponseId;
+    },
+  };
 }
