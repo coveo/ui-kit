@@ -53,6 +53,7 @@ export function initi18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
   return atomicInterface.i18n.use(Backend).init({
     debug: atomicInterface.logLevel === 'debug',
     lng: atomicInterface.language,
+    nsSeparator: '___',
     fallbackLng: 'en',
     backend: i18nBackendOptions(atomicInterface),
   });
