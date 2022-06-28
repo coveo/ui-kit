@@ -77,7 +77,7 @@ export class AtomicSegmentedFacetScrollable {
     }
   }
 
-  private renderDirectionClass(direction: ArrowDirection) {
+  private renderArrowClass(direction: ArrowDirection) {
     if (direction === 'left') {
       return 'left-0 ' + (this.hideLeftArrow ? 'hidden' : '');
     } else {
@@ -101,7 +101,7 @@ export class AtomicSegmentedFacetScrollable {
       <Button
         part={`${direction}-arrow-button`}
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[1] w-10 top-0 bottom-0 ${this.renderDirectionClass(
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[1] w-10 top-0 bottom-0 ${this.renderArrowClass(
           direction
         )}`}
         ariaHidden="true"
