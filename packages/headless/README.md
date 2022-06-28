@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@coveo%2Fheadless.svg)](https://badge.fury.io/js/@coveo%2Fheadless)
+
 # Coveo Headless
 
 Using the library: [Coveo Headless Library Official Documentation](https://docs.coveo.com/en/headless/latest/).
@@ -63,4 +65,3 @@ The base of the `/src` folder should only contain exports.
 # Contribution guide: Adding a new controller.
 
 Please see [the contributor guide](./contributors/adding-a-controller.md) for guidance.
-
