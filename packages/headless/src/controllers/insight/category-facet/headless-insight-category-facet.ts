@@ -7,7 +7,6 @@ import {
 } from '../../core/facets/category-facet/headless-core-category-facet';
 import {CategoryFacetOptions} from '../../core/facets/category-facet/headless-core-category-facet-options';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
-import {InsightEngine} from '../../../insight.index';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -33,64 +32,18 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 
 export interface InsightCategoryFacetOptions extends CategoryFacetOptions {}
 
 export interface InsightCategoryFacetProps {
   /**
-   * The options for  `InsightCategoryFacet` controller
+   * The options for `InsightCategoryFacet` controller
    */
   options: InsightCategoryFacetOptions;
 }
 
 export interface InsightCategoryFacet extends CoreCategoryFacet {
-  /**
-   * Toggles the specified facet value.
-   *
-   * @param selection - The facet value to toggle.
-   */
-  toggleSelect(selection: CategoryFacetValue): void;
-
-  /**
-   * Deselects all facet values.
-   * */
-  deselectAll(): void;
-
-  /**
-   * Sorts the facet values according to the specified criterion.
-   *
-   * @param criterion - The criterion by which to sort values.
-   */
-  sortBy(criterion: CategoryFacetSortCriterion): void;
-
-  /**
-   * Checks whether the facet values are sorted according to the specified criterion.
-   *
-   * @param criterion - The criterion to compare.
-   * @returns Whether the facet values are sorted according to the specified criterion.
-   */
-  isSortedBy(criterion: CategoryFacetSortCriterion): boolean;
-
-  /**
-   * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
-   */
-  showMoreValues(): void;
-
-  /**
-   * Sets the number of values displayed in the facet to the originally configured value.
-   * */
-  showLessValues(): void;
-
-  /**
-   * Enables the facet. I.e., undoes the effects of `disable`.
-   */
-  enable(): void;
-
-  /**
-   * Disables the facet. I.e., prevents it from filtering results.
-   */
-  disable(): void;
-
   /**
    * Provides methods to search the facet's values.
    */
@@ -186,18 +139,8 @@ export function buildInsightCategoryFacet(
       dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
     },
 
-    enable() {
-      coreController.enable();
-    },
-
-    disable() {
-      coreController.disable();
-    },
-
     get state() {
-      return {
-        ...coreController.state,
-      };
+      return {...coreController.state};
     },
   };
 }
