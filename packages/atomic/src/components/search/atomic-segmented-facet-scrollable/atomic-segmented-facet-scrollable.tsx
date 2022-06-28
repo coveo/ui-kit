@@ -27,18 +27,17 @@ export class AtomicSegmentedFacetScrollable {
   @State() private hideRightArrow = false;
 
   @Listen('mousewheel')
-  handleScroll(ev?: Event, pixelsToScroll?: number) {
-    const pixelsScrolled = pixelsToScroll !== undefined ? pixelsToScroll : 0;
+  handleScroll(event: Event) {
+    if (!this.horizontalScroll) {
+      return;
+    }
+
     const isOverflowing =
-      this.horizontalScroll &&
       this.horizontalScroll?.clientWidth < this.horizontalScroll?.scrollWidth;
-    const isLeftEdge =
-      this.horizontalScroll &&
-      this.horizontalScroll?.scrollLeft + pixelsScrolled <= 0;
+    const isLeftEdge = this.horizontalScroll?.scrollLeft <= 0;
     const isRightEdge =
-      this.horizontalScroll &&
-      this.horizontalScroll.scrollLeft + pixelsScrolled >=
-        this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
+      this.horizontalScroll.scrollLeft >=
+      this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
 
     if (!isOverflowing) {
       this.hideLeftArrow = true;
@@ -55,6 +54,11 @@ export class AtomicSegmentedFacetScrollable {
 
   private slideHorizontally(direction: ArrowDirection) {
     const container = this.horizontalScroll;
+    if (!container) {
+      return;
+    }
+
+    const containerWidth = container.clientWidth;
     const pixelsToScroll = container ? container.clientWidth * 0.75 : 700;
 
     if (container === null || !container) {
@@ -62,13 +66,15 @@ export class AtomicSegmentedFacetScrollable {
     }
     if (direction === 'left') {
       container.scrollLeft -= pixelsToScroll;
+      if (container.scrollLeft - pixelsToScroll <= 0) {
+        this.hideLeftArrow = true;
+      }
     } else {
       container.scrollLeft += pixelsToScroll;
+      if (container.scrollLeft + pixelsToScroll >= containerWidth) {
+        this.hideRightArrow = true;
+      }
     }
-    this.handleScroll(
-      undefined,
-      direction === 'left' ? -pixelsToScroll : pixelsToScroll
-    );
   }
 
   private renderDirectionClass(direction: ArrowDirection) {
