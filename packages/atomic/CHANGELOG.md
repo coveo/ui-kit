@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.77.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.77.0...@coveo/atomic@1.77.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* **atomic:** improved aria label for rating facet values ([#2166](https://github.com/coveo/ui-kit/issues/2166)) ([6b2c386](https://github.com/coveo/ui-kit/commit/6b2c386183c597a95150775e231daae8f5595550))
+
+
+
+
+
+# [1.77.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.76.2...@coveo/atomic@1.77.0) (2022-06-27)
+
+
+### Bug Fixes
+
+* **atomic:** improved focus style of outline buttons ([#2153](https://github.com/coveo/ui-kit/issues/2153)) ([21d249c](https://github.com/coveo/ui-kit/commit/21d249c2d0866b8604eb4381e0766b44275d4489))
+* **atomic:** improved search box aria label ([#2164](https://github.com/coveo/ui-kit/issues/2164)) ([64a3d0f](https://github.com/coveo/ui-kit/commit/64a3d0fc6573aaf63516c27aa47b44ced156fe89))
+* **atomic:** missing zh key ([#2154](https://github.com/coveo/ui-kit/issues/2154)) ([81438b9](https://github.com/coveo/ui-kit/commit/81438b9c723252d1960e7695c4b3d4d41e8010ca))
+* **atomic:** moved numeric facet input placeholders above their inputs ([#2155](https://github.com/coveo/ui-kit/issues/2155)) ([017fd23](https://github.com/coveo/ui-kit/commit/017fd23d4d155b5e88a98d17db5e58571b953a6d))
+
+
+### Features
+
+* **atomic:** additional control over outgoing i18n locales requests ([#2145](https://github.com/coveo/ui-kit/issues/2145)) ([b180cca](https://github.com/coveo/ui-kit/commit/b180cca801262d7589b41e32d814a9a4431f2da5))
+
+
+
+
+
 ## [1.76.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.76.1...@coveo/atomic@1.76.2) (2022-06-24)
 
 
