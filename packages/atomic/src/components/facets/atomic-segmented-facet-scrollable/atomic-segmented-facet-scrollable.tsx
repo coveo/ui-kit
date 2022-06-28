@@ -16,19 +16,22 @@ export class AtomicSegmentedFacetScrollable {
   @State() private hideRightArrow = false;
 
   @Listen('mousewheel')
-  handleScroll(ev: Event) {
-    console.log(
-      this.horizontalScroll?.scrollWidth,
-      this.horizontalScroll?.clientWidth,
-      this.horizontalScroll?.offsetWidth,
-      ev
-    );
-    if (
+  handleScroll() {
+    const isOverflowing =
       this.horizontalScroll &&
-      this.horizontalScroll?.clientWidth >= this.horizontalScroll?.scrollWidth
-    ) {
-      console.log('no overflow !!', ev);
+      this.horizontalScroll?.clientWidth < this.horizontalScroll?.scrollWidth;
+    const isLeftEdge = this.horizontalScroll?.scrollLeft === 0;
+    const isRightEdge =
+      this.horizontalScroll &&
+      this.horizontalScroll.scrollLeft >=
+        this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
+
+    if (!isOverflowing) {
       this.hideLeftArrow = true;
+      this.hideRightArrow = true;
+    } else if (isLeftEdge) {
+      this.hideLeftArrow = true;
+    } else if (isRightEdge) {
       this.hideRightArrow = true;
     } else {
       this.hideLeftArrow = false;
@@ -48,6 +51,25 @@ export class AtomicSegmentedFacetScrollable {
     } else {
       container.scrollLeft += pixelsToScroll;
     }
+    this.handleScroll();
+  }
+
+  private renderDirectionClass(direction: ArrowDirection) {
+    if (direction === 'left') {
+      return 'left-0 ' + (this.hideLeftArrow ? 'hidden' : '');
+    } else {
+      return 'right-0 ' + (this.hideRightArrow ? 'hidden' : '');
+    }
+  }
+
+  private renderFadeClass(direction: ArrowDirection) {
+    if (direction === 'left') {
+      return 'bg-gradient-to-r left-0 ' + (this.hideLeftArrow ? 'hidden' : '');
+    } else {
+      return (
+        'bg-gradient-to-l right-0 ' + (this.hideRightArrow ? 'hidden' : '')
+      );
+    }
   }
 
   private renderArrow(direction: ArrowDirection) {
@@ -56,15 +78,9 @@ export class AtomicSegmentedFacetScrollable {
       <Button
         part="arrow"
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-10 w-10 top-0 bottom-0 ${
-          isLeft
-            ? this.hideLeftArrow
-              ? 'left-0 hidden'
-              : 'left-0'
-            : this.hideRightArrow
-            ? 'right-0 hidden'
-            : 'right-0'
-        }`}
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-10 w-10 top-0 bottom-0 ${this.renderDirectionClass(
+          direction
+        )}`}
         ariaHidden="true"
         onClick={() => this.slideHorizontally(direction)}
       >
@@ -75,9 +91,9 @@ export class AtomicSegmentedFacetScrollable {
       </Button>,
       <div
         part="fade"
-        class={`w-16 h-10 absolute top-0  z-[5] pointer-events-none from-background-80 ${
-          isLeft ? 'bg-gradient-to-r left-0' : 'bg-gradient-to-l right-0'
-        }`}
+        class={`w-16 h-10 absolute top-0  z-[5] pointer-events-none from-background-80 ${this.renderFadeClass(
+          direction
+        )}`}
       ></div>,
     ];
   }
