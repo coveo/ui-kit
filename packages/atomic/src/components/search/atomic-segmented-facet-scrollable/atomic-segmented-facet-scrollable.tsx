@@ -23,17 +23,18 @@ type ArrowDirection = 'right' | 'left';
 })
 export class AtomicSegmentedFacetScrollable {
   private horizontalScroll?: HTMLDivElement;
-  @State() private hideLeftArrow = false;
+  @State() private hideLeftArrow = true;
   @State() private hideRightArrow = false;
 
   @Listen('mousewheel')
-  handleScroll(event: Event) {
+  @Listen('resize', {target: 'window'})
+  handleScroll() {
     if (!this.horizontalScroll) {
       return;
     }
 
     const isOverflowing =
-      this.horizontalScroll?.clientWidth < this.horizontalScroll?.scrollWidth;
+      this.horizontalScroll.clientWidth < this.horizontalScroll.scrollWidth;
     const isLeftEdge = this.horizontalScroll?.scrollLeft <= 0;
     const isRightEdge =
       this.horizontalScroll.scrollLeft >=
@@ -59,11 +60,11 @@ export class AtomicSegmentedFacetScrollable {
     }
 
     const containerWidth = container.clientWidth;
+    const containerScrollWidth = container.scrollWidth;
     const pixelsToScroll = container ? container.clientWidth * 0.75 : 700;
+    this.hideLeftArrow = false;
+    this.hideRightArrow = false;
 
-    if (container === null || !container) {
-      return;
-    }
     if (direction === 'left') {
       container.scrollLeft -= pixelsToScroll;
       if (container.scrollLeft - pixelsToScroll <= 0) {
@@ -71,7 +72,10 @@ export class AtomicSegmentedFacetScrollable {
       }
     } else {
       container.scrollLeft += pixelsToScroll;
-      if (container.scrollLeft + pixelsToScroll >= containerWidth) {
+      if (
+        container.scrollLeft + pixelsToScroll >=
+        containerScrollWidth - containerWidth
+      ) {
         this.hideRightArrow = true;
       }
     }
