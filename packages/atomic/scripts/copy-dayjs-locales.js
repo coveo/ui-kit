@@ -14,7 +14,7 @@ function getI18nLocaleKey(key) {
 }
 
 async function copyDayjsLocales() {
-  const localesJSONData = await readFile('node_modules/dayjs/locale.json');
+  const localesJSONData = await readFile('../../node_modules/dayjs/locale.json');
   const localesData = JSON.parse(localesJSONData);
   let fileContent =
     'export const locales: Record<string, () => Promise<unknown>> = {';

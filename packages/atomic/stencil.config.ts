@@ -88,7 +88,7 @@ export const config: Config = {
       copy: [
         {src: 'themes'},
         {
-          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'assets',
         },
       ],
@@ -105,7 +105,7 @@ export const config: Config = {
         {src: 'themes'},
         isDevWatch && {src: 'external-builds', dest: 'build/headless'},
         {
-          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'build/assets',
         },
       ].filter((n) => n),

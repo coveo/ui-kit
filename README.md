@@ -14,7 +14,7 @@
 To install all dependencies and link local packages, run:
 
 ```sh
-npm run setup
+npm i
 ```
 
 To build all projects for production, run:

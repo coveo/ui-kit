@@ -2,7 +2,7 @@ function quanticIsDependency() {
   try {
     // path to npm scripts is expected to be: project_name/node_modules/@coveo/quantic/scripts/npm
     require.resolve('@coveo/quantic/scripts/npm/utils.js');
-    return true;
+    return false; // TODO: update condition
   } catch (err) {
     if (err.code !== 'MODULE_NOT_FOUND') {
       console.error(err);

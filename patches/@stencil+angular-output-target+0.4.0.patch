@@ -1,0 +1,47 @@
+diff --git a/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js b/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
+index 09c7d3a..161ecea 100644
+--- a/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
++++ b/node_modules/@stencil/angular-output-target/dist/generate-angular-component.js
+@@ -46,6 +46,7 @@ export const createComponentDefinition = (componentCorePackage, distTypesDir, ro
+         componentEvents.push(`  /**
+    * ${output.docs.text} ${output.docs.tags.map((tag) => `@${tag.name} ${tag.text}`)}
+    */`);
++   console.log(tag.name)
+         /**
+          * The original attribute contains the original type defined by the devs.
+          * This regexp normalizes the reference, by removing linebreaks,
+@@ -59,7 +60,7 @@ export const createComponentDefinition = (componentCorePackage, distTypesDir, ro
+             .replace(/\n/g, ' ')
+             .replace(/\s{2,}/g, ' ')
+             .replace(/,\s*/g, ', '));
+-        componentEvents.push(`  ${output.name}: EventEmitter<CustomEvent<${outputTypeRemapped.trim()}>>;`);
++        componentEvents.push(`  '${output.name}': EventEmitter<CustomEvent<${outputTypeRemapped.trim()}>>;`);
+         if (index === outputs.length - 1) {
+             // Empty line to push end `}` to new line
+             componentEvents.push('\n');
+diff --git a/node_modules/@stencil/angular-output-target/dist/index.cjs.js b/node_modules/@stencil/angular-output-target/dist/index.cjs.js
+index 2e1b936..eb40149 100644
+--- a/node_modules/@stencil/angular-output-target/dist/index.cjs.js
++++ b/node_modules/@stencil/angular-output-target/dist/index.cjs.js
+@@ -145,7 +145,7 @@ const createComponentDefinition = (componentCorePackage, distTypesDir, rootDir,
+             .replace(/\n/g, ' ')
+             .replace(/\s{2,}/g, ' ')
+             .replace(/,\s*/g, ', '));
+-        componentEvents.push(`  ${output.name}: EventEmitter<CustomEvent<${outputTypeRemapped.trim()}>>;`);
++        componentEvents.push(`  '${output.name}': EventEmitter<CustomEvent<${outputTypeRemapped.trim()}>>;`);
+         if (index === outputs.length - 1) {
+             // Empty line to push end `}` to new line
+             componentEvents.push('\n');
+diff --git a/node_modules/@stencil/angular-output-target/dist/index.js b/node_modules/@stencil/angular-output-target/dist/index.js
+index ba719be..788184f 100644
+--- a/node_modules/@stencil/angular-output-target/dist/index.js
++++ b/node_modules/@stencil/angular-output-target/dist/index.js
+@@ -137,7 +137,7 @@ const createComponentDefinition = (componentCorePackage, distTypesDir, rootDir,
+             .replace(/\n/g, ' ')
+             .replace(/\s{2,}/g, ' ')
+             .replace(/,\s*/g, ', '));
+-        componentEvents.push(`  ${output.name}: EventEmitter<CustomEvent<${outputTypeRemapped.trim()}>>;`);
++        componentEvents.push(`  '${output.name}': EventEmitter<CustomEvent<${outputTypeRemapped.trim()}>>;`);
+         if (index === outputs.length - 1) {
+             // Empty line to push end `}` to new line
+             componentEvents.push('\n');
