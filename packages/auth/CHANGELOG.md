@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.2](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.1...@coveo/auth@1.7.2) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.0...@coveo/auth@1.7.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.20...@coveo/auth@1.7.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
 ## [1.6.20](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.19...@coveo/auth@1.6.20) (2022-06-28)
 
 
