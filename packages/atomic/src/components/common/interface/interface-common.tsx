@@ -74,7 +74,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     };
   }
 
-  public async onComponentInitializing(event: InitializeEvent) {
+  public onComponentInitializing(event: InitializeEvent) {
     event.preventDefault();
     event.stopPropagation();
 
