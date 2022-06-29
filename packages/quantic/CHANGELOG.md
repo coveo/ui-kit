@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.26.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.1...@coveo/quantic@1.26.2) (2022-06-29)
+
+
+### Bug Fixes
+
+* **quantic:** corner case addressed in the QuanticTabBar component ([#2173](https://github.com/coveo/ui-kit/issues/2173)) ([7f81513](https://github.com/coveo/ui-kit/commit/7f81513b33cb6b4544f76afeca41d715d9e1ce1f))
+
+
+
+
+
+## [1.26.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.0...@coveo/quantic@1.26.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.26.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.18...@coveo/quantic@1.26.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
 ## [1.25.18](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.17...@coveo/quantic@1.25.18) (2022-06-28)
 
 
