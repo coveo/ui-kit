@@ -33,12 +33,12 @@
 
         await Promise.all([
           searchInterface1.initialize({
-            accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-            organizationId: 'searchuisamples',
-          }),
-          searchInterface2.initialize({
             accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
             organizationId: 'electronicscoveodemocomo0n2fu8v',
+          }),
+          searchInterface2.initialize({
+            accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+            organizationId: 'searchuisamples',
           }),
         ]);
 
@@ -54,15 +54,16 @@
         <atomic-external selector="#interface-2">
           <atomic-search-box></atomic-search-box>
           <atomic-query-summary></atomic-query-summary>
-          <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer">
-            <atomic-format-currency currency="USD"></atomic-format-currency>
-          </atomic-numeric-facet>
+          <atomic-facet field="author" label="Author"></atomic-facet>
         </atomic-external>
       </div>
       <div>
         <h1>Interface #1, not linked to url</h1>
         <atomic-search-interface id="interface-1" reflect-state-in-url="false">
           <atomic-query-summary></atomic-query-summary>
+          <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer">
+            <atomic-format-currency currency="USD"></atomic-format-currency>
+          </atomic-numeric-facet>
           <atomic-search-box></atomic-search-box>
           <atomic-result-list></atomic-result-list>
         </atomic-search-interface>

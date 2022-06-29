@@ -25,6 +25,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
+ * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
+ * @part segmented-container - The container that holds the segmented facets.
  */
 @Component({
   tag: 'atomic-segmented-facet',
@@ -101,7 +103,7 @@ export class AtomicSegmentedFacet
   }
 
   private renderValuesContainer(children: VNode[]) {
-    const classes = 'box-container flex';
+    const classes = 'box-container flex h-10';
     return (
       <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
         <ul class={classes} part="values">
@@ -156,7 +158,10 @@ export class AtomicSegmentedFacet
     }
 
     return (
-      <div class="flex whitespace-nowrap h-9 items-center">
+      <div
+        part="segmented-container"
+        class="flex whitespace-nowrap h-10 items-center"
+      >
         {this.renderLabel()}
         {this.renderValues()}
       </div>

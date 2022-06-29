@@ -234,9 +234,8 @@ export class AtomicRatingRangeFacet
 
   private formatFacetValue(facetValue: NumericFacetValue) {
     if (facetValue.start === this.maxValueInIndex) {
-      return this.bindings.i18n.t('stars', {
+      return this.bindings.i18n.t('stars-only', {
         count: facetValue.start,
-        max: this.maxValueInIndex,
       });
     }
     return this.bindings.i18n.t('stars-range', {

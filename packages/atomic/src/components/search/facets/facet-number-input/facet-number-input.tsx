@@ -10,6 +10,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-facet-number-input',
+  styleUrl: 'atomic-facet-number-input.pcss',
   shadow: false,
 })
 export class FacetNumberInput {
@@ -48,34 +49,43 @@ export class FacetNumberInput {
 
   render() {
     const label = this.bindings.i18n.t(this.label);
-    const minPlaceholder = this.bindings.i18n.t('min');
+    const minText = this.bindings.i18n.t('min');
+    const maxText = this.bindings.i18n.t('max');
     const minAria = this.bindings.i18n.t('number-input-minimum', {label});
-    const maxPlaceholder = this.bindings.i18n.t('max');
     const maxAria = this.bindings.i18n.t('number-input-maximum', {label});
     const apply = this.bindings.i18n.t('apply');
     const applyAria = this.bindings.i18n.t('number-input-apply', {label});
 
     const inputClasses =
       'p-2.5 input-primary placeholder-neutral-dark min-w-0 mr-1';
+    const labelClasses = 'text-neutral-dark text-sm';
 
     const step = this.type === 'integer' ? '1' : 'any';
 
     return (
       <form
-        class="flex flex-row mt-4 px-2"
+        class="mt-4 px-2 gap-y-0.5"
+        part="input-form"
         onSubmit={(e) => {
           e.preventDefault();
           this.apply();
           return false;
         }}
       >
+        <label
+          part="label-start"
+          class={labelClasses}
+          htmlFor={`${this.filterState.facetId}_start`}
+        >
+          {minText}
+        </label>
         <input
           part="input-start"
+          id={`${this.filterState.facetId}_start`}
           type="number"
           step={step}
           ref={(ref) => (this.startRef = ref!)}
           class={inputClasses}
-          placeholder={minPlaceholder}
           aria-label={minAria}
           required
           min={Number.MIN_SAFE_INTEGER}
@@ -85,13 +95,20 @@ export class FacetNumberInput {
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
           }
         />
+        <label
+          part="label-end"
+          class={labelClasses}
+          htmlFor={`${this.filterState.facetId}_end`}
+        >
+          {maxText}
+        </label>
         <input
           part="input-end"
+          id={`${this.filterState.facetId}_end`}
           type="number"
           step={step}
           ref={(ref) => (this.endRef = ref!)}
           class={inputClasses}
-          placeholder={maxPlaceholder}
           aria-label={maxAria}
           required
           min={this.start}

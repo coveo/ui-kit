@@ -23,6 +23,7 @@ export interface ButtonProps {
   ariaCurrent?: string;
   ariaControls?: string;
   ariaHidden?: string;
+  tabIndex?: string;
   title?: string;
   ref?(element?: HTMLButtonElement): void;
 }
@@ -49,6 +50,12 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
     ref(buttonEl?: HTMLButtonElement) {
       if (props.form) {
         buttonEl?.setAttribute('form', props.form);
+      }
+      if (props.ariaHidden) {
+        buttonEl?.setAttribute('aria-hidden', props.ariaHidden);
+      }
+      if (props.tabIndex) {
+        buttonEl?.setAttribute('tabindex', props.tabIndex);
       }
       props.ref?.(buttonEl);
     },
