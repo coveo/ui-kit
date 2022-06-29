@@ -59,6 +59,9 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
  * @part suggestion-with-query - An item in the list that will update the search box query.
+ * @part instant-results-item - An instant result rendered by an `atomic-search-box-instant-results` component.
+ * @part instant-result-show-all-button - The button to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
+
  */
 @Component({
   tag: 'atomic-search-box',
@@ -100,7 +103,8 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public numberOfQueries = 8;
 
   /**
-   * Defining this option makes the search box standalone.
+   * Defining this option makes the search box standalone (see [Use a
+   * Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).
    *
    * This option defines the default URL the user should be redirected to, when a query is submitted.
    * If a query pipeline redirect is triggered, it will redirect to that URL instead

@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.77.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.1...@coveo/headless@1.77.2) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.77.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.0...@coveo/headless@1.77.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.77.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.10...@coveo/headless@1.77.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
+## [1.76.10](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.9...@coveo/headless@1.76.10) (2022-06-28)
+
+
+### Bug Fixes
+
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
+## [1.76.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.8...@coveo/headless@1.76.9) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.76.8](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.7...@coveo/headless@1.76.8) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.76.7](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.76.6...@coveo/headless@1.76.7) (2022-06-24)
 
 

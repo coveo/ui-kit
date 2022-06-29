@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.2](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.1...@coveo/auth@1.7.2) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.0...@coveo/auth@1.7.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.20...@coveo/auth@1.7.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
+## [1.6.20](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.19...@coveo/auth@1.6.20) (2022-06-28)
+
+
+### Bug Fixes
+
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
+## [1.6.19](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.18...@coveo/auth@1.6.19) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.18](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.17...@coveo/auth@1.6.18) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
 ## [1.6.17](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.16...@coveo/auth@1.6.17) (2022-06-24)
 
 **Note:** Version bump only for package @coveo/auth
