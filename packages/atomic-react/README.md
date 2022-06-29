@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@coveo%2Fatomic-react.svg)](https://badge.fury.io/js/@coveo%2Fatomic-react)
+
 # Atomic React
 
 A React component library for building modern UIs interfacing with the Coveo platform. Atomic React is a wrapper around the core [Atomic](https://docs.coveo.com/en/atomic/latest/) web component library.
