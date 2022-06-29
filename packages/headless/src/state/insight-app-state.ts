@@ -19,7 +19,9 @@ import {
 
 export type InsightSearchParametersState = QuerySection &
   FacetSection &
+  DateFacetSection &
   PaginationSection;
+
 export type InsightAppState = InsightSearchParametersState &
   ConfigurationSection &
   VersionSection &
@@ -32,6 +34,5 @@ export type InsightAppState = InsightSearchParametersState &
   FacetSection &
   FacetSearchSection &
   FacetOptionsSection &
-  DateFacetSection &
   QuerySetSection &
   QuerySuggestionSection;
