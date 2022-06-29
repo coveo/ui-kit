@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.13.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.12.5...@coveo/atomic-react@1.13.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
 ## [1.12.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.12.4...@coveo/atomic-react@1.12.5) (2022-06-28)
 
 
