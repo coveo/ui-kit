@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/@coveo%2Fauth.svg)](https://badge.fury.io/js/@coveo%2Fauth)
+
 # @coveo/auth
 
 Functions to help authenticate with the Coveo platform.
@@ -15,6 +17,7 @@ npm i @coveo/auth
 2. Inside your web application, instantiate the SAML client in this package.
 
 ### Example
+
 ```
 import {buildSamlClient} from '@coveo/auth`;
 
@@ -29,6 +32,7 @@ async function main() {
 
 main();
 ```
+
 ### Example with `@coveo/headless`
 
 ```
@@ -50,6 +54,7 @@ async function main() {
 
 main()
 ```
+
 ### Example with `@coveo/headless` and `React`
 
 - Code example [available here](../samples/headless-react/src/pages/SamlPage.tsx).
