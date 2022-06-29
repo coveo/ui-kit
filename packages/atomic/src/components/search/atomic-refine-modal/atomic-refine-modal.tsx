@@ -21,7 +21,7 @@ import {
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {SortDropdownOption} from '../atomic-search-interface/store';
 import SortIcon from '@images/sort.svg';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {BaseFacetElement} from '../facets/facet-common';
 
