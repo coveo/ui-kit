@@ -1,5 +1,6 @@
 {
   "name": "headless-react",
+  "private": "true",
   "version": "0.60.1",
   "dependencies": {
     "@coveo/auth": "1.7.1",
@@ -27,7 +28,7 @@
   },
   "scripts": {
     "prepublishOnly": "exit 1",
-    "dev": "npm run copy:assets && npm run link:atomic-react && react-scripts start",
+    "dev": "react-scripts start",
     "build": "tsc --noEmit && tsc --module commonjs --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
     "test": "react-scripts test --env=./jest.setup.js",
