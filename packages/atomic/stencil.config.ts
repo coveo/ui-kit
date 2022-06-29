@@ -20,11 +20,22 @@ import {generateAngularModuleDefinition as angularModule} from './stencil-plugin
 const isProduction = process.env.BUILD === 'production';
 
 const toAlias = ['global', 'images', 'utils', 'components'];
+
 function createSrcAliases() {
   return toAlias.map((folder) => ({
     find: `@${folder}`,
     replacement: path.resolve(__dirname, `./src/${folder}`),
   }));
+}
+
+function createModuleNameMapper() {
+  return toAlias.reduce(
+    (acc, alias) => ({
+      ...acc,
+      [`^@(${alias}/.*)$`]: '<rootDir>/src/$1',
+    }),
+    {}
+  );
 }
 
 function getPackageVersion(): string {
@@ -129,6 +140,9 @@ export const config: Config = {
     testPathIgnorePatterns: ['headless', '.snap'],
     setupFiles: ['jest-localstorage-mock'],
     resetMocks: false,
+    moduleNameMapper: {
+      ...createModuleNameMapper(),
+    },
   },
   devServer: {
     reloadStrategy: 'pageReload',
