@@ -6,7 +6,7 @@
   "dependencies": {
     "@coveo/atomic": "^1.62.0",
     "@coveo/atomic-react": "^1.8.2",
-    "react": "18.2.0",
+    "react": "17.0.2",
     "react-dom": "18.2.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 
-const DynamicSearchPage = dynamic(() => import('./search-page'), {
+const DynamicSearchPage = dynamic(() => import('../components/search-page'), {
   ssr: false,
 });
 

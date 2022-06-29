@@ -6,8 +6,8 @@
     "@coveo/atomic": "^1.56.1",
     "@coveo/atomic-react": "^1.4.7",
     "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react": "17.0.2",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@types/node": "17.0.34",
