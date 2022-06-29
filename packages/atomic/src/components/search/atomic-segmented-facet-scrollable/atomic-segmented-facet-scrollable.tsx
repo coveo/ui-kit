@@ -25,9 +25,20 @@ export class AtomicSegmentedFacetScrollable {
   private horizontalScroll?: HTMLDivElement;
   @State() private hideLeftArrow = true;
   @State() private hideRightArrow = false;
+  private ro!: ResizeObserver;
+
+  componentDidLoad() {
+    this.ro = new ResizeObserver(() => {
+      this.handleScroll();
+    });
+    this.ro.observe(this.horizontalScroll as HTMLDivElement);
+  }
+
+  disconnectedCallback() {
+    this.ro.disconnect();
+  }
 
   @Listen('mousewheel')
-  @Listen('resize', {target: 'window'})
   handleScroll() {
     if (!this.horizontalScroll) {
       return;
@@ -43,12 +54,15 @@ export class AtomicSegmentedFacetScrollable {
     if (!isOverflowing) {
       this.hideLeftArrow = true;
       this.hideRightArrow = true;
-    } else if (isLeftEdge) {
+    }
+    if (isLeftEdge) {
       this.hideLeftArrow = true;
-    } else if (isRightEdge) {
-      this.hideRightArrow = true;
     } else {
       this.hideLeftArrow = false;
+    }
+    if (isRightEdge) {
+      this.hideRightArrow = true;
+    } else {
       this.hideRightArrow = false;
     }
   }
