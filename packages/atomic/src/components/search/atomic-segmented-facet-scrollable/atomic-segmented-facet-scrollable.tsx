@@ -125,10 +125,10 @@ export class AtomicSegmentedFacetScrollable {
 
   render() {
     return (
-      <div part="scrollableContainer" class="flex h-10 relative">
+      <div part="scrollable-container" class="flex h-10 relative">
         {this.renderArrow('left')}
         <div
-          part="horizontalScroll"
+          part="horizontal-scroll"
           class="wrapper-segmented flex flex-row ml-10 mr-10 overflow-x-scroll scroll-smooth"
           ref={(el) => (this.horizontalScroll = el as HTMLDivElement)}
         >
