@@ -138,5 +138,9 @@ export const buildPlanRequest = async (
       (await fromAnalyticsStateToAnalyticsParams(
         state.configuration.analytics
       ))),
+    ...(state.configuration.search.authenticationProviders.length && {
+      authentication:
+        state.configuration.search.authenticationProviders.join(','),
+    }),
   };
 };

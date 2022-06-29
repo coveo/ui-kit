@@ -43,6 +43,7 @@
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
+    "@coveo/auth": "^1.5.2",
     "@coveo/bueno": "0.39.19",
     "@reduxjs/toolkit": "1.8.1",
     "@types/pino": "6.3.11",

@@ -15,6 +15,7 @@ export type {
 export {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
+  buildSearchEngineWithSamlAuthentication,
 } from './app/search-engine/search-engine';
 
 export type {CoreEngine, ExternalEngineOptions} from './app/engine';

@@ -114,17 +114,28 @@ export interface ExcerptLength {
   excerptLength?: number;
 }
 
+export interface AuthenticationParam {
+  authentication?: string;
+}
+
 export const baseSearchRequest = (
-  req: BaseParam,
+  req: BaseParam & AuthenticationParam,
   method: HttpMethods,
   contentType: HTTPContentType,
   path: string
-) => ({
-  accessToken: req.accessToken,
-  method,
-  contentType,
-  url: `${req.url}${path}?${getOrganizationIdQueryParam(req)}`,
-});
+) => {
+  return {
+    accessToken: req.accessToken,
+    method,
+    contentType,
+    url: `${req.url}${path}?${getOrganizationIdQueryParam(req)}${
+      req.authentication ? `&${getAuthenticationQueryParam(req)}` : ''
+    }`,
+  };
+};
 
 export const getOrganizationIdQueryParam = (req: BaseParam) =>
   `organizationId=${req.organizationId}`;
+
+export const getAuthenticationQueryParam = (req: AuthenticationParam) =>
+  `authentication=${encodeURIComponent(req.authentication!)}`;

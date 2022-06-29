@@ -22,6 +22,10 @@ export const buildCategoryFacetSearchRequest = async (
     url: state.configuration.search.apiBaseUrl,
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
+    ...(state.configuration.search.authenticationProviders.length && {
+      authentication:
+        state.configuration.search.authenticationProviders.join(','),
+    }),
     basePath,
     captions,
     numberOfValues,

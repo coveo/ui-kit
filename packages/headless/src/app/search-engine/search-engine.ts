@@ -35,6 +35,8 @@ import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {jwtReducer} from './jwt-reducer';
+import {buildSamlClient} from '@coveo/auth';
+import {Schema, StringValue} from '@coveo/bueno';
 
 export type {SearchEngineConfiguration, SearchConfigurationOptions};
 export {getSampleSearchEngineConfiguration};
@@ -141,6 +143,39 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   };
 }
 
+export async function buildSearchEngineWithSamlAuthentication(
+  options: Omit<SearchEngineOptions, 'configuration'> & {
+    configuration: Omit<SearchEngineConfiguration, 'accessToken'> & {
+      provider: string;
+    };
+  }
+) {
+  validateSAMLConfiguration(
+    options.configuration,
+    buildLogger(options.loggerOptions)
+  );
+
+  const saml = buildSamlClient({
+    organizationId: options.configuration.organizationId,
+    platformOrigin: options.configuration.platformUrl,
+    provider: options.configuration.provider,
+  });
+
+  const token = await saml.authenticate();
+  return buildSearchEngine({
+    ...options,
+    configuration: {
+      ...options.configuration,
+      accessToken: token,
+      renewAccessToken: saml.authenticate,
+      search: {
+        ...options.configuration.search,
+        authenticationProviders: [options.configuration.provider],
+      },
+    },
+  });
+}
+
 function validateConfiguration(
   configuration: SearchEngineConfiguration,
   logger: Logger
@@ -150,6 +185,19 @@ function validateConfiguration(
   } catch (error) {
     logger.error(error as Error, 'Search engine configuration error');
     throw error;
+  }
+}
+
+function validateSAMLConfiguration(
+  configuration: {provider: string},
+  logger: Logger
+) {
+  try {
+    new Schema<{provider: string}>({
+      provider: new StringValue({required: true, emptyAllowed: false}),
+    }).validate(configuration);
+  } catch (error) {
+    logger.error(error as Error, 'Search engine SAML configuration error');
   }
 }
 
