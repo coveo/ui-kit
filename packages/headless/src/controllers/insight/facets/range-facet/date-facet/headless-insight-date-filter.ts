@@ -36,7 +36,7 @@ export type {
  * @param props - The configurable `DateFilter` controller properties.
  * @returns A `DateFilter` controller instance.
  */
-export function buildInsightDateFilter(
+export function buildDateFilter(
   engine: InsightEngine,
   props: DateFilterProps
 ): DateFilter {

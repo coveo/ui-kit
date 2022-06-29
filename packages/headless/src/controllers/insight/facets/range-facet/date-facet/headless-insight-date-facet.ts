@@ -38,7 +38,7 @@ export {buildDateRange};
  * @param props - The configurable `DateFacet` controller properties.
  * @returns A `DateFacet` controller instance.
  */
-export function buildInsightDateFacet(
+export function buildDateFacet(
   engine: InsightEngine,
   props: DateFacetProps
 ): DateFacet {

@@ -1,7 +1,7 @@
 import {
   DateFacet,
-  buildInsightDateFacet,
   DateFacetOptions,
+  buildDateFacet,
 } from './headless-insight-date-facet';
 import {
   MockInsightEngine,
@@ -30,7 +30,7 @@ describe('insight date facet', () => {
 
   function initDateFacet() {
     engine = buildMockInsightEngine({state});
-    dateFacet = buildInsightDateFacet(engine, {options});
+    dateFacet = buildDateFacet(engine, {options});
   }
 
   beforeEach(() => {

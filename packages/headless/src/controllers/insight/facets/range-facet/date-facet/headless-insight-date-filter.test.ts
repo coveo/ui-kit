@@ -1,6 +1,6 @@
 import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
 import {
-  buildInsightDateFilter,
+  buildDateFilter,
   DateFilter,
   DateFilterInitialState,
   DateFilterOptions,
@@ -26,7 +26,7 @@ describe('insight date filter', () => {
 
   function initDateFilter() {
     engine = buildMockInsightEngine({state});
-    dateFacet = buildInsightDateFilter(engine, {options, initialState});
+    dateFacet = buildDateFilter(engine, {options, initialState});
   }
 
   beforeEach(() => {
