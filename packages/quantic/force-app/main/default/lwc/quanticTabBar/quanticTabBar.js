@@ -59,7 +59,8 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   updateDropdownOptions() {
-    this.tabsInDropdown = this.overflowingTabs.map((el) => ({
+    this.tabsInDropdown = this.overflowingTabs.map((el, index) => ({
+      id: index,
       // @ts-ignore
       label: el.label,
       // @ts-ignore
@@ -319,9 +320,10 @@ export default class QuanticTabBar extends LightningElement {
   handleDropdownTabSelect = (event) => {
     event.stopPropagation();
     const targetValue = event.currentTarget.getAttribute('data-value');
+    const targetLabel = event.currentTarget.getAttribute('data-label');
     const clickedtab = this.overflowingTabs.find(
       // @ts-ignore
-      (tab) => tab.expression === targetValue
+      (tab) => tab.expression === targetValue && tab.label === targetLabel
     );
     // @ts-ignore
     clickedtab?.select();
