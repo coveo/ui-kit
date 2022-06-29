@@ -160,40 +160,43 @@ export const config: Config = {
   ],
   rollupPlugins: {
     before: [
-      isDevWatch &&
-        alias({
-          entries: [
-            {
-              find: '@coveo/headless/case-assist',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/case-assist/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless/recommendation',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/recommendation/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless/product-recommendation',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/product-recommendation/headless.esm.js'
-              ),
-            },
-            {
-              find: '@coveo/headless',
-              replacement: path.resolve(
-                __dirname,
-                './src/external-builds/headless.esm.js'
-              ),
-            },
-            ...createSrcAliases(),
-          ],
-        }),
+      alias({
+        entries: [
+          ...(isDevWatch
+            ? [
+                {
+                  find: '@coveo/headless/case-assist',
+                  replacement: path.resolve(
+                    __dirname,
+                    './src/external-builds/case-assist/headless.esm.js'
+                  ),
+                },
+                {
+                  find: '@coveo/headless/recommendation',
+                  replacement: path.resolve(
+                    __dirname,
+                    './src/external-builds/recommendation/headless.esm.js'
+                  ),
+                },
+                {
+                  find: '@coveo/headless/product-recommendation',
+                  replacement: path.resolve(
+                    __dirname,
+                    './src/external-builds/product-recommendation/headless.esm.js'
+                  ),
+                },
+                {
+                  find: '@coveo/headless',
+                  replacement: path.resolve(
+                    __dirname,
+                    './src/external-builds/headless.esm.js'
+                  ),
+                },
+              ]
+            : []),
+          ...createSrcAliases(),
+        ],
+      }),
       html({
         include: 'src/templates/**/*.html',
       }),
