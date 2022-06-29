@@ -162,6 +162,7 @@ export const config: Config = {
     before: [
       alias({
         entries: [
+          ...createSrcAliases(),
           ...(isDevWatch
             ? [
                 {
@@ -194,7 +195,6 @@ export const config: Config = {
                 },
               ]
             : []),
-          ...createSrcAliases(),
         ],
       }),
       html({

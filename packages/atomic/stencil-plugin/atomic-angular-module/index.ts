@@ -20,7 +20,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 const componentImports = (components: string[]) => `
 import {
 ${components.join(',\n')}
-} from '@components';
+} from './components';
 `;
 
 const defineCustomElements = `
