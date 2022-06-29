@@ -2,6 +2,18 @@ import {Component, h, Listen, State} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../common/button';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
+} from '@coveo/headless';
+import {Hidden} from '../../common/hidden';
 
 type ArrowDirection = 'right' | 'left';
 
@@ -21,11 +33,25 @@ type ArrowDirection = 'right' | 'left';
   styleUrl: 'atomic-segmented-facet-scrollable.pcss',
   shadow: true,
 })
-export class AtomicSegmentedFacetScrollable {
+export class AtomicSegmentedFacetScrollable implements InitializableComponent {
+  @InitializeBindings()
+  public bindings!: Bindings;
+  public searchStatus!: SearchStatus;
+  @BindStateToController('searchStatus')
+  @State()
+  public searchStatusState!: SearchStatusState;
+  @State()
+  public error!: Error;
+
   private horizontalScroll?: HTMLDivElement;
   @State() private hideLeftArrow = true;
   @State() private hideRightArrow = false;
   private ro!: ResizeObserver;
+
+  public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    console.log('init');
+  }
 
   componentDidLoad() {
     this.ro = new ResizeObserver(() => {
@@ -142,12 +168,16 @@ export class AtomicSegmentedFacetScrollable {
   }
 
   render() {
+    if (this.searchStatus.state.hasError) {
+      return <Hidden></Hidden>;
+    }
+
     return (
       <div part="scrollable-container" class="flex h-10 relative">
         {this.renderArrow('left')}
         <div
           part="horizontal-scroll"
-          class="wrapper-segmented flex flex-row ml-10 mr-10 overflow-x-scroll scroll-smooth"
+          class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
           ref={(el) => (this.horizontalScroll = el as HTMLDivElement)}
         >
           <slot></slot>
