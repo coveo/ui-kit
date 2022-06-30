@@ -71,7 +71,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
     const isScrollable =
       this.horizontalScroll.clientWidth < this.horizontalScroll.scrollWidth;
-    const isLeftEdge = this.horizontalScroll?.scrollLeft <= 0;
+    const isLeftEdge = this.horizontalScroll.scrollLeft <= 0;
     const isRightEdge =
       this.horizontalScroll.scrollLeft >=
       this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
@@ -144,7 +144,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       </Button>,
       <div
         part={`${direction}-fade`}
-        class={`w-16 h-10 absolute top-0  z-[1] pointer-events-none from-background-80 ${this.renderFadeClass(
+        class={`w-20 h-10 absolute top-0  z-[1] pointer-events-none from-background-60 ${this.renderFadeClass(
           direction
         )}`}
       ></div>,

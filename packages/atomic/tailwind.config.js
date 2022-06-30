@@ -52,7 +52,7 @@ module.exports = {
       },
       gradientColorStops: (theme) => ({
         ...theme("colors"),
-        'background-80': 'var(--atomic-background) 80%',
+        'background-60': 'var(--atomic-background) 60%',
       }),
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
