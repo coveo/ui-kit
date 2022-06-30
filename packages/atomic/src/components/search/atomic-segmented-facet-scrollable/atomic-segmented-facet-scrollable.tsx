@@ -69,15 +69,15 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       return;
     }
 
-    const isOverflowing =
+    const isScrollable =
       this.horizontalScroll.clientWidth < this.horizontalScroll.scrollWidth;
     const isLeftEdge = this.horizontalScroll?.scrollLeft <= 0;
     const isRightEdge =
       this.horizontalScroll.scrollLeft >=
       this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
 
-    this.hideLeftArrow = !isOverflowing || isLeftEdge;
-    this.hideRightArrow = !isOverflowing || isRightEdge;
+    this.hideLeftArrow = !isScrollable || isLeftEdge;
+    this.hideRightArrow = !isScrollable || isRightEdge;
   }
 
   private slideHorizontally(direction: ArrowDirection) {
@@ -86,25 +86,22 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       return;
     }
 
-    const containerWidth = container.clientWidth;
-    const containerScrollWidth = container.scrollWidth;
-    const pixelsToScroll = container ? container.clientWidth * 0.75 : 700;
+    const width = container.clientWidth;
+    const scrollWidth = container.scrollWidth;
+    const pixelsToScroll = container.clientWidth * 0.75;
+    const isLeftEdge = container.scrollLeft - pixelsToScroll <= 0;
+    const isRightEdge =
+      container.scrollLeft + pixelsToScroll >= scrollWidth - width;
+
     this.hideLeftArrow = false;
     this.hideRightArrow = false;
 
     if (direction === 'left') {
       container.scrollLeft -= pixelsToScroll;
-      if (container.scrollLeft - pixelsToScroll <= 0) {
-        this.hideLeftArrow = true;
-      }
+      this.hideLeftArrow = isLeftEdge;
     } else {
       container.scrollLeft += pixelsToScroll;
-      if (
-        container.scrollLeft + pixelsToScroll >=
-        containerScrollWidth - containerWidth
-      ) {
-        this.hideRightArrow = true;
-      }
+      this.hideRightArrow = isRightEdge;
     }
   }
 
@@ -127,7 +124,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
   }
 
   private renderArrow(direction: ArrowDirection) {
-    const isLeft: boolean = direction === 'left';
+    const isLeft = direction === 'left';
     return [
       <Button
         part={`${direction}-arrow-button`}
