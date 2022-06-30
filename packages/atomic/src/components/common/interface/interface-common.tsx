@@ -1,7 +1,4 @@
-import type {SearchEngine} from '@coveo/headless';
 import {LogLevel} from '@coveo/headless';
-import type {RecommendationEngine} from '@coveo/headless/recommendation';
-import type {InsightEngine} from '@coveo/headless/insight';
 import {i18n, TFunction} from 'i18next';
 import {ComponentInterface, h} from '@stencil/core';
 import {setCoveoGlobal} from '../../../global/environment';
@@ -10,14 +7,12 @@ import {initi18n} from './i18n';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {AnyBindings} from './bindings';
+import {AnyBindings, AnyEngineType} from './bindings';
 import {
   i18nBackendOptions,
   i18nTranslationNamespace,
 } from '../../common/interface/i18n';
 import Backend from 'i18next-http-backend';
-
-export type AnyEngineType = SearchEngine | RecommendationEngine | InsightEngine;
 
 export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   extends ComponentInterface {

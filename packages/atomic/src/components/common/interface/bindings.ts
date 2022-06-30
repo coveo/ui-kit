@@ -1,11 +1,11 @@
-import {HTMLStencilElement} from '@stencil/core/internal';
+import type {SearchEngine} from '@coveo/headless';
+import type {RecommendationEngine} from '@coveo/headless/recommendation';
+import type {InsightEngine} from '@coveo/headless/insight';
 import {i18n} from 'i18next';
-import {AnyEngineType} from './interface-common';
 import {AtomicCommonStoreData} from './store';
+import {HTMLStencilElement} from '@stencil/core/internal';
 
-export interface ExtensibleStencilStore<
-  StoreData extends AtomicCommonStoreData
-> {
+export interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
   state: StoreData;
 
   get: <PropName extends keyof StoreData>(
@@ -28,7 +28,7 @@ export interface ExtensibleStencilStore<
  */
 export interface CommonBindings<
   Engine extends AnyEngineType,
-  Store extends ExtensibleStencilStore<AtomicCommonStoreData>,
+  Store extends CommonStencilStore<AtomicCommonStoreData>,
   InterfaceElement extends HTMLStencilElement
 > {
   /**
@@ -51,6 +51,8 @@ export interface CommonBindings<
 
 export type AnyBindings = CommonBindings<
   AnyEngineType,
-  ExtensibleStencilStore<AtomicCommonStoreData>,
+  CommonStencilStore<AtomicCommonStoreData>,
   HTMLStencilElement
 >;
+
+export type AnyEngineType = SearchEngine | RecommendationEngine | InsightEngine;

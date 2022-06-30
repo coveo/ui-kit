@@ -1,6 +1,5 @@
 import {createStore} from '@stencil/store';
-import {ExtensibleStencilStore} from './bindings';
-import {AnyEngineType} from './interface-common';
+import {AnyEngineType, CommonStencilStore} from './bindings';
 
 export type AtomicCommonStoreData = {
   loadingFlags: string[];
@@ -12,7 +11,7 @@ export function createAtomicCommonStore<
 >(initialStoreData: StoreData) {
   const stencilStore = createStore(
     initialStoreData
-  ) as ExtensibleStencilStore<StoreData>;
+  ) as CommonStencilStore<StoreData>;
 
   return {
     ...stencilStore,
