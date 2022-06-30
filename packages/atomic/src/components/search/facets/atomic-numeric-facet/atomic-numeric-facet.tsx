@@ -22,7 +22,7 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
@@ -40,15 +40,12 @@ import {
 } from '../../formats/format-common';
 import {NumberInputType} from '../facet-number-input/number-input-type';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
-import {getFieldValueCaption} from '../../../../utils/field-utils';
+import {getFieldValueCaption} from '@utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
-import {Hidden} from '../../../common/hidden';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {MapProp} from '../../../../utils/props-utils';
-import {randomID} from '../../../../utils/utils';
+import {Hidden} from '@components/common/hidden';
+import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
+import {MapProp} from '@utils/props-utils';
+import {randomID} from '@utils/utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

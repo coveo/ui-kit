@@ -4,7 +4,7 @@ import {
   Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {Bindings} from '@components/search/atomic-search-interface/atomic-search-interface';
 
 /**
  * Binds the logging of document

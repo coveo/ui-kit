@@ -1,4 +1,5 @@
 import {createStore} from '@stencil/store';
+import {AnyEngineType, CommonStencilStore} from './bindings';
 
 export type AtomicCommonStoreData = {
   loadingFlags: string[];
@@ -8,7 +9,9 @@ export type AtomicCommonStoreData = {
 export function createAtomicCommonStore<
   StoreData extends AtomicCommonStoreData
 >(initialStoreData: StoreData) {
-  const stencilStore = createStore(initialStoreData);
+  const stencilStore = createStore(
+    initialStoreData
+  ) as CommonStencilStore<StoreData>;
 
   return {
     ...stencilStore,
@@ -39,6 +42,13 @@ export function createAtomicCommonStore<
 
     isAppLoaded() {
       return !stencilStore.get('loadingFlags').length;
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    getUniqueIDFromEngine(_engine: AnyEngineType): string {
+      throw new Error(
+        'getUniqueIDFromEngine not implemented at the common store level.'
+      );
     },
   };
 }

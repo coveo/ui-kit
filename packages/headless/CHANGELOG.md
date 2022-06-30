@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.77.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.4...@coveo/headless@1.77.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.77.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.3...@coveo/headless@1.77.4) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.77.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.2...@coveo/headless@1.77.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.77.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.1...@coveo/headless@1.77.2) (2022-06-29)
 
 **Note:** Version bump only for package @coveo/headless

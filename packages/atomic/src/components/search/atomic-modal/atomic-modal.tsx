@@ -9,14 +9,14 @@ import {
   EventEmitter,
   Host,
 } from '@stencil/core';
-import {isIOS} from '../../../utils/device-utils';
-import {listenOnce} from '../../../utils/event-utils';
+import {isIOS} from '@utils/device-utils';
+import {listenOnce} from '@utils/event-utils';
 import {
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {once, randomID} from '../../../utils/utils';
+} from '@utils/initialization-utils';
+import {updateBreakpoints} from '@utils/replace-breakpoint';
+import {once, randomID} from '@utils/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
