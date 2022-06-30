@@ -37,10 +37,7 @@
   },
   "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
   "devDependencies": {
-    "@types/jest": "27.5.1",
-    "jest": "27.5.1",
     "rimraf": "3.0.2",
-    "ts-jest": "27.1.4",
     "vite": "2.9.9"
   },
   "engines": {

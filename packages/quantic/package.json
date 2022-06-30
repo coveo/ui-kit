@@ -49,7 +49,6 @@
     "@octokit/graphql-schema": "10.73.0",
     "@salesforce/eslint-config-lwc": "3.3.2",
     "@salesforce/sfdx-lwc-jest": "1.1.0",
-    "@types/jest": "26.0.24",
     "@types/strip-color": "0.1.0",
     "@types/wait-on": "5.3.1",
     "chalk": "4.1.2",
