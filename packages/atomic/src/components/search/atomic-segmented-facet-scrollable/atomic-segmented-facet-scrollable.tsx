@@ -107,18 +107,20 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   private renderArrowClass(direction: ArrowDirection) {
     if (direction === 'left') {
-      return 'left-0 ' + (this.hideLeftArrow ? 'hidden' : '');
+      return 'left-0 ' + (this.hideLeftArrow ? 'invisible opacity-0' : '');
     } else {
-      return 'right-0 ' + (this.hideRightArrow ? 'hidden' : '');
+      return 'right-0 ' + (this.hideRightArrow ? 'invisible opacity-0' : '');
     }
   }
 
   private renderFadeClass(direction: ArrowDirection) {
     if (direction === 'left') {
-      return 'bg-gradient-to-r left-0 ' + (this.hideLeftArrow ? 'hidden' : '');
+      return (
+        'bg-gradient-to-r left-0 ' + (this.hideLeftArrow ? 'opacity-0' : '')
+      );
     } else {
       return (
-        'bg-gradient-to-l right-0 ' + (this.hideRightArrow ? 'hidden' : '')
+        'bg-gradient-to-l right-0 ' + (this.hideRightArrow ? 'opacity-0' : '')
       );
     }
   }
@@ -129,7 +131,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       <Button
         part={`${direction}-arrow-button`}
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[2] w-10 top-0 bottom-0 ${this.renderArrowClass(
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[2] w-10 top-0 bottom-0 transition-visi-opacity ease-in-out duration-300 ${this.renderArrowClass(
           direction
         )}`}
         ariaHidden="true"
@@ -144,7 +146,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       </Button>,
       <div
         part={`${direction}-fade`}
-        class={`w-20 h-10 absolute top-0  z-[1] pointer-events-none from-background-60 ${this.renderFadeClass(
+        class={`w-20 h-10 absolute top-0  z-[1] pointer-events-none from-background-60 transition-visi-opacity ease-in-out duration-300 ${this.renderFadeClass(
           direction
         )}`}
       ></div>,
