@@ -8,7 +8,6 @@ import {AppContext} from '../context/engine';
 
 export function SamlPage(props: PropsWithChildren<SamlClientOptions>) {
   const [engine, setEngine] = useState<SearchEngine | null>(null);
-
   useEffect(() => {
     getEngine();
   }, []);
