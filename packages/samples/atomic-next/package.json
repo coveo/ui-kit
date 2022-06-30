@@ -5,7 +5,7 @@
   "dependencies": {
     "@coveo/atomic": "^1.56.1",
     "@coveo/atomic-react": "^1.4.7",
-    "next": "^12.2.0",
+    "next": "12.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
@@ -13,13 +13,12 @@
     "@types/node": "17.0.34",
     "@types/react": "18.0.14",
     "@types/react-dom": "18.0.5",
-    "eslint": "8.15.0",
     "eslint-config-next": "12.2.0",
     "ncp": "2.0.0",
     "typescript": "4.6.4"
   },
   "scripts": {
-    "build": "next build",
+    "_build": "next build",
     "dev": "npm run copy:assets && npm run link:atomic-react && next dev",
     "link:atomic-react": "cd ../../atomic-react && npm link ../samples/atomic-next/node_modules/react/ && ncp ../atomic/dist ../atomic-react/node_modules/@coveo/atomic/dist",
     "copy:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets"
