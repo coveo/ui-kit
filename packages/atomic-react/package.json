@@ -33,10 +33,10 @@
     "@types/react-dom": "18.0.5",
     "ncp": "2.0.0",
     "react": "17.0.2",
-    "react-dom": "18.2.0"
+    "react-dom": "17.0.2"
   },
   "peerDependencies": {
-    "react": "^17.0.2 || ^18.0.0",
-    "react-dom": "^17.0.2 || ^18.0.0"
+    "react": ">=17.0.2",
+    "react-dom": ">=17.0.2"
   }
 }
