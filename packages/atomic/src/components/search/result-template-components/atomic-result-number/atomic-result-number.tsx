@@ -1,7 +1,7 @@
 import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {InitializeBindings} from '@utils/initialization-utils';
 import {
   defaultNumberFormatter,
   NumberFormatter,

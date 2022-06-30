@@ -8,8 +8,8 @@ import {
   InitializeBindings,
   InitializableComponent,
   BindStateToController,
-} from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
+} from '@utils/initialization-utils';
+import {Button} from '@components/common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

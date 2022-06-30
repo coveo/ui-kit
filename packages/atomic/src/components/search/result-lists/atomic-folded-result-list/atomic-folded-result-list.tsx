@@ -13,7 +13,7 @@ import {
 import {
   BindStateToController,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
+} from '@utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -24,11 +24,8 @@ import {
   ResultRenderingFunction,
 } from '../result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
-import {randomID} from '../../../../utils/utils';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {randomID} from '@utils/utils';
+import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {ResultListInfo} from '../../atomic-search-interface/store';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

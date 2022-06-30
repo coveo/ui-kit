@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.78.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.4...@coveo/atomic@1.78.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.78.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.3...@coveo/atomic@1.78.4) (2022-06-30)
+
+
+### Bug Fixes
+
+* **atomic:** dedup recent queries keys ([#2158](https://github.com/coveo/ui-kit/issues/2158)) ([b354204](https://github.com/coveo/ui-kit/commit/b354204c27679684e9267192ec01feb4350c5e7e))
+
+
+
+
+
+## [1.78.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.2...@coveo/atomic@1.78.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.78.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.1...@coveo/atomic@1.78.2) (2022-06-29)
 
 **Note:** Version bump only for package @coveo/atomic

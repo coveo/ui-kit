@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
-import {Button} from '../../../common/button';
+import {Button} from '@components/common/button';
 
 interface FacetSearchInputProps {
   label: string;
