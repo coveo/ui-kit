@@ -12,7 +12,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {cleanUpString} from '../../../../utils/string-utils';
+import {cleanUpString} from '@utils/string-utils';
 import {
   BaseResultList,
   ResultListCommon,
@@ -23,7 +23,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../atomic-result/atomic-result-display-options';
-import {Button} from '../../../common/button';
+import {Button} from '@components/common/button';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.

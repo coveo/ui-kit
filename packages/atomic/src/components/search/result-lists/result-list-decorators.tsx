@@ -1,6 +1,6 @@
 import {FoldedResultList} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {buildCustomEvent} from '@utils/event-utils';
 
 type FoldedResultListContextEventHandler = (
   foldedResultList: FoldedResultList

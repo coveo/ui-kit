@@ -22,7 +22,7 @@ import {
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
-import {InitializeEvent} from '../../../utils/initialization-utils';
+import {InitializeEvent} from '@utils/initialization-utils';
 import i18next, {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {createAtomicStore} from './store';
@@ -31,16 +31,16 @@ import {
   SafeStorage,
   StandaloneSearchBoxData,
   StorageItems,
-} from '../../../utils/local-storage-utils';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
-import {loadGlobalScripts} from '../../../global/global';
-import {BaseAtomicInterface} from '../../common/interface/interface-common';
-import {CommonBindings} from '../../common/interface/bindings';
+} from '@utils/local-storage-utils';
+import {loadDayjsLocale} from '@utils/dayjs-locales';
+import {loadGlobalScripts} from '@global/global';
+import {BaseAtomicInterface} from '@components/common/interface/interface-common';
+import {CommonBindings} from '@components/common/interface/bindings';
 import {
   initi18n,
   i18nBackendOptions,
   i18nTranslationNamespace,
-} from '../../common/interface/i18n';
+} from '@components/common/interface/i18n';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;

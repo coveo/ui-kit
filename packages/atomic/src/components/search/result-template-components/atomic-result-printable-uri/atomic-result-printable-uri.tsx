@@ -5,15 +5,12 @@ import {
   Result,
 } from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {parseXML} from '../../../../utils/utils';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {parseXML} from '@utils/utils';
+import {InitializeBindings} from '@utils/initialization-utils';
 import {Schema, NumberValue} from '@coveo/bueno';
-import Arrow from '../../../../images/arrow-right.svg';
+import Arrow from '@images/arrow-right.svg';
 import {LinkWithResultAnalytics} from '../../result-link/result-link';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
