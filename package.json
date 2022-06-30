@@ -57,9 +57,9 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/samples/**",
     "packages/atomic-angular/*",
-    "packages/atomic-angular/projects/*"
+    "packages/atomic-angular/projects/*",
+    "packages/samples/**"
   ],
   "config": {
     "commitizen": {
