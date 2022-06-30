@@ -1,7 +1,7 @@
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {DateFilter, DateFilterState, buildDateRange} from '@coveo/headless';
 import dayjs from 'dayjs';
-import {Button} from '../../../common/button';
+import {Button} from '@components/common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

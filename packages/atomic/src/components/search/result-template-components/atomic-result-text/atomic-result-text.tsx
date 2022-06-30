@@ -1,12 +1,12 @@
 import {Component, Prop, h, Element, Host, State} from '@stencil/core';
 import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {getFieldValueCaption} from '../../../../utils/field-utils';
+import {getFieldValueCaption} from '@utils/field-utils';
 import {
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
+} from '@utils/initialization-utils';
+import {getStringValueFromResultOrNull} from '@utils/result-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

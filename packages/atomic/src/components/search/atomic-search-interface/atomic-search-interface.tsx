@@ -22,7 +22,7 @@ import {
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
-import {InitializeEvent} from '../../../utils/initialization-utils';
+import {InitializeEvent} from '@utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import {createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
@@ -30,13 +30,12 @@ import {
   SafeStorage,
   StandaloneSearchBoxData,
   StorageItems,
-} from '../../../utils/local-storage-utils';
-
+} from '@utils/local-storage-utils';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
-import {CommonBindings} from '../../common/interface/bindings';
+} from '@components/common/interface/interface-common';
+import {CommonBindings} from '@components/common/interface/bindings';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;

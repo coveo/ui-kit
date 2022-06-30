@@ -12,7 +12,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {cleanUpString} from '../../../../utils/string-utils';
+import {encodeForDomAttribute} from '@utils/string-utils';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
@@ -115,7 +115,7 @@ export class AtomicSearchBoxQuerySuggestions {
           )}
         </div>
       ),
-      key: `qs-${cleanUpString(suggestion.rawValue)}`,
+      key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
       query: suggestion.rawValue,
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);

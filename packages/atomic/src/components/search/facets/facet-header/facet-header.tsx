@@ -3,8 +3,8 @@ import ArrowTopIcon from 'coveo-styleguide/resources/icons/svg/arrow-top-rounded
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {i18n} from 'i18next';
-import {Button} from '../../../common/button';
-import {Heading} from '../../../common/heading';
+import {Button} from '@components/common/button';
+import {Heading} from '@components/common/heading';
 
 export interface FacetHeaderProps {
   i18n: i18n;

@@ -2,7 +2,7 @@ import {RecommendationEngine} from '@coveo/headless/recommendation';
 import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
-} from '../../common/interface/store';
+} from '@components/common/interface/store';
 
 export interface AtomicRecsStoreData extends AtomicCommonStoreData {}
 

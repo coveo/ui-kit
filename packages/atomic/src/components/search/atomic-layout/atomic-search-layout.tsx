@@ -1,6 +1,6 @@
 import {Component, Element, Prop} from '@stencil/core';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {randomID} from '../../../utils/utils';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@utils/replace-breakpoint';
+import {randomID} from '@utils/utils';
 import {buildSearchLayout} from './search-layout';
 
 /**
