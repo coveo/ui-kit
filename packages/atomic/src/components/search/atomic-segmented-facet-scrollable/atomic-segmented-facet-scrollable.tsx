@@ -1,19 +1,19 @@
 import {Component, h, Listen, State} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import {Button} from '../../common/button';
+import {Button} from '@components/common/button';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+} from '@utils/initialization-utils';
+import {Bindings} from '@components/search/atomic-search-interface/atomic-search-interface';
 import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Hidden} from '../../common/hidden';
+import {Hidden} from '@components/common/hidden';
 
 type ArrowDirection = 'right' | 'left';
 
@@ -129,7 +129,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       <Button
         part={`${direction}-arrow-button`}
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[1] w-10 top-0 bottom-0 ${this.renderArrowClass(
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[2] w-10 top-0 bottom-0 ${this.renderArrowClass(
           direction
         )}`}
         ariaHidden="true"
@@ -144,7 +144,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       </Button>,
       <div
         part={`${direction}-fade`}
-        class={`w-16 h-10 absolute top-0  z-0 pointer-events-none from-background-80 ${this.renderFadeClass(
+        class={`w-16 h-10 absolute top-0  z-[1] pointer-events-none from-background-80 ${this.renderFadeClass(
           direction
         )}`}
       ></div>,
