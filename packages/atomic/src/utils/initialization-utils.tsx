@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildCustomEvent} from './event-utils';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {TOptions} from 'i18next';
-import {Hidden} from '../components/common/hidden';
-import {CommonBindings} from '../components/common/interface/bindings';
-import {AnyEngineType} from '../components/common/interface/interface-common';
-import {HTMLStencilElement} from '@stencil/core/internal';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {Hidden} from '@components/common/hidden';
+import {Bindings} from '@components/search/atomic-search-interface/atomic-search-interface';
+import {AnyBindings} from '@components/common/interface/bindings';
 
 declare global {
   interface Window {
@@ -14,11 +11,7 @@ declare global {
   }
 }
 
-type AnyBindings = CommonBindings<AnyEngineType, any, HTMLStencilElement>;
-
-export type InitializeEventHandler = <SpecificBindings extends AnyBindings>(
-  bindings: SpecificBindings
-) => void;
+export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
 const initializableElements = ['atomic-search-interface', 'atomic-external'];
@@ -34,7 +27,7 @@ export function initializeBindings<SpecificBindings extends AnyBindings>(
   return new Promise<SpecificBindings>((resolve, reject) => {
     const event = buildCustomEvent<InitializeEventHandler>(
       initializeEventName,
-      (bindings: any) => resolve(bindings)
+      (bindings) => resolve(bindings as SpecificBindings)
     );
     element.dispatchEvent(event);
 
@@ -132,22 +125,25 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>() {
 
     component.componentWillLoad = function () {
       const element = getElement(this);
-      const event = buildCustomEvent(initializeEventName, (bindings: any) => {
-        this.bindings = bindings;
+      const event = buildCustomEvent(
+        initializeEventName,
+        (bindings: SpecificBindings) => {
+          this.bindings = bindings;
 
-        const updateLanguage = () => forceUpdate(this);
-        this.bindings.i18n.on('languageChanged', updateLanguage);
-        unsubscribeLanguage = () =>
-          this.bindings.i18n.off('languageChanged', updateLanguage);
+          const updateLanguage = () => forceUpdate(this);
+          this.bindings.i18n.on('languageChanged', updateLanguage);
+          unsubscribeLanguage = () =>
+            this.bindings.i18n.off('languageChanged', updateLanguage);
 
-        try {
-          // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
-          // In this case, we have to manually trigger it.
-          this.initialize ? this.initialize() : forceUpdate(this);
-        } catch (e) {
-          this.error = e as Error;
+          try {
+            // When no controller is initialized, updating a property with a State() decorator, there will be no re-render.
+            // In this case, we have to manually trigger it.
+            this.initialize ? this.initialize() : forceUpdate(this);
+          } catch (e) {
+            this.error = e as Error;
+          }
         }
-      });
+      );
 
       const canceled = element.dispatchEvent(event);
       if (canceled) {
