@@ -1144,7 +1144,7 @@ export namespace Components {
         /**
           * Initializes the connection with an already preconfigured headless insight engine.
          */
-        "initializeWithRecommendationEngine": (engine: InsightEngine) => Promise<void>;
+        "initializeWithInsightEngine": (engine: InsightEngine) => Promise<void>;
         /**
           * The service insight interface language.
          */

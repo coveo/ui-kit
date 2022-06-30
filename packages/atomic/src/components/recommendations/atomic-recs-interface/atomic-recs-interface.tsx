@@ -1,13 +1,21 @@
 import {LogLevel} from '@coveo/headless';
 import {RecommendationEngine} from '@coveo/headless/recommendation';
-import {Component, Element, h, Method, Prop, Watch} from '@stencil/core';
-import i18next, {i18n, TFunction} from 'i18next';
-import {loadGlobalScripts} from '@global/global';
-import {loadDayjsLocale} from '@utils/dayjs-locales';
+import {
+  Component,
+  Element,
+  h,
+  Listen,
+  Method,
+  Prop,
+  Watch,
+} from '@stencil/core';
+import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '@utils/initialization-utils';
 import {CommonBindings} from '@components/common/interface/bindings';
-import {initi18n} from '@components/common/interface/i18n';
-import {BaseAtomicInterface} from '@components/common/interface/interface-common';
+import {
+  BaseAtomicInterface,
+  CommonAtomicInterfaceHelper,
+} from '@components/common/interface/interface-common';
 import {createAtomicRecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
@@ -67,17 +75,18 @@ export class AtomicRecsInterface
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
-  @Element() private host!: HTMLAtomicRecsInterfaceElement;
-  private hangingComponentsInitialization: InitializeEvent[] = [];
-  private i18nPromise!: Promise<TFunction>;
+  @Element() public host!: HTMLAtomicRecsInterfaceElement;
   private store = createAtomicRecsStore();
+  private commonInterfaceHelper: CommonAtomicInterfaceHelper<RecommendationEngine>;
 
   public constructor() {
-    loadGlobalScripts('CoveoAtomicRecs');
+    this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
+      this,
+      'CoveoAtomicRecs'
+    );
   }
 
   public connectedCallback() {
-    this.i18nPromise = initi18n(this);
     this.store.setLoadingFlag(FirstRecommendationExecutedFlag);
   }
 
@@ -96,11 +105,26 @@ export class AtomicRecsInterface
     this.store.set('iconAssetsPath', this.iconAssetsPath);
   }
 
-  render() {
-    return <div>Hello from Recs interface</div>;
+  @Listen('atomic/initializeComponent')
+  public handleInitialization(event: InitializeEvent) {
+    this.commonInterfaceHelper.onComponentInitializing(event);
   }
 
-  private get bindings(): Bindings {
+  @Watch('language')
+  public updateLanguage() {
+    this.commonInterfaceHelper.onLanguageChange();
+  }
+
+  @Watch('analytics')
+  public toggleAnalytics() {
+    this.commonInterfaceHelper.onAnalyticsChange();
+  }
+
+  render() {
+    return this.engine && <slot></slot>;
+  }
+
+  public get bindings(): Bindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -109,25 +133,8 @@ export class AtomicRecsInterface
     };
   }
 
-  private initComponents() {
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.bindings)
-    );
-  }
-
   private async internalInitialization(initEngine: () => void) {
-    if (this.engine) {
-      this.engine.logger.warn(
-        'The atomic-recs-interface component "initialize" has already been called.',
-        this.host
-      );
-      return;
-    }
-
-    this.updateIconAssetsPath();
-    initEngine();
-    loadDayjsLocale(this.language);
-    await this.i18nPromise;
-    this.initComponents();
+    await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
   }
 }
