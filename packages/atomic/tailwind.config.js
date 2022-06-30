@@ -65,6 +65,9 @@ module.exports = {
           'scaleUp .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
         slideDownModal: 'slideDown .5s linear forwards',
       },
+      transitionProperty: {
+        'visi-opacity': 'visibility, opacity'
+      },
       keyframes: {
         scaleUp: {
           '0%': {transform: 'scale(0.7) translateY(1000px)', opacity: '0.7'},
