@@ -1,9 +1,14 @@
 import {buildInteractiveResult, Result} from '@coveo/headless';
-import {FunctionComponent, useContext, useEffect} from 'react';
+import {
+  FunctionComponent,
+  useContext,
+  useEffect,
+  PropsWithChildren,
+} from 'react';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';
 
-interface LinkProps {
+interface LinkProps extends PropsWithChildren {
   result: Result;
 }
 
