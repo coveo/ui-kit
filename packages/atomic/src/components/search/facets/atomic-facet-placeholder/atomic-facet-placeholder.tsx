@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {getRandomArbitrary} from '../../../../utils/utils';
+import {getRandomArbitrary} from '@utils/utils';
 
 export interface FacetPlaceholderProps {
   numberOfValues: number;

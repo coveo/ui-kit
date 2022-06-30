@@ -2,14 +2,15 @@ import {
   NumericFacetValue,
   DateFacetValue,
   SortCriterion,
+  SearchEngine,
 } from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@utils/replace-breakpoint';
 import {
   createAtomicCommonStore,
   AtomicCommonStoreData,
-} from '../../common/interface/store';
+} from '@components/common/interface/store';
 
 interface FacetInfo {
   label: string;
@@ -111,6 +112,10 @@ export function createAtomicStore() {
       return !window.matchMedia(
         makeDesktopQuery(commonStore.state.mobileBreakpoint)
       ).matches;
+    },
+
+    getUniqueIDFromEngine(engine: SearchEngine): string {
+      return engine.state.search.response.searchUid;
     },
   };
 }
