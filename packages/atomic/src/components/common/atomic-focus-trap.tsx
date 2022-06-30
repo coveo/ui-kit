@@ -1,6 +1,6 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
-import {defer, getFocusedElement} from '../../utils/utils';
+import {getFirstFocusableDescendant} from '@utils/accessibility-utils';
+import {defer, getFocusedElement} from '@utils/utils';
 
 function getParent(element: Element | ShadowRoot) {
   if (element.parentNode) {

@@ -4,7 +4,7 @@ import {ResultContext} from '../result-template-decorators';
 import {objectTypeIcons} from './object-type-icons';
 import {fileTypeIcons} from './file-type-icons';
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
-import {snakeToCamel} from '../../../../utils/utils';
+import {snakeToCamel} from '@utils/utils';
 
 /**
  * The `atomic-result-icon` component outputs the corresponding icon for a given file type.

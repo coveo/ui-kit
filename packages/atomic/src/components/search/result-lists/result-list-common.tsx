@@ -11,7 +11,7 @@ import {
   buildResultTemplatesManager,
   ResultListProps,
 } from '@coveo/headless';
-import {InitializableComponent} from '../../../utils/initialization-utils';
+import {InitializableComponent} from '@utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -25,12 +25,12 @@ import {ListDisplayResults} from './list-display-results';
 import {GridDisplayResults} from './grid-display-results';
 import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
 import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
-import {once} from '../../../utils/utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {once} from '@utils/utils';
+import {updateBreakpoints} from '@utils/replace-breakpoint';
 import {
   FocusTargetController,
   getFirstFocusableDescendant,
-} from '../../../utils/accessibility-utils';
+} from '@utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 export interface BaseResultList extends InitializableComponent {
