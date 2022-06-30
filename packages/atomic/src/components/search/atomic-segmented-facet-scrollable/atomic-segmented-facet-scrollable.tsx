@@ -146,7 +146,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       </Button>,
       <div
         part={`${direction}-fade`}
-        class={`w-20 h-10 absolute top-0  z-[1] pointer-events-none from-background-60 ${this.renderFadeClass(
+        class={`w-20 h-10 absolute top-0  z-[1] pointer-events-none from-background-60 transition-visi-opacity ease-in-out duration-300 ${this.renderFadeClass(
           direction
         )}`}
       ></div>,
