@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
@@ -55,7 +56,8 @@ export function FocusTarget() {
         }
         if (
           focusAfterSearch &&
-          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine)
+          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+            lastSearchId
         ) {
           focusAfterSearch = false;
           if (element) {

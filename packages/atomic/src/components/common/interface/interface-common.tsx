@@ -5,8 +5,8 @@ import {setCoveoGlobal} from '../../../global/environment';
 import {loadFocusVisiblePolyfill} from '../../../global/focus-visible';
 import {initi18n} from './i18n';
 import {HTMLStencilElement} from '@stencil/core/internal';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
-import {InitializeEvent} from '../../../utils/initialization-utils';
+import {loadDayjsLocale} from '@utils/dayjs-locales';
+import {InitializeEvent} from '@utils/initialization-utils';
 import {AnyBindings, AnyEngineType} from './bindings';
 import {
   i18nBackendOptions,
