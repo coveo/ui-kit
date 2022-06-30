@@ -46,22 +46,21 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
   private horizontalScroll?: HTMLDivElement;
   @State() private hideLeftArrow = true;
   @State() private hideRightArrow = false;
-  private ro!: ResizeObserver;
+  private observer!: ResizeObserver;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    console.log('init');
   }
 
   componentDidLoad() {
-    this.ro = new ResizeObserver(() => {
+    this.observer = new ResizeObserver(() => {
       this.handleScroll();
     });
-    this.ro.observe(this.horizontalScroll as HTMLDivElement);
+    this.observer.observe(this.horizontalScroll as HTMLDivElement);
   }
 
   disconnectedCallback() {
-    this.ro.disconnect();
+    this.observer.disconnect();
   }
 
   @Listen('mousewheel')
@@ -77,20 +76,8 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       this.horizontalScroll.scrollLeft >=
       this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
 
-    if (!isOverflowing) {
-      this.hideLeftArrow = true;
-      this.hideRightArrow = true;
-    }
-    if (isLeftEdge) {
-      this.hideLeftArrow = true;
-    } else {
-      this.hideLeftArrow = false;
-    }
-    if (isRightEdge) {
-      this.hideRightArrow = true;
-    } else {
-      this.hideRightArrow = false;
-    }
+    this.hideLeftArrow = !isOverflowing || isLeftEdge;
+    this.hideRightArrow = !isOverflowing || isRightEdge;
   }
 
   private slideHorizontally(direction: ArrowDirection) {
