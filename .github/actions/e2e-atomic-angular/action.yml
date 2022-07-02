@@ -8,6 +8,10 @@ inputs:
 runs:
   using: composite
   steps:
+    - run: |
+        npm ci
+        cypress install
+      shell: bash
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
