@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "dev": "npm run copy:assets && ng serve",
-    "link:local": "npm link ../../atomic-angular/projects/atomic-angular/dist/",
+    "dev": "npm run link:angular && npm run copy:assets && ng serve",
+    "link:angular": "npm link ../../atomic-angular/projects/atomic-angular/dist/",
     "watch": "ng build --watch --configuration development",
     "copy:assets": "ncp ../../atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../atomic-angular/projects/atomic-angular/dist/lang src/lang"
   },
@@ -18,7 +18,6 @@
     "@angular/platform-browser": "13.3.0",
     "@angular/platform-browser-dynamic": "13.3.0",
     "@angular/router": "13.3.0",
-    "@coveo/atomic": "^1.56.0",
     "@coveo/atomic-angular": "^1.17.4",
     "rxjs": "7.5.5",
     "tslib": "2.4.0",
