@@ -17,7 +17,7 @@
     "typescript": "4.6.4"
   },
   "scripts": {
-    "_build": "next info && next build --debug",
+    "build": "tsc --noEmit && tsc --module commonjs --noEmit",
     "dev": "npm run link:react && npm run copy:assets && next dev",
     "link:react": "cd ../../atomic-react && npm link ../samples/atomic-react/node_modules/react/",
     "copy:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets"
