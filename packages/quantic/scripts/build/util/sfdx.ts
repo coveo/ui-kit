@@ -26,6 +26,7 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
         maxBuffer: 1024 * 1024 * 1.5,
       },
       (error, stdout) => {
+        console.log(error, 'SFDX FAILS?');
         (error ? reject : resolve)(
           stdout ? (JSON.parse(strip(stdout)) as T) : null
         );
