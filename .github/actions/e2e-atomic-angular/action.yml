@@ -9,9 +9,9 @@ runs:
   using: composite
   steps:
     - run: |
-        cd ./packages/samples/angular
         npm i
       shell: bash
+      working-directory: ./packages/samples/angular
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
