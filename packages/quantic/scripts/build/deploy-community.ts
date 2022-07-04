@@ -22,8 +22,6 @@ interface Options {
   };
 }
 
-const packagePath = 'packages/quantic/';
-
 function ensureEnvVariables() {
   [
     'BRANCH_NAME',
@@ -106,9 +104,7 @@ async function buildOptions(): Promise<Options> {
   }
 
   return {
-    configFile: path.resolve(
-      packagePath + 'cypress/plugins/config/examples-community.json'
-    ),
+    configFile: path.resolve('cypress/plugins/config/examples-community.json'),
     community: {
       name: 'Quantic Examples',
       path: 'examples',
@@ -117,7 +113,7 @@ async function buildOptions(): Promise<Options> {
     scratchOrg: {
       alias: 'LWC',
       defFile: await prepareScratchOrgDefinitionFile(
-        path.resolve(packagePath + 'config/project-scratch-def.json')
+        path.resolve('config/project-scratch-def.json')
       ),
       duration: ci ? 1 : 7,
     },
@@ -186,10 +182,7 @@ async function deployComponents(
 
   await sfdx.deploySource({
     alias: options.scratchOrg.alias,
-    packagePaths: [
-      packagePath + 'force-app/main',
-      packagePath + 'force-app/examples',
-    ],
+    packagePaths: ['force-app/main', 'force-app/examples'],
   });
 
   log('Components deployed.');

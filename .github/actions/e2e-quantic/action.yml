@@ -24,6 +24,7 @@ runs:
           --setdefaultdevhubusername
         npx --no-install ts-node packages/quantic/scripts/build/deploy-community.ts --ci
         rm server.key
+      working-directory: ./packages/quantic
       shell: bash
       env:
         BRANCH_NAME: ${{ github.ref }}
