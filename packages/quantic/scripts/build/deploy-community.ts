@@ -113,7 +113,7 @@ async function buildOptions(): Promise<Options> {
     scratchOrg: {
       alias: 'LWC',
       defFile: await prepareScratchOrgDefinitionFile(
-        path.resolve('config/project-scratch-def.json')
+        path.resolve('packages/quantic/config/project-scratch-def.json')
       ),
       duration: ci ? 1 : 7,
     },
