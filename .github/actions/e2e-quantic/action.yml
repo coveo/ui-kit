@@ -15,6 +15,7 @@ runs:
   using: composite
   steps:
     - run: |
+        npm i
         echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
         npx --no-install sfdx force:auth:jwt:grant \
           --clientid ${{ env.SFDX_AUTH_CLIENT_ID }} \
