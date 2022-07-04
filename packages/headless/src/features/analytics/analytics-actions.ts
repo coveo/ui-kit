@@ -9,6 +9,7 @@ import {
   AnalyticsType,
   documentIdentifier,
   makeAnalyticsAction,
+  makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from './analytics-utils';
@@ -121,6 +122,12 @@ export const logCustomEvent = (p: LogCustomEventActionCreatorPayload) =>
   )();
 
 export const logInterfaceLoad = makeAnalyticsAction(
+  'analytics/interface/load',
+  AnalyticsType.Search,
+  (client) => client.logInterfaceLoad()
+);
+
+export const logInsightInterfaceLoad = makeInsightAnalyticsAction(
   'analytics/interface/load',
   AnalyticsType.Search,
   (client) => client.logInterfaceLoad()
