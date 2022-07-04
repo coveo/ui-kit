@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.40.6](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.40.5...@coveo/bueno@0.40.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+
+
+
+
+
 ## [0.40.5](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.40.4...@coveo/bueno@0.40.5) (2022-06-30)
 
 **Note:** Version bump only for package @coveo/bueno

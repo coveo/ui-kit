@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.77.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.5...@coveo/headless@1.77.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+
+
+
+
+
 ## [1.77.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.4...@coveo/headless@1.77.5) (2022-06-30)
 
 **Note:** Version bump only for package @coveo/headless
