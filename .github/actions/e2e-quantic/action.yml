@@ -15,7 +15,6 @@ runs:
   using: composite
   steps:
     - run: |
-        npm i
         echo "${{ env.SFDX_AUTH_JWT_KEY }}" > server.key
         npx --no-install sfdx force:auth:jwt:grant \
           --clientid ${{ env.SFDX_AUTH_CLIENT_ID }} \
@@ -25,8 +24,8 @@ runs:
           --setdefaultdevhubusername
         npx --no-install ts-node scripts/build/deploy-community.ts --ci
         rm server.key
-      working-directory: ./packages/quantic
       shell: bash
+      working-directory: ./packages/quantic
       env:
         BRANCH_NAME: ${{ github.ref }}
         SFDX_AUTH_CLIENT_ID: ${{ inputs.clientid }}

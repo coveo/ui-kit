@@ -127,18 +127,18 @@ async function buildOptions(): Promise<Options> {
   };
 }
 
-async function deleteOldOrgs(log: StepLogger, options: Options): Promise<void> {
-  log('Deleting old scratch organizations...');
+// async function deleteOldOrgs(log: StepLogger, options: Options): Promise<void> {
+//   log('Deleting old scratch organizations...');
 
-  const nbDeleted = await sfdx.deleteOldScratchOrgs({
-    devHubUsername: options.jwt.username,
-    scratchOrgName: getCiOrgName(),
-    jwtClientId: options.jwt.clientId,
-    jwtKeyFile: options.jwt.keyFile,
-  });
+//   const nbDeleted = await sfdx.deleteOldScratchOrgs({
+//     devHubUsername: options.jwt.username,
+//     scratchOrgName: getCiOrgName(),
+//     jwtClientId: options.jwt.clientId,
+//     jwtKeyFile: options.jwt.keyFile,
+//   });
 
-  log(`${nbDeleted} scratch organizations deleted.`);
-}
+//   log(`${nbDeleted} scratch organizations deleted.`);
+// }
 
 async function ensureScratchOrgExists(log: StepLogger, options: Options) {
   log(`Searching for ${options.scratchOrg.alias} organization...`);
@@ -294,11 +294,11 @@ async function deleteScratchOrg(
   try {
     let communityUrl = '';
 
-    if (options.deleteOldOrgs) {
-      runner.add(async (log) => {
-        await deleteOldOrgs(log, options);
-      });
-    }
+    // if (options.deleteOldOrgs) {
+    //   runner.add(async (log) => {
+    //     await deleteOldOrgs(log, options);
+    //   });
+    // }
 
     runner
       .add(async (log) => {
