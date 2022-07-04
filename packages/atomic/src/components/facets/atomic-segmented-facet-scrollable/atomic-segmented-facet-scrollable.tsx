@@ -63,7 +63,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     this.observer.disconnect();
   }
 
-  @Listen('mousewheel')
+  @Listen('wheel')
   @Listen('touchmove')
   handleScroll() {
     if (!this.horizontalScroll) {
