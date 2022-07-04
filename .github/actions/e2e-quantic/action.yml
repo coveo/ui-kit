@@ -22,7 +22,7 @@ runs:
           --username ${{ env.SFDX_AUTH_JWT_USERNAME }} \
           --instanceurl ${{ env.SFDX_AUTH_JWT_INSTANCE_URL }} \
           --setdefaultdevhubusername
-        npx --no-install ts-node packages/quantic/scripts/build/deploy-community.ts --ci
+        npx --no-install ts-node scripts/build/deploy-community.ts --ci
         rm server.key
       working-directory: ./packages/quantic
       shell: bash
