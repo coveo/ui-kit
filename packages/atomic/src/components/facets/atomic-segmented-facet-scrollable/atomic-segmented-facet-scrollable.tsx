@@ -64,6 +64,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
   }
 
   @Listen('mousewheel')
+  @Listen('touchmove')
   handleScroll() {
     if (!this.horizontalScroll) {
       return;
@@ -71,9 +72,9 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
     const isScrollable =
       this.horizontalScroll.clientWidth < this.horizontalScroll.scrollWidth;
-    const isLeftEdge = this.horizontalScroll.scrollLeft <= 0;
+    const isLeftEdge = Math.floor(this.horizontalScroll.scrollLeft) <= 0;
     const isRightEdge =
-      this.horizontalScroll.scrollLeft >=
+      Math.ceil(this.horizontalScroll.scrollLeft) >=
       this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
 
     this.hideLeftArrow = !isScrollable || isLeftEdge;
