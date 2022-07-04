@@ -20,7 +20,9 @@
     "dist/",
     "recommendation/",
     "product-recommendation/",
-    "product-listing/"
+    "product-listing/",
+    "insight/",
+    "case-assist/"
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"node esbuild.js dev\"",
