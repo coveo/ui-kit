@@ -123,16 +123,14 @@ export const baseSearchRequest = (
   method: HttpMethods,
   contentType: HTTPContentType,
   path: string
-) => {
-  return {
-    accessToken: req.accessToken,
-    method,
-    contentType,
-    url: `${req.url}${path}?${getOrganizationIdQueryParam(req)}${
-      req.authentication ? `&${getAuthenticationQueryParam(req)}` : ''
-    }`,
-  };
-};
+) => ({
+  accessToken: req.accessToken,
+  method,
+  contentType,
+  url: `${req.url}${path}?${getOrganizationIdQueryParam(req)}${
+    req.authentication ? `&${getAuthenticationQueryParam(req)}` : ''
+  }`,
+});
 
 export const getOrganizationIdQueryParam = (req: BaseParam) =>
   `organizationId=${req.organizationId}`;
