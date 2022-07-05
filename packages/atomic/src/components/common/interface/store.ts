@@ -6,9 +6,19 @@ export type AtomicCommonStoreData = {
   iconAssetsPath: string;
 };
 
+export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
+  extends CommonStencilStore<StoreData> {
+  setLoadingFlag(flag: string): void;
+  unsetLoadingFlag(loadingFlag: string): void;
+  hasLoadingFlag(loadingFlag: string): boolean;
+  waitUntilAppLoaded(callback: () => void): void;
+  isAppLoaded(): boolean;
+  getUniqueIDFromEngine(engine: AnyEngineType): string;
+}
+
 export function createAtomicCommonStore<
   StoreData extends AtomicCommonStoreData
->(initialStoreData: StoreData) {
+>(initialStoreData: StoreData): AtomicCommonStore<StoreData> {
   const stencilStore = createStore(
     initialStoreData
   ) as CommonStencilStore<StoreData>;
