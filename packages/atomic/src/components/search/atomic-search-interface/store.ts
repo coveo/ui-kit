@@ -6,11 +6,11 @@ import {
 } from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
-import {DEFAULT_MOBILE_BREAKPOINT} from '@utils/replace-breakpoint';
+import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   createAtomicCommonStore,
   AtomicCommonStoreData,
-} from '@components/common/interface/store';
+} from '../../common/interface/store';
 
 interface FacetInfo {
   label: string;

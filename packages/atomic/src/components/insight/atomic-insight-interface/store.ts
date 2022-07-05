@@ -2,7 +2,7 @@ import {InsightEngine} from '@coveo/headless/insight';
 import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
-} from '@components/common/interface/store';
+} from '../../common/interface/store';
 
 export interface AtomicSvgInsightStoreData extends AtomicCommonStoreData {}
 

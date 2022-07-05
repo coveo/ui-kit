@@ -7,8 +7,8 @@ import {
   ResultTemplatesManager,
 } from '@coveo/headless';
 import {Component, Element, State, h, Listen, Prop, Host} from '@stencil/core';
-import {InitializeBindings} from '@utils/initialization-utils';
-import {elementHasAncestorTag} from '@utils/utils';
+import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {elementHasAncestorTag} from '../../../../utils/utils';
 import {
   ResultContext,
   ChildTemplatesContext,
@@ -24,7 +24,7 @@ import {
 } from '../result-list-decorators';
 import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
 import {ListDisplayResultsPlaceholder} from '../list-display-results-placeholder';
-import {Button} from '@components/common/button';
+import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 const childTemplateComponent = 'atomic-result-children-template';

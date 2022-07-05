@@ -10,12 +10,9 @@ import {
   Watch,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
-import {InitializeEvent} from '@utils/initialization-utils';
-import {CommonBindings} from '@components/common/interface/bindings';
-import {
-  BaseAtomicInterface,
-  CommonAtomicInterfaceHelper,
-} from '@components/common/interface/interface-common';
+import {InitializeEvent} from '../../../utils/initialization-utils';
+import {CommonBindings} from '../../common/interface/bindings';
+import {BaseAtomicInterface} from '../../common/interface/interface-common';
 import {createAtomicSvcInsightStore} from './store';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';

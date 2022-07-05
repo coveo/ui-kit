@@ -19,25 +19,6 @@ import {generateAngularModuleDefinition as angularModule} from './stencil-plugin
 
 const isProduction = process.env.BUILD === 'production';
 
-const toAlias = ['global', 'images', 'utils', 'components'];
-
-function createSrcAliases() {
-  return toAlias.map((folder) => ({
-    find: `@${folder}`,
-    replacement: path.resolve(__dirname, `./src/${folder}`),
-  }));
-}
-
-function createModuleNameMapper() {
-  return toAlias.reduce(
-    (acc, alias) => ({
-      ...acc,
-      [`^@(${alias}/.*)$`]: '<rootDir>/src/$1',
-    }),
-    {}
-  );
-}
-
 function getPackageVersion(): string {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
@@ -140,9 +121,6 @@ export const config: Config = {
     testPathIgnorePatterns: ['headless', '.snap'],
     setupFiles: ['jest-localstorage-mock'],
     resetMocks: false,
-    moduleNameMapper: {
-      ...createModuleNameMapper(),
-    },
   },
   devServer: {
     reloadStrategy: 'pageReload',
@@ -152,16 +130,7 @@ export const config: Config = {
     inlineSvg(),
     postcss({
       plugins: [
-        atImport({
-          resolve: (id) => {
-            const aliases = createSrcAliases();
-            const match = aliases.find((al) => id.startsWith(al.find));
-            if (match) {
-              return id.replace(match.find, match.replacement);
-            }
-            return id;
-          },
-        }),
+        atImport(),
         mixins(),
         tailwindNesting(),
         tailwind(),
@@ -174,43 +143,39 @@ export const config: Config = {
   ],
   rollupPlugins: {
     before: [
-      alias({
-        entries: [
-          ...createSrcAliases(),
-          ...(isDevWatch
-            ? [
-                {
-                  find: '@coveo/headless/case-assist',
-                  replacement: path.resolve(
-                    __dirname,
-                    './src/external-builds/case-assist/headless.esm.js'
-                  ),
-                },
-                {
-                  find: '@coveo/headless/recommendation',
-                  replacement: path.resolve(
-                    __dirname,
-                    './src/external-builds/recommendation/headless.esm.js'
-                  ),
-                },
-                {
-                  find: '@coveo/headless/product-recommendation',
-                  replacement: path.resolve(
-                    __dirname,
-                    './src/external-builds/product-recommendation/headless.esm.js'
-                  ),
-                },
-                {
-                  find: '@coveo/headless',
-                  replacement: path.resolve(
-                    __dirname,
-                    './src/external-builds/headless.esm.js'
-                  ),
-                },
-              ]
-            : []),
-        ],
-      }),
+      isDevWatch &&
+        alias({
+          entries: [
+            {
+              find: '@coveo/headless/case-assist',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/case-assist/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless/recommendation',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/recommendation/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless/product-recommendation',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/product-recommendation/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/headless.esm.js'
+              ),
+            },
+          ],
+        }),
       html({
         include: 'src/templates/**/*.html',
       }),
