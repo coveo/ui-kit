@@ -16,7 +16,7 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
+} from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
@@ -28,15 +28,21 @@ import {
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
-import {getFieldCaptions, getFieldValueCaption} from '@utils/field-utils';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../../utils/field-utils';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
-import {Button} from '@components/common/button';
-import {Hidden} from '@components/common/hidden';
-import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
-import {MapProp} from '@utils/props-utils';
+import {Button} from '../../../common/button';
+import {Hidden} from '../../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
+import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

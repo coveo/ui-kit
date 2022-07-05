@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import PlusIcon from 'coveo-styleguide/resources/icons/svg/plus.svg';
 import MinusIcon from 'coveo-styleguide/resources/icons/svg/minus.svg';
-import {Button} from '@components/common/button';
+import {Button} from '../../../common/button';
 
 interface FacetShowMoreProps {
   label: string;

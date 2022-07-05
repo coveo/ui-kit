@@ -1,11 +1,11 @@
 import {Component, h, Prop, Element} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {filterProtocol} from '@utils/xss-utils';
+import {filterProtocol} from '../../../../utils/xss-utils';
 import {
   InitializeBindings,
   InitializableComponent,
-} from '@utils/initialization-utils';
+} from '../../../../utils/initialization-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
