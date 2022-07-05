@@ -17,22 +17,28 @@ To install all dependencies and link local packages, run:
 npm i
 ```
 
+To install a dependencies in a specific package, specify the workspace:
+
+```sh
+npm i lodash -w headless-react
+```
+
 To build all projects for production, run:
 
 ```sh
 npm run build
 ```
 
-To build a single project for production (for instance, the `product-listing` package), run:
+To build a single project for production (for instance, the `@coveo/atomic` package), run:
 
 ```sh
-npm run build  -- --filter product-listing
+npm run build -w @coveo/atomic
 ```
 
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npm start -- --scope @coveo/quantic 
+npm start -w @coveo/quantic 
 ```
 
 To start Atomic & Headless simultaneously in development (recommended), run:
