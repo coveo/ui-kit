@@ -132,7 +132,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       <Button
         part={`${direction}-arrow-button`}
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[2] w-10 top-0 bottom-0 transition-visi-opacity ease-in-out duration-300 ${this.renderArrowClass(
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[2] h-10 w-10 top-0 bottom-0 transition-visi-opacity ease-in-out duration-300 ${this.renderArrowClass(
           direction
         )}`}
         ariaHidden="true"
@@ -160,7 +160,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     }
 
     return (
-      <div part="scrollable-container" class="flex h-10 relative">
+      <div part="scrollable-container" class="flex relative">
         {this.renderArrow('left')}
         <div
           part="horizontal-scroll"
