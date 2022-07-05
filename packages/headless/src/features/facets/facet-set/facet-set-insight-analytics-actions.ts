@@ -54,7 +54,7 @@ export interface LogFacetUpdateSortActionCreatorPayload {
   /**
    * The updated sort criterion.
    */
-  criterion: FacetSortCriterion | RangeFacetSortCriterion;
+  sortCriterion: FacetSortCriterion | RangeFacetSortCriterion;
 }
 
 export const logFacetUpdateSort = (
@@ -66,16 +66,16 @@ export const logFacetUpdateSort = (
     (client, state) => {
       validatePayload(payload, {
         facetId: facetIdDefinition,
-        criterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
+        sortCriterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
           required: true,
         }),
       });
 
-      const {facetId, criterion} = payload;
+      const {facetId, sortCriterion} = payload;
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
 
       const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const metadata = {...base, criteria: criterion};
+      const metadata = {...base, criteria: sortCriterion};
 
       return client.logFacetUpdateSort(metadata);
     }
