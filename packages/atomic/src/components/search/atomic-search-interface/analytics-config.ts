@@ -1,8 +1,8 @@
 import {
   AnalyticsConfiguration,
   SearchEngineConfiguration,
+  AnalyticsClientSendEventHook,
 } from '@coveo/headless';
-import {AnalyticsClientSendEventHook} from '../../../../../../node_modules/coveo.analytics';
 import {getAtomicEnvironment} from '@global/environment';
 import {createAtomicStore} from './store';
 

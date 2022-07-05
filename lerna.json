@@ -1,7 +1,6 @@
 {
   "packages": [
     "packages/*",
-    "packages/atomic-angular/*",
     "packages/atomic-angular/projects/*",
     "packages/samples/*"
   ],
