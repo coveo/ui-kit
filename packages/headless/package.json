@@ -15,7 +15,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.77.8",
+  "version": "1.77.9",
   "files": [
     "dist/",
     "recommendation/",
@@ -45,7 +45,7 @@
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "0.40.8",
+    "@coveo/bueno": "0.40.9",
     "@reduxjs/toolkit": "1.8.1",
     "@types/pino": "6.3.11",
     "@types/redux-mock-store": "1.0.3",
