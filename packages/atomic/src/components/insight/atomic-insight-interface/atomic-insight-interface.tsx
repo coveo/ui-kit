@@ -1,5 +1,9 @@
 import {LogLevel} from '@coveo/headless';
-import {InsightEngine} from '@coveo/headless/insight';
+import {
+  buildInsightEngine,
+  InsightEngine,
+  InsightEngineConfiguration,
+} from '@coveo/headless/insight';
 import {
   Component,
   Element,
@@ -7,6 +11,7 @@ import {
   Listen,
   Method,
   Prop,
+  State,
   Watch,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
@@ -17,8 +22,10 @@ import {
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
 import {createAtomicSvcInsightStore} from './store';
+import {getAnalyticsConfig} from './analytics-config';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
+export type InitializationOptions = InsightEngineConfiguration;
 export type Bindings = CommonBindings<
   InsightEngine,
   ReturnType<typeof createAtomicSvcInsightStore>,
@@ -37,6 +44,10 @@ export type Bindings = CommonBindings<
 export class AtomicSvcInsightInterface
   implements BaseAtomicInterface<InsightEngine>
 {
+  private initialized = false;
+
+  @State() public error?: Error;
+
   /**
    * The service insight interface headless engine.
    */
@@ -92,11 +103,36 @@ export class AtomicSvcInsightInterface
   }
 
   /**
+   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   */
+  @Method() public initialize(options: InitializationOptions) {
+    return this.internalInitialization(() => this.initEngine(options));
+  }
+
+  /**
    * Initializes the connection with an already preconfigured headless insight engine.
    *
    */
   @Method() public initializeWithInsightEngine(engine: InsightEngine) {
     return this.internalInitialization(() => (this.engine = engine));
+  }
+
+  /**
+   *
+   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+   */
+  @Method() public async executeFirstSearch() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+    if (!this.initialized) {
+      console.error(
+        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
+        this.host
+      );
+      return;
+    }
+    this.engine.executeFirstSearch();
   }
 
   @Watch('iconAssetsPath')
@@ -132,8 +168,27 @@ export class AtomicSvcInsightInterface
     };
   }
 
+  private initEngine(options: InitializationOptions) {
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    try {
+      this.engine = buildInsightEngine({
+        configuration: {
+          ...options,
+          analytics: analyticsConfig,
+        },
+        loggerOptions: {
+          level: this.logLevel,
+        },
+      });
+    } catch (error) {
+      this.error = error as Error;
+      throw error;
+    }
+  }
+
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.initialized = true;
   }
 }
