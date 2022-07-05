@@ -3,7 +3,7 @@
     "packages/*",
     "packages/atomic-angular/*",
     "packages/atomic-angular/projects/*",
-    "packages/samples/**"
+    "packages/samples/*"
   ],
   "command": {
     "version": {

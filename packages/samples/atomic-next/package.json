@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "^1.56.1",
-    "@coveo/atomic-react": "^1.4.7",
+    "@coveo/atomic": "^1.69.0",
+    "@coveo/atomic-react": "^1.12.5",
     "next": "12.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"

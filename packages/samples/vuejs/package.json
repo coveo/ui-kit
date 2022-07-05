@@ -9,7 +9,7 @@
     "copy:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
   },
   "dependencies": {
-    "@coveo/atomic": "^1.33.2",
+    "@coveo/atomic": "^1.69.0",
     "core-js": "3.21.1",
     "vue": "3.2.31"
   },
