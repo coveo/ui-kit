@@ -1,19 +1,19 @@
 import {Component, h, Listen, State} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import {Button} from '@components/common/button';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '@utils/initialization-utils';
-import {Bindings} from '@components/search/atomic-search-interface/atomic-search-interface';
+import {Button} from '../../../components/common/button';
 import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Hidden} from '@components/common/hidden';
+import {Hidden} from '../../../components/common/hidden';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../src/utils/initialization-utils';
+import {Bindings} from '../../..';
 
 type ArrowDirection = 'right' | 'left';
 
