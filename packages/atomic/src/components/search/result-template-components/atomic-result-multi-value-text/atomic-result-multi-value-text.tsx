@@ -6,9 +6,9 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {getFieldValueCaption} from '@utils/field-utils';
-import {InitializeBindings} from '@utils/initialization-utils';
-import {titleToKebab} from '@utils/utils';
+import {getFieldValueCaption} from '../../../../utils/field-utils';
+import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {titleToKebab} from '../../../../utils/utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

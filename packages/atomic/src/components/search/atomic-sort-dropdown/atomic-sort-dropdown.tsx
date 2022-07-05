@@ -12,8 +12,8 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
-import {randomID} from '@utils/utils';
+} from '../../../utils/initialization-utils';
+import {randomID} from '../../../utils/utils';
 import {SortDropdownOption} from '../atomic-search-interface/store';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {Schema, StringValue} from '@coveo/bueno';

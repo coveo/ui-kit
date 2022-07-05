@@ -13,7 +13,7 @@ import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
