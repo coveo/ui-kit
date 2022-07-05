@@ -1,3 +1,4 @@
+import {TestFixture} from '../../fixtures/test-fixture';
 import {
   BaseFacetSelector,
   FacetWithCheckboxSelector,
@@ -89,6 +90,7 @@ export function pressShowMore(
     .its('length')
     .then((valuesCount) => {
       FacetShowMoreSelector.showMoreButton().click();
+      cy.wait(TestFixture.interceptAliases.Search);
       FacetShowMoreSelector.values()
         .children()
         .should('have.length.greaterThan', valuesCount);
