@@ -1,6 +1,6 @@
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {FunctionalComponent, h} from '@stencil/core';
-import {Button, ButtonProps} from '@components/common/button';
+import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
 import {SearchBox} from '@coveo/headless';
 

@@ -1,15 +1,15 @@
 import {Component, h, Prop, State} from '@stencil/core';
-import {Bindings} from '../atomic-insight-interface/atomic-insight-interface';
+import {buildInsightSearchBox} from '@coveo/headless/insight';
+import {SearchBox, SearchBoxState} from '@coveo/headless';
+import {randomID} from '../../../utils/utils';
 import {
   BindStateToController,
   InitializeBindings,
-} from '@utils/initialization-utils';
-import {buildInsightSearchBox} from '@coveo/headless/insight';
-import {SearchBox, SearchBoxState} from '@coveo/headless';
-import {randomID} from '@utils/utils';
-import {SearchInput} from '@components/common/search-box/SearchInput';
-import {SearchBoxWrapper} from '@components/common/search-box/SearchBoxWrapper';
-import {SubmitButton} from '@components/common/search-box/SubmitButton';
+} from '../../../utils/initialization-utils';
+import {Bindings} from '../atomic-insight-interface/atomic-insight-interface';
+import {SearchInput} from '../../common/search-box/SearchInput';
+import {SearchBoxWrapper} from '../../common/search-box/SearchBoxWrapper';
+import {SubmitButton} from '../../common/search-box/SubmitButton';
 
 /**
  *
