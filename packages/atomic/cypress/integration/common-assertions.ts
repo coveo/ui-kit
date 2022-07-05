@@ -3,7 +3,8 @@ import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
-  shadow: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  // Setting JQuery<HTMLElement> is incompatible with Stencil's HTML elements
+  shadow: () => Cypress.Chainable<JQuery<any>>;
 }
 
 export function should(should: boolean) {

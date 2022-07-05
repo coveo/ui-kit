@@ -6,7 +6,7 @@ import {
   ResultDisplayImageSize,
   getResultDisplayClasses,
 } from './atomic-result-display-options';
-import {applyFocusVisiblePolyfill} from '@utils/initialization-utils';
+import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
   ResultContextEvent,

@@ -275,7 +275,7 @@ describe('Facet v1 Test Suites', () => {
       });
 
       describe('when searching for a value that returns a single result', () => {
-        const query = 'amoreau';
+        const query = 'Gregory';
         function setupSearchForSingleValue() {
           setupSelectCheckboxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);
