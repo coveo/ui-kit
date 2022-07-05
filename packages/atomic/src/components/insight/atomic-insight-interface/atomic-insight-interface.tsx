@@ -189,5 +189,6 @@ export class AtomicSvcInsightInterface
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.initialized = true;
   }
 }
