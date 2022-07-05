@@ -11,12 +11,15 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
-import ArrowRight from '@images/arrow-right.svg';
-import {Button} from '@components/common/button';
-import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
-import {randomID} from '@utils/utils';
-import {RadioButton} from '@components/common/radio-button';
+} from '../../../utils/initialization-utils';
+import ArrowRight from '../../../images/arrow-right.svg';
+import {Button} from '../../common/button';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
+import {randomID} from '../../../utils/utils';
+import {RadioButton} from '../../common/radio-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

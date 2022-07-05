@@ -2,7 +2,7 @@ import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
-} from '@components/common/interface/analytics-config';
+} from '../../common/interface/analytics-config';
 import {
   AnalyticsConfiguration,
   SearchEngineConfiguration,

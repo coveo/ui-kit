@@ -1,7 +1,7 @@
 import {Component, h} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import {Button} from '@components/common/button';
+import {Button} from '../../common/button';
 
 type ArrowDirection = 'right' | 'left';
 

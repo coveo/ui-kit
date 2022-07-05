@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {filterProtocol} from '@utils/xss-utils';
+import {filterProtocol} from '../../../utils/xss-utils';
 
 export interface ResultLinkProps {
   href: string;

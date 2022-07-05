@@ -12,7 +12,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {encodeForDomAttribute} from '@utils/string-utils';
+import {encodeForDomAttribute} from '../../../../utils/string-utils';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
