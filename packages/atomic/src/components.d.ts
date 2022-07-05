@@ -14,8 +14,9 @@ import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { StandaloneSearchBoxData } from "@utils/local-storage-utils";
+import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { InsightEngine } from "@coveo/headless/insight";
+import { InitializationOptions as InitializationOptions1 } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export namespace Components {
     interface AtomicAriaLive {
         "updateMessage": (region: string, message: string) => Promise<void>;
@@ -1133,6 +1134,10 @@ export namespace Components {
          */
         "engine"?: InsightEngine;
         /**
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+         */
+        "executeFirstSearch": () => Promise<void>;
+        /**
           * The service insight interface i18next instance.
          */
         "i18n": i18n;
@@ -1141,6 +1146,10 @@ export namespace Components {
           * @example /mypublicpath/icons
          */
         "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: InitializationOptions) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless insight engine.
          */

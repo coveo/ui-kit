@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.78.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.6...@coveo/atomic@1.78.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.78.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.5...@coveo/atomic@1.78.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+* **atomic:** amoreau was being selected & searched in tests ([#2184](https://github.com/coveo/ui-kit/issues/2184)) ([c9be5be](https://github.com/coveo/ui-kit/commit/c9be5be28ca3753e8b4c662a3977fb721a3fb636))
+
+
+
+
+
 ## [1.78.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.4...@coveo/atomic@1.78.5) (2022-06-30)
 
 **Note:** Version bump only for package @coveo/atomic
