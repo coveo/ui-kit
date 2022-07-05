@@ -2,7 +2,7 @@ import {Component, Prop, State} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

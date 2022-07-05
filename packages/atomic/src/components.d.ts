@@ -14,7 +14,7 @@ import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { StandaloneSearchBoxData } from "@utils/local-storage-utils";
+import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { InsightEngine } from "@coveo/headless/insight";
 export namespace Components {
     interface AtomicAriaLive {
