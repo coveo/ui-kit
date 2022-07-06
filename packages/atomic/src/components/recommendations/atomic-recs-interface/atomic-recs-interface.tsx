@@ -16,12 +16,12 @@ import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
-import {createAtomicRecsStore} from './store';
+import {createAtomicRecsStore, AtomicRecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 export type Bindings = CommonBindings<
   RecommendationEngine,
-  ReturnType<typeof createAtomicRecsStore>,
+  AtomicRecsStore,
   HTMLAtomicRecsInterfaceElement
 >;
 
