@@ -9,6 +9,7 @@ import {
   AnalyticsType,
   documentIdentifier,
   makeAnalyticsAction,
+  makeInsightAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from './analytics-utils';
@@ -126,7 +127,22 @@ export const logInterfaceLoad = makeAnalyticsAction(
   (client) => client.logInterfaceLoad()
 );
 
+export const logInsightInterfaceLoad = makeInsightAnalyticsAction(
+  'analytics/interface/load',
+  AnalyticsType.Search,
+  (client) => client.logInterfaceLoad()
+);
+
 export const logInterfaceChange = makeAnalyticsAction(
+  'analytics/interface/change',
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logInterfaceChange({
+      interfaceChangeTo: state.configuration.analytics.originLevel2,
+    })
+);
+
+export const logInsightInterfaceChange = makeInsightAnalyticsAction(
   'analytics/interface/change',
   AnalyticsType.Search,
   (client, state) =>

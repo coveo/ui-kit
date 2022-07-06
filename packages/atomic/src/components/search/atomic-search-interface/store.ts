@@ -10,6 +10,7 @@ import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   createAtomicCommonStore,
   AtomicCommonStoreData,
+  AtomicCommonStore,
 } from '../../common/interface/store';
 
 interface FacetInfo {
@@ -46,7 +47,29 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   resultList?: ResultListInfo;
 }
 
-export function createAtomicStore() {
+export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
+  registerFacet<T extends FacetType, U extends string>(
+    facetType: T,
+    data: AtomicStoreData[T][U] & {facetId: U; element: HTMLElement}
+  ): void;
+
+  registerResultList(data: ResultListInfo): void;
+
+  getFacetElements(): HTMLElement[];
+
+  getAllFacets(): {
+    [facetId: string]:
+      | FacetInfo
+      | (FacetInfo & FacetValueFormat<NumericFacetValue>)
+      | (FacetInfo & FacetValueFormat<DateFacetValue>);
+  };
+
+  isMobile(): boolean;
+
+  getUniqueIDFromEngine(engine: SearchEngine): string;
+}
+
+export function createAtomicStore(): AtomicStore {
   const commonStore = createAtomicCommonStore<AtomicStoreData>({
     loadingFlags: [],
     facets: {},

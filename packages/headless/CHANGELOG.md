@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.78.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.9...@coveo/headless@1.78.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+* **headless:** add case context actions ([#2120](https://github.com/coveo/ui-kit/issues/2120)) ([925247b](https://github.com/coveo/ui-kit/commit/925247ba83eabbb0e4aa01ef04ae4cef92e23ba6))
+
+
+
+
+
+## [1.77.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.8...@coveo/headless@1.77.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
 ## [1.77.8](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.7...@coveo/headless@1.77.8) (2022-07-05)
 
 **Note:** Version bump only for package @coveo/headless

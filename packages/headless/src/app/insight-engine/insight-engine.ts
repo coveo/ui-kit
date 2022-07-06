@@ -25,7 +25,7 @@ import {
 import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
-import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
+import {logInsightInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {executeSearch} from '../../features/insight-search/insight-search-actions';
 
@@ -48,7 +48,7 @@ export interface InsightEngine<State extends object = {}>
   /**
    * Executes the first search.
    *
-   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInterfaceLoad` will be used.
+   * @param analyticsEvent - The analytics event to log in association with the first search. If unspecified, `logInsightInterfaceLoad` will be used.
    */
   executeFirstSearch(analyticsEvent?: SearchAction): void;
 }
@@ -108,7 +108,7 @@ export function buildInsightEngine(
       return engine.state;
     },
 
-    executeFirstSearch(analyticsEvent = logInterfaceLoad()) {
+    executeFirstSearch(analyticsEvent = logInsightInterfaceLoad()) {
       const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
 
       if (firstSearchExecuted) {
