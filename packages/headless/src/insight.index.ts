@@ -1,12 +1,14 @@
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-
 export type {Result} from './api/search/search/result';
 export type {
   ResultTemplate,
   ResultTemplateCondition,
 } from './features/result-templates/result-templates';
 export {ResultTemplatesHelpers} from './features';
+
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
 // Main App
 export type {

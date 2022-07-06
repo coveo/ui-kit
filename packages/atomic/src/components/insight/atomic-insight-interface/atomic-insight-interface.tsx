@@ -1,5 +1,5 @@
-import {LogLevel} from '@coveo/headless';
 import {
+  LogLevel,
   buildInsightEngine,
   InsightEngine,
   InsightEngineConfiguration,

@@ -5,12 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result as Result1, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result as Result1, ResultTemplate as ResultTemplate1, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
-import { InsightEngine, Result } from "@coveo/headless/insight";
+import { InsightEngine, LogLevel as LogLevel1, Result, ResultTemplate, ResultTemplateCondition as ResultTemplateCondition1 } from "@coveo/headless/insight";
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { i18n } from "i18next";
@@ -383,7 +383,7 @@ export namespace Components {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions": ResultTemplateCondition[];
+        "conditions": ResultTemplateCondition1[];
         /**
           * Gets the appropriate result template based on conditions applied.
          */
@@ -757,7 +757,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        "getTemplate": () => Promise<ResultTemplate1<DocumentFragment> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -915,7 +915,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        "getTemplate": () => Promise<ResultTemplate1<DocumentFragment> | null>;
     }
     interface AtomicResultText {
         /**
@@ -1232,7 +1232,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The service insight interface headless engine.
          */
@@ -2305,7 +2305,7 @@ declare namespace LocalJSX {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions"?: ResultTemplateCondition[];
+        "conditions"?: ResultTemplateCondition1[];
     }
     interface AtomicInsightSearchBox {
         /**
@@ -3112,7 +3112,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The service insight interface headless engine.
          */

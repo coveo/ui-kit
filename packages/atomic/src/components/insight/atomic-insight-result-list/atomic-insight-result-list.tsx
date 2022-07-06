@@ -3,18 +3,16 @@ import {
   buildInsightResultList,
   InsightResultList,
   InsightResultListState,
+  Result,
+  ResultTemplate,
+  ResultTemplatesManager,
+  buildResultTemplatesManager,
 } from '@coveo/headless/insight';
 import {Bindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  Result,
-  ResultTemplatesManager,
-  ResultTemplate,
-  buildResultTemplatesManager,
-} from '@coveo/headless';
 import {
   getResultDisplayClasses,
   ResultDisplayDensity,
