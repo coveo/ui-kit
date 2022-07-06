@@ -65,7 +65,7 @@ export type {
  * @param props - The configurable `InsightFacet` properties.
  * @returns An `InsightFacet` controller instance.
  */
-export function buildInsightFacet(
+export function buildFacet(
   engine: InsightEngine,
   props: FacetProps<FacetOptions>
 ): Facet {
