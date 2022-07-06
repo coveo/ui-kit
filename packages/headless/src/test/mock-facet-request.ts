@@ -15,6 +15,7 @@ export function buildMockFacetRequest(
     numberOfValues: 8,
     preventAutoSelect: false,
     sortCriteria: 'score',
+    hasBreadcrumbs: true,
     type: 'specific',
     ...config,
   };
