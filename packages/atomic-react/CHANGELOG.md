@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.14.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.13.9...@coveo/atomic-react@1.14.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
 ## [1.13.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.13.8...@coveo/atomic-react@1.13.9) (2022-07-05)
 
 
