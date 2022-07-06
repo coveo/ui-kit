@@ -142,6 +142,15 @@ export const logInterfaceChange = makeAnalyticsAction(
     })
 );
 
+export const logInsightInterfaceChange = makeInsightAnalyticsAction(
+  'analytics/interface/change',
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logInterfaceChange({
+      interfaceChangeTo: state.configuration.analytics.originLevel2,
+    })
+);
+
 export const logSearchFromLink = makeAnalyticsAction(
   'analytics/interface/searchFromLink',
   AnalyticsType.Search,
