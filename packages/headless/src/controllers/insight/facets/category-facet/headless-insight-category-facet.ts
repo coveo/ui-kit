@@ -1,12 +1,12 @@
 import {
   buildCoreCategoryFacet,
+  CategoryFacetProps,
   CategoryFacetSearch,
   CategoryFacetValue,
   CoreCategoryFacet,
   CoreCategoryFacetState,
-} from '../../core/facets/category-facet/headless-core-category-facet';
-import {CategoryFacetOptions} from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+} from '../../../core/facets/category-facet/headless-core-category-facet';
+import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
   logFacetClearAll,
   logFacetDeselect,
@@ -14,34 +14,14 @@ import {
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
-} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {
   executeSearch,
   fetchFacetValues,
-} from '../../../features/insight-search/insight-search-actions';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  search,
-} from '../../../app/reducers';
-import {
-  CategoryFacetSearchSection,
-  CategoryFacetSection,
-  ConfigurationSection,
-  SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+} from '../../../../features/insight-search/insight-search-actions';
+import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 
-export interface InsightCategoryFacetOptions extends CategoryFacetOptions {}
-
-export interface InsightCategoryFacetProps {
-  /**
-   * The options for `InsightCategoryFacet` controller
-   */
-  options: InsightCategoryFacetOptions;
-}
+export interface InsightCategoryFacetProps extends CategoryFacetProps {}
 
 export interface InsightCategoryFacet extends CoreCategoryFacet {
   /**
@@ -95,10 +75,6 @@ export function buildInsightCategoryFacet(
 
   const {state, ...restOfFacetSearch} = facetSearch;
 
-  if (!loadInsightCategoryFacetReducers(engine)) {
-    throw loadReducerError;
-  }
-
   return {
     ...coreController,
 
@@ -121,7 +97,9 @@ export function buildInsightCategoryFacet(
     sortBy(criterion: CategoryFacetSortCriterion) {
       coreController.sortBy(criterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch(
+          logFacetUpdateSort({facetId: getFacetId(), sortCriterion: criterion})
+        )
       );
     },
 
@@ -138,28 +116,7 @@ export function buildInsightCategoryFacet(
       coreController.showLessValues();
       dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
     },
-
-    get state() {
-      return {...coreController.state};
-    },
   };
-}
-
-function loadInsightCategoryFacetReducers(
-  engine: InsightEngine
-): engine is InsightEngine<
-  CategoryFacetSection &
-    CategoryFacetSearchSection &
-    ConfigurationSection &
-    SearchSection
-> {
-  engine.addReducers({
-    categoryFacetSet,
-    categoryFacetSearchSet,
-    configuration,
-    search,
-  });
-  return true;
 }
 
 function getToggleSelectInsightAnalyticsAction(
