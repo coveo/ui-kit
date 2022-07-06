@@ -109,12 +109,12 @@ export const executeSearch = createAsyncThunk<
 
 export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  InsightAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchPage',
   async (
-    analyticsAction: SearchAction,
+    analyticsAction: InsightAction,
     {getState, dispatch, rejectWithValue, extra}
   ) => {
     const state = getState();
@@ -315,15 +315,3 @@ const getStateAfterResponse: (
     results: response.results,
   },
 });
-
-const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
-  if (state.configuration.analytics.enabled) {
-    historyStore.addElement({
-      name: 'Query',
-      ...(state.query?.q && {
-        value: state.query.q,
-      }),
-      time: JSON.stringify(new Date()),
-    });
-  }
-};

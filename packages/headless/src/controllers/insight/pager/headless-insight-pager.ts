@@ -23,7 +23,7 @@ export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
  * @param props - The configurable `Pager` properties.
  * @returns A `InsightPager` controller instance.
  * */
-export function buildInsightPager(
+export function buildPager(
   engine: InsightEngine,
   props: PagerProps = {}
 ): Pager {
