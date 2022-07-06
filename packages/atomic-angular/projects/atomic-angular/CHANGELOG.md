@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.18.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.8...@coveo/atomic-angular@1.18.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+## [1.18.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.7...@coveo/atomic-angular@1.18.8) (2022-07-05)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.18.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.6...@coveo/atomic-angular@1.18.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
 ## [1.18.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.5...@coveo/atomic-angular@1.18.6) (2022-07-04)
 
 

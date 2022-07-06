@@ -13,6 +13,7 @@ import { ResultRenderingFunction } from "./components/search/result-lists/result
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { i18n } from "i18next";
+import { AtomicStore } from "./components/search/atomic-search-interface/store";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { InsightEngine } from "@coveo/headless/insight";
@@ -662,7 +663,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicStore>;
+        "store"?: AtomicStore;
     }
     interface AtomicResultBadge {
         /**
@@ -2498,7 +2499,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicStore>;
+        "store"?: AtomicStore;
     }
     interface AtomicResultBadge {
         /**
