@@ -148,6 +148,12 @@ export type {
 export {buildQuerySummary} from './query-summary/headless-query-summary';
 
 export type {
+  CoreQuerySummaryState,
+  CoreQuerySummary,
+} from './core/query-summary/headless-core-query-summary';
+export {buildCoreQuerySummary} from './core/query-summary/headless-core-query-summary';
+
+export type {
   ResultListProps,
   ResultListOptions,
   ResultListState,
