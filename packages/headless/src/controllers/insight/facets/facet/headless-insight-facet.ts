@@ -134,10 +134,12 @@ export function buildInsightFacet(
       dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
 
-    sortBy(criterion: FacetSortCriterion) {
-      coreController.sortBy(criterion);
+    sortBy(sortCriterion: FacetSortCriterion) {
+      coreController.sortBy(sortCriterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch(
+          logFacetUpdateSort({facetId: getFacetId(), sortCriterion})
+        )
       );
     },
 

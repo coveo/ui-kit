@@ -2,6 +2,7 @@ import {getCaseContextInitialState} from '../features/case-context/case-context-
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-state';
+import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
@@ -34,7 +35,6 @@ export function buildMockInsightState(
     querySet: getQuerySetInitialState(),
     querySuggest: getQuerySuggestSetInitialState(),
     categoryFacetSet: getCategoryFacetSetInitialState(),
-    facetOptions: getFacetOptionsInitialState(),
     ...config,
   };
 }
