@@ -1,12 +1,14 @@
 import {
+  AnalyticsPayload,
+  augmentAnalyticsWithAtomicVersion,
+  augmentWithExternalMiddleware,
+} from '../../common/interface/analytics-config';
+import {
   AnalyticsConfiguration,
   SearchEngineConfiguration,
   AnalyticsClientSendEventHook,
 } from '@coveo/headless';
-import {getAtomicEnvironment} from '@global/environment';
 import {createAtomicStore} from './store';
-
-type AnalyticsPayload = Parameters<AnalyticsClientSendEventHook>[1];
 
 export function getAnalyticsConfig(
   searchEngineConfig: SearchEngineConfiguration,
@@ -44,24 +46,6 @@ function augmentAnalytics(
   result = augmentAnalyticsWithAtomicVersion(result);
   result = augmentAnalyticsWithFacetTitles(result, store);
   return result;
-}
-
-function augmentWithExternalMiddleware(
-  event: string,
-  payload: AnalyticsPayload,
-  config: SearchEngineConfiguration
-) {
-  if (config.analytics?.analyticsClientMiddleware) {
-    return config.analytics.analyticsClientMiddleware(event, payload);
-  }
-  return payload;
-}
-
-function augmentAnalyticsWithAtomicVersion(payload: AnalyticsPayload) {
-  if (payload.customData) {
-    payload.customData.coveoAtomicVersion = getAtomicEnvironment().version;
-  }
-  return payload;
 }
 
 function augmentAnalyticsWithFacetTitles(

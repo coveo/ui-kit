@@ -8,7 +8,7 @@ import {
   Element,
 } from '@stencil/core';
 import {sanitize} from 'dompurify';
-import {sanitizeStyle} from '@utils/utils';
+import {sanitizeStyle} from '../../../utils/utils';
 
 /**
  * @part answer - The container displaying the full document excerpt.
