@@ -37,5 +37,4 @@ export interface FacetRequest
     SortCriteria<FacetSortCriterion> {
   /** @defaultValue `automatic` */
   sortCriteria: FacetSortCriterion;
-  hasBreadcrumbs: boolean;
 }

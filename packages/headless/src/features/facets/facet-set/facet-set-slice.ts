@@ -121,12 +121,10 @@ export const facetSetReducer = createReducer(
         });
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
-        Object.values(state)
-          .filter((req) => req.hasBreadcrumbs)
-          .forEach((req) => {
-            const request = state[req.facetId];
-            handleFacetDeselectAll(request);
-          });
+        Object.keys(state).forEach((facetId) => {
+          const request = state[facetId];
+          handleFacetDeselectAll(request);
+        });
       })
       .addCase(updateFacetAutoSelection, (state, action) =>
         Object.keys(state).forEach((facetId) => {
@@ -262,7 +260,6 @@ function buildFacetRequest(
     freezeCurrentValues: false,
     isFieldExpanded: false,
     preventAutoSelect: false,
-    hasBreadcrumbs: true,
     ...config,
   };
 }
