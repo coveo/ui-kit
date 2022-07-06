@@ -54,10 +54,12 @@ export function buildDateFacet(
       dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
 
-    sortBy(criterion: RangeFacetSortCriterion) {
-      coreController.sortBy(criterion);
+    sortBy(sortCriterion: RangeFacetSortCriterion) {
+      coreController.sortBy(sortCriterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch(
+          logFacetUpdateSort({facetId: getFacetId(), sortCriterion})
+        )
       );
     },
 
