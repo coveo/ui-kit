@@ -190,6 +190,24 @@ describe('InsightClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.queryError, meta);
     });
 
+    it('should send proper payload for #logPagerNumber', async () => {
+        const meta = {pagerNumber: 123};
+        await client.logPagerNumber(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.pagerNumber, meta);
+    });
+
+    it('should send proper payload for #logPagerNext', async () => {
+        const meta = {pagerNumber: 123};
+        await client.logPagerNext(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.pagerNext, meta);
+    });
+
+    it('should send proper payload for #logPagerPrevious', async () => {
+        const meta = {pagerNumber: 123};
+        await client.logPagerPrevious(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, meta);
+    });
+
     it('should enable analytics tracking by default', () => {
         const c = new CoveoInsightClient({}, provider);
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
