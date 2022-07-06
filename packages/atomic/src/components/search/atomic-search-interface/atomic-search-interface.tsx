@@ -24,7 +24,7 @@ import {
 } from '@coveo/headless';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {createAtomicStore} from './store';
+import {AtomicStore, createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
   SafeStorage,
@@ -41,7 +41,7 @@ const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
 export type Bindings = CommonBindings<
   SearchEngine,
-  ReturnType<typeof createAtomicStore>,
+  AtomicStore,
   HTMLAtomicSearchInterfaceElement
 >;
 
