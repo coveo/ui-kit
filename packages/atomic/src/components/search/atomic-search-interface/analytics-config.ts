@@ -6,7 +6,6 @@ import {
 import {
   AnalyticsConfiguration,
   SearchEngineConfiguration,
-  AnalyticsClientSendEventHook,
 } from '@coveo/headless';
 import {createAtomicStore} from './store';
 
