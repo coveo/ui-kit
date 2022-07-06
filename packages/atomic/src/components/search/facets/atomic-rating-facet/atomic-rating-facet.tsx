@@ -17,7 +17,7 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
+} from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
@@ -25,11 +25,14 @@ import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
 import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
-import Star from '@images/star.svg';
+import Star from '../../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
-import {Hidden} from '@components/common/hidden';
-import {FocusTarget, FocusTargetController} from '@utils/accessibility-utils';
-import {MapProp} from '@utils/props-utils';
+import {Hidden} from '../../../common/hidden';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
+import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

@@ -5,7 +5,7 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {MapProp} from '@utils/props-utils';
+import {MapProp} from '../../../../utils/props-utils';
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
