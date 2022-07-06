@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.79.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.79.0...@coveo/atomic@1.79.1) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+# [1.79.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.7...@coveo/atomic@1.79.0) (2022-07-05)
+
+
+### Features
+
+* **atomic:** initial work on atomic-insight-interface  ([#2183](https://github.com/coveo/ui-kit/issues/2183)) ([6b45ae9](https://github.com/coveo/ui-kit/commit/6b45ae9aaa06aca7abc66d90082ed0f533be5454))
+
+
+
+
+
+## [1.78.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.6...@coveo/atomic@1.78.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.78.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.5...@coveo/atomic@1.78.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+* **atomic:** amoreau was being selected & searched in tests ([#2184](https://github.com/coveo/ui-kit/issues/2184)) ([c9be5be](https://github.com/coveo/ui-kit/commit/c9be5be28ca3753e8b4c662a3977fb721a3fb636))
+
+
+
+
+
+## [1.78.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.4...@coveo/atomic@1.78.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.78.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.3...@coveo/atomic@1.78.4) (2022-06-30)
+
+
+### Bug Fixes
+
+* **atomic:** dedup recent queries keys ([#2158](https://github.com/coveo/ui-kit/issues/2158)) ([b354204](https://github.com/coveo/ui-kit/commit/b354204c27679684e9267192ec01feb4350c5e7e))
+
+
+
+
+
+## [1.78.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.2...@coveo/atomic@1.78.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.78.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.1...@coveo/atomic@1.78.2) (2022-06-29)
 
 **Note:** Version bump only for package @coveo/atomic

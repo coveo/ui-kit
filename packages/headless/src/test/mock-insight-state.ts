@@ -1,10 +1,10 @@
+import {getCaseContextInitialState} from '../features/case-context/case-context-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
-import {getInsightCaseContextSearchInitialState} from '../features/insight-search/insight-case-context-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getQuerySuggestSetInitialState} from '../features/query-suggest/query-suggest-state';
@@ -24,7 +24,7 @@ export function buildMockInsightState(
     insightInterface: getInsightInterfaceInitialState(),
     searchHub: getSearchHubInitialState(),
     version: 'unit-testing-version',
-    insightCaseContext: getInsightCaseContextSearchInitialState(),
+    insightCaseContext: getCaseContextInitialState(),
     query: getQueryInitialState(),
     facetSet: getFacetSetInitialState(),
     pagination: getPaginationInitialState(),

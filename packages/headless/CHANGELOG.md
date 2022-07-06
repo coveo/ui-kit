@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.77.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.8...@coveo/headless@1.77.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+## [1.77.8](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.7...@coveo/headless@1.77.8) (2022-07-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.77.7](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.6...@coveo/headless@1.77.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.77.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.5...@coveo/headless@1.77.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+
+
+
+
+
+## [1.77.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.4...@coveo/headless@1.77.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.77.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.3...@coveo/headless@1.77.4) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.77.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.2...@coveo/headless@1.77.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 ## [1.77.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.1...@coveo/headless@1.77.2) (2022-06-29)
 
 **Note:** Version bump only for package @coveo/headless

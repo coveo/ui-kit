@@ -249,7 +249,6 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
 function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
   return Object.values(state || {}).map((slice) => slice!.request);
 }
-
 function getFacetRequests<T extends AnyFacetRequest>(
   requests: Record<string, T> = {}
 ) {
