@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.13.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.13.8...@coveo/atomic-react@1.13.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+## [1.13.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.13.7...@coveo/atomic-react@1.13.8) (2022-07-05)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
 ## [1.13.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.13.6...@coveo/atomic-react@1.13.7) (2022-07-05)
 
 

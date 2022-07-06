@@ -21,14 +21,14 @@ import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
-import {createAtomicSvcInsightStore} from './store';
+import {AtomicSvcInsightStore, createAtomicSvcInsightStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InitializationOptions = InsightEngineConfiguration;
 export type Bindings = CommonBindings<
   InsightEngine,
-  ReturnType<typeof createAtomicSvcInsightStore>,
+  AtomicSvcInsightStore,
   HTMLAtomicSvcInsightInterfaceElement
 >;
 

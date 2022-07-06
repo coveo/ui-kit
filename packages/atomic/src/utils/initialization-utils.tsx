@@ -49,8 +49,6 @@ export class MissingInterfaceParentError extends Error {
 
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.
- *
- * TODO: Move InitializableComponent definition close to their specific use case; Remove generic need for specific use cases
  */
 export interface InitializableComponent<
   SpecificBindings extends AnyBindings = Bindings
