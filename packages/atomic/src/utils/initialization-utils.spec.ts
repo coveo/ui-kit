@@ -14,11 +14,11 @@ import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {
   AtomicSearchInterface,
   Bindings,
-} from '@components/search/atomic-search-interface/atomic-search-interface';
+} from '../components/search/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
-import {AtomicSearchBox} from '@components/search/atomic-search-box/atomic-search-box';
+import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
 
-import {createAtomicStore} from '@components/search/atomic-search-interface/store';
+import {createAtomicStore} from '../components/search/atomic-search-interface/store';
 
 describe('InitializeBindings decorator', () => {
   it(`when using the decorator with a property other than bindings

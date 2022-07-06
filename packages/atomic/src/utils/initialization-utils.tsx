@@ -1,9 +1,9 @@
 import {buildCustomEvent} from './event-utils';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {TOptions} from 'i18next';
-import {Hidden} from '@components/common/hidden';
-import {Bindings} from '@components/search/atomic-search-interface/atomic-search-interface';
-import {AnyBindings} from '@components/common/interface/bindings';
+import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {AnyBindings} from '../components/common/interface/bindings';
+import {Hidden} from '../components/common/hidden';
 
 declare global {
   interface Window {
@@ -49,8 +49,6 @@ export class MissingInterfaceParentError extends Error {
 
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.
- *
- * TODO: Move InitializableComponent definition close to their specific use case; Remove generic need for specific use cases
  */
 export interface InitializableComponent<
   SpecificBindings extends AnyBindings = Bindings

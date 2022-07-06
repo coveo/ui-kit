@@ -8,12 +8,12 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import {parseAssetURL} from '@utils/utils';
+import {parseAssetURL} from '../../../utils/utils';
 import {sanitize} from 'dompurify';
 import {
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

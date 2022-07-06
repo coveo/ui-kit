@@ -8,9 +8,9 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 import escape from 'escape-html';
-import {AriaLiveRegion} from '@utils/accessibility-utils';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
