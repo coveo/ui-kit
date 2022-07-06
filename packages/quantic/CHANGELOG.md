@@ -3,6 +3,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.9...@coveo/quantic@1.27.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
+## [1.26.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.8...@coveo/quantic@1.26.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+## [1.26.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.7...@coveo/quantic@1.26.8) (2022-07-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.6...@coveo/quantic@1.26.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.26.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.5...@coveo/quantic@1.26.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+
+
+
+
+
+## [1.26.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.4...@coveo/quantic@1.26.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.3...@coveo/quantic@1.26.4) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.2...@coveo/quantic@1.26.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.1...@coveo/quantic@1.26.2) (2022-06-29)
+
+
+### Bug Fixes
+
+* **quantic:** corner case addressed in the QuanticTabBar component ([#2173](https://github.com/coveo/ui-kit/issues/2173)) ([7f81513](https://github.com/coveo/ui-kit/commit/7f81513b33cb6b4544f76afeca41d715d9e1ce1f))
+
+
+
+
+
+## [1.26.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.0...@coveo/quantic@1.26.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.26.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.18...@coveo/quantic@1.26.0) (2022-06-28)
 
 

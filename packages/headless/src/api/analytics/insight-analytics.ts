@@ -106,15 +106,15 @@ export const configureInsightAnalytics = ({
   provider = new InsightAnalyticsProvider(state),
 }: ConfigureInsightAnalyticsOptions) => {
   const token = state.configuration.accessToken;
-  const endpoint = state.configuration.analytics.apiBaseUrl;
+  const apiBaseUrl = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
-  const enableAnalytics = state.configuration.analytics.enabled;
+  const enabled = state.configuration.analytics.enabled;
 
   const client = new CoveoInsightClient(
     {
-      enableAnalytics,
+      enableAnalytics: enabled,
       token,
-      endpoint,
+      endpoint: apiBaseUrl,
       runtimeEnvironment,
       preprocessRequest,
       beforeSendHooks: [
@@ -124,7 +124,7 @@ export const configureInsightAnalytics = ({
             {
               ...payload,
               type,
-              endpoint,
+              endpoint: apiBaseUrl,
               token,
             },
             'Analytics request'
@@ -136,7 +136,7 @@ export const configureInsightAnalytics = ({
     provider
   );
 
-  if (!enableAnalytics) {
+  if (!enabled) {
     client.disable();
   }
 

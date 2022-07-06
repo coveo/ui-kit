@@ -12,7 +12,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {cleanUpString} from '../../../../utils/string-utils';
+import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {
   BaseResultList,
   ResultListCommon,
@@ -114,11 +114,11 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       : this.results;
     const elements: SearchBoxSuggestionElement[] = results.map(
       (result: Result) => ({
-        key: `instant-result-${cleanUpString(result.uniqueId)}`,
+        key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
         part: 'instant-results-item',
         content: (
           <atomic-result
-            key={`instant-result-${cleanUpString(result.uniqueId)}`}
+            key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
             part="outline"
             result={result}
             engine={this.bindings.engine}

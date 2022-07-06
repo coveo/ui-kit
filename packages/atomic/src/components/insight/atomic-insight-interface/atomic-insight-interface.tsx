@@ -1,19 +1,34 @@
 import {LogLevel} from '@coveo/headless';
-import {InsightEngine} from '@coveo/headless/insight';
-import {Component, Element, h, Method, Prop, Watch} from '@stencil/core';
-import i18next, {i18n, TFunction} from 'i18next';
-import {loadGlobalScripts} from '../../../global/global';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
+import {
+  buildInsightEngine,
+  InsightEngine,
+  InsightEngineConfiguration,
+} from '@coveo/headless/insight';
+import {
+  Component,
+  Element,
+  h,
+  Listen,
+  Method,
+  Prop,
+  State,
+  Watch,
+} from '@stencil/core';
+import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {CommonBindings} from '../../common/interface/bindings';
-import {initi18n} from '../../common/interface/i18n';
-import {BaseAtomicInterface} from '../../common/interface/interface-common';
-import {createAtomicSvcInsightStore} from './store';
+import {
+  BaseAtomicInterface,
+  CommonAtomicInterfaceHelper,
+} from '../../common/interface/interface-common';
+import {AtomicSvcInsightStore, createAtomicSvcInsightStore} from './store';
+import {getAnalyticsConfig} from './analytics-config';
 
-const FirstRecommendationExecutedFlag = 'firstInsightRequestExecuted';
+const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
+export type InitializationOptions = InsightEngineConfiguration;
 export type Bindings = CommonBindings<
   InsightEngine,
-  ReturnType<typeof createAtomicSvcInsightStore>,
+  AtomicSvcInsightStore,
   HTMLAtomicSvcInsightInterfaceElement
 >;
 
@@ -29,6 +44,10 @@ export type Bindings = CommonBindings<
 export class AtomicSvcInsightInterface
   implements BaseAtomicInterface<InsightEngine>
 {
+  private initialized = false;
+
+  @State() public error?: Error;
+
   /**
    * The service insight interface headless engine.
    */
@@ -67,26 +86,53 @@ export class AtomicSvcInsightInterface
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
-  @Element() private host!: HTMLAtomicSvcInsightInterfaceElement;
-  private hangingComponentsInitialization: InitializeEvent[] = [];
-  private i18nPromise!: Promise<TFunction>;
+  @Element() public host!: HTMLAtomicSvcInsightInterfaceElement;
+
   private store = createAtomicSvcInsightStore();
+  private commonInterfaceHelper: CommonAtomicInterfaceHelper<InsightEngine>;
 
   public constructor() {
-    loadGlobalScripts('CoveoAtomicRecs');
+    this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
+      this,
+      'CoveoAtomicSvc'
+    );
   }
 
   public connectedCallback() {
-    this.i18nPromise = initi18n(this);
-    this.store.setLoadingFlag(FirstRecommendationExecutedFlag);
+    this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
+  }
+
+  /**
+   * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   */
+  @Method() public initialize(options: InitializationOptions) {
+    return this.internalInitialization(() => this.initEngine(options));
   }
 
   /**
    * Initializes the connection with an already preconfigured headless insight engine.
    *
    */
-  @Method() public initializeWithRecommendationEngine(engine: InsightEngine) {
+  @Method() public initializeWithInsightEngine(engine: InsightEngine) {
     return this.internalInitialization(() => (this.engine = engine));
+  }
+
+  /**
+   *
+   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+   */
+  @Method() public async executeFirstSearch() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+    if (!this.initialized) {
+      console.error(
+        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
+        this.host
+      );
+      return;
+    }
+    this.engine.executeFirstSearch();
   }
 
   @Watch('iconAssetsPath')
@@ -94,11 +140,26 @@ export class AtomicSvcInsightInterface
     this.store.set('iconAssetsPath', this.iconAssetsPath);
   }
 
-  render() {
-    return <div>Hello from Svc Insight interface</div>;
+  @Listen('atomic/initializeComponent')
+  public handleInitialization(event: InitializeEvent) {
+    this.commonInterfaceHelper.onComponentInitializing(event);
   }
 
-  private get bindings(): Bindings {
+  @Watch('language')
+  public updateLanguage() {
+    this.commonInterfaceHelper.onLanguageChange();
+  }
+
+  @Watch('analytics')
+  public toggleAnalytics() {
+    this.commonInterfaceHelper.onAnalyticsChange();
+  }
+
+  render() {
+    return this.engine && <slot></slot>;
+  }
+
+  public get bindings(): Bindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -107,25 +168,27 @@ export class AtomicSvcInsightInterface
     };
   }
 
-  private initComponents() {
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.bindings)
-    );
+  private initEngine(options: InitializationOptions) {
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    try {
+      this.engine = buildInsightEngine({
+        configuration: {
+          ...options,
+          analytics: analyticsConfig,
+        },
+        loggerOptions: {
+          level: this.logLevel,
+        },
+      });
+    } catch (error) {
+      this.error = error as Error;
+      throw error;
+    }
   }
 
   private async internalInitialization(initEngine: () => void) {
-    if (this.engine) {
-      this.engine.logger.warn(
-        'The atomic-recs-interface component "initialize" has already been called.',
-        this.host
-      );
-      return;
-    }
-
-    this.updateIconAssetsPath();
-    initEngine();
-    loadDayjsLocale(this.language);
-    await this.i18nPromise;
-    this.initComponents();
+    await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.initialized = true;
   }
 }

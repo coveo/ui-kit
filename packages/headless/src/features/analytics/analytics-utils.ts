@@ -42,6 +42,7 @@ import {
 import {InsightAppState} from '../../state/insight-app-state';
 import {
   configureInsightAnalytics,
+  InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
 
@@ -186,7 +187,10 @@ export const makeInsightAnalyticsAction = <T extends AnalyticsType>(
   log: (
     client: CoveoInsightClient,
     state: ConfigurationSection & Partial<InsightAppState>
-  ) => Promise<void | SearchEventResponse> | void
+  ) => Promise<void | SearchEventResponse> | void,
+  provider: (state: Partial<InsightAppState>) => InsightAnalyticsProvider = (
+    s
+  ) => new InsightAnalyticsProvider(s as StateNeededByInsightAnalyticsProvider)
 ) => {
   return createAsyncThunk<
     {analyticsType: T},
@@ -204,6 +208,7 @@ export const makeInsightAnalyticsAction = <T extends AnalyticsType>(
         logger,
         analyticsClientMiddleware,
         preprocessRequest,
+        provider: provider(state),
       });
       const response = await log(client, state);
       logger.info(
