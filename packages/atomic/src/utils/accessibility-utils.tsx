@@ -56,7 +56,8 @@ export function FocusTarget() {
         }
         if (
           focusAfterSearch &&
-          getSearchUIDFromState(this.bindings) !== lastSearchId
+          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+            lastSearchId
         ) {
           focusAfterSearch = false;
           if (element) {
@@ -86,7 +87,9 @@ export function FocusTarget() {
           }
         },
         focusAfterSearch: () => {
-          lastSearchId = getSearchUIDFromState(this.bindings);
+          lastSearchId = this.bindings.store.getUniqueIDFromEngine(
+            this.bindings.engine
+          );
           focusAfterSearch = true;
           return new Promise((resolve) => (onFocusCallback = resolve));
         },
@@ -95,8 +98,8 @@ export function FocusTarget() {
           return new Promise((resolve) => (onFocusCallback = resolve));
         },
         disableForCurrentSearch: () =>
-          getSearchUIDFromState(this.bindings) !== lastSearchId &&
-          (focusAfterSearch = false),
+          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+            lastSearchId && (focusAfterSearch = false),
       };
       this[setterName] = focusTargetController;
     };
@@ -149,10 +152,4 @@ export function getFirstFocusableDescendant(
     }
   }
   return null;
-}
-
-function getSearchUIDFromState(bindings: any): string {
-  // TODO: This is a temporary dirty hack while refactoring Atomic for generic use cases
-  // Needs to be a generic function enforced at the interface level (BaseAtomicInterface)
-  return bindings?.engine?.state?.search?.response?.searchUid;
 }
