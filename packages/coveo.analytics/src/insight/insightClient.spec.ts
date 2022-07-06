@@ -107,6 +107,13 @@ describe('InsightClient', () => {
         expectMatchPayload(SearchPageEvents.interfaceLoad);
     });
 
+    it('should send proper payload for #interfaceChange', async () => {
+        await client.logInterfaceChange({
+            interfaceChangeTo: 'bob',
+        });
+        expectMatchPayload(SearchPageEvents.interfaceChange, {interfaceChangeTo: 'bob'});
+    });
+
     it('should send proper payload for #fetchMoreResults', async () => {
         await client.logFetchMoreResults();
         expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});

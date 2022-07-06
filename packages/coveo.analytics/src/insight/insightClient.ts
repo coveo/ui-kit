@@ -9,6 +9,7 @@ import {
     FacetSortMeta,
     FacetStateMetadata,
     PagerMetadata,
+    InterfaceChangeMetadata,
     QueryErrorMeta,
     SearchPageEvents,
 } from '../searchPage/searchPageEvents';
@@ -52,6 +53,10 @@ export class CoveoInsightClient {
 
     public logInterfaceLoad() {
         return this.logSearchEvent(SearchPageEvents.interfaceLoad);
+    }
+
+    public logInterfaceChange(metadata: InterfaceChangeMetadata) {
+        return this.logSearchEvent(SearchPageEvents.interfaceChange, metadata);
     }
 
     public logFetchMoreResults() {
