@@ -64,7 +64,7 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `InsightFacet` properties.
  * @returns An `InsightFacet` controller instance.
- * */
+ */
 export function buildInsightFacet(
   engine: InsightEngine,
   props: FacetProps<FacetOptions>
