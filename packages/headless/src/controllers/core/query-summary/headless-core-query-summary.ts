@@ -41,7 +41,7 @@ export interface CoreQuerySummaryState extends CoreStatusState {
   hasDuration: boolean;
 
   /**
-   * Determines if an empty query was executed.
+   * Determines if non-empty query has been executed.
    */
   hasQuery: boolean;
 
