@@ -12,7 +12,6 @@ import {
   numberOfValues,
   facetSearch,
   allowedValues,
-  hasBreadcrumbs,
 } from '../../core/facets/_common/facet-option-definitions';
 
 export interface FacetOptions {
@@ -82,12 +81,6 @@ export interface FacetOptions {
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
   allowedValues?: string[];
-
-  /**
-   * Specifies whether breadcrumbs appear for the facet
-   * @defaultValue `true`
-   */
-  hasBreadcrumbs?: boolean;
 }
 
 export interface FacetSearchOptions {
@@ -119,5 +112,4 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
   facetSearch,
   allowedValues,
-  hasBreadcrumbs,
 });
