@@ -39,6 +39,7 @@ export type Bindings = CommonBindings<
  */
 @Component({
   tag: 'atomic-svc-insight-interface',
+  styleUrl: 'atomic-insight-interface.pcss',
   shadow: true,
 })
 export class AtomicSvcInsightInterface
@@ -48,6 +49,10 @@ export class AtomicSvcInsightInterface
 
   @State() public error?: Error;
 
+  /**
+   * The service insight interface headless engine.
+   */
+  @Prop({mutable: true}) public widget = false;
   /**
    * The service insight interface headless engine.
    */
@@ -85,6 +90,10 @@ export class AtomicSvcInsightInterface
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
+  /**
+   * A list of non-default fields to include in the query results, separated by commas.
+   */
+  @Prop({reflect: true}) public fieldsToInclude = '';
 
   @Element() public host!: HTMLAtomicSvcInsightInterfaceElement;
 
@@ -100,12 +109,25 @@ export class AtomicSvcInsightInterface
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.updateFieldsToInclude();
+  }
+
+  private updateFieldsToInclude() {
+    if (this.fieldsToInclude) {
+      this.store.set(
+        'fieldsToInclude',
+        this.fieldsToInclude.split(',').map((field) => field.trim())
+      );
+    }
   }
 
   /**
    * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
   @Method() public initialize(options: InitializationOptions) {
+    if (this.widget) {
+      this.host.classList.add('widget');
+    }
     return this.internalInitialization(() => this.initEngine(options));
   }
 

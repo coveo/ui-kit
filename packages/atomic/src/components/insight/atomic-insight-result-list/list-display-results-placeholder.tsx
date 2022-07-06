@@ -1,8 +1,9 @@
+//TODO: change to insights bundle when done
 import {ResultsPerPageState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {ResultPlaceholderProps} from '../../common/result-list/result-list';
 
-export const GridDisplayResultsPlaceholder: FunctionalComponent<
+export const ListDisplayResultsPlaceholder: FunctionalComponent<
   ResultPlaceholderProps<ResultsPerPageState>
 > = (props) => {
   return Array.from(
@@ -11,8 +12,9 @@ export const GridDisplayResultsPlaceholder: FunctionalComponent<
       <atomic-result-placeholder
         key={`placeholder-${i}`}
         density={props.density}
-        display="grid"
+        display="list"
         imageSize={props.imageSize!}
+        isChild={props.isChild}
       ></atomic-result-placeholder>
     )
   );

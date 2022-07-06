@@ -49,7 +49,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: '../result-list-common.pcss',
+  styleUrl: '../../../common/result-list/result-list.pcss',
   shadow: true,
 })
 export class AtomicResultList implements BaseResultList, ResultListInfo {
