@@ -1,6 +1,6 @@
 import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
 import {
-  buildInsightNumericFilter,
+  buildNumericFilter,
   NumericFilter,
   NumericFilterInitialState,
   NumericFilterOptions,
@@ -26,7 +26,7 @@ describe('insight numeric filter', () => {
 
   function initNumericFilter() {
     engine = buildMockInsightEngine({state});
-    numericFacet = buildInsightNumericFilter(engine, {options, initialState});
+    numericFacet = buildNumericFilter(engine, {options, initialState});
   }
 
   beforeEach(() => {

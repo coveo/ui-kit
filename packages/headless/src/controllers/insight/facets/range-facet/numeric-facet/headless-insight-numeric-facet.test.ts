@@ -1,6 +1,6 @@
 import {
   NumericFacet,
-  buildInsightNumericFacet,
+  buildNumericFacet,
   NumericFacetOptions,
 } from './headless-insight-numeric-facet';
 import {
@@ -30,7 +30,7 @@ describe('insight numeric facet', () => {
 
   function initNumericFacet() {
     engine = buildMockInsightEngine({state});
-    numericFacet = buildInsightNumericFacet(engine, {options});
+    numericFacet = buildNumericFacet(engine, {options});
   }
 
   beforeEach(() => {

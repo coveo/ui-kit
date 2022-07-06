@@ -41,7 +41,7 @@ export type {
  * @param props - The configurable `NumericFilter` controller properties.
  * @returns A `NumericFilter` controller instance.
  */
-export function buildInsightNumericFilter(
+export function buildNumericFilter(
   engine: InsightEngine,
   props: NumericFilterProps
 ): NumericFilter {

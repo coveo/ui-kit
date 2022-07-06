@@ -47,7 +47,7 @@ export {buildNumericRange};
  * @param props - The configurable `NumericFacet` properties.
  * @returns A `NumericFacet` controller instance.
  */
-export function buildInsightNumericFacet(
+export function buildNumericFacet(
   engine: InsightEngine,
   props: NumericFacetProps
 ): NumericFacet {
@@ -67,10 +67,12 @@ export function buildInsightNumericFacet(
       dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
 
-    sortBy(criterion: RangeFacetSortCriterion) {
-      coreController.sortBy(criterion);
+    sortBy(sortCriterion: RangeFacetSortCriterion) {
+      coreController.sortBy(sortCriterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch(
+          logFacetUpdateSort({facetId: getFacetId(), sortCriterion})
+        )
       );
     },
 
