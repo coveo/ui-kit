@@ -64,8 +64,8 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `InsightFacet` properties.
  * @returns An `InsightFacet` controller instance.
- * */
-export function buildInsightFacet(
+ */
+export function buildFacet(
   engine: InsightEngine,
   props: FacetProps<FacetOptions>
 ): Facet {
@@ -134,10 +134,12 @@ export function buildInsightFacet(
       dispatch(executeSearch(logFacetClearAll(getFacetId())));
     },
 
-    sortBy(criterion: FacetSortCriterion) {
-      coreController.sortBy(criterion);
+    sortBy(sortCriterion: FacetSortCriterion) {
+      coreController.sortBy(sortCriterion);
       dispatch(
-        executeSearch(logFacetUpdateSort({facetId: getFacetId(), criterion}))
+        executeSearch(
+          logFacetUpdateSort({facetId: getFacetId(), sortCriterion})
+        )
       );
     },
 

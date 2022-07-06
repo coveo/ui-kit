@@ -50,6 +50,10 @@ module.exports = {
         'desktop-only': {min: '1024px'},
         'mobile-only': {raw: 'not all and (min-width: 1024px)'},
       },
+      gradientColorStops: (theme) => ({
+        ...theme("colors"),
+        'background-80': 'var(--atomic-background) 80%',
+      }),
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
       },

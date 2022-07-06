@@ -45,7 +45,7 @@ describe('insight analytics', () => {
     ).toBe(false);
   });
 
-  describe('search analytics provider', () => {
+  describe('insight analytics provider', () => {
     const getBaseState = (): StateNeededByInsightAnalyticsProvider => ({
       configuration: getConfigurationInitialState(),
     });
@@ -64,6 +64,13 @@ describe('insight analytics', () => {
       expect(new InsightAnalyticsProvider(state).getPipeline()).toBe('foo');
     });
 
+    it('should return "default" if the pipeline is not available', () => {
+      const state = getBaseState();
+      state.pipeline = undefined;
+      state.search = undefined;
+      expect(new InsightAnalyticsProvider(state).getPipeline()).toBe('default');
+    });
+
     it('should properly return facet state', () => {
       const state = getBaseState();
       state.facetSet = {the_facet: buildMockFacetRequest({field: 'foo'})};
@@ -75,6 +82,9 @@ describe('insight analytics', () => {
         }),
       ];
 
+      expect(new InsightAnalyticsProvider(state).getFacetState().length).toBe(
+        1
+      );
       expect(new InsightAnalyticsProvider(state).getFacetState()[0].field).toBe(
         'foo'
       );

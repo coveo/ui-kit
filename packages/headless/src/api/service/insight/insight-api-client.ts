@@ -46,6 +46,7 @@ export interface InsightAPIErrorStatusResponse {
   statusCode: number;
   message: string;
   type: string;
+  ignored?: boolean;
 }
 
 export interface InsightAPIErrorResponse {

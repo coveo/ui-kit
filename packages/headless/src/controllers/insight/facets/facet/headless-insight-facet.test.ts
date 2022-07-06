@@ -1,4 +1,4 @@
-import {buildInsightFacet, Facet, FacetOptions} from './headless-insight-facet';
+import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
 import {
   MockInsightEngine,
   buildMockInsightEngine,
@@ -32,7 +32,7 @@ describe('InsightFacet', () => {
 
   function initFacet() {
     engine = buildMockInsightEngine({state});
-    facet = buildInsightFacet(engine, {options});
+    facet = buildFacet(engine, {options});
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {

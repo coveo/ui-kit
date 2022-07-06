@@ -2,7 +2,6 @@ import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {
   buildInstantResults,
   buildResultList,
-  buildInteractiveResult,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -13,7 +12,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {cleanUpString} from '../../../../utils/string-utils';
+import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {
   BaseResultList,
   ResultListCommon,
@@ -28,8 +27,6 @@ import {Button} from '../../../common/button';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
- * @part instant-results-item - An instant result.
- * @part instant-result-show-all-button - The button to show all items for the current instant results search.
  */
 @Component({
   tag: 'atomic-search-box-instant-results',
@@ -89,6 +86,25 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     }
   }
 
+  private getLink(el: HTMLElement): HTMLElement | null {
+    return (
+      el
+        ?.querySelector('atomic-result')
+        ?.shadowRoot?.querySelector('atomic-result-link a') || null
+    );
+  }
+
+  private handleLinkClick(el: HTMLElement, hasModifier: boolean) {
+    const setTarget = (value: string) => el.setAttribute('target', value);
+    const initialTarget = el.getAttribute('target');
+
+    hasModifier && setTarget('_blank');
+    el.click();
+    hasModifier && setTarget(initialTarget || '');
+
+    return true;
+  }
+
   private renderItems(): SearchBoxSuggestionElement[] {
     if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
       return [];
@@ -98,11 +114,11 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       : this.results;
     const elements: SearchBoxSuggestionElement[] = results.map(
       (result: Result) => ({
-        key: `instant-result-${cleanUpString(result.uniqueId)}`,
+        key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
         part: 'instant-results-item',
         content: (
           <atomic-result
-            key={`instant-result-${cleanUpString(result.uniqueId)}`}
+            key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
             part="outline"
             result={result}
             engine={this.bindings.engine}
@@ -110,14 +126,16 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
             density={this.density}
             imageSize={this.imageSize}
             content={this.resultListCommon.getContentOfResultTemplate(result)}
+            stopPropagation={false}
           ></atomic-result>
         ),
-        onSelect: () => {
-          buildInteractiveResult(this.bindings.engine, {
-            options: {result},
-          }).select();
-          this.bindings.clearSuggestions();
-          window.location.href = result.clickUri;
+        onSelect: (e: MouseEvent) => {
+          const link = this.getLink(e.target as HTMLElement);
+
+          if (!link) {
+            return;
+          }
+          this.handleLinkClick(link, e.ctrlKey || e.metaKey);
         },
       })
     );

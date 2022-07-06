@@ -12,7 +12,7 @@ import {
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
 import {ResultRenderingFunction} from '../result-lists/result-list-common';
-import {createAtomicStore} from '../atomic-search-interface/store';
+import {AtomicStore} from '../atomic-search-interface/store';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -37,6 +37,11 @@ export class AtomicResult {
   @Element() host!: HTMLElement;
 
   /**
+   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   */
+  @Prop() stopPropagation?: boolean;
+
+  /**
    * The result item.
    */
   @Prop() result!: Result | FoldedResult;
@@ -50,7 +55,7 @@ export class AtomicResult {
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: ReturnType<typeof createAtomicStore>;
+  @Prop() store?: AtomicStore;
 
   /**
    * The result content to display.
@@ -105,6 +110,11 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveStopPropagation')
+  public resolveStopPropagation(event: CustomEvent) {
+    event.detail(this.stopPropagation);
   }
 
   @Listen('atomic/resolveResultDisplayConfig')

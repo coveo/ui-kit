@@ -7,7 +7,6 @@ import {
   Watch,
   Element,
   State,
-  getAssetPath,
 } from '@stencil/core';
 import {
   LogLevel,
@@ -23,26 +22,26 @@ import {
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless';
+import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import i18next, {i18n, TFunction} from 'i18next';
-import Backend, {BackendOptions} from 'i18next-http-backend';
-import {createAtomicStore} from './store';
+import {AtomicStore, createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 import {
   SafeStorage,
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
-import {loadGlobalScripts} from '../../../global/global';
-import {BaseAtomicInterface} from '../../common/interface/interface-common';
+import {
+  BaseAtomicInterface,
+  CommonAtomicInterfaceHelper,
+} from '../../common/interface/interface-common';
 import {CommonBindings} from '../../common/interface/bindings';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
 export type Bindings = CommonBindings<
   SearchEngine,
-  ReturnType<typeof createAtomicStore>,
+  AtomicStore,
   HTMLAtomicSearchInterfaceElement
 >;
 
@@ -61,14 +60,13 @@ export class AtomicSearchInterface
   private searchStatus!: SearchStatus;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
-  private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createAtomicStore();
-  private i18nPromise!: Promise<TFunction>;
+  private commonInterfaceHelper: CommonAtomicInterfaceHelper<SearchEngine>;
 
-  @Element() private host!: HTMLAtomicSearchInterfaceElement;
+  @Element() public host!: HTMLAtomicSearchInterfaceElement;
 
-  @State() private error?: Error;
+  @State() public error?: Error;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -145,37 +143,22 @@ export class AtomicSearchInterface
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
   public constructor() {
-    loadGlobalScripts('CoveoAtomic');
+    this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
+      this,
+      'CoveoAtomic'
+    );
   }
 
   public connectedCallback() {
-    this.i18nPromise = this.initI18n();
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
     this.updateFieldsToInclude();
   }
 
-  private updateFieldsToInclude() {
-    const fields = [...EcommerceDefaultFieldsToInclude];
-    if (this.fieldsToInclude) {
-      this.fieldsToInclude.split(',').map((field) => field.trim());
-    }
-    this.store.set('fieldsToInclude', fields);
-  }
-
-  private updateMobileBreakpoint() {
-    const breakpoint = this.host.querySelector(
-      'atomic-search-layout'
-    )?.mobileBreakpoint;
-    if (breakpoint) {
-      this.store.set('mobileBreakpoint', breakpoint);
-    }
-  }
-
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
-    if (!this.engineIsCreated(this.engine)) {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
 
@@ -192,21 +175,16 @@ export class AtomicSearchInterface
 
   @Watch('analytics')
   public toggleAnalytics() {
-    if (!this.engineIsCreated(this.engine)) {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
 
-    if (!this.analytics) {
-      this.engine.disableAnalytics();
-      return;
-    }
-
-    this.engine.enableAnalytics();
+    this.commonInterfaceHelper.onAnalyticsChange();
   }
 
   @Watch('language')
   public updateLanguage() {
-    if (!this.engineIsCreated(this.engine)) {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
 
@@ -218,22 +196,7 @@ export class AtomicSearchInterface
         locale: this.language,
       })
     );
-
-    loadDayjsLocale(this.language);
-    new Backend(this.i18n.services, this.i18nBackendOptions).read(
-      this.language,
-      'translation',
-      (_, data) => {
-        this.i18n.addResourceBundle(
-          this.language,
-          'translation',
-          data,
-          true,
-          false
-        );
-        this.i18n.changeLanguage(this.language);
-      }
-    );
+    this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('iconAssetsPath')
@@ -249,15 +212,7 @@ export class AtomicSearchInterface
 
   @Listen('atomic/initializeComponent')
   public handleInitialization(event: InitializeEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (this.engine) {
-      event.detail(this.bindings);
-      return;
-    }
-
-    this.hangingComponentsInitialization.push(event);
+    this.commonInterfaceHelper.onComponentInitializing(event);
   }
 
   @Listen('atomic/scrollToTop')
@@ -293,7 +248,7 @@ export class AtomicSearchInterface
    * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
    */
   @Method() public async executeFirstSearch() {
-    if (!this.engineIsCreated(this.engine)) {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
       return;
     }
 
@@ -324,16 +279,43 @@ export class AtomicSearchInterface
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
-  private engineIsCreated(engine?: SearchEngine): engine is SearchEngine {
-    if (!engine) {
-      console.error(
-        'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.',
-        this.host
-      );
-      return false;
-    }
+  public get bindings(): Bindings {
+    return {
+      engine: this.engine!,
+      i18n: this.i18n,
+      store: this.store,
+      interfaceElement: this.host,
+    };
+  }
 
-    return true;
+  public render() {
+    return [
+      this.engine && (
+        <atomic-relevance-inspector
+          bindings={this.bindings}
+        ></atomic-relevance-inspector>
+      ),
+      <slot></slot>,
+    ];
+  }
+
+  private updateFieldsToInclude() {
+    const fields = [...EcommerceDefaultFieldsToInclude];
+    if (this.fieldsToInclude) {
+      fields.push(
+        ...this.fieldsToInclude.split(',').map((field) => field.trim())
+      );
+    }
+    this.store.set('fieldsToInclude', fields);
+  }
+
+  private updateMobileBreakpoint() {
+    const breakpoint = this.host.querySelector(
+      'atomic-search-layout'
+    )?.mobileBreakpoint;
+    if (breakpoint) {
+      this.store.set('mobileBreakpoint', breakpoint);
+    }
   }
 
   private initEngine(options: InitializationOptions) {
@@ -376,30 +358,6 @@ export class AtomicSearchInterface
     }
 
     return searchConfigFromProps;
-  }
-
-  private initI18n() {
-    return this.i18n.use(Backend).init({
-      debug: this.logLevel === 'debug',
-      lng: this.language,
-      fallbackLng: 'en',
-      backend: this.i18nBackendOptions,
-    });
-  }
-
-  private get bindings(): Bindings {
-    return {
-      engine: this.engine!,
-      i18n: this.i18n,
-      store: this.store,
-      interfaceElement: this.host,
-    };
-  }
-
-  private initComponents() {
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.bindings)
-    );
   }
 
   private get fragment() {
@@ -465,49 +423,11 @@ export class AtomicSearchInterface
     this.urlManager.synchronize(this.fragment);
   };
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
-
-    return [
-      this.engine && (
-        <atomic-relevance-inspector
-          bindings={this.bindings}
-        ></atomic-relevance-inspector>
-      ),
-      <slot></slot>,
-    ];
-  }
-
-  private get i18nBackendOptions(): BackendOptions {
-    return {
-      loadPath: `${getAssetPath(this.languageAssetsPath)}/{{lng}}.json`,
-    };
-  }
-
   private async internalInitialization(initEngine: () => void) {
-    if (this.engine) {
-      this.engine.logger.warn(
-        'The atomic-search-interface component "initialize" has already been called.',
-        this.host
-      );
-      return;
-    }
-    this.updateIconAssetsPath();
-    initEngine();
-    loadDayjsLocale(this.language);
-    await this.i18nPromise;
-    this.initComponents();
+    await this.commonInterfaceHelper.onInitialization(initEngine);
     this.initSearchStatus();
     this.initUrlManager();
     this.initAriaLive();
-
     this.initialized = true;
   }
 }

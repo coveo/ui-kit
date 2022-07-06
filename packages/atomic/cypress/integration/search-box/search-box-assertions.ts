@@ -14,7 +14,9 @@ export function assertHasText(text: string) {
 
 export function assertHasSuggestionsCount(count: number) {
   it(`should display ${count} suggestions`, () => {
-    SearchBoxSelectors.querySuggestions().should('have.length', count);
+    SearchBoxSelectors.querySuggestions()
+      .filter(':visible')
+      .should('have.length', count);
   });
 }
 

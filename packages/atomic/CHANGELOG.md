@@ -3,6 +3,191 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.80.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.80.0...@coveo/atomic@1.80.1) (2022-07-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.80.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.79.1...@coveo/atomic@1.80.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
+## [1.79.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.79.0...@coveo/atomic@1.79.1) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+# [1.79.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.7...@coveo/atomic@1.79.0) (2022-07-05)
+
+
+### Features
+
+* **atomic:** initial work on atomic-insight-interface  ([#2183](https://github.com/coveo/ui-kit/issues/2183)) ([6b45ae9](https://github.com/coveo/ui-kit/commit/6b45ae9aaa06aca7abc66d90082ed0f533be5454))
+
+
+
+
+
+## [1.78.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.6...@coveo/atomic@1.78.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.78.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.5...@coveo/atomic@1.78.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+* **atomic:** amoreau was being selected & searched in tests ([#2184](https://github.com/coveo/ui-kit/issues/2184)) ([c9be5be](https://github.com/coveo/ui-kit/commit/c9be5be28ca3753e8b4c662a3977fb721a3fb636))
+
+
+
+
+
+## [1.78.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.4...@coveo/atomic@1.78.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.78.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.3...@coveo/atomic@1.78.4) (2022-06-30)
+
+
+### Bug Fixes
+
+* **atomic:** dedup recent queries keys ([#2158](https://github.com/coveo/ui-kit/issues/2158)) ([b354204](https://github.com/coveo/ui-kit/commit/b354204c27679684e9267192ec01feb4350c5e7e))
+
+
+
+
+
+## [1.78.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.2...@coveo/atomic@1.78.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.78.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.1...@coveo/atomic@1.78.2) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.78.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.78.0...@coveo/atomic@1.78.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.78.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.77.2...@coveo/atomic@1.78.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
+## [1.77.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.77.1...@coveo/atomic@1.77.2) (2022-06-28)
+
+
+### Bug Fixes
+
+* **atomic:** encode colon for i18n namespace feature ([#2125](https://github.com/coveo/ui-kit/issues/2125)) ([2ac53be](https://github.com/coveo/ui-kit/commit/2ac53bedffc329c045ebb4d714050f7136a0e22e))
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
+## [1.77.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.77.0...@coveo/atomic@1.77.1) (2022-06-27)
+
+
+### Bug Fixes
+
+* **atomic:** improved aria label for rating facet values ([#2166](https://github.com/coveo/ui-kit/issues/2166)) ([6b2c386](https://github.com/coveo/ui-kit/commit/6b2c386183c597a95150775e231daae8f5595550))
+
+
+
+
+
+# [1.77.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.76.2...@coveo/atomic@1.77.0) (2022-06-27)
+
+
+### Bug Fixes
+
+* **atomic:** improved focus style of outline buttons ([#2153](https://github.com/coveo/ui-kit/issues/2153)) ([21d249c](https://github.com/coveo/ui-kit/commit/21d249c2d0866b8604eb4381e0766b44275d4489))
+* **atomic:** improved search box aria label ([#2164](https://github.com/coveo/ui-kit/issues/2164)) ([64a3d0f](https://github.com/coveo/ui-kit/commit/64a3d0fc6573aaf63516c27aa47b44ced156fe89))
+* **atomic:** missing zh key ([#2154](https://github.com/coveo/ui-kit/issues/2154)) ([81438b9](https://github.com/coveo/ui-kit/commit/81438b9c723252d1960e7695c4b3d4d41e8010ca))
+* **atomic:** moved numeric facet input placeholders above their inputs ([#2155](https://github.com/coveo/ui-kit/issues/2155)) ([017fd23](https://github.com/coveo/ui-kit/commit/017fd23d4d155b5e88a98d17db5e58571b953a6d))
+
+
+### Features
+
+* **atomic:** additional control over outgoing i18n locales requests ([#2145](https://github.com/coveo/ui-kit/issues/2145)) ([b180cca](https://github.com/coveo/ui-kit/commit/b180cca801262d7589b41e32d814a9a4431f2da5))
+
+
+
+
+
+## [1.76.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.76.1...@coveo/atomic@1.76.2) (2022-06-24)
+
+
+### Bug Fixes
+
+* **atomic:** fix arrow navigation on input ([#2152](https://github.com/coveo/ui-kit/issues/2152)) ([54efce7](https://github.com/coveo/ui-kit/commit/54efce7ff2a6f672fcfb437908087ace3489b3d1))
+* **atomic:** improve click interaction in instant result ([#2129](https://github.com/coveo/ui-kit/issues/2129)) ([f7df573](https://github.com/coveo/ui-kit/commit/f7df57332f90941aee2be85224c6d1dd79c01a70))
+
+
+
+
+
+## [1.76.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.76.0...@coveo/atomic@1.76.1) (2022-06-23)
+
+
+### Bug Fixes
+
+* **atomic:** actually include fieldsToInclude in search from interface ([#2149](https://github.com/coveo/ui-kit/issues/2149)) ([1675f33](https://github.com/coveo/ui-kit/commit/1675f33bb35b8ba56f433a23ccb6784446ab1eec))
+* **atomic:** changed focus style of primary buttons ([#2143](https://github.com/coveo/ui-kit/issues/2143)) ([60bdf73](https://github.com/coveo/ui-kit/commit/60bdf73ceb2682102fb9e39f192b9fade838523e))
+* **atomic:** improved aria labels in facets ([#2144](https://github.com/coveo/ui-kit/issues/2144)) ([9f2a51b](https://github.com/coveo/ui-kit/commit/9f2a51baf725ccaf288e8b912af2d4aa480878ea))
+
+
+
+
+
 # [1.76.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.75.6...@coveo/atomic@1.76.0) (2022-06-22)
 
 

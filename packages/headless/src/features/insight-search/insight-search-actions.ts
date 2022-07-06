@@ -11,6 +11,7 @@ import {
 } from '../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
 import {
+  CategoryFacetSection,
   ConfigurationSection,
   FacetSection,
   InsightCaseContextSection,
@@ -22,6 +23,7 @@ import {
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction} from '../analytics/analytics-utils';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
@@ -47,6 +49,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       QuerySection &
       FacetSection &
       NumericFacetSection &
+      CategoryFacetSection &
       PaginationSection
   >;
 
@@ -202,16 +205,14 @@ export const fetchQuerySuggestions = createAsyncThunk<
 const buildInsightSearchRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
+  const facets = getAllFacets(state);
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
     insightId: state.insightConfiguration.insightId,
     q: state.query?.q,
-    facets: getFacetRequests({
-      ...state.facetSet,
-      ...state.numericFacetSet,
-    }),
+    ...(facets.length && {facets}),
     caseContext: state.insightCaseContext?.caseContext,
     ...(state.pagination && {
       firstResult: state.pagination.firstResult,
@@ -240,6 +241,19 @@ const buildInsightFetchFacetValuesRequest = (
   };
 };
 
+function getAllFacets(state: StateNeededByExecuteSearch) {
+  return [
+    ...getFacetRequests({
+      ...state.facetSet,
+      ...state.numericFacetSet,
+    }),
+    ...getCategoryFacetRequests(state.categoryFacetSet),
+  ];
+}
+
+function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
+  return Object.values(state || {}).map((slice) => slice!.request);
+}
 function getFacetRequests<T extends AnyFacetRequest>(
   requests: Record<string, T> = {}
 ) {
