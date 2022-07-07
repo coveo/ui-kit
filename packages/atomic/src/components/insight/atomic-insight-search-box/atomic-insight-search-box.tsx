@@ -9,7 +9,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-insight-interface/atomic-insight-interface';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {SearchInput} from '../../common/search-box/SearchInput';
 import {SearchBoxWrapper} from '../../common/search-box/SearchBoxWrapper';
 import {SubmitButton} from '../../common/search-box/SubmitButton';
@@ -24,7 +24,7 @@ import {SubmitButton} from '../../common/search-box/SubmitButton';
   shadow: true,
 })
 export class AtomicInsightSearchBox {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: InsightBindings;
   @State() public error!: Error;
 
   private id!: string;

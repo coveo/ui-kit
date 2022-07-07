@@ -12,11 +12,11 @@ import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } fro
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
 import { InsightEngine } from "@coveo/headless/insight";
 import { i18n } from "i18next";
-import { InitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
+import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
-import { InitializationOptions as InitializationOptions1 } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
@@ -359,7 +359,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
-        "initialize": (options: InitializationOptions) => Promise<void>;
+        "initialize": (options: InsightInitializationOptions) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless insight engine.
          */

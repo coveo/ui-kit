@@ -25,7 +25,7 @@ import {AtomicInsightStore, createAtomicInsightStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
-export type InitializationOptions = InsightEngineConfiguration;
+export type InsightInitializationOptions = InsightEngineConfiguration;
 export type InsightBindings = CommonBindings<
   InsightEngine,
   AtomicInsightStore,
@@ -105,7 +105,7 @@ export class AtomicInsightInterface
   /**
    * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
-  @Method() public initialize(options: InitializationOptions) {
+  @Method() public initialize(options: InsightInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
@@ -168,7 +168,7 @@ export class AtomicInsightInterface
     };
   }
 
-  private initEngine(options: InitializationOptions) {
+  private initEngine(options: InsightInitializationOptions) {
     const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
       this.engine = buildInsightEngine({
