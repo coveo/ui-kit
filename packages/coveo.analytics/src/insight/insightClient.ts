@@ -12,6 +12,7 @@ import {
     InterfaceChangeMetadata,
     QueryErrorMeta,
     SearchPageEvents,
+    ResultsSortMetadata,
 } from '../searchPage/searchPageEvents';
 
 export interface InsightClientProvider {
@@ -117,6 +118,10 @@ export class CoveoInsightClient {
 
     public logPagerPrevious(meta: PagerMetadata) {
         return this.logCustomEvent(SearchPageEvents.pagerPrevious, meta);
+    }
+
+    public logResultsSort(metadata: ResultsSortMetadata) {
+        return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {

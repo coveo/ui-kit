@@ -215,6 +215,11 @@ describe('InsightClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, meta);
     });
 
+    it('should send proper payload for #resultsSort', async () => {
+        await client.logResultsSort({resultsSortBy: 'date ascending'});
+        expectMatchPayload(SearchPageEvents.resultsSort, {resultsSortBy: 'date ascending'});
+    });
+
     it('should enable analytics tracking by default', () => {
         const c = new CoveoInsightClient({}, provider);
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
