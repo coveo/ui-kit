@@ -19,7 +19,7 @@ async function checkoutLatestMaster() {
 async function bumpVersionAndPush() {
   try {
     await exec(
-      `npx lerna version --conventional-commits --conventional-graduate --no-private --yes --exact`
+      `npx --no-install lerna version --conventional-commits --conventional-graduate --no-private --yes --exact`
     );
   } catch (e) {
     console.error(
