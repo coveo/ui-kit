@@ -18,7 +18,7 @@ import MagnifyingGlass from '../../../images/magnifying-glass.svg';
 import escape from 'escape-html';
 import {Button} from '../../common/button';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -35,7 +35,7 @@ import {SearchBindings} from '../atomic-search-interface/atomic-search-interface
   shadow: true,
 })
 export class AtomicNoResults {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
   public history!: HistoryManager;
   public querySummary!: QuerySummary;

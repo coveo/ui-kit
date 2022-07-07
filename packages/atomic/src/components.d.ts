@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
-import { SearchBindings } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
@@ -16,7 +16,7 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
-import { SearchInitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
@@ -199,7 +199,7 @@ export namespace Components {
         "withSearch": boolean;
     }
     interface AtomicFacetDateInput {
-        "bindings": SearchBindings;
+        "bindings": Bindings;
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
@@ -211,7 +211,7 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     interface AtomicFacetNumberInput {
-        "bindings": SearchBindings;
+        "bindings": Bindings;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -660,7 +660,7 @@ export namespace Components {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
-        "bindings": SearchBindings;
+        "bindings": Bindings;
     }
     interface AtomicResult {
         /**
@@ -1028,7 +1028,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
-        "initialize": (options: SearchInitializationOptions) => Promise<void>;
+        "initialize": (options: InitializationOptions) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
          */
@@ -2041,7 +2041,7 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     interface AtomicFacetDateInput {
-        "bindings": SearchBindings;
+        "bindings": Bindings;
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
@@ -2054,7 +2054,7 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     interface AtomicFacetNumberInput {
-        "bindings": SearchBindings;
+        "bindings": Bindings;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -2484,7 +2484,7 @@ declare namespace LocalJSX {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
-        "bindings": SearchBindings;
+        "bindings": Bindings;
     }
     interface AtomicResult {
         /**

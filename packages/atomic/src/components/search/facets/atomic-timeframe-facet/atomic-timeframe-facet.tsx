@@ -45,7 +45,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {randomID} from '../../../../utils/utils';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -79,7 +79,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
 export class AtomicTimeframeFacet
   implements InitializableComponent, BaseFacet<DateFacet>
 {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   public facetForDateRange?: DateFacet;
   public facetForDatePicker?: DateFacet;
 

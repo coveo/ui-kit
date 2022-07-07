@@ -3,14 +3,14 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import {TestUtils} from '@coveo/headless';
-import {SearchBindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildStringTemplateFromResult} from './result-utils';
 
 describe('buildStringTemplateFromResult', () => {
   const engine = buildSearchEngine({
     configuration: getSampleSearchEngineConfiguration(),
   });
-  const bindings = {engine} as SearchBindings;
+  const bindings = {engine} as Bindings;
   const result = TestUtils.buildMockResult({
     title: 'foo',
     uri: 'http://uri.foo.com',

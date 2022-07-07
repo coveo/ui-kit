@@ -36,10 +36,10 @@ import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SubmitButton} from '../../common/search-box/submit-button';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
@@ -68,7 +68,7 @@ import {SubmitButton} from '../../common/search-box/submit-button';
   shadow: true,
 })
 export class AtomicSearchBox {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;

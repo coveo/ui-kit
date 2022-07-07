@@ -21,7 +21,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 import {Hidden} from '../../../common/hidden';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * @internal
@@ -36,7 +36,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
 export class AtomicSegmentedFacet
   implements InitializableComponent, BaseFacet<Facet>
 {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
   @State()
   public searchStatusState!: SearchStatusState;

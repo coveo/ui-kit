@@ -10,7 +10,7 @@ import {
   BindStateToController,
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
@@ -29,7 +29,7 @@ export class AtomicRefineToggle implements InitializableComponent {
   private modalRef?: HTMLAtomicRefineModalElement;
   private buttonRef?: HTMLButtonElement;
 
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
   @BindStateToController('searchStatus')
   @State()

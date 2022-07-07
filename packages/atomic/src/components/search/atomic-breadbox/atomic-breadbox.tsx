@@ -20,7 +20,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 interface Breadcrumb {
   facetId: string;
@@ -51,7 +51,7 @@ const ELLIPSIS = '...';
   shadow: true,
 })
 export class AtomicBreadbox implements InitializableComponent {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
   private resizeObserver?: ResizeObserver;
   private showMore!: HTMLButtonElement;

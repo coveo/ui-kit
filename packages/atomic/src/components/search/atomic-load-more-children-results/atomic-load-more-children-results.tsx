@@ -10,7 +10,7 @@ import {
   ResultDisplayConfigContext,
 } from '../result-template-components/result-template-decorators';
 import {FoldedResultListStateContext} from '../result-lists/result-list-decorators';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-load-more-children-results` component allows to load the full collection for a folded result.
@@ -22,7 +22,7 @@ import {SearchBindings} from '../atomic-search-interface/atomic-search-interface
   shadow: true,
 })
 export class AtomicLoadMoreChildrenResults {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   @ResultContext() public result!: Result;
   @State() public error!: Error;
   @Element() host!: HTMLElement;

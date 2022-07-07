@@ -13,7 +13,7 @@ import {buildSearchBox, Controller, TestUtils} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {
   AtomicSearchInterface,
-  SearchBindings,
+  Bindings,
 } from '../components/search/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
 import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
@@ -24,8 +24,7 @@ describe('InitializeBindings decorator', () => {
   it(`when using the decorator with a property other than bindings
   should log an error`, () => {
     console.error = jest.fn();
-    const component: InitializableComponent<SearchBindings> =
-      new AtomicSearchBox();
+    const component: InitializableComponent<Bindings> = new AtomicSearchBox();
     InitializeBindings()(component, 'anything');
 
     expect(console.error).toHaveBeenCalledWith(
@@ -73,7 +72,7 @@ describe('InitializeBindings decorator', () => {
   });
 
   describe('render method override', () => {
-    let component: InitializableComponent<SearchBindings>;
+    let component: InitializableComponent<Bindings>;
 
     beforeEach(() => {
       component = new AtomicSearchBox();
@@ -116,7 +115,7 @@ describe('InitializeBindings decorator', () => {
 });
 
 describe('BindStateToController decorator', () => {
-  let component: InitializableComponent<SearchBindings>;
+  let component: InitializableComponent<Bindings>;
 
   beforeEach(() => {
     console.error = jest.fn();
