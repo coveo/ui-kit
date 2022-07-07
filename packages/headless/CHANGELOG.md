@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.79.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.78.0...@coveo/headless@1.79.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add insight CategoryFacet controller ([#2150](https://github.com/coveo/ui-kit/issues/2150)) ([eb677a7](https://github.com/coveo/ui-kit/commit/eb677a7fed78f5cc707f93e15f863d2a3a127321))
+* **headless:** Add Insight QuerySummary ([#2181](https://github.com/coveo/ui-kit/issues/2181)) ([dcb2035](https://github.com/coveo/ui-kit/commit/dcb2035eee55adf96d5c6d80f6a9875672a812c6))
+
+
+
+
+
 # [1.78.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.9...@coveo/headless@1.78.0) (2022-07-06)
 
 
