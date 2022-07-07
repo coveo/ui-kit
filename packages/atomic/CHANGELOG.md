@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.80.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.80.0...@coveo/atomic@1.80.1) (2022-07-06)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.80.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.79.1...@coveo/atomic@1.80.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
 ## [1.79.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.79.0...@coveo/atomic@1.79.1) (2022-07-05)
 
 
