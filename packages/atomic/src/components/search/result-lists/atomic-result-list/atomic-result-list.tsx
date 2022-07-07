@@ -13,11 +13,6 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {
-  ResultDisplayLayout,
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-} from '../../atomic-result/atomic-result-display-options';
-import {
   BaseResultList,
   ResultListCommon,
   ResultRenderingFunction,
@@ -29,6 +24,11 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {ResultListInfo} from '../../atomic-search-interface/store';
 import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../../common/layout/display-options';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.

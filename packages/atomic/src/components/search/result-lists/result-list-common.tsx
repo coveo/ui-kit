@@ -12,12 +12,6 @@ import {
   ResultListProps,
 } from '@coveo/headless';
 import {InitializableComponent} from '../../../utils/initialization-utils';
-import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-  getResultDisplayClasses,
-} from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
 import {TableDisplayResultsPlaceholder} from './table-display-results-placeholder';
 import {TableDisplayResults} from './table-display-results';
@@ -36,6 +30,12 @@ import {
   ResultPlaceholderProps,
 } from '../../common/result-list/result-list';
 import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+  getResultDisplayClasses,
+} from '../../common/layout/display-options';
 
 export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;

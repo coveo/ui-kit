@@ -2,7 +2,7 @@ import {Result, FoldedResultListState} from '@coveo/headless';
 import {Component, Element, h, Prop, State} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {InitializeBindings} from '../../../utils/initialization-utils';
-import {getResultDisplayClasses} from '../atomic-result/atomic-result-display-options';
+import {getResultDisplayClasses} from '../../common/layout/display-options';
 import {Button} from '../../common/button';
 import {
   DisplayConfig,
@@ -75,6 +75,7 @@ export class AtomicLoadMoreChildrenResults {
     }
     return '';
   }
+
   private getWrapperClass() {
     return getResultDisplayClasses(
       'list',

@@ -2,7 +2,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-} from '../../search/atomic-result/atomic-result-display-options';
+} from '../../common/layout/display-options';
 
 export interface DisplayOptions {
   density: ResultDisplayDensity;

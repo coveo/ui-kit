@@ -8,7 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result as Result1, ResultTemplate as ResultTemplate1, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { SearchBindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
 import { InsightEngine, LogLevel, Result, ResultTemplate, ResultTemplateCondition as ResultTemplateCondition1 } from "@coveo/headless/insight";
 import { i18n } from "i18next";

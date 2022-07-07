@@ -17,7 +17,7 @@ import {
   getResultDisplayClasses,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../../search/atomic-result/atomic-result-display-options';
+} from '../../common/layout/display-options';
 
 export type TemplateContent = DocumentFragment;
 

@@ -1,0 +1,107 @@
+import {containsSections, resultSectionTags} from './sections';
+
+export type ResultDisplayLayout = 'list' | 'grid' | 'table';
+export type ResultDisplayDensity = 'comfortable' | 'normal' | 'compact';
+export type ResultDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
+
+function getDisplayClass(display: ResultDisplayLayout) {
+  switch (display) {
+    case 'grid':
+      return 'display-grid';
+    case 'list':
+    default:
+      return 'display-list';
+    case 'table':
+      return 'display-table';
+  }
+}
+
+function getDensityClass(density: ResultDisplayDensity) {
+  switch (density) {
+    case 'comfortable':
+      return 'density-comfortable';
+    case 'normal':
+    default:
+      return 'density-normal';
+    case 'compact':
+      return 'density-compact';
+  }
+}
+
+function getImageClass(image: ResultDisplayImageSize) {
+  switch (image) {
+    case 'large':
+      return 'image-large';
+    case 'small':
+      return 'image-small';
+    case 'icon':
+    default:
+      return 'image-icon';
+    case 'none':
+      return 'image-none';
+  }
+}
+
+export function getResultDisplayClasses(
+  display: ResultDisplayLayout,
+  density: ResultDisplayDensity,
+  image: ResultDisplayImageSize
+) {
+  const classes = [
+    getDisplayClass(display),
+    getDensityClass(density),
+    getImageClass(image),
+  ];
+  return classes;
+}
+
+export class Layout {
+  private children: HTMLCollection;
+  private density: ResultDisplayDensity;
+  private imageSize: ResultDisplayImageSize;
+  private display: ResultDisplayLayout;
+
+  constructor(
+    children: HTMLCollection,
+    display: ResultDisplayLayout,
+    density: ResultDisplayDensity,
+    imageSize: ResultDisplayImageSize
+  ) {
+    this.children = children;
+    this.display = display;
+    this.density = density;
+    this.imageSize = imageSize;
+  }
+
+  private getImageSizeFromSections() {
+    const imageSize = this.getSection(
+      'atomic-result-section-visual'
+    )?.getAttribute('image-size');
+    if (!imageSize) {
+      return undefined;
+    }
+    return imageSize as ResultDisplayImageSize;
+  }
+
+  private getSection(section: typeof resultSectionTags[number]) {
+    return Array.from(this.children).find(
+      (element) => element.tagName.toLowerCase() === section
+    );
+  }
+
+  public getClasses(HTMLContent?: string) {
+    const classes = getResultDisplayClasses(
+      this.display,
+      this.density,
+      this.getImageSizeFromSections() ?? this.imageSize
+    );
+    if (
+      HTMLContent
+        ? containsSections(HTMLContent)
+        : containsSections(this.children)
+    ) {
+      classes.push('with-sections');
+    }
+    return classes;
+  }
+}

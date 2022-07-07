@@ -3,24 +3,14 @@ import {InsightEngine, Result} from '@coveo/headless/insight';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {createAtomicInsightStore} from '../atomic-insight-interface/store';
 import {
-  getResultDisplayClasses,
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-} from '../../search/atomic-result/atomic-result-display-options';
-import {
   DisplayConfig,
   ResultContextEvent,
 } from '../../search/result-template-components/result-template-decorators';
-const resultSectionTags = [
-  'atomic-result-section-visual',
-  'atomic-result-section-badges',
-  'atomic-result-section-actions',
-  'atomic-result-section-title',
-  'atomic-result-section-title-metadata',
-  'atomic-result-section-emphasized',
-  'atomic-result-section-excerpt',
-  'atomic-result-section-bottom-metadata',
-] as const;
+import {
+  Layout,
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+} from '../../common/layout/display-options';
 
 /**
  * The `atomic-insight-result` component is used internally by the `atomic-insight-result-list` component.
@@ -31,6 +21,7 @@ const resultSectionTags = [
   shadow: true,
 })
 export class AtomicInsightResult {
+  private layout!: Layout;
   @Element() host!: HTMLElement;
 
   /**
@@ -103,43 +94,13 @@ export class AtomicInsightResult {
     });
   }
 
-  private containsSections() {
-    return Array.from(this.content!.children).some((child) =>
-      (resultSectionTags as readonly string[]).includes(
-        child.tagName.toLowerCase()
-      )
-    );
-  }
-
-  private getSection(section: typeof resultSectionTags[number]) {
-    return Array.from(this.content!.children).find(
-      (element) => element.tagName.toLowerCase() === section
-    );
-  }
-
-  private getImageSizeFromSections() {
-    const imageSize = this.getSection(
-      'atomic-result-section-visual'
-    )?.getAttribute('image-size');
-    if (!imageSize) {
-      return undefined;
-    }
-    return imageSize as ResultDisplayImageSize;
-  }
-
-  private getClassesFromHTMLContent() {
-    const classes = getResultDisplayClasses(
+  public connectedCallback() {
+    this.layout = new Layout(
+      this.content!.children,
       'list',
       this.density,
-      this.getImageSizeFromSections() ?? this.imageSize
+      this.imageSize
     );
-    if (this.containsSections()) {
-      classes.push('with-sections');
-    }
-    if (this.classes) {
-      classes.push(this.classes);
-    }
-    return classes;
   }
 
   private getContentHTML() {
@@ -152,7 +113,10 @@ export class AtomicInsightResult {
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
-        class={`result-root ${this.getClassesFromHTMLContent().join(' ')}`}
+        class={`result-root ${this.layout
+          .getClasses()
+          .concat(this.classes)
+          .join(' ')}`}
         innerHTML={this.getContentHTML()}
       ></div>
     );

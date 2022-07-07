@@ -1,11 +1,5 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
 import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
-import {
-  ResultDisplayLayout,
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  getResultDisplayClasses,
-} from './atomic-result-display-options';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
@@ -13,17 +7,12 @@ import {
 } from '../result-template-components/result-template-decorators';
 import {ResultRenderingFunction} from '../result-lists/result-list-common';
 import {AtomicStore} from '../atomic-search-interface/store';
-
-const resultSectionTags = [
-  'atomic-result-section-visual',
-  'atomic-result-section-badges',
-  'atomic-result-section-actions',
-  'atomic-result-section-title',
-  'atomic-result-section-title-metadata',
-  'atomic-result-section-emphasized',
-  'atomic-result-section-excerpt',
-  'atomic-result-section-bottom-metadata',
-] as const;
+import {
+  Layout,
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../common/layout/display-options';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -34,6 +23,8 @@ const resultSectionTags = [
   shadow: true,
 })
 export class AtomicResult {
+  private layout!: Layout;
+
   @Element() host!: HTMLElement;
 
   /**
@@ -127,66 +118,17 @@ export class AtomicResult {
     });
   }
 
+  public connectedCallback() {
+    this.layout = new Layout(
+      this.content!.children,
+      this.display,
+      this.density,
+      this.imageSize ?? this.image
+    );
+  }
+
   private get isCustomRenderFunctionMode() {
     return this.renderingFunction !== undefined;
-  }
-
-  private containsSections() {
-    return Array.from(this.content!.children).some((child) =>
-      (resultSectionTags as readonly string[]).includes(
-        child.tagName.toLowerCase()
-      )
-    );
-  }
-
-  private getSection(section: typeof resultSectionTags[number]) {
-    return Array.from(this.content!.children).find(
-      (element) => element.tagName.toLowerCase() === section
-    );
-  }
-
-  private getImageSizeFromSections() {
-    const imageSize = this.getSection(
-      'atomic-result-section-visual'
-    )?.getAttribute('image-size');
-    if (!imageSize) {
-      return undefined;
-    }
-    return imageSize as ResultDisplayImageSize;
-  }
-
-  private getClassesFromHTMLContent() {
-    const classes = getResultDisplayClasses(
-      this.display,
-      this.density,
-      this.getImageSizeFromSections() ?? this.imageSize ?? this.image
-    );
-    if (this.containsSections()) {
-      classes.push('with-sections');
-    }
-    if (this.classes) {
-      classes.push(this.classes);
-    }
-    return classes;
-  }
-
-  private getClassesFromStringContent(content: string) {
-    const classes = getResultDisplayClasses(
-      this.display,
-      this.density,
-      this.imageSize || this.image
-    );
-    if (
-      resultSectionTags.some((resultSectionTag) =>
-        content.includes(resultSectionTag)
-      )
-    ) {
-      classes.push('with-sections');
-    }
-    if (this.classes) {
-      classes.push(this.classes);
-    }
-    return classes;
   }
 
   private getContentHTML() {
@@ -215,7 +157,10 @@ export class AtomicResult {
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
-        class={`result-root ${this.getClassesFromHTMLContent().join(' ')}`}
+        class={`result-root ${this.layout
+          .getClasses()
+          .concat(this.classes)
+          .join(' ')}`}
         innerHTML={this.getContentHTML()}
       ></div>
     );
@@ -235,9 +180,10 @@ export class AtomicResult {
         this.resultRootRef!
       );
 
-      this.resultRootRef!.className += ` ${this.getClassesFromStringContent(
-        customRenderOutputAsString
-      ).join(' ')}`;
+      this.resultRootRef!.className += ` ${this.layout
+        .getClasses(customRenderOutputAsString)
+        .concat(this.classes)
+        .join(' ')}`;
 
       this.executedRenderingFunctionOnce = true;
     }

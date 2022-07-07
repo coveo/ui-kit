@@ -17,7 +17,7 @@ import {
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../../atomic-result/atomic-result-display-options';
+} from '../../../common/layout/display-options';
 import {
   BaseResultList,
   ResultListCommon,
