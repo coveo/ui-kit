@@ -40,6 +40,7 @@ import {SearchBindings} from '../atomic-search-interface/atomic-search-interface
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SubmitButton} from '../../common/search-box/submit-button';
+
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *

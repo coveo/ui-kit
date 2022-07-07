@@ -4,7 +4,7 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "types": [],
-    "paths": {"@angular/*": ["./node_modules/@angular/*"]},
+    "paths": {"@angular/*": ["../../../node_modules/@angular/*"]},
     "preserveSymlinks": true
   },
   "files": ["src/main.ts", "src/polyfills.ts"],

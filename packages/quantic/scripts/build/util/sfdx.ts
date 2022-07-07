@@ -19,16 +19,18 @@ export interface SfdxResponse {
 export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     exec(
-      `"${path.resolve('node_modules/.bin/sfdx')}" ${command} --json`,
+      `"${path.resolve('../../node_modules/.bin/sfdx')}" ${command} --json`,
       {
         cwd: process.cwd(),
         env: process.env,
         maxBuffer: 1024 * 1024 * 1.5,
       },
       (error, stdout) => {
-        (error ? reject : resolve)(
-          stdout ? (JSON.parse(strip(stdout)) as T) : null
-        );
+        if (error) {
+          reject(error);
+        }
+
+        resolve(stdout ? (JSON.parse(strip(stdout)) as T) : null);
       }
     );
   });
