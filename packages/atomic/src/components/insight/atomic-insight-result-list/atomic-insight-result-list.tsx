@@ -26,7 +26,7 @@ interface TemplateElement extends HTMLElement {
 }
 
 /**
- * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
+ * The `atomic-insight-result-list` component is responsible for displaying query results by applying one or more insight result templates.
  *
  * @part result-list - The element containing every result of a result list
  * @part outline - The element displaying an outline or a divider around a result
@@ -95,10 +95,6 @@ export class AtomicInsightResultList {
   // }
 
   public async initialize() {
-    console.log(
-      'this.bindings.store.state.fieldsToInclude:',
-      this.bindings.store.state.fieldsToInclude
-    );
     this.resultList = buildInsightResultList(this.bindings.engine, {
       options: {
         fieldsToInclude: this.bindings.store.state.fieldsToInclude || undefined,

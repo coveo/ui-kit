@@ -382,7 +382,7 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
-          * The service insight interface headless engine.
+          * Whether the interface should be shown in widget format.
          */
         "widget": boolean;
     }
@@ -2292,7 +2292,7 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
         /**
-          * The service insight interface headless engine.
+          * Whether the interface should be shown in widget format.
          */
         "widget"?: boolean;
     }

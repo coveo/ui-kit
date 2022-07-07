@@ -4,7 +4,7 @@ import {MapProp} from '../../../utils/props-utils';
 import {makeMatchConditions} from '../../common/result-template/result-template';
 
 /**
- * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
+ * The `atomic-insight-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-insight-result-template`, and either an `atomic-insight-result-list` must be the parent of each `atomic-insight-result-template`.
  *
  * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
  */
