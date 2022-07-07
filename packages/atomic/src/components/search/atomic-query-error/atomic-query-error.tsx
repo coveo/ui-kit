@@ -12,7 +12,7 @@ import SearchInactive from '../../../images/search-inactive.svg';
 import NoConnection from '../../../images/no-connection.svg';
 import Indexing from '../../../images/indexing.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 const disconnectedException = 'Disconnected';
 const noEndpointsException = 'NoEndpointsException';
@@ -42,7 +42,7 @@ interface QueryErrorDetails {
   shadow: true,
 })
 export class AtomicQueryError implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   public queryError!: QueryError;
 
   @BindStateToController('queryError')

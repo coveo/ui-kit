@@ -7,7 +7,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.
@@ -17,7 +17,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   shadow: false,
 })
 export class AtomicResultText implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   @ResultContext() private result!: Result;
 
   @Element() private host!: HTMLElement;

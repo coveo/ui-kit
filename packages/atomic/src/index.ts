@@ -1,5 +1,5 @@
-import {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
-export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from './components/search/atomic-search-interface/atomic-search-interface';
+export {SearchBindings as Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 
 export {Components, JSX} from './components';
 export type {i18n} from 'i18next';
@@ -10,7 +10,7 @@ export {MissingInterfaceParentError} from './utils/initialization-utils';
 import {initializeBindings as genericInitializeBindings} from './utils/initialization-utils';
 
 export function initializeBindings(element: Element) {
-  return genericInitializeBindings<Bindings>(element);
+  return genericInitializeBindings<SearchBindings>(element);
 }
 export {resultContext} from './components/search/result-template-components/result-template-decorators';
 export {

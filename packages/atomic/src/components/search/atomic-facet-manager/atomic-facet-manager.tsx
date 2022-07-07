@@ -13,7 +13,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {NumberValue, Schema} from '@coveo/bueno';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 import {BaseFacetElement} from '../facets/facet-common';
 
 /**
@@ -24,7 +24,7 @@ import {BaseFacetElement} from '../facets/facet-common';
   shadow: false,
 })
 export class AtomicFacetManager implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   private facetManager!: FacetManager;
   public searchStatus!: SearchStatus;
 

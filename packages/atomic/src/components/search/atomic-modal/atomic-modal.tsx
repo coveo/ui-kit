@@ -17,7 +17,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -39,7 +39,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicModal implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   @Element() public host!: HTMLElement;
 
   @State() public error!: Error;

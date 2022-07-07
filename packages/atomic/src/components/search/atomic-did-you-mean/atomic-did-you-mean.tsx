@@ -7,7 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 import escape from 'escape-html';
 import {Hidden} from '../../common/hidden';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -23,7 +23,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicDidYouMean implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   private didYouMean!: DidYouMean;
 
   @BindStateToController('didYouMean')

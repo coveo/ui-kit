@@ -4,7 +4,7 @@ import {
   Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 
 /**
  * Binds the logging of document
@@ -52,7 +52,7 @@ export function bindLogDocumentOpenOnResult(
 export function buildStringTemplateFromResult(
   template: string,
   result: Result,
-  bindings: Bindings
+  bindings: SearchBindings
 ) {
   return template.replace(/\${(.*?)}/g, (value: string) => {
     const key = value.substring(2, value.length - 1);
