@@ -50,7 +50,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -93,7 +93,7 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
 export class AtomicNumericFacet
   implements InitializableComponent, BaseFacet<NumericFacet>
 {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   public facetForRange?: NumericFacet;
   public facetForInput?: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;

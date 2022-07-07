@@ -9,7 +9,7 @@ import {ResultContext} from '../result-template-decorators';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {titleToKebab} from '../../../../utils/utils';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
@@ -26,7 +26,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
 export class AtomicResultMultiText {
   public breadcrumbManager!: BreadcrumbManager;
 
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
 
   @Element() host!: HTMLElement;

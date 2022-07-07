@@ -15,7 +15,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {ResultContextEvent} from '../result-template-components/result-template-decorators';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * @part source-url
@@ -27,7 +27,7 @@ import {SearchBindings} from '../atomic-search-interface/atomic-search-interface
   shadow: false,
 })
 export class AtomicSmartSnippetSource implements InitializableComponent {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   @Prop({reflect: true, mutable: true}) source!: Result;
 
   @Event() selectSource!: EventEmitter;

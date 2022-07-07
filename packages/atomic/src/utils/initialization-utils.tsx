@@ -1,7 +1,7 @@
 import {buildCustomEvent} from './event-utils';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {TOptions} from 'i18next';
-import {SearchBindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/hidden';
 
@@ -51,7 +51,7 @@ export class MissingInterfaceParentError extends Error {
  * Necessary interface an Atomic Component must have to initialize itself correctly.
  */
 export interface InitializableComponent<
-  SpecificBindings extends AnyBindings = SearchBindings
+  SpecificBindings extends AnyBindings = Bindings
 > extends ComponentInterface {
   /**
    * Bindings passed from the `AtomicSearchInterface` to its children components.

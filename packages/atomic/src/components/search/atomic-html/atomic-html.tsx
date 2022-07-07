@@ -4,7 +4,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-html` component renders the HTML value of a string.
@@ -18,7 +18,7 @@ import {SearchBindings} from '../atomic-search-interface/atomic-search-interface
   shadow: true,
 })
 export class AtomicHtml implements InitializableComponent {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
 
   /**

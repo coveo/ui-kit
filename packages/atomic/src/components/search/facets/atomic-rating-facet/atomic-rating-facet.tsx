@@ -34,7 +34,7 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -68,7 +68,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
 export class AtomicRatingFacet
   implements InitializableComponent, BaseFacet<NumericFacet>
 {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   public facet!: NumericFacet;
   private dependenciesManager?: FacetConditionsManager;
   public searchStatus!: SearchStatus;

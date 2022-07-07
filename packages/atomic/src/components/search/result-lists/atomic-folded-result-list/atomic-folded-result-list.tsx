@@ -30,7 +30,7 @@ import {
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {ResultListInfo} from '../../atomic-search-interface/store';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -44,7 +44,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
   shadow: true,
 })
 export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
   public listWrapperRef?: HTMLDivElement;

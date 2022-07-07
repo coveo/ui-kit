@@ -4,7 +4,7 @@ import Star from '../../../../images/star.svg';
 import {ResultContext} from '../result-template-decorators';
 import {Rating} from '../../atomic-rating/atomic-rating';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-rating` element renders a star rating.
@@ -17,7 +17,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
   shadow: true,
 })
 export class AtomicResultRating {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
   @Element() host!: HTMLElement;
 

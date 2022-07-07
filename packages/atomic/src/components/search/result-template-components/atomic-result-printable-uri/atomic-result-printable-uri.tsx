@@ -14,7 +14,7 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
@@ -25,7 +25,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
   shadow: false,
 })
 export class AtomicResultPrintableUri {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
   @Element() public host!: HTMLElement;
 

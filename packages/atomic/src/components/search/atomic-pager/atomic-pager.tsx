@@ -20,7 +20,7 @@ import {
 } from '../../../utils/accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {RadioButton} from '../../common/radio-button';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
@@ -38,7 +38,7 @@ import {SearchBindings} from '../atomic-search-interface/atomic-search-interface
   shadow: true,
 })
 export class AtomicPager implements InitializableComponent {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   private pager!: Pager;
   public searchStatus!: SearchStatus;
   private readonly radioGroupName = randomID('atomic-pager-');

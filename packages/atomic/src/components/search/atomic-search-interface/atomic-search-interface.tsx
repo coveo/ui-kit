@@ -38,8 +38,8 @@ import {
 import {CommonBindings} from '../../common/interface/bindings';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
-export type SearchInitializationOptions = SearchEngineConfiguration;
-export type SearchBindings = CommonBindings<
+export type InitializationOptions = SearchEngineConfiguration;
+export type Bindings = CommonBindings<
   SearchEngine,
   AtomicStore,
   HTMLAtomicSearchInterfaceElement
@@ -231,7 +231,7 @@ export class AtomicSearchInterface
   /**
    * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
-  @Method() public initialize(options: SearchInitializationOptions) {
+  @Method() public initialize(options: InitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
   }
 
@@ -279,7 +279,7 @@ export class AtomicSearchInterface
     this.engine.executeFirstSearchAfterStandaloneSearchBoxRedirect(analytics);
   }
 
-  public get bindings(): SearchBindings {
+  public get bindings(): Bindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -318,7 +318,7 @@ export class AtomicSearchInterface
     }
   }
 
-  private initEngine(options: SearchInitializationOptions) {
+  private initEngine(options: InitializationOptions) {
     const searchConfig = this.getSearchConfiguration(options);
     const analyticsConfig = getAnalyticsConfig(
       options,
@@ -342,7 +342,7 @@ export class AtomicSearchInterface
     }
   }
 
-  private getSearchConfiguration(options: SearchInitializationOptions) {
+  private getSearchConfiguration(options: InitializationOptions) {
     const searchConfigFromProps = {
       searchHub: this.searchHub,
       pipeline: this.pipeline,

@@ -23,7 +23,7 @@ import {
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {ResultListInfo} from '../../atomic-search-interface/store';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -53,7 +53,7 @@ import {
   shadow: true,
 })
 export class AtomicResultList implements BaseResultList, ResultListInfo {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
   public listWrapperRef?: HTMLDivElement;

@@ -17,7 +17,7 @@ import {randomID} from '../../../utils/utils';
 import {SortDropdownOption} from '../atomic-search-interface/store';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {Schema, StringValue} from '@coveo/bueno';
-import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
@@ -35,7 +35,7 @@ import {SearchBindings} from '../atomic-search-interface/atomic-search-interface
   shadow: true,
 })
 export class AtomicSortDropdown implements InitializableComponent {
-  @InitializeBindings() public bindings!: SearchBindings;
+  @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
   public searchStatus!: SearchStatus;
   private id = randomID('atomic-sort-dropdown-');

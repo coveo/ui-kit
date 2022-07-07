@@ -6,7 +6,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-date` component renders the value of a date result field.
@@ -17,7 +17,7 @@ import {SearchBindings} from '../../atomic-search-interface/atomic-search-interf
 })
 export class AtomicResultDate implements InitializableComponent {
   @InitializeBindings()
-  public bindings!: SearchBindings;
+  public bindings!: Bindings;
 
   @ResultContext() private result!: Result;
 
