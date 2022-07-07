@@ -207,7 +207,7 @@ describe('c/quanticHeadlessLoader', () => {
         }
       });
 
-      describe('when other components are still uninitialized ', () => {
+      describe('when other components are still uninitialized', () => {
         beforeEach(() => {
           window.coveoHeadless[testId].components = [
             {
@@ -233,7 +233,7 @@ describe('c/quanticHeadlessLoader', () => {
         });
       });
 
-      describe('when other components are initialized ', () => {
+      describe('when other components are initialized', () => {
         beforeEach(() => {
           window.coveoHeadless[testId].components = [
             {
@@ -351,7 +351,7 @@ describe('c/quanticHeadlessLoader', () => {
         }
       });
 
-      it('should init the engine and initialize ', async () => {
+      it('should init the engine and initialize', async () => {
         await initializeWithHeadless(testElement, testId, initialize);
         const engine = await window.coveoHeadless[testId].enginePromise;
 
@@ -499,7 +499,7 @@ describe('c/quanticHeadlessLoader', () => {
       expect(mockedConsoleError.mock.calls.length).toBe(1);
     });
 
-    it('should return undefined when facetType does not exist in store ', () => {
+    it('should return undefined when facetType does not exist in store', () => {
       initQuanticStoreTest(testId, { state: { 'someOtherFacet': { label: 'label', facetId: 'facetId'}}});
       const data = getFromStore(testId, 'someFacets');
 

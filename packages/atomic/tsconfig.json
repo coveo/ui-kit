@@ -25,7 +25,6 @@
         }
       }
     ],
-    "skipLibCheck": true
   },
   "include": ["src", "types/jsx.d.ts"],
   "exclude": [
