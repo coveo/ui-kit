@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "setup": "npm i && husky install && lerna bootstrap && npm run lockLernaDependencies",
+    "postinstall": "husky install & patch-package",
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run clean && lerna run build",
@@ -20,20 +20,23 @@
     "npm:tag:beta": "npm run npm:tag -- beta",
     "npm:tag:latest": "npm run npm:tag -- latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.js",
-    "doc:generate": "lerna run doc:generate",
-    "lockLernaDependencies": "lerna exec \"npm install --package-lock-only\""
+    "doc:generate": "lerna run doc:generate"
+  },
+  "dependencies": {
+    "patch-package": "6.4.7"
   },
   "devDependencies": {
     "@actions/core": "1.8.2",
     "@actions/github": "4.0.0",
-    "@commitlint/config-conventional": "12.1.4",
-    "@commitlint/config-lerna-scopes": "10.0.0",
+    "@commitlint/config-conventional": "17.0.3",
+    "@commitlint/config-lerna-scopes": "17.0.0",
     "@commitlint/lint": "9.1.2",
     "@octokit/rest": "18.12.0",
     "@rollup/plugin-typescript": "8.3.2",
     "@types/node": "14.18.18",
-    "@typescript-eslint/eslint-plugin": "4.33.0",
-    "@typescript-eslint/parser": "4.33.0",
+    "@types/jest": "27.5.1",
+    "@typescript-eslint/eslint-plugin": "5.30.0",
+    "@typescript-eslint/parser": "5.30.0",
     "aws-sdk": "2.1135.0",
     "commitizen": "4.2.4",
     "concurrently": "6.5.1",
@@ -41,18 +44,30 @@
     "cz-conventional-changelog": "3.2.0",
     "esbuild": "0.14.2",
     "esbuild-plugin-alias": "0.2.1",
-    "eslint": "7.32.0",
-    "eslint-config-prettier": "6.15.0",
+    "eslint": "8.18.0",
+    "eslint-config-prettier": "8.5.0",
     "eslint-plugin-cypress": "2.12.1",
     "gts": "3.1.0",
     "husky": "5.2.0",
+    "jest": "27.5.1",
     "lerna": "4.0.0",
     "lint-staged": "11.2.6",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
     "semver": "7.3.7",
+    "ts-jest": "27.1.4",
     "typescript": "4.6.4"
   },
+  "workspaces": [
+    "packages/bueno",
+    "packages/auth",
+    "packages/headless",
+    "packages/atomic",
+    "packages/quantic",
+    "packages/atomic-react",
+    "packages/atomic-angular/projects/*",
+    "packages/samples/*"
+  ],
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog",

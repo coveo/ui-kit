@@ -8,13 +8,17 @@ inputs:
 runs:
   using: composite
   steps:
+    - run: |
+        npm i
+      shell: bash
+      working-directory: ./packages/samples/angular
     - uses: cypress-io/github-action@v4
       name: Run Cypress
       with:
         working-directory: ./packages/samples/angular
         start: npm run dev
         wait-on: 'http://localhost:4200'
-        install-command: npm install
+        install: false
         record: false
     - uses: actions/upload-artifact@v2
       if: failure()
