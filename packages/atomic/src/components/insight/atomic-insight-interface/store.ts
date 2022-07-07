@@ -5,15 +5,15 @@ import {
   createAtomicCommonStore,
 } from '../../common/interface/store';
 
-export interface AtomicSvcInsightStoreData extends AtomicCommonStoreData {
+export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   fieldsToInclude: string[];
 }
 
-export interface AtomicSvcInsightStore
-  extends AtomicCommonStore<AtomicSvcInsightStoreData> {}
+export interface AtomicInsightStore
+  extends AtomicCommonStore<AtomicInsightStoreData> {}
 
-export function createAtomicSvcInsightStore(): AtomicSvcInsightStore {
-  const commonStore = createAtomicCommonStore<AtomicSvcInsightStoreData>({
+export function createAtomicInsightStore(): AtomicInsightStore {
+  const commonStore = createAtomicCommonStore<AtomicInsightStoreData>({
     loadingFlags: [],
     iconAssetsPath: '',
     fieldsToInclude: [],

@@ -21,15 +21,15 @@ import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
-import {AtomicSvcInsightStore, createAtomicSvcInsightStore} from './store';
+import {AtomicInsightStore, createAtomicInsightStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
-export type InitializationOptions = InsightEngineConfiguration;
-export type Bindings = CommonBindings<
+export type InsightInitializationOptions = InsightEngineConfiguration;
+export type InsightBindings = CommonBindings<
   InsightEngine,
-  AtomicSvcInsightStore,
-  HTMLAtomicSvcInsightInterfaceElement
+  AtomicInsightStore,
+  HTMLAtomicInsightInterfaceElement
 >;
 
 /**
@@ -38,11 +38,11 @@ export type Bindings = CommonBindings<
  * @internal
  */
 @Component({
-  tag: 'atomic-svc-insight-interface',
+  tag: 'atomic-insight-interface',
   styleUrl: 'atomic-insight-interface.pcss',
   shadow: true,
 })
-export class AtomicSvcInsightInterface
+export class AtomicInsightInterface
   implements BaseAtomicInterface<InsightEngine>
 {
   private initialized = false;
@@ -95,15 +95,15 @@ export class AtomicSvcInsightInterface
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
 
-  @Element() public host!: HTMLAtomicSvcInsightInterfaceElement;
+  @Element() public host!: HTMLAtomicInsightInterfaceElement;
 
-  private store = createAtomicSvcInsightStore();
+  private store = createAtomicInsightStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<InsightEngine>;
 
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
-      'CoveoAtomicSvc'
+      'CoveoAtomic'
     );
   }
 
@@ -124,7 +124,7 @@ export class AtomicSvcInsightInterface
   /**
    * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
-  @Method() public initialize(options: InitializationOptions) {
+  @Method() public initialize(options: InsightInitializationOptions) {
     if (this.widget) {
       this.host.classList.add('widget');
     }
@@ -181,7 +181,7 @@ export class AtomicSvcInsightInterface
     return this.engine && <slot></slot>;
   }
 
-  public get bindings(): Bindings {
+  public get bindings(): InsightBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -190,7 +190,7 @@ export class AtomicSvcInsightInterface
     };
   }
 
-  private initEngine(options: InitializationOptions) {
+  private initEngine(options: InsightInitializationOptions) {
     const analyticsConfig = getAnalyticsConfig(options, this.analytics);
     try {
       this.engine = buildInsightEngine({

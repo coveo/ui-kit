@@ -13,7 +13,7 @@ import {Hidden} from '../../common/hidden';
 import {Heading} from '../../common/heading';
 import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../../utils/utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.
@@ -57,7 +57,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicSmartSnippet implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   public smartSnippet!: SmartSnippet;
   @BindStateToController('smartSnippet')
   @State()

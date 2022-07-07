@@ -25,7 +25,7 @@ import {
 import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
 import {ListDisplayResultsPlaceholder} from '../list-display-results-placeholder';
 import {Button} from '../../../common/button';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -43,7 +43,7 @@ const componentTag = 'atomic-result-children';
   shadow: true,
 })
 export class AtomicResultChildren implements BaseResultList {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   @ChildTemplatesContext()
   public templatesManager!: ResultTemplatesManager<TemplateContent>;
   @ResultContext({folded: true})

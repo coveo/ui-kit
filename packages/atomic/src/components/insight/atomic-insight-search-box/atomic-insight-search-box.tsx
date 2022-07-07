@@ -1,15 +1,18 @@
 import {Component, h, Prop, State} from '@stencil/core';
-import {buildInsightSearchBox} from '@coveo/headless/insight';
-import {SearchBox, SearchBoxState} from '@coveo/headless';
+import {
+  buildInsightSearchBox,
+  InsightSearchBox,
+  SearchBoxState,
+} from '@coveo/headless/insight';
 import {randomID} from '../../../utils/utils';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-insight-interface/atomic-insight-interface';
-import {SearchInput} from '../../common/search-box/SearchInput';
-import {SearchBoxWrapper} from '../../common/search-box/SearchBoxWrapper';
-import {SubmitButton} from '../../common/search-box/SubmitButton';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import {SearchInput} from '../../common/search-box/search-input';
+import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import {SubmitButton} from '../../common/search-box/submit-button';
 
 /**
  *
@@ -21,11 +24,11 @@ import {SubmitButton} from '../../common/search-box/SubmitButton';
   shadow: true,
 })
 export class AtomicInsightSearchBox {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: InsightBindings;
   @State() public error!: Error;
 
   private id!: string;
-  private searchBox!: SearchBox;
+  private searchBox!: InsightSearchBox;
   private inputRef!: HTMLInputElement;
 
   /**

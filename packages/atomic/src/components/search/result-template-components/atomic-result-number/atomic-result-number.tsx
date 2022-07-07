@@ -6,7 +6,7 @@ import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../formats/format-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-number` component renders the value of a number result field.
@@ -18,7 +18,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   shadow: false,
 })
 export class AtomicResultNumber {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   @ResultContext() private result!: Result;
 
   @Element() host!: HTMLElement;

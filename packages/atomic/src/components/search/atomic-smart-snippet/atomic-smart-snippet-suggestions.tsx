@@ -16,7 +16,7 @@ import {Hidden} from '../../common/hidden';
 import {Heading} from '../../common/heading';
 import {Button} from '../../common/button';
 import {randomID} from '../../../utils/utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-suggestions-suggestions` component displays an accordion of questions related to the query with their corresponding answers.
@@ -57,7 +57,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicSmartSnippetSuggestions implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   public smartSnippetQuestionsList!: SmartSnippetQuestionsList;
   @BindStateToController('smartSnippetQuestionsList')
   @State()

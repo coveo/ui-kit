@@ -2,7 +2,7 @@ import {SearchBox} from '@coveo/headless';
 import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 export interface SearchBoxSuggestionElement {
   key: string;
   content: Element | VNode;
@@ -24,7 +24,7 @@ export type SearchBoxSuggestionsEvent = (
   bindings: SearchBoxSuggestionsBindings
 ) => SearchBoxSuggestions;
 
-export interface SearchBoxSuggestionsBindings extends Bindings {
+export interface SearchBoxSuggestionsBindings extends SearchBindings {
   id: string;
   isStandalone: boolean;
   searchBoxController: SearchBox;

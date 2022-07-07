@@ -31,11 +31,11 @@ import {
   FocusTargetController,
   getFirstFocusableDescendant,
 } from '../../../utils/accessibility-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   DisplayOptions,
   ResultPlaceholderProps,
 } from '../../common/result-list/result-list';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;
@@ -56,7 +56,7 @@ export type SetRenderFunction = (
 
 export interface ResultsProps extends DisplayOptions {
   host: HTMLElement;
-  bindings: Bindings;
+  bindings: SearchBindings;
   resultListState: FoldedResultListState | ResultListState;
   resultListCommon: ResultListCommon;
   getContentOfResultTemplate(
@@ -86,7 +86,7 @@ export interface RenderListOptions extends DisplayOptions {
 
 interface ResultListCommonOptions {
   host: HTMLElement;
-  bindings: Bindings;
+  bindings: SearchBindings;
   templateElements: NodeListOf<TemplateElement>;
   includeDefaultTemplate?: boolean;
   loadingFlag?: string;
@@ -97,7 +97,7 @@ interface ResultListCommonOptions {
 
 export class ResultListCommon {
   private host: HTMLElement;
-  private bindings: Bindings;
+  private bindings: SearchBindings;
   private render?: ResultRenderingFunction;
   private updateBreakpoints?: (host: HTMLElement) => void;
   private nextNewResultTarget?: FocusTargetController;

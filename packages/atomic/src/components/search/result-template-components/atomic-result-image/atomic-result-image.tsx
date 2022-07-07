@@ -6,7 +6,7 @@ import {
   InitializeBindings,
   InitializableComponent,
 } from '../../../../utils/initialization-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-image` component renders an image from a result field.
@@ -17,7 +17,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   shadow: false,
 })
 export class AtomicResultImage implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   @ResultContext() private result!: Result;
   @Element() private host!: HTMLElement;
 

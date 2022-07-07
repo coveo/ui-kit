@@ -20,7 +20,7 @@ import {
 import {Button} from '../../common/button';
 import {once, randomID} from '../../../utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-smart-snippet-feedback-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-smart-snippet` is initialized.
@@ -53,7 +53,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicSmartSnippetFeedbackModal implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   @Element() public host!: HTMLElement;
   public smartSnippet!: SmartSnippet;
 

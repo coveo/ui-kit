@@ -22,7 +22,7 @@ import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {SortDropdownOption} from '../atomic-search-interface/store';
 import SortIcon from '../../../images/sort.svg';
 import {Button} from '../../common/button';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 import {BaseFacetElement} from '../facets/facet-common';
 
 /**
@@ -55,7 +55,7 @@ export class AtomicRefineModal implements InitializableComponent {
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
   private facetManager!: FacetManager;
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   @Element() public host!: HTMLElement;
 
   @BindStateToController('querySummary')

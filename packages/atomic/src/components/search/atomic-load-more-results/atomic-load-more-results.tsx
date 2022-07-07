@@ -12,7 +12,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SearchBindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-load-more-results` component allows the user to load additional results if more are available.
@@ -31,7 +31,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicLoadMoreResults {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: SearchBindings;
   public querySummary!: QuerySummary;
   public resultList!: ResultList;
 
