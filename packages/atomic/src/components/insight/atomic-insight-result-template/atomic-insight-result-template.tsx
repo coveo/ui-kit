@@ -1,10 +1,7 @@
 import {Component, h, Element, Prop, Method, State} from '@stencil/core';
-import {
-  ResultTemplate,
-  ResultTemplateCondition,
-  ResultTemplatesHelpers,
-} from '@coveo/headless/insight';
+import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless/insight';
 import {MapProp} from '../../../utils/props-utils';
+import {makeMatchConditions} from '../../common/result-template/result-template';
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
@@ -45,23 +42,9 @@ export class AtomicInsightResultTemplate {
     {};
 
   public componentWillLoad() {
-    this.addMatchConditions();
-  }
-
-  addMatchConditions() {
-    for (const field in this.mustMatch) {
-      this.matchConditions.push(
-        ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
-      );
-    }
-    for (const field in this.mustNotMatch) {
-      this.matchConditions.push(
-        ResultTemplatesHelpers.fieldMustNotMatch(
-          field,
-          this.mustNotMatch[field]
-        )
-      );
-    }
+    this.matchConditions.push(
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch)
+    );
   }
 
   /**

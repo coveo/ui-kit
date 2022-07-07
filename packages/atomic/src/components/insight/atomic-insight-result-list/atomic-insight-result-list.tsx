@@ -183,7 +183,7 @@ export class AtomicInsightResultList {
         {this.templateHasError && <slot></slot>}
         <div class={`list-wrapper ${this.getClasses()}`}>
           <div class={`list-root  ${this.getClasses()}`} part="result-list">
-            {/* TODO: when results per page state */}
+            {/* TODO: when results per page state is ready in headless*/}
             {/* {this.bindings.store.isAppLoaded() && (
               <ListDisplayResultsPlaceholder
                 display="list"
