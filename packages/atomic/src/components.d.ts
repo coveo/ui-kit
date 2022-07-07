@@ -5,19 +5,19 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result as Result1, ResultTemplate as ResultTemplate1, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
-import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result as Result1, ResultTemplate as ResultTemplate1, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { SearchBindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
-import { InsightEngine, LogLevel as LogLevel1, Result, ResultTemplate, ResultTemplateCondition as ResultTemplateCondition1 } from "@coveo/headless/insight";
+import { InsightEngine, LogLevel, Result, ResultTemplate, ResultTemplateCondition as ResultTemplateCondition1 } from "@coveo/headless/insight";
+import { i18n } from "i18next";
+import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
-import { i18n } from "i18next";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
-import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { SearchInitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-import { InitializationOptions as InitializationOptions1 } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export namespace Components {
     interface AtomicAriaLive {
         "updateMessage": (region: string, message: string) => Promise<void>;
@@ -199,7 +199,7 @@ export namespace Components {
         "withSearch": boolean;
     }
     interface AtomicFacetDateInput {
-        "bindings": Bindings;
+        "bindings": SearchBindings;
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
@@ -211,7 +211,7 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     interface AtomicFacetNumberInput {
-        "bindings": Bindings;
+        "bindings": SearchBindings;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -334,6 +334,58 @@ export namespace Components {
          */
         "icon": string;
     }
+    interface AtomicInsightInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * The service insight interface headless engine.
+         */
+        "engine"?: InsightEngine;
+        /**
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+         */
+        "executeFirstSearch": () => Promise<void>;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
+        /**
+          * The service insight interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: InsightInitializationOptions) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless insight engine.
+         */
+        "initializeWithInsightEngine": (engine: InsightEngine) => Promise<void>;
+        /**
+          * The service insight interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The service insight interface headless engine.
+         */
+        "widget": boolean;
+    }
     interface AtomicInsightResult {
         /**
           * Classes that will be added to the result element.
@@ -367,7 +419,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicSvcInsightStore>;
+        "store"?: ReturnType<typeof createAtomicInsightStore>;
     }
     interface AtomicInsightResultList {
         /**
@@ -659,7 +711,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -671,7 +723,7 @@ export namespace Components {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
-        "bindings": Bindings;
+        "bindings": SearchBindings;
     }
     interface AtomicResult {
         /**
@@ -1039,7 +1091,7 @@ export namespace Components {
         /**
           * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
-        "initialize": (options: InitializationOptions) => Promise<void>;
+        "initialize": (options: SearchInitializationOptions) => Promise<void>;
         /**
           * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
          */
@@ -1056,7 +1108,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -1185,58 +1237,6 @@ export namespace Components {
           * The non-localized label to display for this expression.
          */
         "label": string;
-    }
-    interface AtomicSvcInsightInterface {
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics": boolean;
-        /**
-          * The service insight interface headless engine.
-         */
-        "engine"?: InsightEngine;
-        /**
-          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
-         */
-        "executeFirstSearch": () => Promise<void>;
-        /**
-          * A list of non-default fields to include in the query results, separated by commas.
-         */
-        "fieldsToInclude": string;
-        /**
-          * The service insight interface i18next instance.
-         */
-        "i18n": i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
-         */
-        "iconAssetsPath": string;
-        /**
-          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
-         */
-        "initialize": (options: InitializationOptions) => Promise<void>;
-        /**
-          * Initializes the connection with an already preconfigured headless insight engine.
-         */
-        "initializeWithInsightEngine": (engine: InsightEngine) => Promise<void>;
-        /**
-          * The service insight interface language.
-         */
-        "language": string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
-         */
-        "languageAssetsPath": string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: LogLevel1;
-        /**
-          * The service insight interface headless engine.
-         */
-        "widget": boolean;
     }
     interface AtomicTableElement {
         /**
@@ -1431,6 +1431,12 @@ declare global {
     var HTMLAtomicIconElement: {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
+    };
+    interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightInterfaceElement: {
+        prototype: HTMLAtomicInsightInterfaceElement;
+        new (): HTMLAtomicInsightInterfaceElement;
     };
     interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
     }
@@ -1822,12 +1828,6 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
-    interface HTMLAtomicSvcInsightInterfaceElement extends Components.AtomicSvcInsightInterface, HTMLStencilElement {
-    }
-    var HTMLAtomicSvcInsightInterfaceElement: {
-        prototype: HTMLAtomicSvcInsightInterfaceElement;
-        new (): HTMLAtomicSvcInsightInterfaceElement;
-    };
     interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
     }
     var HTMLAtomicTableElementElement: {
@@ -1873,6 +1873,7 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
@@ -1938,7 +1939,6 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
-        "atomic-svc-insight-interface": HTMLAtomicSvcInsightInterfaceElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
@@ -2125,7 +2125,7 @@ declare namespace LocalJSX {
         "withSearch"?: boolean;
     }
     interface AtomicFacetDateInput {
-        "bindings": Bindings;
+        "bindings": SearchBindings;
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
@@ -2138,7 +2138,7 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     interface AtomicFacetNumberInput {
-        "bindings": Bindings;
+        "bindings": SearchBindings;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -2256,6 +2256,46 @@ declare namespace LocalJSX {
          */
         "icon": string;
     }
+    interface AtomicInsightInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * The service insight interface headless engine.
+         */
+        "engine"?: InsightEngine;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
+        /**
+          * The service insight interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
+          * @example /mypublicpath/icons
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The service insight interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
+          * @example /mypublicpath/languages
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The service insight interface headless engine.
+         */
+        "widget"?: boolean;
+    }
     interface AtomicInsightResult {
         /**
           * Classes that will be added to the result element.
@@ -2289,7 +2329,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicSvcInsightStore>;
+        "store"?: ReturnType<typeof createAtomicInsightStore>;
     }
     interface AtomicInsightResultList {
         /**
@@ -2575,7 +2615,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
     }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
@@ -2587,7 +2627,7 @@ declare namespace LocalJSX {
         /**
           * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
-        "bindings": Bindings;
+        "bindings": SearchBindings;
     }
     interface AtomicResult {
         /**
@@ -2941,7 +2981,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -3078,46 +3118,6 @@ declare namespace LocalJSX {
          */
         "label": string;
     }
-    interface AtomicSvcInsightInterface {
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics"?: boolean;
-        /**
-          * The service insight interface headless engine.
-         */
-        "engine"?: InsightEngine;
-        /**
-          * A list of non-default fields to include in the query results, separated by commas.
-         */
-        "fieldsToInclude"?: string;
-        /**
-          * The service insight interface i18next instance.
-         */
-        "i18n"?: i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
-         */
-        "iconAssetsPath"?: string;
-        /**
-          * The service insight interface language.
-         */
-        "language"?: string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
-         */
-        "languageAssetsPath"?: string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: LogLevel1;
-        /**
-          * The service insight interface headless engine.
-         */
-        "widget"?: boolean;
-    }
     interface AtomicTableElement {
         /**
           * The label to display in the header of this column.
@@ -3211,6 +3211,7 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
+        "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
@@ -3276,7 +3277,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
-        "atomic-svc-insight-interface": AtomicSvcInsightInterface;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
@@ -3307,6 +3307,7 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
@@ -3372,7 +3373,6 @@ declare module "@stencil/core" {
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
-            "atomic-svc-insight-interface": LocalJSX.AtomicSvcInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicSvcInsightInterfaceElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;

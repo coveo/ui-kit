@@ -8,7 +8,7 @@ import {
   ResultTemplatesManager,
   buildResultTemplatesManager,
 } from '@coveo/headless/insight';
-import {Bindings} from '../atomic-insight-interface/atomic-insight-interface';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
   BindStateToController,
   InitializeBindings,
@@ -49,7 +49,7 @@ interface TemplateElement extends HTMLElement {
   shadow: true,
 })
 export class AtomicInsightResultList {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: InsightBindings;
   public resultList!: InsightResultList;
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
   @State() public ready = false;

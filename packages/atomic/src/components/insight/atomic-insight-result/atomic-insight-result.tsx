@@ -1,7 +1,7 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
 import {InsightEngine, Result} from '@coveo/headless/insight';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
-import {createAtomicSvcInsightStore} from '../atomic-insight-interface/store';
+import {createAtomicInsightStore} from '../atomic-insight-interface/store';
 import {
   getResultDisplayClasses,
   ResultDisplayDensity,
@@ -52,7 +52,7 @@ export class AtomicInsightResult {
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: ReturnType<typeof createAtomicSvcInsightStore>;
+  @Prop() store?: ReturnType<typeof createAtomicInsightStore>;
 
   /**
    * The result content to display.

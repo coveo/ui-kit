@@ -35,7 +35,7 @@
       <atomic-insight-interface>
         <atomic-insight-search-box></atomic-insight-search-box>
         <atomic-layout-section section="results">
-          <atomic-insight-result-list>
+          <atomic-insight-result-list image-size="none">
             <atomic-insight-result-template>
               <template>
                 <style>
@@ -183,8 +183,10 @@
         updateWrapper(widgetView);
       });
       updateWrapper(widgetView);
-      function updateWrapper(widgetView) {
-        const insightInterface = document.querySelector('atomic-svc-insight-interface');
+
+      async function updateWrapper(widgetView) {
+        await customElements.whenDefined('atomic-insight-interface');
+        const insightInterface = document.querySelector('atomic-insight-interface');
         if (widgetView) {
           wrapper.style.width = '400px';
           wrapper.style.height = '720px';
