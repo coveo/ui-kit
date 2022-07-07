@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.82.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.81.0...@coveo/atomic@1.82.0) (2022-07-07)
+
+
+### Features
+
+* **atomic,headless:** add search box to insights ([#2188](https://github.com/coveo/ui-kit/issues/2188)) ([d0465f6](https://github.com/coveo/ui-kit/commit/d0465f6a8fff4028f70485d4e0349840a34b6ed7))
+* **atomic:** hide arrow buttons ([#2175](https://github.com/coveo/ui-kit/issues/2175)) ([742e8dc](https://github.com/coveo/ui-kit/commit/742e8dcc1eceebffa590ca5ca30b1d1fe0f21ec4)), closes [#2179](https://github.com/coveo/ui-kit/issues/2179) [#2189](https://github.com/coveo/ui-kit/issues/2189)
+
+
+
+
+
 # [1.81.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.80.1...@coveo/atomic@1.81.0) (2022-07-07)
 
 

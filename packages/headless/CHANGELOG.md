@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.81.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.80.0...@coveo/headless@1.81.0) (2022-07-07)
+
+
+### Features
+
+* **atomic,headless:** add search box to insights ([#2188](https://github.com/coveo/ui-kit/issues/2188)) ([d0465f6](https://github.com/coveo/ui-kit/commit/d0465f6a8fff4028f70485d4e0349840a34b6ed7))
+
+
+
+
+
 # [1.80.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.79.0...@coveo/headless@1.80.0) (2022-07-07)
 
 
