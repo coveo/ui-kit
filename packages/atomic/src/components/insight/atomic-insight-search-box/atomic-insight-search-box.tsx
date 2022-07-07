@@ -10,9 +10,9 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
-import {SearchInput} from '../../common/search-box/SearchInput';
-import {SearchBoxWrapper} from '../../common/search-box/SearchBoxWrapper';
-import {SubmitButton} from '../../common/search-box/SubmitButton';
+import {SearchInput} from '../../common/search-box/search-input';
+import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import {SubmitButton} from '../../common/search-box/submit-button';
 
 /**
  *

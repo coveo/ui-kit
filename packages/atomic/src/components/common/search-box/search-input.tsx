@@ -2,7 +2,7 @@ import {JSXBase} from '@stencil/core/internal';
 import {SearchBox, SearchBoxState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {AnyBindings} from '../interface/bindings';
-import {ClearButton} from './ClearButton';
+import {ClearButton} from './clear-button';
 
 interface Props extends JSXBase.InputHTMLAttributes<HTMLInputElement> {
   inputRef: HTMLInputElement;
