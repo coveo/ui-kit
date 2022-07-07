@@ -28,7 +28,6 @@
     "web-vitals": "1.1.2"
   },
   "scripts": {
-    "prepublishOnly": "exit 1",
     "dev": "react-scripts start",
     "build": "tsc --noEmit && tsc --module commonjs --noEmit",
     "build:server": "tsc --project ./tsconfig.server.json",
