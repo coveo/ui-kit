@@ -50,7 +50,7 @@ export class AtomicInsightInterface
   @State() public error?: Error;
 
   /**
-   * The service insight interface headless engine.
+   * Whether the interface should be shown in widget format.
    */
   @Prop({mutable: true}) public widget = false;
   /**
