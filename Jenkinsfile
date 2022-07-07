@@ -32,7 +32,7 @@ node('linux && docker') {
       sh 'git clean -f'
     }
 
-    withDockerContainer(image: 'node:14', args: '-u=root') {
+    withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
