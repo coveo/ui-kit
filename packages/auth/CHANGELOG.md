@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.8.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.8.0...@coveo/auth@1.8.1) (2022-07-06)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+# [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.9...@coveo/auth@1.8.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
 ## [1.7.9](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.8...@coveo/auth@1.7.9) (2022-07-05)
 
 
