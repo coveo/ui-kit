@@ -39,6 +39,7 @@ import {BaseFacetElement} from '../facets/facet-common';
  * @part body-wrapper - The wrapper around the body.
  * @part body - The body of the modal, between the header and the footer.
  * @part select - The `<select>` element of the drop-down list.
+ * @part select-icon - The select dropdown's sort icon.
  * @part filter-clear-all - The button that resets all actively selected facet values.
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer of the modal, containing the clear all button.
@@ -179,7 +180,10 @@ export class AtomicRefineModal implements InitializableComponent {
         >
           {this.options.map((option) => this.buildOption(option))}
         </select>
-        <div class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6">
+        <div
+          part="select-icon"
+          class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6"
+        >
           <atomic-icon icon={SortIcon} class="w-6 h-6"></atomic-icon>
         </div>
       </div>,

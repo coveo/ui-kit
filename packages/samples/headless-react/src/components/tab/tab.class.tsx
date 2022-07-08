@@ -1,4 +1,4 @@
-import {Component, ContextType} from 'react';
+import {Component, ContextType, PropsWithChildren} from 'react';
 import {
   buildTab,
   Tab as HeadlessTab,
@@ -13,7 +13,7 @@ export interface TabProps {
   active?: boolean;
 }
 
-export class Tab extends Component<TabProps, TabState> {
+export class Tab extends Component<PropsWithChildren<TabProps>, TabState> {
   static contextType = AppContext;
   context!: ContextType<typeof AppContext>;
 

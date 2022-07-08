@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.28.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.28.0...@coveo/quantic@1.28.1) (2022-07-07)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.28.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.27.1...@coveo/quantic@1.28.0) (2022-07-07)
+
+
+### Features
+
+* npm workspace migration ([#2180](https://github.com/coveo/ui-kit/issues/2180)) ([f3b6997](https://github.com/coveo/ui-kit/commit/f3b69977675837dbed5ebe1eb3cb7fb2c98305ea))
+
+
+
+
+
+## [1.27.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.27.0...@coveo/quantic@1.27.1) (2022-07-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.9...@coveo/quantic@1.27.0) (2022-07-06)
 
 
