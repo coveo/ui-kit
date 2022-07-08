@@ -13,6 +13,7 @@ import {getQueryInitialState} from '../features/query/query-state';
 import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 import {getSearchInitialState} from '../features/search/search-state';
+import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-state';
 import {InsightAppState} from '../state/insight-app-state';
 
 export function buildMockInsightState(
@@ -35,6 +36,7 @@ export function buildMockInsightState(
     querySet: getQuerySetInitialState(),
     querySuggest: getQuerySuggestSetInitialState(),
     categoryFacetSet: getCategoryFacetSetInitialState(),
+    sortCriteria: getSortCriteriaInitialState(),
     ...config,
   };
 }

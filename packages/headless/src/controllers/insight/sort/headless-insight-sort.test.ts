@@ -1,19 +1,19 @@
 import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../test/mock-engine';
-import {Sort, SortProps, buildSort} from './headless-sort';
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../../test/mock-engine';
+import {Sort, SortProps, buildSort} from './headless-insight-sort';
 import {
   buildDateSortCriterion,
   SortOrder,
-} from '../../features/sort-criteria/criteria';
-import {updateSortCriterion} from '../../features/sort-criteria/sort-criteria-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {updatePage} from '../../features/pagination/pagination-actions';
-import {configuration, sortCriteria} from '../../app/reducers';
+} from '../../../features/sort-criteria/criteria';
+import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {updatePage} from '../../../features/pagination/pagination-actions';
+import {configuration, sortCriteria} from '../../../app/reducers';
 
-describe('Sort', () => {
-  let engine: MockSearchEngine;
+describe('InsightSort', () => {
+  let engine: MockInsightEngine;
   let props: SortProps;
   let sort: Sort;
 
@@ -22,7 +22,7 @@ describe('Sort', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockInsightEngine();
     props = {
       initialState: {},
     };
