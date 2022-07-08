@@ -18,16 +18,18 @@ import {resultLinkComponent} from './result-components/result-link-selectors';
 import {assertRendersGrandchildren} from './folded-result-list-assertions';
 import * as CommonAssertions from '../common-assertions';
 
-const setSource = () => {
+const setSourceAndSortCriteria = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
-    request.body.aq = '@source==("iNaturalistTaxons")';
+    request.body.aq =
+      '@source==("iNaturalistTaxons") AND @foldingcollection==("Pyrenomycetes")';
+    request.body.sortCriteria = 'date descending';
   });
 };
 
 describe('Folded Result List Component', () => {
   it('should show child results', () => {
     new TestFixture()
-      .with(setSource)
+      .with(setSourceAndSortCriteria)
       .with(
         addFoldedResultList(buildTemplateWithoutSections(buildResultTopChild()))
       )
@@ -39,10 +41,10 @@ describe('Folded Result List Component', () => {
 
     FoldedResultListSelectors.childResultAtIndex(0)
       .find(resultLinkComponent)
-      .contains('Stubble Lichens');
+      .contains('Powdery Mildews');
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
-      .contains('Opercs');
+      .contains('common lichens');
   });
 
   it('renders content before and after children only when there are children', () => {
@@ -59,7 +61,7 @@ describe('Folded Result List Component', () => {
     components[1].insertAdjacentElement('beforeend', after);
 
     new TestFixture()
-      .with(setSource)
+      .with(setSourceAndSortCriteria)
       .with(addFoldedResultList(buildTemplateWithoutSections(components)))
       .init();
 
@@ -95,7 +97,7 @@ describe('Folded Result List Component', () => {
   describe('when grandchildren templates are specified', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(setSource)
+        .with(setSourceAndSortCriteria)
         .with(
           addFoldedResultList(
             buildTemplateWithoutSections(
@@ -114,7 +116,7 @@ describe('Folded Result List Component', () => {
       const resultChildren = generateComponentHTML(resultChildrenComponent);
       resultChildren.setAttribute('inherit-templates', 'true');
       new TestFixture()
-        .with(setSource)
+        .with(setSourceAndSortCriteria)
         .with(
           addFoldedResultList(
             buildTemplateWithSections({
@@ -132,7 +134,7 @@ describe('Folded Result List Component', () => {
   describe('with an invalid configuration', () => {
     before(() => {
       new TestFixture()
-        .with(setSource)
+        .with(setSourceAndSortCriteria)
         .with(
           addFoldedResultList(undefined, {
             'child-field': '',

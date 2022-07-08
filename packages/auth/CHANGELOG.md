@@ -3,6 +3,267 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.8.1...@coveo/auth@1.9.0) (2022-07-07)
+
+
+### Features
+
+* npm workspace migration ([#2180](https://github.com/coveo/ui-kit/issues/2180)) ([f3b6997](https://github.com/coveo/ui-kit/commit/f3b69977675837dbed5ebe1eb3cb7fb2c98305ea))
+
+
+
+
+
+## [1.8.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.8.0...@coveo/auth@1.8.1) (2022-07-06)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+# [1.8.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.9...@coveo/auth@1.8.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
+## [1.7.9](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.8...@coveo/auth@1.7.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+## [1.7.8](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.7...@coveo/auth@1.7.8) (2022-07-05)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.7.7](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.6...@coveo/auth@1.7.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.7.6](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.5...@coveo/auth@1.7.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+
+
+
+
+
+## [1.7.5](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.4...@coveo/auth@1.7.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.7.4](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.3...@coveo/auth@1.7.4) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.7.3](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.2...@coveo/auth@1.7.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.7.2](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.1...@coveo/auth@1.7.2) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.7.1](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.7.0...@coveo/auth@1.7.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+# [1.7.0](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.20...@coveo/auth@1.7.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
+## [1.6.20](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.19...@coveo/auth@1.6.20) (2022-06-28)
+
+
+### Bug Fixes
+
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
+## [1.6.19](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.18...@coveo/auth@1.6.19) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.18](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.17...@coveo/auth@1.6.18) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.17](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.16...@coveo/auth@1.6.17) (2022-06-24)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.16](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.15...@coveo/auth@1.6.16) (2022-06-23)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.15](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.14...@coveo/auth@1.6.15) (2022-06-22)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.14](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.13...@coveo/auth@1.6.14) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.13](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.12...@coveo/auth@1.6.13) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.12](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.11...@coveo/auth@1.6.12) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.11](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.10...@coveo/auth@1.6.11) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.10](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.9...@coveo/auth@1.6.10) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.9](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.8...@coveo/auth@1.6.9) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.8](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.7...@coveo/auth@1.6.8) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.7](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.6...@coveo/auth@1.6.7) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.6](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.5...@coveo/auth@1.6.6) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.5](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.4...@coveo/auth@1.6.5) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.6.4](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.3...@coveo/auth@1.6.4) (2022-06-16)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
 ## [1.6.3](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.6.1...@coveo/auth@1.6.3) (2022-06-16)
 
 

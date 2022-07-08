@@ -3,6 +3,303 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.28.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.28.2...@coveo/quantic@1.28.3) (2022-07-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.28.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.28.1...@coveo/quantic@1.28.2) (2022-07-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.28.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.28.0...@coveo/quantic@1.28.1) (2022-07-07)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.28.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.27.1...@coveo/quantic@1.28.0) (2022-07-07)
+
+
+### Features
+
+* npm workspace migration ([#2180](https://github.com/coveo/ui-kit/issues/2180)) ([f3b6997](https://github.com/coveo/ui-kit/commit/f3b69977675837dbed5ebe1eb3cb7fb2c98305ea))
+
+
+
+
+
+## [1.27.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.27.0...@coveo/quantic@1.27.1) (2022-07-06)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.9...@coveo/quantic@1.27.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
+## [1.26.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.8...@coveo/quantic@1.26.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+## [1.26.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.7...@coveo/quantic@1.26.8) (2022-07-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.6...@coveo/quantic@1.26.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.26.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.5...@coveo/quantic@1.26.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+
+
+
+
+
+## [1.26.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.4...@coveo/quantic@1.26.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.3...@coveo/quantic@1.26.4) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.2...@coveo/quantic@1.26.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.26.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.1...@coveo/quantic@1.26.2) (2022-06-29)
+
+
+### Bug Fixes
+
+* **quantic:** corner case addressed in the QuanticTabBar component ([#2173](https://github.com/coveo/ui-kit/issues/2173)) ([7f81513](https://github.com/coveo/ui-kit/commit/7f81513b33cb6b4544f76afeca41d715d9e1ce1f))
+
+
+
+
+
+## [1.26.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.26.0...@coveo/quantic@1.26.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.26.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.18...@coveo/quantic@1.26.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
+## [1.25.18](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.17...@coveo/quantic@1.25.18) (2022-06-28)
+
+
+### Bug Fixes
+
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
+## [1.25.17](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.16...@coveo/quantic@1.25.17) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.16](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.15...@coveo/quantic@1.25.16) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.15](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.14...@coveo/quantic@1.25.15) (2022-06-24)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.14](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.13...@coveo/quantic@1.25.14) (2022-06-23)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.13](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.12...@coveo/quantic@1.25.13) (2022-06-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.12](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.11...@coveo/quantic@1.25.12) (2022-06-21)
+
+
+### Bug Fixes
+
+* **headless:** update recent queries only when query has results ([#2110](https://github.com/coveo/ui-kit/issues/2110)) ([623674b](https://github.com/coveo/ui-kit/commit/623674b6d64d0f03a129651fdfa859b570baff54))
+
+
+
+
+
+## [1.25.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.10...@coveo/quantic@1.25.11) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.9...@coveo/quantic@1.25.10) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.8...@coveo/quantic@1.25.9) (2022-06-20)
+
+
+### Bug Fixes
+
+* **quantic:** automatically  closing the tab dropdown when it loses focus ([#2114](https://github.com/coveo/ui-kit/issues/2114)) ([0488be6](https://github.com/coveo/ui-kit/commit/0488be63cb0981494eddfc9940ac77c976ab24b2))
+
+
+
+
+
+## [1.25.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.7...@coveo/quantic@1.25.8) (2022-06-20)
+
+
+### Bug Fixes
+
+* **quantic:** display clear all filters button only when there is active filters ([#2106](https://github.com/coveo/ui-kit/issues/2106)) ([9aabbf9](https://github.com/coveo/ui-kit/commit/9aabbf953c0803749f4cd34cda6385fa29ee6f16))
+
+
+
+
+
+## [1.25.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.6...@coveo/quantic@1.25.7) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.5...@coveo/quantic@1.25.6) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.4...@coveo/quantic@1.25.5) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.3...@coveo/quantic@1.25.4) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.2...@coveo/quantic@1.25.3) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.25.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.1...@coveo/quantic@1.25.2) (2022-06-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.25.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.25.0...@coveo/quantic@1.25.1) (2022-06-16)
 
 **Note:** Version bump only for package @coveo/quantic

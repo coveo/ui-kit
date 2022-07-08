@@ -8,6 +8,11 @@ const links = [
   {href: '/examples/modal.html', label: 'Modal'},
   {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
   {href: '/examples/instantResults.html', label: 'Instant Results'},
+  {href: '/examples/insights.html', label: 'Insights Panel'},
+  {
+    href: '/accessibility/commerce-full.html',
+    label: 'Accessible Commerce Full',
+  },
 ];
 
 const header = document.createElement('header');

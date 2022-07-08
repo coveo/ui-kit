@@ -11,7 +11,7 @@
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('#search');
+        const searchInterface = document.querySelector('atomic-search-interface');
 
         await searchInterface.initialize({
           accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
@@ -64,7 +64,7 @@
 
         const useLoadMoreResultsClass = 'use-load-more-results';
         const paginationSelect = document.getElementById('pagination-select');
-        const pagination = document.querySelector('.pagination');
+        const pagination = document.querySelector('atomic-layout-section[section="pagination"]');
         paginationSelect.value = pagination.classList.contains(useLoadMoreResultsClass) ? 'load-more' : 'pager';
         paginationSelect.addEventListener('change', (e) =>
           pagination.classList.toggle(useLoadMoreResultsClass, e.target.value === 'load-more')
@@ -114,35 +114,8 @@
       }
     </style>
     <style>
-      :root {
-        --spacing: 16px;
-        --spacing-col: 32px;
-        --search-box-width: 648px;
-      }
-
-      atomic-search-box {
-        margin-top: 1rem;
-      }
-
       body {
         margin: 0;
-      }
-
-      body.atomic-modal-opened {
-        overflow-y: hidden;
-      }
-
-      atomic-search-interface {
-        display: grid;
-        grid-template-columns: var(--spacing) 1fr var(--spacing);
-        grid-template-areas:
-          '. search      .'
-          '. status      .'
-          '. breadbox    .'
-          '. topbar      .'
-          '. results     .'
-          '. pagination  .'
-          '. .           .';
       }
 
       .header-bg {
@@ -150,142 +123,25 @@
         grid-area: 1 / -1 / 1 / 1;
       }
 
-      atomic-facet-manager {
-        display: none;
-      }
-
-      atomic-sort-dropdown {
-        display: none;
-      }
-
-      .search {
-        grid-area: search;
-        margin: var(--spacing) 0;
-        max-width: var(--search-box-width);
-      }
-
-      .status {
-        grid-area: status;
-      }
-
-      atomic-facet-manager {
-        grid-area: facets;
-        margin-top: var(--spacing);
-      }
-
-      atomic-facet-manager > * {
-        margin-bottom: var(--spacing);
-      }
-
-      atomic-breadbox {
-        grid-area: breadbox;
-        margin-top: var(--spacing);
-        padding-bottom: var(--spacing);
-        border-bottom: 1px solid var(--atomic-neutral);
-      }
-
-      .topbar {
-        grid-area: topbar;
-        margin: var(--spacing) 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      atomic-did-you-mean {
-        margin-bottom: var(--spacing);
-      }
-
-      .results {
-        grid-area: results;
-      }
-
-      .pagination {
-        grid-area: pagination;
-        margin: var(--spacing) 0;
-        display: grid;
-        grid-template-areas:
-          'header header header'
-          'pager  .      rpp';
-        grid-template-columns: auto 1fr auto;
-      }
-
-      .pagination atomic-load-more-results {
-        display: none;
-      }
-
-      .pagination.use-load-more-results {
-        grid-template-areas:
-          'header header header'
-          'lmr    lmr    lmr';
-      }
-
-      .pagination.use-load-more-results atomic-pager,
-      .pagination.use-load-more-results atomic-results-per-page {
-        display: none;
-      }
-
-      .pagination.use-load-more-results atomic-load-more-results {
-        display: initial;
-      }
-
-      .pagination .accessibility-header {
-        grid-area: header;
-      }
-
-      atomic-pager {
-        grid-area: pager;
-      }
-
-      atomic-results-per-page {
-        grid-area: rpp;
-      }
-
-      atomic-load-more-results {
-        grid-area: lmr;
-      }
-
-      .atomic-search-interface-no-results .topbar,
-      .atomic-search-interface-no-results .results,
-      .atomic-search-interface-no-results .pagination {
-        display: none;
+      atomic-search-layout {
+        row-gap: var(--atomic-layout-spacing-y);
       }
 
       .accessibility-header {
+        position: absolute;
+        display: block;
         height: 0;
         overflow: hidden;
         margin: 0;
       }
 
-      @media only screen and (min-width: 1024px) {
-        atomic-search-interface {
-          column-gap: var(--spacing-col);
-          grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 1100px) 1fr;
-          grid-template-areas:
-            '. .      search      .'
-            '. facets breadbox .'
-            '. facets topbar      .'
-            '. facets results     .'
-            '. facets pagination  .'
-            '. facets status      .'
-            '. facets .           .';
-        }
+      atomic-layout-section[section='pagination'].use-load-more-results atomic-pager,
+      atomic-layout-section[section='pagination'].use-load-more-results atomic-results-per-page {
+        display: none;
+      }
 
-        atomic-facet-manager {
-          display: block;
-        }
-
-        atomic-refine-toggle {
-          display: none;
-        }
-
-        atomic-sort-dropdown {
-          display: block;
-        }
-
-        .status {
-          max-width: var(--search-box-width);
-        }
+      atomic-layout-section[section='pagination']:not(.use-load-more-results) atomic-load-more-results {
+        display: none;
       }
     </style>
   </head>
@@ -293,209 +149,232 @@
   <body>
     <atomic-aria-live></atomic-aria-live>
     <atomic-search-interface
-      id="search"
       pipeline="Search"
       search-hub="MainSearch"
       fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
     >
-      <div class="header-bg"></div>
-      <div class="search">
-        <div id="result-display-option">
-          <label for="result-display-select">Result list layout:&nbsp;</label
-          ><select id="result-display-select">
-            <option value="list">List</option>
-            <option value="grid">Grid</option>
-            <option value="table">Table</option>
-          </select>
-        </div>
-        <div id="pagination-option">
-          <label for="pagination-select">Browsing mode:&nbsp;</label>
-          <select id="pagination-select">
-            <option value="pager">Pagination</option>
-            <option value="load-more">Load more results button</option>
-          </select>
-        </div>
-        <h1 class="accessibility-header">Search</h1>
-        <atomic-search-box>
-          <atomic-search-box-recent-queries> </atomic-search-box-recent-queries>
-          <atomic-search-box-instant-results image-size="icon">
-            <atomic-result-template>
-              <template>
-                <style>
-                  .result-root {
-                    padding-top: 12px;
-                  }
-                  [field='title'] {
-                    font-size: 14px;
-                  }
-                </style>
-                <atomic-result-section-title>
-                  <atomic-result-link></atomic-result-link>
-                </atomic-result-section-title>
-                <atomic-result-section-title-metadata>
-                  <div class="rating-wrapper">
+      <atomic-search-layout>
+        <div class="header-bg"></div>
+        <atomic-layout-section section="search">
+          <div id="result-display-option">
+            <label for="result-display-select">Result list layout:&nbsp;</label
+            ><select id="result-display-select">
+              <option value="list">List</option>
+              <option value="grid">Grid</option>
+              <option value="table">Table</option>
+            </select>
+          </div>
+          <div id="pagination-option">
+            <label for="pagination-select">Browsing mode:&nbsp;</label>
+            <select id="pagination-select">
+              <option value="pager">Pagination</option>
+              <option value="load-more">Load more results button</option>
+            </select>
+          </div>
+          <h1 class="accessibility-header">Search</h1>
+          <atomic-search-box>
+            <atomic-search-box-recent-queries> </atomic-search-box-recent-queries>
+            <atomic-search-box-instant-results image-size="small">
+              <atomic-result-template>
+                <template>
+                  <style>
+                    .result-root {
+                      height: 120px;
+                      padding-top: 12px;
+                    }
+                    .result-root img {
+                      max-width: 70%;
+                    }
+                    atomic-result-section-visual {
+                      max-height: 100%;
+                    }
+                    [field='title'] {
+                      font-size: 14px;
+                    }
+                  </style>
+                  <atomic-result-section-title>
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-result-section-title>
+                  <atomic-result-section-title-metadata>
+                    <div class="rating-wrapper">
+                      <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                    </div>
+                  </atomic-result-section-title-metadata>
+                  <atomic-result-section-visual>
+                    <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                  </atomic-result-section-visual>
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-number field="ec_price">
+                      <atomic-format-currency currency="USD"></atomic-format-currency>
+                    </atomic-result-number>
+                  </atomic-result-section-bottom-metadata>
+                </template>
+              </atomic-result-template>
+            </atomic-search-box-instant-results>
+            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+          </atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <h1 class="accessibility-header">Filters</h1>
+            <atomic-category-facet
+              field="ec_category"
+              label="Category"
+              delimiting-character="|"
+              heading-level="2"
+              with-search
+            ></atomic-category-facet>
+            <atomic-facet field="ec_brand" label="Brand" heading-level="2"></atomic-facet>
+            <atomic-numeric-facet
+              field="cat_review_count"
+              label="Amount of reviews"
+              display-values-as="link"
+              heading-level="2"
+            >
+              <atomic-numeric-range start="0" end="150" label="Few"></atomic-numeric-range>
+              <atomic-numeric-range start="150" end="650" label="A moderate amount"></atomic-numeric-range>
+              <atomic-numeric-range start="650" end="999999999" label="A lot"></atomic-numeric-range>
+            </atomic-numeric-facet>
+            <atomic-color-facet
+              field="cat_color"
+              label="Color"
+              number-of-values="6"
+              sort-criteria="occurrences"
+              heading-level="2"
+            ></atomic-color-facet>
+            <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer" heading-level="2">
+              <atomic-format-currency currency="USD"></atomic-format-currency>
+            </atomic-numeric-facet>
+            <atomic-timeframe-facet label="Listed within" with-date-picker heading-level="2">
+              <atomic-timeframe unit="hour"></atomic-timeframe>
+              <atomic-timeframe unit="day"></atomic-timeframe>
+              <atomic-timeframe unit="week"></atomic-timeframe>
+              <atomic-timeframe unit="month"></atomic-timeframe>
+              <atomic-timeframe unit="quarter"></atomic-timeframe>
+              <atomic-timeframe unit="year"></atomic-timeframe>
+              <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
+            </atomic-timeframe-facet>
+            <atomic-rating-facet
+              field="ec_rating"
+              label="Rating"
+              number-of-intervals="5"
+              heading-level="2"
+            ></atomic-rating-facet>
+            <atomic-rating-range-facet
+              facet-id="ec_rating_range"
+              field="ec_rating"
+              label="Rating Range"
+              number-of-intervals="5"
+              heading-level="2"
+            >
+            </atomic-rating-range-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <h1 class="accessibility-header">Status</h1>
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary enable-duration="false"></atomic-query-summary>
+            <atomic-refine-toggle></atomic-refine-toggle>
+            <atomic-sort-dropdown>
+              <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+              <atomic-sort-expression
+                label="Price (low to high)"
+                expression="ec_price ascending"
+              ></atomic-sort-expression>
+              <atomic-sort-expression
+                label="Price (high to low)"
+                expression="ec_price descending"
+              ></atomic-sort-expression>
+            </atomic-sort-dropdown>
+            <atomic-did-you-mean></atomic-did-you-mean>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <h1 class="accessibility-header">Results</h1>
+            <atomic-result-list display="grid" image-size="large">
+              <atomic-result-template>
+                <template>
+                  <style>
+                    .field {
+                      display: inline-flex;
+                      white-space: nowrap;
+                      align-items: center;
+                    }
+
+                    .field-label {
+                      font-weight: bold;
+                      margin-right: 0.25rem;
+                    }
+                  </style>
+                  <atomic-result-section-title>
+                    <h2><atomic-result-link></atomic-result-link></h2>
+                  </atomic-result-section-title>
+                  <atomic-result-section-emphasized>
+                    <atomic-result-number field="ec_price">
+                      <atomic-format-currency currency="USD"></atomic-format-currency>
+                    </atomic-result-number>
+                  </atomic-result-section-emphasized>
+                  <atomic-result-section-title-metadata>
                     <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                  </div>
-                </atomic-result-section-title-metadata>
-                <atomic-result-section-visual>
-                  <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
-                </atomic-result-section-visual>
-                <atomic-result-section-bottom-metadata>
-                  <atomic-result-number field="ec_price">
-                    <atomic-format-currency currency="USD"></atomic-format-currency>
-                  </atomic-result-number>
-                </atomic-result-section-bottom-metadata>
-              </template>
-            </atomic-result-template>
-          </atomic-search-box-instant-results>
-        </atomic-search-box>
-      </div>
-      <atomic-facet-manager>
-        <h1 class="accessibility-header">Filters</h1>
-        <atomic-category-facet
-          field="ec_category"
-          label="Category"
-          delimiting-character="|"
-          heading-level="2"
-          with-search
-        ></atomic-category-facet>
-        <atomic-facet field="ec_brand" label="Brand" heading-level="2"></atomic-facet>
-        <atomic-numeric-facet
-          field="cat_review_count"
-          label="Amount of reviews"
-          display-values-as="link"
-          heading-level="2"
-        >
-          <atomic-numeric-range start="0" end="150" label="Few"></atomic-numeric-range>
-          <atomic-numeric-range start="150" end="650" label="A moderate amount"></atomic-numeric-range>
-          <atomic-numeric-range start="650" end="999999999" label="A lot"></atomic-numeric-range>
-        </atomic-numeric-facet>
-        <atomic-color-facet
-          field="cat_color"
-          label="Color"
-          number-of-values="6"
-          sort-criteria="occurrences"
-          heading-level="2"
-        ></atomic-color-facet>
-        <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer" heading-level="2">
-          <atomic-format-currency currency="USD"></atomic-format-currency>
-        </atomic-numeric-facet>
-        <atomic-timeframe-facet label="Listed within" with-date-picker heading-level="2">
-          <atomic-timeframe unit="hour"></atomic-timeframe>
-          <atomic-timeframe unit="day"></atomic-timeframe>
-          <atomic-timeframe unit="week"></atomic-timeframe>
-          <atomic-timeframe unit="month"></atomic-timeframe>
-          <atomic-timeframe unit="quarter"></atomic-timeframe>
-          <atomic-timeframe unit="year"></atomic-timeframe>
-          <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
-        </atomic-timeframe-facet>
-        <atomic-rating-facet
-          field="ec_rating"
-          label="Rating"
-          number-of-intervals="5"
-          heading-level="2"
-        ></atomic-rating-facet>
-        <atomic-rating-range-facet
-          facet-id="ec_rating_range"
-          field="ec_rating"
-          label="Rating Range"
-          number-of-intervals="5"
-          heading-level="2"
-        >
-        </atomic-rating-range-facet>
-      </atomic-facet-manager>
-      <atomic-breadbox></atomic-breadbox>
-      <div class="topbar">
-        <atomic-query-summary enable-duration="false"></atomic-query-summary>
-        <atomic-refine-toggle></atomic-refine-toggle>
-        <atomic-sort-dropdown>
-          <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
-          <atomic-sort-expression label="Price (low to high)" expression="ec_price ascending"></atomic-sort-expression>
-          <atomic-sort-expression label="Price (high to low)" expression="ec_price descending"></atomic-sort-expression>
-        </atomic-sort-dropdown>
-      </div>
-      <div class="results">
-        <h1 class="accessibility-header">Results</h1>
-        <atomic-did-you-mean></atomic-did-you-mean>
-        <atomic-result-list display="grid" image-size="large">
-          <atomic-result-template>
-            <template>
-              <style>
-                .field {
-                  display: inline-flex;
-                  white-space: nowrap;
-                  align-items: center;
-                }
+                    <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+                  </atomic-result-section-title-metadata>
+                  <atomic-result-section-badges>
+                    <atomic-result-badge field="ec_brand" role="note"></atomic-result-badge>
+                  </atomic-result-section-badges>
+                  <atomic-result-section-visual>
+                    <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                  </atomic-result-section-visual>
+                  <atomic-result-section-excerpt
+                    ><atomic-result-text field="ec_shortdesc"></atomic-result-text
+                  ></atomic-result-section-excerpt>
+                  <atomic-result-section-bottom-metadata>
+                    <atomic-result-fields-list role="grid">
+                      <atomic-field-condition class="field" if-defined="cat_platform" role="row">
+                        <span class="field-label" role="rowheader"><atomic-text value="Platform"></atomic-text>:</span>
+                        <atomic-result-text field="cat_platform" role="cell"></atomic-result-text>
+                      </atomic-field-condition>
 
-                .field-label {
-                  font-weight: bold;
-                  margin-right: 0.25rem;
-                }
-              </style>
-              <atomic-result-section-title>
-                <h2><atomic-result-link></atomic-result-link></h2>
-              </atomic-result-section-title>
-              <atomic-result-section-emphasized>
-                <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
-                </atomic-result-number>
-              </atomic-result-section-emphasized>
-              <atomic-result-section-title-metadata>
-                <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
-              </atomic-result-section-title-metadata>
-              <atomic-result-section-badges>
-                <atomic-result-badge field="ec_brand" role="note"></atomic-result-badge>
-              </atomic-result-section-badges>
-              <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
-              </atomic-result-section-visual>
-              <atomic-result-section-excerpt
-                ><atomic-result-text field="ec_shortdesc"></atomic-result-text
-              ></atomic-result-section-excerpt>
-              <atomic-result-section-bottom-metadata>
-                <atomic-result-fields-list role="grid">
-                  <atomic-field-condition class="field" if-defined="cat_platform" role="row">
-                    <span class="field-label" role="rowheader"><atomic-text value="Platform"></atomic-text>:</span>
-                    <atomic-result-text field="cat_platform" role="cell"></atomic-result-text>
-                  </atomic-field-condition>
+                      <atomic-field-condition class="field" if-defined="cat_condition" role="row">
+                        <span class="field-label" role="rowheader"><atomic-text value="Condition"></atomic-text>:</span>
+                        <atomic-result-text field="cat_condition" role="cell"></atomic-result-text>
+                      </atomic-field-condition>
 
-                  <atomic-field-condition class="field" if-defined="cat_condition" role="row">
-                    <span class="field-label" role="rowheader"><atomic-text value="Condition"></atomic-text>:</span>
-                    <atomic-result-text field="cat_condition" role="cell"></atomic-result-text>
-                  </atomic-field-condition>
+                      <atomic-field-condition class="field" if-defined="cat_categories" role="row">
+                        <span class="field-label" role="rowheader"><atomic-text value="Tags"></atomic-text>:</span>
+                        <atomic-result-multi-value-text
+                          field="cat_categories"
+                          role="cell"
+                        ></atomic-result-multi-value-text>
+                      </atomic-field-condition>
+                    </atomic-result-fields-list>
+                  </atomic-result-section-bottom-metadata>
+                  <atomic-table-element label="Description">
+                    <atomic-result-link></atomic-result-link>
+                  </atomic-table-element>
+                  <atomic-table-element label="Price">
+                    <atomic-result-number field="ec_price">
+                      <atomic-format-currency currency="USD"></atomic-format-currency>
+                    </atomic-result-number>
+                  </atomic-table-element>
+                  <atomic-table-element label="Rating">
+                    <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  </atomic-table-element>
+                </template>
+              </atomic-result-template>
+            </atomic-result-list>
+            <atomic-query-error></atomic-query-error>
+            <atomic-no-results></atomic-no-results>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination" class="use-load-more-results">
+            <h1 class="accessibility-header">Pagination</h1>
+            <atomic-load-more-results></atomic-load-more-results>
 
-                  <atomic-field-condition class="field" if-defined="cat_categories" role="row">
-                    <span class="field-label" role="rowheader"><atomic-text value="Tags"></atomic-text>:</span>
-                    <atomic-result-multi-value-text field="cat_categories" role="cell"></atomic-result-multi-value-text>
-                  </atomic-field-condition>
-                </atomic-result-fields-list>
-              </atomic-result-section-bottom-metadata>
-              <atomic-table-element label="Description">
-                <atomic-result-link></atomic-result-link>
-              </atomic-table-element>
-              <atomic-table-element label="Price">
-                <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
-                </atomic-result-number>
-              </atomic-table-element>
-              <atomic-table-element label="Rating">
-                <atomic-result-rating field="ec_rating"></atomic-result-rating>
-              </atomic-table-element>
-            </template>
-          </atomic-result-template>
-        </atomic-result-list>
-      </div>
-      <div class="pagination use-load-more-results">
-        <h1 class="accessibility-header">Pagination</h1>
-        <atomic-load-more-results></atomic-load-more-results>
-        <atomic-pager></atomic-pager>
-        <atomic-results-per-page choices-displayed="12,24,48,96"></atomic-results-per-page>
-      </div>
-      <div class="status">
-        <atomic-query-error></atomic-query-error>
-        <atomic-no-results></atomic-no-results>
-      </div>
+            <atomic-pager></atomic-pager>
+            <atomic-results-per-page choices-displayed="12,24,48,96"></atomic-results-per-page>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
     </atomic-search-interface>
+    <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>

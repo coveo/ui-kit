@@ -17,6 +17,7 @@
   --atomic-success: #12a244;
   --atomic-error: #ce3f00;
   --atomic-visited: #752e9c;
+  --atomic-disabled: #c5cacf;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
@@ -41,4 +42,7 @@
   /* Layout */
   --atomic-layout-spacing-x: 1.5rem;
   --atomic-layout-spacing-y: 1rem;
+
+  /* Component specific */
+  --atomic-rating-icon-outline: #775d00;
 }

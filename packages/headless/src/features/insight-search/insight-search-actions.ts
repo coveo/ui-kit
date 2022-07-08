@@ -1,12 +1,19 @@
 import {createAsyncThunk} from '../..';
+import {
+  historyStore,
+  StateNeededByInsightAnalyticsProvider,
+} from '../../api/analytics/insight-analytics';
 import {isErrorResponse} from '../../api/search/search-api-client';
+import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {
   AsyncThunkInsightOptions,
   InsightAPIClient,
 } from '../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
 import {
+  CategoryFacetSection,
   ConfigurationSection,
+  DateFacetSection,
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
@@ -14,16 +21,31 @@ import {
   QuerySection,
   SearchSection,
 } from '../../state/state-sections';
-import {
-  AnalyticsType,
-  makeAnalyticsAction,
-  SearchAction,
-} from '../analytics/analytics-utils';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {InsightAction} from '../analytics/analytics-utils';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
+import {
+  buildQuerySuggestRequest,
+  FetchQuerySuggestionsActionCreatorPayload,
+  FetchQuerySuggestionsThunkReturn,
+  StateNeededByQuerySuggest,
+} from '../query-suggest/query-suggest-actions';
+import {getQueryInitialState} from '../query/query-state';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
-import {logQueryError} from '../search/search-analytics-actions';
+import {
+  MappedSearchRequest,
+  mapSearchRequest,
+  mapSearchResponse,
+  SuccessResponse,
+} from '../search/search-mappings';
+import {getSearchInitialState} from '../search/search-state';
+import {
+  logFetchMoreResults,
+  logQueryError,
+} from './insight-search-analytics-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   InsightConfigurationSection &
@@ -32,6 +54,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchSection &
       QuerySection &
       FacetSection &
+      DateFacetSection &
+      CategoryFacetSection &
       PaginationSection
   >;
 
@@ -49,20 +73,22 @@ const fetchFromAPI = async (
 
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  InsightAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/executeSearch',
   async (
-    analyticsAction: SearchAction,
+    analyticsAction: InsightAction,
     {getState, dispatch, rejectWithValue, extra}
   ) => {
-    /** TODO: We need to dispatch analytics action, but first we have to create InsightClientProvider so the refactor will be available in  https://coveord.atlassian.net/browse/SVCC-2246*/
     const state = getState();
+    addEntryInActionsHistory(state);
+
+    const mappedRequest = buildInsightSearchRequest(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      buildInsightSearchRequest(state)
+      mappedRequest.request
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -70,6 +96,23 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(fetched.response.error);
     }
 
+    const fetchedResponse = (
+      mapSearchResponse(
+        fetched.response,
+        mappedRequest.mappings
+      ) as SuccessResponse
+    ).success;
+    analyticsAction(
+      dispatch,
+      () =>
+        getStateAfterResponse(
+          fetched.queryExecuted,
+          fetched.duration,
+          state,
+          fetchedResponse
+        ),
+      extra
+    );
     dispatch(snapshot(extractHistory(getState())));
 
     return {
@@ -115,12 +158,12 @@ export const fetchMoreResults = createAsyncThunk<
 
 export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
-  SearchAction,
+  InsightAction,
   AsyncThunkInsightOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchFacetValues',
   async (
-    analyticsAction: SearchAction,
+    analyticsAction: InsightAction,
     {getState, dispatch, rejectWithValue, extra: {apiClient}}
   ) => {
     const state = getState();
@@ -147,29 +190,55 @@ export const fetchFacetValues = createAsyncThunk<
   }
 );
 
+export const fetchQuerySuggestions = createAsyncThunk<
+  FetchQuerySuggestionsThunkReturn,
+  FetchQuerySuggestionsActionCreatorPayload,
+  AsyncThunkInsightOptions<StateNeededByQuerySuggest>
+>(
+  'querySuggest/fetch',
+
+  async (payload: {id: string}, {getState, extra: {validatePayload}}) => {
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+    });
+    const id = payload.id;
+    const request = await buildQuerySuggestRequest(id, getState());
+
+    // TODO: Fetch query suggestions from the platform when the back-end supports it.
+
+    return {
+      id,
+      q: request.q,
+      completions: [],
+      responseId: '',
+    };
+  }
+);
+
 const buildInsightSearchRequest = (
   state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
+): MappedSearchRequest<InsightQueryRequest> => {
+  const facets = getAllFacets(state);
+  return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
     insightId: state.insightConfiguration.insightId,
     q: state.query?.q,
-    facets: getFacetRequests(state.facetSet),
+    ...(facets.length && {facets}),
     caseContext: state.insightCaseContext?.caseContext,
     ...(state.pagination && {
       firstResult: state.pagination.firstResult,
       numberOfResults: state.pagination.numberOfResults,
     }),
-  };
+  });
 };
 
 const buildInsightFetchMoreResultsRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
   return {
-    ...buildInsightSearchRequest(state),
+    ...buildInsightSearchRequest(state).request,
     firstResult:
       (state.pagination?.firstResult ?? 0) +
       (state.pagination?.numberOfResults ?? 0),
@@ -180,17 +249,24 @@ const buildInsightFetchFacetValuesRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
   return {
-    ...buildInsightSearchRequest(state),
+    ...buildInsightSearchRequest(state).request,
     numberOfResults: 0,
   };
 };
 
-export const logFetchMoreResults = makeAnalyticsAction(
-  'search/logFetchMoreResults',
-  AnalyticsType.Search,
-  (client) => client.logFetchMoreResults()
-);
+function getAllFacets(state: StateNeededByExecuteSearch) {
+  return [
+    ...getFacetRequests({
+      ...state.facetSet,
+      ...state.dateFacetSet,
+    }),
+    ...getCategoryFacetRequests(state.categoryFacetSet),
+  ];
+}
 
+function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
+  return Object.values(state || {}).map((slice) => slice!.request);
+}
 function getFacetRequests<T extends AnyFacetRequest>(
   requests: Record<string, T> = {}
 ) {
@@ -199,3 +275,41 @@ function getFacetRequests<T extends AnyFacetRequest>(
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';
+
+const getStateAfterResponse: (
+  query: string,
+  duration: number,
+  previousState: StateNeededByExecuteSearch,
+  response: SearchResponseSuccess
+) => StateNeededByInsightAnalyticsProvider = (
+  query,
+  duration,
+  previousState,
+  response
+) => ({
+  ...previousState,
+  query: {
+    q: query,
+    enableQuerySyntax:
+      previousState.query?.enableQuerySyntax ??
+      getQueryInitialState().enableQuerySyntax,
+  },
+  search: {
+    ...getSearchInitialState(),
+    duration,
+    response,
+    results: response.results,
+  },
+});
+
+const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
+  if (state.configuration.analytics.enabled) {
+    historyStore.addElement({
+      name: 'Query',
+      ...(state.query?.q && {
+        value: state.query.q,
+      }),
+      time: JSON.stringify(new Date()),
+    });
+  }
+};

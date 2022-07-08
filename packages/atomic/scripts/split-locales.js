@@ -26,7 +26,7 @@ async function splitLocales() {
     }
   }
 
-  const langFolderPath = 'src/components/atomic-search-interface/lang/';
+  const langFolderPath = 'src/components/search/atomic-search-interface/lang/';
 
   await rm(langFolderPath, {recursive: true, force: true});
   await mkdir(langFolderPath, {recursive: true});
@@ -37,6 +37,20 @@ async function splitLocales() {
       JSON.stringify(localeData)
     );
   });
+
+  saveAvailableLocales(localesMap);
+}
+
+async function saveAvailableLocales(localesMap) {
+  const generatedPath = 'src/generated';
+  const localesArray = Object.entries(localesMap).map(
+    ([localeKey]) => localeKey.toLowerCase()
+  );
+
+  await writeFile(
+    `${generatedPath}/availableLocales.json`,
+    JSON.stringify(localesArray)
+  );
 }
 
 splitLocales();

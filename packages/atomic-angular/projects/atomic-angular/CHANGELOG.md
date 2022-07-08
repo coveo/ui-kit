@@ -3,6 +3,301 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.2...@coveo/atomic-angular@1.20.3) (2022-07-08)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.1...@coveo/atomic-angular@1.20.2) (2022-07-08)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.0...@coveo/atomic-angular@1.20.1) (2022-07-07)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.19.1...@coveo/atomic-angular@1.20.0) (2022-07-07)
+
+
+### Features
+
+* npm workspace migration ([#2180](https://github.com/coveo/ui-kit/issues/2180)) ([f3b6997](https://github.com/coveo/ui-kit/commit/f3b69977675837dbed5ebe1eb3cb7fb2c98305ea))
+
+
+
+
+
+## [1.19.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.19.0...@coveo/atomic-angular@1.19.1) (2022-07-06)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.19.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.9...@coveo/atomic-angular@1.19.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+
+
+
+
+
+## [1.18.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.8...@coveo/atomic-angular@1.18.9) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** add explicit types for different types of store ([#2190](https://github.com/coveo/ui-kit/issues/2190)) ([16afb1e](https://github.com/coveo/ui-kit/commit/16afb1ea91a4b97ca5a34585b342dc6208dc9ed0))
+
+
+
+
+
+## [1.18.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.7...@coveo/atomic-angular@1.18.8) (2022-07-05)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.18.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.6...@coveo/atomic-angular@1.18.7) (2022-07-05)
+
+
+### Bug Fixes
+
+* **atomic:** revert aliases ([#2187](https://github.com/coveo/ui-kit/issues/2187)) ([702946a](https://github.com/coveo/ui-kit/commit/702946ae3de6f52370ab15bcee50d18e3f5b8fc2))
+
+
+
+
+
+## [1.18.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.5...@coveo/atomic-angular@1.18.6) (2022-07-04)
+
+
+### Bug Fixes
+
+* **atomic:** add insight and case assist to headless files ([#2185](https://github.com/coveo/ui-kit/issues/2185)) ([6d85aca](https://github.com/coveo/ui-kit/commit/6d85acab276cbf845ab947d555cbe162bbb6c5c1))
+
+
+
+
+
+## [1.18.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.4...@coveo/atomic-angular@1.18.5) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.18.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.3...@coveo/atomic-angular@1.18.4) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.18.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.2...@coveo/atomic-angular@1.18.3) (2022-06-30)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.18.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.1...@coveo/atomic-angular@1.18.2) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.18.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.18.0...@coveo/atomic-angular@1.18.1) (2022-06-29)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.18.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.5...@coveo/atomic-angular@1.18.0) (2022-06-28)
+
+
+### Features
+
+* **atomic:** add functionality arrow button scroll ([#2130](https://github.com/coveo/ui-kit/issues/2130)) ([9b1b77b](https://github.com/coveo/ui-kit/commit/9b1b77be3bc17a8788acf272b3876f329ab4ecd7))
+
+
+
+
+
+## [1.17.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.4...@coveo/atomic-angular@1.17.5) (2022-06-28)
+
+
+### Bug Fixes
+
+* make lockfiles part of the PR generated files ([#2167](https://github.com/coveo/ui-kit/issues/2167)) ([0b1d12a](https://github.com/coveo/ui-kit/commit/0b1d12a5f47879583ace719f0ebf03f0490499a5))
+
+
+
+
+
+## [1.17.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.3...@coveo/atomic-angular@1.17.4) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.17.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.2...@coveo/atomic-angular@1.17.3) (2022-06-27)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.17.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.1...@coveo/atomic-angular@1.17.2) (2022-06-24)
+
+
+### Bug Fixes
+
+* **atomic:** improve click interaction in instant result ([#2129](https://github.com/coveo/ui-kit/issues/2129)) ([f7df573](https://github.com/coveo/ui-kit/commit/f7df57332f90941aee2be85224c6d1dd79c01a70))
+
+
+
+
+
+## [1.17.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.17.0...@coveo/atomic-angular@1.17.1) (2022-06-23)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.10...@coveo/atomic-angular@1.17.0) (2022-06-22)
+
+
+### Features
+
+* **atomic:** add segmented scrollable component basic structure ([#2100](https://github.com/coveo/ui-kit/issues/2100)) ([7bb2d1c](https://github.com/coveo/ui-kit/commit/7bb2d1c17e60d4fd924f04b4b319fca3b62e3d8a))
+* **atomic:** disableSearch prop for search box ([#2126](https://github.com/coveo/ui-kit/issues/2126)) ([a3d2c64](https://github.com/coveo/ui-kit/commit/a3d2c645ea904bf27254ce4eac4f63f4e8318de9))
+
+
+
+
+
+## [1.16.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.9...@coveo/atomic-angular@1.16.10) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.8...@coveo/atomic-angular@1.16.9) (2022-06-21)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.7...@coveo/atomic-angular@1.16.8) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.6...@coveo/atomic-angular@1.16.7) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.5...@coveo/atomic-angular@1.16.6) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.4...@coveo/atomic-angular@1.16.5) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.3...@coveo/atomic-angular@1.16.4) (2022-06-20)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.2...@coveo/atomic-angular@1.16.3) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.1...@coveo/atomic-angular@1.16.2) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.16.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.16.0...@coveo/atomic-angular@1.16.1) (2022-06-17)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+# [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.15.1...@coveo/atomic-angular@1.16.0) (2022-06-16)
+
+
+### Features
+
+* **atomic:** release instant results and add react and angular support ([#2079](https://github.com/coveo/ui-kit/issues/2079)) ([06f715f](https://github.com/coveo/ui-kit/commit/06f715fc56c7063043ead5a40baa9278709f62ae))
+
+
+
+
+
 ## [1.15.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.15.0...@coveo/atomic-angular@1.15.1) (2022-06-16)
 
 **Note:** Version bump only for package @coveo/atomic-angular

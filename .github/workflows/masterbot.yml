@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      - run: npx --no-install lerna run copy:staticresources --scope @coveo/quantic
+      - run: npm run copy:staticresources -w @coveo/quantic
       - run: npm test
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
@@ -41,7 +41,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: ["cypress/integration/*", "cypress/integration/result-list/**/*", "cypress/integration/facets/**/*"]
+        spec: ["cypress/integration/*", "cypress/integration/result-list/**/*", "cypress/integration/facets/**/*", "cypress/integration/search-box/**/*"]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -118,7 +118,6 @@ jobs:
           token: ${{ secrets.ADMIN_GITHUB_TOKEN }}
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: git add '**package-lock.json'
       - name: Clean directory
         run: git clean -xfd -e node_modules/ -e .husky
       - name: Commit & push

@@ -35,9 +35,7 @@ runs:
       with:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('**/package-lock.json') }}
-    - run: |
-        npm install
-        npx --no-install lerna bootstrap --no-ci
+    - run: npm ci
       shell: bash
     - if: steps.build-cache.outputs.cache-hit != 'true'
       run: npm run build

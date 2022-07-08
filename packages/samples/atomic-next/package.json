@@ -3,25 +3,23 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "^1.56.1",
-    "@coveo/atomic-react": "^1.4.7",
-    "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "@coveo/atomic": "^1.69.0",
+    "@coveo/atomic-react": "^1.12.5",
+    "next": "12.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@types/node": "17.0.34",
-    "@types/react": "18.0.9",
-    "@types/react-dom": "18.0.4",
-    "eslint": "8.15.0",
-    "eslint-config-next": "12.1.6",
-    "ncp": "^2.0.0",
+    "@types/react": "18.0.14",
+    "@types/react-dom": "18.0.5",
+    "ncp": "2.0.0",
     "typescript": "4.6.4"
   },
   "scripts": {
-    "build": "next build",
-    "dev": "npm run copy:assets && npm run link:atomic-react && next dev",
-    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/atomic-next/node_modules/react/ && ncp ../atomic/dist ../atomic-react/node_modules/@coveo/atomic/dist",
-    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang public/assets"
+    "build": "tsc --noEmit && tsc --module commonjs --noEmit",
+    "dev": "npm run link:react && npm run copy:assets && next dev",
+    "link:react": "cd ../../atomic-react && npm link ../samples/atomic-react/node_modules/react/",
+    "copy:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets"
   }
 }

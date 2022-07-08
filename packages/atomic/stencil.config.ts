@@ -62,7 +62,6 @@ export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
   sourceMap: true,
-  globalScript: 'node_modules/focus-visible/dist/focus-visible.min.js',
   outputTargets: [
     react({
       componentCorePackage: '@coveo/atomic',
@@ -89,7 +88,7 @@ export const config: Config = {
       copy: [
         {src: 'themes'},
         {
-          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'assets',
         },
       ],
@@ -104,12 +103,14 @@ export const config: Config = {
       copy: [
         {src: 'pages', keepDirStructure: false},
         {src: 'themes'},
-        isDevWatch && {src: 'external-builds', dest: 'build/headless'},
+        isDevWatch
+          ? {src: 'external-builds', dest: 'build/headless'}
+          : {src: ''},
         {
-          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'build/assets',
         },
-      ].filter((n) => n),
+      ].filter((n) => n.src),
     },
   ],
   testing: {
@@ -166,6 +167,13 @@ export const config: Config = {
               replacement: path.resolve(
                 __dirname,
                 './src/external-builds/product-recommendation/headless.esm.js'
+              ),
+            },
+            {
+              find: '@coveo/headless/insight',
+              replacement: path.resolve(
+                __dirname,
+                './src/external-builds/insight/headless.esm.js'
               ),
             },
             {

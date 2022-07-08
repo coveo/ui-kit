@@ -4,30 +4,30 @@
   "description": "Samples with atomic-react",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "^1.62.0",
-    "@coveo/atomic-react": "^1.0.2",
-    "react": "18.0.0",
-    "react-dom": "18.0.0"
+    "@coveo/atomic": "^1.69.0",
+    "@coveo/atomic-react": "^1.12.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/react": "18.0.2",
-    "@types/react-dom": "18.0.0",
+    "@types/react": "18.0.14",
+    "@types/react-dom": "18.0.5",
     "css-loader": "6.7.1",
     "cypress": "9.3.1",
-    "eslint-plugin-react": "7.29.4",
+    "eslint-plugin-react": "7.30.1",
     "ncp": "2.0.0",
     "style-loader": "3.3.1",
     "ts-loader": "9.2.8",
     "typescript": "4.6.3",
     "webpack": "5.72.0",
-    "webpack-cli": "4.9.2",
+    "webpack-cli": "4.10.0",
     "webpack-dev-server": "4.8.1"
   },
   "scripts": {
-    "build": "tsc --noEmit",
-    "dev": "npm run copy:assets && npm run link:atomic-react && webpack serve",
-    "copy:assets": "ncp node_modules/@coveo/atomic-react/dist/assets public/assets && ncp node_modules/@coveo/atomic-react/dist/lang public/lang public/assets && ncp node_modules/@coveo/atomic/dist/atomic/themes public/themes",
-    "link:atomic-react": "cd ../../atomic-react && npm link ../samples/atomic-react/node_modules/react/ && ncp ../atomic/dist ../atomic-react/node_modules/@coveo/atomic/dist",
+    "build": "tsc --noEmit && tsc --module commonjs --noEmit",
+    "dev": "npm run link:react && npm run copy:assets && webpack serve",
+    "link:react": "cd ../../atomic-react && npm link ../samples/atomic-react/node_modules/react/",
+    "copy:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
     "cypress:open": "cypress open"
   }
 }

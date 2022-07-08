@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
@@ -55,7 +56,8 @@ export function FocusTarget() {
         }
         if (
           focusAfterSearch &&
-          this.bindings.engine.state.search.response.searchUid !== lastSearchId
+          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+            lastSearchId
         ) {
           focusAfterSearch = false;
           if (element) {
@@ -85,7 +87,9 @@ export function FocusTarget() {
           }
         },
         focusAfterSearch: () => {
-          lastSearchId = this.bindings.engine.state.search.response.searchUid;
+          lastSearchId = this.bindings.store.getUniqueIDFromEngine(
+            this.bindings.engine
+          );
           focusAfterSearch = true;
           return new Promise((resolve) => (onFocusCallback = resolve));
         },
@@ -94,7 +98,7 @@ export function FocusTarget() {
           return new Promise((resolve) => (onFocusCallback = resolve));
         },
         disableForCurrentSearch: () =>
-          this.bindings.engine.state.search.response.searchUid !==
+          this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
             lastSearchId && (focusAfterSearch = false),
       };
       this[setterName] = focusTargetController;

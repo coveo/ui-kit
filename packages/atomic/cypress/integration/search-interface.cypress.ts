@@ -17,6 +17,11 @@ describe('Search Interface Component', () => {
   const engineError =
     'You have to call "initialize" on the atomic-search-interface component before modifying the props or calling other public methods.';
 
+  const setLanguageAndWait = (lang: string) => {
+    setLanguage(lang);
+    cy.wait(TestFixture.interceptAliases.Locale);
+  };
+
   describe('before being initialized', () => {
     beforeEach(() => {
       new TestFixture().withoutInterfaceInitialization().init();
@@ -46,16 +51,50 @@ describe('Search Interface Component', () => {
     });
 
     it('should support changing language', () => {
-      setLanguage('fr');
+      setLanguageAndWait('fr');
       QuerySummarySelectors.text().should('contain', 'Résultats');
 
-      setLanguage('en');
+      setLanguageAndWait('en');
       QuerySummarySelectors.text().should('contain', 'Results');
+    });
+
+    it('should default back to english when language unavailable', () => {
+      setLanguageAndWait('fr');
+      setLanguage('jo');
+
+      QuerySummarySelectors.text().should('contain', 'Results');
+    });
+
+    it('should default back to the non region localed (e.g., "es-ES" to "es")', () => {
+      setLanguageAndWait('es-ES');
+
+      QuerySummarySelectors.text().should('contain', 'Resultados');
+    });
+
+    it('should not log an error to the console when fetching non-existing languages', () => {
+      setLanguageAndWait('es-ES');
+      setLanguage('jo');
+
+      cy.get(TestFixture.consoleAliases.error).should('not.be.called');
+    });
+
+    it('should work with lowercase regions', () => {
+      setLanguageAndWait('zh-tw');
+
+      QuerySummarySelectors.text().should('contain', '結果數');
+    });
+
+    it('should support adding a non-existing language', () => {
+      setTranslation('jo', 'showing-results-of', 'hello');
+      setLanguage('jo');
+      cy.wait(200);
+
+      QuerySummarySelectors.text().should('contain', 'hello');
     });
 
     it('should support changing a translation value without overriding other strings', () => {
       setTranslation('fr', 'showing-results-of_plural', 'patate');
-      setLanguage('fr');
+      setLanguageAndWait('fr');
 
       QuerySummarySelectors.text()
         .should('contain', 'patate')

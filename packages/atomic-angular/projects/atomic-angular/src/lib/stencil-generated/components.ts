@@ -657,13 +657,13 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'stopPropagation']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'stopPropagation']
 })
 export class AtomicResult {
   protected el: HTMLElement;
@@ -1207,13 +1207,13 @@ export declare interface AtomicSearchBox extends Components.AtomicSearchBox {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;
