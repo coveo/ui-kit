@@ -13,6 +13,7 @@ import {InsightQueryRequest} from '../../api/service/insight/query/query-request
 import {
   CategoryFacetSection,
   ConfigurationSection,
+  DateFacetSection,
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
@@ -34,6 +35,12 @@ import {
 } from '../query-suggest/query-suggest-actions';
 import {getQueryInitialState} from '../query/query-state';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
+import {
+  MappedSearchRequest,
+  mapSearchRequest,
+  mapSearchResponse,
+  SuccessResponse,
+} from '../search/search-mappings';
 import {getSearchInitialState} from '../search/search-state';
 import {
   logFetchMoreResults,
@@ -47,6 +54,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchSection &
       QuerySection &
       FacetSection &
+      DateFacetSection &
       CategoryFacetSection &
       PaginationSection
   >;
@@ -75,10 +83,12 @@ export const executeSearch = createAsyncThunk<
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
+
+    const mappedRequest = buildInsightSearchRequest(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      buildInsightSearchRequest(state)
+      mappedRequest.request
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -86,7 +96,12 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(fetched.response.error);
     }
 
-    const fetchedResponse = fetched.response.success;
+    const fetchedResponse = (
+      mapSearchResponse(
+        fetched.response,
+        mappedRequest.mappings
+      ) as SuccessResponse
+    ).success;
     analyticsAction(
       dispatch,
       () =>
@@ -236,9 +251,9 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
 const buildInsightSearchRequest = (
   state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
+): MappedSearchRequest<InsightQueryRequest> => {
   const facets = getAllFacets(state);
-  return {
+  return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
@@ -250,14 +265,14 @@ const buildInsightSearchRequest = (
       firstResult: state.pagination.firstResult,
       numberOfResults: state.pagination.numberOfResults,
     }),
-  };
+  });
 };
 
 const buildInsightFetchMoreResultsRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
   return {
-    ...buildInsightSearchRequest(state),
+    ...buildInsightSearchRequest(state).request,
     firstResult:
       (state.pagination?.firstResult ?? 0) +
       (state.pagination?.numberOfResults ?? 0),
@@ -268,14 +283,17 @@ const buildInsightFetchFacetValuesRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
   return {
-    ...buildInsightSearchRequest(state),
+    ...buildInsightSearchRequest(state).request,
     numberOfResults: 0,
   };
 };
 
 function getAllFacets(state: StateNeededByExecuteSearch) {
   return [
-    ...getFacetRequests(state.facetSet),
+    ...getFacetRequests({
+      ...state.facetSet,
+      ...state.dateFacetSet,
+    }),
     ...getCategoryFacetRequests(state.categoryFacetSet),
   ];
 }
