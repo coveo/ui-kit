@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.81.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.80.0...@coveo/headless@1.81.0) (2022-07-07)
+
+
+### Features
+
+* **atomic,headless:** add search box to insights ([#2188](https://github.com/coveo/ui-kit/issues/2188)) ([d0465f6](https://github.com/coveo/ui-kit/commit/d0465f6a8fff4028f70485d4e0349840a34b6ed7))
+
+
+
+
+
+# [1.80.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.79.0...@coveo/headless@1.80.0) (2022-07-07)
+
+
+### Features
+
+* npm workspace migration ([#2180](https://github.com/coveo/ui-kit/issues/2180)) ([f3b6997](https://github.com/coveo/ui-kit/commit/f3b69977675837dbed5ebe1eb3cb7fb2c98305ea))
+
+
+
+
+
 # [1.79.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.78.0...@coveo/headless@1.79.0) (2022-07-06)
 
 

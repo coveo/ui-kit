@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "1.14.1",
+  "version": "1.15.1",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "compile:cjs": "tsc -p tsconfig.cjs.json",
     "compile": "concurrently \"npm run compile:esm\" \"npm run compile:cjs\"",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
-    "copy:assets": "ncp node_modules/@coveo/atomic/dist/atomic/assets dist/assets && ncp node_modules/@coveo/atomic/dist/atomic/lang dist/lang "
+    "copy:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
@@ -25,7 +25,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "1.80.1"
+    "@coveo/atomic": "1.82.0"
   },
   "devDependencies": {
     "@types/node": "15.14.9",
@@ -36,7 +36,7 @@
     "react-dom": "18.2.0"
   },
   "peerDependencies": {
-    "react": "^17.0.2 || ^18.0.0",
-    "react-dom": "^17.0.2 || ^18.0.0"
+    "react": ">=17.0.2",
+    "react-dom": ">=17.0.2"
   }
 }

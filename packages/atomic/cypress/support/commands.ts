@@ -2,7 +2,7 @@
 import {
   SearchEventRequest,
   ClickEventRequest,
-} from '@coveo/headless/node_modules/coveo.analytics/src/events';
+} from 'coveo.analytics/src/events';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 
 // eslint-disable @typescript/interface-name
