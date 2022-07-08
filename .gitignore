@@ -8,3 +8,7 @@ dist
 reports/*.xml
 
 !.vscode/extensions.json
+
+.yarn/cache
+.yarn/install-state.gz
+yarn.lock
