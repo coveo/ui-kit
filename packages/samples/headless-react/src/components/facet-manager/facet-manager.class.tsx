@@ -47,7 +47,7 @@ export class FacetManager extends Component<
 
   render() {
     if (!this.state) {
-      return this.props.children;
+      return <>{this.props.children}</>;
     }
 
     const childFacets = Children.toArray(
@@ -56,6 +56,6 @@ export class FacetManager extends Component<
     const payload = this.createPayload(childFacets);
     const sortedFacets = this.controller.sort(payload).map((p) => p.payload);
 
-    return sortedFacets;
+    return <>{sortedFacets}</>;
   }
 }

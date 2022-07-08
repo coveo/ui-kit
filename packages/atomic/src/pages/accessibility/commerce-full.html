@@ -174,12 +174,19 @@
           <h1 class="accessibility-header">Search</h1>
           <atomic-search-box>
             <atomic-search-box-recent-queries> </atomic-search-box-recent-queries>
-            <atomic-search-box-instant-results image-size="icon">
+            <atomic-search-box-instant-results image-size="small">
               <atomic-result-template>
                 <template>
                   <style>
                     .result-root {
+                      height: 120px;
                       padding-top: 12px;
+                    }
+                    .result-root img {
+                      max-width: 70%;
+                    }
+                    atomic-result-section-visual {
+                      max-height: 100%;
                     }
                     [field='title'] {
                       font-size: 14px;
