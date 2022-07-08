@@ -33,6 +33,10 @@ export function buildPager(
   return {
     ...pager,
 
+    get state() {
+      return pager.state;
+    },
+
     selectPage(page: number) {
       pager.selectPage(page);
       dispatch(fetchPage(logPageNumber()));
