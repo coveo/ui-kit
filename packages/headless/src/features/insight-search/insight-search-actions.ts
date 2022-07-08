@@ -137,10 +137,12 @@ export const fetchPage = createAsyncThunk<
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
+
+    const mappedRequest = buildInsightSearchRequest(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      buildInsightSearchRequest(state)
+      mappedRequest.request
     );
 
     if (isErrorResponse(fetched.response)) {
