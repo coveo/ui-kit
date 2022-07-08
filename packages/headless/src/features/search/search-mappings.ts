@@ -6,6 +6,7 @@ import {SearchAPIClientResponse} from '../../api/search/search-api-client';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
+import {isFacetRequest} from '../facets/facet-set/interfaces/request';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response';
 import {
@@ -66,6 +67,10 @@ function mapFacetRequest(
         mapDateRangeRequest(value, facetId, mappings)
       ),
     };
+  }
+  if (isFacetRequest(facetRequest)) {
+    const {hasBreadcrumbs, ...required} = facetRequest;
+    return required;
   }
 
   return facetRequest;
