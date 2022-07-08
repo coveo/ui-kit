@@ -8,9 +8,11 @@ import {
     FacetMetadata,
     FacetSortMeta,
     FacetStateMetadata,
+    PagerMetadata,
     InterfaceChangeMetadata,
     QueryErrorMeta,
     SearchPageEvents,
+    ResultsSortMetadata,
 } from '../searchPage/searchPageEvents';
 
 export interface InsightClientProvider {
@@ -104,6 +106,22 @@ export class CoveoInsightClient {
 
     public async logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
         return this.coveoAnalyticsClient.sendSearchEvent(await this.getBaseSearchEventRequest(event, metadata));
+    }
+
+    public logPagerNumber(meta: PagerMetadata) {
+        return this.logCustomEvent(SearchPageEvents.pagerNumber, meta);
+    }
+
+    public logPagerNext(meta: PagerMetadata) {
+        return this.logCustomEvent(SearchPageEvents.pagerNext, meta);
+    }
+
+    public logPagerPrevious(meta: PagerMetadata) {
+        return this.logCustomEvent(SearchPageEvents.pagerPrevious, meta);
+    }
+
+    public logResultsSort(metadata: ResultsSortMetadata) {
+        return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
