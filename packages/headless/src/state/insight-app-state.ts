@@ -14,13 +14,18 @@ import {
   FacetOptionsSection,
   QuerySuggestionSection,
   QuerySetSection,
+  NumericFacetSection,
+  DateFacetSection,
   CategoryFacetSection,
   SortSection,
 } from './state-sections';
 
 export type InsightSearchParametersState = QuerySection &
   FacetSection &
+  DateFacetSection &
+  NumericFacetSection &
   PaginationSection;
+
 export type InsightAppState = InsightSearchParametersState &
   ConfigurationSection &
   VersionSection &

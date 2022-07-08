@@ -4,6 +4,8 @@ import {getFacetOptionsInitialState} from '../features/facet-options/facet-optio
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-state';
+import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
+import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
@@ -35,6 +37,8 @@ export function buildMockInsightState(
     facetOptions: getFacetOptionsInitialState(),
     querySet: getQuerySetInitialState(),
     querySuggest: getQuerySuggestSetInitialState(),
+    numericFacetSet: getNumericFacetSetInitialState(),
+    dateFacetSet: getDateFacetSetInitialState(),
     categoryFacetSet: getCategoryFacetSetInitialState(),
     sortCriteria: getSortCriteriaInitialState(),
     ...config,
