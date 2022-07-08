@@ -1,7 +1,7 @@
 import {Component, h, Element, Prop, Method, State} from '@stencil/core';
-import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless/insight';
 import {MapProp} from '../../../utils/props-utils';
 import {makeMatchConditions} from '../../common/result-template/result-template';
+import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
 
 /**
  * The `atomic-insight-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-insight-result-template`, and either an `atomic-insight-result-list` must be the parent of each `atomic-insight-result-template`.
@@ -16,7 +16,7 @@ export class AtomicInsightResultTemplate {
   @State() public error!: Error;
 
   @Element() public host!: HTMLDivElement;
-  public matchConditions: ResultTemplateCondition[] = [];
+  public matchConditions: InsightResultTemplateCondition[] = [];
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -24,7 +24,7 @@ export class AtomicInsightResultTemplate {
    * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
    * `[(result) => /singapore/i.test(result.title)]`
    */
-  @Prop() public conditions: ResultTemplateCondition[] = [];
+  @Prop() public conditions: InsightResultTemplateCondition[] = [];
 
   /**
    * The field and values that define which result items the condition must be applied to.
@@ -51,7 +51,7 @@ export class AtomicInsightResultTemplate {
    * Gets the appropriate result template based on conditions applied.
    */
   @Method()
-  public async getTemplate(): Promise<ResultTemplate<DocumentFragment> | null> {
+  public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
     if (this.error) {
       return null;
     }

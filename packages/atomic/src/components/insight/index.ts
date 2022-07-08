@@ -1,0 +1,18 @@
+export {
+  AnalyticsConfiguration as InsightAnalyticsConfiguration,
+  LogLevel as InsightLogLevel,
+  InsightEngine,
+  InsightEngineConfiguration,
+  buildInsightEngine,
+  InsightResultList,
+  InsightResultListState,
+  buildInsightResultList,
+  Result as InsightResult,
+  ResultTemplate as InsightResultTemplate,
+  ResultTemplateCondition as InsightResultTemplateCondition,
+  ResultTemplatesManager as InsightResultTemplatesManager,
+  buildResultTemplatesManager as insightBuildResultTemplatesManager,
+  buildInsightSearchBox,
+  InsightSearchBox,
+  SearchBoxState as InsightSearchBoxState,
+} from '@coveo/headless/insight';

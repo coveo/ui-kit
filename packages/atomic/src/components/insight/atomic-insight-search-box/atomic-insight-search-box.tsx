@@ -1,9 +1,5 @@
 import {Component, h, Prop, State} from '@stencil/core';
-import {
-  buildInsightSearchBox,
-  InsightSearchBox,
-  SearchBoxState,
-} from '@coveo/headless/insight';
+
 import {randomID} from '../../../utils/utils';
 import {
   BindStateToController,
@@ -13,6 +9,11 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SubmitButton} from '../../common/search-box/submit-button';
+import {
+  buildInsightSearchBox,
+  InsightSearchBox,
+  InsightSearchBoxState,
+} from '..';
 
 /**
  *
@@ -39,7 +40,7 @@ export class AtomicInsightSearchBox {
 
   @BindStateToController('searchBox')
   @State()
-  private searchBoxState!: SearchBoxState;
+  private searchBoxState!: InsightSearchBoxState;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');

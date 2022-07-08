@@ -1,13 +1,5 @@
 import {Component, h, Element, State, Prop, Host} from '@stencil/core';
-import {
-  buildInsightResultList,
-  InsightResultList,
-  InsightResultListState,
-  Result,
-  ResultTemplate,
-  ResultTemplatesManager,
-  buildResultTemplatesManager,
-} from '@coveo/headless/insight';
+
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
   BindStateToController,
@@ -18,11 +10,20 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
+import {
+  insightBuildResultTemplatesManager,
+  InsightResultList,
+  InsightResultListState,
+  InsightResult,
+  InsightResultTemplate,
+  InsightResultTemplatesManager,
+  buildInsightResultList,
+} from '..';
 
 export type TemplateContent = DocumentFragment;
 
 interface TemplateElement extends HTMLElement {
-  getTemplate(): Promise<ResultTemplate<DocumentFragment> | null>;
+  getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null>;
 }
 
 /**
@@ -51,7 +52,7 @@ interface TemplateElement extends HTMLElement {
 export class AtomicInsightResultList {
   @InitializeBindings() public bindings!: InsightBindings;
   public resultList!: InsightResultList;
-  private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  private resultTemplatesManager!: InsightResultTemplatesManager<TemplateContent>;
   @State() public ready = false;
   @Element() public host!: HTMLDivElement;
   // TODO:
@@ -106,12 +107,12 @@ export class AtomicInsightResultList {
     // this.bindings.store.registerResultList(this);
   }
 
-  public getTemplate(result: Result) {
+  public getTemplate(result: InsightResult) {
     return this.resultTemplatesManager.selectTemplate(result);
   }
 
   private async registerResultTemplates() {
-    this.resultTemplatesManager = buildResultTemplatesManager(
+    this.resultTemplatesManager = insightBuildResultTemplatesManager(
       this.bindings.engine
     );
     const elements = this.host.querySelectorAll(
@@ -130,14 +131,14 @@ export class AtomicInsightResultList {
     const templates = [this.makeDefaultTemplate()].concat(
       customTemplates.filter(
         (template) => template
-      ) as ResultTemplate<DocumentFragment>[]
+      ) as InsightResultTemplate<DocumentFragment>[]
     );
 
     this.resultTemplatesManager.registerTemplates(...templates);
     this.ready = true;
   }
 
-  private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
+  private makeDefaultTemplate(): InsightResultTemplate<DocumentFragment> {
     const content = document.createDocumentFragment();
     const linkEl = document.createElement('atomic-result-link');
     content.appendChild(linkEl);
@@ -148,7 +149,7 @@ export class AtomicInsightResultList {
   }
 
   private getContentOfResultTemplate(
-    result: Result
+    result: InsightResult
   ): HTMLElement | DocumentFragment {
     return this.getTemplate(result)!;
   }

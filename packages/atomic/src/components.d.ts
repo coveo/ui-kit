@@ -5,12 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result as Result1, ResultTemplate as ResultTemplate1, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
-import { InsightEngine, LogLevel, Result, ResultTemplate, ResultTemplateCondition as ResultTemplateCondition1 } from "@coveo/headless/insight";
+import { InsightEngine, InsightLogLevel, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { Section } from "./components/search/atomic-layout-section/sections";
@@ -380,7 +380,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: InsightLogLevel;
         /**
           * Whether the interface should be shown in widget format.
          */
@@ -411,7 +411,7 @@ export namespace Components {
         /**
           * The result item.
          */
-        "result": Result;
+        "result": InsightResult;
         /**
           * Whether an atomic-result-link inside atomic-result should stop propagation.
          */
@@ -435,11 +435,11 @@ export namespace Components {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions": ResultTemplateCondition1[];
+        "conditions": InsightResultTemplateCondition[];
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -711,7 +711,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -762,7 +762,7 @@ export namespace Components {
         /**
           * The result item.
          */
-        "result": Result1 | FoldedResult1;
+        "result": Result | FoldedResult;
         /**
           * Whether an atomic-result-link inside atomic-result should stop propagation.
          */
@@ -809,7 +809,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate1<DocumentFragment> | null>;
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultDate {
         /**
@@ -967,7 +967,7 @@ export namespace Components {
         /**
           * Gets the appropriate result template based on conditions applied.
          */
-        "getTemplate": () => Promise<ResultTemplate1<DocumentFragment> | null>;
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicResultText {
         /**
@@ -1108,7 +1108,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -1214,7 +1214,7 @@ export namespace Components {
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
-        "source": Result1;
+        "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
         /**
@@ -2290,7 +2290,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: InsightLogLevel;
         /**
           * Whether the interface should be shown in widget format.
          */
@@ -2321,7 +2321,7 @@ declare namespace LocalJSX {
         /**
           * The result item.
          */
-        "result": Result;
+        "result": InsightResult;
         /**
           * Whether an atomic-result-link inside atomic-result should stop propagation.
          */
@@ -2345,7 +2345,7 @@ declare namespace LocalJSX {
         /**
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
-        "conditions"?: ResultTemplateCondition1[];
+        "conditions"?: InsightResultTemplateCondition[];
     }
     interface AtomicInsightSearchBox {
         /**
@@ -2615,7 +2615,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
     }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
@@ -2666,7 +2666,7 @@ declare namespace LocalJSX {
         /**
           * The result item.
          */
-        "result": Result1 | FoldedResult1;
+        "result": Result | FoldedResult;
         /**
           * Whether an atomic-result-link inside atomic-result should stop propagation.
          */
@@ -2981,7 +2981,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -3094,7 +3094,7 @@ declare namespace LocalJSX {
         "onBeginDelayedSelectSource"?: (event: CustomEvent<any>) => void;
         "onCancelPendingSelectSource"?: (event: CustomEvent<any>) => void;
         "onSelectSource"?: (event: CustomEvent<any>) => void;
-        "source": Result1;
+        "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
         /**

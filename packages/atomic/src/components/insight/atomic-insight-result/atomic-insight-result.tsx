@@ -1,5 +1,4 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {InsightEngine, Result} from '@coveo/headless/insight';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {createAtomicInsightStore} from '../atomic-insight-interface/store';
 import {
@@ -11,6 +10,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
+import {InsightResult, InsightEngine} from '..';
 
 /**
  * The `atomic-insight-result` component is used internally by the `atomic-insight-result-list` component.
@@ -32,7 +32,7 @@ export class AtomicInsightResult {
   /**
    * The result item.
    */
-  @Prop() result!: Result;
+  @Prop() result!: InsightResult;
 
   /**
    * The headless search engine.
@@ -73,7 +73,7 @@ export class AtomicInsightResult {
   @Prop() loadingFlag?: string;
 
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<Result>) {
+  public resolveResult(event: ResultContextEvent<InsightResult>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);

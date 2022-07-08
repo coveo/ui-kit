@@ -1,10 +1,9 @@
-import {InsightEngine} from '@coveo/headless/insight';
 import {
   AtomicCommonStore,
   AtomicCommonStoreData,
   createAtomicCommonStore,
 } from '../../common/interface/store';
-
+import {InsightEngine} from '..';
 export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   fieldsToInclude: string[];
 }

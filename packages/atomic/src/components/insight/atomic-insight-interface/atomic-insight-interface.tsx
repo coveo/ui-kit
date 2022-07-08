@@ -1,10 +1,4 @@
 import {
-  LogLevel,
-  buildInsightEngine,
-  InsightEngine,
-  InsightEngineConfiguration,
-} from '@coveo/headless/insight';
-import {
   Component,
   Element,
   h,
@@ -23,6 +17,12 @@ import {
 } from '../../common/interface/interface-common';
 import {AtomicInsightStore, createAtomicInsightStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
+import {
+  InsightLogLevel,
+  InsightEngine,
+  InsightEngineConfiguration,
+  buildInsightEngine,
+} from '..';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
@@ -69,7 +69,7 @@ export class AtomicInsightInterface
   /**
    * The severity level of the messages to log in the console.
    */
-  @Prop({reflect: true}) public logLevel?: LogLevel;
+  @Prop({reflect: true}) public logLevel?: InsightLogLevel;
   /**
    * The service insight interface language.
    */
