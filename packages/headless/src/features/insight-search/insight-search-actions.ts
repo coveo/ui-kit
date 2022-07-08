@@ -289,18 +289,6 @@ function getFacetRequests<T extends AnyFacetRequest>(
   return Object.keys(requests).map((id) => requests[id]);
 }
 
-const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
-  if (state.configuration.analytics.enabled) {
-    historyStore.addElement({
-      name: 'Query',
-      ...(state.query?.q && {
-        value: state.query.q,
-      }),
-      time: JSON.stringify(new Date()),
-    });
-  }
-};
-
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';
 
@@ -329,3 +317,15 @@ const getStateAfterResponse: (
     results: response.results,
   },
 });
+
+const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
+  if (state.configuration.analytics.enabled) {
+    historyStore.addElement({
+      name: 'Query',
+      ...(state.query?.q && {
+        value: state.query.q,
+      }),
+      time: JSON.stringify(new Date()),
+    });
+  }
+};

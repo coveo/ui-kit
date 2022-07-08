@@ -8,6 +8,7 @@ import {
   executeSearch,
   fetchFacetValues,
   fetchMoreResults,
+  fetchPage,
   StateNeededByExecuteSearch,
 } from './insight-search-actions';
 
@@ -46,6 +47,20 @@ export interface InsightSearchActionCreators {
   >;
 
   /**
+   * Creates an action that executes a search query to fetch a new page of results.
+   *
+   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
+   * @returns A dispatchable action.
+   */
+  fetchPage(
+    analyticsSearchAction: SearchAction
+  ): AsyncThunkAction<
+    ExecuteSearchThunkReturn,
+    SearchAction,
+    AsyncThunkInsightOptions<StateNeededByExecuteSearch>
+  >;
+
+  /**
    * Creates an action that only fetches facet values without affecting the rest of the state.
    *
    * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
@@ -75,5 +90,6 @@ export function loadInsightSearchActions(
     executeSearch,
     fetchFacetValues,
     fetchMoreResults,
+    fetchPage,
   };
 }
