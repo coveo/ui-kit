@@ -1,16 +1,5 @@
 import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {
-  ConfigurationSection,
-  NumericFacetSection,
-  SearchSection,
-} from '../../../../../state/state-sections';
-import {
-  configuration,
-  numericFacetSet,
-  search,
-} from '../../../../../app/reducers';
-import {loadReducerError} from '../../../../../utils/errors';
 import {isRangeFacetValueSelected} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
 import {
   buildCoreNumericFacet,
@@ -55,10 +44,6 @@ export function buildNumericFacet(
   engine: InsightEngine,
   props: NumericFacetProps
 ): NumericFacet {
-  if (!loadNumericFacetReducers(engine)) {
-    throw loadReducerError;
-  }
-
   const coreController = buildCoreNumericFacet(engine, props);
   const dispatch = engine.dispatch;
   const getFacetId = () => coreController.state.facetId;
@@ -95,15 +80,6 @@ export function buildNumericFacet(
       };
     },
   };
-}
-
-function loadNumericFacetReducers(
-  engine: InsightEngine
-): engine is InsightEngine<
-  NumericFacetSection & ConfigurationSection & SearchSection
-> {
-  engine.addReducers({numericFacetSet, configuration, search});
-  return true;
 }
 
 function getAnalyticsActionForToggleRangeFacetSelect(

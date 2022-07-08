@@ -1,16 +1,4 @@
 import {
-  ConfigurationSection,
-  NumericFacetSection,
-  SearchSection,
-} from '../../../../../state/state-sections';
-import {loadReducerError} from '../../../../../utils/errors';
-import {
-  configuration,
-  numericFacetSet,
-  search,
-} from '../../../../../app/reducers';
-
-import {
   NumericFilterOptions,
   NumericFilterInitialState,
   NumericFilterRange,
@@ -45,10 +33,6 @@ export function buildNumericFilter(
   engine: InsightEngine,
   props: NumericFilterProps
 ): NumericFilter {
-  if (!loadNumericFilterReducer(engine)) {
-    throw loadReducerError;
-  }
-
   const coreController = buildCoreNumericFilter(engine, props);
   const {dispatch} = engine;
   const getFacetId = () => coreController.state.facetId;
@@ -80,13 +64,4 @@ export function buildNumericFilter(
       };
     },
   };
-}
-
-function loadNumericFilterReducer(
-  engine: InsightEngine
-): engine is InsightEngine<
-  NumericFacetSection & ConfigurationSection & SearchSection
-> {
-  engine.addReducers({numericFacetSet, configuration, search});
-  return true;
 }
