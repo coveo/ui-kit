@@ -18,6 +18,7 @@ import {
 
 export type {
   RegisterStandaloneSearchBoxActionCreatorPayload,
+  ResetStandaloneSearchBoxActionCreatorPayload,
   FetchRedirectUrlActionCreatorPayload,
   UpdateAnalyticsToSearchFromLinkActionCreatorPayload,
   UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload,
