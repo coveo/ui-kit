@@ -127,6 +127,42 @@ export const executeSearch = createAsyncThunk<
   }
 );
 
+export const fetchPage = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  InsightAction,
+  AsyncThunkInsightOptions<StateNeededByExecuteSearch>
+>(
+  'search/fetchPage',
+  async (
+    analyticsAction: InsightAction,
+    {getState, dispatch, rejectWithValue, extra}
+  ) => {
+    const state = getState();
+    addEntryInActionsHistory(state);
+
+    const mappedRequest = buildInsightSearchRequest(state);
+    const fetched = await fetchFromAPI(
+      extra.apiClient,
+      state,
+      mappedRequest.request
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
+      return rejectWithValue(fetched.response.error);
+    }
+
+    dispatch(snapshot(extractHistory(state)));
+    return {
+      ...fetched,
+      response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
+      analyticsAction,
+    };
+  }
+);
+
 export const fetchMoreResults = createAsyncThunk<
   ExecuteSearchThunkReturn,
   void,
