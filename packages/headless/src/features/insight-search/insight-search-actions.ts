@@ -17,6 +17,7 @@ import {
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
+  NumericFacetSection,
   PaginationSection,
   QuerySection,
   SearchSection,
@@ -54,6 +55,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchSection &
       QuerySection &
       FacetSection &
+      NumericFacetSection &
       DateFacetSection &
       CategoryFacetSection &
       PaginationSection
@@ -258,6 +260,7 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
   return [
     ...getFacetRequests({
       ...state.facetSet,
+      ...state.numericFacetSet,
       ...state.dateFacetSet,
     }),
     ...getCategoryFacetRequests(state.categoryFacetSet),
