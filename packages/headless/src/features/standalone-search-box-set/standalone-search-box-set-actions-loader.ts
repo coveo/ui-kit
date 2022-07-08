@@ -39,7 +39,7 @@ export interface StandaloneSearchBoxSetActionCreators {
   ): PayloadAction<RegisterStandaloneSearchBoxActionCreatorPayload>;
 
   /**
-   * Reset a standalone search box's state. To be dispatched on SPAs after the redirection has been triggered.
+   * Resets the standalone search box state. To be dispatched on single page applications after the redirection has been triggered.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.

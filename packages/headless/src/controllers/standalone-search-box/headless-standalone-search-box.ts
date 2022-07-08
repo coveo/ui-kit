@@ -53,9 +53,9 @@ export interface StandaloneSearchBox extends SearchBox {
   submit(): void;
 
   /**
-   * Reset a standalone search box's state. To be dispatched on SPAs after the redirection has been triggered.
+   * Resets the standalone search box state. To be dispatched on single page applications after the redirection has been triggered.
    */
-  reset(): void;
+  afterRedirection(): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `StandaloneSearchBox` controller.
@@ -133,7 +133,7 @@ export function buildStandaloneSearchBox(
       this.submit();
     },
 
-    reset() {
+    afterRedirection() {
       dispatch(resetStandaloneSearchBox({id}));
     },
 

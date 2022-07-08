@@ -164,7 +164,7 @@ export class AtomicSearchBox {
   public componentWillUpdate() {
     if (
       !('redirectTo' in this.searchBoxState) ||
-      !('reset' in this.searchBox)
+      !('afterRedirection' in this.searchBox)
     ) {
       return;
     }
@@ -178,7 +178,7 @@ export class AtomicSearchBox {
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
-    this.searchBox.reset();
+    this.searchBox.afterRedirection();
     window.location.href = redirectTo;
   }
 
