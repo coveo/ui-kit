@@ -3,7 +3,7 @@ import {
   Pager,
   PagerOptions,
   PagerInitialState,
-  buildInsightPager,
+  buildPager,
 } from './headless-insight-pager';
 import {
   buildMockInsightEngine,
@@ -23,7 +23,7 @@ describe('Pager', () => {
   }
 
   function initPager() {
-    pager = buildInsightPager(engine, {options, initialState});
+    pager = buildPager(engine, {options, initialState});
   }
 
   beforeEach(() => {

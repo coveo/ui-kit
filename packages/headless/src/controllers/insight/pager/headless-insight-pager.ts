@@ -3,7 +3,7 @@ import {
   logPageNumber,
   logPageNext,
   logPagePrevious,
-} from '../../../features/pagination/pagination-analytics-actions';
+} from '../../../features/pagination/pagination-insight-analytics-actions';
 import {
   buildCorePager,
   PagerInitialState,
@@ -17,11 +17,11 @@ import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 
 /**
- * Creates a `InsightPager` controller instance.
+ * Creates an `InsightPager` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Pager` properties.
- * @returns A `InsightPager` controller instance.
+ * @returns An `InsightPager` controller instance.
  * */
 export function buildPager(
   engine: InsightEngine,
