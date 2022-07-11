@@ -17,19 +17,19 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
-        run: npx snyk monitor --yarn-workspaces --prune-repeated-subdependencies
+        run: npx snyk monitor --yarn-workspaces
       - name: Snyk Test
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
-        run: npx snyk test --yarn-workspaces --sarif-file-output=./sarifs/snyk.sarif --prune-repeated-subdependencies
+        run: npx snyk test --yarn-workspaces --sarif-file-output=./sarifs/snyk.sarif
       - name: Snyk Code
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
-        run: npx snyk code test --all-projects --sarif > ./sarifs/snyk-code.sarif --prune-repeated-subdependencies
+        run: npx snyk code test --all-projects --sarif > ./sarifs/snyk-code.sarif
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@e41f8baf4a726fae01b76b1337c600136468896e # tag=v1
         with:
