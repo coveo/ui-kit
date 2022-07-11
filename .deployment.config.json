@@ -180,28 +180,11 @@
     }
   ],
   "snyk": {
-    "org": "coveo-jsui",
-    "no_container_images": true,
-    "configurations": [
-      {
-        "directory": "packages/headless",
-        "project_name": "headless-engine"
-      },
-      {
-        "directory": "packages/atomic",
-        "project_name": "atomic"
-      }
-    ]
+    "no_dependencies": true,
+    "no_container_images": true
   },
   "snyk_code": {
-    "no_scan": false,
-    "configurations": [
-      {
-        "path": ".",
-        "project_name": "coveo/ui-kit",
-        "org": "coveo-jsui"
-      }
-    ]
+    "no_scan": true
   },
   "observatory": {
     "no_endpoint": true
@@ -209,15 +192,5 @@
   "package_rollout": {
     "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
   },
-  "deployment_config_version": 7,
-  "certifiers": {
-    "stg": [
-      {
-        "system_certifier": "snyk"
-      },
-      {
-        "system_certifier": "snyk-code"
-      }
-    ]
-  }
+  "deployment_config_version": 7
 }
