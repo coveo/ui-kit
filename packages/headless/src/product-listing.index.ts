@@ -77,6 +77,7 @@ export {
 } from './controllers/product-listing/sort/headless-product-listing-sort';
 
 export type {
+  CoreFacetManager,
   FacetManager,
   FacetManagerPayload,
   FacetManagerState,

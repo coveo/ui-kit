@@ -10,5 +10,5 @@
     "esModuleInterop": true
   },
   "include": ["**/*.ts", "**/*.js"],
-  "files": ["../node_modules/@applitools/eyes-cypress/index.d.ts"],
+  "files": ["../../../node_modules/@applitools/eyes-cypress/index.d.ts"],
 }

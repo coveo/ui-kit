@@ -11,16 +11,20 @@ import {
 } from '../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
 import {
+  CategoryFacetSection,
   ConfigurationSection,
+  DateFacetSection,
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
+  NumericFacetSection,
   PaginationSection,
   QuerySection,
   SearchSection,
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction} from '../analytics/analytics-utils';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
@@ -32,6 +36,12 @@ import {
 } from '../query-suggest/query-suggest-actions';
 import {getQueryInitialState} from '../query/query-state';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
+import {
+  MappedSearchRequest,
+  mapSearchRequest,
+  mapSearchResponse,
+  SuccessResponse,
+} from '../search/search-mappings';
 import {getSearchInitialState} from '../search/search-state';
 import {
   logFetchMoreResults,
@@ -45,6 +55,9 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchSection &
       QuerySection &
       FacetSection &
+      NumericFacetSection &
+      DateFacetSection &
+      CategoryFacetSection &
       PaginationSection
   >;
 
@@ -72,10 +85,12 @@ export const executeSearch = createAsyncThunk<
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
+
+    const mappedRequest = buildInsightSearchRequest(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      buildInsightSearchRequest(state)
+      mappedRequest.request
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -83,7 +98,12 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(fetched.response.error);
     }
 
-    const fetchedResponse = fetched.response.success;
+    const fetchedResponse = (
+      mapSearchResponse(
+        fetched.response,
+        mappedRequest.mappings
+      ) as SuccessResponse
+    ).success;
     analyticsAction(
       dispatch,
       () =>
@@ -97,6 +117,42 @@ export const executeSearch = createAsyncThunk<
     );
     dispatch(snapshot(extractHistory(getState())));
 
+    return {
+      ...fetched,
+      response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
+      analyticsAction,
+    };
+  }
+);
+
+export const fetchPage = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  InsightAction,
+  AsyncThunkInsightOptions<StateNeededByExecuteSearch>
+>(
+  'search/fetchPage',
+  async (
+    analyticsAction: InsightAction,
+    {getState, dispatch, rejectWithValue, extra}
+  ) => {
+    const state = getState();
+    addEntryInActionsHistory(state);
+
+    const mappedRequest = buildInsightSearchRequest(state);
+    const fetched = await fetchFromAPI(
+      extra.apiClient,
+      state,
+      mappedRequest.request
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
+      return rejectWithValue(fetched.response.error);
+    }
+
+    dispatch(snapshot(extractHistory(state)));
     return {
       ...fetched,
       response: fetched.response.success,
@@ -199,27 +255,28 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
 const buildInsightSearchRequest = (
   state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
+): MappedSearchRequest<InsightQueryRequest> => {
+  const facets = getAllFacets(state);
+  return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
     insightId: state.insightConfiguration.insightId,
     q: state.query?.q,
-    facets: getFacetRequests(state.facetSet),
+    ...(facets.length && {facets}),
     caseContext: state.insightCaseContext?.caseContext,
     ...(state.pagination && {
       firstResult: state.pagination.firstResult,
       numberOfResults: state.pagination.numberOfResults,
     }),
-  };
+  });
 };
 
 const buildInsightFetchMoreResultsRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
   return {
-    ...buildInsightSearchRequest(state),
+    ...buildInsightSearchRequest(state).request,
     firstResult:
       (state.pagination?.firstResult ?? 0) +
       (state.pagination?.numberOfResults ?? 0),
@@ -230,11 +287,25 @@ const buildInsightFetchFacetValuesRequest = (
   state: StateNeededByExecuteSearch
 ): InsightQueryRequest => {
   return {
-    ...buildInsightSearchRequest(state),
+    ...buildInsightSearchRequest(state).request,
     numberOfResults: 0,
   };
 };
 
+function getAllFacets(state: StateNeededByExecuteSearch) {
+  return [
+    ...getFacetRequests({
+      ...state.facetSet,
+      ...state.numericFacetSet,
+      ...state.dateFacetSet,
+    }),
+    ...getCategoryFacetRequests(state.categoryFacetSet),
+  ];
+}
+
+function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
+  return Object.values(state || {}).map((slice) => slice!.request);
+}
 function getFacetRequests<T extends AnyFacetRequest>(
   requests: Record<string, T> = {}
 ) {

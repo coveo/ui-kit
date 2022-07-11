@@ -16,7 +16,7 @@ node('linux && docker') {
 
   dockerUtils.withDocker(image: 'node:16', args: '-e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     stage('Setup') {
-      sh 'npm run setup'
+      sh 'npm ci'
     }
     
     stage('Npm publish') {

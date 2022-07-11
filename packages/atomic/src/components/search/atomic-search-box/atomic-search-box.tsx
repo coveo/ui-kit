@@ -1,5 +1,3 @@
-import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
-import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import {
   Component,
   h,
@@ -24,7 +22,6 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
 import {once, randomID} from '../../../utils/utils';
 import {
   queryDataAttribute,
@@ -39,8 +36,10 @@ import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {SearchInput} from '../../common/search-box/search-input';
+import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import {SubmitButton} from '../../common/search-box/submit-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
@@ -162,8 +161,11 @@ export class AtomicSearchBox {
     this.pendingSuggestionEvents = [];
   }
 
-  public componentDidUpdate() {
-    if (!('redirectTo' in this.searchBoxState)) {
+  public componentWillUpdate() {
+    if (
+      !('redirectTo' in this.searchBoxState) ||
+      !('afterRedirection' in this.searchBox)
+    ) {
       return;
     }
 
@@ -176,6 +178,7 @@ export class AtomicSearchBox {
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
+    this.searchBox.afterRedirection();
     window.location.href = redirectTo;
   }
 
@@ -213,10 +216,6 @@ export class AtomicSearchBox {
 
   private get popupId() {
     return `${this.id}-popup`;
-  }
-
-  private get hasInputValue() {
-    return this.searchBoxState.value !== '';
   }
 
   private get hasSuggestions() {
@@ -521,71 +520,6 @@ export class AtomicSearchBox {
     }
   }
 
-  private renderInput() {
-    return (
-      <input
-        part="input"
-        ref={(el) => (this.inputRef = el as HTMLInputElement)}
-        role="combobox"
-        aria-autocomplete="both"
-        aria-haspopup="true"
-        aria-owns={this.popupId}
-        aria-expanded={`${this.isExpanded}`}
-        aria-activedescendant={this.activeDescendant}
-        aria-label={this.bindings.i18n.t('search-box')}
-        autocomplete="off"
-        autocapitalize="off"
-        autocorrect="off"
-        placeholder={this.bindings.i18n.t('search')}
-        type="text"
-        class="h-full outline-none bg-transparent w-0 grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
-        value={this.searchBoxState.value}
-        onFocus={() => this.onFocus()}
-        onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-        onBlur={() => this.clearSuggestions()}
-        onKeyDown={(e) => this.onKeyDown(e)}
-      />
-    );
-  }
-
-  private renderClearButton() {
-    return (
-      <Button
-        style="text-transparent"
-        part="clear-button"
-        class="w-8 h-8 mr-1.5 text-neutral-dark"
-        onClick={() => {
-          this.searchBox.clear();
-          this.clearSuggestionElements();
-          this.inputRef.focus();
-        }}
-        ariaLabel={this.bindings.i18n.t('clear')}
-      >
-        <atomic-icon
-          part="clear-icon"
-          icon={ClearIcon}
-          class="w-3 h-3"
-        ></atomic-icon>
-      </Button>
-    );
-  }
-
-  private renderInputContainer() {
-    const isLoading = this.searchBoxState.isLoading;
-    return (
-      <div class="grow flex items-center">
-        {this.renderInput()}
-        {isLoading && (
-          <span
-            part="loading"
-            class="loading w-5 h-5 rounded-full bg-gradient-to-r animate-spin mr-3 grid place-items-center"
-          ></span>
-        )}
-        {!isLoading && this.hasInputValue && this.renderClearButton()}
-      </div>
-    );
-  }
-
   private clearSuggestionElements() {
     this.leftSuggestionElements = [];
     this.rightSuggestionElements = [];
@@ -757,44 +691,34 @@ export class AtomicSearchBox {
     );
   }
 
-  private renderSubmitButton() {
-    return (
-      <Button
-        style="primary"
-        class="w-12 h-auto rounded-r-md rounded-l-none -my-px -mr-px"
-        part="submit-button"
-        disabled={this.disableSearch}
-        ariaLabel={this.bindings.i18n.t('search')}
-        onClick={() => {
-          this.searchBox.submit();
-          this.clearSuggestionElements();
-        }}
-      >
-        <atomic-icon
-          part="submit-icon"
-          icon={SearchIcon}
-          class="w-4 h-4"
-        ></atomic-icon>
-      </Button>
-    );
-  }
-
   public render() {
     this.updateBreakpoints();
 
     return [
-      <div
-        part="wrapper"
-        class={`relative flex bg-background h-full w-full border border-neutral rounded-md focus-within:ring ${
-          this.disableSearch
-            ? 'focus-within:border-disabled focus-within:ring-neutral'
-            : 'focus-within:border-primary focus-within:ring-ring-primary'
-        }`}
-      >
-        {this.renderInputContainer()}
+      <SearchBoxWrapper disabled={this.disableSearch}>
+        <SearchInput
+          inputRef={this.inputRef}
+          loading={this.searchBoxState.isLoading}
+          ref={(el) => (this.inputRef = el as HTMLInputElement)}
+          bindings={this.bindings}
+          searchBox={this.searchBox}
+          state={this.searchBoxState}
+          disabled={this.disableSearch}
+          onFocus={() => this.onFocus()}
+          onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+          onBlur={() => this.clearSuggestions()}
+          onKeyDown={(e) => this.onKeyDown(e)}
+          aria-owns={this.popupId}
+          aria-expanded={`${this.isExpanded}`}
+          aria-activedescendant={this.activeDescendant}
+        />
         {this.renderSuggestions()}
-        {this.renderSubmitButton()}
-      </div>,
+        <SubmitButton
+          bindings={this.bindings}
+          disabled={this.disableSearch}
+          searchBox={this.searchBox}
+        />
+      </SearchBoxWrapper>,
       !this.suggestions.length && (
         <slot>
           <atomic-search-box-recent-queries></atomic-search-box-recent-queries>

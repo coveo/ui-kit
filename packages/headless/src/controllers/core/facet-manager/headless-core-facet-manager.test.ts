@@ -1,19 +1,19 @@
-import {facetOptions, search} from '../../app/reducers';
-import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {facetOptions, search} from '../../../app/reducers';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {
-  buildFacetManager,
-  FacetManager,
+  buildCoreFacetManager,
+  CoreFacetManager,
   FacetManagerPayload,
-} from './headless-facet-manager';
+} from './headless-core-facet-manager';
 
 describe('facet manager', () => {
   let engine: MockSearchEngine;
-  let facetManager: FacetManager;
+  let facetManager: CoreFacetManager;
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
-    facetManager = buildFacetManager(engine);
+    facetManager = buildCoreFacetManager(engine);
   });
 
   it('exposes a #subscribe method', () => {

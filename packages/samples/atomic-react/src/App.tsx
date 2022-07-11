@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useState} from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import './style.css';
 import {ResultListPage} from './pages/ResultListPage';
 import {FoldedResultListPage} from './pages/FoldedResultListPage';
@@ -47,4 +47,5 @@ const App: FunctionComponent = () => {
   );
 };
 
-ReactDOM.hydrate(<App />, document.getElementById('root'));
+const root = createRoot(document.getElementById('root')!);
+root.render(<App />);
