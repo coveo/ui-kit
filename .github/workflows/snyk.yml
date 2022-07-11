@@ -1,6 +1,5 @@
 name: Snyk
 on: [pull_request] # TODO: switch to master branch
-
 jobs:
   snyk:
     runs-on: ubuntu-latest
@@ -14,7 +13,7 @@ jobs:
           yarn install --no-immutable --mode=skip-build
       - name: Snyk Monitor
         continue-on-error: true
-        if: ${{ github.event_name != 'pull_request' }}
+        # if: ${{ github.event_name != 'pull_request' }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
@@ -33,6 +32,5 @@ jobs:
         run: npx snyk code test    --dev --all-projects --sarif > ./sarifs/snyk-code.sarif
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@e41f8baf4a726fae01b76b1337c600136468896e # tag=v1
-
         with:
           sarif_file: ./sarifs
