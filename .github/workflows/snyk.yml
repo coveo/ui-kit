@@ -8,7 +8,6 @@ jobs:
       - uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3
       - name: Prepare snyk
         run: |
-          npm run setup:snyk
           npm ci
           yarn install --no-immutable --mode=skip-build
       - name: Snyk Monitor
@@ -17,19 +16,19 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
-        run: npx snyk monitor --dev --yarn-workspaces
+        run: npx snyk monitor --dev --yarn-workspaces --prune-repeated-subdependencies --exclude packages/samples
       - name: Snyk Test
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
-        run: npx snyk test --dev --yarn-workspaces --sarif-file-output=./sarifs/snyk.sarif
+        run: npx snyk test --dev --yarn-workspaces --sarif-file-output=./sarifs/snyk.sarif --prune-repeated-subdependencies --exclude packages/samples
       - name: Snyk Code
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
-        run: npx snyk code test    --dev --all-projects --sarif > ./sarifs/snyk-code.sarif
+        run: npx snyk code test --dev --all-projects --sarif > ./sarifs/snyk-code.sarif --prune-repeated-subdependencies --exclude packages/samples
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@e41f8baf4a726fae01b76b1337c600136468896e # tag=v1
         with:
