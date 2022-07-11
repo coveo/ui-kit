@@ -7,7 +7,10 @@ import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {getOrganizationIdQueryParam} from './search-api-params';
+import {
+  getAuthenticationQueryParam,
+  getOrganizationIdQueryParam,
+} from './search-api-params';
 import {buildMockFacetSearch} from '../../test/mock-facet-search';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search';
@@ -195,6 +198,23 @@ describe('search api client', () => {
       expect(request).toMatchObject(expectedRequest);
     });
 
+    it(`when calling SearchAPIClient.search with authentication providers
+    should call PlatformClient.call with the right options`, async () => {
+      state.configuration.search.authenticationProviders = [
+        'myProvider',
+        'myOtherProvider',
+      ];
+      const req = (await buildSearchRequest(state)).request;
+      searchAPIClient.search(req);
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const expectedUrl = `${
+        state.configuration.search.apiBaseUrl
+      }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
+        req
+      )}`;
+      expect(request.url).toBe(expectedUrl);
+    });
+
     it(`when calling SearchAPIClient.search multiple times
     should abort the previous pending requests`, async () => {
       mockPlatformResponse(() => buildMockSearchEndpointResponse(), 3);
@@ -239,6 +259,20 @@ describe('search api client', () => {
       expect(request).toMatchObject(expectedRequest);
     });
 
+    it(`when calling SearchAPIClient.plan with authentication providers
+    should call PlatformClient.call with the right options`, async () => {
+      state.configuration.search.authenticationProviders = ['myProvider'];
+      const req = await buildPlanRequest(state);
+      searchAPIClient.plan(req);
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const expectedUrl = `${
+        state.configuration.search.apiBaseUrl
+      }/plan?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
+        req
+      )}`;
+      expect(request.url).toBe(expectedUrl);
+    });
+
     it(`when calling SearchAPIClient.querySuggest
     should call PlatformClient.call with the right options`, async () => {
       const id = 'someid123';
@@ -275,6 +309,26 @@ describe('search api client', () => {
       expect(request).toMatchObject(expectedRequest);
     });
 
+    it(`when calling SearchAPIClient.querySuggest with authentication providers
+    should call PlatformClient.call with the right options`, async () => {
+      const id = 'someid123';
+      const qs = buildMockQuerySuggest({id, count: 11});
+      state.querySet[id] = 'some query';
+      state.querySuggest[id] = qs;
+      state.configuration.search.authenticationProviders = ['myProvider'];
+
+      const req = await buildQuerySuggestRequest(id, state);
+      searchAPIClient.querySuggest(req);
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+
+      const expectedUrl = `${
+        state.configuration.search.apiBaseUrl
+      }/querySuggest?${getOrganizationIdQueryParam(
+        req
+      )}&${getAuthenticationQueryParam(req)}`;
+      expect(request.url).toBe(expectedUrl);
+    });
+
     describe('SearchAPIClient.facetSearch', () => {
       it('it calls Platform.call with the right options', async () => {
         const id = 'someid123';
@@ -297,6 +351,28 @@ describe('search api client', () => {
             state.configuration.search.apiBaseUrl
           }/facet?${getOrganizationIdQueryParam(req)}`,
         });
+      });
+
+      it('with an authentication provider it calls Platform.call with the right options', async () => {
+        const id = 'someid123';
+        const facetSearchState = buildMockFacetSearch();
+        const facetState = buildMockFacetRequest();
+
+        state.facetSearchSet[id] = facetSearchState;
+        state.facetSet[id] = facetState;
+        state.configuration.search.authenticationProviders = ['foo'];
+
+        const req = await buildSpecificFacetSearchRequest(id, state);
+        searchAPIClient.facetSearch(req);
+
+        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        const expectedUrl = `${
+          state.configuration.search.apiBaseUrl
+        }/facet?${getOrganizationIdQueryParam(
+          req
+        )}&${getAuthenticationQueryParam(req)}`;
+
+        expect(request.url).toBe(expectedUrl);
       });
 
       it(`when the id is on the facetSearchSet,
@@ -435,6 +511,27 @@ describe('search api client', () => {
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
       expect(request).toMatchObject(expectedRequest);
+    });
+
+    it(`when calling SearchAPIClient.recommendations with an authentication provider it
+      should call PlatformClient.call with the right options`, async () => {
+      const recommendationState = createMockRecommendationState();
+      recommendationState.configuration.search.authenticationProviders = [
+        'all work and no play makes jack a dull boy',
+      ];
+
+      const req = await buildRecommendationRequest(recommendationState);
+
+      searchAPIClient.recommendations(req);
+
+      const expectedUrl = `${
+        recommendationState.configuration.search.apiBaseUrl
+      }?${getOrganizationIdQueryParam(req)}&${getAuthenticationQueryParam(
+        req
+      )}`;
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+
+      expect(request.url).toBe(expectedUrl);
     });
 
     it(`when calling SearchAPIClient.productRecommendations
