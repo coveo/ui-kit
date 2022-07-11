@@ -137,6 +137,8 @@ import {
   buildRecentQueriesList,
   RecentResultsList as HeadlessRecentResultsList,
   buildRecentResultsList,
+  InstantResults as HeadlessInstantResults,
+  buildInstantResults,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -154,6 +156,8 @@ import {RecentQueriesList} from '../components/recent-queries/recent-queries.cla
 import {RecentQueriesList as RecentQueriesListFn} from '../components/recent-queries/recent-queries.fn';
 import {RecentResultsList} from '../components/recent-results/recent-results.class';
 import {RecentResultsList as RecentResultsListFn} from '../components/recent-results/recent-results.fn';
+import {InstantResults} from '../components/instant-results/instant-results.class';
+import {InstantResults as InstantResultsFn} from '../components/instant-results/instant-results.fn';
 
 declare global {
   interface Window {
@@ -220,6 +224,8 @@ export class SearchPage extends Component {
   private readonly categoryFieldSuggestions: HeadlessCategoryFieldSuggestions;
   private readonly recentQueriesList: HeadlessRecentQueriesList;
   private readonly recentResultsList: HeadlessRecentResultsList;
+  private readonly instantResults: HeadlessInstantResults;
+  private readonly searchboxInstantResults: HeadlessSearchBox;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -376,6 +382,20 @@ export class SearchPage extends Component {
     this.recentQueriesList = buildRecentQueriesList(this.engine);
 
     this.recentResultsList = buildRecentResultsList(this.engine);
+
+    const sharedIdBetweenSearchboxAndInstantResult = 'sample-instant-results';
+
+    this.instantResults = buildInstantResults(this.engine, {
+      options: {
+        maxResultsPerQuery: 5,
+        searchBoxId: sharedIdBetweenSearchboxAndInstantResult,
+      },
+    });
+    this.searchboxInstantResults = buildSearchBox(this.engine, {
+      options: {
+        id: sharedIdBetweenSearchboxAndInstantResult,
+      },
+    });
   }
 
   initEngine(props: SearchPageProps) {
@@ -691,6 +711,13 @@ export class SearchPage extends Component {
           <Section title="recent-results-list">
             <RecentResultsList maxLength={10} />
             <RecentResultsListFn controller={this.recentResultsList} />
+          </Section>
+          <Section title="instant-results-list">
+            <InstantResults />
+            <InstantResultsFn
+              controllerInstantResults={this.instantResults}
+              controllerSearchbox={this.searchboxInstantResults}
+            />
           </Section>
         </AppContext.Provider>
       </div>
