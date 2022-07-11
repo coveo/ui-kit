@@ -21,14 +21,18 @@ export type {Sort, SortProps, SortState, SortInitialState};
  */
 export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;
-  const coreController = buildCoreSort(engine, props);
+  const sort = buildCoreSort(engine, props);
   const search = () => dispatch(executeSearch(logResultsSort()));
 
   return {
-    ...coreController,
+    ...sort,
+
+    get state() {
+      return sort.state;
+    },
 
     sortBy(criterion: SortCriterion | SortCriterion[]) {
-      coreController.sortBy(criterion);
+      sort.sortBy(criterion);
       search();
     },
   };
