@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.83.0...@coveo/headless@1.84.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight numeric facet ([#2156](https://github.com/coveo/ui-kit/issues/2156)) ([5d52b73](https://github.com/coveo/ui-kit/commit/5d52b7307111423235d24bcab6fee43116d885b5))
+
+
+
+
+
+# [1.83.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.82.0...@coveo/headless@1.83.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight date facet controller ([#2142](https://github.com/coveo/ui-kit/issues/2142)) ([44a30cb](https://github.com/coveo/ui-kit/commit/44a30cb65b6494574d0da8698dc4ed2166f3bbb0))
+
+
+
+
+
+# [1.82.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.81.0...@coveo/headless@1.82.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight facet controller ([#2133](https://github.com/coveo/ui-kit/issues/2133)) ([4a40482](https://github.com/coveo/ui-kit/commit/4a40482486d8ced04933552e8ca632c8d8dd344e))
+
+
+
+
+
 # [1.81.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.80.0...@coveo/headless@1.81.0) (2022-07-07)
 
 

@@ -10,15 +10,21 @@ import {
   PaginationSection,
   ResultPreviewSection,
   SearchSection,
+  FacetSearchSection,
+  FacetOptionsSection,
   QuerySuggestionSection,
   QuerySetSection,
+  NumericFacetSection,
+  DateFacetSection,
   CategoryFacetSection,
-  FacetOptionsSection,
 } from './state-sections';
 
 export type InsightSearchParametersState = QuerySection &
   FacetSection &
+  DateFacetSection &
+  NumericFacetSection &
   PaginationSection;
+
 export type InsightAppState = InsightSearchParametersState &
   ConfigurationSection &
   VersionSection &
@@ -28,8 +34,9 @@ export type InsightAppState = InsightSearchParametersState &
   InsightInterfaceSection &
   InsightCaseContextSection &
   ResultPreviewSection &
-  SearchSection &
+  FacetSection &
+  FacetSearchSection &
+  FacetOptionsSection &
   QuerySetSection &
   QuerySuggestionSection &
-  CategoryFacetSection &
-  FacetOptionsSection;
+  CategoryFacetSection;
