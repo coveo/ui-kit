@@ -145,7 +145,11 @@ export class AtomicSegmentedFacet
     if (!this.label) {
       return;
     }
-    return <b class="inline-block my-3 mx-2">{this.label}:</b>;
+    return (
+      <b class="inline-block my-3 mx-2" part="label">
+        {this.label}:
+      </b>
+    );
   }
 
   public render() {
