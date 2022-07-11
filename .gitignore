@@ -6,9 +6,10 @@ npm-debug.log
 dist
 .size-snapshot.json
 reports/*.xml
-
 !.vscode/extensions.json
-
-.yarn/cache
-.yarn/install-state.gz
+.npmrc
+.yarn/*
+!.yarn/releases
 yarn.lock
+.dccache
+sarifs

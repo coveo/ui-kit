@@ -14,6 +14,7 @@
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
     "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
+    "setup:snyk": "node ./scripts/snyk/remove-samples-workspace.js",
     "bump:version": "node ./scripts/deploy/bump-version.js",
     "npm:publish:alpha": "lerna run --stream npm:publish:alpha",
     "npm:tag": "node ./scripts/deploy/update-npm-tag.js",
