@@ -1,10 +1,13 @@
-import {RecordValue, Schema} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema} from '@coveo/bueno';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {nonEmptyString} from '../../utils/validate-payload';
+import {
+  nonEmptyString,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
@@ -51,6 +54,12 @@ export interface SearchConfigurationOptions {
    */
   timezone?: string;
   /**
+   * Specifies the name of the authentication providers to use to perform queries.
+   *
+   * See [SAML Authentication](https://docs.coveo.com/en/91/).
+   */
+  authenticationProviders?: string[];
+  /**
    * Allows for augmenting a search response before the state is updated.
    */
   preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
@@ -76,6 +85,10 @@ export const searchEngineConfigurationSchema =
         searchHub: nonEmptyString,
         locale: nonEmptyString,
         timezone: nonEmptyString,
+        authenticationProviders: new ArrayValue({
+          required: false,
+          each: requiredNonEmptyString,
+        }),
       },
     }),
   });

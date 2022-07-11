@@ -18,6 +18,10 @@ export const buildSpecificFacetSearchRequest = async (
     url: state.configuration.search.apiBaseUrl,
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
+    ...(state.configuration.search.authenticationProviders && {
+      authentication:
+        state.configuration.search.authenticationProviders.join(','),
+    }),
     captions,
     numberOfValues,
     query: newQuery,
