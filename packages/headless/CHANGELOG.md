@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.85.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.0...@coveo/headless@1.85.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **headless:** wrong payload interface for logClickEvent ([#2205](https://github.com/coveo/ui-kit/issues/2205)) ([b43be52](https://github.com/coveo/ui-kit/commit/b43be527ab2cde2e77621e76ef07509646cf81e7))
+
+
+
+
+
 # [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.84.0...@coveo/headless@1.85.0) (2022-07-11)
 
 
