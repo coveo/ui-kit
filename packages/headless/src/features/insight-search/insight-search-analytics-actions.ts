@@ -25,3 +25,10 @@ export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
         errorMessage: error.message,
       })
   )();
+
+export const logContextChanged = () =>
+  makeInsightAnalyticsAction(
+    'insight/logContextChanged',
+    AnalyticsType.Search,
+    (client) => client.logContextChanged()
+  )();
