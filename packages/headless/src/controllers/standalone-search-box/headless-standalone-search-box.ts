@@ -13,6 +13,7 @@ import {
   registerStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
+  resetStandaloneSearchBox,
 } from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
 import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
 import {
@@ -50,6 +51,11 @@ export interface StandaloneSearchBox extends SearchBox {
    * Triggers a redirection.
    */
   submit(): void;
+
+  /**
+   * Resets the standalone search box state. To be dispatched on single page applications after the redirection has been triggered.
+   */
+  afterRedirection(): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `StandaloneSearchBox` controller.
@@ -125,6 +131,10 @@ export function buildStandaloneSearchBox(
       dispatch(updateAnalyticsToOmniboxFromLink({id, metadata}));
 
       this.submit();
+    },
+
+    afterRedirection() {
+      dispatch(resetStandaloneSearchBox({id}));
     },
 
     submit() {
