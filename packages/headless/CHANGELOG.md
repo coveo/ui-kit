@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.84.0...@coveo/headless@1.85.0) (2022-07-11)
+
+
+### Bug Fixes
+
+* **atomic,headless:** clear standalone search box state when redirecting ([#2195](https://github.com/coveo/ui-kit/issues/2195)) ([2a19960](https://github.com/coveo/ui-kit/commit/2a199600e9d177f4e9eaa63a41a73205ede25e6e))
+* **headless:** properly support authentication query parameter to use with SAML ([#2176](https://github.com/coveo/ui-kit/issues/2176)) ([f2a8ccb](https://github.com/coveo/ui-kit/commit/f2a8ccb282362011ad603c3980f96cdb11f3c446))
+
+
+### Features
+
+* **headless:** added insight pager controller ([#2202](https://github.com/coveo/ui-kit/issues/2202)) ([3531c75](https://github.com/coveo/ui-kit/commit/3531c75ddc4c89472daf67cf38a91a63dd276b14))
+
+
+
+
+
 # [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.83.0...@coveo/headless@1.84.0) (2022-07-08)
 
 
