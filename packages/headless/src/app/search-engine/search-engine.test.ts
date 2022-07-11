@@ -1,14 +1,11 @@
-import {buildSamlClient} from '@coveo/auth';
 import {enableDebug} from '../../features/debug/debug-actions';
 import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {
   buildSearchEngine,
-  buildSearchEngineWithSamlAuthentication,
   SearchEngine,
   SearchEngineOptions,
 } from './search-engine';
 import {getSampleSearchEngineConfiguration} from './search-engine-configuration';
-jest.mock('@coveo/auth');
 
 describe('searchEngine', () => {
   let engine: SearchEngine;
@@ -85,41 +82,6 @@ describe('searchEngine', () => {
 
       it('sets the timezone correctly', () => {
         expect(engine.state.configuration.search.timezone).toBe(timezone);
-      });
-    });
-  });
-
-  describe('buildSearchEngineWithSamlAuthentication', () => {
-    beforeAll(() => {
-      (buildSamlClient as jest.Mock).mockImplementation(() => ({
-        authenticate: () => Promise.resolve('theToken'),
-      }));
-    });
-
-    it('sets the authentication provider and token correctly', async () => {
-      engine = await buildSearchEngineWithSamlAuthentication({
-        configuration: {
-          organizationId: 'theOrg',
-          provider: 'theProvider',
-        },
-      });
-
-      expect(engine.state.configuration.search.authenticationProviders[0]).toBe(
-        'theProvider'
-      );
-      expect(engine.state.configuration.accessToken).toBe('theToken');
-    });
-
-    it('passes down generic engine options correctly', async () => {
-      engine = await buildSearchEngineWithSamlAuthentication({
-        configuration: {
-          organizationId: 'theOrg',
-          provider: 'theProvider',
-          analytics: {enabled: false},
-          search: {
-            pipeline: 'thePipeline',
-          },
-        },
       });
     });
   });
