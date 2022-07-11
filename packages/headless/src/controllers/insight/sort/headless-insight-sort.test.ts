@@ -9,8 +9,6 @@ import {
 } from '../../../features/sort-criteria/criteria';
 import {updateSortCriterion} from '../../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {updatePage} from '../../../features/pagination/pagination-actions';
-import {configuration, sortCriteria} from '../../../app/reducers';
 
 describe('InsightSort', () => {
   let engine: MockInsightEngine;
