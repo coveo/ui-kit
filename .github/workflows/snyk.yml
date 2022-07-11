@@ -8,6 +8,7 @@ jobs:
       - uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3
       - name: Prepare snyk
         run: |
+          npm run setup:snyk
           npm ci
           yarn install --no-immutable --mode=skip-build
       - name: Snyk Monitor
