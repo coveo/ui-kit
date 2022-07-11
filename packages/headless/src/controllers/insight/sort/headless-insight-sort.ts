@@ -13,11 +13,11 @@ import {
 export type {Sort, SortProps, SortState, SortInitialState};
 
 /**
- * Creates an `InsightSort` controller instance.
+ * Creates an `Sort` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `InsightSort` controller properties.
- * @returns A `InsightSort` controller instance.
+ * @param props - The configurable `Sort` controller properties.
+ * @returns A `Sort` controller instance.
  */
 export function buildSort(engine: InsightEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;

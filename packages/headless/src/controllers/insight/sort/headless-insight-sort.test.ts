@@ -30,13 +30,6 @@ describe('InsightSort', () => {
     initSort();
   });
 
-  it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
-      configuration,
-      sortCriteria,
-    });
-  });
-
   describe('when calling #sortBy with a criterion', () => {
     const criterion = buildDateSortCriterion(SortOrder.Descending);
 
@@ -47,10 +40,6 @@ describe('InsightSort', () => {
     it('dispatches an updateSortCriterion action with the passed criterion', () => {
       const action = updateSortCriterion(criterion);
       expect(engine.actions).toContainEqual(action);
-    });
-
-    it('updates the page to the first one', () => {
-      expect(engine.actions).toContainEqual(updatePage(1));
     });
 
     it('dispatches an executeSearch', () => {
