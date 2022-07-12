@@ -1,25 +1,25 @@
-import {executeSearch} from '../../features/search/search-actions';
-import {SortCriterion} from '../../features/sort-criteria/criteria';
-import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {SortCriterion} from '../../../features/sort-criteria/criteria';
+import {logResultsSort} from '../../../features/sort-criteria/sort-criteria-insight-analytics-actions';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {
   buildCoreSort,
   Sort,
   SortProps,
   SortState,
   SortInitialState,
-} from '../core/sort/headless-core-sort';
+} from '../../core/sort/headless-core-sort';
 
 export type {Sort, SortProps, SortState, SortInitialState};
 
 /**
- * Creates a `Sort` controller instance.
+ * Creates an `Sort` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */
-export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
+export function buildSort(engine: InsightEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;
   const sort = buildCoreSort(engine, props);
   const search = () => dispatch(executeSearch(logResultsSort()));
