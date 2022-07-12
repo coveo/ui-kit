@@ -68,6 +68,7 @@ function mapFacetRequest(
       ),
     };
   }
+  // TODO: remove in v2
   if (isFacetRequest(facetRequest)) {
     const {hasBreadcrumbs, ...required} = facetRequest;
     return required;

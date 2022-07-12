@@ -5,8 +5,10 @@ import {
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockSearchRequest} from '../../test/mock-search-request';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {FacetRequest} from '../facets/facet-set/interfaces/request';
 import {mapSearchRequest, mapSearchResponse} from './search-mappings';
 
 const facetId = 'myfacet';
@@ -38,6 +40,20 @@ describe('#mapSearchRequest', () => {
       dateFacetValueMap: {},
     });
     expect(request).toEqual(originalRequest);
+  });
+
+  it('should not return hasBreadcrumbs facet field', () => {
+    const originalRequest = buildMockSearchRequest({
+      facets: [buildMockFacetRequest()],
+    });
+    const {hasBreadcrumbs, ...rest} = originalRequest
+      .facets?.[0] as FacetRequest;
+    const expectedRequest = buildMockSearchRequest({
+      facets: [rest],
+    });
+
+    const {request} = mapSearchRequest(originalRequest);
+    expect(request).toEqual(expectedRequest);
   });
 
   it('should map the dateFacet values', () => {
