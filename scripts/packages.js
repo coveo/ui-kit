@@ -1,4 +1,4 @@
-export const packageDirsNpmTag = [
+const packageDirsNpmTag = [
   'atomic',
   'auth',
   'bueno',
@@ -8,7 +8,10 @@ export const packageDirsNpmTag = [
   'quantic'
 ];
 
-export const packageDirsSnyk = [
+const packageDirsSnyk = [
   'headless',
   'atomic',
 ];
+
+exports.packageDirsNpmTag = packageDirsNpmTag;
+exports.packageDirsSnyk = packageDirsSnyk;

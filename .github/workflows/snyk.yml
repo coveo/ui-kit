@@ -1,5 +1,10 @@
 name: Snyk
-on: [pull_request] # TODO: switch to master branch
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
 jobs:
   snyk:
     runs-on: ubuntu-latest
@@ -13,7 +18,7 @@ jobs:
           yarn install --no-immutable --mode=skip-build
       - name: Snyk Monitor
         continue-on-error: true
-        # if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           NODE_OPTIONS: --max-old-space-size=8192
