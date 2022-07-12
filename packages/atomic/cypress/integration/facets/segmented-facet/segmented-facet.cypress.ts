@@ -29,22 +29,22 @@ describe('Segmented Facet Test Suites', () => {
     );
   });
 
-  describe('when select a value', () => {
+  describe.skip('when select a value', () => {
     describe('verify rendering', () => {});
     describe('verify analytic', () => {});
   });
 
-  describe('with custom #numberOfValues', () => {});
+  describe.skip('with custom #numberOfValues', () => {});
 
-  describe('with no label', () => {});
+  describe.skip('with no label', () => {});
 
-  describe('when field returns no results', () => {});
+  describe.skip('when field returns no results', () => {});
 
-  describe('with a selected path in the URL', () => {});
+  describe.skip('with a selected path in the URL', () => {});
 
-  describe('with depends-on', () => {});
+  describe.skip('with depends-on', () => {});
 
-  describe('when the dependency is met', () => {});
+  describe.skip('when the dependency is met', () => {});
 
-  describe('with two dependencies', () => {});
+  describe.skip('with two dependencies', () => {});
 });
