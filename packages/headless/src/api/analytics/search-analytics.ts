@@ -77,6 +77,18 @@ export class SearchAnalyticsProvider
     );
   }
 
+  public getSplitTestRunName(): string | undefined {
+    return this.state.search?.response.splitTestRun;
+  }
+
+  public getSplitTestRunVersion(): string | undefined {
+    const hasSplitTestRun = !!this.getSplitTestRunName();
+    const effectivePipelineWithSplitTestRun =
+      this.state.search?.response.pipeline || this.state.pipeline || 'default';
+
+    return hasSplitTestRun ? effectivePipelineWithSplitTestRun : undefined;
+  }
+
   private mapResultsToAnalyticsDocument() {
     return this.state.search?.response.results.map((r) => ({
       documentUri: r.uri,

@@ -11,6 +11,8 @@ export function buildMockRecommendation(
     error: null,
     analyticsAction: logInterfaceLoad(),
     searchUid: '123',
+    splitTestRun: '',
+    pipeline: '',
     ...config,
   };
 }
