@@ -13,6 +13,8 @@ import {
     QueryErrorMeta,
     SearchPageEvents,
     ResultsSortMetadata,
+    FacetRangeMetadata,
+    CategoryFacetMetadata,
 } from '../searchPage/searchPageEvents';
 
 export interface InsightClientProvider {
@@ -62,6 +64,14 @@ export class CoveoInsightClient {
 
     public logFetchMoreResults() {
         return this.logCustomEvent(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
+    }
+
+    public logBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
+        return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
+    }
+
+    public logBreadcrumbResetAll() {
+        return this.logSearchEvent(SearchPageEvents.breadcrumbResetAll);
     }
 
     public logFacetSelect(meta: FacetMetadata) {

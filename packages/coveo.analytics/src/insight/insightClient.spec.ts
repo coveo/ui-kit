@@ -119,6 +119,22 @@ describe('InsightClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
     });
 
+    it('should send proper payload for #breadcrumbResetAll', async () => {
+        await client.logBreadcrumbResetAll();
+        expectMatchPayload(SearchPageEvents.breadcrumbResetAll);
+    });
+
+    it('should send proper payload for #breadcrumbFacet', async () => {
+        const meta = {
+            facetField: '@foo',
+            facetId: 'bar',
+            facetTitle: 'title',
+            facetValue: 'qwerty',
+        };
+        await client.logBreadcrumbFacet(meta);
+        expectMatchPayload(SearchPageEvents.breadcrumbFacet, meta);
+    });
+
     it('should send proper payload for #logFacetSelect', async () => {
         const meta = {
             facetField: '@foo',
