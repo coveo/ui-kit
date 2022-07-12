@@ -4,7 +4,7 @@ import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {BooleanValue, Value} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, Value} from '@coveo/bueno';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
@@ -63,6 +63,12 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone of the user.
    */
   timezone?: string;
+  /**
+   * Specifies the name of the authentication providers to use to perform queries.
+   *
+   * See [SAML Authentication](https://docs.coveo.com/en/91/).
+   */
+  authenticationProviders?: string[];
 }
 
 export const updateSearchConfiguration = createAction(
@@ -74,6 +80,10 @@ export const updateSearchConfiguration = createAction(
       searchHub: nonEmptyString,
       timezone: nonEmptyString,
       locale: nonEmptyString,
+      authenticationProviders: new ArrayValue({
+        required: false,
+        each: requiredNonEmptyString,
+      }),
     })
 );
 

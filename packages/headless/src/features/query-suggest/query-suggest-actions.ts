@@ -175,5 +175,8 @@ export const buildQuerySuggestRequest = async (
       ...(s.configuration.analytics.enabled &&
         (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
     }),
+    ...(s.configuration.search.authenticationProviders.length && {
+      authentication: s.configuration.search.authenticationProviders.join(','),
+    }),
   };
 };

@@ -12,10 +12,13 @@ import {
   updateAnalyticsToOmniboxFromLink,
   UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload,
   StateNeededForRedirect,
+  resetStandaloneSearchBox,
+  ResetStandaloneSearchBoxActionCreatorPayload,
 } from './standalone-search-box-set-actions';
 
 export type {
   RegisterStandaloneSearchBoxActionCreatorPayload,
+  ResetStandaloneSearchBoxActionCreatorPayload,
   FetchRedirectUrlActionCreatorPayload,
   UpdateAnalyticsToSearchFromLinkActionCreatorPayload,
   UpdateAnalyticsToOmniboxFromLinkActionCreatorPayload,
@@ -34,6 +37,16 @@ export interface StandaloneSearchBoxSetActionCreators {
   registerStandaloneSearchBox(
     payload: RegisterStandaloneSearchBoxActionCreatorPayload
   ): PayloadAction<RegisterStandaloneSearchBoxActionCreatorPayload>;
+
+  /**
+   * Resets the standalone search box state. To be dispatched on single page applications after the redirection has been triggered.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  resetStandaloneSearchBox(
+    payload: ResetStandaloneSearchBoxActionCreatorPayload
+  ): PayloadAction<ResetStandaloneSearchBoxActionCreatorPayload>;
 
   /**
    * Preprocesses the query for the current headless state, and retrieves a redirection URL if a redirect trigger was fired in the query pipeline.
@@ -86,5 +99,6 @@ export function loadStandaloneSearchBoxSetActions(
     fetchRedirectUrl,
     updateAnalyticsToSearchFromLink,
     updateAnalyticsToOmniboxFromLink,
+    resetStandaloneSearchBox,
   };
 }

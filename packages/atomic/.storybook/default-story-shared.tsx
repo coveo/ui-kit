@@ -48,7 +48,7 @@ export function renderArgsToHTMLString(
 
   if (parentElement) {
     const parent = parentElement();
-    parent.innerHTML = `\n\t${el.outerHTML}\n`;
+    parent.innerHTML += `\n\t${el.outerHTML}\n`;
     return parent.outerHTML;
   }
 
