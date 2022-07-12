@@ -8,11 +8,11 @@ import {FoldedResultListWithCustomChildrenPage} from './pages/FoldedResultListWi
 import {InstantResultsPage} from './pages/InstantResultsPage';
 import {TableResultListPage} from './pages/TableResultListPage';
 
-const LIST_PAGE = 'Results list';
-const FOLDED_LIST_PAGE = 'Folded results list';
+const LIST_PAGE = 'Result list';
+const FOLDED_LIST_PAGE = 'Folded result list';
 const FOLDED_CUSTOM_CHILDREN_PAGE = 'Folded result list with custom children';
 const INSTANT_RESULTS_PAGE = 'Instant results';
-const TABLE_RESULTS_LIST_PAGE = 'Table results list';
+const TABLE_RESULT_LIST_PAGE = 'Table result list';
 
 const App: FunctionComponent = () => {
   const [page, setPage] = useState(LIST_PAGE);
@@ -38,7 +38,7 @@ const App: FunctionComponent = () => {
             setPage={setPage}
           />
           <HeaderLink
-            page={TABLE_RESULTS_LIST_PAGE}
+            page={TABLE_RESULT_LIST_PAGE}
             currentPage={page}
             setPage={setPage}
           />
@@ -50,7 +50,7 @@ const App: FunctionComponent = () => {
         <FoldedResultListWithCustomChildrenPage />
       )}
       {page === INSTANT_RESULTS_PAGE && <InstantResultsPage />}
-      {page === TABLE_RESULTS_LIST_PAGE && <TableResultListPage />}
+      {page === TABLE_RESULT_LIST_PAGE && <TableResultListPage />}
     </>
   );
 };
