@@ -7,7 +7,9 @@ import {
   interceptSearch,
   interceptSearchIndefinitely,
   interceptSearchWithError,
+  mockFacetSearchSingleValue,
   mockNoMoreFacetValues,
+  routeMatchers,
 } from '../../../page-objects/search';
 import {FacetActions as Actions} from './facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
@@ -59,6 +61,27 @@ describe('Facet Test Suite', () => {
       const indexValues = extractFacetValues(interception.response);
       cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
     });
+  }
+
+  function searchForFacetValue(singleValueQuery: string) {
+    Actions.typeQueryInSearchInput(singleValueQuery);
+    for (let i = 0; i < singleValueQuery.length; i++) {
+      cy.wait(InterceptAliases.FacetSearch);
+    }
+  }
+
+  function setupWithSingleFacetSearchValue(
+    singleValueQuery: string,
+    options: Partial<FacetOptions> = {}
+  ) {
+    cy.intercept('POST', routeMatchers.search).as(
+      InterceptAliases.Search.substring(1)
+    );
+    mockFacetSearchSingleValue(singleValueQuery);
+
+    cy.visit(pageUrl);
+    configure(options);
+    cy.wait(InterceptAliases.Search);
   }
 
   describe('with default settings', () => {
@@ -124,14 +147,6 @@ describe('Facet Test Suite', () => {
     function searchForValue(query: string) {
       setupWithValues();
       Actions.typeQueryInSearchInput(query);
-    }
-
-    function searchForSingleValue() {
-      const singleValueQuery = 'account';
-      Actions.typeQueryInSearchInput(singleValueQuery);
-      for (let i = 0; i < singleValueQuery.length; i++) {
-        cy.wait(InterceptAliases.FacetSearch);
-      }
     }
 
     it('should work as expected', () => {
@@ -247,24 +262,10 @@ describe('Facet Test Suite', () => {
         Expect.displaySearchClearButton(false);
       });
 
-      scope('when searching for a value that returns a single result', () => {
-        searchForSingleValue();
-
-        Expect.numberOfIdleCheckboxValues(1);
-        Expect.numberOfSelectedCheckboxValues(0);
-        Expect.displayMoreMatchesFound(false);
-        Expect.displayNoMatchesFound(false);
-        Expect.displaySearchClearButton(true);
-      });
-
       scope('when searching for a value that returns no results', () => {
         const query = 'this facet value does not exist';
 
-        function searchForInvalidValue() {
-          Actions.clickSearchClearButton();
-          Actions.typeQueryInSearchInput(query);
-        }
-        searchForInvalidValue();
+        Actions.typeQueryInSearchInput(query);
 
         Expect.numberOfIdleCheckboxValues(0);
         Expect.numberOfSelectedCheckboxValues(0);
@@ -277,7 +278,7 @@ describe('Facet Test Suite', () => {
       scope('when selecting a search result', () => {
         function selectSearchResult() {
           Actions.clickSearchClearButton();
-          searchForSingleValue();
+          searchForFacetValue('account');
           Actions.checkFirstValue();
         }
         selectSearchResult();
@@ -319,6 +320,21 @@ describe('Facet Test Suite', () => {
           Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
           Expect.displayShowMoreButton(true);
         });
+      });
+    });
+
+    it('should work as expected', () => {
+      scope('when searching for a value that returns a single result', () => {
+        const queryValue = 'account';
+
+        setupWithSingleFacetSearchValue(queryValue);
+        searchForFacetValue(queryValue);
+
+        Expect.numberOfIdleCheckboxValues(1);
+        Expect.numberOfSelectedCheckboxValues(0);
+        Expect.displayMoreMatchesFound(false);
+        Expect.displayNoMatchesFound(false);
+        Expect.displaySearchClearButton(true);
       });
     });
 
@@ -382,15 +398,14 @@ describe('Facet Test Suite', () => {
   });
 
   describe('with link values', () => {
+    const linkValueOptions = {
+      field: defaultField,
+      label: defaultLabel,
+      displayValuesAs: 'link',
+    };
+
     function setupWithLinkValues() {
-      visitFacetPage(
-        {
-          field: defaultField,
-          label: defaultLabel,
-          displayValuesAs: 'link',
-        },
-        false
-      );
+      visitFacetPage(linkValueOptions, false);
     }
 
     function setupWithNoMoreValues() {
@@ -493,13 +508,6 @@ describe('Facet Test Suite', () => {
           Actions.typeQueryInSearchInput(query);
         }
 
-        function searchForSingleValue() {
-          const singleValueQuery = 'account';
-          Actions.typeQueryInSearchInput(singleValueQuery);
-          for (let i = 0; i < singleValueQuery.length; i++) {
-            cy.wait(InterceptAliases.FacetSearch);
-          }
-        }
         searchForValue();
 
         Expect.numberOfIdleLinkValues(defaultNumberOfValues);
@@ -572,25 +580,10 @@ describe('Facet Test Suite', () => {
           });
         });
 
-        scope('when searching for a value that returns a single result', () => {
-          searchForSingleValue();
-
-          Expect.numberOfIdleLinkValues(1);
-          Expect.numberOfSelectedLinkValues(0);
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(false);
-          Expect.displaySearchClearButton(true);
-        });
-
         scope('when searching for a value that returns no results', () => {
           const query = 'this facet value does not exist';
 
-          function searchForInvalidValue() {
-            Actions.clickSearchClearButton();
-            Actions.typeQueryInSearchInput(query);
-          }
-
-          searchForInvalidValue();
+          Actions.typeQueryInSearchInput(query);
 
           Expect.numberOfIdleLinkValues(0);
           Expect.numberOfSelectedLinkValues(0);
@@ -626,6 +619,21 @@ describe('Facet Test Suite', () => {
           Expect.numberOfIdleLinkValues(defaultNumberOfValues);
           Expect.displayShowMoreButton(true);
         });
+      });
+    });
+
+    it('should work as expected', () => {
+      scope('when searching for a value that returns a single result', () => {
+        const queryValue = 'account';
+
+        setupWithSingleFacetSearchValue(queryValue, linkValueOptions);
+        searchForFacetValue(queryValue);
+
+        Expect.numberOfIdleLinkValues(1);
+        Expect.numberOfSelectedLinkValues(0);
+        Expect.displayMoreMatchesFound(false);
+        Expect.displayNoMatchesFound(false);
+        Expect.displaySearchClearButton(true);
       });
     });
 
