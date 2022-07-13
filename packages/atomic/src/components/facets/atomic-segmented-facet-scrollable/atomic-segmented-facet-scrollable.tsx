@@ -1,4 +1,4 @@
-import {Component, h, Listen, State} from '@stencil/core';
+import {Component, h, Listen, State, Watch} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../../components/common/button';
@@ -52,13 +52,6 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  componentDidLoad() {
-    this.observer = new ResizeObserver(() => {
-      this.handleScroll();
-    });
-    this.observer.observe(this.horizontalScroll as HTMLDivElement);
-  }
-
   disconnectedCallback() {
     this.observer.disconnect();
   }
@@ -79,6 +72,20 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
     this.hideLeftArrow = !isScrollable || isLeftEdge;
     this.hideRightArrow = !isScrollable || isRightEdge;
+  }
+
+  @Watch('searchStatusState')
+  loadObserver() {
+    if (
+      this.searchStatusState.firstSearchExecuted &&
+      this.horizontalScroll &&
+      !this.observer
+    ) {
+      this.observer = new ResizeObserver(() => {
+        this.handleScroll();
+      });
+      this.observer.observe(this.horizontalScroll as HTMLDivElement);
+    }
   }
 
   private slideHorizontally(direction: ArrowDirection) {
