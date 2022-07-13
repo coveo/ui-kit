@@ -45,7 +45,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   private horizontalScroll?: HTMLDivElement;
   @State() private hideLeftArrow = true;
-  @State() private hideRightArrow = false;
+  @State() private hideRightArrow = true;
   private observer!: ResizeObserver;
 
   public initialize() {

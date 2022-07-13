@@ -148,16 +148,20 @@ export class AtomicSegmentedFacet
     return <b class="inline-block my-3 mx-2">{this.label}:</b>;
   }
 
-  public render() {
-    if (
-      this.searchStatus.state.hasError ||
-      !this.facetState.values.length ||
-      !this.facet.state.enabled
-    ) {
-      return <Hidden></Hidden>;
-    }
-
+  renderLoadingAnimation() {
     return (
+      <div
+        part="placeholder"
+        aria-hidden
+        class="rounded h-8 my-2 w-screen bg-neutral animate-pulse"
+      ></div>
+    );
+  }
+
+  renderContainer() {
+    return !this.facetState.values.length ? (
+      <Hidden></Hidden>
+    ) : (
       <div
         part="segmented-container"
         class="flex whitespace-nowrap h-10 mb-[1%] items-center"
@@ -166,5 +170,15 @@ export class AtomicSegmentedFacet
         {this.renderValues()}
       </div>
     );
+  }
+
+  public render() {
+    if (this.searchStatus.state.hasError || !this.facet.state.enabled) {
+      return <Hidden></Hidden>;
+    }
+
+    return !this.searchStatus.state.firstSearchExecuted
+      ? this.renderLoadingAnimation()
+      : this.renderContainer();
   }
 }
