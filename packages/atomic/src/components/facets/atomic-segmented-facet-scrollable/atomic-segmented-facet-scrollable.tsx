@@ -65,6 +65,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   @Listen('wheel')
   @Listen('touchmove')
+  @Listen('keydown')
   handleScroll() {
     if (!this.horizontalScroll) {
       return;
