@@ -54,3 +54,5 @@ export const allowedValues = new RecordValue({
     }),
   },
 });
+
+export const hasBreadcrumbs = new BooleanValue();

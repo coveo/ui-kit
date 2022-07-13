@@ -194,6 +194,8 @@ export type {
 export type {
   InstantResults,
   InstantResultsState,
+  InstantResultProps,
+  InstantResultOptions,
 } from './instant-results/instant-results';
 export {buildInstantResults} from './instant-results/instant-results';
 
