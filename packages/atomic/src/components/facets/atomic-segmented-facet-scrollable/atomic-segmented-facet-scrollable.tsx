@@ -45,7 +45,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   private horizontalScroll?: HTMLDivElement;
   @State() private hideLeftArrow = true;
-  @State() private hideRightArrow = true;
+  @State() private hideRightArrow = false;
   private observer!: ResizeObserver;
 
   public initialize() {
@@ -153,17 +153,11 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     ];
   }
 
-  renderLoadingAnimation() {
-    return (
-      <div
-        part="placeholder"
-        aria-hidden
-        class="rounded h-8 my-2 w-full bg-neutral animate-pulse"
-      ></div>
-    );
-  }
+  render() {
+    if (this.searchStatus.state.hasError) {
+      return <Hidden></Hidden>;
+    }
 
-  renderScrollable() {
     return (
       <div part="scrollable-container" class="flex relative">
         {this.renderArrow('left')}
@@ -177,15 +171,5 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         {this.renderArrow('right')}
       </div>
     );
-  }
-
-  render() {
-    if (this.searchStatus.state.hasError) {
-      return <Hidden></Hidden>;
-    }
-
-    return !this.searchStatusState.firstSearchExecuted
-      ? this.renderLoadingAnimation()
-      : this.renderScrollable();
   }
 }
