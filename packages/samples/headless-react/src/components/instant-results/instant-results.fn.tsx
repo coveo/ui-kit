@@ -29,10 +29,12 @@ export const InstantResults: FunctionComponent<InstantResultsProps> = (
       ),
     []
   );
-  useEffect(() =>
-    controllerInstantResults.subscribe(() =>
-      setStateInstantResults(controllerInstantResults.state)
-    )
+  useEffect(
+    () =>
+      controllerInstantResults.subscribe(() =>
+        setStateInstantResults(controllerInstantResults.state)
+      ),
+    []
   );
 
   return (
