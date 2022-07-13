@@ -42,10 +42,10 @@ export type {
 };
 
 /**
- * Creates a `CategoryFacet` controller instance.
+ * Creates an insight `CategoryFacet` controller instance.
  *
  * @param engine - The insight engine.
- * @param props - The configurable `InsightCategoryFacet` properties.
+ * @param props - The configurable `CategoryFacet` properties.
  * @returns A `CategoryFacet` controller instance.
  * */
 export function buildCategoryFacet(

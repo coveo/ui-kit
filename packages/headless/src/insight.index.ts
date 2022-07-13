@@ -73,9 +73,9 @@ export {buildCoreResultList} from './controllers/core/result-list/headless-core-
 export type {
   InsightInteractiveResultOptions,
   InsightInteractiveResultProps,
-  InsightInteractiveResult,
+  InteractiveResult,
 } from './controllers/insight/result-list/headless-insight-interactive-result';
-export {buildInsightInteractiveResult} from './controllers/insight/result-list/headless-insight-interactive-result';
+export {buildInteractiveResult} from './controllers/insight/result-list/headless-insight-interactive-result';
 
 export type {
   ResultsPerPageInitialState,

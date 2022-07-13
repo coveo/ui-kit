@@ -9,13 +9,13 @@ import {
 } from '../../../test/mock-engine';
 import {
   buildInsightInteractiveResult,
-  InsightInteractiveResult,
+  InteractiveResult,
 } from './headless-insight-interactive-result';
 
 describe('InsightInteractiveResult', () => {
   let engine: MockInsightEngine;
   let mockResult: Result;
-  let interactiveResult: InsightInteractiveResult;
+  let interactiveResult: InteractiveResult;
   let logDocumentOpenPendingActionType: string;
 
   const resultStringParams = {

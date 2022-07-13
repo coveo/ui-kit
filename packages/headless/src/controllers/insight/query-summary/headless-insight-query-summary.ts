@@ -7,10 +7,10 @@ import {
 
 export type {QuerySummary, QuerySummaryState};
 /**
- * Creates a `InsightQuerySummary` controller instance.
+ * Creates an insight `QuerySummary` controller instance.
  *
- * @param engine - The headless engine instance.
- * @returns A `InsightQuerySummary` controller instance.
+ * @param engine - The insight engine.
+ * @returns A `QuerySummary` controller instance.
  */
 export function buildQuerySummary(engine: InsightEngine): QuerySummary {
   return buildCoreQuerySummary(engine);

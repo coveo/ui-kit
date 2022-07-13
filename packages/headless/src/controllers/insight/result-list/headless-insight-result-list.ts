@@ -11,8 +11,8 @@ import {
 export type {ResultListOptions, ResultListProps, ResultListState, ResultList};
 
 /**
- * Creates an `ResultList` controller instance.
- * @param engine - The headless engine.
+ * Creates an insight `ResultList` controller instance.
+ * @param engine - The insight engine.
  * @param props - The `ResultList` controller properties.
  * @returns An `ResultList` controller instance.
  */

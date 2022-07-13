@@ -9,12 +9,10 @@ import {
 export type {FacetManagerState, FacetManagerPayload, FacetManager};
 
 /**
- * Creates an `InsightFacetManager` instance.
+ * Creates an insight `FacetManager` instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
  */
-export function buildFacetManager(
-  engine: InsightEngine
-): FacetManager {
+export function buildFacetManager(engine: InsightEngine): FacetManager {
   return buildCoreFacetManager(engine);
 }

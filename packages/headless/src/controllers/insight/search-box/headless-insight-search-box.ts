@@ -30,9 +30,9 @@ export interface SearchBoxProps {
 }
 
 /**
- * Creates an `SearchBox` controller instance.
+ * Creates an insight `SearchBox` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
  * @param props - The configurable `SearchBox` properties.
  * @returns An `SearchBox` controller instance.
  */

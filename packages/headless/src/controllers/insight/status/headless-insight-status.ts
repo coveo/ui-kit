@@ -8,7 +8,7 @@ import {
 export type {SearchStatus, SearchStatusState};
 
 /**
- * Creates an `SearchStatus` controller instance.
+ * Creates an insight `SearchStatus` controller instance.
  *
  * @param engine - The headless engine.
  * @returns An `SearchStatus` controller instance.
