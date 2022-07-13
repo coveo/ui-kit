@@ -10,7 +10,7 @@ import {
 
 export interface SearchStatus extends Controller {
   /**
-   * The state of the `CoreStatus` controller.
+   * The state of the `SearchStatus` controller.
    */
   state: SearchStatusState;
 }

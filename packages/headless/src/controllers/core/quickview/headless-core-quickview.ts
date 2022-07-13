@@ -16,7 +16,7 @@ import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 
 export interface QuickviewProps {
   /**
-   * The options for the `QuickviewCore` controller.
+   * The options for the `Quickview` controller.
    */
   options: QuickviewOptions;
 }
@@ -40,7 +40,7 @@ export interface Quickview extends Controller {
   fetchResultContent(): void;
 
   /**
-   * The state for the `QuickviewCore` controller.
+   * The state for the `Quickview` controller.
    */
   state: QuickviewState;
 }
@@ -65,12 +65,12 @@ export interface QuickviewState {
 }
 
 /**
- * Creates a Quickview controller core instance.
+ * Creates a `Quickview` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `QuickviewCore` properties.
+ * @param props - The configurable `Quickview` properties.
  * @param fetchResultContentCallback - The callback to be triggered after executing fetchResultContent.
- * @returns A `QuickviewCore` controller instance.
+ * @returns A `Quickview` controller instance.
  */
 export function buildCoreQuickview(
   engine: CoreEngine,

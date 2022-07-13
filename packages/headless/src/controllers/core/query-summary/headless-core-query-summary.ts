@@ -20,7 +20,7 @@ export interface QuerySummary extends Controller {
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `CoreQuerySummary` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `QuerySummary` controller.
  * */
 export interface QuerySummaryState extends SearchStatusState {
   /**
@@ -65,10 +65,10 @@ export interface QuerySummaryState extends SearchStatusState {
 }
 
 /**
- * Creates a `CoreQuerySummary` controller instance.
+ * Creates a `QuerySummary` controller instance.
  *
  * @param engine - The headless engine instance.
- * @returns A `CoreQuerySummary` controller instance.
+ * @returns A `QuerySummary` controller instance.
  */
 export function buildCoreQuerySummary(engine: CoreEngine): QuerySummary {
   if (!loadQuerySummaryReducers(engine)) {

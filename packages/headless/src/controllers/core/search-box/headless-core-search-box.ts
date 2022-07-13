@@ -51,7 +51,7 @@ export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
 export interface SearchBoxProps {
   /**
-   * The `CoreSearchBox` controller options.
+   * The `SearchBox` controller options.
    */
   options?: SearchBoxOptions;
 
@@ -149,6 +149,12 @@ export interface SearchBox extends Controller {
   state: SearchBoxState;
 }
 
+/**
+ * Creates a `SearchBox` controller instance.
+ *
+ * @param engine - The headless engine instance.
+ * @returns A `SearchBox` controller instance.
+ */
 export function buildCoreSearchBox(
   engine: CoreEngine,
   props: SearchBoxProps

@@ -24,7 +24,7 @@ export interface FacetManagerPayload<T> {
 }
 
 /**
- * The `CoreFacetManager` controller helps reorder facets to match the most recent search response.
+ * The `FacetManager` controller helps reorder facets to match the most recent search response.
  */
 export interface FacetManager extends Controller {
   /**

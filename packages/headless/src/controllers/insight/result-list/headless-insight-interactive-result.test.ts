@@ -8,7 +8,7 @@ import {
   MockInsightEngine,
 } from '../../../test/mock-engine';
 import {
-  buildInsightInteractiveResult,
+  buildInteractiveResult,
   InteractiveResult,
 } from './headless-insight-interactive-result';
 
@@ -33,7 +33,7 @@ describe('InsightInteractiveResult', () => {
     const result = (mockResult = buildMockResult(resultStringParams));
     logDocumentOpenPendingActionType =
       logDocumentOpenThunk(mockResult).pending.type;
-    interactiveResult = buildInsightInteractiveResult(engine, {
+    interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });
   }
