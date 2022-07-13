@@ -16,8 +16,13 @@ import {
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {allValidPlatformCombination} from '../../test/platform-url';
+import {clearCoveoAnalyticsClient} from '../../api/analytics/search-analytics';
+jest.mock('../../api/analytics/search-analytics');
 
 describe('configuration slice', () => {
+  afterEach(() => {
+    (clearCoveoAnalyticsClient as jest.Mock).mockClear();
+  });
   const url = platformUrl({environment: 'dev', region: 'eu'});
   const existingState: ConfigurationState = {
     ...getConfigurationInitialState(),
@@ -199,6 +204,45 @@ describe('configuration slice', () => {
       ).toEqual(expectedState);
     });
 
+    it('clearCoveoAnalyticsClient when needed', () => {
+      const existingState = getConfigurationInitialState();
+      existingState.analytics.enabled = true;
+      configurationReducer(
+        existingState,
+        updateAnalyticsConfiguration({
+          enabled: false,
+        })
+      );
+
+      expect(clearCoveoAnalyticsClient).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not clearCoveoAnalyticsClient when it is already disabled', () => {
+      const existingState = getConfigurationInitialState();
+      existingState.analytics.enabled = false;
+      configurationReducer(
+        existingState,
+        updateAnalyticsConfiguration({
+          enabled: false,
+        })
+      );
+
+      expect(clearCoveoAnalyticsClient).not.toHaveBeenCalled();
+    });
+
+    it('does not clearCoveoAnalyticsClient when it is enabled', () => {
+      const existingState = getConfigurationInitialState();
+      existingState.analytics.enabled = false;
+      configurationReducer(
+        existingState,
+        updateAnalyticsConfiguration({
+          enabled: true,
+        })
+      );
+
+      expect(clearCoveoAnalyticsClient).not.toHaveBeenCalled();
+    });
+
     it('setting apiBaseUrl to a relative url does not return an error', () => {
       const apiBaseUrl = '/rest/ua';
       const action = updateAnalyticsConfiguration({apiBaseUrl});
@@ -269,6 +313,7 @@ describe('configuration slice', () => {
     expect(
       configurationReducer(state, disableAnalytics()).analytics.enabled
     ).toBe(false);
+    expect(clearCoveoAnalyticsClient).toHaveBeenCalledTimes(1);
   });
 
   it('should handle enable analytics', () => {
@@ -277,6 +322,7 @@ describe('configuration slice', () => {
     expect(
       configurationReducer(state, enableAnalytics()).analytics.enabled
     ).toBe(true);
+    expect(clearCoveoAnalyticsClient).not.toHaveBeenCalled();
   });
 
   it('should handle #setOriginLevel2', () => {
