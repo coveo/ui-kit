@@ -1,7 +1,13 @@
 import {
   buildCoreCategoryFacet,
+  CategoryFacet,
+  CategoryFacetOptions,
   CategoryFacetProps,
   CategoryFacetSearch,
+  CategoryFacetSearchOptions,
+  CategoryFacetSearchResult,
+  CategoryFacetSearchState,
+  CategoryFacetState,
   CategoryFacetValue,
   CoreCategoryFacet,
   CoreCategoryFacetState,
@@ -21,33 +27,31 @@ import {
 } from '../../../../features/insight-search/insight-search-actions';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 
-export interface InsightCategoryFacetProps extends CategoryFacetProps {}
-
-export interface InsightCategoryFacet extends CoreCategoryFacet {
-  /**
-   * Provides methods to search the facet's values.
-   */
-  facetSearch: CategoryFacetSearch;
-
-  /**
-   * The state of the `Facet` controller.
-   * */
-  state: InsightCategoryFacetState;
-}
-
-export interface InsightCategoryFacetState extends CoreCategoryFacetState {}
+export type {
+  CategoryFacetValue,
+  CategoryFacetOptions,
+  CategoryFacetSearchOptions,
+  CategoryFacetProps,
+  CategoryFacet,
+  CategoryFacetState,
+  CategoryFacetSearch,
+  CategoryFacetSearchState,
+  CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
+};
 
 /**
- * Creates a `InsightCategoryFacet` controller instance.
+ * Creates a `CategoryFacet` controller instance.
  *
  * @param engine - The insight engine.
  * @param props - The configurable `InsightCategoryFacet` properties.
- * @returns A `InsightCategoryFacet` controller instance.
+ * @returns A `CategoryFacet` controller instance.
  * */
-export function buildInsightCategoryFacet(
+export function buildCategoryFacet(
   engine: InsightEngine,
-  props: InsightCategoryFacetProps
-): InsightCategoryFacet {
+  props: CategoryFacetProps
+): CategoryFacet {
   const coreController = buildCoreCategoryFacet(engine, props);
   const {dispatch} = engine;
   const getFacetId = () => coreController.state.facetId;
@@ -115,6 +119,13 @@ export function buildInsightCategoryFacet(
     showLessValues() {
       coreController.showLessValues();
       dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
+    },
+
+    get state() {
+      return {
+        ...coreController.state,
+        facetSearch: facetSearch.state,
+      };
     },
   };
 }

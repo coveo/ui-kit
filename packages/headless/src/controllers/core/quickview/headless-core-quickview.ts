@@ -14,14 +14,14 @@ import {CoreEngine} from '../../..';
 import {HtmlApiClient} from '../../../api/search/html/html-api-client';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 
-export interface QuickviewCoreProps {
+export interface QuickviewProps {
   /**
    * The options for the `QuickviewCore` controller.
    */
-  options: QuickviewCoreOptions;
+  options: QuickviewOptions;
 }
 
-export interface QuickviewCoreOptions {
+export interface QuickviewOptions {
   /**
    * The result to retrieve a quickview for.
    */
@@ -33,7 +33,7 @@ export interface QuickviewCoreOptions {
   maximumPreviewSize?: number;
 }
 
-export interface QuickviewCore extends Controller {
+export interface Quickview extends Controller {
   /**
    * Retrieves the preview content for the configured result.
    */
@@ -42,10 +42,10 @@ export interface QuickviewCore extends Controller {
   /**
    * The state for the `QuickviewCore` controller.
    */
-  state: QuickviewCoreState;
+  state: QuickviewState;
 }
 
-export interface QuickviewCoreState {
+export interface QuickviewState {
   /**
    * The result preview HTML content.
    *
@@ -72,11 +72,11 @@ export interface QuickviewCoreState {
  * @param fetchResultContentCallback - The callback to be triggered after executing fetchResultContent.
  * @returns A `QuickviewCore` controller instance.
  */
-export function buildQuickviewCore(
+export function buildCoreQuickview(
   engine: CoreEngine,
-  props: QuickviewCoreProps,
+  props: QuickviewProps,
   fetchResultContentCallback?: () => void
-): QuickviewCore {
+): Quickview {
   if (!loadQuickviewReducers(engine)) {
     throw loadReducerError;
   }

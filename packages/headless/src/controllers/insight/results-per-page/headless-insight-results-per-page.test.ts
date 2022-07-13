@@ -1,7 +1,7 @@
 import {
   ResultsPerPage,
   ResultsPerPageProps,
-  buildInsightResultsPerPage,
+  buildResultsPerPage,
 } from './headless-insight-results-per-page';
 import {
   MockInsightEngine,
@@ -16,7 +16,7 @@ describe('InsightResultsPerPage', () => {
   let resultsPerPage: ResultsPerPage;
 
   function initResultsPerPage() {
-    resultsPerPage = buildInsightResultsPerPage(engine, props);
+    resultsPerPage = buildResultsPerPage(engine, props);
   }
 
   beforeEach(() => {

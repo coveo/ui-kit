@@ -17,13 +17,13 @@ export type {
 };
 
 /**
- * Creates an `InsightResultsPerPage` controller instance.
+ * Creates an `ResultsPerPage` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `InsightResultsPerPage` properties.
- * @returns An `InsightResultsPerPage` controller instance.
+ * @param props - The configurable `ResultsPerPage` properties.
+ * @returns An `ResultsPerPage` controller instance.
  */
-export function buildInsightResultsPerPage(
+export function buildResultsPerPage(
   engine: InsightEngine,
   props: ResultsPerPageProps = {}
 ): ResultsPerPage {

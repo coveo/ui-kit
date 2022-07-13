@@ -5,10 +5,6 @@ import {
 } from '../../../../test/mock-engine';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {
-  buildInsightCategoryFacet,
-  InsightCategoryFacet,
-} from './headless-insight-category-facet';
-import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
@@ -28,18 +24,22 @@ import {
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {CategoryFacetOptions} from '../../../core/facets/category-facet/headless-core-category-facet';
+import {
+  CategoryFacet,
+  CategoryFacetOptions,
+} from '../../../core/facets/category-facet/headless-core-category-facet';
+import {buildCategoryFacet} from './headless-insight-category-facet';
 
 describe('insight category facet', () => {
   const facetId = '1';
-  let insightCategoryFacet: InsightCategoryFacet;
+  let insightCategoryFacet: CategoryFacet;
   let engine: MockInsightEngine;
   let state: InsightAppState;
   let options: CategoryFacetOptions;
 
   function initInsightCategoryFacet() {
     engine = buildMockInsightEngine({state});
-    insightCategoryFacet = buildInsightCategoryFacet(engine, {options});
+    insightCategoryFacet = buildCategoryFacet(engine, {options});
   }
 
   function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {

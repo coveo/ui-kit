@@ -53,10 +53,10 @@ export {buildCaseField} from './controllers/case-field/headless-case-field';
 export type {CaseFieldSuggestion} from './features/case-field/case-field-state';
 
 export type {
-  QuickviewCore,
-  QuickviewCoreOptions,
-  QuickviewCoreProps,
-  QuickviewCoreState,
+  Quickview,
+  QuickviewOptions,
+  QuickviewProps,
+  QuickviewState,
 } from './controllers/core/quickview/headless-core-quickview';
 export type {
   CaseAssistQuickviewState,
