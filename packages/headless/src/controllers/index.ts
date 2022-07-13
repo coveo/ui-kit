@@ -222,7 +222,6 @@ export type {
   Tab,
 } from './tab/headless-tab';
 export {buildTab} from './tab/headless-tab';
-export type {CoreFacetManager} from './core/facet-manager/headless-core-facet-manager';
 
 export type {
   FacetManagerPayload,
@@ -230,6 +229,7 @@ export type {
   FacetManager,
 } from './facet-manager/headless-facet-manager';
 export {buildFacetManager} from './facet-manager/headless-facet-manager';
+export {buildCoreFacetManager} from './core/facet-manager/headless-core-facet-manager';
 
 export type {
   NumericFacetBreadcrumb,

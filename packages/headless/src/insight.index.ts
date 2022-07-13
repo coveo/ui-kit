@@ -105,6 +105,14 @@ export type {
 export {buildSearchStatus} from './controllers/insight/status/headless-insight-status';
 export {buildCoreSearchStatus} from './controllers/core/status/headless-core-status';
 
+export type {
+  FacetManagerPayload,
+  FacetManagerState,
+  FacetManager,
+} from './controllers/insight/facet-manager/headless-insight-facet-manager';
+export {buildFacetManager} from './controllers/insight/facet-manager/headless-insight-facet-manager';
+export {buildCoreFacetManager} from './controllers/core/facet-manager/headless-core-facet-manager';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
