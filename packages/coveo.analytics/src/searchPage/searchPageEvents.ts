@@ -1,4 +1,5 @@
 import {DocumentInformation, FacetStateRequest} from '../events';
+import {InsightEvents} from '../insight/insightEvents';
 
 export enum SearchPageEvents {
     /**
@@ -263,7 +264,7 @@ export enum SearchPageEvents {
     showLessFoldedResults = 'showLessFoldedResults',
 }
 
-export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
+export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
     [SearchPageEvents.triggerNotify]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerExecute]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerQuery]: 'queryPipelineTriggers',
@@ -296,6 +297,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.recentResultClick]: 'recentlyClickedDocuments',
     [SearchPageEvents.clearRecentResults]: 'recentlyClickedDocuments',
     [SearchPageEvents.showLessFoldedResults]: 'folding',
+    [InsightEvents.expandToFullUI]: 'interface',
 };
 
 export interface StaticFilterMetadata {

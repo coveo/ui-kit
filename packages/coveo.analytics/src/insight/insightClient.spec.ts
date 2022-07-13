@@ -75,7 +75,7 @@ describe('InsightClient', () => {
         });
     };
 
-    const expectMatchCustomEventPayload = (actionCause: SearchPageEvents, meta = {}) => {
+    const expectMatchCustomEventPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
         const [, {body}] = fetchMock.lastCall();
         const customData = {foo: 'bar', ...meta};
         expect(JSON.parse(body.toString())).toMatchObject({
@@ -256,5 +256,16 @@ describe('InsightClient', () => {
         const meta = {caseId: '1234', caseNumber: '1234', caseContext: {subject: 'test'}};
         await client.logContextChanged(meta);
         expectMatchPayload(InsightEvents.contextChanged, meta);
+    });
+
+    it('should send proper payload for #expandToFullUI', async () => {
+        const meta = {
+            caseId: '1234',
+            caseNumber: '1234',
+            caseContext: {subject: 'test'},
+            fullSearchComponentName: 'c__FullSearch',
+        };
+        await client.logExpandToFullUI(meta);
+        expectMatchCustomEventPayload(InsightEvents.expandToFullUI, meta);
     });
 });
