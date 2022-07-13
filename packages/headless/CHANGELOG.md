@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.1...@coveo/headless@1.86.0) (2022-07-12)
+
+
+### Features
+
+* **headless:** added sort controller ([#2204](https://github.com/coveo/ui-kit/issues/2204)) ([6c9167a](https://github.com/coveo/ui-kit/commit/6c9167ae0496207cebc2a11eb69a27bc3cb60dd6))
+
+
+
+
+
 ## [1.85.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.0...@coveo/headless@1.85.1) (2022-07-11)
 
 

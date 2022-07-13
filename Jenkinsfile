@@ -1,4 +1,4 @@
-node('linux && docker') {
+node('heavy && linux && docker') {
   checkout scm
   def tag = sh(script: "git tag --contains", returnStdout: true).trim()
   def isBump = !!tag
@@ -12,7 +12,7 @@ node('linux && docker') {
     return
   }
 
-  withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=4096']) {
+  withEnv(['npm_config_cache=npm-cache', 'CI=true', 'NODE_OPTIONS=--max_old_space_size=8192']) {
     withDockerContainer(image: 'node:16', args: '-u=root -e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
       stage('Setup') {
         sh 'npm ci'
