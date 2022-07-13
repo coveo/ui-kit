@@ -161,7 +161,7 @@ export class AtomicSegmentedFacet
     return (
       <div
         part="segmented-container"
-        class="flex whitespace-nowrap h-10 mb-[1%] items-center"
+        class="flex whitespace-nowrap h-10 mb-2.5 items-center"
       >
         {this.renderLabel()}
         {this.renderValues()}
