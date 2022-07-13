@@ -3,7 +3,6 @@ import {
   getHeadlessBindings,
   loadDependencies,
   setEngineOptions,
-  setInitializedCallback,
   HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
 
@@ -46,16 +45,9 @@ export default class QuanticInsightInterface extends LightningElement {
               this,
               CoveoHeadlessInsight
             );
-            setInitializedCallback(this.initialize, this.engineId);
           }
         });
-      } else {
-        setInitializedCallback(this.initialize, this.engineId);
       }
     });
   }
-
-  initialize = (engine) => {
-    this.engine = engine;
-  };
 }
