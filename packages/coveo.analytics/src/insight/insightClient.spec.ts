@@ -4,6 +4,7 @@ import {NoopAnalytics} from '../client/noopAnalytics';
 import {CustomEventsTypes, SearchPageEvents} from '../searchPage/searchPageEvents';
 import {CoveoInsightClient, InsightClientProvider} from './insightClient';
 import doNotTrack from '../donottrack';
+import {InsightEvents} from './insightEvents';
 
 jest.mock('../donottrack', () => {
     return {
@@ -58,7 +59,7 @@ describe('InsightClient', () => {
         originLevel3: 'origin-level-3',
     });
 
-    const expectMatchPayload = (actionCause: SearchPageEvents, meta = {}) => {
+    const expectMatchPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
         const [, {body}] = fetchMock.lastCall();
         const customData = {foo: 'bar', ...meta};
         expect(JSON.parse(body.toString())).toMatchObject({
@@ -249,5 +250,10 @@ describe('InsightClient', () => {
         expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
         c.enable();
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+    });
+
+    it('should send proper payload for #contextChanged', async () => {
+        await client.logContextChanged({caseId: '1234', caseNumber: '1234', caseContext: {subject: 'test'}});
+        expectMatchPayload(InsightEvents.contextChanged);
     });
 });

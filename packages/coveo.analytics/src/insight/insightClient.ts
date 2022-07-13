@@ -14,6 +14,7 @@ import {
     SearchPageEvents,
     ResultsSortMetadata,
 } from '../searchPage/searchPageEvents';
+import {ContextChangedMetadata, InsightEvents} from './insightEvents';
 
 export interface InsightClientProvider {
     getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
@@ -104,7 +105,7 @@ export class CoveoInsightClient {
         return this.coveoAnalyticsClient.sendCustomEvent(payload);
     }
 
-    public async logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+    public async logSearchEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         return this.coveoAnalyticsClient.sendSearchEvent(await this.getBaseSearchEventRequest(event, metadata));
     }
 
@@ -124,6 +125,10 @@ export class CoveoInsightClient {
         return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
+    public logContextChanged(meta: ContextChangedMetadata) {
+        return this.logSearchEvent(InsightEvents.contextChanged, meta);
+    }
+
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
         return {
             ...(await this.getBaseEventRequest(metadata)),
@@ -132,7 +137,7 @@ export class CoveoInsightClient {
     }
 
     private async getBaseSearchEventRequest(
-        event: SearchPageEvents,
+        event: SearchPageEvents | InsightEvents,
         metadata?: Record<string, any>
     ): Promise<SearchEventRequest> {
         return {
