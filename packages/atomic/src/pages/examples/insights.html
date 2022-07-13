@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Insights Panel example</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script type="module">
+      async function main() {
+        await customElements.whenDefined('atomic-insight-interface');
+        const insightInterface = document.querySelector('atomic-insight-interface');
+        await insightInterface.initialize({});
+
+        insightInterface.executeFirstSearch();
+      }
+
+      main();
+    </script>
+    <style>
+      #wrapper {
+        width: 100%;
+        height: auto;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="widget-view">Toggle widget view</button>
+    <div id="wrapper">
+      <atomic-insight-interface> </atomic-insight-interface>
+    </div>
+    <script src="../header.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      let widgetView = false;
+      const widgetButton = document.getElementById('widget-view');
+      const wrapper = document.getElementById('wrapper');
+      widgetButton.addEventListener('click', () => {
+        widgetView = !widgetView;
+        updateWrapper(widgetView);
+      });
+      function updateWrapper(widgetView) {
+        if (widgetView) {
+          wrapper.style.width = '400px';
+          wrapper.style.height = '720px';
+        } else {
+          wrapper.style.width = '';
+          wrapper.style.height = '';
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -10,18 +10,18 @@ import {
   Watch,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
-import {InitializeEvent} from '@utils/initialization-utils';
-import {CommonBindings} from '@components/common/interface/bindings';
+import {InitializeEvent} from '../../../utils/initialization-utils';
+import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-} from '@components/common/interface/interface-common';
-import {createAtomicRecsStore} from './store';
+} from '../../common/interface/interface-common';
+import {createAtomicRecsStore, AtomicRecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 export type Bindings = CommonBindings<
   RecommendationEngine,
-  ReturnType<typeof createAtomicRecsStore>,
+  AtomicRecsStore,
   HTMLAtomicRecsInterfaceElement
 >;
 

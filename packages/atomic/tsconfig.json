@@ -25,13 +25,6 @@
         }
       }
     ],
-    "skipLibCheck": true,
-    "paths": {
-      "@global/*": ["./src/global/*"],
-      "@images/*": ["./src/images/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@components/*": ["./src/components/*"]
-    }
   },
   "include": ["src", "types/jsx.d.ts"],
   "exclude": [

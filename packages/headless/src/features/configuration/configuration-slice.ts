@@ -75,6 +75,10 @@ export const configurationReducer = createReducer(
         if (action.payload.timezone) {
           state.search.timezone = action.payload.timezone;
         }
+        if (action.payload.authenticationProviders) {
+          state.search.authenticationProviders =
+            action.payload.authenticationProviders;
+        }
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (!isNullOrUndefined(action.payload.enabled)) {

@@ -2,7 +2,7 @@ import {Component, h, Host, State, Element, Method} from '@stencil/core';
 import {
   FindAriaLiveEventArgs,
   findAriaLiveEventName,
-} from '@utils/accessibility-utils';
+} from '../../../utils/accessibility-utils';
 
 /**
  * The `atomic-aria-live` component notifies screen readers of changes in the search interface.

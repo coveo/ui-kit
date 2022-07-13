@@ -5,6 +5,7 @@ import {
   registerStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
+  resetStandaloneSearchBox,
 } from './standalone-search-box-set-actions';
 import {standaloneSearchBoxSetReducer} from './standalone-search-box-set-slice';
 import {StandaloneSearchBoxSetState} from './standalone-search-box-set-state';
@@ -43,6 +44,24 @@ describe('standalone search box slice', () => {
       const finalState = standaloneSearchBoxSetReducer(state, action);
 
       expect(state[id]).toEqual(finalState[id]);
+    });
+  });
+
+  describe('#resetStandaloneSearchBox', () => {
+    it('when the id exists, it resets the state except for the "defaultRedirectionUrl"', () => {
+      state[id]!.redirectTo = '/newpage';
+      state[id]!.defaultRedirectionUrl = '/newpage';
+      const action = resetStandaloneSearchBox({id});
+      const finalState = standaloneSearchBoxSetReducer(state, action);
+
+      expect(finalState[id]).toEqual(
+        buildMockStandaloneSearchBoxEntry({defaultRedirectionUrl: '/newpage'})
+      );
+    });
+
+    it('when the id does not exist, it does not throw', () => {
+      const action = resetStandaloneSearchBox({id: 'invalid'});
+      expect(() => standaloneSearchBoxSetReducer(state, action)).not.toThrow();
     });
   });
 

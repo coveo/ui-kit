@@ -11,7 +11,7 @@ async function computeFileSizes() {
 
 async function setup() {
   console.log('setting up repositories');
-  await exec('npm run setup');
+  await exec('npm ci');
 }
 
 async function buildFiles() {

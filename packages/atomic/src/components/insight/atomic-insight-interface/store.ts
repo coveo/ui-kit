@@ -1,13 +1,17 @@
 import {InsightEngine} from '@coveo/headless/insight';
 import {
+  AtomicCommonStore,
   AtomicCommonStoreData,
   createAtomicCommonStore,
-} from '@components/common/interface/store';
+} from '../../common/interface/store';
 
-export interface AtomicSvgInsightStoreData extends AtomicCommonStoreData {}
+export interface AtomicInsightStoreData extends AtomicCommonStoreData {}
 
-export function createAtomicSvcInsightStore() {
-  const commonStore = createAtomicCommonStore<AtomicSvgInsightStoreData>({
+export interface AtomicInsightStore
+  extends AtomicCommonStore<AtomicInsightStoreData> {}
+
+export function createAtomicInsightStore(): AtomicInsightStore {
+  const commonStore = createAtomicCommonStore<AtomicInsightStoreData>({
     loadingFlags: [],
     iconAssetsPath: '',
   });

@@ -25,6 +25,7 @@ import {
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
+  resetStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
 } from '../../features/standalone-search-box-set/standalone-search-box-set-actions';
@@ -220,5 +221,10 @@ describe('headless standalone searchBox', () => {
       );
       expect(action).toBeTruthy();
     });
+  });
+
+  it('should dispatch a resetStandaloneSearchBox action when calling afterRedirection', () => {
+    searchBox.afterRedirection();
+    expect(engine.actions).toContainEqual(resetStandaloneSearchBox({id}));
   });
 });

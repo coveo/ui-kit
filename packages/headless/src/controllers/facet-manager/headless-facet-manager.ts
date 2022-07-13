@@ -1,48 +1,21 @@
-import {facetOptions, search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {SearchSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {sortFacets} from '../../utils/facet-utils';
-import {buildController, Controller} from '../controller/headless-controller';
+import {
+  buildCoreFacetManager,
+  CoreFacetManager,
+  FacetManagerState,
+  FacetManagerPayload,
+} from '../core/facet-manager/headless-core-facet-manager';
 
-/**
- * A facet payload object to be sorted by the manager.
- */
-export interface FacetManagerPayload<T> {
-  /**
-   * A unique string identifying a facet.
-   */
-  facetId: string;
-
-  /**
-   * The payload to associate with the facetId. This can be anything e.g., a DOM element, JSX, a string.
-   */
-  payload: T;
-}
+export type {FacetManagerState, FacetManagerPayload};
 
 /**
  * The `FacetManager` controller helps reorder facets to match the most recent search response.
  */
-export interface FacetManager extends Controller {
-  /**
-   * Sorts the facets to match the order in the most recent search response.
-   *
-   * @param facets - An array of facet payloads to sort.
-   * @returns A sorted array.
-   */
-  sort<T>(facets: FacetManagerPayload<T>[]): FacetManagerPayload<T>[];
-
+export interface FacetManager extends CoreFacetManager {
   /**
    * The state of the `FacetManager` controller.
-   * */
-  state: FacetManagerState;
-}
-
-export interface FacetManagerState {
-  /**
-   * The facet ids sorted in the same order as the latest response.
    */
-  facetIds: string[];
+  state: FacetManagerState;
 }
 
 /**
@@ -51,32 +24,5 @@ export interface FacetManagerState {
  * @param engine - The headless engine.
  */
 export function buildFacetManager(engine: SearchEngine): FacetManager {
-  if (!loadFacetManagerReducers(engine)) {
-    throw loadReducerError;
-  }
-
-  const controller = buildController(engine);
-  const getState = () => engine.state;
-
-  return {
-    ...controller,
-
-    sort<T>(facets: FacetManagerPayload<T>[]) {
-      return sortFacets(facets, this.state.facetIds);
-    },
-
-    get state() {
-      const facets = getState().search.response.facets;
-      const facetIds = facets.map((f) => f.facetId);
-
-      return {facetIds};
-    },
-  };
-}
-
-function loadFacetManagerReducers(
-  engine: SearchEngine
-): engine is SearchEngine<SearchSection> {
-  engine.addReducers({search, facetOptions});
-  return true;
+  return buildCoreFacetManager(engine);
 }

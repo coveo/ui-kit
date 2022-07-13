@@ -121,12 +121,12 @@ function buildBrowserConfig(options) {
       alias({
         'coveo.analytics': path.resolve(
           __dirname,
-          './node_modules/coveo.analytics/dist/library.es.js'
+          '../../node_modules/coveo.analytics/dist/library.es.js'
         ),
         'cross-fetch': path.resolve(__dirname, './fetch-ponyfill.js'),
         'web-encoding': path.resolve(
           __dirname,
-          './node_modules/web-encoding/src/lib.js'
+          '../../node_modules/web-encoding/src/lib.js'
         ),
       }),
     ],
@@ -169,11 +169,11 @@ function buildNodeConfig(options) {
       alias({
         'coveo.analytics': path.resolve(
           __dirname,
-          './node_modules/coveo.analytics/dist/library.js'
+          '../../node_modules/coveo.analytics/dist/library.js'
         ),
         'web-encoding': path.resolve(
           __dirname,
-          './node_modules/web-encoding/src/lib.cjs'
+          '../../node_modules/web-encoding/src/lib.cjs'
         ),
       }),
     ],

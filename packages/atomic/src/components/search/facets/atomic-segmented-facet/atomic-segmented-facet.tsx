@@ -3,7 +3,7 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '@utils/initialization-utils';
+} from '../../../../utils/initialization-utils';
 import {BaseFacet} from '../facet-common';
 import {
   buildFacet,
@@ -16,11 +16,11 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {getFieldValueCaption} from '@utils/field-utils';
-import {MapProp} from '@utils/props-utils';
+import {getFieldValueCaption} from '../../../../utils/field-utils';
+import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
-import {Hidden} from '@components/common/hidden';
+import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -160,7 +160,7 @@ export class AtomicSegmentedFacet
     return (
       <div
         part="segmented-container"
-        class="flex whitespace-nowrap h-10 items-center"
+        class="flex whitespace-nowrap h-10 mb-[1%] items-center"
       >
         {this.renderLabel()}
         {this.renderValues()}

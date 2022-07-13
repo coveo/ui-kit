@@ -6,13 +6,13 @@ import {
   ResultDisplayImageSize,
   getResultDisplayClasses,
 } from './atomic-result-display-options';
-import {applyFocusVisiblePolyfill} from '@utils/initialization-utils';
+import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
 import {ResultRenderingFunction} from '../result-lists/result-list-common';
-import {createAtomicStore} from '../atomic-search-interface/store';
+import {AtomicStore} from '../atomic-search-interface/store';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -55,7 +55,7 @@ export class AtomicResult {
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: ReturnType<typeof createAtomicStore>;
+  @Prop() store?: AtomicStore;
 
   /**
    * The result content to display.
