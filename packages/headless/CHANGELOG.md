@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.87.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.86.0...@coveo/headless@1.87.0) (2022-07-13)
+
+
+### Features
+
+* **headless:** clearAllBreadcrumbs only affects regular facets ([#2203](https://github.com/coveo/ui-kit/issues/2203)) ([7fdb44a](https://github.com/coveo/ui-kit/commit/7fdb44a0189cd60068442bf3ebf7cb5f512ccd6f))
+
+
+
+
+
 # [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.1...@coveo/headless@1.86.0) (2022-07-12)
 
 
