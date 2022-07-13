@@ -42,6 +42,8 @@ export interface SearchPageClientProvider {
     getLanguage: () => string;
     getIsAnonymous: () => boolean;
     getFacetState?: () => FacetStateMetadata[];
+    getSplitTestRunName?: () => string | undefined;
+    getSplitTestRunVersion?: () => string | undefined;
 }
 
 export interface SearchPageClientOptions extends ClientOptions {
@@ -417,6 +419,7 @@ export class CoveoSearchPageClient {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
         return {
             ...this.getOrigins(),
+            ...this.getSplitTestRun(),
             customData,
             language: this.provider.getLanguage(),
             facetState: this.provider.getFacetState ? this.provider.getFacetState() : [],
@@ -438,5 +441,14 @@ export class CoveoSearchPageClient {
         return this.coveoAnalyticsClient instanceof CoveoAnalyticsClient
             ? this.coveoAnalyticsClient.getCurrentVisitorId()
             : undefined;
+    }
+
+    private getSplitTestRun() {
+        const splitTestRunName = this.provider.getSplitTestRunName ? this.provider.getSplitTestRunName() : '';
+        const splitTestRunVersion = this.provider.getSplitTestRunVersion ? this.provider.getSplitTestRunVersion() : '';
+        return {
+            ...(splitTestRunName && {splitTestRunName}),
+            ...(splitTestRunVersion && {splitTestRunVersion}),
+        };
     }
 }

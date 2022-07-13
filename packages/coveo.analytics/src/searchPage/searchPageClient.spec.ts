@@ -69,6 +69,8 @@ describe('SearchPageClient', () => {
         getLanguage: () => 'en',
         getFacetState: () => fakeFacetState,
         getIsAnonymous: () => false,
+        getSplitTestRunName: () => 'split-test-run-something',
+        getSplitTestRunVersion: () => 'split-test-run-something/foo',
     };
 
     beforeEach(() => {
@@ -96,6 +98,11 @@ describe('SearchPageClient', () => {
         originLevel3: 'origin-level-3',
     });
 
+    const expectSplitTestRun = () => ({
+        splitTestRunName: 'split-test-run-something',
+        splitTestRunVersion: 'split-test-run-something/foo',
+    });
+
     const expectMatchPayload = (actionCause: SearchPageEvents, meta = {}) => {
         const [, {body}] = fetchMock.lastCall();
         const customData = {foo: 'bar', ...meta};
@@ -109,6 +116,7 @@ describe('SearchPageClient', () => {
             language: 'en',
             clientId: 'visitor-id',
             ...expectOrigins(),
+            ...expectSplitTestRun(),
         });
     };
 
@@ -123,6 +131,7 @@ describe('SearchPageClient', () => {
             clientId: 'visitor-id',
             ...doc,
             ...expectOrigins(),
+            ...expectSplitTestRun(),
         });
     };
 
@@ -137,6 +146,7 @@ describe('SearchPageClient', () => {
             language: 'en',
             clientId: 'visitor-id',
             ...expectOrigins(),
+            ...expectSplitTestRun(),
         });
     };
 
@@ -151,6 +161,7 @@ describe('SearchPageClient', () => {
             language: 'en',
             clientId: 'visitor-id',
             ...expectOrigins(),
+            ...expectSplitTestRun(),
         });
     };
 
