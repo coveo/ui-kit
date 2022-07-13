@@ -153,7 +153,7 @@ export class AtomicSegmentedFacet
       <div
         part="placeholder"
         aria-hidden
-        class="rounded h-8 my-2 w-screen bg-neutral animate-pulse"
+        class="h-8 my-2 w-screen bg-neutral animate-pulse"
       ></div>
     );
   }
