@@ -105,14 +105,6 @@ export type {
 export {buildSearchStatus} from './controllers/insight/status/headless-insight-status';
 export {buildCoreSearchStatus} from './controllers/core/status/headless-core-status';
 
-export type {
-  TabProps,
-  TabState,
-  Tab,
-} from './controllers/insight/tab/headless-insight-tab';
-export {buildTab} from './controllers/insight/tab/headless-insight-tab';
-export {buildCoreTab} from './controllers/core/tab/headless-core-tab';
-
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
