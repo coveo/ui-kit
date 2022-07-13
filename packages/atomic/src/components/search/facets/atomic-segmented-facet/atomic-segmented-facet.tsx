@@ -97,6 +97,7 @@ export class AtomicSegmentedFacet
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
+      hasBreadcrumbs: false,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
@@ -160,7 +161,7 @@ export class AtomicSegmentedFacet
     return (
       <div
         part="segmented-container"
-        class="flex whitespace-nowrap h-10 mb-[1%] items-center"
+        class="flex whitespace-nowrap h-10 mb-2.5 items-center"
       >
         {this.renderLabel()}
         {this.renderValues()}
