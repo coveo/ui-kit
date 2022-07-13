@@ -12,11 +12,14 @@ import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight
  */
 export interface InsightSearchAnalyticsActionCreators {
   /**
-   * Creates a Case Assist event for when the user enters the interface.
+   * Creates an Insight event for when the case context changes.
    *
    * @returns A dispatchable action.
    */
-  logContextChanged(): AsyncThunkAction<
+  logContextChanged(
+    caseId: string,
+    caseNumber: string
+  ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
     },

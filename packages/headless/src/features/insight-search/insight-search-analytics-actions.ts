@@ -26,9 +26,16 @@ export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
       })
   )();
 
-export const logContextChanged = () =>
+export const logContextChanged = (caseId: string, caseNumber: string) =>
   makeInsightAnalyticsAction(
-    'insight/logContextChanged',
+    'analytics/contextChanged',
     AnalyticsType.Search,
-    (client) => client.logContextChanged()
+    (client, state) => {
+      const meta = {
+        caseId,
+        caseNumber,
+        caseContext: state.insightCaseContext?.caseContext || {},
+      };
+      client.logContextChanged(meta);
+    }
   )();
