@@ -161,8 +161,11 @@ export class AtomicSearchBox {
     this.pendingSuggestionEvents = [];
   }
 
-  public componentDidUpdate() {
-    if (!('redirectTo' in this.searchBoxState)) {
+  public componentWillUpdate() {
+    if (
+      !('redirectTo' in this.searchBoxState) ||
+      !('afterRedirection' in this.searchBox)
+    ) {
       return;
     }
 
@@ -175,6 +178,7 @@ export class AtomicSearchBox {
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
+    this.searchBox.afterRedirection();
     window.location.href = redirectTo;
   }
 

@@ -17,6 +17,7 @@ import {
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
+  NumericFacetSection,
   PaginationSection,
   QuerySection,
   SearchSection,
@@ -54,6 +55,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchSection &
       QuerySection &
       FacetSection &
+      NumericFacetSection &
       DateFacetSection &
       CategoryFacetSection &
       PaginationSection
@@ -115,6 +117,42 @@ export const executeSearch = createAsyncThunk<
     );
     dispatch(snapshot(extractHistory(getState())));
 
+    return {
+      ...fetched,
+      response: fetched.response.success,
+      automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
+      analyticsAction,
+    };
+  }
+);
+
+export const fetchPage = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  InsightAction,
+  AsyncThunkInsightOptions<StateNeededByExecuteSearch>
+>(
+  'search/fetchPage',
+  async (
+    analyticsAction: InsightAction,
+    {getState, dispatch, rejectWithValue, extra}
+  ) => {
+    const state = getState();
+    addEntryInActionsHistory(state);
+
+    const mappedRequest = buildInsightSearchRequest(state);
+    const fetched = await fetchFromAPI(
+      extra.apiClient,
+      state,
+      mappedRequest.request
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
+      return rejectWithValue(fetched.response.error);
+    }
+
+    dispatch(snapshot(extractHistory(state)));
     return {
       ...fetched,
       response: fetched.response.success,
@@ -258,6 +296,7 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
   return [
     ...getFacetRequests({
       ...state.facetSet,
+      ...state.numericFacetSet,
       ...state.dateFacetSet,
     }),
     ...getCategoryFacetRequests(state.categoryFacetSet),

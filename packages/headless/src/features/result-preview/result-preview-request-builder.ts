@@ -31,5 +31,8 @@ export async function buildResultPreviewRequest(
     q,
     ...options,
     requestedOutputSize: options.requestedOutputSize || 0,
+    ...(search.authenticationProviders.length && {
+      authentication: search.authenticationProviders.join(','),
+    }),
   };
 }

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.82.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.5...@coveo/atomic@1.82.6) (2022-07-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.82.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.4...@coveo/atomic@1.82.5) (2022-07-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.82.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.3...@coveo/atomic@1.82.4) (2022-07-11)
+
+
+### Bug Fixes
+
+* **atomic,headless:** clear standalone search box state when redirecting ([#2195](https://github.com/coveo/ui-kit/issues/2195)) ([2a19960](https://github.com/coveo/ui-kit/commit/2a199600e9d177f4e9eaa63a41a73205ede25e6e))
+
+
+
+
+
+## [1.82.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.2...@coveo/atomic@1.82.3) (2022-07-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.82.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.1...@coveo/atomic@1.82.2) (2022-07-08)
 
 **Note:** Version bump only for package @coveo/atomic

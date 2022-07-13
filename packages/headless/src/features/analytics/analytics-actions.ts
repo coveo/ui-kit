@@ -23,8 +23,18 @@ export interface SearchEventPayload {
 }
 
 export interface ClickEventPayload {
+  /**
+   * The identifier of the click action.
+   */
   evt: SearchPageEvents | string;
+  /**
+   * The result associated with the click event.
+   */
   result: Result;
+  /**
+   * The event metadata.
+   */
+  meta?: Record<string, unknown>;
 }
 
 export interface CustomEventPayload {
@@ -78,6 +88,11 @@ export interface LogClickEventActionCreatorPayload {
    * The result associated with the click event.
    */
   result: Result;
+
+  /**
+   * The event metadata.
+   * */
+  meta?: Record<string, unknown>;
 }
 
 export const logClickEvent = (p: LogClickEventActionCreatorPayload) =>
@@ -91,7 +106,8 @@ export const logClickEvent = (p: LogClickEventActionCreatorPayload) =>
       return client.logClickEvent(
         p.evt as SearchPageEvents,
         partialDocumentInformation(p.result, state),
-        documentIdentifier(p.result)
+        documentIdentifier(p.result),
+        p.meta
       );
     }
   )();
