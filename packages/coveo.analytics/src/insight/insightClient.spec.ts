@@ -253,7 +253,8 @@ describe('InsightClient', () => {
     });
 
     it('should send proper payload for #contextChanged', async () => {
-        await client.logContextChanged({caseId: '1234', caseNumber: '1234', caseContext: {subject: 'test'}});
-        expectMatchPayload(InsightEvents.contextChanged);
+        const meta = {caseId: '1234', caseNumber: '1234', caseContext: {subject: 'test'}};
+        await client.logContextChanged(meta);
+        expectMatchPayload(InsightEvents.contextChanged, meta);
     });
 });
