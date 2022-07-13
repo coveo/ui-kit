@@ -43,6 +43,7 @@ export class SearchAnalyticsProvider
   extends BaseAnalyticsProvider
   implements SearchPageClientProvider
 {
+  private static fallbackPipelineName = 'default';
   constructor(private state: StateNeededBySearchAnalyticsProvider) {
     super(state);
   }
@@ -53,7 +54,9 @@ export class SearchAnalyticsProvider
 
   public getPipeline() {
     return (
-      this.state.pipeline || this.state.search?.response.pipeline || 'default'
+      this.state.pipeline ||
+      this.state.search?.response.pipeline ||
+      SearchAnalyticsProvider.fallbackPipelineName
     );
   }
 
@@ -84,7 +87,9 @@ export class SearchAnalyticsProvider
   public getSplitTestRunVersion(): string | undefined {
     const hasSplitTestRun = !!this.getSplitTestRunName();
     const effectivePipelineWithSplitTestRun =
-      this.state.search?.response.pipeline || this.state.pipeline || 'default';
+      this.state.search?.response.pipeline ||
+      this.state.pipeline ||
+      SearchAnalyticsProvider.fallbackPipelineName;
 
     return hasSplitTestRun ? effectivePipelineWithSplitTestRun : undefined;
   }
