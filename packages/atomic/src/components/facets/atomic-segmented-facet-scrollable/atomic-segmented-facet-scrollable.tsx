@@ -179,7 +179,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         {this.renderArrow('left')}
         <div
           part="horizontal-scroll"
-          class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
+          class="wrapper-segmented w-full flex flex-row overflow-x-scroll scroll-smooth"
           ref={(el) => (this.horizontalScroll = el as HTMLDivElement)}
         >
           <slot></slot>
