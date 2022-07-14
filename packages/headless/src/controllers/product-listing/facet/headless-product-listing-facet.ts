@@ -9,8 +9,6 @@ import {
   FacetSearchOptions,
   FacetSearchState,
   FacetState,
-  CoreFacetState,
-  CoreFacet,
   FacetValue,
   SpecificFacetSearchResult,
 } from '../../core/facets/facet/headless-core-facet';
@@ -43,8 +41,6 @@ export type {
   FacetProps,
   Facet,
   FacetState,
-  CoreFacetState,
-  CoreFacet,
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,

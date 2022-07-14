@@ -84,8 +84,6 @@ export type {
 export {buildFacetManager} from './controllers/product-listing/facet/headless-product-listing-facet-manager';
 
 export type {
-  CoreFacet,
-  CoreFacetState,
   Facet,
   FacetOptions,
   FacetProps,
