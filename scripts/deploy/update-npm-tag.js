@@ -1,18 +1,9 @@
 const {promisify} = require('util');
 const exec = promisify(require('child_process').exec);
-
-const packageDirs = [
-  'atomic',
-  'auth',
-  'bueno',
-  'headless',
-  'atomic-react',
-  'atomic-angular/projects/atomic-angular',
-  'quantic'
-];
+const {packageDirsNpmTag} = require('../packages');
 
 async function main() {
-  const requests = packageDirs
+  const requests = packageDirsNpmTag
     .map((dir) => require(`../../packages/${dir}/package.json`))
     .map(({name, version}) => updateNpmTag(name, version));
 
