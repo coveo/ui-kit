@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.83.0...@coveo/atomic@1.84.0) (2022-07-14)
+
+
+### Features
+
+* **atomic-react:** add support for result list table ([#2207](https://github.com/coveo/ui-kit/issues/2207)) ([73f9376](https://github.com/coveo/ui-kit/commit/73f93766c1972727218516a61b18dbb37e37f86c))
+
+
+
+
+
 # [1.83.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.6...@coveo/atomic@1.83.0) (2022-07-13)
 
 
