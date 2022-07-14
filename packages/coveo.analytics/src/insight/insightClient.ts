@@ -34,6 +34,17 @@ export interface InsightClientOptions extends ClientOptions {
     enableAnalytics: boolean;
 }
 
+const extractContextFromMetadata = (meta: {caseContext: Record<string, string>}) => {
+    const context: Record<string, string> = {};
+    Object.keys(meta.caseContext).forEach((contextKey) => {
+        const capitalizedKey = contextKey.charAt(0).toUpperCase() + contextKey.slice(1);
+        const keyToBeSent = `context_Case_${capitalizedKey}`;
+        context[keyToBeSent] = meta.caseContext[contextKey];
+    });
+
+    return context;
+};
+
 export class CoveoInsightClient {
     public coveoAnalyticsClient: AnalyticsClient;
 
@@ -126,11 +137,30 @@ export class CoveoInsightClient {
     }
 
     public logContextChanged(meta: ContextChangedMetadata) {
-        return this.logSearchEvent(InsightEvents.contextChanged, meta);
+        const context = extractContextFromMetadata(meta);
+
+        const {caseId, caseNumber} = meta;
+        const metaToBeSent = {
+            CaseId: caseId,
+            CaseNumber: caseNumber,
+            ...(!!context.context_Case_Subject && {CaseSubject: context.context_Case_Subject}),
+            ...context,
+        };
+        return this.logSearchEvent(InsightEvents.contextChanged, metaToBeSent);
     }
 
     public logExpandToFullUI(meta: ExpandToFullUIMetadata) {
-        return this.logCustomEvent(InsightEvents.expandToFullUI, meta);
+        const context = extractContextFromMetadata(meta);
+
+        const {caseId, caseNumber, triggeredBy, fullSearchComponentName} = meta;
+        const metaToBeSent = {
+            CaseId: caseId,
+            CaseNumber: caseNumber,
+            triggeredBy,
+            fullSearchComponentName,
+            ...(!!context.context_Case_Subject && {CaseSubject: context.context_Case_Subject}),
+        };
+        return this.logCustomEvent(InsightEvents.expandToFullUI, metaToBeSent);
     }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {

@@ -253,20 +253,41 @@ describe('InsightClient', () => {
     });
 
     it('should send proper payload for #contextChanged', async () => {
-        const meta = {caseId: '1234', caseNumber: '1234', caseContext: {subject: 'test'}};
+        const meta = {
+            caseId: '1234',
+            caseNumber: '5678',
+            caseContext: {subject: 'test subject', description: 'test description'},
+        };
+
+        const metaToBeSent = {
+            CaseId: '1234',
+            CaseNumber: '5678',
+            CaseSubject: 'test subject',
+            context_Case_Subject: 'test subject',
+            context_Case_Description: 'test description',
+        };
+
         await client.logContextChanged(meta);
-        expectMatchPayload(InsightEvents.contextChanged, meta);
+        expectMatchPayload(InsightEvents.contextChanged, metaToBeSent);
     });
 
     it('should send proper payload for #expandToFullUI', async () => {
         const meta = {
             caseId: '1234',
-            caseNumber: '1234',
-            caseContext: {subject: 'test'},
+            caseNumber: '5678',
+            caseContext: {subject: 'test subject', description: 'test description'},
+            fullSearchComponentName: 'c__FullSearch',
+            triggeredBy: 'openFullSearchButton',
+        };
+
+        const metaToBeSent = {
+            CaseId: '1234',
+            CaseNumber: '5678',
+            CaseSubject: 'test subject',
             fullSearchComponentName: 'c__FullSearch',
             triggeredBy: 'openFullSearchButton',
         };
         await client.logExpandToFullUI(meta);
-        expectMatchCustomEventPayload(InsightEvents.expandToFullUI, meta);
+        expectMatchCustomEventPayload(InsightEvents.expandToFullUI, metaToBeSent);
     });
 });
