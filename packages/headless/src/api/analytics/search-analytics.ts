@@ -153,7 +153,7 @@ export const configureAnalytics = ({
 export const getVisitorID = () =>
   new CoveoAnalyticsClient({}).getCurrentVisitorId();
 
-export const clearCoveoAnalyticsClient = () => {
+export const clearAnalyticsClient = () => {
   const client = new CoveoAnalyticsClient({});
   client.clear();
   client.deleteHttpOnlyVisitorId();

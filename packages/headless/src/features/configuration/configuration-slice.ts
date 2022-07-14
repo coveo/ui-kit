@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
-import {clearCoveoAnalyticsClient} from '../../api/analytics/search-analytics';
+import {clearAnalyticsClient} from '../../api/analytics/search-analytics';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -84,7 +84,7 @@ export const configurationReducer = createReducer(
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (!isNullOrUndefined(action.payload.enabled)) {
           if (!action.payload.enabled && state.analytics.enabled) {
-            clearCoveoAnalyticsClient();
+            clearAnalyticsClient();
           }
 
           state.analytics.enabled = action.payload.enabled;
@@ -120,7 +120,7 @@ export const configurationReducer = createReducer(
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
-        clearCoveoAnalyticsClient();
+        clearAnalyticsClient();
       })
       .addCase(enableAnalytics, (state) => {
         state.analytics.enabled = true;
