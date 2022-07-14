@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.85.0...@coveo/atomic@1.86.0) (2022-07-14)
+
+
+### Features
+
+* **atomic:** fix bug where arrows appear when field is invalid ([#2211](https://github.com/coveo/ui-kit/issues/2211)) ([34edac9](https://github.com/coveo/ui-kit/commit/34edac9b48c9015a59ef30a3a02db59cc1130fa7))
+
+
+
+
+
 # [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.1...@coveo/atomic@1.85.0) (2022-07-14)
 
 
