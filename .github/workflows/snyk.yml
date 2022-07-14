@@ -20,9 +20,9 @@ jobs:
       - uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3
       - name: Prepare snyk
         run: |
-          npm run setup:snyk
           npm ci
           yarn install --no-immutable --mode=skip-build
+          npm run setup:snyk
       - name: Snyk Monitor
         continue-on-error: true
         if: ${{ github.event_name != 'pull_request' }}
