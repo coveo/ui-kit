@@ -189,6 +189,8 @@ export {buildCoreSearchBox} from './core/search-box/headless-core-search-box';
 export type {
   InstantResults,
   InstantResultsState,
+  InstantResultProps,
+  InstantResultOptions,
 } from './instant-results/instant-results';
 export {buildInstantResults} from './instant-results/instant-results';
 
