@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.1...@coveo/atomic@1.85.0) (2022-07-14)
+
+
+### Features
+
+* **atomic:** first atomic segmented filter test ([#2208](https://github.com/coveo/ui-kit/issues/2208)) ([a9bcb19](https://github.com/coveo/ui-kit/commit/a9bcb19372646fd1d6fb608c72aa0faf46a158da))
+
+
+
+
+
 ## [1.84.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.0...@coveo/atomic@1.84.1) (2022-07-14)
 
 **Note:** Version bump only for package @coveo/atomic
