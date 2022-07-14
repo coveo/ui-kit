@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.87.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.87.0...@coveo/headless@1.87.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.87.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.86.0...@coveo/headless@1.87.0) (2022-07-13)
+
+
+### Features
+
+* **headless:** clearAllBreadcrumbs only affects regular facets ([#2203](https://github.com/coveo/ui-kit/issues/2203)) ([7fdb44a](https://github.com/coveo/ui-kit/commit/7fdb44a0189cd60068442bf3ebf7cb5f512ccd6f))
+
+
+
+
+
+# [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.1...@coveo/headless@1.86.0) (2022-07-12)
+
+
+### Features
+
+* **headless:** added sort controller ([#2204](https://github.com/coveo/ui-kit/issues/2204)) ([6c9167a](https://github.com/coveo/ui-kit/commit/6c9167ae0496207cebc2a11eb69a27bc3cb60dd6))
+
+
+
+
+
+## [1.85.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.0...@coveo/headless@1.85.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **headless:** wrong payload interface for logClickEvent ([#2205](https://github.com/coveo/ui-kit/issues/2205)) ([b43be52](https://github.com/coveo/ui-kit/commit/b43be527ab2cde2e77621e76ef07509646cf81e7))
+
+
+
+
+
+# [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.84.0...@coveo/headless@1.85.0) (2022-07-11)
+
+
+### Bug Fixes
+
+* **atomic,headless:** clear standalone search box state when redirecting ([#2195](https://github.com/coveo/ui-kit/issues/2195)) ([2a19960](https://github.com/coveo/ui-kit/commit/2a199600e9d177f4e9eaa63a41a73205ede25e6e))
+* **headless:** properly support authentication query parameter to use with SAML ([#2176](https://github.com/coveo/ui-kit/issues/2176)) ([f2a8ccb](https://github.com/coveo/ui-kit/commit/f2a8ccb282362011ad603c3980f96cdb11f3c446))
+
+
+### Features
+
+* **headless:** added insight pager controller ([#2202](https://github.com/coveo/ui-kit/issues/2202)) ([3531c75](https://github.com/coveo/ui-kit/commit/3531c75ddc4c89472daf67cf38a91a63dd276b14))
+
+
+
+
+
 # [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.83.0...@coveo/headless@1.84.0) (2022-07-08)
 
 

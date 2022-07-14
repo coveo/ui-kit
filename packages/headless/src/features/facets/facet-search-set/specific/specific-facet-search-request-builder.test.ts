@@ -68,11 +68,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
   });
 
   it('sets the #searchContext to the search request params', async () => {
-    const facet = state.facetSet[id];
-    const request = {
-      ...(await buildSearchRequest(state)).request,
-      facets: [facet],
-    };
+    const request = (await buildSearchRequest(state)).request;
 
     expect((await buildParams()).searchContext).toEqual({
       ...request,

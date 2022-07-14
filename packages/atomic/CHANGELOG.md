@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.84.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.0...@coveo/atomic@1.84.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.83.0...@coveo/atomic@1.84.0) (2022-07-14)
+
+
+### Features
+
+* **atomic-react:** add support for result list table ([#2207](https://github.com/coveo/ui-kit/issues/2207)) ([73f9376](https://github.com/coveo/ui-kit/commit/73f93766c1972727218516a61b18dbb37e37f86c))
+
+
+
+
+
+# [1.83.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.6...@coveo/atomic@1.83.0) (2022-07-13)
+
+
+### Features
+
+* **headless:** clearAllBreadcrumbs only affects regular facets ([#2203](https://github.com/coveo/ui-kit/issues/2203)) ([7fdb44a](https://github.com/coveo/ui-kit/commit/7fdb44a0189cd60068442bf3ebf7cb5f512ccd6f))
+
+
+
+
+
+## [1.82.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.5...@coveo/atomic@1.82.6) (2022-07-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.82.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.4...@coveo/atomic@1.82.5) (2022-07-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.82.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.3...@coveo/atomic@1.82.4) (2022-07-11)
+
+
+### Bug Fixes
+
+* **atomic,headless:** clear standalone search box state when redirecting ([#2195](https://github.com/coveo/ui-kit/issues/2195)) ([2a19960](https://github.com/coveo/ui-kit/commit/2a199600e9d177f4e9eaa63a41a73205ede25e6e))
+
+
+
+
+
 ## [1.82.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.2...@coveo/atomic@1.82.3) (2022-07-08)
 
 **Note:** Version bump only for package @coveo/atomic
