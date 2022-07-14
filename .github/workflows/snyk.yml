@@ -6,16 +6,23 @@ on:
   pull_request:
 
 jobs:
+  allow-workflow:
+    name: 'Allow workflow'
+    if: "!startsWith(github.event.head_commit.message, '[Version Bump]')"
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Workflow allowed to start"
   snyk:
+    needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
       - uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3
       - name: Prepare snyk
         run: |
-          npm run setup:snyk
           npm ci
           yarn install --no-immutable --mode=skip-build
+          npm run setup:snyk
       - name: Snyk Monitor
         continue-on-error: true
         if: ${{ github.event_name != 'pull_request' }}
