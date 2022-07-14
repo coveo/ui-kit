@@ -19,4 +19,5 @@ export interface ContextChangedMetadata extends CaseMetadata {}
 
 export interface ExpandToFullUIMetadata extends CaseMetadata {
     fullSearchComponentName: string;
+    triggeredBy: string;
 }

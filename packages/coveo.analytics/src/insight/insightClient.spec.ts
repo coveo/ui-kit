@@ -264,6 +264,7 @@ describe('InsightClient', () => {
             caseNumber: '1234',
             caseContext: {subject: 'test'},
             fullSearchComponentName: 'c__FullSearch',
+            triggeredBy: 'openFullSearchButton',
         };
         await client.logExpandToFullUI(meta);
         expectMatchCustomEventPayload(InsightEvents.expandToFullUI, meta);
