@@ -11,6 +11,9 @@ import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {buildSearchRequest} from './search-request';
 import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
+import {omit} from '../../utils/utils';
+import {FacetRequest} from '../facets/facet-set/interfaces/request';
+import {FacetSetState} from '../facets/facet-set/facet-set-state';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -65,9 +68,10 @@ describe('search request', () => {
   it('#searchRequest returns the facets in the state #facetSet', async () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = request;
-
     const {facets} = (await buildSearchRequest(state)).request;
-    expect(facets).toContainEqual(request);
+    const {hasBreadcrumbs, ...rest} = request;
+
+    expect(facets).toContainEqual(rest);
   });
 
   it('#searchRequest returns the facets in the state #numericFacetSet', async () => {
@@ -150,8 +154,10 @@ describe('search request', () => {
     state.facetOptions.facets['g'] = buildFacetOptionsSlice();
     state.facetOptions.facets['h'] = buildFacetOptionsSlice({enabled: false});
 
+    const {hasBreadcrumbs, ...enabledFacetRequestParams} = enabledFacetRequest;
+
     const {facets} = (await buildSearchRequest(state)).request;
-    expect(facets).toContainEqual(enabledFacetRequest);
+    expect(facets).toContainEqual(enabledFacetRequestParams);
     expect(facets).toContainEqual(enabledNumericFacetRequest);
     expect(facets).toContainEqual(enabledDateFacetRequest);
     expect(facets).toContainEqual(enabledCategoryFacetRequest);
@@ -177,6 +183,7 @@ describe('search request', () => {
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
 
     const {facets} = (await buildSearchRequest(state)).request;
+    omitField('hasBreadcrumbs', state.facetSet);
     expect(facets).toEqual([
       state.facetSet[facetId2],
       state.facetSet[facetId1],
@@ -194,6 +201,7 @@ describe('search request', () => {
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
 
     const {facets} = (await buildSearchRequest(state)).request;
+    omitField('hasBreadcrumbs', state.facetSet);
     expect(facets).toEqual([
       state.facetSet[facetId2],
       state.facetSet[facetId1],
@@ -219,6 +227,16 @@ describe('search request', () => {
     expect(
       (await buildSearchRequest(state)).request.visitorId
     ).not.toBeDefined();
+  });
+
+  it('should not send hasBreadcrumbs', async () => {
+    const facetId1 = '1';
+
+    state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
+
+    const {facets} = (await buildSearchRequest(state)).request;
+
+    expect((facets![0] as FacetRequest).hasBreadcrumbs).not.toBeDefined();
   });
 
   it('#searchRequest.tab holds the #originLevel2', async () => {
@@ -323,3 +341,11 @@ describe('search request', () => {
     expect((await buildSearchRequest(state)).request.cq).toBe('a');
   });
 });
+
+function omitField(field: keyof FacetRequest, set: FacetSetState) {
+  Object.values(set)
+    .filter(({facetId}) => set[facetId])
+    .forEach(
+      ({facetId}) => (set[facetId] = omit(field, set[facetId]) as FacetRequest)
+    );
+}
