@@ -31,6 +31,13 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
+  FacetManagerPayload,
+  FacetManagerState,
+  FacetManager,
+} from './controllers/insight/facet-manager/headless-insight-facet-manager';
+export {buildFacetManager} from './controllers/insight/facet-manager/headless-insight-facet-manager';
+
+export type {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
   CategoryFacetProps,
@@ -40,17 +47,84 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
 } from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 export {buildCategoryFacet} from './controllers/insight/facets/category-facet/headless-insight-category-facet';
+
+export type {
+  FacetOptions,
+  FacetSearchOptions,
+  FacetProps,
+  FacetState,
+  Facet,
+  FacetValue,
+  FacetValueState,
+  FacetSearch,
+  FacetSearchState,
+  SpecificFacetSearchResult,
+} from './controllers/insight/facets/facet/headless-insight-facet';
+export {buildFacet} from './controllers/insight/facets/facet/headless-insight-facet';
+
+export type {
+  DateRangeOptions,
+  DateRangeRequest,
+  DateRangeInput,
+  DateFacetOptions,
+  DateFacetProps,
+  DateFacetState,
+  DateFacet,
+} from './controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet';
+export {
+  buildDateRange,
+  buildDateFacet,
+} from './controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet';
+
+export type {
+  NumericRangeOptions,
+  NumericRangeRequest,
+  NumericFacetOptions,
+  NumericFacetProps,
+  NumericFacetState,
+  NumericFacet,
+} from './controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-facet';
+export {
+  buildNumericRange,
+  buildNumericFacet,
+} from './controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-facet';
+
+export type {
+  NumericFilter,
+  NumericFilterOptions,
+  NumericFilterProps,
+  NumericFilterRange,
+  NumericFilterState,
+  NumericFilterInitialState,
+} from './controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-filter';
+export {buildNumericFilter} from './controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-filter';
+
+export type {
+  DateFilter,
+  DateFilterOptions,
+  DateFilterProps,
+  DateFilterRange,
+  DateFilterState,
+  DateFilterInitialState,
+} from './controllers/insight/facets/range-facet/date-facet/headless-insight-date-filter';
+export {buildDateFilter} from './controllers/insight/facets/range-facet/date-facet/headless-insight-date-filter';
+
+export type {
+  PagerInitialState,
+  PagerOptions,
+  PagerProps,
+  PagerState,
+  Pager,
+} from './controllers/insight/pager/headless-insight-pager';
+export {buildPager} from './controllers/insight/pager/headless-insight-pager';
 
 export type {
   QuerySummaryState,
   QuerySummary,
 } from './controllers/insight/query-summary/headless-insight-query-summary';
 export {buildQuerySummary} from './controllers/insight/query-summary/headless-insight-query-summary';
-export {buildCoreQuerySummary} from './controllers/core/query-summary/headless-core-query-summary';
 
 export type {
   Quickview,
@@ -59,7 +133,6 @@ export type {
   QuickviewState,
 } from './controllers/insight/quickview/headless-insight-quickview';
 export {buildQuickview} from './controllers/insight/quickview/headless-insight-quickview';
-export {buildCoreQuickview} from './controllers/core/quickview/headless-core-quickview';
 
 export type {
   ResultListProps,
@@ -68,7 +141,6 @@ export type {
   ResultList,
 } from './controllers/insight/result-list/headless-insight-result-list';
 export {buildResultList} from './controllers/insight/result-list/headless-insight-result-list';
-export {buildCoreResultList} from './controllers/core/result-list/headless-core-result-list';
 
 export type {
   InsightInteractiveResultOptions,
@@ -84,7 +156,6 @@ export type {
   ResultsPerPage,
 } from './controllers/insight/results-per-page/headless-insight-results-per-page';
 export {buildResultsPerPage} from './controllers/insight/results-per-page/headless-insight-results-per-page';
-export {buildCoreResultsPerPage} from './controllers/core/results-per-page/headless-core-results-per-page';
 
 export type {
   SearchBoxOptions,
@@ -96,22 +167,20 @@ export type {
   Delimiters,
 } from './controllers/insight/search-box/headless-insight-search-box';
 export {buildSearchBox} from './controllers/insight/search-box/headless-insight-search-box';
-export {buildCoreSearchBox} from './controllers/core/search-box/headless-core-search-box';
 
 export type {
   SearchStatus,
   SearchStatusState,
 } from './controllers/insight/status/headless-insight-status';
 export {buildSearchStatus} from './controllers/insight/status/headless-insight-status';
-export {buildCoreSearchStatus} from './controllers/core/status/headless-core-status';
 
 export type {
-  FacetManagerPayload,
-  FacetManagerState,
-  FacetManager,
-} from './controllers/insight/facet-manager/headless-insight-facet-manager';
-export {buildFacetManager} from './controllers/insight/facet-manager/headless-insight-facet-manager';
-export {buildCoreFacetManager} from './controllers/core/facet-manager/headless-core-facet-manager';
+  SortInitialState,
+  SortProps,
+  SortState,
+  Sort,
+} from './controllers/insight/sort/headless-insight-sort';
+export {buildSort} from './controllers/insight/sort/headless-insight-sort';
 
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';

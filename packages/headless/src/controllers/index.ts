@@ -52,11 +52,8 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
 } from './facets/category-facet/headless-category-facet';
 export {buildCategoryFacet} from './facets/category-facet/headless-category-facet';
-export {buildCoreCategoryFacet} from './core/facets/category-facet/headless-core-category-facet';
 
 export type {
   FacetOptions,
@@ -69,8 +66,6 @@ export type {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
-  CoreFacet,
-  CoreFacetState,
 } from './facets/facet/headless-facet';
 export {buildFacet} from './facets/facet/headless-facet';
 
@@ -147,7 +142,6 @@ export type {
   QuerySummary,
 } from './query-summary/headless-query-summary';
 export {buildQuerySummary} from './query-summary/headless-query-summary';
-export {buildCoreQuerySummary} from './core/query-summary/headless-core-query-summary';
 
 export type {
   ResultListProps,
@@ -156,7 +150,6 @@ export type {
   ResultList,
 } from './result-list/headless-result-list';
 export {buildResultList} from './result-list/headless-result-list';
-export {buildCoreResultList} from './core/result-list/headless-core-result-list';
 
 export type {
   InteractiveResultOptions,
@@ -172,7 +165,6 @@ export type {
   ResultsPerPage,
 } from './results-per-page/headless-results-per-page';
 export {buildResultsPerPage} from './results-per-page/headless-results-per-page';
-export {buildCoreResultsPerPage} from './core/results-per-page/headless-core-results-per-page';
 
 export type {
   SearchBoxOptions,
@@ -184,7 +176,6 @@ export type {
   Delimiters,
 } from './search-box/headless-search-box';
 export {buildSearchBox} from './search-box/headless-search-box';
-export {buildCoreSearchBox} from './core/search-box/headless-core-search-box';
 
 export type {
   InstantResults,
@@ -231,7 +222,6 @@ export type {
   FacetManager,
 } from './facet-manager/headless-facet-manager';
 export {buildFacetManager} from './facet-manager/headless-facet-manager';
-export {buildCoreFacetManager} from './core/facet-manager/headless-core-facet-manager';
 
 export type {
   NumericFacetBreadcrumb,
@@ -278,7 +268,6 @@ export type {
   SearchStatusState,
 } from './search-status/headless-search-status';
 export {buildSearchStatus} from './search-status/headless-search-status';
-export {buildCoreSearchStatus} from './core/status/headless-core-status';
 
 export type {ErrorPayload} from './controller/error-payload';
 
@@ -289,7 +278,6 @@ export type {
   QuickviewState,
 } from './quickview/headless-quickview';
 export {buildQuickview} from './quickview/headless-quickview';
-export {buildCoreQuickview} from './core/quickview/headless-core-quickview';
 
 export type {
   FoldedCollection,
