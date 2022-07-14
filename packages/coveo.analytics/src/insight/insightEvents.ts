@@ -4,7 +4,7 @@ export enum InsightEvents {
      */
     contextChanged = 'contextChanged',
     /**
-     * Identifies the event that gets logged when the user opens the full search page from the insight panell.
+     * Identifies the event that gets logged when the user opens the full search page from the insight panel.
      */
     expandToFullUI = 'expandToFullUI',
 }
