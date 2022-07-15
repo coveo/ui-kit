@@ -44,6 +44,12 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         }
     }
 
+    public async deleteHttpCookieVisitorId() {
+        const {baseUrl} = this.opts;
+        const url = `${baseUrl}/analytics/visit`;
+        await fetch(url, {headers: this.getHeaders(), method: 'DELETE'});
+    }
+
     private shouldAppendVisitorId(eventType: EventType) {
         return [EventType.click, EventType.custom, EventType.search, EventType.view].indexOf(eventType) !== -1;
     }

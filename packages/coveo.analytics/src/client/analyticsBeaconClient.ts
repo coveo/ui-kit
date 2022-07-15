@@ -31,6 +31,10 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         return;
     }
 
+    public deleteHttpCookieVisitorId() {
+        return Promise.resolve();
+    }
+
     private encodeForEventType(eventType: EventType, payload: IRequestPayload): string {
         return this.isEventTypeLegacy(eventType)
             ? this.encodeForLegacyType(eventType, payload)

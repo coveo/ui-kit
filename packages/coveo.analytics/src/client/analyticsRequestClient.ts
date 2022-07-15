@@ -7,6 +7,7 @@ export interface VisitorIdProvider {
 
 export interface AnalyticsRequestClient {
     sendEvent(eventType: string, payload: IRequestPayload): Promise<AnyEventResponse | void>;
+    deleteHttpCookieVisitorId: () => Promise<void>;
 }
 
 export interface IAnalyticsClientOptions {
@@ -29,6 +30,10 @@ export interface IAnalyticsRequestOptions extends RequestInit {
 
 export class NoopAnalyticsClient implements AnalyticsRequestClient {
     public async sendEvent(_: EventType, __: IRequestPayload): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public async deleteHttpCookieVisitorId() {
         return Promise.resolve();
     }
 }

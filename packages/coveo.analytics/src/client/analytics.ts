@@ -303,6 +303,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         store.clear();
     }
 
+    public deleteHttpOnlyVisitorId() {
+        this.runtime.client.deleteHttpCookieVisitorId();
+    }
+
     async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void> {
         return this.sendEvent(EventType.search, request);
     }
