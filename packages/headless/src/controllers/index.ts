@@ -148,6 +148,12 @@ export type {
 export {buildQuerySummary} from './query-summary/headless-query-summary';
 
 export type {
+  CoreQuerySummaryState,
+  CoreQuerySummary,
+} from './core/query-summary/headless-core-query-summary';
+export {buildCoreQuerySummary} from './core/query-summary/headless-core-query-summary';
+
+export type {
   ResultListProps,
   ResultListOptions,
   ResultListState,
@@ -188,6 +194,8 @@ export type {
 export type {
   InstantResults,
   InstantResultsState,
+  InstantResultProps,
+  InstantResultOptions,
 } from './instant-results/instant-results';
 export {buildInstantResults} from './instant-results/instant-results';
 
@@ -223,6 +231,8 @@ export type {
   Tab,
 } from './tab/headless-tab';
 export {buildTab} from './tab/headless-tab';
+
+export type {CoreFacetManager} from './core/facet-manager/headless-core-facet-manager';
 
 export type {
   FacetManagerPayload,

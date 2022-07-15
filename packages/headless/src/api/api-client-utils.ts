@@ -5,11 +5,14 @@ import {
   SearchAPIErrorWithStatusCode,
   SearchAPIErrorWithExceptionInBody,
 } from './search/search-api-error-response';
+import {AuthenticationParam} from './search/search-api-params';
 
-export function pickNonBaseParams<Params extends BaseParam>(req: Params) {
+export function pickNonBaseParams<
+  Params extends BaseParam & AuthenticationParam
+>(req: Params) {
   // cheap version of _.omit
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {url, accessToken, organizationId, ...nonBase} = req;
+  const {url, accessToken, organizationId, authentication, ...nonBase} = req;
   return nonBase;
 }
 

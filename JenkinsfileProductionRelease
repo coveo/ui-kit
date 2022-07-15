@@ -4,7 +4,7 @@ library(
     changelog: false
 )
 
-node('linux && docker') {
+node('heavy && linux && docker') {
   def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
 
   checkout([
@@ -16,7 +16,7 @@ node('linux && docker') {
 
   dockerUtils.withDocker(image: 'node:16', args: '-e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm') {
     stage('Setup') {
-      sh 'npm run setup'
+      sh 'npm ci'
     }
     
     stage('Npm publish') {

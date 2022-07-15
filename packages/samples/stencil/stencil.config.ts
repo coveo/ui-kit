@@ -14,7 +14,7 @@ export const config: Config = {
       copy: [
         {src: 'pages', keepDirStructure: false},
         {
-          src: '../node_modules/@coveo/atomic/dist/atomic',
+          src: '../../../../node_modules/@coveo/atomic/dist/atomic',
           dest: 'build/atomic',
           keepDirStructure: false,
         },

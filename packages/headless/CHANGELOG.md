@@ -3,6 +3,143 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.87.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.87.0...@coveo/headless@1.87.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.87.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.86.0...@coveo/headless@1.87.0) (2022-07-13)
+
+
+### Features
+
+* **headless:** clearAllBreadcrumbs only affects regular facets ([#2203](https://github.com/coveo/ui-kit/issues/2203)) ([7fdb44a](https://github.com/coveo/ui-kit/commit/7fdb44a0189cd60068442bf3ebf7cb5f512ccd6f))
+
+
+
+
+
+# [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.1...@coveo/headless@1.86.0) (2022-07-12)
+
+
+### Features
+
+* **headless:** added sort controller ([#2204](https://github.com/coveo/ui-kit/issues/2204)) ([6c9167a](https://github.com/coveo/ui-kit/commit/6c9167ae0496207cebc2a11eb69a27bc3cb60dd6))
+
+
+
+
+
+## [1.85.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.0...@coveo/headless@1.85.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **headless:** wrong payload interface for logClickEvent ([#2205](https://github.com/coveo/ui-kit/issues/2205)) ([b43be52](https://github.com/coveo/ui-kit/commit/b43be527ab2cde2e77621e76ef07509646cf81e7))
+
+
+
+
+
+# [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.84.0...@coveo/headless@1.85.0) (2022-07-11)
+
+
+### Bug Fixes
+
+* **atomic,headless:** clear standalone search box state when redirecting ([#2195](https://github.com/coveo/ui-kit/issues/2195)) ([2a19960](https://github.com/coveo/ui-kit/commit/2a199600e9d177f4e9eaa63a41a73205ede25e6e))
+* **headless:** properly support authentication query parameter to use with SAML ([#2176](https://github.com/coveo/ui-kit/issues/2176)) ([f2a8ccb](https://github.com/coveo/ui-kit/commit/f2a8ccb282362011ad603c3980f96cdb11f3c446))
+
+
+### Features
+
+* **headless:** added insight pager controller ([#2202](https://github.com/coveo/ui-kit/issues/2202)) ([3531c75](https://github.com/coveo/ui-kit/commit/3531c75ddc4c89472daf67cf38a91a63dd276b14))
+
+
+
+
+
+# [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.83.0...@coveo/headless@1.84.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight numeric facet ([#2156](https://github.com/coveo/ui-kit/issues/2156)) ([5d52b73](https://github.com/coveo/ui-kit/commit/5d52b7307111423235d24bcab6fee43116d885b5))
+
+
+
+
+
+# [1.83.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.82.0...@coveo/headless@1.83.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight date facet controller ([#2142](https://github.com/coveo/ui-kit/issues/2142)) ([44a30cb](https://github.com/coveo/ui-kit/commit/44a30cb65b6494574d0da8698dc4ed2166f3bbb0))
+
+
+
+
+
+# [1.82.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.81.0...@coveo/headless@1.82.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight facet controller ([#2133](https://github.com/coveo/ui-kit/issues/2133)) ([4a40482](https://github.com/coveo/ui-kit/commit/4a40482486d8ced04933552e8ca632c8d8dd344e))
+
+
+
+
+
+# [1.81.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.80.0...@coveo/headless@1.81.0) (2022-07-07)
+
+
+### Features
+
+* **atomic,headless:** add search box to insights ([#2188](https://github.com/coveo/ui-kit/issues/2188)) ([d0465f6](https://github.com/coveo/ui-kit/commit/d0465f6a8fff4028f70485d4e0349840a34b6ed7))
+
+
+
+
+
+# [1.80.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.79.0...@coveo/headless@1.80.0) (2022-07-07)
+
+
+### Features
+
+* npm workspace migration ([#2180](https://github.com/coveo/ui-kit/issues/2180)) ([f3b6997](https://github.com/coveo/ui-kit/commit/f3b69977675837dbed5ebe1eb3cb7fb2c98305ea))
+
+
+
+
+
+# [1.79.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.78.0...@coveo/headless@1.79.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add insight CategoryFacet controller ([#2150](https://github.com/coveo/ui-kit/issues/2150)) ([eb677a7](https://github.com/coveo/ui-kit/commit/eb677a7fed78f5cc707f93e15f863d2a3a127321))
+* **headless:** Add Insight QuerySummary ([#2181](https://github.com/coveo/ui-kit/issues/2181)) ([dcb2035](https://github.com/coveo/ui-kit/commit/dcb2035eee55adf96d5c6d80f6a9875672a812c6))
+
+
+
+
+
+# [1.78.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.9...@coveo/headless@1.78.0) (2022-07-06)
+
+
+### Features
+
+* **headless:** Add analytics actions to insight-search ([#2147](https://github.com/coveo/ui-kit/issues/2147)) ([e5c72ad](https://github.com/coveo/ui-kit/commit/e5c72ad5c2073dd7ebeb3afc087246735c99a4e2))
+* **headless:** add case context actions ([#2120](https://github.com/coveo/ui-kit/issues/2120)) ([925247b](https://github.com/coveo/ui-kit/commit/925247ba83eabbb0e4aa01ef04ae4cef92e23ba6))
+
+
+
+
+
 ## [1.77.9](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.77.8...@coveo/headless@1.77.9) (2022-07-05)
 
 

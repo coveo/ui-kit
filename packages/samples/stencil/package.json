@@ -8,11 +8,11 @@
     "cypress:open": "cypress open"
   },
   "dependencies": {
-    "@coveo/atomic": "^1.44.0",
+    "@coveo/atomic": "^1.69.0",
     "@stencil/core": "2.15.0"
   },
   "devDependencies": {
-    "rollup-plugin-html": "0.2.1",
-    "cypress": "9.5.3"
+    "cypress": "9.5.3",
+    "rollup-plugin-html": "0.2.1"
   }
 }

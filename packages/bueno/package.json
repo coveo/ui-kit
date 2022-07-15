@@ -1,6 +1,5 @@
 {
   "name": "@coveo/bueno",
-  "private": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/coveo/ui-kit.git",
@@ -9,12 +8,12 @@
   "main": "./dist/bueno.js",
   "module": "./dist/bueno.esm.js",
   "browser": {
-    "./dist/bueno.js": "./dist/browser/bueno.js",
-    "./dist/bueno.esm.js": "./dist/browser/bueno.esm.js"
+    "./dist/bueno.esm.js": "./dist/browser/bueno.esm.js",
+    "./dist/bueno.js": "./dist/browser/bueno.js"
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.40.9",
+  "version": "0.42.1",
   "files": [
     "dist/"
   ],
@@ -27,10 +26,5 @@
     "test:watch": "jest --watch --colors --no-cache",
     "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha"
-  },
-  "devDependencies": {
-    "@types/jest": "26.0.24",
-    "jest": "26.6.3",
-    "ts-jest": "26.5.6"
   }
 }
