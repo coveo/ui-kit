@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.15.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.12...@coveo/atomic-react@1.15.13) (2022-07-15)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.15.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.11...@coveo/atomic-react@1.15.12) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.15.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.10...@coveo/atomic-react@1.15.11) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.15.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.9...@coveo/atomic-react@1.15.10) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.15.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.8...@coveo/atomic-react@1.15.9) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.15.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.7...@coveo/atomic-react@1.15.8) (2022-07-13)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
 ## [1.15.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.6...@coveo/atomic-react@1.15.7) (2022-07-12)
 
 **Note:** Version bump only for package @coveo/atomic-react

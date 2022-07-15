@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.29.1...@coveo/quantic@1.29.2) (2022-07-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.29.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.29.0...@coveo/quantic@1.29.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.29.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.28.8...@coveo/quantic@1.29.0) (2022-07-14)
+
+
+### Features
+
+* **quantic:** add QuanticInsightInterface component ([#2116](https://github.com/coveo/ui-kit/issues/2116)) ([2c5de03](https://github.com/coveo/ui-kit/commit/2c5de03d09973a565cd2dd262bf838df28392ed8))
+
+
+
+
+
+## [1.28.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.28.7...@coveo/quantic@1.28.8) (2022-07-13)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.28.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.28.6...@coveo/quantic@1.28.7) (2022-07-12)
 
 **Note:** Version bump only for package @coveo/quantic
