@@ -10,6 +10,10 @@ const links = [
   {href: '/examples/instantResults.html', label: 'Instant Results'},
   {href: '/examples/insights.html', label: 'Insights Panel'},
   {
+    href: '/examples/recommendations.html',
+    label: 'Recommendations',
+  },
+  {
     href: '/accessibility/commerce-full.html',
     label: 'Accessible Commerce Full',
   },

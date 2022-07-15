@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Instant Results example</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script type="module">
+      import {buildRecommendationEngine, buildRecommendationList} from '/build/headless/recommendation/headless.esm.js';
+
+      async function main() {
+        await customElements.whenDefined('atomic-recs-interface');
+        const recommendationInterface = document.querySelector('atomic-recs-interface');
+        const recommendationEngine = buildRecommendationEngine({
+          configuration: {
+            accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
+            organizationId: 'fashioncoveodemocomgzh7iep8',
+          },
+        });
+        await recommendationInterface.initializeWithRecommendationEngine(recommendationEngine);
+
+        buildRecommendationList(recommendationEngine).refresh();
+      }
+
+      main();
+    </script>
+  </head>
+  <body>
+    <atomic-recs-interface search-hub="MainSearch"></atomic-recs-interface>
+  </body>
+</html>

@@ -633,9 +633,17 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
+          * The non-localized label for the recommendation interface.
+         */
+        "identifier": string;
+        /**
           * Initializes the connection with an already preconfigured headless recommendation engine.
          */
         "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
+        /**
+          * The non-localized label for the recommendation interface.
+         */
+        "label": string;
         /**
           * The search interface language.
          */
@@ -2460,6 +2468,14 @@ declare namespace LocalJSX {
           * @example /mypublicpath/icons
          */
         "iconAssetsPath"?: string;
+        /**
+          * The non-localized label for the recommendation interface.
+         */
+        "identifier"?: string;
+        /**
+          * The non-localized label for the recommendation interface.
+         */
+        "label"?: string;
         /**
           * The search interface language.
          */

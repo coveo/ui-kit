@@ -1,5 +1,8 @@
 import {LogLevel} from '@coveo/headless';
-import {RecommendationEngine} from '@coveo/headless/recommendation';
+import {
+  buildRecommendationList,
+  RecommendationEngine,
+} from '@coveo/headless/recommendation';
 import {
   Component,
   Element,
@@ -74,6 +77,15 @@ export class AtomicRecsInterface
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
+
+  /**
+   * The non-localized label for the recommendation interface.
+   */
+  @Prop({reflect: true}) public label = 'recommendations';
+  /**
+   * The non-localized label for the recommendation interface.
+   */
+  @Prop({reflect: true}) public identifier = 'recommendations';
 
   @Element() public host!: HTMLAtomicRecsInterfaceElement;
   private store = createAtomicRecsStore();
