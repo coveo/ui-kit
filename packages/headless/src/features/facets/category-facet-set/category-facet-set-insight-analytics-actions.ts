@@ -1,27 +1,16 @@
 import {ArrayValue} from '@coveo/bueno';
 import type {CategoryFacetMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../../state/search-app-state';
+import {InsightAppState} from '../../../state/insight-app-state';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload';
 import {
   AnalyticsType,
-  makeAnalyticsAction,
+  makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
-
-export interface LogCategoryFacetBreadcrumbActionCreatorPayload {
-  /**
-   * The category facet id.
-   */
-  categoryFacetId: string;
-
-  /**
-   * The category facet selected path.
-   */
-  categoryFacetPath: string[];
-}
+import {LogCategoryFacetBreadcrumbActionCreatorPayload} from './category-facet-set-analytics-actions';
 
 const categoryFacetBreadcrumbPayloadDefinition = {
   categoryFacetId: facetIdDefinition,
@@ -32,7 +21,7 @@ const categoryFacetBreadcrumbPayloadDefinition = {
 };
 
 const getCategoryFacetMetadata = (
-  state: Partial<SearchAppState>,
+  state: Partial<InsightAppState>,
   {
     categoryFacetId,
     categoryFacetPath,
@@ -52,7 +41,7 @@ const getCategoryFacetMetadata = (
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
 ) =>
-  makeAnalyticsAction(
+  makeInsightAnalyticsAction(
     'analytics/categoryFacet/breadcrumb',
     AnalyticsType.Search,
     (client, state) => {

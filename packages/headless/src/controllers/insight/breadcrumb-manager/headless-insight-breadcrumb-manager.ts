@@ -1,66 +1,50 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
-import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
-import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
-import {BaseFacetRequest} from '../../features/facets/facet-api/request';
-import {BaseFacetValue} from '../../features/facets/facet-api/response';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions';
+import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-analytics-actions';
+import {categoryFacetSelectedValuesSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
+import {BaseFacetRequest} from '../../../features/facets/facet-api/request';
+import {BaseFacetValue} from '../../../features/facets/facet-api/response';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
-} from '../../features/facets/facet-set/facet-set-actions';
-import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {facetResponseSelectedValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
-import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
-import {dateFacetSelectedValuesSelector} from '../../features/facets/range-facets/date-facet-set/date-facet-selectors';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
-import {numericFacetSelectedValuesSelector} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../../features/facets/facet-set/facet-set-actions';
+import {facetResponseSelectedValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+import {toggleSelectDateFacetValue} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {dateFacetSelectedValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSelectedValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {
-  logStaticFilterDeselect,
+  logInsightStaticFilterDeselect,
   toggleSelectStaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-actions';
+} from '../../../features/static-filter-set/static-filter-set-actions';
 import {
   StaticFilterSlice,
   StaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-state';
+} from '../../../features/static-filter-set/static-filter-set-state';
 import {
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
   SearchSection,
-} from '../../state/state-sections';
+} from '../../../state/state-sections';
 import {
-  Breadcrumb,
   BreadcrumbManager,
-  BreadcrumbManagerState,
-  BreadcrumbValue,
   buildCoreBreadcrumbManager,
   CategoryFacetBreadcrumb,
   DateFacetBreadcrumb,
-  DeselectableValue,
   FacetBreadcrumb,
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
-} from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
+} from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
+import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
+import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
+import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
 
-export type {
-  NumericFacetBreadcrumb,
-  FacetBreadcrumb,
-  DateFacetBreadcrumb,
-  CategoryFacetBreadcrumb,
-  StaticFilterBreadcrumb,
-  Breadcrumb,
-  BreadcrumbValue,
-  BreadcrumbManagerState,
-  BreadcrumbManager,
-  DeselectableValue,
-};
 /**
  * Creates a `BreadcrumbManager` controller instance.
  *
@@ -68,7 +52,7 @@ export type {
  * @returns A `BreadcrumbManager` controller instance.
  */
 export function buildBreadcrumbManager(
-  engine: SearchEngine
+  engine: InsightEngine
 ): BreadcrumbManager {
   const controller = buildCoreBreadcrumbManager(engine);
   const {dispatch} = engine;
@@ -192,7 +176,7 @@ export function buildBreadcrumbManager(
       value,
       deselect: () => {
         const {caption, expression} = value;
-        const analytics = logStaticFilterDeselect({
+        const analytics = logInsightStaticFilterDeselect({
           staticFilterId: id,
           staticFilterValue: {caption, expression},
         });

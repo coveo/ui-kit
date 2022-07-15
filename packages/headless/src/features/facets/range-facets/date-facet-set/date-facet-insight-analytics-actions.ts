@@ -1,28 +1,16 @@
 import {validatePayload} from '../../../../utils/validate-payload';
 import {
   AnalyticsType,
-  makeAnalyticsAction,
+  makeInsightAnalyticsAction,
 } from '../../../analytics/analytics-utils';
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
 import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
-import {DateFacetValue} from './interfaces/response';
-
-export interface LogDateFacetBreadcrumbActionCreatorPayload {
-  /**
-   * The facet id of the date facet corresponding to the breadcrumb.
-   */
-  facetId: string;
-
-  /**
-   * The date facet value deselected using the breadcrumb.
-   */
-  selection: DateFacetValue;
-}
+import {LogDateFacetBreadcrumbActionCreatorPayload} from './date-facet-analytics-actions';
 
 export const logDateFacetBreadcrumb = (
   payload: LogDateFacetBreadcrumbActionCreatorPayload
 ) =>
-  makeAnalyticsAction(
+  makeInsightAnalyticsAction(
     'analytics/dateFacet/breadcrumb',
     AnalyticsType.Search,
     (client, state) => {

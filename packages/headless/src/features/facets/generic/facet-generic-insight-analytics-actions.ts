@@ -1,10 +1,10 @@
 import {
   AnalyticsType,
-  makeAnalyticsAction,
+  makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
 
 export const logClearBreadcrumbs = () =>
-  makeAnalyticsAction(
+  makeInsightAnalyticsAction(
     'analytics/facet/deselectAllBreadcrumbs',
     AnalyticsType.Search,
     (client) => {
