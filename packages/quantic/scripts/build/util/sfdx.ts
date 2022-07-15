@@ -27,7 +27,7 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
       },
       (error, stdout) => {
         if (error) {
-          reject(error);
+          reject(JSON.parse(strip(stdout)));
         }
 
         resolve(stdout ? (JSON.parse(strip(stdout)) as T) : null);
