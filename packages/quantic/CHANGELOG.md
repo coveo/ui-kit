@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.29.2...@coveo/quantic@1.29.3) (2022-07-15)
+
+
+### Bug Fixes
+
+* **quantic:** added apex tests to meet min coverage ([#2220](https://github.com/coveo/ui-kit/issues/2220)) ([87d39df](https://github.com/coveo/ui-kit/commit/87d39df517219a62ef9fd606505f9510c852e16c))
+
+
+
+
+
 ## [1.29.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.29.1...@coveo/quantic@1.29.2) (2022-07-15)
 
 **Note:** Version bump only for package @coveo/quantic
