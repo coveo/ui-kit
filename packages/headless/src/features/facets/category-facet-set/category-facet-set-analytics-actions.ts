@@ -8,6 +8,7 @@ import {
 import {
   AnalyticsType,
   makeAnalyticsAction,
+  makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 
@@ -53,6 +54,21 @@ export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
 ) =>
   makeAnalyticsAction(
+    'analytics/categoryFacet/breadcrumb',
+    AnalyticsType.Search,
+    (client, state) => {
+      validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
+
+      return client.logBreadcrumbFacet(
+        getCategoryFacetMetadata(state, payload)
+      );
+    }
+  )();
+
+export const logInsightCategoryFacetBreadcrumb = (
+  payload: LogCategoryFacetBreadcrumbActionCreatorPayload
+) =>
+  makeInsightAnalyticsAction(
     'analytics/categoryFacet/breadcrumb',
     AnalyticsType.Search,
     (client, state) => {

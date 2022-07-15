@@ -6,14 +6,6 @@ import {
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {
-  BreadcrumbManager,
-  buildBreadcrumbManager,
-  CategoryFacetBreadcrumb,
-  DateFacetBreadcrumb,
-  FacetBreadcrumb,
-  NumericFacetBreadcrumb,
-} from './headless-breadcrumb-manager';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
@@ -49,6 +41,14 @@ import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+import {
+  BreadcrumbManager,
+  CategoryFacetBreadcrumb,
+  DateFacetBreadcrumb,
+  FacetBreadcrumb,
+  NumericFacetBreadcrumb,
+} from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
+import {buildBreadcrumbManager} from './headless-breadcrumb-manager';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
