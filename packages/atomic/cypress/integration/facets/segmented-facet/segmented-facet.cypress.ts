@@ -13,7 +13,6 @@ import {
 import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
 import * as FacetAssertions from './segmented-facet-assertions';
-import {selectIdleCheckboxValueAt} from '../facet-common-actions';
 
 describe('Segmented Facet Test Suites', () => {
   function setupSegmentedFacet() {

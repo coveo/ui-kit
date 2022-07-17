@@ -172,5 +172,36 @@ describe('search analytics', () => {
         'another_id'
       );
     });
+
+    it('should return an undefined getSplitTestRunVersion if there is no splitTestRunName', () => {
+      const state = getBaseState();
+      state.search = buildMockSearchState({});
+      state.search.response.splitTestRun = '';
+      expect(
+        new SearchAnalyticsProvider(state).getSplitTestRunVersion()
+      ).toBeUndefined();
+    });
+
+    it('should return getSplitTestRunVersion from the pipeline search response if available', () => {
+      const state = getBaseState();
+      state.search = buildMockSearchState({});
+      state.search.response.splitTestRun = 'foo';
+      state.search.response.pipeline = 'pipeline-from-response';
+      state.pipeline = 'pipeline-from-state';
+      expect(new SearchAnalyticsProvider(state).getSplitTestRunVersion()).toBe(
+        'pipeline-from-response'
+      );
+    });
+
+    it('should return getSplitTestRunVersion from the pipeline state value if there is no pipeline available in the search response', () => {
+      const state = getBaseState();
+      state.search = buildMockSearchState({});
+      state.search.response.splitTestRun = 'foo';
+      state.search.response.pipeline = '';
+      state.pipeline = 'pipeline-from-state';
+      expect(new SearchAnalyticsProvider(state).getSplitTestRunVersion()).toBe(
+        'pipeline-from-state'
+      );
+    });
   });
 });

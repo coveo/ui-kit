@@ -67,5 +67,9 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
       !isNullOrUndefined(state.excerptLength.length) && {
         excerptLength: state.excerptLength.length,
       }),
+    ...(state.configuration.search.authenticationProviders.length && {
+      authentication:
+        state.configuration.search.authenticationProviders.join(','),
+    }),
   };
 };

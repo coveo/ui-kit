@@ -41,7 +41,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logClickEvent(payload: LogSearchEventActionCreatorPayload): AsyncThunkAction<
+  logClickEvent(payload: LogClickEventActionCreatorPayload): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Click;
     },

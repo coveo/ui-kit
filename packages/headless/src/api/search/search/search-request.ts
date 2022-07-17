@@ -12,6 +12,7 @@ import {
   ActionsHistoryParam,
   AdvancedQueryParam,
   AnalyticsParam,
+  AuthenticationParam,
   ConstantQueryParam,
   DisjunctionQueryParam,
   EnableDidYouMeanParam,
@@ -58,4 +59,5 @@ export type SearchRequest = BaseParam &
   TimezoneParam &
   AnalyticsParam &
   ExcerptLength &
-  ActionsHistoryParam;
+  ActionsHistoryParam &
+  AuthenticationParam;

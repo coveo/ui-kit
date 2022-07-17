@@ -1,4 +1,5 @@
 import {BaseParam, VisitorIDParam} from '../../platform-service-params';
+import {AuthenticationParam} from '../search-api-params';
 
 export interface HtmlRequestOptions {
   uniqueId: string;
@@ -7,6 +8,7 @@ export interface HtmlRequestOptions {
 
 export type HtmlRequest = BaseParam &
   HtmlRequestOptions &
+  AuthenticationParam &
   VisitorIDParam & {
     enableNavigation: boolean;
     requestedOutputSize: number;

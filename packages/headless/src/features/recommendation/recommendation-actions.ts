@@ -28,6 +28,8 @@ export interface GetRecommendationsThunkReturn {
   analyticsAction: SearchAction;
   searchUid: string;
   duration: number;
+  splitTestRun: string;
+  pipeline: string;
 }
 
 export interface SetRecommendationIdActionCreatorPayload {
@@ -66,6 +68,8 @@ export const getRecommendations = createAsyncThunk<
       analyticsAction: logRecommendationUpdate(),
       duration,
       searchUid: fetched.success.searchUid,
+      splitTestRun: fetched.success.splitTestRun,
+      pipeline: fetched.success.pipeline,
     };
   }
 );
@@ -108,4 +112,7 @@ export const buildRecommendationRequest = async (
   }),
   ...(s.configuration.analytics.enabled &&
     (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
+  ...(s.configuration.search.authenticationProviders.length && {
+    authentication: s.configuration.search.authenticationProviders.join(','),
+  }),
 });

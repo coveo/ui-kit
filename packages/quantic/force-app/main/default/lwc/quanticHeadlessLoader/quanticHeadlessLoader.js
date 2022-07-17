@@ -42,6 +42,7 @@ const loadDependencies = async (element, headlessUseCase) => {
   ];
     
   await Promise.all(dependencyPromises);
+  /** @type {AnyHeadless} */
   return bundleInfo.bundle();
 }
 
@@ -109,6 +110,7 @@ const instantiateWindowEngineObject = (element, engineId) => {
     enginePromise: undefined,
     options: new Deferred(),
     bindings: {},
+    bundle: undefined,
   };
   if (!window.coveoHeadless) {
     window.coveoHeadless = {
@@ -159,8 +161,9 @@ const initQuanticStore = (engineId) => {
  * @param {(options: unknown) => unknown} engineConstructor Th engine constructor.
  * @param {string} engineId The id of the engine.
  * @param element The Lightning element to use to load dependencies.
+ * @param headlessBundle The headless bundle associated to the engine.
  */
-function setEngineOptions(options, engineConstructor, engineId, element) {
+function setEngineOptions(options, engineConstructor, engineId, element, headlessBundle) {
   if (window.coveoHeadless?.[engineId]?.options?.isResolved) {
     console.warn(`Attempted to overwrite engine options for engine ID: ${engineId}`);
     return;
@@ -169,6 +172,7 @@ function setEngineOptions(options, engineConstructor, engineId, element) {
     instantiateWindowEngineObject(element, engineId)
   }
   window.coveoHeadless[engineId].engineConstructor = engineConstructor;
+  window.coveoHeadless[engineId].bundle = headlessBundle;
   window.coveoHeadless[engineId].options.resolve(options);
 }
 
@@ -308,6 +312,15 @@ function getFromStore(engineId, facetType) {
   }), {})
 }
 
+/**
+ * Get the headless bundle associated to the specified engine.
+ * @param {string} engineId The engine ID.
+ * @returns The headless bundle associated to the specified engine.
+ */
+function getHeadlessBundle(engineId) {
+  return window.coveoHeadless[engineId]?.bundle ?? CoveoHeadless;
+}
+
 
 export {
   loadDependencies,
@@ -323,4 +336,5 @@ export {
   getFromStore,
   HeadlessBundleNames,
   getAllFacetsFromStore,
+  getHeadlessBundle,
 }

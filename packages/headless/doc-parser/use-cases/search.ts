@@ -429,6 +429,17 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildInstantResults',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/instant-results/instant-results.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/instant-results/instant-results.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaders: ActionLoaderConfiguration[] = [
