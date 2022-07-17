@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.86.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.86.1...@coveo/atomic@1.86.2) (2022-07-15)
+
+
+### Bug Fixes
+
+* **headless:** clear analytics cookie as soon as analytics are disabled ([#2218](https://github.com/coveo/ui-kit/issues/2218)) ([637f832](https://github.com/coveo/ui-kit/commit/637f8323276ea40ce53d4b433e39271025562dad))
+
+
+
+
+
+## [1.86.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.86.0...@coveo/atomic@1.86.1) (2022-07-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.85.0...@coveo/atomic@1.86.0) (2022-07-14)
 
 

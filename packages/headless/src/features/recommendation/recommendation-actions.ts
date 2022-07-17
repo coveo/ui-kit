@@ -28,6 +28,8 @@ export interface GetRecommendationsThunkReturn {
   analyticsAction: SearchAction;
   searchUid: string;
   duration: number;
+  splitTestRun: string;
+  pipeline: string;
 }
 
 export interface SetRecommendationIdActionCreatorPayload {
@@ -66,6 +68,8 @@ export const getRecommendations = createAsyncThunk<
       analyticsAction: logRecommendationUpdate(),
       duration,
       searchUid: fetched.success.searchUid,
+      splitTestRun: fetched.success.splitTestRun,
+      pipeline: fetched.success.pipeline,
     };
   }
 );
