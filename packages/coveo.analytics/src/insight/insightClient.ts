@@ -15,6 +15,7 @@ import {
     ResultsSortMetadata,
     FacetRangeMetadata,
     CategoryFacetMetadata,
+    StaticFilterToggleValueMetadata,
 } from '../searchPage/searchPageEvents';
 
 export interface InsightClientProvider {
@@ -60,6 +61,10 @@ export class CoveoInsightClient {
 
     public logInterfaceChange(metadata: InterfaceChangeMetadata) {
         return this.logSearchEvent(SearchPageEvents.interfaceChange, metadata);
+    }
+
+    public logStaticFilterDeselect(meta: StaticFilterToggleValueMetadata) {
+        return this.logSearchEvent(SearchPageEvents.staticFilterDeselect, meta);
     }
 
     public logFetchMoreResults() {
