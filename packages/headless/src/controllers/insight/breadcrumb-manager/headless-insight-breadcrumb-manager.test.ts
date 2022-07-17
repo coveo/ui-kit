@@ -1,34 +1,28 @@
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../test';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetValue} from '../../test/mock-facet-value';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
-import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-response';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
-import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
-import {executeSearch} from '../../features/search/search-actions';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
+import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value';
+import {buildMockDateFacetResponse} from '../../../test/mock-date-facet-response';
+import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
+import {buildMockNumericFacetResponse} from '../../../test/mock-numeric-facet-response';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {executeSearch} from '../../../features/search/search-actions';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+import {getSearchInitialState} from '../../../features/search/search-state';
+import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
-} from '../../features/facets/facet-set/facet-set-actions';
-import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
+} from '../../../features/facets/facet-set/facet-set-actions';
+import {toggleSelectDateFacetValue} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {
   configuration,
   search,
@@ -36,34 +30,40 @@ import {
   numericFacetSet,
   dateFacetSet,
   categoryFacetSet,
-} from '../../app/reducers';
-import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
-import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+} from '../../../app/reducers';
+import {buildMockStaticFilterSlice} from '../../../test/mock-static-filter-slice';
+import {buildMockStaticFilterValue} from '../../../test/mock-static-filter-value';
+import {toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
+import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {
   BreadcrumbManager,
   CategoryFacetBreadcrumb,
   DateFacetBreadcrumb,
   FacetBreadcrumb,
   NumericFacetBreadcrumb,
-} from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
+} from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
 import {buildBreadcrumbManager} from './headless-insight-breadcrumb-manager';
+import {InsightAppState} from '../../../state/insight-app-state';
+import {
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../test/mock-engine';
+import {buildMockInsightState} from '../../../test/mock-insight-state';
 
-describe('headless breadcrumb manager', () => {
+describe('insight breadcrumb manager', () => {
   const facetId = 'abc123';
-  let engine: MockSearchEngine;
-  let state: SearchAppState;
+  let engine: MockInsightEngine;
+  let state: InsightAppState;
   let breadcrumbManager: BreadcrumbManager;
 
   function initController() {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockInsightEngine();
     engine.state = state;
     breadcrumbManager = buildBreadcrumbManager(engine);
   }
 
   beforeEach(() => {
-    state = createMockState();
+    state = buildMockInsightState();
     initController();
   });
 
@@ -87,7 +87,7 @@ describe('headless breadcrumb manager', () => {
         state: 'selected',
       });
 
-      state = createMockState({
+      state = buildMockInsightState({
         search: {
           ...getSearchInitialState(),
           response: {
@@ -151,7 +151,7 @@ describe('headless breadcrumb manager', () => {
     beforeEach(() => {
       mockValue = buildMockDateFacetValue({state: 'selected'});
 
-      state = createMockState({
+      state = buildMockInsightState({
         search: {
           ...getSearchInitialState(),
           response: {
@@ -207,7 +207,7 @@ describe('headless breadcrumb manager', () => {
     beforeEach(() => {
       mockValue = buildMockNumericFacetValue({state: 'selected'});
 
-      state = createMockState({
+      state = buildMockInsightState({
         search: {
           ...getSearchInitialState(),
           response: {
@@ -264,7 +264,7 @@ describe('headless breadcrumb manager', () => {
     beforeEach(() => {
       mockValue = buildMockCategoryFacetValue({state: 'selected'});
 
-      state = createMockState({
+      state = buildMockInsightState({
         search: {
           ...getSearchInitialState(),
           response: {

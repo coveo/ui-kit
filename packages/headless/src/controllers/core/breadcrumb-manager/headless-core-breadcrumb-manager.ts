@@ -1,27 +1,10 @@
 import {CoreEngine} from '../../../app/engine';
-import {
-  categoryFacetSet,
-  configuration,
-  dateFacetSet,
-  facetSet,
-  numericFacetSet,
-  search,
-} from '../../../app/reducers';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {BaseFacetValue} from '../../../features/facets/facet-api/response';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {
-  CategoryFacetSection,
-  ConfigurationSection,
-  DateFacetSection,
-  FacetSection,
-  NumericFacetSection,
-  SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
 import {
   buildController,
   Controller,
@@ -183,10 +166,6 @@ export interface DeselectableValue {
 export function buildCoreBreadcrumbManager(
   engine: CoreEngine
 ): BreadcrumbManager {
-  if (!loadBreadcrumbManagerReducers(engine)) {
-    throw loadReducerError;
-  }
-
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -212,26 +191,4 @@ export function buildCoreBreadcrumbManager(
       value.deselect();
     },
   };
-}
-
-function loadBreadcrumbManagerReducers(
-  engine: CoreEngine
-): engine is CoreEngine<
-  ConfigurationSection &
-    SearchSection &
-    FacetSection &
-    NumericFacetSection &
-    DateFacetSection &
-    CategoryFacetSection
-> {
-  engine.addReducers({
-    configuration,
-    search,
-    facetSet,
-    numericFacetSet,
-    dateFacetSet,
-    categoryFacetSet,
-  });
-
-  return true;
 }

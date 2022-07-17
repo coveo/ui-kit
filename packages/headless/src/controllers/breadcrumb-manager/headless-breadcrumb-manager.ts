@@ -1,4 +1,12 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  categoryFacetSet,
+  configuration,
+  dateFacetSet,
+  facetSet,
+  numericFacetSet,
+  search,
+} from '../../app/reducers';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
@@ -30,6 +38,8 @@ import {
   StaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-state';
 import {
+  CategoryFacetSection,
+  ConfigurationSection,
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
@@ -48,6 +58,7 @@ import {
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
+import {loadReducerError} from '../../utils/errors';
 
 export type {
   NumericFacetBreadcrumb,
@@ -70,6 +81,10 @@ export type {
 export function buildBreadcrumbManager(
   engine: SearchEngine
 ): BreadcrumbManager {
+  if (!loadBreadcrumbManagerReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildCoreBreadcrumbManager(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
@@ -232,4 +247,26 @@ export function buildBreadcrumbManager(
       dispatch(executeSearch(logClearBreadcrumbs()));
     },
   };
+}
+
+function loadBreadcrumbManagerReducers(
+  engine: SearchEngine
+): engine is SearchEngine<
+  ConfigurationSection &
+    SearchSection &
+    FacetSection &
+    NumericFacetSection &
+    DateFacetSection &
+    CategoryFacetSection
+> {
+  engine.addReducers({
+    configuration,
+    search,
+    facetSet,
+    numericFacetSet,
+    dateFacetSet,
+    categoryFacetSet,
+  });
+
+  return true;
 }

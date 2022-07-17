@@ -1,4 +1,12 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {
+  categoryFacetSet,
+  configuration,
+  dateFacetSet,
+  facetSet,
+  numericFacetSet,
+  search,
+} from '../../../app/reducers';
 import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSelectedValuesSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
@@ -25,16 +33,22 @@ import {
   StaticFilterValue,
 } from '../../../features/static-filter-set/static-filter-set-state';
 import {
+  CategoryFacetSection,
+  ConfigurationSection,
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../state/state-sections';
 import {
+  Breadcrumb,
   BreadcrumbManager,
+  BreadcrumbManagerState,
+  BreadcrumbValue,
   buildCoreBreadcrumbManager,
   CategoryFacetBreadcrumb,
   DateFacetBreadcrumb,
+  DeselectableValue,
   FacetBreadcrumb,
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
@@ -44,7 +58,20 @@ import {executeSearch} from '../../../features/insight-search/insight-search-act
 import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
 import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
+import {loadReducerError} from '../../../utils/errors';
 
+export type {
+  NumericFacetBreadcrumb,
+  FacetBreadcrumb,
+  DateFacetBreadcrumb,
+  CategoryFacetBreadcrumb,
+  StaticFilterBreadcrumb,
+  Breadcrumb,
+  BreadcrumbValue,
+  BreadcrumbManagerState,
+  BreadcrumbManager,
+  DeselectableValue,
+};
 /**
  * Creates a `BreadcrumbManager` controller instance.
  *
@@ -54,6 +81,9 @@ import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generi
 export function buildBreadcrumbManager(
   engine: InsightEngine
 ): BreadcrumbManager {
+  if (!loadBreadcrumbManagerReducers(engine)) {
+    throw loadReducerError;
+  }
   const controller = buildCoreBreadcrumbManager(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
@@ -68,7 +98,7 @@ export function buildBreadcrumbManager(
   ) => {
     return Object.keys(facetSet)
       .map((facetId) => {
-        const values = facetValuesSelector(getState(), facetId).map(
+        const values = facetValuesSelector(engine.state, facetId).map(
           (selection) => ({
             value: selection,
             deselect: () => executeToggleSelect({facetId, selection}),
@@ -216,4 +246,26 @@ export function buildBreadcrumbManager(
       dispatch(executeSearch(logClearBreadcrumbs()));
     },
   };
+}
+
+function loadBreadcrumbManagerReducers(
+  engine: InsightEngine
+): engine is InsightEngine<
+  ConfigurationSection &
+    SearchSection &
+    FacetSection &
+    NumericFacetSection &
+    DateFacetSection &
+    CategoryFacetSection
+> {
+  engine.addReducers({
+    configuration,
+    search,
+    facetSet,
+    numericFacetSet,
+    dateFacetSet,
+    categoryFacetSet,
+  });
+
+  return true;
 }
