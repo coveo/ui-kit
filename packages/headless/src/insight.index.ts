@@ -45,10 +45,10 @@ export type {
 export {buildBreadcrumbManager} from './controllers/insight/breadcrumb-manager/headless-insight-breadcrumb-manager';
 
 export type {
-  SearchBox,
+  InsightSearchBox,
   SearchBoxState,
 } from './controllers/insight/search-box/headless-insight-search-box';
-export {buildSearchBox} from './controllers/insight/search-box/headless-insight-search-box';
+export {buildInsightSearchBox} from './controllers/insight/search-box/headless-insight-search-box';
 
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
