@@ -20,6 +20,7 @@ export interface SearchResponseSuccess {
   triggers: Trigger[];
   questionAnswer: QuestionsAnswers;
   pipeline: string;
+  splitTestRun: string;
 }
 
 export interface SearchResponseSuccessWithDebugInfo

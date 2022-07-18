@@ -141,7 +141,7 @@ describe('Search Interface Component', () => {
     });
 
     it('should not call the analytics server', () => {
-      cy.shouldBeCalled(TestFixture.urlParts.UA, 0);
+      cy.shouldBeCalled(TestFixture.urlParts.UASearch, 0);
     });
   });
 });
