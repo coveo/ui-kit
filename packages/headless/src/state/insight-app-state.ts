@@ -18,20 +18,36 @@ import {
   DateFacetSection,
   CategoryFacetSection,
   SortSection,
+  TabSection,
+  AdvancedSearchQueriesSection,
+  StaticFilterSection,
+  DebugSection,
+  InstantResultSection,
+  PipelineSection,
 } from './state-sections';
 
-export type InsightSearchParametersState = QuerySection &
-  FacetSection &
+export type InsightSearchParametersState = FacetSection &
   DateFacetSection &
   NumericFacetSection &
-  PaginationSection;
+  CategoryFacetSection &
+  FacetOptionsSection &
+  QuerySection &
+  TabSection &
+  AdvancedSearchQueriesSection &
+  StaticFilterSection &
+  PaginationSection &
+  SortSection &
+  QuerySetSection &
+  InstantResultSection &
+  PipelineSection &
+  SearchHubSection &
+  DebugSection;
 
 export type InsightAppState = InsightSearchParametersState &
   ConfigurationSection &
   VersionSection &
   InsightConfigurationSection &
   SearchSection &
-  SearchHubSection &
   InsightInterfaceSection &
   InsightCaseContextSection &
   ResultPreviewSection &
@@ -40,6 +56,4 @@ export type InsightAppState = InsightSearchParametersState &
   FacetOptionsSection &
   QuerySetSection &
   QuerySuggestionSection &
-  CategoryFacetSection &
-  FacetOptionsSection &
   SortSection;
