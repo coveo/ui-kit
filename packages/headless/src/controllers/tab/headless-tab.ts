@@ -11,6 +11,7 @@ import {
 import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
+
 /**
  * Creates a `Tab` controller instance.
  *
