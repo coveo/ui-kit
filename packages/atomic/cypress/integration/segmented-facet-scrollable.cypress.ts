@@ -1,23 +1,15 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import * as CommonAssertions from './common-assertions';
-import {
-  segmentedFacetComponent,
-  SegmentedFacetSelectors,
-} from './facets/segmented-facet/segmented-facet-selectors';
+import {segmentedFacetComponent} from './facets/segmented-facet/segmented-facet-selectors';
 import {
   addScrollable,
   clickArrow,
   scroll,
 } from './segmented-facet-scrollable-actions';
 import * as ScrollableAssertions from './segmented-facet-scrollable-assertions';
-import {
-  scrollableComponent,
-  ScrollableSelectors,
-} from './segmented-facet-scrollable-selectors';
+import {scrollableComponent} from './segmented-facet-scrollable-selectors';
 
 describe('Segmented Facet Scrollable Test Suites', () => {
   function setupScrollable() {
-    //setup component with segmented facets
     new TestFixture()
       .with(addScrollable({field: 'author', 'number-of-values': 5}))
       .init();
@@ -61,10 +53,9 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       function setupKeyboardScrollable() {
         setupWithOverflowFacets();
         cy.get(scrollableComponent).click('center');
-        //.type('{rightarrow}');
         cy.get(segmentedFacetComponent)
           .shadow()
-          .find('button [part="value-box"][aria-pressed="true"]')
+          .find('[part="value-box"][aria-pressed="true"]')
           .type('{rightarrow}');
       }
       before(setupKeyboardScrollable);
