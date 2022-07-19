@@ -54,7 +54,7 @@ const initialStateSchema = new Schema({
 
 export interface TabProps {
   /**
-   * The options for the `CoreTab` controller.
+   * The options for the `Tab` controller.
    */
   options: TabOptions;
   /**
@@ -73,7 +73,7 @@ export interface Tab extends Controller {
   select(): void;
 
   /**
-   * The state of the `CoreTab` controller.
+   * The state of the `Tab` controller.
    */
   state: TabState;
 }
@@ -83,7 +83,7 @@ export interface Tab extends Controller {
  */
 export interface TabState {
   /**
-   * `true` if the current tab is selected and `false` otherwise.
+   * Indicates whether the current tab is selected.
    * */
   isActive: boolean;
 }
@@ -129,7 +129,7 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
     },
 
     get state() {
-      const isActive = engine.state.tabSet[id].isActive;
+      const isActive = engine.state.tabSet[id]?.isActive;
       return {
         isActive,
       };

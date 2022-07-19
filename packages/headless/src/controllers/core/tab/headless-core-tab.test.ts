@@ -5,11 +5,10 @@ import {
   updateActiveTab,
 } from '../../../features/tab-set/tab-set-actions';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
-import {buildMockAdvancedSearchQueriesState} from '../../../test/mock-advanced-search-queries-state';
 import {buildMockTabSlice} from '../../../test/mock-tab-state';
 import {buildCoreTab, Tab, TabProps} from './headless-core-tab';
 
-describe('CoreTab', () => {
+describe('Core Tab', () => {
   let engine: MockSearchEngine;
   let props: TabProps;
   let tab: Tab;
@@ -20,7 +19,6 @@ describe('CoreTab', () => {
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
-    engine.state.advancedSearchQueries = buildMockAdvancedSearchQueriesState();
     props = {
       options: {
         expression: '@objecttype==Message',

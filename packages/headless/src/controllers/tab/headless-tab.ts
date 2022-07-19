@@ -19,21 +19,20 @@ export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
  * @returns A `Tab` controller instance.
  */
 export function buildTab(engine: SearchEngine, props: TabProps): Tab {
-  const controller = buildCoreTab(engine, props);
   const {dispatch} = engine;
+  const tab = buildCoreTab(engine, props);
+  const search = () => dispatch(executeSearch(logInterfaceChange()));
 
   return {
-    ...controller,
-
-    select() {
-      controller.select();
-      dispatch(executeSearch(logInterfaceChange()));
-    },
+    ...tab,
 
     get state() {
-      return {
-        ...controller.state,
-      };
+      return tab.state;
+    },
+
+    select() {
+      tab.select();
+      search();
     },
   };
 }

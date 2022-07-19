@@ -11,6 +11,7 @@ import {logInsightInterfaceChange} from '../../../features/analytics/analytics-a
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 
 export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
+
 /**
  * Creates an insight `Tab` controller instance.
  *
@@ -19,21 +20,20 @@ export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
  * @returns An insight `Tab` controller instance.
  */
 export function buildTab(engine: InsightEngine, props: TabProps): Tab {
-  const controller = buildCoreTab(engine, props);
   const {dispatch} = engine;
+  const tab = buildCoreTab(engine, props);
+  const search = () => dispatch(executeSearch(logInsightInterfaceChange()));
 
   return {
-    ...controller,
-
-    select() {
-      controller.select();
-      dispatch(executeSearch(logInsightInterfaceChange()));
-    },
+    ...tab,
 
     get state() {
-      return {
-        ...controller.state,
-      };
+      return tab.state;
+    },
+
+    select() {
+      tab.select();
+      search();
     },
   };
 }

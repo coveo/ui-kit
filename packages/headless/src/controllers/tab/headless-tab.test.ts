@@ -2,11 +2,8 @@ import {
   MockSearchEngine,
   buildMockSearchAppEngine,
 } from '../../test/mock-engine';
-import {buildTab} from './headless-tab';
-import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
-import {updateActiveTab} from '../../features/tab-set/tab-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {Tab, TabProps} from '../core/tab/headless-core-tab';
+import {buildTab, Tab, TabProps} from './headless-tab';
 
 describe('Tab', () => {
   const expression = 'abc123';
@@ -20,7 +17,6 @@ describe('Tab', () => {
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
-    engine.state.advancedSearchQueries = buildMockAdvancedSearchQueriesState();
     props = {
       options: {
         expression,
@@ -33,14 +29,12 @@ describe('Tab', () => {
 
     initTab();
   });
+
+  it('initializes', () => {
+    expect(tab).toBeTruthy();
+  });
+
   describe('#select', () => {
-    it('dispatches #updateActiveTab', () => {
-      const {id} = props.options;
-      tab.select();
-
-      expect(engine.actions).toContainEqual(updateActiveTab(id));
-    });
-
     it('dispatches #executeSearch', () => {
       tab.select();
       const action = engine.findAsyncAction(executeSearch.pending);
