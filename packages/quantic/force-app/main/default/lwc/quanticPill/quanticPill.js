@@ -20,8 +20,28 @@ export default class QuanticPill extends LightningElement {
    * @type {string}
    */
   @api altText;
+  /**
+   * The name of the group if applicable related to the button (for screen readers).
+   * @api
+   * @type {string}
+   */
+  @api groupName;
+  /**
+   * The name of the action if applicable when the button is clicked (for screen readers).
+   * @api
+   * @type {string}
+   */
+  @api actionName;
   
   deselect() {
     this.dispatchEvent(new CustomEvent('deselect'));
+  }
+
+  get alternativeText() {
+    let label = this.altText;
+    if(this.groupName && this.actionName) {
+      label = `${this.groupName} ${this.actionName}`;
+    }
+    return label;
   }
 }
