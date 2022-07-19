@@ -357,7 +357,6 @@ export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
 };
 
 export const addElement = (env: TestFixture, element: HTMLElement) => {
-  console.log('eleemnt to add, ', element);
   env.withElement(element);
 };
 
