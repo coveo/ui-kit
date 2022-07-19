@@ -51,6 +51,14 @@ function baseBreadcrumbManagerExpectations(
         .contains(value)
         .logDetail(`should have the value "${value}" at first value`);
     },
+    firstBreadcrumbAltTextContains: (value: string) => {
+      selector
+        .firstbreadcrumbAltText()
+        .contains(value)
+        .logDetail(
+          `should have the "${value}" as slds-assistive-text at first value`
+        );
+    },
     displayShowMore: (display: boolean) => {
       selector
         .showMoreButton()

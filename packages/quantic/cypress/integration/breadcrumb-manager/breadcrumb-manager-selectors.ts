@@ -7,6 +7,7 @@ export interface BreadcrumbSelector extends ComponentSelector {
   values: () => CypressSelector;
   showMoreButton: () => CypressSelector;
   firstbreadcrumbValueLabel: () => CypressSelector;
+  firstbreadcrumbAltText: () => CypressSelector;
 }
 
 interface BreadcrumbManagerSelector extends ComponentSelector {
@@ -24,6 +25,10 @@ const FacetBreadcrumbSelectors: BreadcrumbSelector = {
   values: () => FacetBreadcrumbSelectors.get().find('c-quantic-pill'),
   firstbreadcrumbValueLabel: () =>
     FacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
+  firstbreadcrumbAltText: () =>
+    FacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
+      .first(),
   showMoreButton: () =>
     FacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };
@@ -37,6 +42,10 @@ const NumericFacetBreadcrumbSelectors: BreadcrumbSelector = {
   values: () => NumericFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
   firstbreadcrumbValueLabel: () =>
     NumericFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
+  firstbreadcrumbAltText: () =>
+    NumericFacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
+      .first(),
   showMoreButton: () =>
     NumericFacetBreadcrumbSelectors.get().find(
       '.breadcrumb-manager__more-button'
@@ -54,6 +63,10 @@ const CategoryFacetBreadcrumbSelectors: BreadcrumbSelector = {
     CategoryFacetBreadcrumbSelectors.get()
       .find('.pill__text-container')
       .first(),
+  firstbreadcrumbAltText: () =>
+    CategoryFacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
+      .first(),
 };
 
 const DateFacetBreadcrumbSelectors: BreadcrumbSelector = {
@@ -63,6 +76,10 @@ const DateFacetBreadcrumbSelectors: BreadcrumbSelector = {
   values: () => DateFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
   firstbreadcrumbValueLabel: () =>
     DateFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
+  firstbreadcrumbAltText: () =>
+    DateFacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
+      .first(),
   showMoreButton: () =>
     DateFacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };
