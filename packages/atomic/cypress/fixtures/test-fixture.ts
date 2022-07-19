@@ -356,6 +356,11 @@ export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
   env.withElement(e);
 };
 
+export const addElement = (env: TestFixture, element: HTMLElement) => {
+  console.log('eleemnt to add, ', element);
+  env.withElement(element);
+};
+
 export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(props)) {
