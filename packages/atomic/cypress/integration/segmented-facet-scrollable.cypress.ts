@@ -1,11 +1,19 @@
 import {TestFixture} from '../fixtures/test-fixture';
 import * as CommonAssertions from './common-assertions';
 import {
+  segmentedFacetComponent,
+  SegmentedFacetSelectors,
+} from './facets/segmented-facet/segmented-facet-selectors';
+import {
   addScrollable,
   clickArrow,
   scroll,
 } from './segmented-facet-scrollable-actions';
 import * as ScrollableAssertions from './segmented-facet-scrollable-assertions';
+import {
+  scrollableComponent,
+  ScrollableSelectors,
+} from './segmented-facet-scrollable-selectors';
 
 describe('Segmented Facet Scrollable Test Suites', () => {
   function setupScrollable() {
@@ -49,13 +57,25 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 
-    describe.skip('with right scroll using keyboard', () => {
+    describe('with right scroll using keyboard', () => {
+      function setupKeyboardScrollable() {
+        setupWithOverflowFacets();
+        cy.get(scrollableComponent).click('center');
+        //.type('{rightarrow}');
+        cy.get(segmentedFacetComponent)
+          .shadow()
+          .find('button [part="value-box"][aria-pressed="true"]')
+          .type('{rightarrow}');
+      }
+      before(setupKeyboardScrollable);
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 
-    describe.skip('with screen size increase', () => {
-      before(setupWithOverflowFacets);
-      //cy.viewport(3840, 2160);
+    describe('with screen size increase', () => {
+      before(() => {
+        setupWithOverflowFacets();
+        cy.viewport(7680, 4320);
+      });
       ScrollableAssertions.assertDisplayScrollable(true);
       ScrollableAssertions.assertDisplayArrows(false, false);
     });
@@ -73,9 +93,14 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       ScrollableAssertions.assertDisplayArrows(false, false);
     });
 
-    describe.skip('with screen size decrease', () => {
+    describe('with screen size decrease', () => {
+      before(() => {
+        setupWithoutOverflowFacets();
+        cy.viewport(320, 480);
+      });
+
       ScrollableAssertions.assertDisplayScrollable(true);
-      ScrollableAssertions.assertDisplayArrows(true, true);
+      ScrollableAssertions.assertDisplayArrows(false, true);
     });
   });
 
@@ -89,10 +114,13 @@ describe('Segmented Facet Scrollable Test Suites', () => {
     ScrollableAssertions.assertDisplayScrollable(false);
   });
 
-  describe.skip('with invalid search', () => {
-    function setupWithInvalidSearch() {
-      //setup component with segmented facets
-    }
+  describe('when no search has yet been executed', () => {
+    before(() => {
+      new TestFixture()
+        .with(addScrollable({field: 'author', 'number-of-values': 5}))
+        .withoutFirstAutomaticSearch()
+        .init();
+    });
     ScrollableAssertions.assertDisplayScrollable(false);
   });
 });

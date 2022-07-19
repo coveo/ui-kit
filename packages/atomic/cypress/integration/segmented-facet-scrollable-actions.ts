@@ -4,7 +4,11 @@ import {
   generateComponentHTML,
   addElement,
 } from '../fixtures/test-fixture';
-import {ScrollableSelectors} from './segmented-facet-scrollable-selectors';
+import {segmentedFacetComponent} from './facets/segmented-facet/segmented-facet-selectors';
+import {
+  scrollableComponent,
+  ScrollableSelectors,
+} from './segmented-facet-scrollable-selectors';
 
 type direction = 'right' | 'left';
 
@@ -34,4 +38,5 @@ export function scroll(direction: direction, msDuration: number) {
   ScrollableSelectors.horizontalScroll().scrollTo(direction, {
     duration: msDuration,
   });
+  cy.get(scrollableComponent).trigger('wheel');
 }

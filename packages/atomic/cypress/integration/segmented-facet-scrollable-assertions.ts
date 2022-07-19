@@ -3,10 +3,9 @@ import {ScrollableSelectors} from './segmented-facet-scrollable-selectors';
 
 export function assertDisplayScrollable(display: boolean) {
   it(`${should(display)} display the scrollable`, () => {
-    ScrollableSelectors.wrapper().should(display ? 'be.visible' : 'not.exist');
-    ScrollableSelectors.horizontalScroll().should(
-      display ? 'be.visible' : 'not.exist'
-    );
+    ScrollableSelectors.wrapper()
+      .invoke('outerHeight')
+      .should(display ? 'be.gt' : 'be.eq', 0);
   });
 }
 
@@ -16,7 +15,7 @@ export function assertDisplayArrows(
 ) {
   it(`${should(displayLeftArrow)} display the left arrow and ${should(
     displayRightArrow
-  )} the right arrow`, () => {
+  )} display the right arrow`, () => {
     ScrollableSelectors.leftArrow().should(
       displayLeftArrow ? 'not.have.class' : 'have.class',
       'invisible'
