@@ -1,8 +1,6 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {getDebugInitialState} from '../../../features/debug/debug-state';
-import {getPaginationInitialState} from '../../../features/pagination/pagination-state';
 import {getQueryInitialState} from '../../../features/query/query-state';
 import {
   restoreSearchParameters,
@@ -18,8 +16,6 @@ import {
 } from '../../controller/headless-controller';
 import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {deepEqualAnyOrder} from '../../../utils/compare-utils';
-import {StaticFilterValue} from '../../../features/static-filter-set/static-filter-set-state';
 import {CoreEngine} from '../../../app/engine';
 
 export type {SearchParameters};
@@ -97,25 +93,18 @@ export function buildCoreSearchParameterManager(
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const activeParams = getActiveSearchParameters(engine);
-      const oldParams = enrichParameters(engine, activeParams);
       const newParams = enrichParameters(engine, parameters);
-
-      if (deepEqualAnyOrder(oldParams, newParams)) {
-        return;
-      }
-
       dispatch(restoreSearchParameters(newParams));
     },
 
     get state() {
-      const parameters = getActiveSearchParameters(engine);
+      const parameters = getCoreActiveSearchParameters(engine);
       return {parameters};
     },
   };
 }
 
-function enrichParameters(
+export function enrichParameters(
   engine: CoreEngine,
   parameters: SearchParameters
 ): Required<SearchParameters> {
@@ -125,23 +114,18 @@ function enrichParameters(
   };
 }
 
-function getActiveSearchParameters(engine: CoreEngine): SearchParameters {
+export function getCoreActiveSearchParameters(
+  engine: CoreEngine
+): SearchParameters {
   const state = engine.state;
   return {
     ...getQ(state),
-    ...getEnableQuerySyntax(state),
-    ...getAq(state),
-    ...getCq(state),
     ...getTab(state),
-    ...getFirstResult(state),
-    ...getNumberOfResults(state),
     ...getSortCriteria(state),
     ...getFacets(state),
     ...getCategoryFacets(state),
     ...getNumericFacets(state),
     ...getDateFacets(state),
-    ...getDebug(state),
-    ...getStaticFilters(state),
   };
 }
 
@@ -155,63 +139,12 @@ function getQ(state: Partial<SearchParametersState>) {
   return shouldInclude ? {q} : {};
 }
 
-function getEnableQuerySyntax(state: Partial<SearchParametersState>) {
-  if (state.query === undefined) {
-    return {};
-  }
-
-  const enableQuerySyntax = state.query.enableQuerySyntax;
-  const shouldInclude =
-    enableQuerySyntax !== getQueryInitialState().enableQuerySyntax;
-  return shouldInclude ? {enableQuerySyntax} : {};
-}
-
-function getAq(state: Partial<SearchParametersState>) {
-  if (state.advancedSearchQueries === undefined) {
-    return {};
-  }
-
-  const {aq, defaultFilters} = state.advancedSearchQueries;
-  const shouldInclude = aq !== defaultFilters.aq;
-  return shouldInclude ? {aq} : {};
-}
-
-function getCq(state: Partial<SearchParametersState>) {
-  if (state.advancedSearchQueries === undefined) {
-    return {};
-  }
-
-  const {cq, defaultFilters} = state.advancedSearchQueries;
-  const shouldInclude = cq !== defaultFilters.cq;
-  return shouldInclude ? {cq} : {};
-}
-
 function getTab(state: Partial<SearchParametersState>) {
   const activeTab = Object.values(state.tabSet || {}).find(
     (tab) => tab.isActive
   );
 
   return activeTab ? {tab: activeTab.id} : {};
-}
-
-function getFirstResult(state: Partial<SearchParametersState>) {
-  if (state.pagination === undefined) {
-    return {};
-  }
-
-  const firstResult = state.pagination.firstResult;
-  const shouldInclude = firstResult !== getPaginationInitialState().firstResult;
-  return shouldInclude ? {firstResult} : {};
-}
-
-function getNumberOfResults(state: Partial<SearchParametersState>) {
-  if (state.pagination === undefined) {
-    return {};
-  }
-
-  const {numberOfResults, defaultNumberOfResults} = state.pagination;
-  const shouldInclude = numberOfResults !== defaultNumberOfResults;
-  return shouldInclude ? {numberOfResults} : {};
 }
 
 function getSortCriteria(state: Partial<SearchParametersState>) {
@@ -222,25 +155,6 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   const sortCriteria = state.sortCriteria;
   const shouldInclude = sortCriteria !== getSortCriteriaInitialState();
   return shouldInclude ? {sortCriteria} : {};
-}
-
-function getStaticFilters(state: Partial<SearchParametersState>) {
-  if (state.staticFilterSet === undefined) {
-    return {};
-  }
-
-  const sf = Object.entries(state.staticFilterSet)
-    .map(([id, filter]) => {
-      const selectedCaptions = getSelectedStaticFilterCaptions(filter.values);
-      return selectedCaptions.length ? {[id]: selectedCaptions} : {};
-    })
-    .reduce((acc, obj) => ({...acc, ...obj}), {});
-
-  return Object.keys(sf).length ? {sf} : {};
-}
-
-function getSelectedStaticFilterCaptions(values: StaticFilterValue[]) {
-  return values.filter((v) => v.state === 'selected').map((v) => v.caption);
 }
 
 function getFacets(state: Partial<SearchParametersState>) {
@@ -317,14 +231,4 @@ function getDateFacets(state: Partial<SearchParametersState>) {
 
 function getSelectedRanges<T extends RangeValueRequest>(ranges: T[]) {
   return ranges.filter((range) => range.state === 'selected');
-}
-
-function getDebug(state: Partial<SearchParametersState>) {
-  if (state.debug === undefined) {
-    return {};
-  }
-
-  const debug = state.debug;
-  const shouldInclude = debug !== getDebugInitialState();
-  return shouldInclude ? {debug} : {};
 }

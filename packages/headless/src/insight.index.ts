@@ -30,6 +30,15 @@ export type {
 } from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
 
+export type {
+  SearchParameterManagerProps,
+  SearchParameterManagerInitialState,
+  SearchParameterManagerState,
+  SearchParameterManager,
+  SearchParameters,
+} from './controllers/insight/search-parameter-manager/headless-insight-search-parameter-manager';
+export {buildSearchParameterManager} from './controllers/insight/search-parameter-manager/headless-insight-search-parameter-manager';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
