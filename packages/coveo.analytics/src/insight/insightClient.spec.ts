@@ -259,7 +259,7 @@ describe('InsightClient', () => {
             caseContext: {Case_Subject: 'test subject', Case_Description: 'test description'},
         };
 
-        const metaToBeSent = {
+        const expectedMeta = {
             CaseId: '1234',
             CaseNumber: '5678',
             CaseSubject: 'test subject',
@@ -268,7 +268,7 @@ describe('InsightClient', () => {
         };
 
         await client.logContextChanged(meta);
-        expectMatchPayload(InsightEvents.contextChanged, metaToBeSent);
+        expectMatchPayload(InsightEvents.contextChanged, expectedMeta);
     });
 
     it('should send proper payload for #expandToFullUI', async () => {
@@ -280,7 +280,7 @@ describe('InsightClient', () => {
             triggeredBy: 'openFullSearchButton',
         };
 
-        const metaToBeSent = {
+        const expectedMeta = {
             CaseId: '1234',
             CaseNumber: '5678',
             CaseSubject: 'test subject',
@@ -288,6 +288,6 @@ describe('InsightClient', () => {
             triggeredBy: 'openFullSearchButton',
         };
         await client.logExpandToFullUI(meta);
-        expectMatchCustomEventPayload(InsightEvents.expandToFullUI, metaToBeSent);
+        expectMatchCustomEventPayload(InsightEvents.expandToFullUI, expectedMeta);
     });
 });
