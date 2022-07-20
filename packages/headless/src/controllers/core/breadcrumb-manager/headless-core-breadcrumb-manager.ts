@@ -1,10 +1,19 @@
 import {CoreEngine} from '../../../app/engine';
 import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {BaseFacetRequest} from '../../../features/facets/facet-api/request';
 import {BaseFacetValue} from '../../../features/facets/facet-api/response';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {
+  CategoryFacetSection,
+  ConfigurationSection,
+  DateFacetSection,
+  FacetSection,
+  NumericFacetSection,
+  SearchSection,
+} from '../../../state/state-sections';
 import {
   buildController,
   Controller,
@@ -156,6 +165,48 @@ export interface DeselectableValue {
    */
   deselect(): void;
 }
+
+/**
+ * Get the breadcrumb of the facet selected
+ * @param engine headless engine
+ * @param facetSet facet section
+ * @param executeToggleSelect the execute toggle action
+ * @param facetValuesSelector facet selector
+ * @returns list breadcrumb of the facet selected
+ */
+export const getBreadcrumbs = <T extends BaseFacetValue>(
+  engine: CoreEngine<
+    ConfigurationSection &
+      SearchSection &
+      FacetSection &
+      NumericFacetSection &
+      DateFacetSection &
+      CategoryFacetSection
+  >,
+  facetSet: Record<string, BaseFacetRequest>,
+  executeToggleSelect: (payload: {facetId: string; selection: T}) => void,
+  facetValuesSelector:
+    | ((state: SearchSection & FacetSection, facetId: string) => T[])
+    | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
+    | ((state: SearchSection & DateFacetSection, facetId: string) => T[])
+) => {
+  return Object.keys(facetSet)
+    .map((facetId) => {
+      const values = facetValuesSelector(engine.state, facetId).map(
+        (selection) => ({
+          value: selection,
+          deselect: () => executeToggleSelect({facetId, selection}),
+        })
+      );
+
+      return {
+        facetId,
+        field: facetSet[facetId].field,
+        values,
+      };
+    })
+    .filter((breadcrumb) => breadcrumb.values.length);
+};
 
 /**
  * Creates a `BreadcrumbManager` controller instance.

@@ -47,8 +47,8 @@ import {
   DateFacetBreadcrumb,
   FacetBreadcrumb,
   NumericFacetBreadcrumb,
-} from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {buildBreadcrumbManager} from './headless-breadcrumb-manager';
+  buildBreadcrumbManager,
+} from './headless-breadcrumb-manager';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';

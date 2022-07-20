@@ -58,7 +58,7 @@ export interface InsightAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a search interface loads for the first time.
+   * The event to log when a insight interface loads for the first time.
    *
    * @returns A dispatchable action.
    */

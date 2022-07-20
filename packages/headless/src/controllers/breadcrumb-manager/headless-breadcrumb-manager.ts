@@ -10,8 +10,6 @@ import {
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
-import {BaseFacetRequest} from '../../features/facets/facet-api/request';
-import {BaseFacetValue} from '../../features/facets/facet-api/response';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
@@ -55,6 +53,7 @@ import {
   DateFacetBreadcrumb,
   DeselectableValue,
   FacetBreadcrumb,
+  getBreadcrumbs,
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
@@ -89,34 +88,9 @@ export function buildBreadcrumbManager(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const getBreadcrumbs = <T extends BaseFacetValue>(
-    facetSet: Record<string, BaseFacetRequest>,
-    executeToggleSelect: (payload: {facetId: string; selection: T}) => void,
-    facetValuesSelector:
-      | ((state: SearchSection & FacetSection, facetId: string) => T[])
-      | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
-      | ((state: SearchSection & DateFacetSection, facetId: string) => T[])
-  ) => {
-    return Object.keys(facetSet)
-      .map((facetId) => {
-        const values = facetValuesSelector(getState(), facetId).map(
-          (selection) => ({
-            value: selection,
-            deselect: () => executeToggleSelect({facetId, selection}),
-          })
-        );
-
-        return {
-          facetId,
-          field: facetSet[facetId].field,
-          values,
-        };
-      })
-      .filter((breadcrumb) => breadcrumb.values.length);
-  };
-
   const getFacetBreadcrumbs = (): FacetBreadcrumb[] => {
     return getBreadcrumbs<FacetValue>(
+      engine,
       getState().facetSet,
       ({facetId, selection}) => {
         const analyticsAction = logFacetBreadcrumb({
@@ -135,6 +109,7 @@ export function buildBreadcrumbManager(
 
   const getNumericFacetBreadcrumbs = (): NumericFacetBreadcrumb[] => {
     return getBreadcrumbs<NumericFacetValue>(
+      engine,
       getState().numericFacetSet,
       (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
@@ -146,6 +121,7 @@ export function buildBreadcrumbManager(
 
   const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
     return getBreadcrumbs<DateFacetValue>(
+      engine,
       getState().dateFacetSet,
       (payload) => {
         dispatch(toggleSelectDateFacetValue(payload));

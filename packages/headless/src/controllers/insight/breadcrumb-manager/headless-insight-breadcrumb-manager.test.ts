@@ -41,8 +41,8 @@ import {
   DateFacetBreadcrumb,
   FacetBreadcrumb,
   NumericFacetBreadcrumb,
-} from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {buildBreadcrumbManager} from './headless-insight-breadcrumb-manager';
+  buildBreadcrumbManager,
+} from './headless-insight-breadcrumb-manager';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {
   buildMockInsightEngine,
