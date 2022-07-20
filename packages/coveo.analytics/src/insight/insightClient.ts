@@ -17,6 +17,7 @@ import {
     CategoryFacetMetadata,
     StaticFilterToggleValueMetadata,
 } from '../searchPage/searchPageEvents';
+import {ContextChangedMetadata, ExpandToFullUIMetadata, InsightEvents} from './insightEvents';
 
 export interface InsightClientProvider {
     getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
@@ -35,6 +36,16 @@ export interface InsightClientProvider {
 export interface InsightClientOptions extends ClientOptions {
     enableAnalytics: boolean;
 }
+
+const extractContextFromMetadata = (meta: {caseContext: Record<string, string>}) => {
+    const context: Record<string, string> = {};
+    Object.keys(meta.caseContext).forEach((contextKey) => {
+        const keyToBeSent = `context_${contextKey}`;
+        context[keyToBeSent] = meta.caseContext[contextKey];
+    });
+
+    return context;
+};
 
 export class CoveoInsightClient {
     public coveoAnalyticsClient: AnalyticsClient;
@@ -107,7 +118,7 @@ export class CoveoInsightClient {
         return this.logCustomEvent(SearchPageEvents.queryError, meta);
     }
 
-    public async logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+    public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
@@ -119,7 +130,7 @@ export class CoveoInsightClient {
         return this.coveoAnalyticsClient.sendCustomEvent(payload);
     }
 
-    public async logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+    public async logSearchEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         return this.coveoAnalyticsClient.sendSearchEvent(await this.getBaseSearchEventRequest(event, metadata));
     }
 
@@ -139,6 +150,33 @@ export class CoveoInsightClient {
         return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
+    public logContextChanged(meta: ContextChangedMetadata) {
+        const context = extractContextFromMetadata(meta);
+
+        const {caseId, caseNumber} = meta;
+        const metaToBeSent = {
+            CaseId: caseId,
+            CaseNumber: caseNumber,
+            ...(!!context.context_Case_Subject && {CaseSubject: context.context_Case_Subject}),
+            ...context,
+        };
+        return this.logSearchEvent(InsightEvents.contextChanged, metaToBeSent);
+    }
+
+    public logExpandToFullUI(meta: ExpandToFullUIMetadata) {
+        const context = extractContextFromMetadata(meta);
+
+        const {caseId, caseNumber, triggeredBy, fullSearchComponentName} = meta;
+        const metaToBeSent = {
+            CaseId: caseId,
+            CaseNumber: caseNumber,
+            triggeredBy,
+            fullSearchComponentName,
+            ...(!!context.context_Case_Subject && {CaseSubject: context.context_Case_Subject}),
+        };
+        return this.logCustomEvent(InsightEvents.expandToFullUI, metaToBeSent);
+    }
+
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
         return {
             ...(await this.getBaseEventRequest(metadata)),
@@ -147,7 +185,7 @@ export class CoveoInsightClient {
     }
 
     private async getBaseSearchEventRequest(
-        event: SearchPageEvents,
+        event: SearchPageEvents | InsightEvents,
         metadata?: Record<string, any>
     ): Promise<SearchEventRequest> {
         return {

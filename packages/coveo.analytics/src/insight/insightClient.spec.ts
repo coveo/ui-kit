@@ -4,6 +4,7 @@ import {NoopAnalytics} from '../client/noopAnalytics';
 import {CustomEventsTypes, SearchPageEvents, StaticFilterToggleValueMetadata} from '../searchPage/searchPageEvents';
 import {CoveoInsightClient, InsightClientProvider} from './insightClient';
 import doNotTrack from '../donottrack';
+import {InsightEvents} from './insightEvents';
 
 jest.mock('../donottrack', () => {
     return {
@@ -58,7 +59,7 @@ describe('InsightClient', () => {
         originLevel3: 'origin-level-3',
     });
 
-    const expectMatchPayload = (actionCause: SearchPageEvents, meta = {}) => {
+    const expectMatchPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
         const [, {body}] = fetchMock.lastCall();
         const customData = {foo: 'bar', ...meta};
         expect(JSON.parse(body.toString())).toMatchObject({
@@ -74,7 +75,7 @@ describe('InsightClient', () => {
         });
     };
 
-    const expectMatchCustomEventPayload = (actionCause: SearchPageEvents, meta = {}) => {
+    const expectMatchCustomEventPayload = (actionCause: SearchPageEvents | InsightEvents, meta = {}) => {
         const [, {body}] = fetchMock.lastCall();
         const customData = {foo: 'bar', ...meta};
         expect(JSON.parse(body.toString())).toMatchObject({
@@ -294,5 +295,44 @@ describe('InsightClient', () => {
         expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
         c.enable();
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+    });
+
+    it('should send proper payload for #contextChanged', async () => {
+        const meta = {
+            caseId: '1234',
+            caseNumber: '5678',
+            caseContext: {Case_Subject: 'test subject', Case_Description: 'test description'},
+        };
+
+        const expectedMeta = {
+            CaseId: '1234',
+            CaseNumber: '5678',
+            CaseSubject: 'test subject',
+            context_Case_Subject: 'test subject',
+            context_Case_Description: 'test description',
+        };
+
+        await client.logContextChanged(meta);
+        expectMatchPayload(InsightEvents.contextChanged, expectedMeta);
+    });
+
+    it('should send proper payload for #expandToFullUI', async () => {
+        const meta = {
+            caseId: '1234',
+            caseNumber: '5678',
+            caseContext: {Case_Subject: 'test subject', Case_Description: 'test description'},
+            fullSearchComponentName: 'c__FullSearch',
+            triggeredBy: 'openFullSearchButton',
+        };
+
+        const expectedMeta = {
+            CaseId: '1234',
+            CaseNumber: '5678',
+            CaseSubject: 'test subject',
+            fullSearchComponentName: 'c__FullSearch',
+            triggeredBy: 'openFullSearchButton',
+        };
+        await client.logExpandToFullUI(meta);
+        expectMatchCustomEventPayload(InsightEvents.expandToFullUI, expectedMeta);
     });
 });
