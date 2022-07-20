@@ -26,8 +26,6 @@ import {
 } from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
 import {
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
   buildCoreCategoryFacet,
   CategoryFacet,
   CategoryFacetProps,
@@ -41,8 +39,6 @@ import {ProductListingEngine} from '../../../app/product-listing-engine/product-
 import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search';
 
 export type {
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
   CategoryFacetValue,
   CategoryFacetOptions,
   CategoryFacetSearchOptions,

@@ -98,8 +98,6 @@ export type {
 export {buildFacet} from './controllers/product-listing/facet/headless-product-listing-facet';
 
 export type {
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
   CategoryFacet,
   CategoryFacetOptions,
   CategoryFacetProps,
