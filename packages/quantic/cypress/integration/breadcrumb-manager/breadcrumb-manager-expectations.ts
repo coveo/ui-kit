@@ -47,13 +47,13 @@ function baseBreadcrumbManagerExpectations(
     },
     firstBreadcrumbValueLabelContains: (value: string) => {
       selector
-        .firstbreadcrumbValueLabel()
+        .firstBreadcrumbValueLabel()
         .contains(value)
         .logDetail(`should have the value "${value}" at first value`);
     },
     firstBreadcrumbAltTextContains: (value: string) => {
       selector
-        .firstbreadcrumbAltText()
+        .firstBreadcrumbAltText()
         .contains(value)
         .logDetail(
           `should have the "${value}" as slds-assistive-text at first value`
