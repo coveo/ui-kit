@@ -7,7 +7,7 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 import {
-  buildCoreSearchStatus,
+  buildCoreStatus,
   SearchStatusState,
 } from '../status/headless-core-status';
 
@@ -76,7 +76,7 @@ export function buildCoreQuerySummary(engine: CoreEngine): QuerySummary {
   }
 
   const controller = buildController(engine);
-  const searchStatus = buildCoreSearchStatus(engine);
+  const searchStatus = buildCoreStatus(engine);
   const getState = () => engine.state;
 
   const durationInSeconds = () => {

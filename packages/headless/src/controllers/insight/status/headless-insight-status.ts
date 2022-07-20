@@ -1,7 +1,7 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {
   SearchStatusState,
-  buildCoreSearchStatus,
+  buildCoreStatus,
   SearchStatus,
 } from '../../core/status/headless-core-status';
 
@@ -14,5 +14,5 @@ export type {SearchStatus, SearchStatusState};
  * @returns An `SearchStatus` controller instance.
  */
 export function buildSearchStatus(engine: InsightEngine): SearchStatus {
-  return buildCoreSearchStatus(engine);
+  return buildCoreStatus(engine);
 }

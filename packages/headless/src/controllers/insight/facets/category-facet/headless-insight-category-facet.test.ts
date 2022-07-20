@@ -27,8 +27,8 @@ import {updateFacetOptions} from '../../../../features/facet-options/facet-optio
 import {
   CategoryFacet,
   CategoryFacetOptions,
-} from '../../../core/facets/category-facet/headless-core-category-facet';
-import {buildCategoryFacet} from './headless-insight-category-facet';
+  buildCategoryFacet,
+} from './headless-insight-category-facet';
 
 describe('insight category facet', () => {
   const facetId = '1';

@@ -38,8 +38,6 @@ import {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
 } from '../../core/facets/category-facet/headless-core-category-facet';
 import {buildCategoryFacetSearch} from './headless-category-facet-search';
 
@@ -53,8 +51,6 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
 };
 
 /**

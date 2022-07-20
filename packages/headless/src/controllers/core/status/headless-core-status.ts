@@ -43,7 +43,7 @@ export interface SearchStatusState {
  * @param engine - The headless engine.
  * @returns A `SearchStatus` controller instance.
  * */
-export function buildCoreSearchStatus(engine: CoreEngine): SearchStatus {
+export function buildCoreStatus(engine: CoreEngine): SearchStatus {
   if (!loadSearchStateReducers(engine)) {
     throw loadReducerError;
   }
