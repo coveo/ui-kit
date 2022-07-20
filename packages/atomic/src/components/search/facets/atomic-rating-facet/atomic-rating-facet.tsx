@@ -56,6 +56,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
+ * @part selected-value - The selected facet value of any display.
  *
  * @part ripple - The ripple effect of the component's interactive elements.
  *

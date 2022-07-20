@@ -74,6 +74,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
+ * @part selected-value - The selected facet value of any display.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.

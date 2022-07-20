@@ -17,7 +17,9 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (
     <li key={props.displayValue} class={props.class}>
       <Button
         style="text-neutral"
-        part={props.part ?? 'value-link'}
+        part={
+          props.part ?? `value-link${props.isSelected ? ' selected-value' : ''}`
+        }
         onClick={() => props.onClick()}
         class="group w-full flex items-center px-2 py-2.5 text-left truncate no-outline"
         ariaPressed={props.isSelected.toString()}

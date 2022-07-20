@@ -22,7 +22,7 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
       <button
         id={id}
         role="checkbox"
-        part="value-checkbox"
+        part={`value-checkbox${props.isSelected ? ' selected-value' : ''}`}
         onClick={() => props.onClick()}
         onMouseDown={(e) =>
           createRipple(e, {color: 'neutral', parent: labelRef})

@@ -63,6 +63,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  * @part value-link - The facet value when display is 'link'.
+ * @part selected-value - The selected facet value of any display.
  *
  * @part input-start - The input for the starting value of the custom date range.
  * @part input-end - The input for the ending value of the custom date range.
