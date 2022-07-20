@@ -40,4 +40,32 @@ describe('recommendations analytics', () => {
       'the_id'
     );
   });
+
+  it('should return an undefined getSplitTestRunVersion if there is no splitTestRunName', () => {
+    const state = getBaseState();
+    state.recommendation!.splitTestRun = '';
+    expect(
+      new RecommendationAnalyticsProvider(state).getSplitTestRunVersion()
+    ).toBeUndefined();
+  });
+
+  it('should return getSplitTestRunVersion from the pipeline search response if available', () => {
+    const state = getBaseState();
+    state.recommendation!.splitTestRun = 'foo';
+    state.recommendation!.pipeline = 'pipeline-from-response';
+    state.pipeline = 'pipeline-from-state';
+    expect(
+      new RecommendationAnalyticsProvider(state).getSplitTestRunVersion()
+    ).toBe('pipeline-from-response');
+  });
+
+  it('should return getSplitTestRunVersion from the pipeline state value if there is no pipeline available in the search response', () => {
+    const state = getBaseState();
+    state.recommendation!.splitTestRun = 'foo';
+    state.recommendation!.pipeline = '';
+    state.pipeline = 'pipeline-from-state';
+    expect(
+      new RecommendationAnalyticsProvider(state).getSplitTestRunVersion()
+    ).toBe('pipeline-from-state');
+  });
 });

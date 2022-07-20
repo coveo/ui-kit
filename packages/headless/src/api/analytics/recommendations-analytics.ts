@@ -29,7 +29,9 @@ export class RecommendationAnalyticsProvider
   }
 
   public getPipeline(): string {
-    return this.state.pipeline || 'default';
+    return (
+      this.state.pipeline || this.state.recommendation?.pipeline || 'default'
+    );
   }
 
   public getSearchEventRequestPayload(): Omit<
@@ -49,6 +51,18 @@ export class RecommendationAnalyticsProvider
       this.state.recommendation?.searchUid ||
       getRecommendationInitialState().searchUid
     );
+  }
+
+  public getSplitTestRunName(): string | undefined {
+    return this.state.recommendation?.splitTestRun;
+  }
+
+  public getSplitTestRunVersion(): string | undefined {
+    const hasSplitTestRun = !!this.getSplitTestRunName();
+    const effectivePipelineWithSplitTestRun =
+      this.state.recommendation?.pipeline || this.state.pipeline || 'default';
+
+    return hasSplitTestRun ? effectivePipelineWithSplitTestRun : undefined;
   }
 
   private get responseTime() {

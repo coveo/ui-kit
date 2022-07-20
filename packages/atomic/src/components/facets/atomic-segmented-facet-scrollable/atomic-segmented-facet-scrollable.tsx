@@ -45,7 +45,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   private horizontalScroll?: HTMLDivElement;
   @State() private hideLeftArrow = true;
-  @State() private hideRightArrow = false;
+  @State() private hideRightArrow = true;
   private observer!: ResizeObserver;
 
   public initialize() {
@@ -65,6 +65,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   @Listen('wheel')
   @Listen('touchmove')
+  @Listen('keydown')
   handleScroll() {
     if (!this.horizontalScroll) {
       return;

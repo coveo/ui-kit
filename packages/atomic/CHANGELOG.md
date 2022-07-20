@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.86.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.86.1...@coveo/atomic@1.86.2) (2022-07-15)
+
+
+### Bug Fixes
+
+* **headless:** clear analytics cookie as soon as analytics are disabled ([#2218](https://github.com/coveo/ui-kit/issues/2218)) ([637f832](https://github.com/coveo/ui-kit/commit/637f8323276ea40ce53d4b433e39271025562dad))
+
+
+
+
+
+## [1.86.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.86.0...@coveo/atomic@1.86.1) (2022-07-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.85.0...@coveo/atomic@1.86.0) (2022-07-14)
+
+
+### Features
+
+* **atomic:** fix bug where arrows appear when field is invalid ([#2211](https://github.com/coveo/ui-kit/issues/2211)) ([34edac9](https://github.com/coveo/ui-kit/commit/34edac9b48c9015a59ef30a3a02db59cc1130fa7))
+
+
+
+
+
+# [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.1...@coveo/atomic@1.85.0) (2022-07-14)
+
+
+### Features
+
+* **atomic:** first atomic segmented filter test ([#2208](https://github.com/coveo/ui-kit/issues/2208)) ([a9bcb19](https://github.com/coveo/ui-kit/commit/a9bcb19372646fd1d6fb608c72aa0faf46a158da))
+
+
+
+
+
+## [1.84.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.0...@coveo/atomic@1.84.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.83.0...@coveo/atomic@1.84.0) (2022-07-14)
 
 
