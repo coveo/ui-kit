@@ -76,7 +76,7 @@ export interface Facet extends CoreFacet {
 /**
  * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
  */
-export interface CoreFacet extends Controller {
+interface CoreFacet extends Controller {
   /**
    * Toggles the specified facet value.
    *
@@ -153,7 +153,7 @@ export interface FacetState extends CoreFacetState {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
  */
-export interface CoreFacetState {
+interface CoreFacetState {
   /** The facet ID. */
   facetId: string;
 
