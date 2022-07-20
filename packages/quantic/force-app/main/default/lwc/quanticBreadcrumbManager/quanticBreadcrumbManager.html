@@ -14,7 +14,7 @@
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li>
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-grid slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                   </li>
                 </template>
               </ul>
@@ -31,7 +31,7 @@
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li>
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-grid slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                   </li>
                 </template>
               </ul>
@@ -58,7 +58,7 @@
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li>
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-grid slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                   </li>
                 </template>
               </ul>
@@ -66,10 +66,10 @@
           </template>
         </ul>
       </div>
-      <div class="slds-col breadcrumb-manager__column slds-nowrap breadcrumb-manager__clear-button slds-m-left_small">
+      <div class="slds-col breadcrumb-manager__column slds-nowrap breadcrumb-manager__clear-button slds-m-left_small slds-shrink-none">
         <ul class="slds-m-around_xx-small">
           <li>
-            <a onclick={deselectAll}>{labels.clearAllFilters}</a>
+            <button class="slds-button slds-var-m-around_xxx-small" onclick={deselectAll}>{labels.clearAllFilters}</button>
           </li>
         </ul>
       </div>
