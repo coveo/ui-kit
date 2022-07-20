@@ -150,6 +150,10 @@ export class CoveoInsightClient {
         return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
+    public logSearchboxSubmit() {
+        return this.logSearchEvent(SearchPageEvents.searchboxSubmit);
+    }
+
     public logContextChanged(meta: ContextChangedMetadata) {
         const context = extractContextFromMetadata(meta);
 
