@@ -1,4 +1,4 @@
-import {createAsyncThunk} from '../..';
+import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
 import {
   historyStore,
   StateNeededByInsightAnalyticsProvider,
@@ -10,10 +10,12 @@ import {
   InsightAPIClient,
 } from '../../api/service/insight/insight-api-client';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   CategoryFacetSection,
   ConfigurationSection,
   DateFacetSection,
+  DidYouMeanSection,
   FacetSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
@@ -24,6 +26,8 @@ import {
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction} from '../analytics/analytics-utils';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
@@ -34,6 +38,7 @@ import {
   FetchQuerySuggestionsThunkReturn,
   StateNeededByQuerySuggest,
 } from '../query-suggest/query-suggest-actions';
+import {updateQuery} from '../query/query-actions';
 import {getQueryInitialState} from '../query/query-state';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {
@@ -58,7 +63,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       NumericFacetSection &
       DateFacetSection &
       CategoryFacetSection &
-      PaginationSection
+      PaginationSection &
+      DidYouMeanSection
   >;
 
 const fetchFromAPI = async (
@@ -98,6 +104,31 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(fetched.response.error);
     }
 
+    if (
+      !shouldReExecuteTheQueryWithCorrections(state, fetched.response.success)
+    ) {
+      dispatch(snapshot(extractHistory(state)));
+      return {
+        ...fetched,
+        response: fetched.response.success,
+        automaticallyCorrected: false,
+        originalQuery: getOriginalQuery(state),
+        analyticsAction,
+      };
+    }
+    const {correctedQuery} = fetched.response.success.queryCorrections[0];
+    const retried = await automaticallyRetryQueryWithCorrection(
+      extra.apiClient,
+      correctedQuery,
+      getState,
+      dispatch
+    );
+
+    if (isErrorResponse(retried.response)) {
+      dispatch(logQueryError(retried.response.error));
+      return rejectWithValue(retried.response.error);
+    }
+
     const fetchedResponse = (
       mapSearchResponse(
         fetched.response,
@@ -118,11 +149,14 @@ export const executeSearch = createAsyncThunk<
     dispatch(snapshot(extractHistory(getState())));
 
     return {
-      ...fetched,
-      response: fetched.response.success,
-      automaticallyCorrected: false,
+      ...retried,
+      response: {
+        ...retried.response.success,
+        queryCorrections: fetched.response.success.queryCorrections,
+      },
+      automaticallyCorrected: true,
       originalQuery: getOriginalQuery(state),
-      analyticsAction,
+      analyticsAction: logDidYouMeanAutomatic(),
     };
   }
 );
@@ -290,6 +324,42 @@ const buildInsightFetchFacetValuesRequest = (
     ...buildInsightSearchRequest(state).request,
     numberOfResults: 0,
   };
+};
+
+const automaticallyRetryQueryWithCorrection = async (
+  client: InsightAPIClient,
+  correction: string,
+  getState: () => StateNeededByExecuteSearch,
+  dispatch: ThunkDispatch<
+    StateNeededByExecuteSearch,
+    ClientThunkExtraArguments<InsightAPIClient> & {
+      searchAPIClient?: InsightAPIClient | undefined;
+    },
+    AnyAction
+  >
+) => {
+  dispatch(updateQuery({q: correction}));
+  const fetched = await fetchFromAPI(
+    client,
+    getState(),
+    await buildInsightSearchRequest(getState()).request
+  );
+  dispatch(applyDidYouMeanCorrection(correction));
+  return fetched;
+};
+
+const shouldReExecuteTheQueryWithCorrections = (
+  state: StateNeededByExecuteSearch,
+  res: SearchResponseSuccess
+) => {
+  if (
+    state.didYouMean?.enableDidYouMean === true &&
+    res.results.length === 0 &&
+    res.queryCorrections.length !== 0
+  ) {
+    return true;
+  }
+  return false;
 };
 
 function getAllFacets(state: StateNeededByExecuteSearch) {

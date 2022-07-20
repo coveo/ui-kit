@@ -30,6 +30,14 @@ export type {
 } from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
 
+export type {
+  DidYouMean,
+  DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
+} from './controllers/insight/did-you-mean/headless-insight-did-you-mean';
+export {buildDidYouMean} from './controllers/insight/did-you-mean/headless-insight-did-you-mean';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
