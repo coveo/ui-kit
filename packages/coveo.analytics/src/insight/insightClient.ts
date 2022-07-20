@@ -37,8 +37,7 @@ export interface InsightClientOptions extends ClientOptions {
 const extractContextFromMetadata = (meta: {caseContext: Record<string, string>}) => {
     const context: Record<string, string> = {};
     Object.keys(meta.caseContext).forEach((contextKey) => {
-        const capitalizedKey = contextKey.charAt(0).toUpperCase() + contextKey.slice(1);
-        const keyToBeSent = `context_Case_${capitalizedKey}`;
+        const keyToBeSent = `context_${contextKey}`;
         context[keyToBeSent] = meta.caseContext[contextKey];
     });
 

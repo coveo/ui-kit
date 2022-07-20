@@ -256,7 +256,7 @@ describe('InsightClient', () => {
         const meta = {
             caseId: '1234',
             caseNumber: '5678',
-            caseContext: {subject: 'test subject', description: 'test description'},
+            caseContext: {Case_Subject: 'test subject', Case_Description: 'test description'},
         };
 
         const metaToBeSent = {
@@ -275,7 +275,7 @@ describe('InsightClient', () => {
         const meta = {
             caseId: '1234',
             caseNumber: '5678',
-            caseContext: {subject: 'test subject', description: 'test description'},
+            caseContext: {Case_Subject: 'test subject', Case_Description: 'test description'},
             fullSearchComponentName: 'c__FullSearch',
             triggeredBy: 'openFullSearchButton',
         };
