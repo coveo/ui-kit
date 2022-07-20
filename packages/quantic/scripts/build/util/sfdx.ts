@@ -27,7 +27,14 @@ export function sfdx<T = SfdxResponse>(command: string): Promise<T> {
       },
       (error, stdout) => {
         if (error) {
-          reject(JSON.parse(strip(stdout)));
+          let jsonOutput;
+          try {
+            jsonOutput = JSON.parse(strip(stdout));
+          } catch (e) {
+            // The output is not JSON. The command most-likely failed outside the SFDX CLI.
+          }
+
+          reject(jsonOutput || error);
         }
 
         resolve(stdout ? (JSON.parse(strip(stdout)) as T) : null);
