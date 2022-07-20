@@ -16,42 +16,42 @@ export const NumericFacetSelectors = {
     return this.shadow().find('[part="placeholder"]');
   },
   selectedCheckboxValue() {
-    return this.shadow().find('[part="value-checkbox"][aria-checked="true"]');
+    return this.shadow().find('[part~="value-checkbox"][aria-checked="true"]');
   },
   idleCheckboxValue() {
-    return this.shadow().find('[part="value-checkbox"][aria-checked="false"]');
+    return this.shadow().find('[part~="value-checkbox"][aria-checked="false"]');
   },
   checkboxValueWithText(text: string) {
     return this.shadow()
       .find(`[part="value-label"]:contains("${text}")`)
       .parent()
       .parent()
-      .find('[part="value-checkbox"]');
+      .find('[part~="value-checkbox"]');
   },
   idleCheckboxValueLabel() {
     return this.idleCheckboxValue().parent().find('[part="value-label"]');
   },
   selectedLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="true"]');
+    return this.shadow().find('[part~="value-link"][aria-pressed="true"]');
   },
   idleLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="false"]');
+    return this.shadow().find('[part~="value-link"][aria-pressed="false"]');
   },
   selectedLinkValueWithText(text: string) {
     return this.shadow().find(
-      `[part="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
+      `[part~="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
     );
   },
   idleLinkValueLabel() {
     return this.shadow().find(
-      '[part="value-link"][aria-pressed="false"] [part="value-label"]'
+      '[part~="value-link"][aria-pressed="false"] [part="value-label"]'
     );
   },
   selectedBoxValue() {
-    return this.shadow().find('[part="value-box"][aria-pressed="true"]');
+    return this.shadow().find('[part~="value-box"][aria-pressed="true"]');
   },
   idleBoxValue() {
-    return this.shadow().find('[part="value-box"][aria-pressed="false"]');
+    return this.shadow().find('[part~="value-box"][aria-pressed="false"]');
   },
   values() {
     return this.shadow().find('[part="values"]');
