@@ -21,14 +21,14 @@ function breadcrumbManagerActions(selector: BreadcrumbManagerSelector) {
     clickFirstValueNumericFacetBreadcrumb: () => {
       selector
         .numericFacet()
-        .firstbreadcrumbValueLabel()
+        .firstBreadcrumbValueLabel()
         .click({force: true})
         .logAction('when clicking the first value numeric facet breadcrumb');
     },
     clickCategoryFacetBreadcrumb: () => {
       selector
         .categoryFacet()
-        .firstbreadcrumbValueLabel()
+        .firstBreadcrumbValueLabel()
         .click({force: true})
         .logAction('when clicking the category facet breadcrumb');
     },
