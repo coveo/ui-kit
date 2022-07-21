@@ -4,7 +4,10 @@ import {
   AnalyticsType,
   AsyncThunkInsightAnalyticsOptions,
 } from '../analytics/analytics-utils';
-import {logContextChanged} from './insight-search-analytics-actions';
+import {
+  logContextChanged,
+  logExpandToFullUI,
+} from './insight-search-analytics-actions';
 import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
 
 /**
@@ -12,7 +15,7 @@ import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight
  */
 export interface InsightSearchAnalyticsActionCreators {
   /**
-   * Creates an Insight event for when the case context changes.
+   * The event to log when the context is updated.
    *
    * @returns A dispatchable action.
    */
@@ -22,6 +25,24 @@ export interface InsightSearchAnalyticsActionCreators {
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when the full search page is opened.
+   *
+   * @returns A dispatchable action.
+   */
+  logExpandToFullUI(
+    caseId: string,
+    caseNumber: string,
+    fullSearchComponentName: string,
+    triggeredBy: string
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
     },
     void,
     AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
@@ -39,5 +60,6 @@ export function loadInsightSearchAnalyticsActions(
   engine.addReducers({});
   return {
     logContextChanged,
+    logExpandToFullUI,
   };
 }

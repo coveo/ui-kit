@@ -39,3 +39,24 @@ export const logContextChanged = (caseId: string, caseNumber: string) =>
       client.logContextChanged(meta);
     }
   )();
+
+export const logExpandToFullUI = (
+  caseId: string,
+  caseNumber: string,
+  fullSearchComponentName: string,
+  triggeredBy: string
+) =>
+  makeInsightAnalyticsAction(
+    'analytics/expandToFullUI',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const meta = {
+        caseId,
+        caseNumber,
+        fullSearchComponentName,
+        triggeredBy,
+        caseContext: state.insightCaseContext?.caseContext || {},
+      };
+      client.logExpandToFullUI(meta);
+    }
+  )();
