@@ -82,7 +82,7 @@ describe('Segmented Facet Test Suites', () => {
     });
   });
 
-  describe.skip('when no search has yet been executed', () => {
+  describe('when no search has yet been executed', () => {
     before(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label}))
