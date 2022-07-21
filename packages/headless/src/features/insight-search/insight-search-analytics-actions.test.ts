@@ -4,7 +4,7 @@ import {
   logContextChanged,
   logExpandToFullUI,
 } from './insight-search-analytics-actions';
-const CoveoAnalytics = require('coveo.analytics');
+import * as CoveoAnalytics from 'coveo.analytics';
 
 const mockLogContextChanged = jest.fn();
 const mockLogExpandtoFullUI = jest.fn();
@@ -14,7 +14,10 @@ const mockCoveoInsightClient = jest.fn(() => ({
   logContextChanged: mockLogContextChanged,
   logExpandToFullUI: mockLogExpandtoFullUI,
 }));
-CoveoAnalytics.CoveoInsightClient = mockCoveoInsightClient;
+
+Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
+  value: mockCoveoInsightClient,
+});
 
 const exampleSubject = 'example subject';
 const exampleDescription = 'example description';
