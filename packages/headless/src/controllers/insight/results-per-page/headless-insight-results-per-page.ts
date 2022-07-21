@@ -21,7 +21,7 @@ export type {
  *
  * @param engine - The insight engine.
  * @param props - The configurable `ResultsPerPage` properties.
- * @returns An `ResultsPerPage` controller instance.
+ * @returns A `ResultsPerPage` controller instance.
  */
 export function buildResultsPerPage(
   engine: InsightEngine,

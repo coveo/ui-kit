@@ -34,7 +34,7 @@ export interface SearchBoxProps {
  *
  * @param engine - The insight engine.
  * @param props - The configurable `SearchBox` properties.
- * @returns An `SearchBox` controller instance.
+ * @returns A `SearchBox` controller instance.
  */
 export function buildSearchBox(
   engine: InsightEngine,

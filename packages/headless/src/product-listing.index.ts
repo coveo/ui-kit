@@ -107,6 +107,8 @@ export type {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 } from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
 export {buildCategoryFacet} from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
 

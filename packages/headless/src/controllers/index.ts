@@ -52,6 +52,8 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 } from './facets/category-facet/headless-category-facet';
 export {buildCategoryFacet} from './facets/category-facet/headless-category-facet';
 

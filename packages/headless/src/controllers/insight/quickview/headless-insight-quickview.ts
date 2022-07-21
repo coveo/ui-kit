@@ -14,7 +14,7 @@ export type {QuickviewOptions, QuickviewState, QuickviewProps, Quickview};
  * Creates an insight `Quickview` controller instance.
  * @param engine - The insight engine.
  * @param props - The configurable `Quickview` properties.
- * @returns An `Quickview` controller instance.
+ * @returns A `Quickview` controller instance.
  */
 export function buildQuickview(
   engine: InsightEngine,
