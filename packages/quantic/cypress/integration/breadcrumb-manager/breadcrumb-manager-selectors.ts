@@ -6,7 +6,8 @@ export interface BreadcrumbSelector extends ComponentSelector {
   label: () => CypressSelector;
   values: () => CypressSelector;
   showMoreButton: () => CypressSelector;
-  firstbreadcrumbValueLabel: () => CypressSelector;
+  firstBreadcrumbValueLabel: () => CypressSelector;
+  firstBreadcrumbAltText: () => CypressSelector;
 }
 
 interface BreadcrumbManagerSelector extends ComponentSelector {
@@ -22,8 +23,12 @@ const FacetBreadcrumbSelectors: BreadcrumbSelector = {
   label: () =>
     FacetBreadcrumbSelectors.get().find('.breadcrumb-manager__field-name'),
   values: () => FacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  firstbreadcrumbValueLabel: () =>
+  firstBreadcrumbValueLabel: () =>
     FacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
+  firstBreadcrumbAltText: () =>
+    FacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
+      .first(),
   showMoreButton: () =>
     FacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };
@@ -35,8 +40,12 @@ const NumericFacetBreadcrumbSelectors: BreadcrumbSelector = {
       '.breadcrumb-manager__field-name'
     ),
   values: () => NumericFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  firstbreadcrumbValueLabel: () =>
+  firstBreadcrumbValueLabel: () =>
     NumericFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
+  firstBreadcrumbAltText: () =>
+    NumericFacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
+      .first(),
   showMoreButton: () =>
     NumericFacetBreadcrumbSelectors.get().find(
       '.breadcrumb-manager__more-button'
@@ -50,9 +59,13 @@ const CategoryFacetBreadcrumbSelectors: BreadcrumbSelector = {
       '.breadcrumb-manager__field-name'
     ),
   values: () => CategoryFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  firstbreadcrumbValueLabel: () =>
+  firstBreadcrumbValueLabel: () =>
     CategoryFacetBreadcrumbSelectors.get()
       .find('.pill__text-container')
+      .first(),
+  firstBreadcrumbAltText: () =>
+    CategoryFacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
       .first(),
 };
 
@@ -61,8 +74,12 @@ const DateFacetBreadcrumbSelectors: BreadcrumbSelector = {
   label: () =>
     DateFacetBreadcrumbSelectors.get().find('.breadcrumb-manager__field-name'),
   values: () => DateFacetBreadcrumbSelectors.get().find('c-quantic-pill'),
-  firstbreadcrumbValueLabel: () =>
+  firstBreadcrumbValueLabel: () =>
     DateFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
+  firstBreadcrumbAltText: () =>
+    DateFacetBreadcrumbSelectors.get()
+      .find('lightning-icon > .slds-assistive-text')
+      .first(),
   showMoreButton: () =>
     DateFacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };
