@@ -8,6 +8,8 @@ export const getRecommendationInitialState = (): RecommendationState => ({
   id: 'Recommendation',
   recommendations: [],
   searchUid: '',
+  splitTestRun: '',
+  pipeline: '',
 });
 
 export interface RecommendationState {
@@ -36,4 +38,12 @@ export interface RecommendationState {
    * A unique identifier for this recommendation request, used mainly for the Coveo Analytics service.
    */
   searchUid: string;
+  /**
+   * The version of the A/B test that applied to the related recommendation (i.e., version A or version B).
+   */
+  splitTestRun: string;
+  /**
+   * Specifies the name of the query pipeline used for recommendation.
+   */
+  pipeline: string;
 }

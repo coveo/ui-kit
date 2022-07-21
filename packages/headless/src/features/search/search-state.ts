@@ -64,6 +64,7 @@ export function getSearchInitialState(): SearchState {
       triggers: [],
       questionAnswer: emptyQuestionAnswer(),
       pipeline: '',
+      splitTestRun: '',
     },
     duration: 0,
     queryExecuted: '',

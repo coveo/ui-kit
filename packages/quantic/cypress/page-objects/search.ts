@@ -116,6 +116,23 @@ export function mockNoMoreFacetValues(field: string) {
   }).as(InterceptAliases.Search.substring(1));
 }
 
+export function mockFacetSearchSingleValue(queryString: string) {
+  cy.intercept('POST', routeMatchers.facetSearch, (req) => {
+    req.continue((res) => {
+      res.body.values = [
+        {
+          displayValue: queryString,
+          path: [],
+          rawValue: queryString,
+          count: 1,
+        },
+      ];
+      res.body.moreValuesAvailable = false;
+      res.send();
+    });
+  }).as(InterceptAliases.FacetSearch.substring(1));
+}
+
 export function extractFacetValues(
   response: CyHttpMessages.IncomingResponse | undefined
 ) {
