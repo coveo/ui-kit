@@ -167,6 +167,7 @@ export interface DeselectableValue {
 }
 
 /**
+ * @internal
  * Get the breadcrumb of the facet selected
  * @param engine headless engine
  * @param facetSet facet section
