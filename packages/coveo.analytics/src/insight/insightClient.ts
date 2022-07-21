@@ -146,6 +146,14 @@ export class CoveoInsightClient {
         return this.logCustomEvent(SearchPageEvents.pagerPrevious, meta);
     }
 
+    public logDidYouMeanAutomatic() {
+        return this.logSearchEvent(SearchPageEvents.didyoumeanAutomatic);
+    }
+
+    public logDidYouMeanClick() {
+        return this.logSearchEvent(SearchPageEvents.didyoumeanClick);
+    }
+
     public logResultsSort(metadata: ResultsSortMetadata) {
         return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }

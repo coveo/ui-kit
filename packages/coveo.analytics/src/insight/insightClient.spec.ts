@@ -261,6 +261,16 @@ describe('InsightClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, meta);
     });
 
+    it('should send proper payload for #didyoumeanAutomatic', async () => {
+        await client.logDidYouMeanAutomatic();
+        expectMatchPayload(SearchPageEvents.didyoumeanAutomatic);
+    });
+
+    it('should send proper payload for #didyoumeanClick', async () => {
+        await client.logDidYouMeanClick();
+        expectMatchPayload(SearchPageEvents.didyoumeanClick);
+    });
+
     it('should send proper payload for #resultsSort', async () => {
         await client.logResultsSort({resultsSortBy: 'date ascending'});
         expectMatchPayload(SearchPageEvents.resultsSort, {resultsSortBy: 'date ascending'});
