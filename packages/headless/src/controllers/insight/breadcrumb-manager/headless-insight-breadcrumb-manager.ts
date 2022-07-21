@@ -8,7 +8,6 @@ import {
   search,
 } from '../../../app/reducers';
 import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions';
-import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSelectedValuesSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {
   toggleSelectFacetValue,
@@ -52,12 +51,13 @@ import {
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
 import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
 import {loadReducerError} from '../../../utils/errors';
+import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-insight-analytics-actions';
+import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   NumericFacetBreadcrumb,
