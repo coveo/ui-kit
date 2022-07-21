@@ -1,5 +1,5 @@
 import {api, LightningElement, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless, registerToStore} from 'c/quanticHeadlessLoader';
+import {registerComponentForInit, initializeWithHeadless, registerToStore, getHeadlessBundle} from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
 
 import clear from '@salesforce/label/c.quantic_Clear';
@@ -153,6 +153,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   collapseIconName = 'utility:dash';
   /** @type {HTMLInputElement} */
   input;
+  /** @type {AnyHeadless} */
+  headless;
  
   labels = {
     clear,
@@ -186,12 +188,13 @@ export default class QuanticCategoryFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
 
-    this.facet = CoveoHeadless.buildCategoryFacet(engine, {
+    this.facet = this.headless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
         facetId: this.facetId ?? this.field,

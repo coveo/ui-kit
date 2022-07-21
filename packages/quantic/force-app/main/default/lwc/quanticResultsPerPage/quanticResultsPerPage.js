@@ -1,5 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {registerComponentForInit, initializeWithHeadless, getHeadlessBundle} from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -48,6 +48,8 @@ export default class QuanticResultsPerPage extends LightningElement {
   unsubscribe;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {AnyHeadless} */
+  headless;
   
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -61,12 +63,13 @@ export default class QuanticResultsPerPage extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.headless = getHeadlessBundle(this.engineId);
     this.choices = this.parseChoicesDisplayed();
     this.validateInitialChoice();
-    this.resultsPerPage = CoveoHeadless.buildResultsPerPage(engine, {
+    this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
       initialState: {numberOfResults: Number(this.initialChoice) ?? this.choices[0]},
     });
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
   }

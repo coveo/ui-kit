@@ -1,5 +1,5 @@
 import {api, LightningElement, track} from 'lwc';
-import {initializeWithHeadless, registerComponentForInit} from 'c/quanticHeadlessLoader';
+import {getHeadlessBundle, initializeWithHeadless, registerComponentForInit} from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 
 import noResultsForTitle from '@salesforce/label/c.quantic_NoResultsForTitle';
@@ -60,6 +60,8 @@ export default class QuanticNoResults extends LightningElement {
   unsubscribeQuerySummary;
   /** @type {Function} */
   unsubscribeBreadcrumbsManager;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     noResultsTitle,
@@ -81,10 +83,11 @@ export default class QuanticNoResults extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
-    this.historyManager = CoveoHeadless.buildHistoryManager(engine);
-    this.querySummary = CoveoHeadless.buildQuerySummary(engine);
-    this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
+    this.historyManager = this.headless.buildHistoryManager(engine);
+    this.querySummary = this.headless.buildQuerySummary(engine);
+    this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
     this.unsubscribeHistoryManager = this.historyManager.subscribe(() => this.updateState());
     this.unsubscribeQuerySummary = this.querySummary.subscribe(() => this.updateState());

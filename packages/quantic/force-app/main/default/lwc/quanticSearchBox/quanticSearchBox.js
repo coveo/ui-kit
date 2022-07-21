@@ -2,6 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 
 import { keys } from 'c/quanticUtils';
@@ -67,12 +68,15 @@ export default class QuanticSearchBox extends LightningElement {
   searchBox;
   /** @type {Function} */
   unsubscribe;
+  /** @type {AnyHeadless} */
+  headless;
 
   /**
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchBox = CoveoHeadless.buildSearchBox(engine, {
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchBox = this.headless.buildSearchBox(engine, {
       options: {
         numberOfSuggestions: Number(this.numberOfSuggestions),
         highlightOptions: {

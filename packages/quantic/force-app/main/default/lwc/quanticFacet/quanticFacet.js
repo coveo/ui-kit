@@ -4,6 +4,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   registerToStore,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
 
@@ -151,6 +152,8 @@ export default class QuanticFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {HTMLInputElement} */
   input;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     showMore,
@@ -179,7 +182,8 @@ export default class QuanticFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
@@ -195,7 +199,7 @@ export default class QuanticFacet extends LightningElement {
       filterFacetCount: !this.noFilterFacetCount,
       injectionDepth: Number(this.injectionDepth),
     };
-    this.facet = CoveoHeadless.buildFacet(engine, {options});
+    this.facet = this.headless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
     registerToStore(this.engineId, Store.facetTypes.FACETS, {
       label: this.label,

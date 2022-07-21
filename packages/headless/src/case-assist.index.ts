@@ -78,6 +78,8 @@ export type {
 } from './controllers/document-suggestion-list/headless-document-suggestion-list';
 export {buildDocumentSuggestionList} from './controllers/document-suggestion-list/headless-document-suggestion-list';
 
+export {buildCaseAssistInteractiveResult as buildInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
+
 /**
  * @deprecated
  * Types exported for backward compatibility only.

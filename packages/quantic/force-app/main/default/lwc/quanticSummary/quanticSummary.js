@@ -1,7 +1,7 @@
 import {LightningElement, track, api} from 'lwc';
 import LOCALE from '@salesforce/i18n/locale';
 
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {registerComponentForInit, initializeWithHeadless, getHeadlessBundle} from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 
 import noResults from '@salesforce/label/c.quantic_NoResults';
@@ -36,6 +36,8 @@ export default class QuanticSummary extends LightningElement {
   querySummary;
   /** @type {Function} */
   unsubscribe;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     noResults,
@@ -58,7 +60,8 @@ export default class QuanticSummary extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.querySummary = CoveoHeadless.buildQuerySummary(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.querySummary = this.headless.buildQuerySummary(engine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }
 

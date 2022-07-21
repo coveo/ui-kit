@@ -3,7 +3,8 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBindings,
-  registerToStore
+  registerToStore,
+  getHeadlessBundle
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, Store} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
@@ -156,6 +157,8 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeFilter;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {AnyHeadless} */
+  headless;
 
   /** @type {string} */
   start;
@@ -193,7 +196,8 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
@@ -204,7 +208,7 @@ export default class QuanticNumericFacet extends LightningElement {
     if(this.withInput) {
       this.initializeFilter(engine);
     }
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
     registerToStore(this.engineId, Store.facetTypes.NUMERICFACETS, {
       label: this.label,
@@ -218,7 +222,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initializeFacet(engine) {
-    this.facet = CoveoHeadless.buildNumericFacet(engine, {
+    this.facet = this.headless.buildNumericFacet(engine, {
       options: {
         field: this.field,
         generateAutomaticRanges: true,
@@ -236,7 +240,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {import("coveo").SearchEngine} engine
    */
   initializeFilter(engine) {
-    this.numericFilter = CoveoHeadless.buildNumericFilter(engine, {
+    this.numericFilter = this.headless.buildNumericFilter(engine, {
       options: {
         field: this.field,
         facetId: this.facet?.state.facetId ? `${this.facet.state.facetId}_input` : undefined
@@ -400,7 +404,7 @@ export default class QuanticNumericFacet extends LightningElement {
 
     if(this.numberOfValues > 0) {
       const engine = getHeadlessBindings(this.engineId).engine;
-      engine.dispatch(CoveoHeadless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
+      engine.dispatch(this.headless.loadNumericFacetSetActions(engine).deselectAllNumericFacetValues(this.facet.state.facetId));
     }
     
     this.numericFilter.setRange({

@@ -2,6 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -55,6 +56,8 @@ export default class QuanticTab extends LightningElement {
   unsubscribe;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {AnyHeadless} */
+  headless;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -69,7 +72,8 @@ export default class QuanticTab extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.tab = CoveoHeadless.buildTab(engine, {
+    this.headless = getHeadlessBundle(this.engineId);
+    this.tab = this.headless.buildTab(engine, {
       options: {
         expression: this.expression,
         id: this.label,
@@ -78,7 +82,7 @@ export default class QuanticTab extends LightningElement {
         isActive: this.isActive,
       },
     });
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
 
     this.unsubscribe = this.tab.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>

@@ -1,5 +1,5 @@
 import { api, LightningElement, track } from 'lwc';
-import { initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
+import { getHeadlessBundle, initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 
 import didYouMean from '@salesforce/label/c.quantic_DidYouMean';
@@ -38,6 +38,8 @@ export default class QuanticDidYouMean extends LightningElement {
   unsubscribe;
   /** @type {DidYouMean} */
   didYouMean;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     didYouMean,
@@ -57,7 +59,8 @@ export default class QuanticDidYouMean extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.didYouMean = CoveoHeadless.buildDidYouMean(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.didYouMean = this.headless.buildDidYouMean(engine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 

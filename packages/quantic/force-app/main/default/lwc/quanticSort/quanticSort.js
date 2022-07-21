@@ -2,6 +2,7 @@ import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 
 import sortBy from '@salesforce/label/c.quantic_SortBy';
@@ -50,6 +51,8 @@ export default class QuanticSort extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {Array.<SortOption>} */
   options;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     sortBy,
@@ -70,9 +73,10 @@ export default class QuanticSort extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.headless = getHeadlessBundle(this.engineId);
     this.options = this.buildOptions();
-    this.sort = CoveoHeadless.buildSort(engine);
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.sort = this.headless.buildSort(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSort = this.sort.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
@@ -93,16 +97,16 @@ export default class QuanticSort extends LightningElement {
     return [
       {
         label: this.labels.relevancy,
-        value: CoveoHeadless.buildCriterionExpression(this.relevancy),
+        value: this.headless.buildCriterionExpression(this.relevancy),
         criterion: this.relevancy,
       },
       {
         label: this.labels.newest,
-        value: CoveoHeadless.buildCriterionExpression(this.dateDescending),
+        value: this.headless.buildCriterionExpression(this.dateDescending),
         criterion: this.dateDescending},
       {
         label: this.labels.oldest,
-        value: CoveoHeadless.buildCriterionExpression(this.dateAscending),
+        value: this.headless.buildCriterionExpression(this.dateAscending),
         criterion: this.dateAscending,
       },
     ];
@@ -116,18 +120,18 @@ export default class QuanticSort extends LightningElement {
   }
 
   get relevancy() {
-    return CoveoHeadless.buildRelevanceSortCriterion();
+    return this.headless.buildRelevanceSortCriterion();
   }
 
   get dateDescending() {
-    return CoveoHeadless.buildDateSortCriterion(
-      CoveoHeadless.SortOrder.Descending
+    return this.headless.buildDateSortCriterion(
+      this.headless.SortOrder.Descending
     );
   }
 
   get dateAscending() {
-    return CoveoHeadless.buildDateSortCriterion(
-      CoveoHeadless.SortOrder.Ascending
+    return this.headless.buildDateSortCriterion(
+      this.headless.SortOrder.Ascending
     );
   }
 
