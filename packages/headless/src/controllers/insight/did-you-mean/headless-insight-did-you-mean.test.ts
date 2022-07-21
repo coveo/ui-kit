@@ -7,7 +7,7 @@ import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
 } from '../../../features/did-you-mean/did-you-mean-actions';
-import {configuration, didYouMean} from '../../../app/reducers';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 
 describe('did you mean', () => {
   let dym: DidYouMean;
@@ -22,13 +22,6 @@ describe('did you mean', () => {
     initDidYouMean();
   });
 
-  it('it adds the correct reducers to engine', () => {
-    expect(engine.addReducers).toHaveBeenCalledWith({
-      configuration,
-      didYouMean,
-    });
-  });
-
   it('should enable did you mean', () => {
     expect(engine.actions).toContainEqual(enableDidYouMean());
   });
@@ -39,5 +32,11 @@ describe('did you mean', () => {
 
     dym.applyCorrection();
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
+  });
+
+  it('dispatches #executeSearch', () => {
+    dym.applyCorrection();
+    const action = engine.findAsyncAction(executeSearch.pending);
+    expect(action).toBeTruthy();
   });
 });
