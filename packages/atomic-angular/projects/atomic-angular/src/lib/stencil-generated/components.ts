@@ -510,6 +510,25 @@ export class AtomicPager {
 }
 
 
+export declare interface AtomicPopover extends Components.AtomicPopover {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-popover',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicPopover {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicQueryError extends Components.AtomicQueryError {}
 
 @ProxyCmp({
