@@ -21,22 +21,22 @@ export function logParametersChange(
     return logResultsSort();
   }
 
-  if (areFacetParamsEqual(previousParameters.f, newParameters.f)) {
+  if (!areFacetParamsEqual(previousParameters.f, newParameters.f)) {
     return logFacetAnalyticsAction(previousParameters.f, newParameters.f);
   }
 
-  if (areFacetParamsEqual(previousParameters.cf, newParameters.cf)) {
+  if (!areFacetParamsEqual(previousParameters.cf, newParameters.cf)) {
     return logFacetAnalyticsAction(previousParameters.cf, newParameters.cf);
   }
 
-  if (areFacetParamsEqual(previousParameters.nf, newParameters.nf)) {
+  if (!areFacetParamsEqual(previousParameters.nf, newParameters.nf)) {
     return logRangeFacetAnalyticsAction(
       previousParameters.nf,
       newParameters.nf
     );
   }
 
-  if (areFacetParamsEqual(previousParameters.df, newParameters.df)) {
+  if (!areFacetParamsEqual(previousParameters.df, newParameters.df)) {
     return logRangeFacetAnalyticsAction(
       previousParameters.df,
       newParameters.df
@@ -59,7 +59,7 @@ function areFacetParamsEqual(
   previousFacetParams: AnyFacetParameters = {},
   newFacetParams: AnyFacetParameters = {}
 ) {
-  return JSON.stringify(previousFacetParams) !== JSON.stringify(newFacetParams);
+  return JSON.stringify(previousFacetParams) === JSON.stringify(newFacetParams);
 }
 
 function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
