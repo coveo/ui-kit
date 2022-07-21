@@ -68,6 +68,8 @@ export type {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
+  CoreFacet,
+  CoreFacetState,
 } from './facets/facet/headless-facet';
 export {buildFacet} from './facets/facet/headless-facet';
 

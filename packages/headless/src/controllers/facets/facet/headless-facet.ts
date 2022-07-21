@@ -26,6 +26,8 @@ import {
   FacetState,
   FacetValue,
   SpecificFacetSearchResult,
+  CoreFacet,
+  CoreFacetState,
 } from '../../core/facets/facet/headless-core-facet';
 import {CoreEngine} from '../../..';
 import {
@@ -57,6 +59,8 @@ export type {
   FacetSearchState,
   SpecificFacetSearchResult,
   FacetValue,
+  CoreFacet,
+  CoreFacetState,
 };
 
 /**
