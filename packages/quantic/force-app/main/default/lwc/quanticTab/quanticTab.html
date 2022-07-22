@@ -1,7 +1,9 @@
 <template>
   <template if:true={shouldDisplay}>
-    <li class={tabClass} title={label} role="presentation">
-      <a class="slds-tabs_default__link" role="tab" onclick={select}>{label}</a>
-    </li>
+    <div tabindex="0" onkeydown={onKeyDown}>
+      <li class={tabClass} title={label} role="presentation">
+        <a class="slds-tabs_default__link" role="tab" onclick={select}>{label}</a>
+      </li>
+    </div>
   </template>
 </template>
