@@ -29,7 +29,6 @@ export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
     parts.push(`${partName}-checked`);
   } else {
     classNames.push('border border-neutral-dark');
-    parts.push(`${partName}-unchecked`);
   }
   if (props.class) {
     classNames.push(props.class);
