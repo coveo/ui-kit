@@ -70,4 +70,21 @@ export default class QuanticFacetValue extends LightningElement {
       }
     }));
   }
+    /**
+   * @param {KeyboardEvent} evt
+   */
+  onKeyDown(evt) {
+       
+    if(evt.code==="Enter" || evt.code==="Space"){
+      evt.preventDefault()
+      this.dispatchEvent(new CustomEvent(
+        'selectvalue', {
+        detail: {
+          value: this.formattedFacetValue
+        }
+      }));
+    }
+
+
+  }
 }
