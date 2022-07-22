@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.30.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.30.0...@coveo/quantic@1.30.1) (2022-07-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.30.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.29.3...@coveo/quantic@1.30.0) (2022-07-21)
+
+
+### Features
+
+* **quantic:** Fix Breadcrumb values for screen readers ([#2226](https://github.com/coveo/ui-kit/issues/2226)) ([e967892](https://github.com/coveo/ui-kit/commit/e9678924f67ef36a031eda28e08a83b6eb048279))
+
+
+
+
+
 ## [1.29.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.29.2...@coveo/quantic@1.29.3) (2022-07-15)
 
 

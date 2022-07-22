@@ -1,4 +1,4 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {
   categoryFacetSet,
   configuration,
@@ -6,35 +6,29 @@ import {
   facetSet,
   numericFacetSet,
   search,
-} from '../../app/reducers';
-import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
-import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
-import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
+} from '../../../app/reducers';
+import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions';
+import {categoryFacetSelectedValuesSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
-} from '../../features/facets/facet-set/facet-set-actions';
-import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {facetResponseSelectedValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
-import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
-import {dateFacetSelectedValuesSelector} from '../../features/facets/range-facets/date-facet-set/date-facet-selectors';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
-import {numericFacetSelectedValuesSelector} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../../features/facets/facet-set/facet-set-actions';
+import {facetResponseSelectedValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+import {toggleSelectDateFacetValue} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {dateFacetSelectedValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {numericFacetSelectedValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {
-  logStaticFilterDeselect,
+  logInsightStaticFilterDeselect,
   toggleSelectStaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-actions';
+} from '../../../features/static-filter-set/static-filter-set-actions';
 import {
   StaticFilterSlice,
   StaticFilterValue,
-} from '../../features/static-filter-set/static-filter-set-state';
+} from '../../../features/static-filter-set/static-filter-set-state';
 import {
   CategoryFacetSection,
   ConfigurationSection,
@@ -42,7 +36,7 @@ import {
   FacetSection,
   NumericFacetSection,
   SearchSection,
-} from '../../state/state-sections';
+} from '../../../state/state-sections';
 import {
   Breadcrumb,
   BreadcrumbManager,
@@ -56,8 +50,14 @@ import {
   getBreadcrumbs,
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
-} from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {loadReducerError} from '../../utils/errors';
+} from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
+import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
+import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
+import {loadReducerError} from '../../../utils/errors';
+import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-insight-analytics-actions';
+import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   NumericFacetBreadcrumb,
@@ -72,18 +72,17 @@ export type {
   DeselectableValue,
 };
 /**
- * Creates a `BreadcrumbManager` controller instance.
+ * Creates an insight `BreadcrumbManager` controller instance.
  *
  * @param engine - The headless engine.
  * @returns A `BreadcrumbManager` controller instance.
  */
 export function buildBreadcrumbManager(
-  engine: SearchEngine
+  engine: InsightEngine
 ): BreadcrumbManager {
   if (!loadBreadcrumbManagerReducers(engine)) {
     throw loadReducerError;
   }
-
   const controller = buildCoreBreadcrumbManager(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
@@ -183,7 +182,7 @@ export function buildBreadcrumbManager(
       value,
       deselect: () => {
         const {caption, expression} = value;
-        const analytics = logStaticFilterDeselect({
+        const analytics = logInsightStaticFilterDeselect({
           staticFilterId: id,
           staticFilterValue: {caption, expression},
         });
@@ -226,8 +225,8 @@ export function buildBreadcrumbManager(
 }
 
 function loadBreadcrumbManagerReducers(
-  engine: SearchEngine
-): engine is SearchEngine<
+  engine: InsightEngine
+): engine is InsightEngine<
   ConfigurationSection &
     SearchSection &
     FacetSection &
