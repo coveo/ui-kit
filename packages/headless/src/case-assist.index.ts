@@ -64,6 +64,7 @@ export type {
   CaseAssistQuickviewOptions,
   CaseAssistQuickviewProps,
 } from './controllers/quickview/case-assist-headless-quickview';
+export {buildCaseAssistQuickview as buildQuickview} from './controllers/quickview/case-assist-headless-quickview';
 export {buildCaseAssistQuickview} from './controllers/quickview/case-assist-headless-quickview';
 
 export type {Result} from './api/search/search/result';
