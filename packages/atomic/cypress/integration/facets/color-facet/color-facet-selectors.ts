@@ -18,18 +18,18 @@ export const ColorFacetSelectors = {
     return this.shadow().find('[part="placeholder"]');
   },
   selectedBoxValue() {
-    return this.shadow().find('[part="value-box"][aria-pressed="true"]');
+    return this.shadow().find('[part~="value-box"][aria-pressed="true"]');
   },
   idleBoxValue() {
-    return this.shadow().find('[part="value-box"][aria-pressed="false"]');
+    return this.shadow().find('[part~="value-box"][aria-pressed="false"]');
   },
   selectedBoxValueWithText(text: string) {
     return this.shadow().find(
-      `[part="value-box"][aria-pressed="true"]:contains("${text}")`
+      `[part~="value-box"][aria-pressed="true"]:contains("${text}")`
     );
   },
   boxValueWithText(text: string) {
-    return this.shadow().find(`[part="value-box"]:contains("${text}")`);
+    return this.shadow().find(`[part~="value-box"]:contains("${text}")`);
   },
   idleBoxValueLabel() {
     return this.idleBoxValue().find('[part="value-label"]');

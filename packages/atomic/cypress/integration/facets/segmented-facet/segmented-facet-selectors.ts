@@ -22,33 +22,33 @@ export const SegmentedFacetSelectors = {
       .find(`[part="value-label"]:contains("${text}")`)
       .parent()
       .parent()
-      .find('[part="value-box"]');
+      .find('[part~="value-box"]');
   },
   selectedLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="true"]');
+    return this.shadow().find('[part~="value-link"][aria-pressed="true"]');
   },
   idleLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="false"]');
+    return this.shadow().find('[part~="value-link"][aria-pressed="false"]');
   },
   selectedLinkValueWithText(text: string) {
     return this.shadow().find(
-      `[part="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
+      `[part~="value-link"][aria-pressed="true"] [part="value-label"]:contains("${text}")`
     );
   },
   idleLinkValueLabel() {
     return this.shadow().find(
-      '[part="value-link"][aria-pressed="false"] [part="value-label"]'
+      '[part~="value-link"][aria-pressed="false"] [part="value-label"]'
     );
   },
   selectedBoxValue() {
-    return this.shadow().find('[part="value-box"][aria-pressed="true"]');
+    return this.shadow().find('[part~="value-box"][aria-pressed="true"]');
   },
   idleBoxValue() {
-    return this.shadow().find('[part="value-box"][aria-pressed="false"]');
+    return this.shadow().find('[part~="value-box"][aria-pressed="false"]');
   },
   selectedBoxValueWithText(text: string) {
     return this.shadow().find(
-      `[part="value-box"][aria-pressed="true"]:contains("${text}")`
+      `[part~="value-box"][aria-pressed="true"]:contains("${text}")`
     );
   },
   idleBoxValueLabel() {

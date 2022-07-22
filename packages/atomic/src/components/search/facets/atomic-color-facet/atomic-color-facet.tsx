@@ -71,6 +71,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-* - The dynamic part name used to customize a facet value. The `*` is a syntactical placeholder for a specific facet value. For example, if the component's `field` property is set to 'filetype' and your source has a `YouTubeVideo` file type, the part would be targeted like this: `atomic-color-facet::part(value-YouTubeVideo)...`.
  *
  * @part value-box - The facet value when display is 'box'.
+ * @part value-box-selected - The selected facet value when display is 'box'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  *
  * @part show-more - The show more results button.

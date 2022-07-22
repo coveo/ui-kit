@@ -75,7 +75,8 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
- *
+ * @part value-link-selected - The selected facet value when display is 'link'.
+
  * @part input-form - The form that comprises the labels, inputs, and 'apply' button for the custom numeric range.
  * @part label-start - The label for the starting value of the custom numeric range.
  * @part label-end - The label for the ending value of the custom numeric range.
