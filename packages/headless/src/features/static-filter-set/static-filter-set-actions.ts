@@ -1,6 +1,10 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  makeAnalyticsAction,
+  makeInsightAnalyticsAction,
+} from '../analytics/analytics-utils';
 import {
   staticFilterIdSchema,
   staticFilterValueSchema,
@@ -119,4 +123,13 @@ export const logStaticFilterClearAll = (
     'analytics/staticFilter/clearAll',
     AnalyticsType.Search,
     (client) => client.logStaticFilterClearAll(metadata)
+  )();
+
+export const logInsightStaticFilterDeselect = (
+  metadata: LogStaticFilterToggleValueActionCreatorPayload
+) =>
+  makeInsightAnalyticsAction(
+    'analytics/staticFilter/deselect',
+    AnalyticsType.Search,
+    (client) => client.logStaticFilterDeselect(metadata)
   )();

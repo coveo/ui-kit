@@ -2,16 +2,13 @@ import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {FunctionalComponent, h} from '@stencil/core';
 import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
-import {SearchBox} from '@coveo/headless';
 
 interface Props extends Partial<ButtonProps> {
   bindings: AnyBindings;
-  searchBox: SearchBox;
 }
 
 export const SubmitButton: FunctionalComponent<Props> = ({
   bindings,
-  searchBox,
   onClick,
   ...defaultButtonProps
 }) => (
@@ -21,7 +18,6 @@ export const SubmitButton: FunctionalComponent<Props> = ({
     part="submit-button"
     ariaLabel={bindings.i18n.t('search')}
     onClick={() => {
-      searchBox.submit();
       onClick?.();
     }}
     {...defaultButtonProps}

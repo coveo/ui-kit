@@ -108,20 +108,36 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   private renderArrowClass(direction: ArrowDirection) {
     if (direction === 'left') {
-      return 'left-0 ' + (this.hideLeftArrow ? 'invisible opacity-0' : '');
+      return (
+        'left-0 ' +
+        (this.hideLeftArrow || !this.searchStatusState.firstSearchExecuted
+          ? 'invisible opacity-0'
+          : '')
+      );
     } else {
-      return 'right-0 ' + (this.hideRightArrow ? 'invisible opacity-0' : '');
+      return (
+        'right-0 ' +
+        (this.hideRightArrow || !this.searchStatusState.firstSearchExecuted
+          ? 'invisible opacity-0'
+          : '')
+      );
     }
   }
 
   private renderFadeClass(direction: ArrowDirection) {
     if (direction === 'left') {
       return (
-        'bg-gradient-to-r left-0 ' + (this.hideLeftArrow ? 'opacity-0' : '')
+        'bg-gradient-to-r left-0 ' +
+        (this.hideLeftArrow || !this.searchStatusState.firstSearchExecuted
+          ? 'opacity-0'
+          : '')
       );
     } else {
       return (
-        'bg-gradient-to-l right-0 ' + (this.hideRightArrow ? 'opacity-0' : '')
+        'bg-gradient-to-l right-0 ' +
+        (this.hideRightArrow || !this.searchStatusState.firstSearchExecuted
+          ? 'opacity-0'
+          : '')
       );
     }
   }

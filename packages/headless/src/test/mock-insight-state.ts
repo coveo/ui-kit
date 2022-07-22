@@ -18,6 +18,7 @@ import {getSearchInitialState} from '../features/search/search-state';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-state';
 import {InsightAppState} from '../state/insight-app-state';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
+import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
 
 export function buildMockInsightState(
   config: Partial<InsightAppState> = {}
@@ -43,6 +44,7 @@ export function buildMockInsightState(
     categoryFacetSet: getCategoryFacetSetInitialState(),
     sortCriteria: getSortCriteriaInitialState(),
     didYouMean: getDidYouMeanInitialState(),
+    staticFilterSet: getStaticFilterSetInitialState(),
     ...config,
   };
 }
