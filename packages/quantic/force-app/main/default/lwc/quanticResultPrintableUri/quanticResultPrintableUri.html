@@ -7,7 +7,7 @@
       <template for:each={foldedParents} for:item="parent">
         <div class="result-parenturi__container slds-grid slds-grid_vertical-align-center" key={parent.id}>
           <template if:true={parent.isFolded}>
-            <a onclick={expandParents}>...</a>
+            <lightning-button onclick={expandParents}>...</lightning-button>
           </template>
           <template if:false={parent.isFolded}>
             <a class={parent.classes} href={parent.uri} target={target}>{parent.name}</a>
