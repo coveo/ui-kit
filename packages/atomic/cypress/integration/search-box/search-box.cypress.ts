@@ -9,6 +9,7 @@ import * as CommonAssertions from '../common-assertions';
 import * as SearchBoxAssertions from './search-box-assertions';
 import {addQuerySummary} from '../query-summary-actions';
 import * as QuerySummaryAssertions from '../query-summary-assertions';
+import {RouteAlias} from '../../utils/setupComponent';
 
 const setSuggestions = (count: number) => () => {
   cy.intercept(
@@ -144,6 +145,21 @@ describe('Search Box Test Suites', () => {
     CommonAssertions.assertAriaLiveMessage(' no ');
   });
 
+  describe('with a basic search box', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addSearchBox())
+        .with(addQuerySummary())
+        .withoutFirstAutomaticSearch()
+        .init();
+      SearchBoxSelectors.inputBox().click();
+      SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
+      cy.wait(RouteAlias.analytics);
+    });
+
+    CommonAssertions.assertConsoleError(false);
+  });
+
   describe('with disableSearch set to true', () => {
     beforeEach(() => {
       new TestFixture()
@@ -159,5 +175,6 @@ describe('Search Box Test Suites', () => {
     SearchBoxAssertions.assertHasSuggestionsCount(0);
     SearchBoxAssertions.assertHasText('test');
     QuerySummaryAssertions.assertHasPlaceholder();
+    CommonAssertions.assertConsoleError(false);
   });
 });

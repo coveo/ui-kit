@@ -18,6 +18,7 @@ import {
   DateFacetSection,
   CategoryFacetSection,
   SortSection,
+  StaticFilterSection,
   TabSection,
 } from './state-sections';
 
@@ -44,4 +45,5 @@ export type InsightAppState = InsightSearchParametersState &
   FacetOptionsSection &
   QuerySetSection &
   QuerySuggestionSection &
-  SortSection;
+  SortSection &
+  StaticFilterSection;
