@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.90.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.89.0...@coveo/headless@1.90.0) (2022-07-22)
+
+
+### Features
+
+* **headless:** new logContextChanged & logExpandToFullUI action added ([#2214](https://github.com/coveo/ui-kit/issues/2214)) ([620d4be](https://github.com/coveo/ui-kit/commit/620d4be5942b3f7419986fa19fdb5f61b3c0369c))
+
+
+
+
+
+# [1.89.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.88.1...@coveo/headless@1.89.0) (2022-07-21)
+
+
+### Features
+
+* **headless:** Add IP Breadcrumb Manager ([#2224](https://github.com/coveo/ui-kit/issues/2224)) ([523959e](https://github.com/coveo/ui-kit/commit/523959e74ee946e4f3f9fb2196d39a08cff395b2))
+
+
+
+
+
 ## [1.88.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.88.0...@coveo/headless@1.88.1) (2022-07-15)
 
 

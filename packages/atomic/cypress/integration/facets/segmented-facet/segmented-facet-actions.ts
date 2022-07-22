@@ -1,7 +1,7 @@
 import {TestFixture, addTag, TagProps} from '../../../fixtures/test-fixture';
 import {SegmentedFacetSelectors} from './segmented-facet-selectors';
 
-export const defaultNumberOfValues = 8;
+export const defaultNumberOfValues = 6;
 export const label = 'The Authors';
 export const field = 'author';
 
