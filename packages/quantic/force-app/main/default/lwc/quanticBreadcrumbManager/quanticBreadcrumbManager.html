@@ -9,12 +9,12 @@
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value.value} class="breadcrumb__container">
-                    <c-quantic-pill label={breadcrumbValue.value.value} alt-text={breadcrumbValue.value.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
+                    <c-quantic-pill label={breadcrumbValue.value.value} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clear}></c-quantic-pill>
                   </li>
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li>
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-grid slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                   </li>
                 </template>
               </ul>
@@ -26,12 +26,12 @@
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value} class="breadcrumb__container">
-                    <c-quantic-pill label={breadcrumbValue.formattedValue} alt-text={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
+                    <c-quantic-pill label={breadcrumbValue.formattedValue} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clear}></c-quantic-pill>
                   </li>
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li>
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-grid slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                   </li>
                 </template>
               </ul>
@@ -42,7 +42,7 @@
               <span class="slds-col breadcrumb-manager__field-name">{breadcrumbValue.label}{labels.colon} </span>
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <li class="breadcrumb__container">
-                  <c-quantic-pill label={breadcrumbValue.value} alt-text={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
+                  <c-quantic-pill label={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect} group-name={breadcrumbValue.label} action-name={labels.clear}></c-quantic-pill>
                 </li>
               </ul>
             </li>
@@ -53,12 +53,12 @@
               <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                 <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                   <li key={breadcrumbValue.value} class="breadcrumb__container">
-                    <c-quantic-pill label={breadcrumbValue.value} alt-text={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect}></c-quantic-pill>
+                    <c-quantic-pill label={breadcrumbValue.value} ondeselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clear}></c-quantic-pill>
                   </li>
                 </template>
                 <template if:true={breadcrumb.showMoreButton}>
                   <li>
-                    <a onclick={breadcrumb.expandButtonClick} class="slds-grid slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</a>
+                    <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
                   </li>
                 </template>
               </ul>
@@ -66,10 +66,10 @@
           </template>
         </ul>
       </div>
-      <div class="slds-col breadcrumb-manager__column slds-nowrap breadcrumb-manager__clear-button slds-m-left_small">
+      <div class="slds-col breadcrumb-manager__column slds-nowrap breadcrumb-manager__clear-button slds-m-left_small slds-shrink-none">
         <ul class="slds-m-around_xx-small">
           <li>
-            <a onclick={deselectAll}>{labels.clearAllFilters}</a>
+            <button class="slds-button slds-var-m-around_xxx-small" onclick={deselectAll}>{labels.clearAllFilters}</button>
           </li>
         </ul>
       </div>

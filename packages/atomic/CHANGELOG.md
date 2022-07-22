@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.87.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.87.1...@coveo/atomic@1.87.2) (2022-07-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.87.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.87.0...@coveo/atomic@1.87.1) (2022-07-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.87.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.86.2...@coveo/atomic@1.87.0) (2022-07-21)
+
+
+### Bug Fixes
+
+* **atomic:** prevent search box "enter" from submitting twice ([#2228](https://github.com/coveo/ui-kit/issues/2228)) ([161a9c3](https://github.com/coveo/ui-kit/commit/161a9c3636048fcaefede877a584e80b757cd04d))
+
+
+### Features
+
+* **atomic:** add parts to breadbox & sort dropdown elements ([#2229](https://github.com/coveo/ui-kit/issues/2229)) ([f253a73](https://github.com/coveo/ui-kit/commit/f253a73c6fc4d546b178174604e3e711246134a5))
+* **atomic:** loading animation for segmented facets ([#2216](https://github.com/coveo/ui-kit/issues/2216)) ([07b612d](https://github.com/coveo/ui-kit/commit/07b612dfe386aef97924eae3677e24b86174e6f8))
+* **atomic:** segmented facet tests ([#2223](https://github.com/coveo/ui-kit/issues/2223)) ([042793e](https://github.com/coveo/ui-kit/commit/042793e9320a8e45a997e73cf2efc21d22063a46))
+
+
+
+
+
+## [1.86.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.86.1...@coveo/atomic@1.86.2) (2022-07-15)
+
+
+### Bug Fixes
+
+* **headless:** clear analytics cookie as soon as analytics are disabled ([#2218](https://github.com/coveo/ui-kit/issues/2218)) ([637f832](https://github.com/coveo/ui-kit/commit/637f8323276ea40ce53d4b433e39271025562dad))
+
+
+
+
+
+## [1.86.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.86.0...@coveo/atomic@1.86.1) (2022-07-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.85.0...@coveo/atomic@1.86.0) (2022-07-14)
+
+
+### Features
+
+* **atomic:** fix bug where arrows appear when field is invalid ([#2211](https://github.com/coveo/ui-kit/issues/2211)) ([34edac9](https://github.com/coveo/ui-kit/commit/34edac9b48c9015a59ef30a3a02db59cc1130fa7))
+
+
+
+
+
+# [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.1...@coveo/atomic@1.85.0) (2022-07-14)
+
+
+### Features
+
+* **atomic:** first atomic segmented filter test ([#2208](https://github.com/coveo/ui-kit/issues/2208)) ([a9bcb19](https://github.com/coveo/ui-kit/commit/a9bcb19372646fd1d6fb608c72aa0faf46a158da))
+
+
+
+
+
+## [1.84.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.84.0...@coveo/atomic@1.84.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.83.0...@coveo/atomic@1.84.0) (2022-07-14)
+
+
+### Features
+
+* **atomic-react:** add support for result list table ([#2207](https://github.com/coveo/ui-kit/issues/2207)) ([73f9376](https://github.com/coveo/ui-kit/commit/73f93766c1972727218516a61b18dbb37e37f86c))
+
+
+
+
+
 # [1.83.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.82.6...@coveo/atomic@1.83.0) (2022-07-13)
 
 

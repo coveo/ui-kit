@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.17](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.16...@coveo/atomic-angular@1.20.17) (2022-07-22)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.16](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.15...@coveo/atomic-angular@1.20.16) (2022-07-21)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.15](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.14...@coveo/atomic-angular@1.20.15) (2022-07-21)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.14](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.13...@coveo/atomic-angular@1.20.14) (2022-07-15)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.12...@coveo/atomic-angular@1.20.13) (2022-07-15)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.11...@coveo/atomic-angular@1.20.12) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.10...@coveo/atomic-angular@1.20.11) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.10](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.9...@coveo/atomic-angular@1.20.10) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.20.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.8...@coveo/atomic-angular@1.20.9) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 ## [1.20.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.7...@coveo/atomic-angular@1.20.8) (2022-07-13)
 
 **Note:** Version bump only for package @coveo/atomic-angular

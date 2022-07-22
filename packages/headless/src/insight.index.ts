@@ -31,6 +31,20 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
+  NumericFacetBreadcrumb,
+  FacetBreadcrumb,
+  DateFacetBreadcrumb,
+  CategoryFacetBreadcrumb,
+  StaticFilterBreadcrumb,
+  Breadcrumb,
+  BreadcrumbValue,
+  BreadcrumbManagerState,
+  BreadcrumbManager,
+  DeselectableValue,
+} from './controllers/insight/breadcrumb-manager/headless-insight-breadcrumb-manager';
+export {buildBreadcrumbManager} from './controllers/insight/breadcrumb-manager/headless-insight-breadcrumb-manager';
+
+export type {
   FacetManagerPayload,
   FacetManagerState,
   FacetManager,

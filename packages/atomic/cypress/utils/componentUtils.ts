@@ -9,8 +9,12 @@ export function doSortAlphanumeric(originalValues: string[]) {
 }
 
 export function doSortOccurrences(originalValues: string[]) {
-  const getNumericalValue = (value: string) =>
-    parseInt(value.replaceAll(/[,()]/g, ''));
+  const getNumericalValue = (value: string) => {
+    const isKilo = value.includes('K') || value.includes('k');
+    const numericalVal = parseFloat(value.replaceAll(/[,(),Kk]/g, ''));
+    return isKilo ? numericalVal * 1000 : numericalVal;
+  };
+
   return originalValues
     .concat()
     .sort((a, b) => getNumericalValue(b) - getNumericalValue(a));
