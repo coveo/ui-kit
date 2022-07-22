@@ -31,16 +31,23 @@
             </template>
 
             <template if:false={isFacetSearchActive}>
-              <template for:each={values} for:item="v">
-                <c-quantic-facet-value 
-                  onselectvalue={onSelectValue} 
-                  key={v.value} 
-                  item={v} 
-                  is-checked={v.checked}
-                  data-cy={v.value}
-                  display-as-link={isDisplayAsLink}>
-                </c-quantic-facet-value>
-              </template>
+              <fieldset> 
+                <legend class="slds-assistive-text">Test</legend> 
+                <ul>          
+                  <template for:each={values} for:item="v">
+                    <li class="slds-grid" key={v.value} >
+                      <c-quantic-facet-value 
+                        onselectvalue={onSelectValue} 
+                        item={v} 
+                        is-checked={v.checked}
+                        data-cy={v.value}
+                        display-as-link={isDisplayAsLink}>
+                      </c-quantic-facet-value>
+                    </li>
+                  </template>
+                </ul>          
+              </fieldset>
+ 
               <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
                 <template if:true={canShowLess}>
                   <button variant="base" label={labels.showLess}

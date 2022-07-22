@@ -1,9 +1,5 @@
 <template>
-  <fieldset  tabindex="0" onkeydown={onKeyDown}>
-    <legend class="accessibility-only">Value: {formattedFacetValue}, number of {numberOfResults}</legend>
-    <ul >  
-      <li class="slds-grid">
-        <div onclick={onSelect} class="facet__value-container facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small" >
+        <div role={divRole} onclick={onSelect} class="facet__value-container facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small" tabindex="0" onkeydown={onKeyDown}>
           <template if:false={displayAsLink}>
             <lightning-input 
               tabindex="-1"
@@ -32,7 +28,4 @@
             <span class="nowrap slds-var-m-top_xxx-small facet__number-of-results">({numberOfResults})</span>
           </template>
         </div>
-      </li>
-    </ul>
-  </fieldset>
 </template>

@@ -58,6 +58,10 @@ export default class QuanticFacetValue extends LightningElement {
     return new Intl.NumberFormat(LOCALE).format(this.item.numberOfResults);
   }
 
+  get divRole (){
+    return this.displayAsLink ? "button":"checkbox"
+  }
+
   /**
    * @param {InputEvent} evt
    */

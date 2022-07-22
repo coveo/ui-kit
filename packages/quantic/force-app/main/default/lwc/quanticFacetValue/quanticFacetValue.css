@@ -17,11 +17,3 @@ li {
 .facet__value-checkbox {
   min-width: unset;
 }
-
-.accessibility-only{
-  position: absolute;
-  display: block;
-  height: 0px;
-  overflow: hidden;
-  margin: 0px;
-}
