@@ -29,8 +29,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part segmented-container - The container that holds the segmented facets.
  * @part label - The facet value label.
  * @part values - The facet values container.
- * @part value - The facet value.
- * @part value-selected - The selected facet value.
+ * @part value-box - The facet value.
+ * @part value-box-selected - The selected facet value.
  */
 @Component({
   tag: 'atomic-segmented-facet',
