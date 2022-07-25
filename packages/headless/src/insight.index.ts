@@ -45,6 +45,15 @@ export type {
 export {buildBreadcrumbManager} from './controllers/insight/breadcrumb-manager/headless-insight-breadcrumb-manager';
 
 export type {
+  SearchParameterManagerProps,
+  SearchParameterManagerInitialState,
+  SearchParameterManagerState,
+  SearchParameterManager,
+  SearchParameters,
+} from './controllers/insight/search-parameter-manager/headless-insight-search-parameter-manager';
+export {buildSearchParameterManager} from './controllers/insight/search-parameter-manager/headless-insight-search-parameter-manager';
+
+export type {
   InsightSearchBox,
   SearchBoxState,
 } from './controllers/insight/search-box/headless-insight-search-box';
