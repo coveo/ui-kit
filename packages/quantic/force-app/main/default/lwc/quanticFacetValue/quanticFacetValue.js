@@ -79,11 +79,10 @@ export default class QuanticFacetValue extends LightningElement {
       }
     }));
   }
-    /**
+  /**
    * @param {KeyboardEvent} evt
    */
-  onKeyDown(evt) {
-       
+  onKeyDown(evt) {   
     if(evt.code==="Enter" || evt.code==="Space"){
       evt.preventDefault()
       this.dispatchEvent(new CustomEvent(
@@ -93,7 +92,5 @@ export default class QuanticFacetValue extends LightningElement {
         }
       }));
     }
-
-
   }
 }
