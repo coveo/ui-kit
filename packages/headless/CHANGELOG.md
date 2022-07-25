@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.92.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.91.0...@coveo/headless@1.92.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP DidYouMean controller ([#2233](https://github.com/coveo/ui-kit/issues/2233)) ([4bd62e5](https://github.com/coveo/ui-kit/commit/4bd62e57e9edb8ad3e18758ad067072170991a8b))
+
+
+
+
+
 # [1.91.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.90.0...@coveo/headless@1.91.0) (2022-07-25)
 
 
