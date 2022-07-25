@@ -174,6 +174,7 @@ export class AtomicBreadbox implements InitializableComponent {
     const value = Array.isArray(breadcrumb.formattedValue)
       ? this.limitPath(breadcrumb.formattedValue)
       : breadcrumb.formattedValue;
+    const title = `${breadcrumb.label}: ${fullValue}`;
 
     return (
       <li class="breadcrumb" key={value}>
@@ -181,7 +182,10 @@ export class AtomicBreadbox implements InitializableComponent {
           part="breadcrumb-button"
           style="outline-bg-neutral"
           class="py-2 px-3 flex items-center btn-pill group"
-          title={`${breadcrumb.label}: ${fullValue}`}
+          title={title}
+          ariaLabel={this.bindings.i18n.t('remove-filter-on', {
+            value: title,
+          })}
           onClick={() => {
             if (this.numberOfBreadcrumbs > 1) {
               this.breadcrumbRemovedFocus.focusAfterSearch();
