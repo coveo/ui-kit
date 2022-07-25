@@ -156,11 +156,21 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
-    if (
-      this.searchStatus.state.hasError ||
-      !this.facetState.values.length ||
-      !this.facet.state.enabled
-    ) {
+    if (this.searchStatus.state.hasError || !this.facet.state.enabled) {
+      return <Hidden></Hidden>;
+    }
+
+    if (!this.searchStatus.state.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-8 w-screen my-2 bg-neutral animate-pulse"
+        ></div>
+      );
+    }
+
+    if (!this.facetState.values.length) {
       return <Hidden></Hidden>;
     }
 

@@ -71,6 +71,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-count - The facet value count, common for all displays.
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
+ * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.

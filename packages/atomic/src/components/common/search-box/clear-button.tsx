@@ -2,18 +2,15 @@ import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import {FunctionalComponent, h} from '@stencil/core';
 import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
-import {SearchBox} from '@coveo/headless';
 
 interface Props extends Partial<ButtonProps> {
   bindings: AnyBindings;
-  searchBox: SearchBox;
   inputRef: HTMLInputElement | null;
 }
 
 export const ClearButton: FunctionalComponent<Props> = ({
   inputRef,
   bindings,
-  searchBox,
   onClick,
   ...defaultButtonProps
 }) => (
@@ -22,7 +19,6 @@ export const ClearButton: FunctionalComponent<Props> = ({
     part="clear-button"
     class="w-8 h-8 mr-1.5 text-neutral-dark"
     onClick={() => {
-      searchBox.clear();
       onClick?.();
       inputRef?.focus();
     }}
