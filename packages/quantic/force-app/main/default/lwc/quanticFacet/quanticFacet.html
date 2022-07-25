@@ -32,7 +32,7 @@
 
             <template if:false={isFacetSearchActive}>
               <fieldset> 
-                <legend class="slds-assistive-text">Test</legend> 
+                <legend class="slds-assistive-text">{field}</legend> 
                 <ul>          
                   <template for:each={values} for:item="v">
                     <li class="slds-grid" key={v.value} >
@@ -47,6 +47,22 @@
                   </template>
                 </ul>          
               </fieldset>
+              <span>I am divider</span>
+              <div aria-label="Gender"  role="group">                  
+                <template for:each={values} for:item="v">
+                    <c-quantic-facet-value 
+                      display-new
+                      key={v.value}
+                      onselectvalue={onSelectValue} 
+                      item={v} 
+                      is-checked={v.checked}
+                      data-cy={v.value}
+                      display-as-link={isDisplayAsLink}>
+                    </c-quantic-facet-value>
+                </template>
+              </div>
+
+              
  
               <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
                 <template if:true={canShowLess}>
