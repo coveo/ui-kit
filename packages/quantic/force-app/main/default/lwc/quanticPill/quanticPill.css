@@ -10,7 +10,7 @@
 
 .pill__text-container {
   min-width: 0;
-  line-height: var(--lwc-varLineHeightText,1.5);
+  line-height: var(--lwc-lineHeightText, 1.5);
 }
 
 a {
