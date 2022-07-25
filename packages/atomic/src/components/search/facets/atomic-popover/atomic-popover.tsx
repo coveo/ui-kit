@@ -3,7 +3,7 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Listen, State} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -34,6 +34,30 @@ export class AtomicPopover implements InitializableComponent {
 
   renderValueButton() {
     return <Button style="square-neutral">Test</Button>;
+  }
+
+  @Listen('facetInitialized')
+  addClass(event: CustomEvent<HTMLElement>) {
+    console.log(
+      'facet initialized!!',
+      event.detail.shadowRoot!.querySelector('[part="facet"]'),
+      event.detail.shadowRoot
+    );
+    if (!event.detail.shadowRoot) {
+      return;
+    }
+
+    const facetContainer =
+      event.detail.shadowRoot.querySelector('[part="facet"]');
+
+    if (!facetContainer) {
+      return;
+    }
+
+    facetContainer.setAttribute(
+      'class',
+      facetContainer.className + ' popover-nested'
+    );
   }
 
   render() {

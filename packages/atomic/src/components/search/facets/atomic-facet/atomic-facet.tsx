@@ -1,4 +1,13 @@
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  VNode,
+  Element,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -205,6 +214,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
+  @Event() facetInitialized!: EventEmitter<HTMLElement>;
+
   private validateProps() {
     new Schema({
       displayValuesAs: new StringValue({
@@ -237,6 +248,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId!,
       element: this.host,
     });
+  }
+
+  public componentDidRender() {
+    this.facetInitialized.emit(this.host);
   }
 
   public disconnectedCallback() {

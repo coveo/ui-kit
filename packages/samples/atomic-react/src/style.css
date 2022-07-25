@@ -20,3 +20,7 @@ header ul {
   font-weight: var(--atomic-font-bold);
   font-family: var(--atomic-font-family);
 }
+
+atomic-popover atomic-facet::part(label-button) {
+  display: none;
+}
