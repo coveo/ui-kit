@@ -31,23 +31,6 @@
             </template>
 
             <template if:false={isFacetSearchActive}>
-              <fieldset> 
-                <legend class="slds-assistive-text">{field}</legend> 
-                <ul>          
-                  <template for:each={values} for:item="v">
-                    <li class="slds-grid" key={v.value} >
-                      <c-quantic-facet-value 
-                        onselectvalue={onSelectValue} 
-                        item={v} 
-                        is-checked={v.checked}
-                        data-cy={v.value}
-                        display-as-link={isDisplayAsLink}>
-                      </c-quantic-facet-value>
-                    </li>
-                  </template>
-                </ul>          
-              </fieldset>
-              <span>I am divider</span>
               <div aria-label={field}  role="group">                  
                 <template for:each={values} for:item="v">
                     <c-quantic-facet-value 
