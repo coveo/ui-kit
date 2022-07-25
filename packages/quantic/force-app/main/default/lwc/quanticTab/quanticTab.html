@@ -1,6 +1,6 @@
 <template>
   <template if:true={shouldDisplay}>
-    <div tabindex="0" onkeydown={onKeyDown}>
+    <div tabindex="0" role="tab" onkeydown={onKeyDown}>
       <li class={tabClass} title={label} role="presentation">
         <a class="slds-tabs_default__link" role="tab" onclick={select}>{label}</a>
       </li>
