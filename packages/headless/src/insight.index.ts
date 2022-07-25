@@ -31,6 +31,14 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
+  DidYouMean,
+  DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
+} from './controllers/insight/did-you-mean/headless-insight-did-you-mean';
+export {buildDidYouMean} from './controllers/insight/did-you-mean/headless-insight-did-you-mean';
+
+export type {
   NumericFacetBreadcrumb,
   FacetBreadcrumb,
   DateFacetBreadcrumb,

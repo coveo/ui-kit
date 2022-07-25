@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.20.18](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.17...@coveo/atomic-angular@1.20.18) (2022-07-25)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 ## [1.20.17](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.16...@coveo/atomic-angular@1.20.17) (2022-07-22)
 
 **Note:** Version bump only for package @coveo/atomic-angular

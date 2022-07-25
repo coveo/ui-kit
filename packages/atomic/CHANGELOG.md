@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.88.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.87.2...@coveo/atomic@1.88.0) (2022-07-25)
+
+
+### Features
+
+* **atomic:** added -checked part to checkbox facets ([#2232](https://github.com/coveo/ui-kit/issues/2232)) ([95689d2](https://github.com/coveo/ui-kit/commit/95689d22e83c1c4dfc6816bad3028245ba63910a))
+
+
+
+
+
 ## [1.87.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.87.1...@coveo/atomic@1.87.2) (2022-07-22)
 
 **Note:** Version bump only for package @coveo/atomic
