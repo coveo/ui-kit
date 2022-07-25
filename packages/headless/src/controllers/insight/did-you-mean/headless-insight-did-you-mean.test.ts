@@ -1,24 +1,24 @@
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
+import {buildDidYouMean, DidYouMean} from './headless-insight-did-you-mean';
 import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../test/mock-engine';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
-} from '../../features/did-you-mean/did-you-mean-actions';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../../features/did-you-mean/did-you-mean-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 
 describe('did you mean', () => {
   let dym: DidYouMean;
-  let engine: MockSearchEngine;
+  let engine: MockInsightEngine;
 
   function initDidYouMean() {
     dym = buildDidYouMean(engine);
   }
 
   beforeEach(() => {
-    engine = buildMockSearchAppEngine();
+    engine = buildMockInsightEngine();
     initDidYouMean();
   });
 

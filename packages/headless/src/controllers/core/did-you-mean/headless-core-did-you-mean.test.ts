@@ -1,25 +1,32 @@
-import {buildDidYouMean, DidYouMean} from './headless-did-you-mean';
+import {buildCoreDidYouMean, DidYouMean} from './headless-core-did-you-mean';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
-} from '../../test/mock-engine';
+} from '../../../test/mock-engine';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
-} from '../../features/did-you-mean/did-you-mean-actions';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../../features/did-you-mean/did-you-mean-actions';
+import {configuration, didYouMean} from '../../../app/reducers';
 
 describe('did you mean', () => {
   let dym: DidYouMean;
   let engine: MockSearchEngine;
 
   function initDidYouMean() {
-    dym = buildDidYouMean(engine);
+    dym = buildCoreDidYouMean(engine);
   }
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     initDidYouMean();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      didYouMean,
+    });
   });
 
   it('should enable did you mean', () => {
@@ -32,11 +39,5 @@ describe('did you mean', () => {
 
     dym.applyCorrection();
     expect(engine.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
-  });
-
-  it('dispatches #executeSearch', () => {
-    dym.applyCorrection();
-    const action = engine.findAsyncAction(executeSearch.pending);
-    expect(action).toBeTruthy();
   });
 });
