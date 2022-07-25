@@ -119,7 +119,13 @@ export type {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacetSearchResult,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
   CoreCategoryFacet,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
   CoreCategoryFacetState,
 } from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
 export {buildCategoryFacet} from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
