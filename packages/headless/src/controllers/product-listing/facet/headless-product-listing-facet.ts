@@ -11,6 +11,8 @@ import {
   FacetState,
   FacetValue,
   SpecificFacetSearchResult,
+  CoreFacet,
+  CoreFacetState,
 } from '../../core/facets/facet/headless-core-facet';
 import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
@@ -45,6 +47,8 @@ export type {
   FacetSearchState,
   SpecificFacetSearchResult,
   FacetValue,
+  CoreFacet,
+  CoreFacetState,
 };
 
 /**

@@ -389,4 +389,72 @@ export type {
   CategoryFieldSuggestionsOptions,
   CategoryFieldSuggestionsProps,
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
+
+export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuerySummaryState as CoreQuerySummaryState,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuerySummary as CoreQuerySummary,
+} from './core/query-summary/headless-core-query-summary';
+export {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version. Please use `buildQuerySummary` instead.
+   */
+  buildCoreQuerySummary,
+} from './core/query-summary/headless-core-query-summary';
+
+export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  ResultListOptions as CoreResultListOptions,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  ResultListState as CoreResultListState,
+} from './core/result-list/headless-core-result-list';
+
+export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  FacetManager as CoreFacetManager,
+} from './core/facet-manager/headless-core-facet-manager';
+
+export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  SearchStatus as CoreStatusState,
+} from './core/status/headless-core-status';
+
+export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  Quickview as QuickviewCore,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuickviewOptions as QuickviewCoreOptions,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuickviewProps as QuickviewCoreProps,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuickviewState as QuickviewCoreState,
+} from './core/quickview/headless-core-quickview';
+export {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version. Please use `buildQuickview` instead.
+   */
+  buildCoreQuickview as buildQuickviewCore,
+} from './core/quickview/headless-core-quickview';
+
 export {buildCategoryFieldSuggestions} from './field-suggestions/category-facet/headless-category-field-suggestions';
