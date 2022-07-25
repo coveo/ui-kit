@@ -46,24 +46,7 @@
                     </li>
                   </template>
                 </ul>          
-              </fieldset>
-              <span>I am divider</span>
-              <div aria-label={field}  role="group">                  
-                <template for:each={values} for:item="v">
-                    <c-quantic-facet-value 
-                      display-new
-                      key={v.value}
-                      onselectvalue={onSelectValue} 
-                      item={v} 
-                      is-checked={v.checked}
-                      data-cy={v.value}
-                      display-as-link={isDisplayAsLink}>
-                    </c-quantic-facet-value>
-                </template>
-              </div>
-
-              
- 
+              </fieldset> 
               <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
                 <template if:true={canShowLess}>
                   <button variant="base" label={labels.showLess}
