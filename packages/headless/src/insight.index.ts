@@ -31,6 +31,14 @@ export type {
 export {buildController} from './controllers/controller/headless-controller';
 
 export type {
+  DidYouMean,
+  DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
+} from './controllers/insight/did-you-mean/headless-insight-did-you-mean';
+export {buildDidYouMean} from './controllers/insight/did-you-mean/headless-insight-did-you-mean';
+
+export type {
   NumericFacetBreadcrumb,
   FacetBreadcrumb,
   DateFacetBreadcrumb,
@@ -43,6 +51,15 @@ export type {
   DeselectableValue,
 } from './controllers/insight/breadcrumb-manager/headless-insight-breadcrumb-manager';
 export {buildBreadcrumbManager} from './controllers/insight/breadcrumb-manager/headless-insight-breadcrumb-manager';
+
+export type {
+  SearchParameterManagerProps,
+  SearchParameterManagerInitialState,
+  SearchParameterManagerState,
+  SearchParameterManager,
+  SearchParameters,
+} from './controllers/insight/search-parameter-manager/headless-insight-search-parameter-manager';
+export {buildSearchParameterManager} from './controllers/insight/search-parameter-manager/headless-insight-search-parameter-manager';
 
 export type {
   InsightSearchBox,
