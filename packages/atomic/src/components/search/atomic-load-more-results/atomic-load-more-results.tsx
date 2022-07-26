@@ -22,8 +22,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part highlight - The highlighted number of results displayed and number of results available.
  * @part progress-bar - The progress bar displaying a percentage of results shown over the total number of results available.
  * @part load-more-results-button - The "Load more results" button.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-load-more-results',
