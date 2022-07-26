@@ -120,7 +120,7 @@ describe('Result Link Component', () => {
         setupResultLink({slots: [slottedComponent]});
       });
 
-      it('should render the slot inside of the "a" tag', () => {
+      it('should render the default slot inside of the "a" tag', () => {
         ResultLinkSelectors.firstInResult()
           .find('a #myslot')
           .should('be.visible');
@@ -130,14 +130,15 @@ describe('Result Link Component', () => {
     describe('when there is a valid slot named "attributes"', () => {
       it('copies the attributes properly', () => {
         const attributesSlot = generateComponentHTML('a', {
-          download: '',
+          download: 'test',
           target: '_self',
           slot: 'attributes',
         });
         setupResultLink({slots: [attributesSlot]});
         ResultLinkSelectors.firstInResult()
-          .find('a')
-          .should('have.attr', 'download', '')
+          .find('a:not([slot])')
+          .should('have.attr', 'download', 'test')
+          .and('be.visible')
           .and('have.attr', 'target', '_self');
       });
     });
@@ -145,7 +146,7 @@ describe('Result Link Component', () => {
     describe('when there is a slot named "attributes" & a default slot', () => {
       before(() => {
         const attributesSlot = generateComponentHTML('a', {
-          download: '',
+          download: 'test',
           target: '_self',
           slot: 'attributes',
         });
@@ -158,12 +159,13 @@ describe('Result Link Component', () => {
 
       it('copies the attributes properly', () => {
         ResultLinkSelectors.firstInResult()
-          .find('a')
-          .should('have.attr', 'download', '')
+          .find('a:not([slot])')
+          .should('have.attr', 'download', 'test')
+          .and('be.visible')
           .and('have.attr', 'target', '_self');
       });
 
-      it('should render the slot inside of the "a" tag', () => {
+      it('should render the default slot inside of the "a" tag', () => {
         ResultLinkSelectors.firstInResult()
           .find('a #myslot')
           .should('be.visible');
@@ -173,7 +175,7 @@ describe('Result Link Component', () => {
     describe('when there is a slot named "attributes" & a default slot (empty string)', () => {
       before(() => {
         const attributesSlot = generateComponentHTML('a', {
-          download: '',
+          download: 'test',
           target: '_self',
           slot: 'attributes',
         });
@@ -187,12 +189,13 @@ describe('Result Link Component', () => {
 
       it('copies the attributes properly', () => {
         ResultLinkSelectors.firstInResult()
-          .find('a')
-          .should('have.attr', 'download', '')
+          .find('a:not([slot])')
+          .should('have.attr', 'download', 'test')
+          .and('be.visible')
           .and('have.attr', 'target', '_self');
       });
 
-      it('should render the slot inside of the "a" tag', () => {
+      it('should render the default slot inside of the "a" tag', () => {
         ResultLinkSelectors.firstInResult()
           .find('a #myslot')
           .should('be.visible');
