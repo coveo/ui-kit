@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import {onMounted} from 'vue';
-import TopBar from './TopBar.vue';
-import SearchPageFacets from './SearchPageFacets.vue';
-import ResultsList from './ResultsList.vue';
 
 async function initInterface() {
   await customElements.whenDefined('atomic-search-interface');
@@ -24,7 +21,7 @@ onMounted(initInterface);
 </script>
 
 <template>
-  <atomic-search-interface search-hub="MainSearch" pipeline="Search">
+  <atomic-search-interface search-hub="MainSearch" pipeline="Search" fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color">
     <atomic-search-layout>
       <atomic-layout-section section="search">
         <atomic-search-box></atomic-search-box>
