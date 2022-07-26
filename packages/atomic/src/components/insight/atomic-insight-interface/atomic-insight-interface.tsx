@@ -52,7 +52,7 @@ export class AtomicInsightInterface
   /**
    * Whether the interface should be shown in widget format.
    */
-  @Prop({mutable: true}) public widget = false;
+  @Prop({mutable: true, reflect: true}) public widget = false;
   /**
    * The service insight interface headless engine.
    */
@@ -125,9 +125,6 @@ export class AtomicInsightInterface
    * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
   @Method() public initialize(options: InsightInitializationOptions) {
-    if (this.widget) {
-      this.host.setAttribute('widget', 'true');
-    }
     return this.internalInitialization(() => this.initEngine(options));
   }
 
