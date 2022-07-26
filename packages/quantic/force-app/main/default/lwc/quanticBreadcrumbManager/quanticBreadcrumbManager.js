@@ -72,7 +72,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
 
   labels = {
     nMore,
-    clearFilter: clearFilter,
+    clearFilter,
     clearAllFilters,
     colon
   }
