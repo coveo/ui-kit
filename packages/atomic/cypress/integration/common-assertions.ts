@@ -1,3 +1,4 @@
+import {getFocusableDescendants} from '../../src/utils/accessibility-utils';
 import {TestFixture} from '../fixtures/test-fixture';
 import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
@@ -28,6 +29,29 @@ export function assertAccessibility(
         cy.checkA11y(el, {rules});
       });
     }
+  });
+
+  it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
+    function splitIntoWords(text: string) {
+      return text.split(' ').filter((word) => !word.match(/[^a-z]/i));
+    }
+
+    cy.window()
+      .then((win) =>
+        Array.from(getFocusableDescendants(win.document.body)).filter(
+          (element) => element.hasAttribute('aria-label') && element.innerText
+        )
+      )
+      .should((elements) =>
+        Array.from(elements).forEach((element) =>
+          expect(
+            splitIntoWords(element.getAttribute('aria-label')!)
+          ).to.include.all.members(
+            splitIntoWords(element.innerText),
+            'The aria-label should include the innerText. https://www.w3.org/WAI/WCAG22/Techniques/failures/F96.html'
+          )
+        )
+      );
   });
 }
 
