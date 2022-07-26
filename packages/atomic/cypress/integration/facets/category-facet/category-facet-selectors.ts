@@ -41,7 +41,7 @@ export const CategoryFacetSelectors = {
     return this.shadow().find('[part="values"]');
   },
   childValue() {
-    return this.shadow().find('[part="value-link"]');
+    return this.shadow().find('[part~="value-link"]');
   },
   childValueLabel() {
     return this.childValue().find('[part="value-label"]');

@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.89.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.0...@coveo/atomic@1.89.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* **atomic:** use custom "closest" method for initializeBindings, resultContext ([#2242](https://github.com/coveo/ui-kit/issues/2242)) ([d5194a0](https://github.com/coveo/ui-kit/commit/d5194a0e622cc15e7a63ef74c5fe2656054bd76e))
+
+
+
+
+
+# [1.89.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.88.2...@coveo/atomic@1.89.0) (2022-07-25)
+
+
+### Bug Fixes
+
+* **atomic:** improved aria label for breadcrumbs ([#2243](https://github.com/coveo/ui-kit/issues/2243)) ([3073425](https://github.com/coveo/ui-kit/commit/3073425a06d0e74bf4a0a9ce413141018cd097a5))
+
+
+### Features
+
+* **atomic:** added "-selected" parts for link and box facet values ([#2236](https://github.com/coveo/ui-kit/issues/2236)) ([79f51b4](https://github.com/coveo/ui-kit/commit/79f51b49a6897d6f9cc22da196747c9b83f70cec))
+
+
+
+
+
+## [1.88.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.88.1...@coveo/atomic@1.88.2) (2022-07-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.88.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.88.0...@coveo/atomic@1.88.1) (2022-07-25)
 
 **Note:** Version bump only for package @coveo/atomic
