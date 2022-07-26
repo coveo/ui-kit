@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import {onMounted} from 'vue';
+import TopBar from './TopBar.vue';
+import SearchPageFacets from './SearchPageFacets.vue';
+import ResultsList from './ResultsList.vue';
 
 async function initInterface() {
   await customElements.whenDefined('atomic-search-interface');
