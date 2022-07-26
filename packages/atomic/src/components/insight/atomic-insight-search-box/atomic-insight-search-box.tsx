@@ -64,6 +64,18 @@ export class AtomicInsightSearchBox {
     });
   }
 
+  private onKeyDown(e: KeyboardEvent) {
+    if (this.disableSearch) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'Enter':
+        this.searchBox.submit();
+        break;
+    }
+  }
+
   public render() {
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
@@ -72,9 +84,9 @@ export class AtomicInsightSearchBox {
           loading={this.searchBoxState.isLoading}
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
-          state={this.searchBoxState}
-          searchBox={this.searchBox}
-          disabled={this.disableSearch}
+          value={this.searchBoxState.value}
+          onKeyDown={(e) => this.onKeyDown(e)}
+          onClear={() => this.searchBox.clear()}
           onInput={(e) => {
             this.searchBox.updateText((e.target as HTMLInputElement).value);
           }}
@@ -82,7 +94,7 @@ export class AtomicInsightSearchBox {
         <SubmitButton
           bindings={this.bindings}
           disabled={this.disableSearch}
-          searchBox={this.searchBox}
+          onClick={() => this.searchBox.submit()}
         />
       </SearchBoxWrapper>
     );

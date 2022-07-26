@@ -41,6 +41,12 @@ export interface ConfigurationState {
      * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
      */
     timezone: string;
+    /**
+     * Specifies the name of the authentication providers to use to perform queries.
+     *
+     * See [SAML Authentication](https://docs.coveo.com/en/91/).
+     */
+    authenticationProviders: string[];
   };
   /**
    * The global headless engine Usage Analytics API configuration.
@@ -123,6 +129,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     apiBaseUrl: `${platformUrl()}${searchAPIEndpoint}`,
     locale: 'en-US',
     timezone: dayjs.tz.guess(),
+    authenticationProviders: [],
   },
   analytics: {
     enabled: true,

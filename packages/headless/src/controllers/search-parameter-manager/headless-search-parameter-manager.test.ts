@@ -41,37 +41,6 @@ describe('search parameter manager', () => {
     initSearchParameterManager();
   });
 
-  it('exposes a #subscribe method', () => {
-    expect(manager.subscribe).toBeTruthy();
-  });
-
-  it('exposes a #parameters property under state', () => {
-    expect(manager.state.parameters).toBeTruthy();
-  });
-
-  it('dispatches #restoreSearchParameters on registration', () => {
-    const action = restoreSearchParameters(props.initialState.parameters);
-    expect(engine.actions).toContainEqual(action);
-  });
-
-  it('when #parameters is not an object, it throws an error', () => {
-    props.initialState.parameters = true as never;
-    expect(() => initSearchParameterManager()).toThrow(
-      'Check the initialState of buildSearchParameterManager'
-    );
-  });
-
-  describe('#state.parameters.q', () => {
-    it('when the parameter does not equal the default value, it is included', () => {
-      engine.state.query.q = 'a';
-      expect(manager.state.parameters.q).toBe('a');
-    });
-
-    it('when the parameter is equal to the default value, it is not included', () => {
-      expect('q' in manager.state.parameters).toBe(false);
-    });
-  });
-
   describe('#state.parameters.enableQuerySyntax', () => {
     it('when the parameter does not equal the default value, it is included', () => {
       engine.state.query.enableQuerySyntax = true;
@@ -108,22 +77,6 @@ describe('search parameter manager', () => {
       engine.state.advancedSearchQueries.cq = 'abc';
       engine.state.advancedSearchQueries.defaultFilters.cq = 'abc';
       expect('cq' in manager.state.parameters).toBe(false);
-    });
-  });
-
-  describe('#state.parameters.tab', () => {
-    it('when there is an active tab, it is included', () => {
-      const id = 'a';
-      const tab = buildMockTabSlice({id, isActive: true});
-      engine.state.tabSet = {[id]: tab};
-      expect(manager.state.parameters.tab).toBe(id);
-    });
-
-    it('when there is no active tab, it is not included', () => {
-      const id = 'a';
-      const tab = buildMockTabSlice({id, isActive: false});
-      engine.state.tabSet = {[id]: tab};
-      expect(manager.state.parameters.tab).toBe(undefined);
     });
   });
 
@@ -182,144 +135,6 @@ describe('search parameter manager', () => {
 
       engine.state.staticFilterSet = {a: filter};
       expect('sf' in manager.state.parameters).toBe(false);
-    });
-  });
-
-  describe('#state.parameters.f', () => {
-    it('when a facet has selected values, only selected values are included', () => {
-      const selected = buildMockFacetValueRequest({
-        value: 'a',
-        state: 'selected',
-      });
-      const idle = buildMockFacetValueRequest({value: 'b', state: 'idle'});
-
-      const currentValues = [selected, idle];
-      engine.state.facetSet = {author: buildMockFacetRequest({currentValues})};
-
-      expect(manager.state.parameters.f).toEqual({author: ['a']});
-    });
-
-    it('when there are no facets with selected values, the #f parameter is not included', () => {
-      engine.state.facetSet = {author: buildMockFacetRequest()};
-      expect('f' in manager.state.parameters).toBe(false);
-    });
-  });
-
-  describe('#state.parameters.cf', () => {
-    it('when a category facet has selected values, only selected values are included', () => {
-      const selected = buildMockCategoryFacetValueRequest({
-        value: 'a',
-        state: 'selected',
-      });
-
-      const idle = buildMockCategoryFacetValueRequest({
-        value: 'b',
-        state: 'idle',
-      });
-
-      const request = buildMockCategoryFacetRequest({
-        currentValues: [selected, idle],
-      });
-
-      engine.state.categoryFacetSet = {
-        author: buildMockCategoryFacetSlice({request}),
-      };
-
-      expect(manager.state.parameters.cf).toEqual({author: ['a']});
-    });
-
-    it('when a category facet has a nested selection, the full path is included', () => {
-      const child = buildMockCategoryFacetValueRequest({
-        value: 'b',
-        state: 'selected',
-      });
-
-      const parent = buildMockCategoryFacetValueRequest({
-        value: 'a',
-        children: [child],
-      });
-
-      const request = buildMockCategoryFacetRequest({currentValues: [parent]});
-      engine.state.categoryFacetSet = {
-        author: buildMockCategoryFacetSlice({request}),
-      };
-
-      expect(manager.state.parameters.cf).toEqual({author: ['a', 'b']});
-    });
-
-    it('when there are no category facets with selected values, the #cf parameter is not included', () => {
-      engine.state.categoryFacetSet = {author: buildMockCategoryFacetSlice()};
-      expect('cf' in manager.state.parameters).toBe(false);
-    });
-  });
-
-  describe('#state.parameters.nf', () => {
-    it('when a numeric facet has selected values, only selected values are included', () => {
-      const selected = buildMockNumericFacetValue({
-        start: 0,
-        end: 10,
-        state: 'selected',
-      });
-      const idle = buildMockNumericFacetValue({
-        start: 10,
-        end: 20,
-        state: 'idle',
-      });
-
-      const currentValues = [selected, idle];
-      engine.state.numericFacetSet = {
-        size: buildMockNumericFacetRequest({currentValues}),
-      };
-
-      expect(manager.state.parameters.nf).toEqual({size: [selected]});
-    });
-
-    it('when there are no numeric facets with selected values, the #nf parameter is not included', () => {
-      engine.state.numericFacetSet = {author: buildMockNumericFacetRequest()};
-      expect('nf' in manager.state.parameters).toBe(false);
-    });
-  });
-
-  describe('#state.parameters.df', () => {
-    it('when a date facet has selected values, only selected values are included', () => {
-      const selected = buildMockDateFacetValue({
-        start: '2020/10/01',
-        end: '2020/11/01',
-        state: 'selected',
-      });
-      const idle = buildMockDateFacetValue({
-        start: '2020/11/01',
-        end: '2020/12/01',
-        state: 'idle',
-      });
-
-      const currentValues = [selected, idle];
-      engine.state.dateFacetSet = {
-        created: buildMockDateFacetRequest({currentValues}),
-      };
-
-      expect(manager.state.parameters.df).toEqual({created: [selected]});
-    });
-
-    it('when there are no date facets with selected values, the #df parameter is not included', () => {
-      engine.state.dateFacetSet = {created: buildMockDateFacetRequest()};
-      expect('df' in manager.state.parameters).toBe(false);
-    });
-  });
-
-  describe('#state.parameters.sortCriteria', () => {
-    it('when the parameter does not equal the default value, it is included', () => {
-      engine.state.sortCriteria = 'qre';
-      expect(manager.state.parameters.sortCriteria).toBe('qre');
-    });
-
-    it('when the parameter is equal to the default value, it is not included', () => {
-      expect('sortCriteria' in manager.state.parameters).toBe(false);
-    });
-
-    it('when the parameter is undefined, it is not included', () => {
-      engine.state.sortCriteria = undefined as never;
-      expect('sortCriteria' in manager.state.parameters).toBe(false);
     });
   });
 

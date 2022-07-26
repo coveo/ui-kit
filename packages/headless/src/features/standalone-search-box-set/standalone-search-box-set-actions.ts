@@ -43,6 +43,21 @@ export const registerStandaloneSearchBox = createAction(
     })
 );
 
+export interface ResetStandaloneSearchBoxActionCreatorPayload {
+  /**
+   * The standalone search box id.
+   */
+  id: string;
+}
+
+export const resetStandaloneSearchBox = createAction(
+  'standaloneSearchBox/reset',
+  (payload: ResetStandaloneSearchBoxActionCreatorPayload) =>
+    validatePayload(payload, {
+      id: requiredNonEmptyString,
+    })
+);
+
 export interface UpdateAnalyticsToSearchFromLinkActionCreatorPayload {
   /**
    * The standalone search box id.
@@ -138,5 +153,9 @@ export const buildPlanRequest = async (
       (await fromAnalyticsStateToAnalyticsParams(
         state.configuration.analytics
       ))),
+    ...(state.configuration.search.authenticationProviders.length && {
+      authentication:
+        state.configuration.search.authenticationProviders.join(','),
+    }),
   };
 };

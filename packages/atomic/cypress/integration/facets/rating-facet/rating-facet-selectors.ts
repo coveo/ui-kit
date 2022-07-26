@@ -33,17 +33,21 @@ export const RatingFacetSelectors = {
     return this.shadow().find('[part="value-rating"]');
   },
   selectedCheckboxValue() {
-    return this.shadow().find('[part="value-checkbox"][aria-checked="true"]');
+    return this.shadow().find(
+      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-checked="true"]'
+    );
   },
   idleCheckboxValue() {
-    return this.shadow().find('[part="value-checkbox"][aria-checked="false"]');
+    return this.shadow().find(
+      '[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-checked="false"]'
+    );
   },
   checkboxValueWithText(text: string) {
     return this.shadow()
       .find(`[part="value-rating"][aria-label="${text}"]`)
       .parent()
       .parent()
-      .find('[part="value-checkbox"]');
+      .find('[part~="value-checkbox"]');
   },
   idleCheckboxValueLabel() {
     return this.idleCheckboxValue().parent().find('[part="value-rating"]');

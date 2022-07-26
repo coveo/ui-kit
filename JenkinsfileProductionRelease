@@ -4,7 +4,7 @@ library(
     changelog: false
 )
 
-node('linux && docker') {
+node('heavy && linux && docker') {
   def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
 
   checkout([

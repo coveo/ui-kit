@@ -4,7 +4,7 @@ export interface BaseFacetSelector extends ComponentSelector {
   wrapper: () => Cypress.Chainable<JQuery<HTMLElement>>;
   labelButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
   values: () => Cypress.Chainable<JQuery<HTMLElement>>;
-  clearButton: () => Cypress.Chainable<JQuery<HTMLElement>>;
+  clearButton?: () => Cypress.Chainable<JQuery<HTMLElement>>;
   placeholder: () => Cypress.Chainable<JQuery<HTMLElement>>;
   valueLabel: () => Cypress.Chainable<JQuery<HTMLElement>>;
 }

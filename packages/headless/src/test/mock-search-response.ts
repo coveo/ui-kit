@@ -17,6 +17,7 @@ export function buildMockSearchResponse(
     triggers: [],
     questionAnswer: emptyQuestionAnswer(),
     pipeline: '',
+    splitTestRun: '',
     ...config,
   };
 }

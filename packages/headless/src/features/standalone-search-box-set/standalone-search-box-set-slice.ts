@@ -2,6 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   fetchRedirectUrl,
   registerStandaloneSearchBox,
+  resetStandaloneSearchBox,
   updateAnalyticsToOmniboxFromLink,
   updateAnalyticsToSearchFromLink,
 } from './standalone-search-box-set-actions';
@@ -22,6 +23,17 @@ export const standaloneSearchBoxSetReducer = createReducer(
         }
 
         state[id] = buildStandaloneSearchBoxEntry(redirectionUrl);
+      })
+      .addCase(resetStandaloneSearchBox, (state, action) => {
+        const {id} = action.payload;
+        const searchBox = state[id];
+
+        if (searchBox) {
+          state[id] = buildStandaloneSearchBoxEntry(
+            searchBox.defaultRedirectionUrl
+          );
+          return;
+        }
       })
       .addCase(fetchRedirectUrl.pending, (state, action) => {
         const searchBox = state[action.meta.arg.id];

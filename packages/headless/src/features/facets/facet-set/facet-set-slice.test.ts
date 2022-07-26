@@ -76,6 +76,7 @@ describe('facet-set slice', () => {
       delimitingCharacter: '>',
       filterFacetCount: true,
       freezeCurrentValues: false,
+      hasBreadcrumbs: true,
       injectionDepth: 1000,
       isFieldExpanded: false,
       numberOfValues: 8,
@@ -340,6 +341,15 @@ describe('facet-set slice', () => {
     facetSetReducer(state, deselectAllBreadcrumbs());
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(2);
+  });
+
+  it('dispatching #deselectAllBreadcrumbs does not call #handleFacetDeselectAll for a facet where hasBreadcrumbs is false', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+    state['1'] = buildMockFacetRequest({hasBreadcrumbs: false});
+    facetSetReducer(state, deselectAllBreadcrumbs());
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(0);
   });
 
   it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

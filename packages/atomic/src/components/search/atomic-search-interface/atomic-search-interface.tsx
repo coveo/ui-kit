@@ -352,8 +352,8 @@ export class AtomicSearchInterface
 
     if (options.search) {
       return {
-        ...options.search,
         ...searchConfigFromProps,
+        ...options.search,
       };
     }
 

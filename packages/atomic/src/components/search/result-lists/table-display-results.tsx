@@ -4,11 +4,7 @@ import {ResultsProps} from './result-list-common';
 export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
   props
 ) => {
-  const fieldColumns = Array.from(
-    props
-      .getContentOfResultTemplate(props.resultListState.results[0])
-      .querySelectorAll('atomic-table-element')
-  );
+  const fieldColumns = getFieldTableColumns(props);
 
   if (fieldColumns.length === 0) {
     props.bindings.engine.logger.error(
@@ -76,5 +72,38 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
         ))}
       </tbody>
     </table>
+  );
+};
+
+const getFieldTableColumns = (props: ResultsProps) => {
+  if (props.renderingFunction) {
+    return getFieldTableColumnsFromRenderingFunction(props);
+  }
+  return getFieldTableColumnsFromHTMLTemplate(props);
+};
+
+const getFieldTableColumnsFromRenderingFunction = (
+  props: ResultsProps
+): HTMLAtomicTableElementElement[] => {
+  const contentOfRenderingFunction = document.createElement('div');
+
+  const contentOfRenderingFunctionAsString = props.renderingFunction!(
+    props.resultListState.results[0],
+    document.createElement('div')
+  );
+  contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
+
+  return Array.from(
+    contentOfRenderingFunction.querySelectorAll('atomic-table-element')
+  );
+};
+
+const getFieldTableColumnsFromHTMLTemplate = (
+  props: ResultsProps
+): HTMLAtomicTableElementElement[] => {
+  return Array.from(
+    props
+      .getContentOfResultTemplate(props.resultListState.results[0])
+      .querySelectorAll('atomic-table-element')
   );
 };

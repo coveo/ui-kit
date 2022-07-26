@@ -27,6 +27,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @internal
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
  * @part segmented-container - The container that holds the segmented facets.
+ * @part label - The facet value label.
+ * @part values - The facet values container.
  */
 @Component({
   tag: 'atomic-segmented-facet',
@@ -97,6 +99,7 @@ export class AtomicSegmentedFacet
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
+      hasBreadcrumbs: false,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
@@ -145,22 +148,36 @@ export class AtomicSegmentedFacet
     if (!this.label) {
       return;
     }
-    return <b class="inline-block my-3 mx-2">{this.label}:</b>;
+    return (
+      <b class="inline-block my-3 mx-2" part="label">
+        {this.label}:
+      </b>
+    );
   }
 
   public render() {
-    if (
-      this.searchStatus.state.hasError ||
-      !this.facetState.values.length ||
-      !this.facet.state.enabled
-    ) {
+    if (this.searchStatus.state.hasError || !this.facet.state.enabled) {
+      return <Hidden></Hidden>;
+    }
+
+    if (!this.searchStatus.state.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-8 w-screen my-2 bg-neutral animate-pulse"
+        ></div>
+      );
+    }
+
+    if (!this.facetState.values.length) {
       return <Hidden></Hidden>;
     }
 
     return (
       <div
         part="segmented-container"
-        class="flex whitespace-nowrap h-10 mb-[1%] items-center"
+        class="flex whitespace-nowrap h-10 mb-2.5 items-center"
       >
         {this.renderLabel()}
         {this.renderValues()}
