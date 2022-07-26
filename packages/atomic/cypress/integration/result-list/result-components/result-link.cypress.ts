@@ -129,11 +129,12 @@ describe('Result Link Component', () => {
 
     describe('when there is a valid slot named "attributes"', () => {
       it('copies the attributes properly', () => {
-        const slot = generateComponentHTML('a', {
+        const attributesSlot = generateComponentHTML('a', {
           download: '',
           target: '_self',
+          slot: 'attributes',
         });
-        setupResultLink({slots: [slot]});
+        setupResultLink({slots: [attributesSlot]});
         ResultLinkSelectors.firstInResult()
           .find('a')
           .should('have.attr', 'download', '')
@@ -146,6 +147,7 @@ describe('Result Link Component', () => {
         const attributesSlot = generateComponentHTML('a', {
           download: '',
           target: '_self',
+          slot: 'attributes',
         });
         const defaultSlot = document.createElement('div');
         defaultSlot.id = 'myslot';
@@ -173,6 +175,7 @@ describe('Result Link Component', () => {
         const attributesSlot = generateComponentHTML('a', {
           download: '',
           target: '_self',
+          slot: 'attributes',
         });
         const defaultSlot = document.createElement('div');
         defaultSlot.id = 'myslot';
