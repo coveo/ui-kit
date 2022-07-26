@@ -6,7 +6,7 @@ import {
   ResultContextEvent,
 } from '../../search/result-template-components/result-template-decorators';
 import {
-  Layout,
+  ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
@@ -21,7 +21,7 @@ import {InsightResult, InsightEngine} from '..';
   shadow: true,
 })
 export class AtomicInsightResult {
-  private layout!: Layout;
+  private layout!: ResultLayout;
   @Element() host!: HTMLElement;
 
   /**
@@ -95,7 +95,7 @@ export class AtomicInsightResult {
   }
 
   public connectedCallback() {
-    this.layout = new Layout(
+    this.layout = new ResultLayout(
       this.content!.children,
       'list',
       this.density,

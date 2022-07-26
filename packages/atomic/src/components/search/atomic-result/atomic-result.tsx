@@ -8,7 +8,7 @@ import {
 import {ResultRenderingFunction} from '../result-lists/result-list-common';
 import {AtomicStore} from '../atomic-search-interface/store';
 import {
-  Layout,
+  ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
@@ -23,7 +23,7 @@ import {
   shadow: true,
 })
 export class AtomicResult {
-  private layout!: Layout;
+  private layout!: ResultLayout;
 
   @Element() host!: HTMLElement;
 
@@ -119,7 +119,7 @@ export class AtomicResult {
   }
 
   public connectedCallback() {
-    this.layout = new Layout(
+    this.layout = new ResultLayout(
       this.content!.children,
       this.display,
       this.density,

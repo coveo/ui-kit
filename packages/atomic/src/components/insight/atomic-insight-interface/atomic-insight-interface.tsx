@@ -126,7 +126,7 @@ export class AtomicInsightInterface
    */
   @Method() public initialize(options: InsightInitializationOptions) {
     if (this.widget) {
-      this.host.classList.add('widget');
+      this.host.setAttribute('widget', 'true');
     }
     return this.internalInitialization(() => this.initEngine(options));
   }

@@ -55,7 +55,7 @@ export function getResultDisplayClasses(
   return classes;
 }
 
-export class Layout {
+export class ResultLayout {
   private children: HTMLCollection;
   private density: ResultDisplayDensity;
   private imageSize: ResultDisplayImageSize;
