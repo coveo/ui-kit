@@ -1,7 +1,14 @@
 <template>
-  <div role={divRole} aria-checked={isChecked} onclick={onSelect} class="facet__value-container facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small" tabindex="0" onkeydown={onKeyDown}>
+  <div
+    role={divRole}
+    aria-checked={isChecked}
+    onclick={onSelect}
+    class="facet__value-container facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small"
+    tabindex="0"
+    onkeydown={onKeyDown}
+  >
     <template if:false={displayAsLink}>
-      <lightning-input 
+      <lightning-input
         tabindex="-1"
         type="checkbox"
         class="facet__value-checkbox"
@@ -13,20 +20,34 @@
       ></lightning-input>
     </template>
     <template if:true={isChecked}>
-      <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_selected">{formattedFacetValue}</span>
-      <span class="nowrap slds-var-m-top_xxx-small facet__number-of-results facet__value_selected">({numberOfResults})</span>      </template>
+      <span
+        class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_selected"
+        >{formattedFacetValue}</span
+      >
+      <span
+        class="nowrap slds-var-m-top_xxx-small facet__number-of-results facet__value_selected"
+        >({numberOfResults})</span
+      >
+    </template>
     <template if:false={isChecked}>
       <template if:true={isStandardFacet}>
-        <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle">
-          <lightning-formatted-rich-text value={item.highlightedResult}></lightning-formatted-rich-text>
+        <span
+          class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle"
+        >
+          <lightning-formatted-rich-text
+            value={item.highlightedResult}
+          ></lightning-formatted-rich-text>
         </span>
       </template>
       <template if:false={isStandardFacet}>
-        <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle" >{formattedFacetValue}</span>
+        <span
+          class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle"
+          >{formattedFacetValue}</span
+        >
       </template>
-      <span class="nowrap slds-var-m-top_xxx-small facet__number-of-results">({numberOfResults})</span>
+      <span class="nowrap slds-var-m-top_xxx-small facet__number-of-results"
+        >({numberOfResults})</span
+      >
     </template>
   </div>
 </template>
-
-

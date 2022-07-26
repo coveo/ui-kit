@@ -35,7 +35,7 @@ export default class QuanticFacetValue extends LightningElement {
    * @defaultValue `false`
    */
   @api displayAsLink = false;
-  /** 
+  /**
    * A function used to format the displayed value.
    * @api
    * @type {Function}
@@ -43,7 +43,7 @@ export default class QuanticFacetValue extends LightningElement {
    */
   @api formattingFunction;
 
-  @api displayNew = false
+  @api displayNew = false;
 
   get isStandardFacet() {
     return !this.formattingFunction;
@@ -60,11 +60,11 @@ export default class QuanticFacetValue extends LightningElement {
     return new Intl.NumberFormat(LOCALE).format(this.item.numberOfResults);
   }
 
-  get divRole (){
-    return this.displayAsLink ? "button":"checkbox"
+  get divRole() {
+    return this.displayAsLink ? 'button' : 'checkbox';
   }
-  get ariaLabelVoiceOver(){
-    return `Filter, ${this.formattedFacetValue}, ${this.numberOfResults}`
+  get ariaLabelVoiceOver() {
+    return `Filter, ${this.formattedFacetValue}, ${this.numberOfResults}`;
   }
 
   /**
@@ -72,25 +72,27 @@ export default class QuanticFacetValue extends LightningElement {
    */
   onSelect(evt) {
     evt.preventDefault();
-    this.dispatchEvent(new CustomEvent(
-      'selectvalue', {
-      detail: {
-        value: this.formattedFacetValue
-      }
-    }));
+    this.dispatchEvent(
+      new CustomEvent('selectvalue', {
+        detail: {
+          value: this.formattedFacetValue,
+        },
+      })
+    );
   }
   /**
    * @param {KeyboardEvent} evt
    */
-  onKeyDown(evt) {   
-    if(evt.code==="Enter" || evt.code==="Space"){
-      evt.preventDefault()
-      this.dispatchEvent(new CustomEvent(
-        'selectvalue', {
-        detail: {
-          value: this.formattedFacetValue
-        }
-      }));
+  onKeyDown(evt) {
+    if (evt.code === 'Enter' || evt.code === 'Space') {
+      evt.preventDefault();
+      this.dispatchEvent(
+        new CustomEvent('selectvalue', {
+          detail: {
+            value: this.formattedFacetValue,
+          },
+        })
+      );
     }
   }
 }
