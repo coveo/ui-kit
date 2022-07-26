@@ -2,6 +2,7 @@ import {
   buildCoreCategoryFacet,
   CategoryFacetProps,
   CategoryFacetSearch,
+  CategoryFacetSearchState,
   CategoryFacetValue,
   CoreCategoryFacet,
   CoreCategoryFacetState,
@@ -35,7 +36,10 @@ export interface InsightCategoryFacet extends CoreCategoryFacet {
   state: InsightCategoryFacetState;
 }
 
-export interface InsightCategoryFacetState extends CoreCategoryFacetState {}
+export interface InsightCategoryFacetState extends CoreCategoryFacetState {
+  /** The state of the facet's searchbox. */
+  facetSearch: CategoryFacetSearchState;
+}
 
 /**
  * Creates a `InsightCategoryFacet` controller instance.
@@ -115,6 +119,13 @@ export function buildInsightCategoryFacet(
     showLessValues() {
       coreController.showLessValues();
       dispatch(fetchFacetValues(logFacetShowLess(getFacetId())));
+    },
+
+    get state() {
+      return {
+        ...coreController.state,
+        facetSearch: facetSearch.state,
+      };
     },
   };
 }
