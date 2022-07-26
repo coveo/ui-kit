@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.89.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.0...@coveo/atomic@1.89.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* **atomic:** use custom "closest" method for initializeBindings, resultContext ([#2242](https://github.com/coveo/ui-kit/issues/2242)) ([d5194a0](https://github.com/coveo/ui-kit/commit/d5194a0e622cc15e7a63ef74c5fe2656054bd76e))
+
+
+
+
+
 # [1.89.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.88.2...@coveo/atomic@1.89.0) (2022-07-25)
 
 
