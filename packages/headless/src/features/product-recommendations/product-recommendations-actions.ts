@@ -151,7 +151,7 @@ export const getProductRecommendations = createAsyncThunk<
   void,
   AsyncThunkSearchOptions<StateNeededByGetProductRecommendations>
 >(
-  'productrecommendations/get',
+  'productRecommendations/get',
   async (_, {getState, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const startedAt = new Date().getTime();

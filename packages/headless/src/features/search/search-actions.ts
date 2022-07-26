@@ -313,7 +313,7 @@ export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsActionCreatorPayload,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch & InstantResultSection>
 >(
-  'instantResults/fetch',
+  'search/fetchInstantResults',
   async (
     payload: FetchInstantResultsActionCreatorPayload,
     {getState, dispatch, rejectWithValue, extra: {apiClient, validatePayload}}

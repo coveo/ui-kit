@@ -29,7 +29,7 @@ export const fetchFieldsDescription = createAsyncThunk<
   FieldDescription[],
   void,
   AsyncThunkSearchOptions<ConfigurationSection>
->('fields/description', async (_, {extra, getState, rejectWithValue}) => {
+>('fields/fetchDescription', async (_, {extra, getState, rejectWithValue}) => {
   const state = getState();
   const {accessToken, organizationId} = state.configuration;
   const {apiBaseUrl} = state.configuration.search;

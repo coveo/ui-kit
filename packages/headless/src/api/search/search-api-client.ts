@@ -107,6 +107,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
       requestParams: pickNonBaseParams(req),
+      requestMetadata: {feature: 'querySuggest/fetch'},
       ...this.options,
     });
 
