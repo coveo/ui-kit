@@ -91,6 +91,7 @@ export class AtomicColorFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   private dependenciesManager?: FacetConditionsManager;
+  private resultIndexToFocusOnShowMore = 0;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -178,7 +179,10 @@ export class AtomicColorFacet
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
-  private showMoreLessFocus!: FocusTargetController;
+  private showLessFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private showMoreFocus!: FocusTargetController;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -295,7 +299,8 @@ export class AtomicColorFacet
   private renderValue(
     facetValue: FacetValue,
     onClick: () => void,
-    isShowMoreLessFocusTarget: boolean
+    isShowLessFocusTarget: boolean,
+    isShowMoreFocusTarget: boolean
   ) {
     const displayValue = getFieldValueCaption(
       this.facetId!,
@@ -315,10 +320,10 @@ export class AtomicColorFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
-            buttonRef={(element) =>
-              isShowMoreLessFocusTarget &&
-              this.showMoreLessFocus.setTarget(element)
-            }
+            buttonRef={(element) => {
+              isShowLessFocusTarget && this.showLessFocus.setTarget(element);
+              isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
+            }}
           >
             <FacetValueLabelHighlight
               displayValue={displayValue}
@@ -336,10 +341,10 @@ export class AtomicColorFacet
             i18n={this.bindings.i18n}
             onClick={onClick}
             searchQuery={this.facetState.facetSearch.query}
-            buttonRef={(element) =>
-              isShowMoreLessFocusTarget &&
-              this.showMoreLessFocus.setTarget(element)
-            }
+            buttonRef={(element) => {
+              isShowLessFocusTarget && this.showLessFocus.setTarget(element);
+              isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
+            }}
           >
             <div
               part={`value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value`}
@@ -375,14 +380,22 @@ export class AtomicColorFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value, i) =>
-        this.renderValue(value, () => this.facet.toggleSelect(value), i === 0)
+        this.renderValue(
+          value,
+          () => this.facet.toggleSelect(value),
+          i === 0,
+          i ===
+            (this.sortCriteria === 'automatic'
+              ? 0
+              : this.resultIndexToFocusOnShowMore)
+        )
       )
     );
   }
 
   private renderSearchResults() {
     return this.renderValuesContainer(
-      this.facetState.facetSearch.values.map((value, i) =>
+      this.facetState.facetSearch.values.map((value) =>
         this.renderValue(
           {
             state: 'idle',
@@ -390,7 +403,8 @@ export class AtomicColorFacet
             value: value.rawValue,
           },
           () => this.facet.facetSearch.select(value),
-          i === 0
+          false,
+          false
         )
       ),
       this.facetState.facetSearch.query
@@ -414,11 +428,12 @@ export class AtomicColorFacet
         label={this.label}
         i18n={this.bindings.i18n}
         onShowMore={() => {
-          this.showMoreLessFocus.focusAfterSearch();
+          this.resultIndexToFocusOnShowMore = this.facet.state.values.length;
+          this.showMoreFocus.focusAfterSearch();
           this.facet.showMoreValues();
         }}
         onShowLess={() => {
-          this.showMoreLessFocus.focusAfterSearch();
+          this.showLessFocus.focusAfterSearch();
           this.facet.showLessValues();
         }}
         canShowLessValues={this.facetState.canShowLessValues}

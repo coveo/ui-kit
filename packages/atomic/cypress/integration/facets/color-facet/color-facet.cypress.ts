@@ -201,15 +201,21 @@ describe('Color Facet Test Suites', () => {
   });
 
   describe('when selecting the "Show more" button', () => {
-    function setupSelectShowMore() {
+    function setupSelectShowMore(sortCriteria?: string) {
       new TestFixture()
-        .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
+        .with(
+          addColorFacet({
+            field: colorFacetField,
+            label: colorFacetLabel,
+            ...(sortCriteria && {'sort-criteria': sortCriteria}),
+          })
+        )
         .init();
       pressShowMore(ColorFacetSelectors);
     }
 
     describe('verify rendering', () => {
-      before(setupSelectShowMore);
+      before(() => setupSelectShowMore('automatic'));
       CommonFacetAssertions.assertDisplayShowMoreButton(
         ColorFacetSelectors,
         true
@@ -223,10 +229,20 @@ describe('Color Facet Test Suites', () => {
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2
       );
-      CommonFacetAssertions.assertFocusFirstBoxValue(ColorFacetSelectors);
+      CommonFacetAssertions.assertFocusBoxValue(ColorFacetSelectors, 0);
     });
+
+    describe("when the sort order isn't automatic", () => {
+      before(() => setupSelectShowMore('alphanumeric'));
+
+      CommonFacetAssertions.assertFocusBoxValue(
+        ColorFacetSelectors,
+        colorFacetDefaultNumberOfValues
+      );
+    });
+
     describe('verify analytics', () => {
-      before(setupSelectShowMore);
+      before(() => setupSelectShowMore());
       FacetAssertions.assertLogFacetShowMore(colorFacetField);
     });
 
@@ -255,7 +271,6 @@ describe('Color Facet Test Suites', () => {
           ColorFacetSelectors,
           true
         );
-        CommonFacetAssertions.assertFocusFirstBoxValue(ColorFacetSelectors);
       });
     });
 
