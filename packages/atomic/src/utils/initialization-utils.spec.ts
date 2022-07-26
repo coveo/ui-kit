@@ -20,6 +20,10 @@ import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-sea
 
 import {createAtomicStore} from '../components/search/atomic-search-interface/store';
 
+// https://github.com/ionic-team/stencil/issues/3260
+global.DocumentFragment = class DocumentFragment extends Node {};
+global.ShadowRoot = class ShadowRoot extends DocumentFragment {};
+
 describe('InitializeBindings decorator', () => {
   it(`when using the decorator with a property other than bindings
   should log an error`, () => {
