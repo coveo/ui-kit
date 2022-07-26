@@ -55,8 +55,6 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-link-selected - The selected facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
  * @part value-box-selected - The selected facet value when display is 'box'.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-rating-range-facet',
