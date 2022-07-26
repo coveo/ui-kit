@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.89.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.1...@coveo/atomic@1.89.2) (2022-07-26)
+
+
+### Bug Fixes
+
+* **atomic:** added accessible group for results per page options ([#2245](https://github.com/coveo/ui-kit/issues/2245)) ([a08b855](https://github.com/coveo/ui-kit/commit/a08b85545fcdb30a98575bb1e381d6ad057a0f4b))
+* **atomic:** focus first new value in facets when pressing show more ([#2250](https://github.com/coveo/ui-kit/issues/2250)) ([90f68d1](https://github.com/coveo/ui-kit/commit/90f68d1634014630545168b7a03f10b826f7dd90))
+
+
+
+
+
 ## [1.89.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.0...@coveo/atomic@1.89.1) (2022-07-26)
 
 
