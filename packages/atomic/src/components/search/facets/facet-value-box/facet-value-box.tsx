@@ -21,7 +21,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
     <li key={props.displayValue}>
       <Button
         style="outline-bg-neutral"
-        part="value-box"
+        part={`value-box${props.isSelected ? ' value-box-selected' : ''}`}
         onClick={() => props.onClick()}
         class={`value-box box-border w-full h-full items-center p-2 group ${
           props.isSelected ? 'selected' : ''
