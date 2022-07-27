@@ -218,6 +218,15 @@ export type {
 } from './controllers/insight/sort/headless-insight-sort';
 export {buildSort} from './controllers/insight/sort/headless-insight-sort';
 
+export type {
+  TabInitialState,
+  TabOptions,
+  TabProps,
+  TabState,
+  Tab,
+} from './controllers/insight/tab/headless-insight-tab';
+export {buildTab} from './controllers/insight/tab/headless-insight-tab';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
