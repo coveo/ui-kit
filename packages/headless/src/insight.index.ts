@@ -25,6 +25,7 @@ export * from './features/insight-search/insight-search-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 export * from './features/recent-results/recent-results-actions-loader';
+export * from './features/case-context/case-context-actions-loader';
 
 // Controllers
 export type {
