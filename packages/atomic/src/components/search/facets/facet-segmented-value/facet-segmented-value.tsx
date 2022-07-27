@@ -20,7 +20,7 @@ export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (
     <li key={props.displayValue}>
       <Button
         style="square-neutral"
-        part="value-box"
+        part={`value-box${props.isSelected ? ' value-box-selected' : ''}`}
         onClick={() => props.onClick()}
         class={`value-box flex box-border h-full items-center p-2 group ${
           props.isSelected
@@ -44,7 +44,11 @@ export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (
         <span
           title={count}
           part="value-count"
-          class="value-box-count text-neutral-dark truncate pl-1 w-auto mt-0 text-sm"
+          class={`value-box-count truncate pl-1 w-auto mt-0 text-sm ${
+            props.isSelected
+              ? 'text-primary'
+              : 'text-neutral-dark group-hover:text-primary-light group-focus:text-primary'
+          }`}
         >
           {props.i18n.t('between-parentheses', {
             text: compactCount,

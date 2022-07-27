@@ -1,5 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {clearAnalyticsClient} from '../../api/analytics/search-analytics';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {updateActiveTab} from '../tab-set/tab-set-actions';
 import {
@@ -75,9 +76,17 @@ export const configurationReducer = createReducer(
         if (action.payload.timezone) {
           state.search.timezone = action.payload.timezone;
         }
+        if (action.payload.authenticationProviders) {
+          state.search.authenticationProviders =
+            action.payload.authenticationProviders;
+        }
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (!isNullOrUndefined(action.payload.enabled)) {
+          if (!action.payload.enabled && state.analytics.enabled) {
+            clearAnalyticsClient();
+          }
+
           state.analytics.enabled = action.payload.enabled;
         }
         if (!isNullOrUndefined(action.payload.originContext)) {
@@ -111,6 +120,7 @@ export const configurationReducer = createReducer(
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
+        clearAnalyticsClient();
       })
       .addCase(enableAnalytics, (state) => {
         state.analytics.enabled = true;

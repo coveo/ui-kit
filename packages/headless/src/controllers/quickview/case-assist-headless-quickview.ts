@@ -2,20 +2,20 @@ import {CaseAssistEngine} from '../../app//case-assist-engine/case-assist-engine
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
 
 import {
-  buildQuickviewCore,
-  QuickviewCoreOptions,
-  QuickviewCoreState,
-  QuickviewCoreProps,
-  QuickviewCore,
+  buildCoreQuickview,
+  QuickviewOptions,
+  QuickviewState,
+  QuickviewProps,
+  Quickview,
 } from '../core/quickview/headless-core-quickview';
 
-export interface CaseAssistQuickviewProps extends QuickviewCoreProps {}
+export interface CaseAssistQuickviewProps extends QuickviewProps {}
 
-export interface CaseAssistQuickviewOptions extends QuickviewCoreOptions {}
+export interface CaseAssistQuickviewOptions extends QuickviewOptions {}
 
-export interface CaseAssistQuickview extends QuickviewCore {}
+export interface CaseAssistQuickview extends Quickview {}
 
-export interface CaseAssistQuickviewState extends QuickviewCoreState {}
+export interface CaseAssistQuickviewState extends QuickviewState {}
 
 /**
  * Creates a `CaseAssistQuickview` controller instance.
@@ -34,5 +34,5 @@ export function buildCaseAssistQuickview(
     );
   };
 
-  return buildQuickviewCore(engine, props, fetchResultContentCallback);
+  return buildCoreQuickview(engine, props, fetchResultContentCallback);
 }

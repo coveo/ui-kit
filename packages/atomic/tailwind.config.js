@@ -52,7 +52,7 @@ module.exports = {
       },
       gradientColorStops: (theme) => ({
         ...theme("colors"),
-        'background-80': 'var(--atomic-background) 80%',
+        'background-60': 'var(--atomic-background) 60%',
       }),
       gridTemplateColumns: {
         'min-1fr': 'min-content 1fr',
@@ -64,6 +64,9 @@ module.exports = {
         scaleUpModal:
           'scaleUp .5s cubic-bezier(0.165, 0.840, 0.440, 1.000) forwards',
         slideDownModal: 'slideDown .5s linear forwards',
+      },
+      transitionProperty: {
+        'visi-opacity': 'visibility, opacity'
       },
       keyframes: {
         scaleUp: {

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.42.1](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.42.0...@coveo/bueno@0.42.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.42.0](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.41.1...@coveo/bueno@0.42.0) (2022-07-07)
+
+
+### Features
+
+* npm workspace migration ([#2180](https://github.com/coveo/ui-kit/issues/2180)) ([f3b6997](https://github.com/coveo/ui-kit/commit/f3b69977675837dbed5ebe1eb3cb7fb2c98305ea))
+
+
+
+
+
 ## [0.41.1](https://github.com/coveo/ui-kit/compare/@coveo/bueno@0.41.0...@coveo/bueno@0.41.1) (2022-07-06)
 
 **Note:** Version bump only for package @coveo/bueno

@@ -33,35 +33,43 @@ export const RatingFacetSelectors = {
     return this.shadow().find('[part="value-rating"]');
   },
   selectedCheckboxValue() {
-    return this.shadow().find('[part="value-checkbox"][aria-checked="true"]');
+    return this.shadow().find(
+      '[part~="value-checkbox"][part~="value-checkbox-checked"][aria-checked="true"]'
+    );
   },
   idleCheckboxValue() {
-    return this.shadow().find('[part="value-checkbox"][aria-checked="false"]');
+    return this.shadow().find(
+      '[part~="value-checkbox"]:not([part~="value-checkbox-checked"])[aria-checked="false"]'
+    );
   },
   checkboxValueWithText(text: string) {
     return this.shadow()
       .find(`[part="value-rating"][aria-label="${text}"]`)
       .parent()
       .parent()
-      .find('[part="value-checkbox"]');
+      .find('[part~="value-checkbox"]');
   },
   idleCheckboxValueLabel() {
     return this.idleCheckboxValue().parent().find('[part="value-rating"]');
   },
   selectedLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="true"]');
+    return this.shadow().find(
+      '[part~="value-link"][part~="value-link-selected"][aria-pressed="true"]'
+    );
   },
   idleLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="false"]');
+    return this.shadow().find(
+      '[part~="value-link"]:not([part~="value-link-selected"])[aria-pressed="false"]'
+    );
   },
   selectedLinkValueWithText(text: string) {
     return this.shadow().find(
-      `[part="value-link"][aria-pressed="true"] [part="value-rating"][aria-label="${text}"]`
+      `[part~="value-link"][part~="value-link-selected"][aria-pressed="true"] [part="value-rating"][aria-label="${text}"]`
     );
   },
   idleLinkValueLabel() {
     return this.shadow().find(
-      '[part="value-link"][aria-pressed="false"] [part="value-rating"]'
+      '[part~="value-link"]:not([part~="value-link-selected"])[aria-pressed="false"] [part="value-rating"]'
     );
   },
   facetValueAtIndex(index: number) {

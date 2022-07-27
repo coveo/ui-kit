@@ -10,9 +10,14 @@
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
       async function main() {
-        await customElements.whenDefined('atomic-svc-insight-interface');
-        const insightInterface = document.querySelector('atomic-svc-insight-interface');
-        await insightInterface.initialize({});
+        await customElements.whenDefined('atomic-insight-interface');
+        const insightInterface = document.querySelector('atomic-insight-interface');
+        await insightInterface.initialize({
+          // TODO: update org with an insight supported one
+          insightId: 'test',
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
 
         insightInterface.executeFirstSearch();
       }
@@ -32,7 +37,9 @@
   <body>
     <button id="widget-view">Toggle widget view</button>
     <div id="wrapper">
-      <atomic-svc-insight-interface> </atomic-svc-insight-interface>
+      <atomic-insight-interface>
+        <atomic-insight-search-box></atomic-insight-search-box>
+      </atomic-insight-interface>
     </div>
     <script src="../header.js" type="text/javascript"></script>
     <script type="text/javascript">

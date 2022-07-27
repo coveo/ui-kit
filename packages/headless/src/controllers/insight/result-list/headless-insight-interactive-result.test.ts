@@ -8,14 +8,14 @@ import {
   MockInsightEngine,
 } from '../../../test/mock-engine';
 import {
-  buildInsightInteractiveResult,
-  InsightInteractiveResult,
+  buildInteractiveResult,
+  InteractiveResult,
 } from './headless-insight-interactive-result';
 
 describe('InsightInteractiveResult', () => {
   let engine: MockInsightEngine;
   let mockResult: Result;
-  let interactiveResult: InsightInteractiveResult;
+  let interactiveResult: InteractiveResult;
   let logDocumentOpenPendingActionType: string;
 
   const resultStringParams = {
@@ -33,7 +33,7 @@ describe('InsightInteractiveResult', () => {
     const result = (mockResult = buildMockResult(resultStringParams));
     logDocumentOpenPendingActionType =
       logDocumentOpenThunk(mockResult).pending.type;
-    interactiveResult = buildInsightInteractiveResult(engine, {
+    interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });
   }

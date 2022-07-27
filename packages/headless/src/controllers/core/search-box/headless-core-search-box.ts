@@ -49,9 +49,9 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 
 export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
-export interface CoreSearchBoxProps {
+export interface SearchBoxProps {
   /**
-   * The `CoreSearchBox` controller options.
+   * The `SearchBox` controller options.
    */
   options?: SearchBoxOptions;
 
@@ -113,7 +113,7 @@ export interface Suggestion {
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
  */
-export interface CoreSearchBox extends Controller {
+export interface SearchBox extends Controller {
   /**
    * Updates the search box text value and shows the suggestions for that value.
    *
@@ -149,10 +149,16 @@ export interface CoreSearchBox extends Controller {
   state: SearchBoxState;
 }
 
+/**
+ * Creates a `SearchBox` controller instance.
+ *
+ * @param engine - The headless engine instance.
+ * @returns A `SearchBox` controller instance.
+ */
 export function buildCoreSearchBox(
   engine: CoreEngine,
-  props: CoreSearchBoxProps
-): CoreSearchBox {
+  props: SearchBoxProps
+): SearchBox {
   if (!loadSearchBoxReducers(engine)) {
     throw loadReducerError;
   }

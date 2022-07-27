@@ -118,11 +118,6 @@
         margin: 0;
       }
 
-      .header-bg {
-        background-color: var(--atomic-neutral-light);
-        grid-area: 1 / -1 / 1 / 1;
-      }
-
       atomic-search-layout {
         row-gap: var(--atomic-layout-spacing-y);
       }
@@ -154,7 +149,6 @@
       fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
     >
       <atomic-search-layout>
-        <div class="header-bg"></div>
         <atomic-layout-section section="search">
           <div id="result-display-option">
             <label for="result-display-select">Result list layout:&nbsp;</label
@@ -174,12 +168,19 @@
           <h1 class="accessibility-header">Search</h1>
           <atomic-search-box>
             <atomic-search-box-recent-queries> </atomic-search-box-recent-queries>
-            <atomic-search-box-instant-results image-size="icon">
+            <atomic-search-box-instant-results image-size="small">
               <atomic-result-template>
                 <template>
                   <style>
                     .result-root {
+                      height: 120px;
                       padding-top: 12px;
+                    }
+                    .result-root img {
+                      max-width: 70%;
+                    }
+                    atomic-result-section-visual {
+                      max-height: 100%;
                     }
                     [field='title'] {
                       font-size: 14px;
@@ -214,10 +215,11 @@
               field="ec_category"
               label="Category"
               delimiting-character="|"
+              sort-criteria="occurrences"
               heading-level="2"
               with-search
             ></atomic-category-facet>
-            <atomic-facet field="ec_brand" label="Brand" heading-level="2"></atomic-facet>
+            <atomic-facet field="ec_brand" label="Brand" sort-criteria="occurrences" heading-level="2"></atomic-facet>
             <atomic-numeric-facet
               field="cat_review_count"
               label="Amount of reviews"
@@ -235,7 +237,13 @@
               sort-criteria="occurrences"
               heading-level="2"
             ></atomic-color-facet>
-            <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer" heading-level="2">
+            <atomic-numeric-facet
+              field="ec_price"
+              label="Cost"
+              with-input="integer"
+              sort-criteria="occurrences"
+              heading-level="2"
+            >
               <atomic-format-currency currency="USD"></atomic-format-currency>
             </atomic-numeric-facet>
             <atomic-timeframe-facet label="Listed within" with-date-picker heading-level="2">
@@ -321,23 +329,20 @@
                     ><atomic-result-text field="ec_shortdesc"></atomic-result-text
                   ></atomic-result-section-excerpt>
                   <atomic-result-section-bottom-metadata>
-                    <atomic-result-fields-list role="grid">
-                      <atomic-field-condition class="field" if-defined="cat_platform" role="row">
-                        <span class="field-label" role="rowheader"><atomic-text value="Platform"></atomic-text>:</span>
-                        <atomic-result-text field="cat_platform" role="cell"></atomic-result-text>
+                    <atomic-result-fields-list>
+                      <atomic-field-condition class="field" if-defined="cat_platform">
+                        <span class="field-label"><atomic-text value="Platform"></atomic-text>:</span>
+                        <atomic-result-text field="cat_platform"></atomic-result-text>
                       </atomic-field-condition>
 
-                      <atomic-field-condition class="field" if-defined="cat_condition" role="row">
-                        <span class="field-label" role="rowheader"><atomic-text value="Condition"></atomic-text>:</span>
-                        <atomic-result-text field="cat_condition" role="cell"></atomic-result-text>
+                      <atomic-field-condition class="field" if-defined="cat_condition">
+                        <span class="field-label"><atomic-text value="Condition"></atomic-text>:</span>
+                        <atomic-result-text field="cat_condition"></atomic-result-text>
                       </atomic-field-condition>
 
-                      <atomic-field-condition class="field" if-defined="cat_categories" role="row">
-                        <span class="field-label" role="rowheader"><atomic-text value="Tags"></atomic-text>:</span>
-                        <atomic-result-multi-value-text
-                          field="cat_categories"
-                          role="cell"
-                        ></atomic-result-multi-value-text>
+                      <atomic-field-condition class="field" if-defined="cat_categories">
+                        <span class="field-label"><atomic-text value="Tags"></atomic-text>:</span>
+                        <atomic-result-multi-value-text field="cat_categories"></atomic-result-multi-value-text>
                       </atomic-field-condition>
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>

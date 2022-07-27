@@ -9,6 +9,7 @@ import {
   Expandable,
   AllowedValues,
 } from '../../facet-api/request';
+import {AnyFacetRequest} from '../../generic/interfaces/generic-facet-request';
 
 export const facetSortCriteria: FacetSortCriterion[] = [
   'score',
@@ -37,4 +38,9 @@ export interface FacetRequest
     SortCriteria<FacetSortCriterion> {
   /** @defaultValue `automatic` */
   sortCriteria: FacetSortCriterion;
+  hasBreadcrumbs?: boolean;
+}
+
+export function isFacetRequest(req: AnyFacetRequest): req is FacetRequest {
+  return (req as FacetRequest).hasBreadcrumbs !== undefined;
 }

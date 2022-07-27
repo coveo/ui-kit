@@ -181,9 +181,9 @@ export function assertDisplayAllCategoriesButton(display: boolean) {
   });
 }
 
-export function assertFocusFirstChildValue() {
-  it('should focus on the first value', () => {
-    CategoryFacetSelectors.childValue().first().should('be.focused');
+export function assertFocusChildValue(index: number) {
+  it(`should focus on the value at index ${index}`, () => {
+    CategoryFacetSelectors.childValue().eq(index).should('be.focused');
   });
 }
 

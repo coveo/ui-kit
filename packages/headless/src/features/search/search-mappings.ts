@@ -4,8 +4,10 @@ import {
 } from '../../api/search/date/relative-date';
 import {SearchAPIClientResponse} from '../../api/search/search-api-client';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {FacetsParam} from '../../api/search/search-api-params';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
+import {isFacetRequest} from '../facets/facet-set/interfaces/request';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetResponse} from '../facets/generic/interfaces/generic-facet-response';
 import {
@@ -67,20 +69,25 @@ function mapFacetRequest(
       ),
     };
   }
+  // TODO: remove in v2
+  if (isFacetRequest(facetRequest)) {
+    const {hasBreadcrumbs, ...required} = facetRequest;
+    return required;
+  }
 
   return facetRequest;
 }
 
-export interface MappedSearchRequest {
-  request: SearchRequest;
+export interface MappedSearchRequest<T extends FacetsParam = SearchRequest> {
+  request: T;
   mappings: SearchMappings;
 }
 
-export function mapSearchRequest(
-  searchRequest: SearchRequest
-): MappedSearchRequest {
+export function mapSearchRequest<T extends FacetsParam = SearchRequest>(
+  searchRequest: T
+): MappedSearchRequest<T> {
   const mappings = initialSearchMappings();
-  const request: SearchRequest = {
+  const request: T = {
     ...searchRequest,
     facets: searchRequest.facets?.map((facetRequest) =>
       mapFacetRequest(facetRequest, mappings)
