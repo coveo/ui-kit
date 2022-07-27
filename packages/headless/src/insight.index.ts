@@ -222,6 +222,9 @@ export type {InsightInterfaceState} from './features/insight-interface/insight-i
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
+
 // Types & Helpers
 export {
   SortOrder,
