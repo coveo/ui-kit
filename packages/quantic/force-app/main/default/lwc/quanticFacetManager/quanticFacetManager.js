@@ -143,8 +143,8 @@ export default class QuanticFacetManager extends LightningElement {
       return;
     }
 
-    // @ts-ignore
     const payload = this.facets.map((f) => ({
+      // @ts-ignore
       facetId: f.dataset.facetId,
       payload: f,
     }));
