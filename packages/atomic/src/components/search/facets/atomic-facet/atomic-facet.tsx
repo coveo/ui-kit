@@ -214,7 +214,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
-  @Event() facetInitialized!: EventEmitter<HTMLElement>;
+  @Event() facetInitialized!: EventEmitter;
 
   private validateProps() {
     new Schema({
@@ -251,7 +251,12 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   }
 
   public componentDidRender() {
-    this.facetInitialized.emit(this.host);
+    this.facetInitialized.emit({
+      label: this.label,
+      facetId: this.facetId!,
+      element: this.host,
+      facetState: this.facet.state,
+    });
   }
 
   public disconnectedCallback() {

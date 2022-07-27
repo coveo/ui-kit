@@ -149,7 +149,13 @@ export class AtomicExternal {
 }
 
 
-export declare interface AtomicFacet extends Components.AtomicFacet {}
+export declare interface AtomicFacet extends Components.AtomicFacet {
+  /**
+   *  
+   */
+  'facetInitialized': EventEmitter<CustomEvent<any>>;
+
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -166,6 +172,7 @@ export class AtomicFacet {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['facetInitialized']);
   }
 }
 
