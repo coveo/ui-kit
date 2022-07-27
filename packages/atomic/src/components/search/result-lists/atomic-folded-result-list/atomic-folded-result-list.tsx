@@ -23,7 +23,7 @@ import {
   ResultListCommon,
   ResultRenderingFunction,
 } from '../../../common/result-list/result-list-common';
-import {FoldedResultListStateContextEvent} from '../result-list-decorators';
+import {FoldedResultListStateContextEvent} from '../../../common/result-list/result-list-decorators';
 import {randomID} from '../../../../utils/utils';
 import {
   FocusTarget,

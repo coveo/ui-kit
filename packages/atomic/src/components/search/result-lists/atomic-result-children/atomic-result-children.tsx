@@ -20,11 +20,11 @@ import {
   BaseResultList,
   ResultListCommon,
 } from '../../../common/result-list/result-list-common';
-import {TemplateContent} from '../../result-templates/result-template-common';
+import {TemplateContent} from '../../../common/result-templates/result-template-common';
 import {
   FoldedResultListContext,
   FoldedResultListStateContext,
-} from '../result-list-decorators';
+} from '../../../common/result-list/result-list-decorators';
 import {ResultDisplayImageSize} from '../../../common/atomic-result/atomic-result-display-options';
 import {ListDisplayResultsPlaceholder} from '../../../common/result-list/list-display-results-placeholder';
 import {Button} from '../../../common/button';

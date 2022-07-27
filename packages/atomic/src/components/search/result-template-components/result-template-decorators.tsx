@@ -5,7 +5,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/atomic-result/atomic-result-display-options';
-import {TemplateContent} from '../result-templates/result-template-common';
+import {TemplateContent} from '../../common/result-templates/result-template-common';
 
 export class MissingResultParentError extends Error {
   constructor(elementName: string) {

@@ -9,7 +9,7 @@ import {
   ResultContext,
   ResultDisplayConfigContext,
 } from '../result-template-components/result-template-decorators';
-import {FoldedResultListStateContext} from '../result-lists/result-list-decorators';
+import {FoldedResultListStateContext} from '../../common/result-list/result-list-decorators';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
