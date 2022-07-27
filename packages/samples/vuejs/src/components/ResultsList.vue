@@ -6,7 +6,6 @@ import resultTemplate from '../templates/result-template.html';
   <div class="results">
     <atomic-did-you-mean></atomic-did-you-mean>
     <atomic-result-list
-      fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
       display="grid"
       image-size="large"
     >

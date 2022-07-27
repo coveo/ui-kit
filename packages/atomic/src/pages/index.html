@@ -133,7 +133,7 @@
 
   <body>
     <atomic-aria-live></atomic-aria-live>
-    <atomic-search-interface>
+    <atomic-search-interface fields-to-include="snrating,sncost">
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
@@ -214,7 +214,7 @@
           <atomic-layout-section section="results">
             <atomic-smart-snippet></atomic-smart-snippet>
             <atomic-smart-snippet-suggestions></atomic-smart-snippet-suggestions>
-            <atomic-result-list fields-to-include="snrating,sncost">
+            <atomic-result-list>
               <atomic-result-template must-match-sourcetype="YouTube">
                 <template>
                   <atomic-result-section-visual image-size="small">
