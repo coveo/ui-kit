@@ -19,8 +19,8 @@ export const InsightIconButton: FunctionalComponent<Props> = ({
     class="p-3"
     part="button"
     onClick={onClick}
+    title={tooltip || ''}
   >
     <atomic-icon icon={icon} class="w-4 h-4 shrink-0"></atomic-icon>
-    {Boolean(tooltip) && <div class="tooltip">{tooltip}</div>}
   </Button>
 );
