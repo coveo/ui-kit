@@ -1,5 +1,9 @@
 import {LightningElement, api, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless, getHeadlessBundle} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -8,6 +12,7 @@ import {registerComponentForInit, initializeWithHeadless, getHeadlessBundle} fro
 /**
  * The `QuanticResultsPerPage` component determines how many results to display per page.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-results-per-page engine-id={engineId} choices-displayed="5,10,20" initial-choice="5"></c-quantic-results-per-page>
  */
@@ -34,7 +39,7 @@ export default class QuanticResultsPerPage extends LightningElement {
   @api initialChoice = 10;
 
   /** @type {boolean}*/
-  @track hasResults
+  @track hasResults;
   /** @type {number[]} */
   @track choices = [];
 
@@ -50,7 +55,7 @@ export default class QuanticResultsPerPage extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
-  
+
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
@@ -67,12 +72,16 @@ export default class QuanticResultsPerPage extends LightningElement {
     this.choices = this.parseChoicesDisplayed();
     this.validateInitialChoice();
     this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
-      initialState: {numberOfResults: Number(this.initialChoice) ?? this.choices[0]},
+      initialState: {
+        numberOfResults: Number(this.initialChoice) ?? this.choices[0],
+      },
     });
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
-  }
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -88,7 +97,9 @@ export default class QuanticResultsPerPage extends LightningElement {
     return this.choicesDisplayed.split(',').map((choice) => {
       const parsedChoice = parseInt(choice, 10);
       if (isNaN(parsedChoice)) {
-        throw new Error(`The choice value "${choice}" from the "choicesDisplayed" option is not a number.`);
+        throw new Error(
+          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
+        );
       }
       return parsedChoice;
     });
@@ -96,14 +107,16 @@ export default class QuanticResultsPerPage extends LightningElement {
 
   validateInitialChoice() {
     if (!this.choices.includes(Number(this.initialChoice))) {
-      throw new Error(`The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`);
+      throw new Error(
+        `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`
+      );
     }
   }
 
   get choicesObjects() {
     return this.choices.map((choice) => ({
       value: choice,
-      selected: choice === this.currentResultsPerPageValue
+      selected: choice === this.currentResultsPerPageValue,
     }));
   }
 

@@ -21,6 +21,7 @@ import viewResults from '@salesforce/label/c.quantic_ViewResults';
 /**
  * The `QuanticRefineToggle` component displays a button that is used to open the refine modal.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen>
  *   <div slot="refine-title">Custom Title</div>

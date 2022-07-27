@@ -25,6 +25,7 @@ import oldest from '@salesforce/label/c.quantic_Oldest';
 /**
  * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criterion to use when sorting query results.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-sort engine-id={engineId}></c-quantic-sort>
  */
@@ -81,7 +82,7 @@ export default class QuanticSort extends LightningElement {
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
-  }
+  };
 
   disconnectedCallback() {
     this.unsubscribeSort?.();
@@ -103,7 +104,8 @@ export default class QuanticSort extends LightningElement {
       {
         label: this.labels.newest,
         value: this.headless.buildCriterionExpression(this.dateDescending),
-        criterion: this.dateDescending},
+        criterion: this.dateDescending,
+      },
       {
         label: this.labels.oldest,
         value: this.headless.buildCriterionExpression(this.dateAscending),
@@ -116,7 +118,9 @@ export default class QuanticSort extends LightningElement {
    * @param {CustomEvent<{value: string}>} e
    */
   handleChange(e) {
-    this.sort.sortBy(this.options.find((option) => option.value === e.detail.value).criterion);
+    this.sort.sortBy(
+      this.options.find((option) => option.value === e.detail.value).criterion
+    );
   }
 
   get relevancy() {

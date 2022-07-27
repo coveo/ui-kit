@@ -1,4 +1,3 @@
-
 import {LightningElement, track, api} from 'lwc';
 import {
   registerComponentForInit,
@@ -30,6 +29,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticFacet` displays a facet of the results for the current query.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-facet engine-id={engineId} facet-id="myFacet" field="filetype" label="File Type" number-of-values="5" sort-criteria="occurrences" no-search display-values-as="link" is-collapsed></c-quantic-facet>
  */
@@ -40,7 +40,7 @@ export default class QuanticFacet extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /** 
+  /**
    * A unique identifier for the facet.
    * Defaults to the facet field.
    * @api
@@ -135,11 +135,11 @@ export default class QuanticFacet extends LightningElement {
     'displayValuesAs',
     'noFilterFacetCount',
     'injectionDepth',
-  ]
+  ];
 
   /** @type {FacetState} */
   @track state;
-  
+
   /** @type {Facet} */
   facet;
   /** @type {SearchStatus} */
@@ -192,9 +192,11 @@ export default class QuanticFacet extends LightningElement {
       field: this.field,
       sortCriteria: this.sortCriteria,
       numberOfValues: Number(this.numberOfValues),
-      facetSearch: this.noSearch ? undefined : {
-        numberOfValues: Number(this.numberOfValues)
-      },
+      facetSearch: this.noSearch
+        ? undefined
+        : {
+            numberOfValues: Number(this.numberOfValues),
+          },
       facetId: this.facetId ?? this.field,
       filterFacetCount: !this.noFilterFacetCount,
       injectionDepth: Number(this.injectionDepth),
@@ -204,9 +206,9 @@ export default class QuanticFacet extends LightningElement {
     registerToStore(this.engineId, Store.facetTypes.FACETS, {
       label: this.label,
       facetId: this.facet.state.facetId,
-      element: this.template.host
+      element: this.template.host,
     });
-  }
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -215,17 +217,22 @@ export default class QuanticFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
-    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
+    this.showPlaceholder =
+      this.searchStatus?.state?.isLoading &&
+      !this.searchStatus?.state?.hasError &&
+      !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
-    return this.state?.values
-      .filter((value) => value.numberOfResults || value.state === 'selected')
-      .map((v) => ({
-        ...v,
-        checked: v.state === 'selected',
-        highlightedResult: v.value,
-      })) || [];
+    return (
+      this.state?.values
+        .filter((value) => value.numberOfResults || value.state === 'selected')
+        .map((v) => ({
+          ...v,
+          checked: v.state === 'selected',
+          highlightedResult: v.value,
+        })) || []
+    );
   }
 
   get query() {
@@ -304,7 +311,9 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get actionButtonLabel() {
-    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
+    const label = this.isCollapsed
+      ? this.labels.expandFacet
+      : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
@@ -313,7 +322,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   get isDisplayAsLink() {
-    return this.displayValuesAs === 'link'
+    return this.displayValuesAs === 'link';
   }
 
   get numberOfSelectedValues() {
@@ -322,8 +331,14 @@ export default class QuanticFacet extends LightningElement {
 
   get clearFilterLabel() {
     if (this.hasActiveValues) {
-      const labelName = I18nUtils.getLabelNameWithCount('clearFilter', this.numberOfSelectedValues);
-      return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
+      const labelName = I18nUtils.getLabelNameWithCount(
+        'clearFilter',
+        this.numberOfSelectedValues
+      );
+      return `${I18nUtils.format(
+        this.labels[labelName],
+        this.numberOfSelectedValues
+      )}`;
     }
     return '';
   }
@@ -345,7 +360,9 @@ export default class QuanticFacet extends LightningElement {
   }
 
   getItemFromValue(value) {
-    return (this.isFacetSearchActive ? this.facetSearchResults : this.values).find((item) => item.value === value);
+    return (
+      this.isFacetSearchActive ? this.facetSearchResults : this.values
+    ).find((item) => item.value === value);
   }
 
   /**
@@ -403,7 +420,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   clearInput() {
-    if(this.input) {
+    if (this.input) {
       this.input.value = '';
     }
     this.facet.facetSearch.updateText('');
@@ -414,6 +431,9 @@ export default class QuanticFacet extends LightningElement {
       return result;
     }
     const regex = new RegExp(`(${regexEncode(query)})`, 'i');
-    return result.replace(regex, '<b class="facet__search-result_highlight">$1</b>');
+    return result.replace(
+      regex,
+      '<b class="facet__search-result_highlight">$1</b>'
+    );
   }
 }

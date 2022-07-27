@@ -1,5 +1,9 @@
-import { api, LightningElement, track } from 'lwc';
-import { getHeadlessBundle, initializeWithHeadless, registerComponentForInit } from 'c/quanticHeadlessLoader';
+import {api, LightningElement, track} from 'lwc';
+import {
+  getHeadlessBundle,
+  initializeWithHeadless,
+  registerComponentForInit,
+} from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 
 import didYouMean from '@salesforce/label/c.quantic_DidYouMean';
@@ -14,6 +18,7 @@ import queryCorrectedTo from '@salesforce/label/c.quantic_QueryCorrectedTo';
  * The `QuanticDidYouMean` component is responsible for handling query corrections.
  * When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
  */
@@ -45,12 +50,12 @@ export default class QuanticDidYouMean extends LightningElement {
     didYouMean,
     noResultsFor,
     queryCorrectedTo,
-  }
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
-  
+
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
   }
@@ -62,7 +67,7 @@ export default class QuanticDidYouMean extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.didYouMean = this.headless.buildDidYouMean(engine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
-  }
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -70,7 +75,8 @@ export default class QuanticDidYouMean extends LightningElement {
 
   updateState() {
     this.hasQueryCorrection = this.didYouMean.state.hasQueryCorrection;
-    this.wasAutomaticallyCorrected = this.didYouMean.state.wasAutomaticallyCorrected;
+    this.wasAutomaticallyCorrected =
+      this.didYouMean.state.wasAutomaticallyCorrected;
     this.originalQuery = this.didYouMean.state.originalQuery;
     this.correctedQuery = this.didYouMean.state.queryCorrection.correctedQuery;
   }
@@ -80,10 +86,16 @@ export default class QuanticDidYouMean extends LightningElement {
   }
 
   get noResultsLabel() {
-    return I18nUtils.format(this.labels.noResultsFor, I18nUtils.getTextBold(I18nUtils.escapeHTML(this.originalQuery)));
+    return I18nUtils.format(
+      this.labels.noResultsFor,
+      I18nUtils.getTextBold(I18nUtils.escapeHTML(this.originalQuery))
+    );
   }
 
   get correctedQueryLabel() {
-    return I18nUtils.format(this.labels.queryCorrectedTo, I18nUtils.getTextBold(I18nUtils.escapeHTML(this.correctedQuery)));
+    return I18nUtils.format(
+      this.labels.queryCorrectedTo,
+      I18nUtils.getTextBold(I18nUtils.escapeHTML(this.correctedQuery))
+    );
   }
 }

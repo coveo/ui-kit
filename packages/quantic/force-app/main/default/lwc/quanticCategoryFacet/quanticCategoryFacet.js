@@ -1,5 +1,10 @@
 import {api, LightningElement, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless, registerToStore, getHeadlessBundle} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  registerToStore,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
 import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
 
 import clear from '@salesforce/label/c.quantic_Clear';
@@ -24,6 +29,7 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
  * A `QuanticCategoryFacet` displays field values in a browsable, hierarchical fashion.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-category-facet engine-id={engineId} facet-id="myfacet" field="geographicalhierarchy" label="Country" base-path="Africa,Togo,Lome" no-filter-by-base-path delimiting-character="/" number-of-values="5" is-collapsed></c-quantic-category-facet>
  */
@@ -34,7 +40,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /** 
+  /**
    * A unique identifier for the facet.
    * Defaults to the `field` value.
    * @api
@@ -73,7 +79,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    * @api
    * @type {boolean}
    * @defaultValue `false
-   */  
+   */
   @api noFilterFacetCount = false;
   /**
    * The character that separates the values of the target multi-value field.
@@ -87,7 +93,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time more values are shown.
    * @api
-   * @type {number} 
+   * @type {number}
    * @defaultValue `8`
    */
   @api numberOfValues = 8;
@@ -134,11 +140,11 @@ export default class QuanticCategoryFacet extends LightningElement {
     'numberOfValues',
     'sortCriteria',
     'withSearch',
-  ]
+  ];
 
   /** @type {CategoryFacetState} */
   @track state;
-  
+
   /** @type {CategoryFacet} */
   facet;
   /** @type {SearchStatus} */
@@ -155,7 +161,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
- 
+
   labels = {
     clear,
     showMore,
@@ -168,7 +174,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     noMatchesFor,
     collapseFacet,
     expandFacet,
-  }
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -198,9 +204,11 @@ export default class QuanticCategoryFacet extends LightningElement {
       options: {
         field: this.field,
         facetId: this.facetId ?? this.field,
-        facetSearch: this.withSearch ? {
-          numberOfValues: Number(this.numberOfValues)
-        } : undefined,
+        facetSearch: this.withSearch
+          ? {
+              numberOfValues: Number(this.numberOfValues),
+            }
+          : undefined,
         delimitingCharacter: this.delimitingCharacter,
         basePath: this.basePath?.length ? this.basePath.split(',') : [],
         filterByBasePath: !this.noFilterByBasePath,
@@ -213,13 +221,16 @@ export default class QuanticCategoryFacet extends LightningElement {
     registerToStore(this.engineId, Store.facetTypes.CATEGORYFACETS, {
       label: this.label,
       facetId: this.facet.state.facetId,
-      element: this.template.host
+      element: this.template.host,
     });
-  }
+  };
 
   updateState() {
     this.state = this.facet?.state;
-    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
+    this.showPlaceholder =
+      this.searchStatus?.state?.isLoading &&
+      !this.searchStatus?.state?.hasError &&
+      !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
@@ -235,7 +246,9 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get canShowMore() {
-    return this.facet && this.state?.canShowMoreValues && !this.isFacetSearchActive;
+    return (
+      this.facet && this.state?.canShowMoreValues && !this.isFacetSearchActive
+    );
   }
 
   get canShowLess() {
@@ -264,7 +277,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       index: index,
       numberOfResults: result.count,
       path: result.path,
-      localizedPath: this.buildPath(result.path) ,
+      localizedPath: this.buildPath(result.path),
       highlightedResult: this.highlightResult(
         result.displayValue,
         this.input?.value
@@ -281,11 +294,11 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get showMoreFacetValuesLabel() {
-    return I18nUtils.format(this.labels.showMoreFacetValues, this.label)
+    return I18nUtils.format(this.labels.showMoreFacetValues, this.label);
   }
 
   get showLessFacetValuesLabel() {
-    return I18nUtils.format(this.labels.showLessFacetValues, this.label)
+    return I18nUtils.format(this.labels.showLessFacetValues, this.label);
   }
 
   get moreMatchesForLabel() {
@@ -305,7 +318,9 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get actionButtonLabel() {
-    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
+    const label = this.isCollapsed
+      ? this.labels.expandFacet
+      : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
@@ -332,7 +347,7 @@ export default class QuanticCategoryFacet extends LightningElement {
         displayValue: item.value,
         rawValue: item.value,
         count: item.numberOfResults,
-        path: item.path
+        path: item.path,
       });
     } else {
       this.facet.toggleSelect(item);
@@ -343,7 +358,9 @@ export default class QuanticCategoryFacet extends LightningElement {
   getItemFromValue(value) {
     const facetValues = [...this.values, ...this.nonActiveParents];
     // @ts-ignore
-    return (this.isFacetSearchActive ? this.facetSearchResults : facetValues).find((item) => item.value === value);
+    return (
+      this.isFacetSearchActive ? this.facetSearchResults : facetValues
+    ).find((item) => item.value === value);
   }
 
   preventDefault(evt) {
@@ -377,7 +394,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   clearInput() {
-    if(this.input) {
+    if (this.input) {
       this.input.value = '';
     }
     this.facet.facetSearch.updateText('');
@@ -395,11 +412,11 @@ export default class QuanticCategoryFacet extends LightningElement {
    * @param {string[]} path
    */
   buildPath(path) {
-    if(!path.length) {
+    if (!path.length) {
       return this.labels.allCategories;
-    } 
-    if(path.length > 2) {
-      path = path.slice(0, 1).concat("...", ...path.slice(-1));
+    }
+    if (path.length > 2) {
+      path = path.slice(0, 1).concat('...', ...path.slice(-1));
     }
     return path.join('/');
   }
