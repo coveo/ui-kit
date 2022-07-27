@@ -3,10 +3,8 @@ import EditIcon from '../../../images/edit.svg';
 import {Button} from '../../common/button';
 
 /**
- * The `atomic-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
  *
- * When this component is added to the `atomic-search-interface`, an `atomic-refine-modal` component is automatically created.
- * @part button - The refine toggle button.
+ * @part button - The insight edit toggle button.
  */
 @Component({
   tag: 'atomic-insight-edit-toggle',
