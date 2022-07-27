@@ -8,7 +8,7 @@ export const TableDisplayResultsPlaceholder: FunctionalComponent<
     <atomic-result-table-placeholder
       density={props.density}
       imageSize={props.imageSize!}
-      rows={props.resultsPerPageState.numberOfResults}
+      rows={props.numberOfPlaceholder}
     ></atomic-result-table-placeholder>
   );
 };

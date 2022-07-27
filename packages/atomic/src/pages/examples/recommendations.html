@@ -11,7 +11,7 @@
     <script type="module">
       import {buildRecommendationEngine, buildRecommendationList} from '/build/headless/recommendation/headless.esm.js';
 
-      async function main() {
+      (async () => {
         await customElements.whenDefined('atomic-recs-interface');
         const recommendationInterface = document.querySelector('atomic-recs-interface');
         const recommendationEngine = buildRecommendationEngine({
@@ -21,14 +21,21 @@
           },
         });
         await recommendationInterface.initializeWithRecommendationEngine(recommendationEngine);
-
-        buildRecommendationList(recommendationEngine).refresh();
-      }
-
-      main();
+      })();
     </script>
   </head>
   <body>
-    <atomic-recs-interface search-hub="MainSearch"></atomic-recs-interface>
+    <atomic-recs-interface search-hub="MainSearch">
+      <atomic-recs-list fields-to-include="ec_images">
+        <atomic-result-template>
+          <template>
+            <atomic-result-section-title>
+              <atomic-result-link></atomic-result-link>
+            </atomic-result-section-title>
+          </template>
+        </atomic-result-template>
+      </atomic-recs-list>
+    </atomic-recs-interface>
+    <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>

@@ -1,7 +1,4 @@
-import {
-  RecommendationEngine,
-  RecommendationList,
-} from '@coveo/headless/recommendation';
+import {RecommendationEngine} from '@coveo/headless/recommendation';
 import {
   AtomicCommonStore,
   AtomicCommonStoreData,

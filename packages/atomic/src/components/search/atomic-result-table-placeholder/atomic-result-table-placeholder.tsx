@@ -3,7 +3,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   getResultDisplayClasses,
-} from '../atomic-result/atomic-result-display-options';
+} from '../../common/atomic-result/atomic-result-display-options';
 
 const placeholderClasses = 'block bg-neutral rounded';
 

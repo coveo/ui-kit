@@ -4,7 +4,7 @@ import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
+} from '../../common/atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
 
 export class MissingResultParentError extends Error {

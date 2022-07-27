@@ -5,7 +5,6 @@ import {
   FoldedResultListState,
   Result,
   ResultListState,
-  ResultsPerPageState,
   ResultTemplatesManager,
   ResultTemplate,
   buildResultTemplatesManager,
@@ -17,7 +16,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
   getResultDisplayClasses,
-} from '../atomic-result/atomic-result-display-options';
+} from '../result/result-display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
 import {TableDisplayResultsPlaceholder} from './table-display-results-placeholder';
 import {TableDisplayResults} from './table-display-results';
@@ -31,12 +30,13 @@ import {
   FocusTargetController,
   getFirstFocusableDescendant,
 } from '../../../utils/accessibility-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {AnyBindings} from '../interface/bindings';
 
-export interface BaseResultList extends InitializableComponent {
+export interface BaseResultList<Bindings extends AnyBindings>
+  extends InitializableComponent {
   host: HTMLElement;
   templateHasError: boolean;
-  resultListCommon: ResultListCommon;
+  resultListCommon: ResultListCommon<Bindings>;
 
   setRenderFunction?: SetRenderFunction;
 
@@ -44,6 +44,15 @@ export interface BaseResultList extends InitializableComponent {
   imageSize?: ResultDisplayImageSize;
   image?: ResultDisplayImageSize;
   display?: ResultDisplayLayout;
+}
+
+export interface CommonResultListState {
+  hasError: boolean;
+  firstSearchExecuted: boolean;
+  hasResults: boolean;
+  isLoading: boolean;
+  results: Result[] | FoldedCollection[];
+  searchResponseId: string;
 }
 
 export type SetRenderFunction = (
@@ -56,14 +65,15 @@ interface DisplayOptions {
   display?: ResultDisplayLayout;
 }
 export interface ResultPlaceholderProps extends Omit<DisplayOptions, 'image'> {
-  resultsPerPageState: ResultsPerPageState;
+  numberOfPlaceholder: number;
   isChild?: boolean;
 }
-export interface ResultsProps extends DisplayOptions {
+export interface ResultsProps<Bindings extends AnyBindings>
+  extends DisplayOptions {
   host: HTMLElement;
   bindings: Bindings;
-  resultListState: FoldedResultListState | ResultListState;
-  resultListCommon: ResultListCommon;
+  resultListState: CommonResultListState;
+  resultListCommon: ResultListCommon<Bindings>;
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
@@ -81,15 +91,15 @@ interface TemplateElement extends HTMLElement {
 export interface RenderListOptions extends DisplayOptions {
   host: HTMLElement;
   templateHasError: boolean;
-  resultListState: FoldedResultListState | ResultListState;
-  resultsPerPageState: ResultsPerPageState;
+  resultListState: CommonResultListState;
+  numberOfResults: number;
   setListWrapperRef(el: HTMLDivElement | undefined): void;
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
 }
 
-interface ResultListCommonOptions {
+interface ResultListCommonOptions<Bindings extends AnyBindings> {
   host: HTMLElement;
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
@@ -100,7 +110,7 @@ interface ResultListCommonOptions {
   nextNewResultTarget?: FocusTargetController;
 }
 
-export class ResultListCommon {
+export class ResultListCommon<Bindings extends AnyBindings> {
   private host: HTMLElement;
   private bindings: Bindings;
   private render?: ResultRenderingFunction;
@@ -112,7 +122,7 @@ export class ResultListCommon {
   public resultListControllerProps?: ResultListProps;
   public loadingFlag?: string;
 
-  constructor(opts: ResultListCommonOptions) {
+  constructor(opts: ResultListCommonOptions<Bindings>) {
     this.host = opts.host;
     this.bindings = opts.bindings;
     this.loadingFlag = opts.loadingFlag;
@@ -211,7 +221,7 @@ export class ResultListCommon {
 
   public getResultId(
     result: Result | FoldedCollection,
-    resultListState: FoldedResultListState | ResultListState
+    resultListState: CommonResultListState
   ) {
     return (
       this.getUnfoldedResult(result).uniqueId + resultListState.searchResponseId
@@ -252,7 +262,7 @@ export class ResultListCommon {
     imageSize,
     templateHasError,
     resultListState,
-    resultsPerPageState,
+    numberOfResults,
     setListWrapperRef,
     getContentOfResultTemplate,
   }: RenderListOptions) {
@@ -286,7 +296,7 @@ export class ResultListCommon {
                 display={display}
                 density={density}
                 imageSize={imageSize}
-                resultsPerPageState={resultsPerPageState}
+                numberOfPlaceholder={numberOfResults}
               />
             )}
             {resultListState.firstSearchExecuted && (
@@ -346,7 +356,7 @@ const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   }
 };
 
-const Results: FunctionalComponent<ResultsProps> = (props) => {
+const Results: FunctionalComponent<ResultsProps<AnyBindings>> = (props) => {
   if (!props.resultListState.results.length) {
     return null;
   }

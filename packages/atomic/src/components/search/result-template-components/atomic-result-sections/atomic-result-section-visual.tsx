@@ -1,6 +1,6 @@
 import {Element, Component, Prop} from '@stencil/core';
 import {hideEmptySection} from '../../../../utils/result-section-utils';
-import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
+import {ResultDisplayImageSize} from '../../../common/atomic-result/atomic-result-display-options';
 
 /**
  * This section provides visual information about the item.

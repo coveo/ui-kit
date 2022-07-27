@@ -16,14 +16,17 @@ import {
   ResultDisplayConfigContext,
   DisplayConfig,
 } from '../../result-template-components/result-template-decorators';
-import {BaseResultList, ResultListCommon} from '../result-list-common';
+import {
+  BaseResultList,
+  ResultListCommon,
+} from '../../../common/result-list/result-list-common';
 import {TemplateContent} from '../../result-templates/result-template-common';
 import {
   FoldedResultListContext,
   FoldedResultListStateContext,
 } from '../result-list-decorators';
-import {ResultDisplayImageSize} from '../../atomic-result/atomic-result-display-options';
-import {ListDisplayResultsPlaceholder} from '../list-display-results-placeholder';
+import {ResultDisplayImageSize} from '../../../common/atomic-result/atomic-result-display-options';
+import {ListDisplayResultsPlaceholder} from '../../../common/result-list/list-display-results-placeholder';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -42,7 +45,7 @@ const componentTag = 'atomic-result-children';
   styleUrl: 'atomic-result-children.pcss',
   shadow: true,
 })
-export class AtomicResultChildren implements BaseResultList {
+export class AtomicResultChildren implements BaseResultList<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   @ChildTemplatesContext()
   public templatesManager!: ResultTemplatesManager<TemplateContent>;
@@ -51,7 +54,7 @@ export class AtomicResultChildren implements BaseResultList {
   @ResultDisplayConfigContext()
   private displayConfig!: DisplayConfig;
 
-  public resultListCommon!: ResultListCommon;
+  public resultListCommon!: ResultListCommon<Bindings>;
 
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
@@ -201,9 +204,7 @@ export class AtomicResultChildren implements BaseResultList {
     if (result.isLoadingMoreResults) {
       return (
         <ListDisplayResultsPlaceholder
-          resultsPerPageState={{
-            numberOfResults: result.children.length || 2,
-          }}
+          numberOfPlaceholder={result.children.length || 2}
           density={this.displayConfig.density}
           imageSize={this.imageSize || this.displayConfig.imageSize}
           isChild

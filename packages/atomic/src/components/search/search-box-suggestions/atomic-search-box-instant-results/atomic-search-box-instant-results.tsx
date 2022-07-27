@@ -17,13 +17,14 @@ import {
   BaseResultList,
   ResultListCommon,
   ResultRenderingFunction,
-} from '../../result-lists/result-list-common';
+} from '../../../common/result-list/result-list-common';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-} from '../../atomic-result/atomic-result-display-options';
+} from '../../../common/atomic-result/atomic-result-display-options';
 import {Button} from '../../../common/button';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -32,7 +33,7 @@ import {Button} from '../../../common/button';
   tag: 'atomic-search-box-instant-results',
   shadow: true,
 })
-export class AtomicSearchBoxInstantResults implements BaseResultList {
+export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
   public bindings!: SearchBoxSuggestionsBindings;
 
   @Element() public host!: HTMLElement;
@@ -42,7 +43,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
   private instantResults!: InstantResults;
 
   private results: Result[] = [];
-  public resultListCommon!: ResultListCommon;
+  public resultListCommon!: ResultListCommon<Bindings>;
   private renderingFunction: ResultRenderingFunction | null = null;
 
   /**

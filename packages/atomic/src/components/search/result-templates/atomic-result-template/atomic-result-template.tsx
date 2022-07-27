@@ -59,6 +59,7 @@ export class AtomicResultTemplate {
         'atomic-result-list',
         'atomic-folded-result-list',
         'atomic-search-box-instant-results',
+        'atomic-recs-list',
       ],
       allowEmpty: true,
     });

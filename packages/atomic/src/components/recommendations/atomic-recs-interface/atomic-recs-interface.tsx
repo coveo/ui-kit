@@ -1,8 +1,5 @@
 import {LogLevel} from '@coveo/headless';
-import {
-  buildRecommendationList,
-  RecommendationEngine,
-} from '@coveo/headless/recommendation';
+import {RecommendationEngine} from '@coveo/headless/recommendation';
 import {
   Component,
   Element,

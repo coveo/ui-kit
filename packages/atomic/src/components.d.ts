@@ -8,14 +8,14 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
-import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/atomic-result/atomic-result-display-options";
+import { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
 import { InsightEngine } from "@coveo/headless/insight";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
-import { AtomicStore } from "./components/search/atomic-search-interface/store";
+import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
@@ -658,6 +658,8 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
     }
+    interface AtomicRecsList {
+    }
     interface AtomicRefineModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
@@ -689,8 +691,9 @@ export namespace Components {
         "display": ResultDisplayLayout;
         /**
           * The headless search engine.
+          * @deprecated This property is currently un-used
          */
-        "engine": SearchEngine;
+        "engine"?: SearchEngine;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -715,7 +718,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store"?: AtomicStore;
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     interface AtomicResultBadge {
         /**
@@ -1467,6 +1470,12 @@ declare global {
         prototype: HTMLAtomicRecsInterfaceElement;
         new (): HTMLAtomicRecsInterfaceElement;
     };
+    interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsListElement: {
+        prototype: HTMLAtomicRecsListElement;
+        new (): HTMLAtomicRecsListElement;
+    };
     interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicRefineModalElement: {
@@ -1815,6 +1824,7 @@ declare global {
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
+        "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
@@ -2490,6 +2500,8 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
     }
+    interface AtomicRecsList {
+    }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
@@ -2521,8 +2533,9 @@ declare namespace LocalJSX {
         "display"?: ResultDisplayLayout;
         /**
           * The headless search engine.
+          * @deprecated This property is currently un-used
          */
-        "engine": SearchEngine;
+        "engine"?: SearchEngine;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -2547,7 +2560,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store"?: AtomicStore;
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
     interface AtomicResultBadge {
         /**
@@ -3099,6 +3112,7 @@ declare namespace LocalJSX {
         "atomic-rating-facet": AtomicRatingFacet;
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-interface": AtomicRecsInterface;
+        "atomic-recs-list": AtomicRecsList;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
@@ -3192,6 +3206,7 @@ declare module "@stencil/core" {
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
+            "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;

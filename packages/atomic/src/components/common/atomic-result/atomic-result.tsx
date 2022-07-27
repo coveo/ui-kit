@@ -10,9 +10,9 @@ import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
   ResultContextEvent,
-} from '../result-template-components/result-template-decorators';
-import {ResultRenderingFunction} from '../result-lists/result-list-common';
-import {AtomicStore} from '../atomic-search-interface/store';
+} from '../../search/result-template-components/result-template-decorators';
+import {ResultRenderingFunction} from '../result-list/result-list-common';
+import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
 
 const resultSectionTags = [
   'atomic-result-section-visual',
@@ -48,14 +48,16 @@ export class AtomicResult {
 
   /**
    * The headless search engine.
+   *
+   * @deprecated This property is currently un-used
    */
-  @Prop() engine!: SearchEngine;
+  @Prop() engine?: SearchEngine;
 
   /**
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: AtomicStore;
+  @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
 
   /**
    * The result content to display.
