@@ -127,6 +127,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
             imageSize={this.imageSize}
             content={this.resultListCommon.getContentOfResultTemplate(result)}
             stopPropagation={false}
+            renderingFunction={this.resultListCommon.renderingFunction}
           ></atomic-result>
         ),
         onSelect: (e: MouseEvent) => {
