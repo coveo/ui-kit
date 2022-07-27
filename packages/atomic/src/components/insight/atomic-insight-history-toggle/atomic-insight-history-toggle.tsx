@@ -15,7 +15,7 @@ export class AtomicInsightHistoryToggle {
 
   @State() public error!: Error;
 
-  @Prop({mutable: true}) public onClick: () => void = () => {};
+  @Prop({mutable: true}) public clickCallback: () => void = () => {};
 
   @Prop({mutable: true}) public tooltip = '';
 
@@ -24,7 +24,7 @@ export class AtomicInsightHistoryToggle {
       <InsightIconButton
         icon={Clockicon}
         ariaLabel="User action history"
-        onClick={this.onClick}
+        onClick={this.clickCallback}
         tooltip={this.tooltip}
       />
     );
