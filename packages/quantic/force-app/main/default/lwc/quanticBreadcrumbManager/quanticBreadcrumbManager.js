@@ -3,6 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   getFromStore,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, RelativeDateFormatter, Store} from 'c/quanticUtils';
 
@@ -86,7 +87,9 @@ export default class QuanticBreadcrumbManager extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
+    this.breadcrumbManager = getHeadlessBundle(
+      this.engineId
+    ).buildBreadcrumbManager(engine);
     this.unsubscribe = this.breadcrumbManager.subscribe(() =>
       this.updateState()
     );
