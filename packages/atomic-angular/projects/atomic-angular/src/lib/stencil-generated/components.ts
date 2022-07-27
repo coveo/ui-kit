@@ -362,13 +362,13 @@ export declare interface AtomicInsightEditToggle extends Components.AtomicInsigh
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['onClick', 'tooltip']
+  inputs: ['clickCallback', 'tooltip']
 })
 @Component({
   selector: 'atomic-insight-edit-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['onClick', 'tooltip']
+  inputs: ['clickCallback', 'tooltip']
 })
 export class AtomicInsightEditToggle {
   protected el: HTMLElement;
@@ -383,13 +383,13 @@ export declare interface AtomicInsightHistoryToggle extends Components.AtomicIns
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['onClick', 'tooltip']
+  inputs: ['clickCallback', 'tooltip']
 })
 @Component({
   selector: 'atomic-insight-history-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['onClick', 'tooltip']
+  inputs: ['clickCallback', 'tooltip']
 })
 export class AtomicInsightHistoryToggle {
   protected el: HTMLElement;
