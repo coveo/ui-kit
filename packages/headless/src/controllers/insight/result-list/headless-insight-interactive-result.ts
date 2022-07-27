@@ -26,21 +26,21 @@ export interface InsightInteractiveResultProps
 }
 
 /**
- * The `InsightInteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
  */
-export interface InsightInteractiveResult extends InteractiveResultCore {}
+export interface InteractiveResult extends InteractiveResultCore {}
 
 /**
- * Creates an `InsightInteractiveResult` controller instance.
+ * Creates an insight `InteractiveResult` controller instance.
  *
- * @param engine - The headless engine.
- * @param props - The configurable `InsightInteractiveResult` properties.
- * @returns An `InsightInteractiveResult` controller instance.
+ * @param engine - The insight engine.
+ * @param props - The configurable `InteractiveResult` properties.
+ * @returns An `InteractiveResult` controller instance.
  */
-export function buildInsightInteractiveResult(
+export function buildInteractiveResult(
   engine: InsightEngine,
   props: InsightInteractiveResultProps
-): InsightInteractiveResult {
+): InteractiveResult {
   let wasOpened = false;
 
   const logAnalyticsIfNeverOpened = () => {

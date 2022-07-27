@@ -13,9 +13,9 @@ import {
 export type {Sort, SortProps, SortState, SortInitialState};
 
 /**
- * Creates an `Sort` controller instance.
+ * Creates an insight `Sort` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */
