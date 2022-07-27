@@ -1,30 +1,27 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
+import {createAtomicInsightStore} from '../atomic-insight-interface/store';
 import {
   DisplayConfig,
   ResultContextEvent,
-} from '../result-template-components/result-template-decorators';
-import {ResultRenderingFunction} from '../result-lists/result-list-common';
-import {AtomicStore} from '../atomic-search-interface/store';
+} from '../../search/result-template-components/result-template-decorators';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
-  ResultDisplayLayout,
 } from '../../common/layout/display-options';
+import {InsightResult, InsightEngine} from '..';
 
 /**
- * The `atomic-result` component is used internally by the `atomic-result-list` component.
+ * The `atomic-insight-result` component is used internally by the `atomic-insight-result-list` component.
  */
 @Component({
-  tag: 'atomic-result',
-  styleUrl: 'atomic-result.pcss',
+  tag: 'atomic-insight-result',
+  styleUrl: '../../search/atomic-result/atomic-result.pcss',
   shadow: true,
 })
-export class AtomicResult {
+export class AtomicInsightResult {
   private layout!: ResultLayout;
-
   @Element() host!: HTMLElement;
 
   /**
@@ -35,28 +32,23 @@ export class AtomicResult {
   /**
    * The result item.
    */
-  @Prop() result!: Result | FoldedResult;
+  @Prop() result!: InsightResult;
 
   /**
    * The headless search engine.
    */
-  @Prop() engine!: SearchEngine;
+  @Prop() engine!: InsightEngine;
 
   /**
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: AtomicStore;
+  @Prop() store?: ReturnType<typeof createAtomicInsightStore>;
 
   /**
    * The result content to display.
    */
   @Prop() content?: ParentNode;
-
-  /**
-   * How results should be displayed.
-   */
-  @Prop() display: ResultDisplayLayout = 'list';
 
   /**
    * How large or small results should be.
@@ -68,12 +60,7 @@ export class AtomicResult {
    *
    * This may be overwritten if an image size is defined in the result content.
    */
-  @Prop() imageSize?: ResultDisplayImageSize;
-
-  /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop() image: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ResultDisplayImageSize = 'icon';
 
   /**
    * Classes that will be added to the result element.
@@ -85,19 +72,8 @@ export class AtomicResult {
    */
   @Prop() loadingFlag?: string;
 
-  /**
-   * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system.
-   * Particularly useful for Atomic React
-   *
-   * @internal
-   */
-  @Prop() renderingFunction?: ResultRenderingFunction;
-
-  private resultRootRef?: HTMLElement;
-  private executedRenderingFunctionOnce = false;
-
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
+  public resolveResult(event: ResultContextEvent<InsightResult>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
@@ -121,14 +97,10 @@ export class AtomicResult {
   public connectedCallback() {
     this.layout = new ResultLayout(
       this.content!.children,
-      this.display,
+      'list',
       this.density,
-      this.imageSize ?? this.image
+      this.imageSize
     );
-  }
-
-  private get isCustomRenderFunctionMode() {
-    return this.renderingFunction !== undefined;
   }
 
   private getContentHTML() {
@@ -137,23 +109,7 @@ export class AtomicResult {
       .join('');
   }
 
-  private shouldExecuteRenderFunction() {
-    return (
-      this.isCustomRenderFunctionMode &&
-      this.resultRootRef &&
-      !this.executedRenderingFunctionOnce
-    );
-  }
-
   public render() {
-    if (this.isCustomRenderFunctionMode) {
-      return (
-        <div
-          class="result-root"
-          ref={(ref) => (this.resultRootRef = ref)}
-        ></div>
-      );
-    }
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
       <div
@@ -171,21 +127,5 @@ export class AtomicResult {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
     applyFocusVisiblePolyfill(this.host);
-  }
-
-  public componentDidRender() {
-    if (this.shouldExecuteRenderFunction()) {
-      const customRenderOutputAsString = this.renderingFunction!(
-        this.result,
-        this.resultRootRef!
-      );
-
-      this.resultRootRef!.className += ` ${this.layout
-        .getClasses(customRenderOutputAsString)
-        .concat(this.classes)
-        .join(' ')}`;
-
-      this.executedRenderingFunctionOnce = true;
-    }
   }
 }

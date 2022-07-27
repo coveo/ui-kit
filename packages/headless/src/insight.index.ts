@@ -1,5 +1,14 @@
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Result} from './api/search/search/result';
+export type {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
+export {ResultTemplatesHelpers} from './features';
+
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
 // Main App
 export type {
@@ -216,7 +225,17 @@ export type {
 } from './controllers/insight/sort/headless-insight-sort';
 export {buildSort} from './controllers/insight/sort/headless-insight-sort';
 
+export type {
+  InsightResultListProps,
+  InsightResultList,
+  InsightResultListState,
+} from './controllers/insight/result-list/headless-insight-result-list';
+export {buildInsightResultList} from './controllers/insight/result-list/headless-insight-result-list';
+
+export {buildInsightInteractiveResult} from './controllers/insight/result-list/headless-insight-interactive-result';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
+
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 

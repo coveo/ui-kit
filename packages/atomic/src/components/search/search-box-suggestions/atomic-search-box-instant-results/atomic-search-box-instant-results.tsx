@@ -22,7 +22,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-} from '../../atomic-result/atomic-result-display-options';
+} from '../../../common/layout/display-options';
 import {Button} from '../../../common/button';
 
 /**
