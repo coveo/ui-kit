@@ -22,7 +22,7 @@ export type AllFacetSelectors = BaseFacetSelector &
 export const NumericFacetSelectors: AllFacetSelectors = {
   get: () => cy.get(numericFacetComponent),
 
-  label: () => NumericFacetSelectors.get().find('header h2 > span'),
+  label: () => NumericFacetSelectors.get().find('header .card__header > span'),
   values: () => NumericFacetSelectors.get().find('c-quantic-facet-value'),
   inputMin: () => NumericFacetSelectors.get().find('.numeric__input-min input'),
   inputMax: () => NumericFacetSelectors.get().find('.numeric__input-max input'),
