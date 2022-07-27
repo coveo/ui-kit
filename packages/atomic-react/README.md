@@ -43,7 +43,7 @@ Coupled with the [`<template>`](https://developer.mozilla.org/en-US/docs/Web/HTM
 
 However, this can be limiting and awkward to use in a React project using JSX.
 
-For every element that use this interface, Atomic React exposes a wrapper - `AtomicResultList`, `AtomicFoldedResultList` and `AtomicSearchBoxInstantResults`. These components require a `template` property that can be used in a more straightforward manner when coupled with JSX.
+For every kind of search interface element, Atomic React exposes a wrapper: `AtomicResultList`, `AtomicFoldedResultList`, or `AtomicSearchBoxInstantResults`. These wrappers require a `template` property that can be used in a more straightforward manner when coupled with JSX.
 
 The `template` property accepts a function with either a `Result` parameter in the case of the `AtomicResultList` and `AtomicSearchBoxInstantResults` wrappers, or a `FoldedResult` parameter in the case of the `AtomicFoldedResultList` wrapper. Use those parameters to conditionally render different templates based on properties and fields available in result items.
 
