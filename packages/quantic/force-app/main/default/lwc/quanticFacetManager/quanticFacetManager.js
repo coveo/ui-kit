@@ -1,4 +1,5 @@
 import {
+  getHeadlessBundle,
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
@@ -10,9 +11,10 @@ import {api, LightningElement} from 'lwc';
 
 /**
  * The `QuanticFacetManager` component acts as a container component allowing facets to be reordered dynamically as search queries are performed.
- * 
+ *
  * An item template element can be assigned to the `itemTemplate` slot allowing to customize the element that wraps each facet.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-facet-manager engine-id={engineId}>
  *   <c-quantic-facet engine-id={engineId} field="type"></c-quantic-facet>
@@ -42,6 +44,8 @@ export default class QuanticFacetManager extends LightningElement {
   searchStatus;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {AnyHeadless} */
+  headless;
 
   itemTemplate;
 
@@ -64,14 +68,15 @@ export default class QuanticFacetManager extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.headless = getHeadlessBundle(this.engineId);
     this.resolveItemTemplate();
     this.moveFacetsToHost();
 
-    this.facetManager = CoveoHeadless.buildFacetManager(engine);
+    this.facetManager = this.headless.buildFacetManager(engine);
     this.unsubscribeFacetManager = this.facetManager.subscribe(() =>
       this.updateFacetManagerState()
     );
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateSearchStatusState()
     );
@@ -100,9 +105,11 @@ export default class QuanticFacetManager extends LightningElement {
   }
 
   getFacetsFromSlot() {
-    const isFacetManager = (tagName) => /-quantic-facet-manager$/i.test(tagName);
-    return Array.from(this.querySelectorAll('*'))
-      .filter((element) => isFacetManager(element.parentElement.tagName));
+    const isFacetManager = (tagName) =>
+      /-quantic-facet-manager$/i.test(tagName);
+    return Array.from(this.querySelectorAll('*')).filter((element) =>
+      isFacetManager(element.parentElement.tagName)
+    );
   }
 
   moveFacetsToHost() {
@@ -137,7 +144,10 @@ export default class QuanticFacetManager extends LightningElement {
     }
 
     // @ts-ignore
-    const payload = this.facets.map((f) => ({facetId: f.dataset.facetId, payload: f}));
+    const payload = this.facets.map((f) => ({
+      facetId: f.dataset.facetId,
+      payload: f,
+    }));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
 
     sortedFacets.forEach((sortedFacet) => {

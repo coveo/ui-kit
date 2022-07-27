@@ -5,6 +5,7 @@ import more from '@salesforce/label/c.quantic_More';
 /**
  *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" drop-down list.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-tab-bar>
  *   <c-quantic-tab engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
