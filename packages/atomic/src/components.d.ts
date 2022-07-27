@@ -334,6 +334,10 @@ export namespace Components {
          */
         "icon": string;
     }
+    interface AtomicInsightEditToggle {
+        "onClick": () => void;
+        "tooltip": string;
+    }
     interface AtomicInsightInterface {
         /**
           * Whether analytics should be enabled.
@@ -1369,6 +1373,12 @@ declare global {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
     };
+    interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightEditToggleElement: {
+        prototype: HTMLAtomicInsightEditToggleElement;
+        new (): HTMLAtomicInsightEditToggleElement;
+    };
     interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
     }
     var HTMLAtomicInsightInterfaceElement: {
@@ -1792,6 +1802,7 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
@@ -2171,6 +2182,10 @@ declare namespace LocalJSX {
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
+    }
+    interface AtomicInsightEditToggle {
+        "onClick"?: () => void;
+        "tooltip"?: string;
     }
     interface AtomicInsightInterface {
         /**
@@ -3068,6 +3083,7 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
+        "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-layout-section": AtomicLayoutSection;
@@ -3161,6 +3177,7 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
