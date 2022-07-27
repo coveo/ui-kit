@@ -358,6 +358,48 @@ export class AtomicIcon {
 }
 
 
+export declare interface AtomicInsightEditToggle extends Components.AtomicInsightEditToggle {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['onClick', 'tooltip']
+})
+@Component({
+  selector: 'atomic-insight-edit-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['onClick', 'tooltip']
+})
+export class AtomicInsightEditToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightHistoryToggle extends Components.AtomicInsightHistoryToggle {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['onClick', 'tooltip']
+})
+@Component({
+  selector: 'atomic-insight-history-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['onClick', 'tooltip']
+})
+export class AtomicInsightHistoryToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
 
 @ProxyCmp({
