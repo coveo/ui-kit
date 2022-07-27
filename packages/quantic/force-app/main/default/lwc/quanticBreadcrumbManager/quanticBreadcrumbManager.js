@@ -146,8 +146,12 @@ export default class QuanticBreadcrumbManager extends LightningElement {
    */
   formatDateRange(dateRange) {
     try {
-      const startDate = CoveoHeadless.deserializeRelativeDate(dateRange.start);
-      const endDate = CoveoHeadless.deserializeRelativeDate(dateRange.end);
+      const startDate = getHeadlessBundle(
+        this.engineId
+      ).deserializeRelativeDate(dateRange.start);
+      const endDate = getHeadlessBundle(this.engineId).deserializeRelativeDate(
+        dateRange.end
+      );
 
       return new RelativeDateFormatter().formatRange(startDate, endDate);
     } catch (err) {
