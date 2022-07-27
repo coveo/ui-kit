@@ -1,4 +1,4 @@
-import { api, LightningElement, track } from 'lwc';
+import {api, LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticFacetManager extends LightningElement {
   @api engineId = 'quantic-breadcrumb-manager-engine';
@@ -6,22 +6,32 @@ export default class ExampleQuanticFacetManager extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Breadcrumb Manager';
-  pageDescription = 'The QuanticBreadcrumbManager component creates breadcrumbs that display a summary of the currently active facet values.';
-  
+  pageDescription =
+    'The QuanticBreadcrumbManager component creates breadcrumbs that display a summary of the currently active facet values.';
+
   options = [
-      {
-        attribute: 'categoryDivider',
-        label: 'Category Divider',
-        description: 'A character that divides each path segment in a category facet breadcrumb.',
-        defaultValue: '/'
-      },
-      {
-        attribute: 'collapseThreshold',
-        label: 'Collapse Threshold',
-        description: 'Maximum number of displayed breadcrumb values. When more values are selected, additional values appear under the "More" button.',
-        defaultValue: 5
-      },
-  ]; 
+    {
+      attribute: 'isSearch',
+      label: 'Is Search Interface',
+      description:
+        'Define if the use Case is search or else',
+      defaultValue: true,
+    },
+    {
+      attribute: 'categoryDivider',
+      label: 'Category Divider',
+      description:
+        'A character that divides each path segment in a category facet breadcrumb.',
+      defaultValue: '/',
+    },
+    {
+      attribute: 'collapseThreshold',
+      label: 'Collapse Threshold',
+      description:
+        'Maximum number of displayed breadcrumb values. When more values are selected, additional values appear under the "More" button.',
+      defaultValue: 5,
+    },
+  ];
 
   get notConfigured() {
     return !this.isConfigured;

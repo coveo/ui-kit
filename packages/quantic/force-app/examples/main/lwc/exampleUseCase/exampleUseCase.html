@@ -1,0 +1,12 @@
+<template>
+ <template if:true={isSearch}>
+  <c-quantic-search-interface engine-id={engineId}>
+    <slot></slot>
+  </c-quantic-search-interface>
+ </template>
+ <template if:false={isSearch}>
+  <c-quantic-insight-interface insight-id="8025b512-6d9c-4e7b-b947-6442711136fc" engine-id={engineId}>
+    <slot></slot>
+  </c-quantic-insight-interface>
+ </template>
+</template>

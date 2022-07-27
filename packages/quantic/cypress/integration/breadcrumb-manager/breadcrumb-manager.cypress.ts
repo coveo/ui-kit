@@ -14,6 +14,7 @@ describe('quantic-breadcrumb-manager', () => {
   const clearActionName = 'Clear';
 
   interface BreadcrumbOptions {
+    isSearch: boolean;
     categoryDivider: string;
     collapseThreshold: number;
   }
