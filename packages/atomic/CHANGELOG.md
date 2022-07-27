@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.90.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.2...@coveo/atomic@1.90.0) (2022-07-27)
+
+
+### Features
+
+* **headless:** Refactor core and insight controllers ([#2215](https://github.com/coveo/ui-kit/issues/2215)) ([25fb657](https://github.com/coveo/ui-kit/commit/25fb657e43c725beb83a48a9e5fc8393a649c051))
+
+
+
+
+
 ## [1.89.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.1...@coveo/atomic@1.89.2) (2022-07-26)
 
 
