@@ -33,7 +33,7 @@ export function assertAccessibility(
 
   it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
     function splitIntoWords(text: string) {
-      return text.split(' ').filter((word) => !word.match(/[^a-z]/i));
+      return text.split(/\b/g).filter((word) => !word.match(/[^a-z]/i));
     }
 
     cy.window()
