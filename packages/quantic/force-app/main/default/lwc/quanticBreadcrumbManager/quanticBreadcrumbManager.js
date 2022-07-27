@@ -12,7 +12,7 @@ import {I18nUtils, RelativeDateFormatter, Store} from 'c/quanticUtils';
 
 import nMore from '@salesforce/label/c.quantic_NMore';
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
-import clear from '@salesforce/label/c.quantic_Clear';
+import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import colon from '@salesforce/label/c.quantic_Colon';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -72,7 +72,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
 
   labels = {
     nMore,
-    clear,
+    clearFilter,
     clearAllFilters,
     colon
   }
