@@ -4,12 +4,6 @@ on:
     branches:
       - master
 jobs:
-  allow-workflow:
-    name: 'Allow workflow'
-    if: "!startsWith(github.event.head_commit.message, '[Version Bump]')"
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Workflow allowed to start"
   build:
     name: 'Build'
     needs: allow-workflow

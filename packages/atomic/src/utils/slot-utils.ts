@@ -1,9 +1,7 @@
 export function getNamedSlotFromHost(host: HTMLElement, slotName: string) {
   const children = Array.from(host.children);
   const targetSlot = children.filter(
-    (child) =>
-      child.getAttribute('slot') === slotName ||
-      child.getAttribute('slot') !== ''
+    (child) => child.getAttribute('slot') === slotName
   );
 
   if (!targetSlot.length) {
