@@ -14,6 +14,7 @@ import {
   InstantResultOptions,
   instantResultsOptionsSchema,
 } from './instant-results-options';
+export type {InstantResultOptions} from './instant-results-options';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {SerializedError} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../../features/search/search-actions';

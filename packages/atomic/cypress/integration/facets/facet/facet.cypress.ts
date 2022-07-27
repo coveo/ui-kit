@@ -647,13 +647,21 @@ describe('Facet v1 Test Suites', () => {
   });
 
   describe('when selecting the "Show more" button', () => {
-    function setupSelectShowMore() {
-      new TestFixture().with(addFacet({field, label})).init();
+    function setupSelectShowMore(sortCriteria?: string) {
+      new TestFixture()
+        .with(
+          addFacet({
+            field,
+            label,
+            ...(sortCriteria && {'sort-criteria': sortCriteria}),
+          })
+        )
+        .init();
       pressShowMore(FacetSelectors);
     }
 
     describe('verify rendering', () => {
-      before(setupSelectShowMore);
+      before(() => setupSelectShowMore('automatic'));
 
       CommonFacetAssertions.assertDisplayShowMoreButton(FacetSelectors, true);
       CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, true);
@@ -662,11 +670,20 @@ describe('Facet v1 Test Suites', () => {
         FacetSelectors,
         defaultNumberOfValues * 2
       );
-      CommonFacetAssertions.assertFocusFirstCheckboxValue(FacetSelectors);
+      CommonFacetAssertions.assertFocusCheckboxValue(FacetSelectors, 0);
+    });
+
+    describe("when the sort order isn't automatic", () => {
+      before(() => setupSelectShowMore('alphanumeric'));
+
+      CommonFacetAssertions.assertFocusCheckboxValue(
+        FacetSelectors,
+        defaultNumberOfValues
+      );
     });
 
     describe('verify analytics', () => {
-      before(setupSelectShowMore);
+      before(() => setupSelectShowMore());
 
       FacetAssertions.assertLogFacetShowMore(field);
     });
@@ -686,7 +703,6 @@ describe('Facet v1 Test Suites', () => {
           false
         );
         CommonFacetAssertions.assertDisplayShowLessButton(FacetSelectors, true);
-        CommonFacetAssertions.assertFocusFirstCheckboxValue(FacetSelectors);
       });
     });
 

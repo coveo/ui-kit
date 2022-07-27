@@ -7,6 +7,7 @@ import {
 import {
   ActionsHistoryParam,
   AnalyticsParam,
+  AuthenticationParam,
   PipelineParam,
   QueryParam,
   SearchHubParam,
@@ -22,6 +23,7 @@ export type QuerySuggestRequest = BaseParam &
   TimezoneParam &
   ActionsHistoryParam &
   VisitorIDParam &
+  AuthenticationParam &
   AnalyticsParam & {
     count: number;
   };

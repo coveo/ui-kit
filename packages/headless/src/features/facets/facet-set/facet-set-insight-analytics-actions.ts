@@ -15,6 +15,7 @@ import {
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
+import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
 
 export const logFacetShowMore = (facetId: string) =>
   makeInsightAnalyticsAction(
@@ -157,5 +158,25 @@ export const logFacetDeselect = (
       );
 
       return client.logFacetDeselect(metadata);
+    }
+  )();
+
+export const logFacetBreadcrumb = (
+  payload: LogFacetBreadcrumbActionCreatorPayload
+) =>
+  makeInsightAnalyticsAction(
+    'analytics/facet/breadcrumb',
+    AnalyticsType.Search,
+    (client, state) => {
+      validatePayload(payload, {
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      });
+      const metadata = buildFacetSelectionChangeMetadata(
+        payload,
+        getStateNeededForFacetMetadata(state)
+      );
+
+      return client.logBreadcrumbFacet(metadata);
     }
   )();

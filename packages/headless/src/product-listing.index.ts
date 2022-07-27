@@ -77,6 +77,10 @@ export {
 } from './controllers/product-listing/sort/headless-product-listing-sort';
 
 export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  FacetManager as CoreFacetManager,
   FacetManager,
   FacetManagerPayload,
   FacetManagerState,
@@ -84,7 +88,13 @@ export type {
 export {buildFacetManager} from './controllers/product-listing/facet/headless-product-listing-facet-manager';
 
 export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
   CoreFacet,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
   CoreFacetState,
   Facet,
   FacetOptions,
@@ -100,8 +110,6 @@ export type {
 export {buildFacet} from './controllers/product-listing/facet/headless-product-listing-facet';
 
 export type {
-  CoreCategoryFacet,
-  CoreCategoryFacetState,
   CategoryFacet,
   CategoryFacetOptions,
   CategoryFacetProps,
@@ -111,6 +119,14 @@ export type {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacetSearchResult,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreCategoryFacet,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreCategoryFacetState,
 } from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
 export {buildCategoryFacet} from './controllers/product-listing/category-facet/headless-product-listing-category-facet';
 

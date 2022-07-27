@@ -161,8 +161,11 @@ export class AtomicSearchBox {
     this.pendingSuggestionEvents = [];
   }
 
-  public componentDidUpdate() {
-    if (!('redirectTo' in this.searchBoxState)) {
+  public componentWillUpdate() {
+    if (
+      !('redirectTo' in this.searchBoxState) ||
+      !('afterRedirection' in this.searchBox)
+    ) {
       return;
     }
 
@@ -175,6 +178,7 @@ export class AtomicSearchBox {
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
+    this.searchBox.afterRedirection();
     window.location.href = redirectTo;
   }
 
@@ -697,13 +701,12 @@ export class AtomicSearchBox {
           loading={this.searchBoxState.isLoading}
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
-          searchBox={this.searchBox}
-          state={this.searchBoxState}
-          disabled={this.disableSearch}
+          value={this.searchBoxState.value}
           onFocus={() => this.onFocus()}
           onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
           onBlur={() => this.clearSuggestions()}
           onKeyDown={(e) => this.onKeyDown(e)}
+          onClear={() => this.searchBox.clear()}
           aria-owns={this.popupId}
           aria-expanded={`${this.isExpanded}`}
           aria-activedescendant={this.activeDescendant}
@@ -712,7 +715,7 @@ export class AtomicSearchBox {
         <SubmitButton
           bindings={this.bindings}
           disabled={this.disableSearch}
-          searchBox={this.searchBox}
+          onClick={() => this.searchBox.submit()}
         />
       </SearchBoxWrapper>,
       !this.suggestions.length && (

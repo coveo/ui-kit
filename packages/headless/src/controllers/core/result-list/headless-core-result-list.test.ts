@@ -1,7 +1,7 @@
 import {buildMockSearchAppEngine} from '../../../test/mock-engine';
 import {buildMockResult, MockSearchEngine} from '../../../test';
 import {fetchMoreResults} from '../../../features/search/search-actions';
-import {buildCoreResultList, CoreResultList} from './headless-core-result-list';
+import {buildCoreResultList, ResultList} from './headless-core-result-list';
 import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
 import {configuration, fields, search} from '../../../app/reducers';
 import {SchemaValidationError} from '@coveo/bueno';
@@ -88,7 +88,7 @@ describe('CoreResultList', () => {
   });
 
   describe('fetchMoreResults "infinite" fetches prevention', () => {
-    let resultList: CoreResultList;
+    let resultList: ResultList;
     let mockDispatch: jest.Mock;
 
     const fetchMoreResultsAndWait = async (

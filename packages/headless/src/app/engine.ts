@@ -24,9 +24,11 @@ import {configuration, version} from './reducers';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {analyticsMiddleware} from './analytics-middleware';
+import {SearchParametersState} from '../state/search-app-state';
 
 const coreReducers = {configuration, version};
-type CoreState = StateFromReducersMapObject<typeof coreReducers>;
+type CoreState = StateFromReducersMapObject<typeof coreReducers> &
+  Partial<SearchParametersState>;
 
 type EngineDispatch<
   State,

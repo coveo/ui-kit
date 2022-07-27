@@ -3,6 +3,185 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.94.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.93.0...@coveo/headless@1.94.0) (2022-07-27)
+
+
+### Features
+
+* **headless:** Refactor core and insight controllers ([#2215](https://github.com/coveo/ui-kit/issues/2215)) ([25fb657](https://github.com/coveo/ui-kit/commit/25fb657e43c725beb83a48a9e5fc8393a649c051))
+
+
+
+
+
+# [1.93.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.92.0...@coveo/headless@1.93.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP Tab controller ([#2200](https://github.com/coveo/ui-kit/issues/2200)) ([c6e531c](https://github.com/coveo/ui-kit/commit/c6e531c0313cefb70d78a7bc448f84025b88fd18))
+
+
+
+
+
+# [1.92.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.91.0...@coveo/headless@1.92.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP DidYouMean controller ([#2233](https://github.com/coveo/ui-kit/issues/2233)) ([4bd62e5](https://github.com/coveo/ui-kit/commit/4bd62e57e9edb8ad3e18758ad067072170991a8b))
+
+
+
+
+
+# [1.91.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.90.0...@coveo/headless@1.91.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP Search Parameters controller ([#2231](https://github.com/coveo/ui-kit/issues/2231)) ([07d9ab0](https://github.com/coveo/ui-kit/commit/07d9ab0de18cb6cfdc6f9bc0f73f43c720a1480a))
+
+
+
+
+
+# [1.90.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.89.0...@coveo/headless@1.90.0) (2022-07-22)
+
+
+### Features
+
+* **headless:** new logContextChanged & logExpandToFullUI action added ([#2214](https://github.com/coveo/ui-kit/issues/2214)) ([620d4be](https://github.com/coveo/ui-kit/commit/620d4be5942b3f7419986fa19fdb5f61b3c0369c))
+
+
+
+
+
+# [1.89.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.88.1...@coveo/headless@1.89.0) (2022-07-21)
+
+
+### Features
+
+* **headless:** Add IP Breadcrumb Manager ([#2224](https://github.com/coveo/ui-kit/issues/2224)) ([523959e](https://github.com/coveo/ui-kit/commit/523959e74ee946e4f3f9fb2196d39a08cff395b2))
+
+
+
+
+
+## [1.88.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.88.0...@coveo/headless@1.88.1) (2022-07-15)
+
+
+### Bug Fixes
+
+* **headless:** clear analytics cookie as soon as analytics are disabled ([#2218](https://github.com/coveo/ui-kit/issues/2218)) ([637f832](https://github.com/coveo/ui-kit/commit/637f8323276ea40ce53d4b433e39271025562dad))
+
+
+
+
+
+# [1.88.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.87.1...@coveo/headless@1.88.0) (2022-07-15)
+
+
+### Features
+
+* **atomic:** add support for search API A/B test feature ([#2212](https://github.com/coveo/ui-kit/issues/2212)) ([8072f68](https://github.com/coveo/ui-kit/commit/8072f68ffc42943b4d45016ae47ca49c9a120a7e))
+
+
+
+
+
+## [1.87.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.87.0...@coveo/headless@1.87.1) (2022-07-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.87.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.86.0...@coveo/headless@1.87.0) (2022-07-13)
+
+
+### Features
+
+* **headless:** clearAllBreadcrumbs only affects regular facets ([#2203](https://github.com/coveo/ui-kit/issues/2203)) ([7fdb44a](https://github.com/coveo/ui-kit/commit/7fdb44a0189cd60068442bf3ebf7cb5f512ccd6f))
+
+
+
+
+
+# [1.86.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.1...@coveo/headless@1.86.0) (2022-07-12)
+
+
+### Features
+
+* **headless:** added sort controller ([#2204](https://github.com/coveo/ui-kit/issues/2204)) ([6c9167a](https://github.com/coveo/ui-kit/commit/6c9167ae0496207cebc2a11eb69a27bc3cb60dd6))
+
+
+
+
+
+## [1.85.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.85.0...@coveo/headless@1.85.1) (2022-07-11)
+
+
+### Bug Fixes
+
+* **headless:** wrong payload interface for logClickEvent ([#2205](https://github.com/coveo/ui-kit/issues/2205)) ([b43be52](https://github.com/coveo/ui-kit/commit/b43be527ab2cde2e77621e76ef07509646cf81e7))
+
+
+
+
+
+# [1.85.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.84.0...@coveo/headless@1.85.0) (2022-07-11)
+
+
+### Bug Fixes
+
+* **atomic,headless:** clear standalone search box state when redirecting ([#2195](https://github.com/coveo/ui-kit/issues/2195)) ([2a19960](https://github.com/coveo/ui-kit/commit/2a199600e9d177f4e9eaa63a41a73205ede25e6e))
+* **headless:** properly support authentication query parameter to use with SAML ([#2176](https://github.com/coveo/ui-kit/issues/2176)) ([f2a8ccb](https://github.com/coveo/ui-kit/commit/f2a8ccb282362011ad603c3980f96cdb11f3c446))
+
+
+### Features
+
+* **headless:** added insight pager controller ([#2202](https://github.com/coveo/ui-kit/issues/2202)) ([3531c75](https://github.com/coveo/ui-kit/commit/3531c75ddc4c89472daf67cf38a91a63dd276b14))
+
+
+
+
+
+# [1.84.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.83.0...@coveo/headless@1.84.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight numeric facet ([#2156](https://github.com/coveo/ui-kit/issues/2156)) ([5d52b73](https://github.com/coveo/ui-kit/commit/5d52b7307111423235d24bcab6fee43116d885b5))
+
+
+
+
+
+# [1.83.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.82.0...@coveo/headless@1.83.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight date facet controller ([#2142](https://github.com/coveo/ui-kit/issues/2142)) ([44a30cb](https://github.com/coveo/ui-kit/commit/44a30cb65b6494574d0da8698dc4ed2166f3bbb0))
+
+
+
+
+
+# [1.82.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.81.0...@coveo/headless@1.82.0) (2022-07-08)
+
+
+### Features
+
+* **headless:** add insight facet controller ([#2133](https://github.com/coveo/ui-kit/issues/2133)) ([4a40482](https://github.com/coveo/ui-kit/commit/4a40482486d8ced04933552e8ca632c8d8dd344e))
+
+
+
+
+
 # [1.81.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.80.0...@coveo/headless@1.81.0) (2022-07-07)
 
 

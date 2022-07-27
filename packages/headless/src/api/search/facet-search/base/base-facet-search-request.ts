@@ -1,4 +1,5 @@
 import {BaseParam, VisitorIDParam} from '../../../platform-service-params';
+import {AuthenticationParam} from '../../search-api-params';
 import {SearchRequest} from '../../search/search-request';
 
 export interface FacetSearchRequestOptions {
@@ -15,7 +16,8 @@ export interface FacetSearchRequestOptions {
 export interface BaseFacetSearchRequest
   extends FacetSearchRequestOptions,
     BaseParam,
-    VisitorIDParam {
+    VisitorIDParam,
+    AuthenticationParam {
   field: string;
   searchContext: SearchRequest;
   filterFacetCount: boolean;
