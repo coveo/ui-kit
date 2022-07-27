@@ -335,11 +335,11 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicInsightEditToggle {
-        "onClick": () => void;
+        "clickCallback": () => void;
         "tooltip": string;
     }
     interface AtomicInsightHistoryToggle {
-        "onClick": () => void;
+        "clickCallback": () => void;
         "tooltip": string;
     }
     interface AtomicInsightInterface {
@@ -2195,11 +2195,11 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicInsightEditToggle {
-        "onClick"?: () => void;
+        "clickCallback"?: () => void;
         "tooltip"?: string;
     }
     interface AtomicInsightHistoryToggle {
-        "onClick"?: () => void;
+        "clickCallback"?: () => void;
         "tooltip"?: string;
     }
     interface AtomicInsightInterface {

@@ -16,7 +16,7 @@ export class AtomicInsightEditToggle {
 
   @State() public error!: Error;
 
-  @Prop({mutable: true}) public onClick: () => void = () => {};
+  @Prop({mutable: true}) public clickCallback: () => void = () => {};
 
   @Prop({mutable: true}) public tooltip = '';
 
@@ -25,7 +25,7 @@ export class AtomicInsightEditToggle {
       <InsightIconButton
         icon={EditIcon}
         ariaLabel="Edit insight"
-        onClick={this.onClick}
+        onClick={this.clickCallback}
         tooltip={this.tooltip}
       />
     );
