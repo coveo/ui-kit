@@ -28,12 +28,10 @@
       }
 
       .header-wrapper {
-        margin-top: 20px;
-        margin-left: 20px;
-        margin-right: 20px;
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto auto;
+        grid-gap: 0.5rem;
       }
     </style>
   </head>
@@ -44,6 +42,7 @@
         <div class="header-wrapper">
           <atomic-insight-search-box></atomic-insight-search-box>
           <atomic-insight-edit-toggle tooltip="This is a tooltip"></atomic-insight-edit-toggle>
+          <atomic-insight-history-toggle tooltip="This is a tooltip"></atomic-insight-history-toggle>
         </div>
       </atomic-insight-interface>
     </div>

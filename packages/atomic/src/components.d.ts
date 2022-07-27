@@ -338,6 +338,10 @@ export namespace Components {
         "onClick": () => void;
         "tooltip": string;
     }
+    interface AtomicInsightHistoryToggle {
+        "onClick": () => void;
+        "tooltip": string;
+    }
     interface AtomicInsightInterface {
         /**
           * Whether analytics should be enabled.
@@ -1379,6 +1383,12 @@ declare global {
         prototype: HTMLAtomicInsightEditToggleElement;
         new (): HTMLAtomicInsightEditToggleElement;
     };
+    interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightHistoryToggleElement: {
+        prototype: HTMLAtomicInsightHistoryToggleElement;
+        new (): HTMLAtomicInsightHistoryToggleElement;
+    };
     interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
     }
     var HTMLAtomicInsightInterfaceElement: {
@@ -1803,6 +1813,7 @@ declare global {
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
+        "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
@@ -2184,6 +2195,10 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicInsightEditToggle {
+        "onClick"?: () => void;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightHistoryToggle {
         "onClick"?: () => void;
         "tooltip"?: string;
     }
@@ -3084,6 +3099,7 @@ declare namespace LocalJSX {
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
+        "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-layout-section": AtomicLayoutSection;
@@ -3178,6 +3194,7 @@ declare module "@stencil/core" {
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
+            "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
