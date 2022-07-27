@@ -17,11 +17,11 @@ import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 export type {PagerInitialState, PagerOptions, PagerProps, Pager, PagerState};
 
 /**
- * Creates an `InsightPager` controller instance.
+ * Creates an insight `Pager` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
  * @param props - The configurable `Pager` properties.
- * @returns An `InsightPager` controller instance.
+ * @returns A `Pager` controller instance.
  * */
 export function buildPager(
   engine: InsightEngine,

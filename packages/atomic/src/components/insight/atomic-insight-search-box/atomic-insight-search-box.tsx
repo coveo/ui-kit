@@ -1,5 +1,4 @@
 import {Component, h, Prop, State} from '@stencil/core';
-
 import {randomID} from '../../../utils/utils';
 import {
   BindStateToController,

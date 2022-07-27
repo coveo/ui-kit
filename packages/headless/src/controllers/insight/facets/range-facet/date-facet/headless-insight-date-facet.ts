@@ -32,9 +32,9 @@ export type {
 export {buildDateRange};
 
 /**
- * Creates a `DateFacet` controller instance.
+ * Creates an insight `DateFacet` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
  * @param props - The configurable `DateFacet` controller properties.
  * @returns A `DateFacet` controller instance.
  */

@@ -1,6 +1,7 @@
 import {FoldedResult, Result, ResultTemplatesManager} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
+import {closest} from '../../../utils/utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -108,7 +109,7 @@ export function resultContext<T extends Result | FoldedResult = Result>(
     );
     element.dispatchEvent(event);
 
-    if (!element.closest('atomic-result')) {
+    if (!closest(element, 'atomic-result')) {
       reject(new MissingResultParentError(element.nodeName.toLowerCase()));
     }
   });
