@@ -1,5 +1,9 @@
 import {LightningElement, api, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultList} ResultList */
@@ -12,6 +16,7 @@ import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadles
  * The `QuanticResultList` component is responsible for displaying query results by applying one or more result templates.
  * @fires CustomEvent#registerresulttemplates
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-result-list engine-id={engineId} fields-to-include="objecttype,gdfiletitle"></c-quantic-result-list>
  */
@@ -28,7 +33,8 @@ export default class QuanticResultList extends LightningElement {
    * @type {string}
    * @defaultValue `'date,author,source,language,filetype,parents,sfknowledgearticleid'`
    */
-  @api fieldsToInclude = 'date,author,source,language,filetype,parents,sfknowledgearticleid';
+  @api fieldsToInclude =
+    'date,author,source,language,filetype,parents,sfknowledgearticleid';
 
   /** @type {ResultListState}*/
   @track state;
@@ -47,6 +53,8 @@ export default class QuanticResultList extends LightningElement {
   unsubscribeResultsPerPage;
   /** @type {ResultTemplatesManager} */
   resultTemplatesManager;
+  /** @type {AnyHeadless} */
+  headless;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -60,25 +68,27 @@ export default class QuanticResultList extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.resultsPerPage = CoveoHeadless.buildResultsPerPage(engine);
-    this.unsubscribeResultsPerPage = this.resultsPerPage.subscribe(() => this.updateState());
+    this.headless = getHeadlessBundle(this.engineId);
+    this.resultsPerPage = this.headless.buildResultsPerPage(engine);
+    this.unsubscribeResultsPerPage = this.resultsPerPage.subscribe(() =>
+      this.updateState()
+    );
 
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
 
-    this.resultList = CoveoHeadless.buildResultList(engine, {
+    this.resultList = this.headless.buildResultList(engine, {
       options: {
-        fieldsToInclude: this.fields
-      }
+        fieldsToInclude: this.fields,
+      },
     });
-    this.resultTemplatesManager = CoveoHeadless.buildResultTemplatesManager(
-      engine
-    );
+    this.resultTemplatesManager =
+      this.headless.buildResultTemplatesManager(engine);
     this.registerTemplates();
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
-  }
+  };
 
   registerTemplates() {
     this.dispatchEvent(
@@ -98,7 +108,11 @@ export default class QuanticResultList extends LightningElement {
   updateState() {
     this.state = this.resultList?.state;
     this.numberOfResults = this.resultsPerPage?.state?.numberOfResults;
-    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted && !!this.numberOfResults;
+    this.showPlaceholder =
+      this.searchStatus?.state?.isLoading &&
+      !this.searchStatus?.state?.hasError &&
+      !this.searchStatus?.state?.firstSearchExecuted &&
+      !!this.numberOfResults;
   }
 
   get fields() {
