@@ -1,22 +1,12 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   buildCoreFacetManager,
-  CoreFacetManager,
+  FacetManager,
   FacetManagerState,
   FacetManagerPayload,
 } from '../core/facet-manager/headless-core-facet-manager';
 
-export type {FacetManagerState, FacetManagerPayload};
-
-/**
- * The `FacetManager` controller helps reorder facets to match the most recent search response.
- */
-export interface FacetManager extends CoreFacetManager {
-  /**
-   * The state of the `FacetManager` controller.
-   */
-  state: FacetManagerState;
-}
+export type {FacetManagerState, FacetManagerPayload, FacetManager};
 
 /**
  * Creates a `FacetManager` instance.

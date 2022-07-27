@@ -1,30 +1,19 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {
   buildCoreFacetManager,
-  CoreFacetManager,
   FacetManagerState,
   FacetManagerPayload,
+  FacetManager,
 } from '../../core/facet-manager/headless-core-facet-manager';
 
-export type {FacetManagerState, FacetManagerPayload};
+export type {FacetManagerState, FacetManagerPayload, FacetManager};
 
 /**
- * The `InsightFacetManager` controller helps reorder facets to match the most recent search response.
- */
-export interface InsightFacetManager extends CoreFacetManager {
-  /**
-   * The state of the `InsightFacetManager` controller.
-   */
-  state: FacetManagerState;
-}
-
-/**
- * Creates an `InsightFacetManager` instance.
+ * Creates an insight `FacetManager` instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
+ * @returns A `FacetManager` controller instance.
  */
-export function buildInsightFacetManager(
-  engine: InsightEngine
-): InsightFacetManager {
+export function buildFacetManager(engine: InsightEngine): FacetManager {
   return buildCoreFacetManager(engine);
 }

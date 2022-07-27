@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.93.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.92.0...@coveo/headless@1.93.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP Tab controller ([#2200](https://github.com/coveo/ui-kit/issues/2200)) ([c6e531c](https://github.com/coveo/ui-kit/commit/c6e531c0313cefb70d78a7bc448f84025b88fd18))
+
+
+
+
+
+# [1.92.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.91.0...@coveo/headless@1.92.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP DidYouMean controller ([#2233](https://github.com/coveo/ui-kit/issues/2233)) ([4bd62e5](https://github.com/coveo/ui-kit/commit/4bd62e57e9edb8ad3e18758ad067072170991a8b))
+
+
+
+
+
+# [1.91.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.90.0...@coveo/headless@1.91.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP Search Parameters controller ([#2231](https://github.com/coveo/ui-kit/issues/2231)) ([07d9ab0](https://github.com/coveo/ui-kit/commit/07d9ab0de18cb6cfdc6f9bc0f73f43c720a1480a))
+
+
+
+
+
 # [1.90.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.89.0...@coveo/headless@1.90.0) (2022-07-22)
 
 

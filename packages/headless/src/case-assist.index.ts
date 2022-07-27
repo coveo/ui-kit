@@ -53,11 +53,31 @@ export {buildCaseField} from './controllers/case-field/headless-case-field';
 export type {CaseFieldSuggestion} from './features/case-field/case-field-state';
 
 export type {
-  QuickviewCore,
-  QuickviewCoreOptions,
-  QuickviewCoreProps,
-  QuickviewCoreState,
+  Quickview,
+  QuickviewOptions,
+  QuickviewProps,
+  QuickviewState,
 } from './controllers/core/quickview/headless-core-quickview';
+
+export type {
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  Quickview as QuickviewCore,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuickviewOptions as QuickviewCoreOptions,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuickviewProps as QuickviewCoreProps,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  QuickviewState as QuickviewCoreState,
+} from './controllers/core/quickview/headless-core-quickview';
+
 export type {
   CaseAssistQuickviewState,
   CaseAssistQuickview,

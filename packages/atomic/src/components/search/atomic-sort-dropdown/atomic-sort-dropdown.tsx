@@ -27,7 +27,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part select - The `<select>` element of the drop-down list.
  * @part select-separator - The element separating the select from the icon.
  * @part placeholder - The drop-down placeholder for while the search interface is initializing.
- * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-sort-dropdown',

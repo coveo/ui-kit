@@ -24,9 +24,9 @@ export interface FacetManagerPayload<T> {
 }
 
 /**
- * The `CoreFacetManager` controller helps reorder facets to match the most recent search response.
+ * The `FacetManager` controller helps reorder facets to match the most recent search response.
  */
-export interface CoreFacetManager extends Controller {
+export interface FacetManager extends Controller {
   /**
    * Sorts the facets to match the order in the most recent search response.
    *
@@ -49,12 +49,12 @@ export interface FacetManagerState {
 }
 
 /**
- * Creates a `CoreFacetManager` instance.
+ * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
- * @returns The `CoreFacetManager` controller instance.
+ * @returns The `FacetManager` controller instance.
  */
-export function buildCoreFacetManager(engine: CoreEngine): CoreFacetManager {
+export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
   if (!loadFacetManagerReducers(engine)) {
     throw loadReducerError;
   }
