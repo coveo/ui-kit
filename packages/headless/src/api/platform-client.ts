@@ -26,7 +26,6 @@ export interface PlatformClientCallOptions {
   requestParams: unknown;
   accessToken: string;
   preprocessRequest: PreprocessRequest;
-  // TODO: KIT-1883 make a required param
   requestMetadata?: RequestMetadata;
   logger: Logger;
   signal?: AbortSignal;

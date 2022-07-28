@@ -14,7 +14,7 @@ export interface RequestMetadata {
 export type PreprocessRequest = (
   request: PlatformRequestOptions,
   clientOrigin: PlatformClientOrigin,
-  metadata?: RequestMetadata // TODO: KIT-1883 make required
+  metadata?: RequestMetadata
 ) => PlatformRequestOptions | Promise<PlatformRequestOptions>;
 
 export const NoopPreprocessRequest: PreprocessRequest = (request) => request;
