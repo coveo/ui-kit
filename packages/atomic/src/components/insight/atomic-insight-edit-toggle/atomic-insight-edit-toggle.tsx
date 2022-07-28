@@ -1,31 +1,25 @@
-import {Component, h, State, Element, Prop} from '@stencil/core';
+import {Component, h, Prop} from '@stencil/core';
 import EditIcon from '../../../images/edit.svg';
-import {InsightIconButton} from '../insight-icon-button/insight-icon-button';
-
 /**
  *
  * @part button - The insight edit toggle button.
  */
 @Component({
   tag: 'atomic-insight-edit-toggle',
-  styleUrl: '../insight-icon-button/insight-icon-button.pcss',
+  styleUrl: 'atomic-insight-edit-toggle.pcss',
   shadow: true,
 })
 export class AtomicInsightEditToggle {
-  @Element() public host!: HTMLElement;
-
-  @State() public error!: Error;
-
   @Prop({mutable: true}) public clickCallback: () => void = () => {};
 
   @Prop({mutable: true}) public tooltip = '';
 
   public render() {
     return (
-      <InsightIconButton
+      <atomic-icon-button
         icon={EditIcon}
-        ariaLabel="Edit insight"
-        onClick={this.clickCallback}
+        labelI18nKey="edit-insight"
+        click-callback={this.clickCallback}
         tooltip={this.tooltip}
       />
     );
