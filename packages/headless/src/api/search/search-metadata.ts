@@ -1,7 +1,7 @@
 /**
  * Feature related to the SearchAPI client request
  */
-export type SearchRequestFeatureOrigin =
+export type SearchRequestFeature =
   | 'search/executeSearch'
   | 'search/fetchPage'
   | 'search/fetchMoreResults'
