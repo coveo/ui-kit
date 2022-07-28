@@ -295,7 +295,6 @@ const buildInsightSearchRequest = (
   const cq = buildConstantQuery(state);
   const facets = getAllFacets(state);
   return mapSearchRequest<InsightQueryRequest>({
-    ...(cq && {cq}),
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.platformUrl,
@@ -307,6 +306,7 @@ const buildInsightSearchRequest = (
       firstResult: state.pagination.firstResult,
       numberOfResults: state.pagination.numberOfResults,
     }),
+    ...(cq && {cq}),
   });
 };
 
