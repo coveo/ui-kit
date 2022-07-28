@@ -15,6 +15,7 @@ import {
 import {randomID} from '../../../utils/utils';
 import {RadioButton} from '../../common/radio-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {FieldsetGroup} from '../../common/fieldset-group';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
@@ -119,22 +120,27 @@ export class AtomicResultsPerPage implements InitializableComponent {
       return;
     }
 
+    const label = this.bindings.i18n.t('results-per-page');
+
     return (
       <div class="flex items-center">
         <span
           part="label"
           class="self-start text-on-background text-lg mr-3 leading-10"
+          aria-hidden="true"
         >
-          {this.bindings.i18n.t('results-per-page')}
+          {label}
         </span>
-        <div
-          part="buttons"
-          role="radiogroup"
-          aria-label={this.bindings.i18n.t('results-per-page')}
-          class="flex flex-wrap gap-2"
-        >
-          {this.choices.map((choice) => this.buildChoice(choice))}
-        </div>
+        <FieldsetGroup label={label}>
+          <div
+            part="buttons"
+            role="radiogroup"
+            aria-label={this.bindings.i18n.t('results-per-page')}
+            class="flex flex-wrap gap-2"
+          >
+            {this.choices.map((choice) => this.buildChoice(choice))}
+          </div>
+        </FieldsetGroup>
       </div>
     );
   }

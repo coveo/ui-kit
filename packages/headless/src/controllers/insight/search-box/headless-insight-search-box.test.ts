@@ -1,8 +1,8 @@
 import {
-  InsightSearchBox,
-  InsightSearchBoxProps,
+  SearchBox,
+  SearchBoxProps,
   SearchBoxOptions,
-  buildInsightSearchBox,
+  buildSearchBox,
 } from './headless-insight-search-box';
 import {
   executeSearch,
@@ -21,8 +21,8 @@ describe('headless searchBox', () => {
   let state: InsightAppState;
 
   let engine: MockInsightEngine;
-  let searchBox: InsightSearchBox;
-  let props: InsightSearchBoxProps;
+  let searchBox: SearchBox;
+  let props: SearchBoxProps;
 
   beforeEach(() => {
     const options: SearchBoxOptions = {
@@ -65,7 +65,7 @@ describe('headless searchBox', () => {
 
   function initController() {
     engine = buildMockInsightEngine({state});
-    searchBox = buildInsightSearchBox(engine, props);
+    searchBox = buildSearchBox(engine, props);
   }
 
   describe('#showSuggestions', () => {

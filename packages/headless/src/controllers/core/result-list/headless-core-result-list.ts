@@ -15,9 +15,12 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {buildCoreStatus, CoreStatusState} from '../status/headless-core-status';
+import {
+  buildCoreStatus,
+  SearchStatusState,
+} from '../status/headless-core-status';
 
-const optionsSchema = new Schema<CoreResultListOptions>({
+const optionsSchema = new Schema<ResultListOptions>({
   fieldsToInclude: new ArrayValue({
     required: false,
     each: new StringValue<string>({
@@ -27,7 +30,7 @@ const optionsSchema = new Schema<CoreResultListOptions>({
   }),
 });
 
-export interface CoreResultListOptions {
+export interface ResultListOptions {
   /**
    * A list of indexed fields to include in the objects returned by the result list.
    * These results are included in addition to the default fields.
@@ -36,11 +39,11 @@ export interface CoreResultListOptions {
   fieldsToInclude?: string[];
 }
 
-export interface CoreResultListProps {
+export interface ResultListProps {
   /**
    * The options for the `ResultList` controller.
    * */
-  options?: CoreResultListOptions;
+  options?: ResultListOptions;
   /**
    * The action creator to build the `fetchMoreResults` action.
    */
@@ -49,9 +52,9 @@ export interface CoreResultListProps {
 }
 
 /**
- * The `CoreResultList` headless controller offers a high-level interface for designing a common result list UI controller.
+ * The `ResultList` headless controller offers a high-level interface for designing a common result list UI controller.
  */
-export interface CoreResultList extends Controller {
+export interface ResultList extends Controller {
   /**
    * Using the same parameters as the last successful query, fetch another batch of results, if available.
    * Particularly useful for infinite scrolling, for example.
@@ -63,13 +66,13 @@ export interface CoreResultList extends Controller {
   /**
    * The state of the `ResultList` controller.
    */
-  state: CoreResultListState;
+  state: ResultListState;
 }
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultList` controller.
  * */
-export interface CoreResultListState extends CoreStatusState {
+export interface ResultListState extends SearchStatusState {
   /**
    * The results of the last executed search.
    * */
@@ -92,16 +95,16 @@ export interface CoreResultListState extends CoreStatusState {
 }
 
 /**
- * Creates a `CoreResultList` controller instance.
+ * Creates a `ResultList` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `ResultList` properties.
- * @returns A `CoreResultList` controller instance.
+ * @returns A `ResultList` controller instance.
  */
 export function buildCoreResultList(
   engine: CoreEngine,
-  props?: CoreResultListProps
-): CoreResultList {
+  props?: ResultListProps
+): ResultList {
   if (!loadResultListReducers(engine)) {
     throw loadReducerError;
   }

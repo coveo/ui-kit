@@ -15,6 +15,7 @@ export const HeaderLink: FunctionComponent<Props> = ({
     <li
       onClick={() => {
         setPage(page);
+        window.history.pushState({}, '', `?page=${page}`);
       }}
     >
       {page} example

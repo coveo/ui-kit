@@ -23,11 +23,10 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
  *
  * @part label - The "Sort by" label of the `<select>` element.
+ * @part select-parent - The `<select>` element parent.
  * @part select - The `<select>` element of the drop-down list.
  * @part select-separator - The element separating the select from the icon.
  * @part placeholder - The drop-down placeholder for while the search interface is initializing.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-sort-dropdown',
@@ -122,7 +121,7 @@ export class AtomicSortDropdown implements InitializableComponent {
 
   private renderSelect() {
     return (
-      <div class="relative">
+      <div class="relative" part="select-parent">
         <select
           id={this.id}
           class="btn-outline-neutral h-10 flex-grow cursor-pointer appearance-none pl-3 pr-24"

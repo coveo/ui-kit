@@ -10,6 +10,10 @@ import {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-in
 import {TestUtils} from '@coveo/headless';
 import {createAtomicStore} from '../atomic-search-interface/store';
 
+// https://github.com/ionic-team/stencil/issues/3260
+global.DocumentFragment = class DocumentFragment extends Node {};
+global.ShadowRoot = class ShadowRoot extends DocumentFragment {};
+
 describe('ResultContext decorator', () => {
   let page: SpecPage;
 

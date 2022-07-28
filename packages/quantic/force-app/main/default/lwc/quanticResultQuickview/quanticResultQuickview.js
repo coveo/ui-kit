@@ -1,5 +1,10 @@
 import {LightningElement, api, track} from 'lwc';
-import {getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+  HeadlessBundleNames,
+  isHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
 
 import close from '@salesforce/label/c.quantic_Close';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
@@ -62,6 +67,7 @@ export default class QuanticResultQuickview extends LightningElement {
    * Indicates the use case where this quickview component is used.
    * @api
    * @type {'search'|'case-assist'}
+   * @deprecated The component uses the same Headless bundle as the interface it is bound to.
    * @defaultValue `'search'`
    */
   @api useCase = 'search';
@@ -75,19 +81,23 @@ export default class QuanticResultQuickview extends LightningElement {
   isQuickviewOpen = false;
   /** @type {Function} */
   unsubscribe;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     close,
     openPreview,
-    noPreview
-  }
+    noPreview,
+  };
 
   connectedCallback() {
-    getHeadlessEnginePromise(this.engineId).then((engine) => {
-      this.initialize(engine);
-    }).catch((error) => {
-      console.error(error.message);
-    });
+    getHeadlessEnginePromise(this.engineId)
+      .then((engine) => {
+        this.initialize(engine);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   }
 
   renderedCallback() {
@@ -102,17 +112,16 @@ export default class QuanticResultQuickview extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.headless = getHeadlessBundle(this.engineId);
     const options = {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
     };
-    this.quickview = this.useCase === 'case-assist'
-      ? CoveoHeadlessCaseAssist.buildCaseAssistQuickview(engine, {options})
-      : CoveoHeadless.buildQuickview(engine, {options});
+    this.quickview = this.headless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
 
     this.dispatchHasPreview(this.quickview.state.resultHasPreview);
-  }
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -125,15 +134,17 @@ export default class QuanticResultQuickview extends LightningElement {
   openQuickview() {
     this.isQuickviewOpen = true;
     this.quickview.fetchResultContent();
-    if(this.useCase !== 'case-assist'){
+    if (!isHeadlessBundle(this.engineId, HeadlessBundleNames.caseAssist)) {
       this.addRecentResult();
     }
   }
 
   addRecentResult() {
     getHeadlessEnginePromise(this.engineId).then((engine) => {
-      const {pushRecentResult} = CoveoHeadless.loadRecentResultsActions(engine);
-      engine.dispatch(pushRecentResult(JSON.parse(JSON.stringify(this.result))));
+      const {pushRecentResult} = this.headless.loadRecentResultsActions(engine);
+      engine.dispatch(
+        pushRecentResult(JSON.parse(JSON.stringify(this.result)))
+      );
     });
   }
 
@@ -146,13 +157,15 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   dispatchHasPreview(hasPreview) {
-    this.dispatchEvent(new CustomEvent('haspreview', {
-      detail: {
-        hasPreview
-      },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('haspreview', {
+        detail: {
+          hasPreview,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   injectIdToSlots() {
@@ -196,14 +209,16 @@ export default class QuanticResultQuickview extends LightningElement {
   get buttonClass() {
     return [
       'slds-button',
-      this.previewButtonVariant ? `slds-button_${this.previewButtonVariant}` : 'quickview__button-base'
-    ].join(' ')
+      this.previewButtonVariant
+        ? `slds-button_${this.previewButtonVariant}`
+        : 'quickview__button-base',
+    ].join(' ');
   }
 
   get buttonIconClass() {
     return [
       'slds-current-color',
-      this.previewButtonLabel && 'slds-button__icon_right'
+      this.previewButtonLabel && 'slds-button__icon_right',
     ].join(' ');
   }
 

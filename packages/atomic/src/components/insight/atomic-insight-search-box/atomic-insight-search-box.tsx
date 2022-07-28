@@ -1,7 +1,7 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import {
-  buildInsightSearchBox,
-  InsightSearchBox,
+  buildSearchBox,
+  SearchBox,
   SearchBoxState,
 } from '@coveo/headless/insight';
 import {randomID} from '../../../utils/utils';
@@ -28,7 +28,7 @@ export class AtomicInsightSearchBox {
   @State() public error!: Error;
 
   private id!: string;
-  private searchBox!: InsightSearchBox;
+  private searchBox!: SearchBox;
   private inputRef!: HTMLInputElement;
 
   /**
@@ -58,9 +58,21 @@ export class AtomicInsightSearchBox {
         },
       },
     };
-    this.searchBox = buildInsightSearchBox(this.bindings.engine, {
+    this.searchBox = buildSearchBox(this.bindings.engine, {
       options: searchBoxOptions,
     });
+  }
+
+  private onKeyDown(e: KeyboardEvent) {
+    if (this.disableSearch) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'Enter':
+        this.searchBox.submit();
+        break;
+    }
   }
 
   public render() {
@@ -71,9 +83,9 @@ export class AtomicInsightSearchBox {
           loading={this.searchBoxState.isLoading}
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
-          state={this.searchBoxState}
-          searchBox={this.searchBox}
-          disabled={this.disableSearch}
+          value={this.searchBoxState.value}
+          onKeyDown={(e) => this.onKeyDown(e)}
+          onClear={() => this.searchBox.clear()}
           onInput={(e) => {
             this.searchBox.updateText((e.target as HTMLInputElement).value);
           }}
@@ -81,7 +93,7 @@ export class AtomicInsightSearchBox {
         <SubmitButton
           bindings={this.bindings}
           disabled={this.disableSearch}
-          searchBox={this.searchBox}
+          onClick={() => this.searchBox.submit()}
         />
       </SearchBoxWrapper>
     );
