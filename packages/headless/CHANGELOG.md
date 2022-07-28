@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.96.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.95.0...@coveo/headless@1.96.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* **headless:** Active tab added to the insight query request ([#2263](https://github.com/coveo/ui-kit/issues/2263)) ([13fe868](https://github.com/coveo/ui-kit/commit/13fe868ab8a91ac2fb67b5adcf1ee3bfa2c59161))
+
+
+### Features
+
+* **atomic,headless:** add result list and result template to insight ([#2197](https://github.com/coveo/ui-kit/issues/2197)) ([767b242](https://github.com/coveo/ui-kit/commit/767b24200e8fc43b64fb85075a97b574de5bc9ba))
+
+
+
+
+
+# [1.95.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.94.0...@coveo/headless@1.95.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* **headless:** exporting the missing pieces ([#2259](https://github.com/coveo/ui-kit/issues/2259)) ([f2da211](https://github.com/coveo/ui-kit/commit/f2da211de4ff71faf1312230085c59c115db20b5))
+
+
+### Features
+
+* **quantic:** update Quantic components to work with different engines ([#2239](https://github.com/coveo/ui-kit/issues/2239)) ([bd245a7](https://github.com/coveo/ui-kit/commit/bd245a7f18aa767c3369fc64f7fa9b3991adcc17))
+
+
+
+
+
+# [1.94.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.93.0...@coveo/headless@1.94.0) (2022-07-27)
+
+
+### Features
+
+* **headless:** Refactor core and insight controllers ([#2215](https://github.com/coveo/ui-kit/issues/2215)) ([25fb657](https://github.com/coveo/ui-kit/commit/25fb657e43c725beb83a48a9e5fc8393a649c051))
+
+
+
+
+
 # [1.93.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.92.0...@coveo/headless@1.93.0) (2022-07-25)
 
 

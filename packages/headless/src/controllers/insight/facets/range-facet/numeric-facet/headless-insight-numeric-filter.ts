@@ -24,8 +24,8 @@ export type {
 };
 
 /**
- * Creates a `NumericFilter` controller instance.
- * @param engine - The headless engine.
+ * Creates an insight `NumericFilter` controller instance.
+ * @param engine - The insight engine.
  * @param props - The configurable `NumericFilter` controller properties.
  * @returns A `NumericFilter` controller instance.
  */

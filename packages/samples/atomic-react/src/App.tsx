@@ -14,8 +14,18 @@ const FOLDED_CUSTOM_CHILDREN_PAGE = 'Folded result list with custom children';
 const INSTANT_RESULTS_PAGE = 'Instant results';
 const TABLE_RESULT_LIST_PAGE = 'Table result list';
 
+const pages = [
+  LIST_PAGE,
+  FOLDED_LIST_PAGE,
+  FOLDED_CUSTOM_CHILDREN_PAGE,
+  INSTANT_RESULTS_PAGE,
+  TABLE_RESULT_LIST_PAGE,
+];
 const App: FunctionComponent = () => {
-  const [page, setPage] = useState(LIST_PAGE);
+  const initialPage = pages.find((page) =>
+    decodeURIComponent(window.location.search).includes(`page=${page}`)
+  );
+  const [page, setPage] = useState(initialPage || LIST_PAGE);
   return (
     <>
       <header>

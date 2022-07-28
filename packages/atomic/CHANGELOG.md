@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.91.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.90.2...@coveo/atomic@1.91.0) (2022-07-28)
+
+
+### Features
+
+* **atomic,headless:** add result list and result template to insight ([#2197](https://github.com/coveo/ui-kit/issues/2197)) ([767b242](https://github.com/coveo/ui-kit/commit/767b24200e8fc43b64fb85075a97b574de5bc9ba))
+
+
+
+
+
+## [1.90.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.90.1...@coveo/atomic@1.90.2) (2022-07-28)
+
+
+### Bug Fixes
+
+* **atomic:** pass rendering function down to instant result atomic-re… ([#2257](https://github.com/coveo/ui-kit/issues/2257)) ([03336d6](https://github.com/coveo/ui-kit/commit/03336d6d2fc07561aa8dc88e2e2b6c99228d9315))
+* **atomic:** result link default slot should not create a warning ([#2246](https://github.com/coveo/ui-kit/issues/2246)) ([3a7c133](https://github.com/coveo/ui-kit/commit/3a7c133f856e11651f58dc82eb1301a3681d425a))
+
+
+
+
+
+## [1.90.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.90.0...@coveo/atomic@1.90.1) (2022-07-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.90.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.2...@coveo/atomic@1.90.0) (2022-07-27)
+
+
+### Features
+
+* **headless:** Refactor core and insight controllers ([#2215](https://github.com/coveo/ui-kit/issues/2215)) ([25fb657](https://github.com/coveo/ui-kit/commit/25fb657e43c725beb83a48a9e5fc8393a649c051))
+
+
+
+
+
+## [1.89.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.1...@coveo/atomic@1.89.2) (2022-07-26)
+
+
+### Bug Fixes
+
+* **atomic:** added accessible group for results per page options ([#2245](https://github.com/coveo/ui-kit/issues/2245)) ([a08b855](https://github.com/coveo/ui-kit/commit/a08b85545fcdb30a98575bb1e381d6ad057a0f4b))
+* **atomic:** focus first new value in facets when pressing show more ([#2250](https://github.com/coveo/ui-kit/issues/2250)) ([90f68d1](https://github.com/coveo/ui-kit/commit/90f68d1634014630545168b7a03f10b826f7dd90))
+
+
+
+
+
 ## [1.89.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.89.0...@coveo/atomic@1.89.1) (2022-07-26)
 
 

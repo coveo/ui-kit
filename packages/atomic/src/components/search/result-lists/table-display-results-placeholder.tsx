@@ -1,8 +1,9 @@
+import {ResultsPerPageState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
-import {ResultPlaceholderProps} from './result-list-common';
+import {ResultPlaceholderProps} from '../../common/result-list/result-list';
 
 export const TableDisplayResultsPlaceholder: FunctionalComponent<
-  ResultPlaceholderProps
+  ResultPlaceholderProps<ResultsPerPageState>
 > = (props) => {
   return (
     <atomic-result-table-placeholder

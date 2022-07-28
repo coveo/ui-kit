@@ -1,6 +1,7 @@
 import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import {Component, Element, Prop, State, Method} from '@stencil/core';
 import {MapProp} from '../../../../utils/props-utils';
+import {makeMatchConditions} from '../../../common/result-template/result-template';
 import {ResultTemplateCommon} from '../result-template-common';
 
 /**
@@ -61,7 +62,7 @@ export class AtomicResultChildrenTemplate {
   }
 
   public componentWillLoad() {
-    this.resultTemplateCommon.addMatchConditions(
+    this.resultTemplateCommon.matchConditions = makeMatchConditions(
       this.mustMatch,
       this.mustNotMatch
     );

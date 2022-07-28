@@ -64,6 +64,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
       engine={engine}
       pipeline="Search"
       searchHub="MainSearch"
+      fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
     >
       <AtomicSearchLayout>
         <AtomicLayoutSection section="search">

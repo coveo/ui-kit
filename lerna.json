@@ -6,7 +6,7 @@
   ],
   "command": {
     "version": {
-      "message": "[Version Bump]: ui-kit publish\nlerna.json\nCHANGELOG.md\n**/CHANGELOG.md"
+      "message": "[Version Bump][skip ci]: ui-kit publish\nlerna.json\nCHANGELOG.md\n**/CHANGELOG.md"
     }
   },
   "version": "independent"

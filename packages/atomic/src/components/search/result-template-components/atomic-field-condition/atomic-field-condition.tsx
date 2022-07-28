@@ -6,6 +6,7 @@ import {
 } from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {MapProp} from '../../../../utils/props-utils';
+import {makeMatchConditions} from '../../../common/result-template/result-template';
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -69,20 +70,9 @@ export class AtomicFieldCondition {
       );
     }
 
-    for (const field in this.mustMatch) {
-      this.conditions.push(
-        ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
-      );
-    }
-
-    for (const field in this.mustNotMatch) {
-      this.conditions.push(
-        ResultTemplatesHelpers.fieldMustNotMatch(
-          field,
-          this.mustNotMatch[field]
-        )
-      );
-    }
+    this.conditions.push(
+      ...makeMatchConditions(this.mustMatch, this.mustNotMatch)
+    );
   }
 
   public render() {

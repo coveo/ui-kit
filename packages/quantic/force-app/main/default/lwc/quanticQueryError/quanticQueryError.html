@@ -2,7 +2,7 @@
     <template if:true={hasError}>
         <div class="slds-grid slds-grid_align-center slds-gutters slds-grid_vertical">
             <div class="slds-col">
-                <h3 class="slds-text-heading_medium slds-text-color_error slds-text-align_center slds-text-title_bold slds-var-m-around_small">{errorTitle}</h3>
+                <div class="slds-text-heading_medium slds-text-color_error slds-text-align_center slds-text-title_bold slds-var-m-around_small">{errorTitle}</div>
                 <p class="slds-text-align_center">{description}</p>
             </div>
             <template if:true={link}>
