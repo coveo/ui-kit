@@ -5,7 +5,7 @@ import {PlatformClient} from '../../platform-client';
 import {findEncoding} from '../encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {Logger} from 'pino';
-import {PreprocessRequest} from '../../preprocess-request';
+import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
 import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
 
 export interface HtmlApiClient {
@@ -24,6 +24,7 @@ export interface HtmlApiClient {
 export interface HtmlAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
+  requestMetadata?: RequestMetadata;
 }
 
 export const getHtml = async (

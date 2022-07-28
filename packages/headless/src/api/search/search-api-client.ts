@@ -232,9 +232,8 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
-  // TODO: refactor
-  async html(req: HtmlRequest) {
-    return getHtml(req, this.options);
+  async html(req: HtmlRequest, options?: SearchResquestOptions) {
+    return getHtml(req, {...this.options, ...options});
   }
 
   async productRecommendations(
