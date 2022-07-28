@@ -5,7 +5,7 @@ import {closest} from '../../../utils/utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
+} from '../../common/layout/display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
 
 export class MissingResultParentError extends Error {

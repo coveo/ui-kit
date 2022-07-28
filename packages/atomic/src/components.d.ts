@@ -8,9 +8,9 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
-import { InsightEngine } from "@coveo/headless/insight";
+import { InsightEngine, InsightLogLevel, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { Section } from "./components/search/atomic-layout-section/sections";
@@ -348,6 +348,10 @@ export namespace Components {
          */
         "executeFirstSearch": () => Promise<void>;
         /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
+        /**
           * The service insight interface i18next instance.
          */
         "i18n": i18n;
@@ -376,7 +380,66 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: InsightLogLevel;
+        /**
+          * Whether the interface should be shown in widget format.
+         */
+        "widget": boolean;
+    }
+    interface AtomicInsightResult {
+        /**
+          * Classes that will be added to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The headless search engine.
+         */
+        "engine": InsightEngine;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize": ResultDisplayImageSize;
+        "loadingFlag"?: string;
+        /**
+          * The result item.
+         */
+        "result": InsightResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ReturnType<typeof createAtomicInsightStore>;
+    }
+    interface AtomicInsightResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+    }
+    interface AtomicInsightResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": InsightResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -1375,6 +1438,24 @@ declare global {
         prototype: HTMLAtomicInsightInterfaceElement;
         new (): HTMLAtomicInsightInterfaceElement;
     };
+    interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultElement: {
+        prototype: HTMLAtomicInsightResultElement;
+        new (): HTMLAtomicInsightResultElement;
+    };
+    interface HTMLAtomicInsightResultListElement extends Components.AtomicInsightResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultListElement: {
+        prototype: HTMLAtomicInsightResultListElement;
+        new (): HTMLAtomicInsightResultListElement;
+    };
+    interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultTemplateElement: {
+        prototype: HTMLAtomicInsightResultTemplateElement;
+        new (): HTMLAtomicInsightResultTemplateElement;
+    };
     interface HTMLAtomicInsightSearchBoxElement extends Components.AtomicInsightSearchBox, HTMLStencilElement {
     }
     var HTMLAtomicInsightSearchBoxElement: {
@@ -1793,6 +1874,9 @@ declare global {
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
+        "atomic-insight-result": HTMLAtomicInsightResultElement;
+        "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
+        "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
@@ -2182,6 +2266,10 @@ declare namespace LocalJSX {
          */
         "engine"?: InsightEngine;
         /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
+        /**
           * The service insight interface i18next instance.
          */
         "i18n"?: i18n;
@@ -2202,7 +2290,62 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: InsightLogLevel;
+        /**
+          * Whether the interface should be shown in widget format.
+         */
+        "widget"?: boolean;
+    }
+    interface AtomicInsightResult {
+        /**
+          * Classes that will be added to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The headless search engine.
+         */
+        "engine": InsightEngine;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
+        /**
+          * The result item.
+         */
+        "result": InsightResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ReturnType<typeof createAtomicInsightStore>;
+    }
+    interface AtomicInsightResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicInsightResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: InsightResultTemplateCondition[];
     }
     interface AtomicInsightSearchBox {
         /**
@@ -3069,6 +3212,9 @@ declare namespace LocalJSX {
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
         "atomic-insight-interface": AtomicInsightInterface;
+        "atomic-insight-result": AtomicInsightResult;
+        "atomic-insight-result-list": AtomicInsightResultList;
+        "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
@@ -3162,6 +3308,9 @@ declare module "@stencil/core" {
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
+            "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
+            "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
+            "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
