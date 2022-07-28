@@ -23,6 +23,7 @@ import {
   PaginationSection,
   QuerySection,
   SearchSection,
+  TabSection,
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction} from '../analytics/analytics-utils';
@@ -64,7 +65,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       DateFacetSection &
       CategoryFacetSection &
       PaginationSection &
-      DidYouMeanSection
+      DidYouMeanSection &
+      TabSection
   >;
 
 const fetchFromAPI = async (
@@ -290,6 +292,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
 const buildInsightSearchRequest = (
   state: StateNeededByExecuteSearch
 ): MappedSearchRequest<InsightQueryRequest> => {
+  const cq = buildConstantQuery(state);
   const facets = getAllFacets(state);
   return mapSearchRequest<InsightQueryRequest>({
     accessToken: state.configuration.accessToken,
@@ -303,6 +306,7 @@ const buildInsightSearchRequest = (
       firstResult: state.pagination.firstResult,
       numberOfResults: state.pagination.numberOfResults,
     }),
+    ...(cq && {cq}),
   });
 };
 
@@ -380,6 +384,15 @@ function getFacetRequests<T extends AnyFacetRequest>(
   requests: Record<string, T> = {}
 ) {
   return Object.keys(requests).map((id) => requests[id]);
+}
+
+function buildConstantQuery(state: StateNeededByExecuteSearch) {
+  const activeTab = Object.values(state.tabSet || {}).find(
+    (tab) => tab.isActive
+  );
+  const tabExpression = activeTab?.expression.trim() || '';
+
+  return tabExpression;
 }
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
