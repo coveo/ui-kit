@@ -66,6 +66,8 @@ import {
   updateInstantResultsQuery,
 } from '../instant-results/instant-results-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+import {SearchRequestFeature} from '../../api/search/search-metadata';
+import {RequestMetadata} from '../../api/preprocess-request';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -108,10 +110,14 @@ export interface ExecuteSearchThunkReturn {
 const fetchFromAPI = async (
   client: SearchAPIClient,
   state: StateNeededByExecuteSearch,
-  {request, mappings}: MappedSearchRequest
+  {request, mappings}: MappedSearchRequest,
+  metadata: RequestMetadata
 ) => {
   const startedAt = new Date().getTime();
-  const response = mapSearchResponse(await client.search(request), mappings);
+  const response = mapSearchResponse(
+    await client.search(request, {metadata}),
+    mappings
+  );
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {response, duration, queryExecuted, requestExecuted: request};
@@ -134,12 +140,13 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   dispatch(updatePage(1));
 });
 
+const executeSearchFeature: SearchRequestFeature = 'search/executeSearch';
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >(
-  'search/executeSearch',
+  executeSearchFeature,
   async (
     analyticsAction: SearchAction,
     {getState, dispatch, rejectWithValue, extra}
@@ -149,7 +156,8 @@ export const executeSearch = createAsyncThunk<
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      await buildSearchRequest(state)
+      await buildSearchRequest(state),
+      {feature: executeSearchFeature}
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -209,12 +217,13 @@ export const executeSearch = createAsyncThunk<
   }
 );
 
+const fetchPageFeature: SearchRequestFeature = 'search/fetchPage';
 export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >(
-  'search/fetchPage',
+  fetchPageFeature,
   async (
     analyticsAction: SearchAction,
     {getState, dispatch, rejectWithValue, extra}
@@ -224,7 +233,8 @@ export const fetchPage = createAsyncThunk<
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      await buildSearchRequest(state)
+      await buildSearchRequest(state),
+      {feature: fetchPageFeature}
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -243,18 +253,20 @@ export const fetchPage = createAsyncThunk<
   }
 );
 
+const fetchMoreResultsFeature: SearchRequestFeature = 'search/fetchMoreResults';
 export const fetchMoreResults = createAsyncThunk<
   ExecuteSearchThunkReturn,
   void,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >(
-  'search/fetchMoreResults',
+  fetchMoreResultsFeature,
   async (_, {getState, dispatch, rejectWithValue, extra: {apiClient}}) => {
     const state = getState();
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      await buildFetchMoreRequest(state)
+      await buildFetchMoreRequest(state),
+      {feature: fetchMoreResultsFeature}
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -274,12 +286,13 @@ export const fetchMoreResults = createAsyncThunk<
   }
 );
 
+const fetchFacetValuesFeature: SearchRequestFeature = 'search/fetchFacetValues';
 export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >(
-  'search/fetchFacetValues',
+  fetchFacetValuesFeature,
   async (
     analyticsAction: SearchAction,
     {getState, dispatch, rejectWithValue, extra: {apiClient}}
@@ -288,7 +301,8 @@ export const fetchFacetValues = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      await buildFetchFacetValuesRequest(state)
+      await buildFetchFacetValuesRequest(state),
+      {feature: fetchFacetValuesFeature}
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -429,7 +443,8 @@ const automaticallyRetryQueryWithCorrection = async (
   const fetched = await fetchFromAPI(
     client,
     getState(),
-    await buildSearchRequest(getState())
+    await buildSearchRequest(getState()),
+    {feature: executeSearchFeature}
   );
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
