@@ -4,6 +4,7 @@ import {TOptions} from 'i18next';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/hidden';
+import {closest} from './utils';
 
 declare global {
   interface Window {
@@ -31,7 +32,7 @@ export function initializeBindings<SpecificBindings extends AnyBindings>(
     );
     element.dispatchEvent(event);
 
-    if (!element.closest(initializableElements.join(', '))) {
+    if (!closest(element, initializableElements.join(', '))) {
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
     }
   });

@@ -26,9 +26,7 @@ const FacetBreadcrumbSelectors: BreadcrumbSelector = {
   firstBreadcrumbValueLabel: () =>
     FacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
   firstBreadcrumbAltText: () =>
-    FacetBreadcrumbSelectors.get()
-      .find('lightning-icon > .slds-assistive-text')
-      .first(),
+    FacetBreadcrumbSelectors.get().find('button.pill__container').first(),
   showMoreButton: () =>
     FacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };
@@ -44,7 +42,7 @@ const NumericFacetBreadcrumbSelectors: BreadcrumbSelector = {
     NumericFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
   firstBreadcrumbAltText: () =>
     NumericFacetBreadcrumbSelectors.get()
-      .find('lightning-icon > .slds-assistive-text')
+      .find('button.pill__container')
       .first(),
   showMoreButton: () =>
     NumericFacetBreadcrumbSelectors.get().find(
@@ -65,7 +63,7 @@ const CategoryFacetBreadcrumbSelectors: BreadcrumbSelector = {
       .first(),
   firstBreadcrumbAltText: () =>
     CategoryFacetBreadcrumbSelectors.get()
-      .find('lightning-icon > .slds-assistive-text')
+      .find('button.pill__container')
       .first(),
 };
 
@@ -77,9 +75,7 @@ const DateFacetBreadcrumbSelectors: BreadcrumbSelector = {
   firstBreadcrumbValueLabel: () =>
     DateFacetBreadcrumbSelectors.get().find('.pill__text-container').first(),
   firstBreadcrumbAltText: () =>
-    DateFacetBreadcrumbSelectors.get()
-      .find('lightning-icon > .slds-assistive-text')
-      .first(),
+    DateFacetBreadcrumbSelectors.get().find('button.pill__container').first(),
   showMoreButton: () =>
     DateFacetBreadcrumbSelectors.get().find('.breadcrumb-manager__more-button'),
 };

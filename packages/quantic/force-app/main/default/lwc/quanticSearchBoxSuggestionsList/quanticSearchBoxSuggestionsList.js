@@ -1,4 +1,4 @@
-import {LightningElement, api,track} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 
 /**
  * @typedef Suggestion
@@ -12,6 +12,7 @@ import {LightningElement, api,track} from 'lwc';
  * @fires CustomEvent#highlightchange
  * @fires CustomEvent#suggestionselected
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-search-box-suggestions-list suggestions={suggestions} onhighlightchange={handleHighlightChange} onsuggestionselected={handleSuggestionSelection}></c-quantic-search-box-suggestions-list>
  */
@@ -29,7 +30,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   @api
   selectionUp() {
     this.selectionIndex--;
-    if(this.selectionIndex < 0) {
+    if (this.selectionIndex < 0) {
       this.selectionIndex = this.suggestions.length - 1;
     }
   }
@@ -37,10 +38,10 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Move highlighted selection down.
    */
-  @api 
+  @api
   selectionDown() {
     this.selectionIndex++;
-    if(this.selectionIndex >= this.suggestions.length) {
+    if (this.selectionIndex >= this.suggestions.length) {
       this.selectionIndex = 0;
     }
   }
@@ -49,9 +50,9 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * Return the currently selected suggestion.
    * @returns {Suggestion}
    */
-  @api 
+  @api
   getCurrentSelectedValue() {
-    if(this.selectionIndex > -1) {
+    if (this.selectionIndex > -1) {
       return this.suggestions[this.selectionIndex];
     }
     return undefined;
@@ -60,16 +61,16 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Reset the current selection.
    */
-  @api 
+  @api
   resetSelection() {
     this.selectionIndex = -1;
   }
-  
+
   /** @type {number} */
   @track selectionIndex = -1;
 
   renderedCallback() {
-    if(this.selectionIndex > -1) {
+    if (this.selectionIndex > -1) {
       this.emitSuggestionHighlighted();
     }
   }
@@ -77,13 +78,13 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   get suggestionsToRender() {
     return this.suggestions.map((s, i) => ({
       ...s,
-      isSelected: this.selectionIndex === i
+      isSelected: this.selectionIndex === i,
     }));
   }
 
   emitSuggestionHighlighted() {
     const highlightChangeEvent = new CustomEvent('highlightchange', {
-      detail: this.suggestions[this.selectionIndex]
+      detail: this.suggestions[this.selectionIndex],
     });
     this.dispatchEvent(highlightChangeEvent);
   }
@@ -93,7 +94,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
     const textValue = liElement.dataset.rawvalue;
 
     const suggestionSelectedEvent = new CustomEvent('suggestionselected', {
-      detail: textValue
+      detail: textValue,
     });
     this.dispatchEvent(suggestionSelectedEvent);
   }

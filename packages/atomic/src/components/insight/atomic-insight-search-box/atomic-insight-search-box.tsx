@@ -1,7 +1,7 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import {
-  buildInsightSearchBox,
-  InsightSearchBox,
+  buildSearchBox,
+  SearchBox,
   SearchBoxState,
 } from '@coveo/headless/insight';
 import {randomID} from '../../../utils/utils';
@@ -28,7 +28,7 @@ export class AtomicInsightSearchBox {
   @State() public error!: Error;
 
   private id!: string;
-  private searchBox!: InsightSearchBox;
+  private searchBox!: SearchBox;
   private inputRef!: HTMLInputElement;
 
   /**
@@ -58,7 +58,7 @@ export class AtomicInsightSearchBox {
         },
       },
     };
-    this.searchBox = buildInsightSearchBox(this.bindings.engine, {
+    this.searchBox = buildSearchBox(this.bindings.engine, {
       options: searchBoxOptions,
     });
   }
