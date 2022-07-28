@@ -40,7 +40,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 
-    describe('with right scroll', () => {
+    describe.skip('with right scroll', () => {
       function setupScrollScrollable() {
         setupWithOverflowFacets();
         scroll('right', 2000);
@@ -49,7 +49,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 
-    describe('with right scroll using keyboard', () => {
+    describe.skip('with right scroll using keyboard', () => {
       function setupKeyboardScrollable() {
         setupWithOverflowFacets();
         cy.get(scrollableComponent).click('center');
