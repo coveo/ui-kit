@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.21.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.26...@coveo/atomic-angular@1.21.0) (2022-07-28)
+
+
+### Features
+
+* **atomic,headless:** add result list and result template to insight ([#2197](https://github.com/coveo/ui-kit/issues/2197)) ([767b242](https://github.com/coveo/ui-kit/commit/767b24200e8fc43b64fb85075a97b574de5bc9ba))
+
+
+
+
+
 ## [1.20.26](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.20.25...@coveo/atomic-angular@1.20.26) (2022-07-28)
 
 **Note:** Version bump only for package @coveo/atomic-angular
