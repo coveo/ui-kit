@@ -85,7 +85,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req),
-
+      requestMetadata: {clientMethod: 'plan'},
       ...this.options,
     });
 
@@ -109,8 +109,8 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
+      requestMetadata: {clientMethod: 'querySuggest'},
       requestParams: pickNonBaseParams(req),
-
       ...this.options,
     });
 
@@ -184,7 +184,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
-
+      requestMetadata: {clientMethod: 'facetSearch'},
       ...this.options,
     });
 
@@ -205,7 +205,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-
+      requestMetadata: {clientMethod: 'recommendations'},
       ...this.options,
     });
 
@@ -232,7 +232,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-
+      requestMetadata: {clientMethod: 'productRecommendations'},
       ...this.options,
     });
 
@@ -255,7 +255,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
       requestParams: {},
-
+      requestMetadata: {clientMethod: 'fieldDescriptions'},
       ...this.options,
     });
     if (response instanceof Error) {
