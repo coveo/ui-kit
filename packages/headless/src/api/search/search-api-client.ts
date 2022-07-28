@@ -85,7 +85,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: {clientMethod: 'plan'},
+      requestMetadata: {method: 'plan'},
       ...this.options,
     });
 
@@ -109,7 +109,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
-      requestMetadata: {clientMethod: 'querySuggest'},
+      requestMetadata: {method: 'querySuggest'},
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
@@ -149,7 +149,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: {clientMethod: 'search', origin: options?.origin},
+      requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
       signal: this.searchAbortController?.signal,
     });
@@ -184,7 +184,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: {clientMethod: 'facetSearch'},
+      requestMetadata: {method: 'facetSearch'},
       ...this.options,
     });
 
@@ -205,7 +205,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: {clientMethod: 'recommendations'},
+      requestMetadata: {method: 'recommendations'},
       ...this.options,
     });
 
@@ -232,7 +232,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: {clientMethod: 'productRecommendations'},
+      requestMetadata: {method: 'productRecommendations'},
       ...this.options,
     });
 
@@ -255,7 +255,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
       requestParams: {},
-      requestMetadata: {clientMethod: 'fieldDescriptions'},
+      requestMetadata: {method: 'fieldDescriptions'},
       ...this.options,
     });
     if (response instanceof Error) {

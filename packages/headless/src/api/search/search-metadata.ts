@@ -1,4 +1,4 @@
-export type SearchApiClientMethod =
+export type SearchApiMethod =
   | 'plan'
   | 'querySuggest'
   | 'search'
