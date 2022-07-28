@@ -88,7 +88,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       return;
     }
 
-    const pixelsToScroll = container.clientWidth * 0.75;
+    const pixelsToScroll = (container.clientWidth - 100) * 0.75;
     const isLeftEdge = container.scrollLeft - pixelsToScroll <= 0;
     const isRightEdge =
       container.scrollLeft + pixelsToScroll >=
