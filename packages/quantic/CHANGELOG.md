@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.32.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.31.1...@coveo/quantic@1.32.0) (2022-07-28)
+
+
+### Features
+
+* **quantic:** Remove usage of header elements ([#2261](https://github.com/coveo/ui-kit/issues/2261)) ([f97d79a](https://github.com/coveo/ui-kit/commit/f97d79a649cbc441c3f52b32ea6f5390ad2c7a1c))
+
+
+
+
+
 ## [1.31.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.31.0...@coveo/quantic@1.31.1) (2022-07-28)
 
 **Note:** Version bump only for package @coveo/quantic
