@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.95.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.94.0...@coveo/headless@1.95.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* **headless:** exporting the missing pieces ([#2259](https://github.com/coveo/ui-kit/issues/2259)) ([f2da211](https://github.com/coveo/ui-kit/commit/f2da211de4ff71faf1312230085c59c115db20b5))
+
+
+### Features
+
+* **quantic:** update Quantic components to work with different engines ([#2239](https://github.com/coveo/ui-kit/issues/2239)) ([bd245a7](https://github.com/coveo/ui-kit/commit/bd245a7f18aa767c3369fc64f7fa9b3991adcc17))
+
+
+
+
+
 # [1.94.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.93.0...@coveo/headless@1.94.0) (2022-07-27)
 
 
