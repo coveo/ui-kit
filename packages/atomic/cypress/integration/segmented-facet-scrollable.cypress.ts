@@ -40,7 +40,7 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 
-    describe.skip('with right scroll', () => {
+    describe('with right scroll', () => {
       function setupScrollScrollable() {
         setupWithOverflowFacets();
         scroll('right', 2000);
@@ -112,6 +112,6 @@ describe('Segmented Facet Scrollable Test Suites', () => {
         .withoutFirstAutomaticSearch()
         .init();
     });
-    ScrollableAssertions.assertDisplayScrollable(false);
+    ScrollableAssertions.assertDisplayScrollable(true);
   });
 });

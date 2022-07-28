@@ -38,5 +38,7 @@ export function scroll(direction: direction, msDuration: number) {
   ScrollableSelectors.horizontalScroll().scrollTo(direction, {
     duration: msDuration,
   });
-  cy.get(scrollableComponent).trigger('wheel');
+  cy.get(scrollableComponent).then(([el]) =>
+    el.dispatchEvent(new Event('wheel'))
+  );
 }
