@@ -35,18 +35,15 @@ import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
 import {pickNonBaseParams, unwrapError} from '../api-client-utils';
-import {RequestMetadata} from '../preprocess-request';
+import {SearchOrigin} from './search-metadata';
 
 export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
 }
 
-export interface SearchOptions extends SearchRequestOptions {
+export interface SearchOptions {
   disableAbortWarning?: boolean;
-}
-
-export interface SearchRequestOptions {
-  metadata?: RequestMetadata;
+  origin: SearchOrigin;
 }
 
 export type AllSearchAPIResponse =
@@ -83,13 +80,12 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   constructor(private options: SearchAPIClientOptions) {}
 
   async plan(
-    req: PlanRequest,
-    options?: SearchRequestOptions
+    req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: options?.metadata,
+
       ...this.options,
     });
 
@@ -109,13 +105,12 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   }
 
   async querySuggest(
-    req: QuerySuggestRequest,
-    options?: SearchRequestOptions
+    req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: options?.metadata,
+
       ...this.options,
     });
 
@@ -154,7 +149,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: options?.metadata,
+      requestMetadata: {clientMethod: 'search', origin: options?.origin},
       ...this.options,
       signal: this.searchAbortController?.signal,
     });
@@ -185,11 +180,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
-  async facetSearch(req: FacetSearchRequest, options?: SearchRequestOptions) {
+  async facetSearch(req: FacetSearchRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: options?.metadata,
+
       ...this.options,
     });
 
@@ -206,14 +201,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     return processedResponse.body;
   }
 
-  async recommendations(
-    req: RecommendationRequest,
-    options?: SearchRequestOptions
-  ) {
+  async recommendations(req: RecommendationRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: options?.metadata,
+
       ...this.options,
     });
 
@@ -232,18 +224,15 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
-  async html(req: HtmlRequest, options?: SearchRequestOptions) {
-    return getHtml(req, {...this.options, ...options});
+  async html(req: HtmlRequest) {
+    return getHtml(req, {...this.options});
   }
 
-  async productRecommendations(
-    req: ProductRecommendationsRequest,
-    options?: SearchRequestOptions
-  ) {
+  async productRecommendations(req: ProductRecommendationsRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      requestMetadata: options?.metadata,
+
       ...this.options,
     });
 
@@ -262,11 +251,11 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     };
   }
 
-  async fieldDescriptions(req: BaseParam, options?: SearchRequestOptions) {
+  async fieldDescriptions(req: BaseParam) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
       requestParams: {},
-      requestMetadata: options?.metadata,
+
       ...this.options,
     });
     if (response instanceof Error) {

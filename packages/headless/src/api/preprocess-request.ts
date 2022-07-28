@@ -1,5 +1,5 @@
 import {AnalyticsClientOrigin} from 'coveo.analytics/dist/definitions/client/analyticsRequestClient';
-import {SearchRequestFeature} from './search/search-metadata';
+import {SearchApiClientMethod, SearchOrigin} from './search/search-metadata';
 
 export interface PlatformRequestOptions extends RequestInit {
   url: string;
@@ -8,7 +8,8 @@ export interface PlatformRequestOptions extends RequestInit {
 export type PlatformClientOrigin = AnalyticsClientOrigin | 'searchApiFetch';
 
 export interface RequestMetadata {
-  feature: SearchRequestFeature;
+  clientMethod: SearchApiClientMethod;
+  origin?: SearchOrigin;
 }
 
 export type PreprocessRequest = (
