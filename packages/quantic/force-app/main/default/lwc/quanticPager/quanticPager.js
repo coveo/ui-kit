@@ -1,5 +1,9 @@
 import {LightningElement, api, track} from 'lwc';
-import {registerComponentForInit, initializeWithHeadless} from 'c/quanticHeadlessLoader';
+import {
+  registerComponentForInit,
+  initializeWithHeadless,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
 
 import next from '@salesforce/label/c.quantic_Next';
 import previous from '@salesforce/label/c.quantic_Previous';
@@ -10,6 +14,7 @@ import previous from '@salesforce/label/c.quantic_Previous';
 /**
  * The `QuanticPager` provides buttons that allow the end user to navigate through the different result pages.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-pager engine-id={engineId} number-of-pages="4"></c-quantic-pager>
  */
@@ -31,7 +36,7 @@ export default class QuanticPager extends LightningElement {
   /** @type {number[]} */
   @track currentPages = [];
   /** @type {boolean}*/
-  @track hasResults
+  @track hasResults;
 
   /** @type {Pager} */
   pager;
@@ -45,11 +50,13 @@ export default class QuanticPager extends LightningElement {
   hasNext;
   /** @type {number} */
   currentPage = 1;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     next,
-    previous
-  }
+    previous,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -63,15 +70,18 @@ export default class QuanticPager extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.pager = CoveoHeadless.buildPager(engine, {
+    this.headless = getHeadlessBundle(this.engineId);
+    this.pager = this.headless.buildPager(engine, {
       options: {
         numberOfPages: Number(this.numberOfPages),
-      }
+      },
     });
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
-  }
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.updateState()
+    );
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -112,7 +122,7 @@ export default class QuanticPager extends LightningElement {
   get currentPagesObjects() {
     return this.currentPages.map((page) => ({
       number: page,
-      selected: page === this.currentPage
+      selected: page === this.currentPage,
     }));
   }
 }
