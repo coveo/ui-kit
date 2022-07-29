@@ -1,9 +1,15 @@
 <template>
   <template if:true={shouldDisplay}>
-    <div tabindex="0" role="tab" onkeydown={onKeyDown}>
-      <li class={tabClass} title={label} role="presentation">
-        <a class="slds-tabs_default__link" role="tab" onclick={select}>{label}</a>
-      </li>
-    </div>
+    <li class={tabClass} title={label} role="presentation">
+      <button
+        class="pill__container slds-grid_vertical-align-center slds-p-horizontal_x-small slds-p-vertical_xx-small slds-button slds-var-m-around_xxx-small"
+        onclick={select}
+        aria-label={arialLaelText}
+      >
+        <a class="slds-tabs_default__link" role="tab" onclick={select}
+          >{label}</a
+        >
+      </button>
+    </li>
   </template>
 </template>

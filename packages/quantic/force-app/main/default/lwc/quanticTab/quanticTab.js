@@ -104,13 +104,7 @@ export default class QuanticTab extends LightningElement {
     return `slds-tabs_default__item ${this.isActive ? 'slds-is-active' : ''}`;
   }
 
-  /**
-   * @param {KeyboardEvent} evt
-   */
-  onKeyDown(evt) {
-    if(evt.code==="Enter" || evt.code==="Space"){
-          evt.preventDefault()
-          this.tab.select()
-    }
+  get arialLaelText() {
+    return `Tab, ${this.label}`;
   }
 }
