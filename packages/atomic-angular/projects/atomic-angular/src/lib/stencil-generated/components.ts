@@ -358,6 +358,69 @@ export class AtomicIcon {
 }
 
 
+export declare interface AtomicIconButton extends Components.AtomicIconButton {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['clickCallback', 'icon', 'labelI18nKey', 'tooltip']
+})
+@Component({
+  selector: 'atomic-icon-button',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['clickCallback', 'icon', 'labelI18nKey', 'tooltip']
+})
+export class AtomicIconButton {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightEditToggle extends Components.AtomicInsightEditToggle {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['clickCallback', 'tooltip']
+})
+@Component({
+  selector: 'atomic-insight-edit-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['clickCallback', 'tooltip']
+})
+export class AtomicInsightEditToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightHistoryToggle extends Components.AtomicInsightHistoryToggle {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['clickCallback', 'tooltip']
+})
+@Component({
+  selector: 'atomic-insight-history-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['clickCallback', 'tooltip']
+})
+export class AtomicInsightHistoryToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicInsightResult extends Components.AtomicInsightResult {}
 
 @ProxyCmp({
