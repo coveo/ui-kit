@@ -4,10 +4,8 @@ import {
   SortCriterion,
   SearchEngine,
 } from '@coveo/headless';
-import {VNode} from '@stencil/core';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {isInDocument} from '../../../utils/utils';
 import {
   createAtomicCommonStore,
   AtomicCommonStoreData,
@@ -35,7 +33,6 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  facetElements: HTMLElement[];
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
   fieldsToInclude: string[];
@@ -50,8 +47,6 @@ export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
 
   registerResultList(data: ResultListInfo): void;
 
-  getFacetElements(): HTMLElement[];
-
   getAllFacets(): {
     [facetId: string]:
       | FacetInfo
@@ -60,8 +55,6 @@ export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
   };
 
   isMobile(): boolean;
-
-  getUniqueIDFromEngine(engine: SearchEngine): string;
 }
 
 export function createAtomicStore(): AtomicStore {
@@ -94,12 +87,6 @@ export function createAtomicStore(): AtomicStore {
 
     registerResultList(data: ResultListInfo) {
       commonStore.set('resultList', data);
-    },
-
-    getFacetElements() {
-      return commonStore.state.facetElements.filter((element) =>
-        isInDocument(element)
-      );
     },
 
     getAllFacets() {
