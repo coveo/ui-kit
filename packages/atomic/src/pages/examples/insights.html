@@ -26,11 +26,17 @@
     </script>
     <style>
       #wrapper {
-        width: 100%;
-        height: auto;
-        margin-top: 20px;
+        width: 400px;
+        height: 720px;
         margin-left: auto;
         margin-right: auto;
+      }
+
+      .header-wrapper {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        grid-gap: 0.5rem;
       }
     </style>
   </head>
@@ -38,7 +44,11 @@
     <button id="widget-view">Toggle widget view</button>
     <div id="wrapper">
       <atomic-insight-interface>
-        <atomic-insight-search-box></atomic-insight-search-box>
+        <div class="header-wrapper">
+          <atomic-insight-search-box></atomic-insight-search-box>
+          <atomic-insight-edit-toggle tooltip="This is a tooltip"></atomic-insight-edit-toggle>
+          <atomic-insight-history-toggle tooltip="This is a tooltip"></atomic-insight-history-toggle>
+        </div>
         <atomic-layout-section section="results">
           <atomic-insight-result-list image-size="none">
             <atomic-insight-result-template>
@@ -198,8 +208,8 @@
           wrapper.style['box-shadow'] = '0px 3px 24px 0px #0000001A';
           insightInterface.setAttribute('widget', true);
         } else {
-          wrapper.style.width = '';
-          wrapper.style.height = '';
+          wrapper.style.width = '100%';
+          wrapper.style.height = 'auto';
           wrapper.style['box-shadow'] = '';
           insightInterface.setAttribute('widget', false);
         }

@@ -334,6 +334,20 @@ export namespace Components {
          */
         "icon": string;
     }
+    interface AtomicIconButton {
+        "clickCallback": () => void;
+        "icon": string;
+        "labelI18nKey": string;
+        "tooltip": string;
+    }
+    interface AtomicInsightEditToggle {
+        "clickCallback": () => void;
+        "tooltip": string;
+    }
+    interface AtomicInsightHistoryToggle {
+        "clickCallback": () => void;
+        "tooltip": string;
+    }
     interface AtomicInsightInterface {
         /**
           * Whether analytics should be enabled.
@@ -1432,6 +1446,24 @@ declare global {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
     };
+    interface HTMLAtomicIconButtonElement extends Components.AtomicIconButton, HTMLStencilElement {
+    }
+    var HTMLAtomicIconButtonElement: {
+        prototype: HTMLAtomicIconButtonElement;
+        new (): HTMLAtomicIconButtonElement;
+    };
+    interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightEditToggleElement: {
+        prototype: HTMLAtomicInsightEditToggleElement;
+        new (): HTMLAtomicInsightEditToggleElement;
+    };
+    interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightHistoryToggleElement: {
+        prototype: HTMLAtomicInsightHistoryToggleElement;
+        new (): HTMLAtomicInsightHistoryToggleElement;
+    };
     interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
     }
     var HTMLAtomicInsightInterfaceElement: {
@@ -1873,6 +1905,9 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-icon-button": HTMLAtomicIconButtonElement;
+        "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
+        "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
@@ -2255,6 +2290,20 @@ declare namespace LocalJSX {
           * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "icon": string;
+    }
+    interface AtomicIconButton {
+        "clickCallback"?: () => void;
+        "icon": string;
+        "labelI18nKey": string;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightEditToggle {
+        "clickCallback"?: () => void;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightHistoryToggle {
+        "clickCallback"?: () => void;
+        "tooltip"?: string;
     }
     interface AtomicInsightInterface {
         /**
@@ -3211,6 +3260,9 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
+        "atomic-icon-button": AtomicIconButton;
+        "atomic-insight-edit-toggle": AtomicInsightEditToggle;
+        "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-list": AtomicInsightResultList;
@@ -3307,6 +3359,9 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-icon-button": LocalJSX.AtomicIconButton & JSXBase.HTMLAttributes<HTMLAtomicIconButtonElement>;
+            "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
+            "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
