@@ -2,9 +2,7 @@ import {
   TagProps,
   TestFixture,
   generateComponentHTML,
-  addElement,
 } from '../fixtures/test-fixture';
-import {segmentedFacetComponent} from './facets/segmented-facet/segmented-facet-selectors';
 import {
   scrollableComponent,
   ScrollableSelectors,
@@ -12,20 +10,16 @@ import {
 
 type direction = 'right' | 'left';
 
-let scrollable!: HTMLElement;
-
-function appendSegmentedFacet(facetProps: TagProps) {
-  scrollable.append(
-    generateComponentHTML('atomic-segmented-facet', facetProps)
-  );
-}
-
 export const addScrollable =
   (facetProps: TagProps = {}) =>
   (env: TestFixture) => {
-    scrollable = generateComponentHTML('atomic-segmented-facet-scrollable');
-    appendSegmentedFacet(facetProps);
-    addElement(env, scrollable);
+    const scrollable = generateComponentHTML(
+      'atomic-segmented-facet-scrollable'
+    );
+    scrollable.append(
+      generateComponentHTML('atomic-segmented-facet', facetProps)
+    );
+    env.withElement(scrollable);
   };
 
 export function clickArrow(direction: direction) {
