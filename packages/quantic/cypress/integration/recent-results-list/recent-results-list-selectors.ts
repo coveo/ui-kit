@@ -17,7 +17,8 @@ export const RecentResultsListSelectors: RecentResultsListSelector = {
 
   placeholder: () =>
     RecentResultsListSelectors.get().find('.placeholder__card-container'),
-  label: () => RecentResultsListSelectors.get().find('header h2 > span'),
+  label: () =>
+    RecentResultsListSelectors.get().find('header .card__header > span'),
   results: () =>
     RecentResultsListSelectors.get().find('.recent-result__container'),
   resultLinks: () =>

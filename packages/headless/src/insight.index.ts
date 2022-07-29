@@ -34,6 +34,8 @@ export * from './features/insight-search/insight-search-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 export * from './features/recent-results/recent-results-actions-loader';
+export * from './features/case-context/case-context-actions-loader';
+export * from './features/insight-search/insight-search-analytics-actions-loader';
 
 // Controllers
 export type {
@@ -226,13 +228,13 @@ export type {
 export {buildSort} from './controllers/insight/sort/headless-insight-sort';
 
 export type {
-  InsightResultListProps,
-  InsightResultList,
-  InsightResultListState,
-} from './controllers/insight/result-list/headless-insight-result-list';
-export {buildInsightResultList} from './controllers/insight/result-list/headless-insight-result-list';
-
-export {buildInsightInteractiveResult} from './controllers/insight/result-list/headless-insight-interactive-result';
+  TabInitialState,
+  TabOptions,
+  TabProps,
+  TabState,
+  Tab,
+} from './controllers/insight/tab/headless-insight-tab';
+export {buildTab} from './controllers/insight/tab/headless-insight-tab';
 
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 

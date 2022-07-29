@@ -23,7 +23,7 @@ const exampleSubject = 'example subject';
 const exampleDescription = 'example description';
 
 describe('logContextChanged', () => {
-  it('should log #logContextChanged whith the right payload', async () => {
+  it('should log #logContextChanged with the right payload', async () => {
     const exampleSubject = 'example subject';
     const exampleDescription = 'example description';
 
@@ -56,7 +56,7 @@ describe('logContextChanged', () => {
 });
 
 describe('logExpandToFullUI', () => {
-  it('should log #logExpandToFullUI whith the right payload', async () => {
+  it('should log #logExpandToFullUI with the right payload', async () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         insightCaseContext: {

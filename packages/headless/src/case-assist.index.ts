@@ -84,6 +84,7 @@ export type {
   CaseAssistQuickviewOptions,
   CaseAssistQuickviewProps,
 } from './controllers/quickview/case-assist-headless-quickview';
+export {buildCaseAssistQuickview as buildQuickview} from './controllers/quickview/case-assist-headless-quickview';
 export {buildCaseAssistQuickview} from './controllers/quickview/case-assist-headless-quickview';
 
 export type {Result} from './api/search/search/result';
@@ -97,6 +98,8 @@ export type {
   DocumentSuggestionListState,
 } from './controllers/document-suggestion-list/headless-document-suggestion-list';
 export {buildDocumentSuggestionList} from './controllers/document-suggestion-list/headless-document-suggestion-list';
+
+export {buildCaseAssistInteractiveResult as buildInteractiveResult} from './controllers/document-suggestion-list/case-assist-headless-interactive-result';
 
 /**
  * @deprecated

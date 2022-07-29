@@ -11,6 +11,10 @@
   white-space: nowrap;
 }
 
+.breadcrumb-manager__more-button {
+  line-height: var(--lwc-lineHeightText, 1.5);
+}
+
 .breadcrumb-manager__more-button:hover {
   color: var(--color-text-action-label);
 }
