@@ -1,4 +1,4 @@
-import {buildInsightResultList} from './headless-insight-result-list';
+import {buildResultList} from './headless-insight-result-list';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
@@ -22,7 +22,7 @@ describe('InsightResultList', () => {
   });
 
   it('fetchMoreResults should dispatch a fetchMoreResults action', () => {
-    buildInsightResultList(engine).fetchMoreResults();
+    buildResultList(engine).fetchMoreResults();
     expect(
       engine.actions.find(
         (action) => action.type === fetchMoreResults.pending.type

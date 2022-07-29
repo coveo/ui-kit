@@ -44,7 +44,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
 
   private results: Result[] = [];
   public resultListCommon!: ResultListCommon<Bindings>;
-  private renderingFunction: ResultRenderingFunction | null = null;
+  private renderingFunction?: ResultRenderingFunction | undefined;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -56,7 +56,6 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
    */
   @Method() public async setRenderFunction(render: ResultRenderingFunction) {
     this.renderingFunction = render;
-    this.assignRenderingFunctionIfPossible();
   }
   /**
    * The maximum number of results to show.
@@ -113,6 +112,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
     const results = this.instantResults.state.results.length
       ? this.instantResults.state.results
       : this.results;
+
     const elements: SearchBoxSuggestionElement[] = results.map(
       (result: Result) => ({
         key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
@@ -128,6 +128,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
             imageSize={this.imageSize}
             content={this.resultListCommon.getContentOfResultTemplate(result)}
             stopPropagation={false}
+            renderingFunction={this.renderingFunction}
           ></atomic-result>
         ),
         onSelect: (e: MouseEvent) => {
@@ -172,9 +173,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
       host: this.host,
       bindings: this.bindings,
       templateElements: this.host.querySelectorAll('atomic-result-template'),
-      onReady: () => {
-        this.assignRenderingFunctionIfPossible();
-      },
+      onReady: () => {},
       onError: () => {
         this.templateHasError = true;
       },
@@ -219,11 +218,6 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
     });
   }
 
-  private assignRenderingFunctionIfPossible() {
-    if (this.resultListCommon && this.renderingFunction) {
-      this.resultListCommon.renderingFunction = this.renderingFunction;
-    }
-  }
   public render() {
     if (this.error) {
       return (

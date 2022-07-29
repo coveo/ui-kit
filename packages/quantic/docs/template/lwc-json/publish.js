@@ -1,6 +1,6 @@
 /**
  * @overview Builds a tree-like JSON string from the LWC doclet data.
- * @version 0.0.1 
+ * @version 0.0.1
  */
 'use strict';
 
@@ -10,13 +10,11 @@ const xmlToJson = require('xml2json').toJson;
 const dump = require('jsdoc/util/dumper').dump;
 
 function formatType(type) {
-  return type
-    ? (type.names.length === 1 ? type.names[0] : type.names)
-    : '';
+  return type ? (type.names.length === 1 ? type.names[0] : type.names) : '';
 }
 
 function formatBooleanParam(boolParam) {
-  return typeof boolParam === 'boolean' ? boolParam : ''
+  return typeof boolParam === 'boolean' ? boolParam : '';
 }
 
 function parseFunction(element, parentNode) {
@@ -34,7 +32,7 @@ function parseFunction(element, parentNode) {
     virtual: !!element.virtual,
     description: element.description || '',
     parameters: [],
-    examples: []
+    examples: [],
   };
 
   parentNode.functions.push(thisFunction);
@@ -42,7 +40,7 @@ function parseFunction(element, parentNode) {
   if (element.returns) {
     thisFunction.returns = {
       type: formatType(element.returns[0].type),
-      description: element.returns[0].description || ''
+      description: element.returns[0].description || '',
     };
   }
 
@@ -88,10 +86,10 @@ function parseMember(element, parentNode) {
     required: !element.defaultvalue && !isTagDefined(element, 'optional'),
     defaultValue: element.defaultvalue || '',
     type: element.type?.names?.join('|') || '',
-  }
+  };
   if (prop.type.name === 'function') {
-    prop.type.params = element.params || '',
-      prop.type.returns = element.returns || ''
+    (prop.type.params = element.params || ''),
+      (prop.type.returns = element.returns || '');
   }
   parentNode.properties.push(prop);
 }
@@ -104,21 +102,26 @@ function getMetadata(element) {
 }
 
 function getComponentCategories(element) {
-  const categories = element.tags?.filter((tag) => tag.originalTitle === 'category');
-  return categories ? categories.map(category => category.value) : [];
+  const categories = element.tags?.filter(
+    (tag) => tag.originalTitle === 'category'
+  );
+  return categories ? categories.map((category) => category.value) : [];
 }
 
 const categoryMap = {
   search: 'Search',
   resultTemplate: 'Result Template',
   caseAssist: 'Case Assist',
-  utility: 'Utility'
-}
+  utility: 'Utility',
+  insightPanel: 'Insight Panel',
+};
 
 function parseClass(element, parentNode, childNodes) {
   if (!parentNode.components) {
     parentNode.components = {};
-    Object.keys(categoryMap).forEach(key => parentNode.components[key] = []);
+    Object.keys(categoryMap).forEach(
+      (key) => (parentNode.components[key] = [])
+    );
   }
 
   element.xmlMeta = getMetadata(element).LightningComponentBundle;
@@ -133,15 +136,21 @@ function parseClass(element, parentNode, childNodes) {
     xmlMeta: {
       apiVersion: element.xmlMeta?.apiVersion || '',
       isExposed: element.xmlMeta?.isExposed,
-      targets: element.xmlMeta?.targets?.target || []
-    }
+      targets: element.xmlMeta?.targets?.target || [],
+    },
   };
 
-  const categoryKeys = Object.keys(categoryMap).filter(key => thisClass.categories.includes(categoryMap[key]));
+  const categoryKeys = Object.keys(categoryMap).filter((key) =>
+    thisClass.categories.includes(categoryMap[key])
+  );
   if (!categoryKeys.length) {
-    throw new Error(`JsDoc parsing FAILED: Invalid or missing category value(s) on component ${thisClass.name}.`);
+    throw new Error(
+      `JsDoc parsing FAILED: Invalid or missing category value(s) on component ${thisClass.name}.`
+    );
   }
-  categoryKeys.forEach(categoryKey => parentNode.components[categoryKey].push(thisClass));
+  categoryKeys.forEach((categoryKey) =>
+    parentNode.components[categoryKey].push(thisClass)
+  );
 
   if (element.examples) {
     for (let i = 0, len = element.examples.length; i < len; i++) {
@@ -166,7 +175,7 @@ function parseClass(element, parentNode, childNodes) {
 function graft(parentNode, childNodes, parentLongname) {
   childNodes
     .filter(function (element) {
-      return (element.memberof === parentLongname);
+      return element.memberof === parentLongname;
     })
     .forEach(function (element, _index) {
       switch (element.kind) {
@@ -189,15 +198,16 @@ function graft(parentNode, childNodes, parentLongname) {
 exports.publish = function (data, opts) {
   let root = {};
 
-  data({ undocumented: true }).remove();
+  data({undocumented: true}).remove();
   const docs = data().get();
 
   graft(root, docs);
 
   if (opts.destination === 'console') {
     console.log(dump(root));
-  }
-  else {
-    console.log('This template only supports output to the console. Use the option "-d console" when you run JSDoc.');
+  } else {
+    console.log(
+      'This template only supports output to the console. Use the option "-d console" when you run JSDoc.'
+    );
   }
 };

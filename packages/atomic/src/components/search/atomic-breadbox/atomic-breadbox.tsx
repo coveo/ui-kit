@@ -36,6 +36,7 @@ const ELLIPSIS = '...';
 /**
  * The `atomic-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
  *
+ * @part breadcrumb-list - The list of breadcrumb buttons.
  * @part breadcrumb-button - A single breadcrumb button.
  * @part breadcrumb-label - The breadcrumb label, associated with the facet.
  * @part breadcrumb-value - The breadcrumb formatted value.
@@ -173,6 +174,7 @@ export class AtomicBreadbox implements InitializableComponent {
     const value = Array.isArray(breadcrumb.formattedValue)
       ? this.limitPath(breadcrumb.formattedValue)
       : breadcrumb.formattedValue;
+    const title = `${breadcrumb.label}: ${fullValue}`;
 
     return (
       <li class="breadcrumb" key={value}>
@@ -180,7 +182,10 @@ export class AtomicBreadbox implements InitializableComponent {
           part="breadcrumb-button"
           style="outline-bg-neutral"
           class="py-2 px-3 flex items-center btn-pill group"
-          title={`${breadcrumb.label}: ${fullValue}`}
+          title={title}
+          ariaLabel={this.bindings.i18n.t('remove-filter-on', {
+            value: title,
+          })}
           onClick={() => {
             if (this.numberOfBreadcrumbs > 1) {
               this.breadcrumbRemovedFocus.focusAfterSearch();
@@ -408,6 +413,7 @@ export class AtomicBreadbox implements InitializableComponent {
         </span>
         <div class="relative grow">
           <ul
+            part="breadcrumb-list"
             class={`flex gap-1 ${
               this.isCollapsed ? 'flex-nowrap absolute w-full' : 'flex-wrap'
             }`}

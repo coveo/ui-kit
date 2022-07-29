@@ -3,6 +3,7 @@ import {
   registerComponentForInit,
   initializeWithHeadless,
   registerToStore,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, fromSearchApiDate, Store} from 'c/quanticUtils';
 import LOCALE from '@salesforce/i18n/locale';
@@ -105,6 +106,8 @@ export default class QuanticDateFacet extends LightningElement {
   unsubscribe;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {AnyHeadless} */
+  headless;
 
   labels = {
     clearFilter,
@@ -125,12 +128,13 @@ export default class QuanticDateFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.updateState()
     );
 
-    this.facet = CoveoHeadless.buildDateFacet(engine, {
+    this.facet = this.headless.buildDateFacet(engine, {
       options: {
         field: this.field,
         numberOfValues: Number(this.numberOfValues),

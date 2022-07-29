@@ -3,13 +3,13 @@ import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {
   buildCoreFacetManager,
-  CoreFacetManager,
+  FacetManager,
   FacetManagerPayload,
 } from './headless-core-facet-manager';
 
 describe('facet manager', () => {
   let engine: MockSearchEngine;
-  let facetManager: CoreFacetManager;
+  let facetManager: FacetManager;
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();

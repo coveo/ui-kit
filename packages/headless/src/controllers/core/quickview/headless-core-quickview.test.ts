@@ -7,18 +7,18 @@ import {
 } from '../../../test';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
 import {
-  buildQuickviewCore,
-  QuickviewCoreOptions,
-  QuickviewCore,
+  buildCoreQuickview,
+  QuickviewOptions,
+  Quickview,
 } from './headless-core-quickview';
 
 describe('QuickviewCore', () => {
   let engine: MockSearchEngine;
-  let options: QuickviewCoreOptions;
-  let quickview: QuickviewCore;
+  let options: QuickviewOptions;
+  let quickview: Quickview;
 
   function initQuickview() {
-    quickview = buildQuickviewCore(engine, {options});
+    quickview = buildCoreQuickview(engine, {options});
   }
 
   beforeEach(() => {

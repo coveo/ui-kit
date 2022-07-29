@@ -25,7 +25,7 @@ import {
   FoldedResultListContext,
   FoldedResultListStateContext,
 } from '../../../common/result-list/result-list-decorators';
-import {ResultDisplayImageSize} from '../../../common/atomic-result/atomic-result-display-options';
+import {ResultDisplayImageSize} from '../../../common/layout/display-options';
 import {ListDisplayResultsPlaceholder} from '../../../common/result-list/list-display-results-placeholder';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';

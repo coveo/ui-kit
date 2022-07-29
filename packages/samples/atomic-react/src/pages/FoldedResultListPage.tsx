@@ -33,11 +33,7 @@ export const FoldedResultListPage: FunctionComponent = () => {
       accessToken="xx564559b1-0045-48e1-953c-3addd1ee4457"
       organizationId="searchuisamples"
     >
-      <AtomicFoldedResultList
-        fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
-        imageSize="large"
-        template={MyTemplate}
-      />
+      <AtomicFoldedResultList imageSize="large" template={MyTemplate} />
     </AtomicPageWrapper>
   );
 };

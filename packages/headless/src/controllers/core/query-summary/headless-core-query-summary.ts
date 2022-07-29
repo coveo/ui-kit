@@ -6,20 +6,23 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {buildCoreStatus, CoreStatusState} from '../status/headless-core-status';
+import {
+  buildCoreStatus,
+  SearchStatusState,
+} from '../status/headless-core-status';
 
 /**
- * The `CoreQuerySummary` headless controller offers a high-level interface for designing a common query summary UI controller.
+ * The `QuerySummary` headless controller offers a high-level interface for designing a common query summary UI controller.
  * */
-export interface CoreQuerySummary extends Controller {
+export interface QuerySummary extends Controller {
   /** The state relevant to the `CoreQuerySummary` controller.*/
-  state: CoreQuerySummaryState;
+  state: QuerySummaryState;
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `CoreQuerySummary` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `QuerySummary` controller.
  * */
-export interface CoreQuerySummaryState extends CoreStatusState {
+export interface QuerySummaryState extends SearchStatusState {
   /**
    * The duration, in milliseconds, that the last query took to execute.
    */
@@ -62,12 +65,12 @@ export interface CoreQuerySummaryState extends CoreStatusState {
 }
 
 /**
- * Creates a `CoreQuerySummary` controller instance.
+ * Creates a `QuerySummary` controller instance.
  *
  * @param engine - The headless engine instance.
- * @returns A `CoreQuerySummary` controller instance.
+ * @returns A `QuerySummary` controller instance.
  */
-export function buildCoreQuerySummary(engine: CoreEngine): CoreQuerySummary {
+export function buildCoreQuerySummary(engine: CoreEngine): QuerySummary {
   if (!loadQuerySummaryReducers(engine)) {
     throw loadReducerError;
   }

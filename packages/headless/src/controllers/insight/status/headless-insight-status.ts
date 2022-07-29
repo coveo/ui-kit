@@ -1,28 +1,18 @@
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {Controller} from '../../controller/headless-controller';
 import {
-  CoreStatusState,
+  SearchStatusState,
   buildCoreStatus,
+  SearchStatus,
 } from '../../core/status/headless-core-status';
 
-/**
- * The `InsightStatus` controller provides information on the status of the search.
- */
-export interface InsightStatus extends Controller {
-  state: InsightStatusState;
-}
+export type {SearchStatus, SearchStatusState};
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `InsightStatus` controller.
- */
-export interface InsightStatusState extends CoreStatusState {}
-
-/**
- * Creates an `InsightStatus` controller instance.
+ * Creates an insight `SearchStatus` controller instance.
  *
- * @param engine - The headless engine.
- * @returns An `InsightStatus` controller instance.
+ * @param engine - The insight engine.
+ * @returns A `SearchStatus` controller instance.
  */
-export function buildInsightStatus(engine: InsightEngine): InsightStatus {
+export function buildSearchStatus(engine: InsightEngine): SearchStatus {
   return buildCoreStatus(engine);
 }

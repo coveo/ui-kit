@@ -25,8 +25,8 @@
   },
   "scripts": {
     "build": "tsc --noEmit && tsc --module commonjs --noEmit",
-    "dev": "npm run link:react && npm run copy:assets && webpack serve",
-    "link:react": "cd ../../atomic-react && npm link ../samples/atomic-react/node_modules/react/",
+    "dev": "npm run link:packages && npm run copy:assets && webpack serve",
+    "link:packages": "npm link ../../atomic-react && cd ../../atomic-react && npm run link:packages",
     "copy:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
     "cypress:open": "cypress open"
   }

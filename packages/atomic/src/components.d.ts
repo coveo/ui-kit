@@ -8,11 +8,12 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/atomic-result/atomic-result-display-options";
+import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout as ResultDisplayLayout1 } from "./components/common/atomic-result/atomic-result-display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
-import { InsightEngine } from "@coveo/headless/insight";
+import { InsightEngine, InsightLogLevel, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
+import { ResultDisplayDensity as ResultDisplayDensity1, ResultDisplayImageSize as ResultDisplayImageSize1, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
@@ -334,6 +335,20 @@ export namespace Components {
          */
         "icon": string;
     }
+    interface AtomicIconButton {
+        "clickCallback": () => void;
+        "icon": string;
+        "labelI18nKey": string;
+        "tooltip": string;
+    }
+    interface AtomicInsightEditToggle {
+        "clickCallback": () => void;
+        "tooltip": string;
+    }
+    interface AtomicInsightHistoryToggle {
+        "clickCallback": () => void;
+        "tooltip": string;
+    }
     interface AtomicInsightInterface {
         /**
           * Whether analytics should be enabled.
@@ -347,6 +362,10 @@ export namespace Components {
           * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
         /**
           * The service insight interface i18next instance.
          */
@@ -376,7 +395,66 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: InsightLogLevel;
+        /**
+          * Whether the interface should be shown in widget format.
+         */
+        "widget": boolean;
+    }
+    interface AtomicInsightResult {
+        /**
+          * Classes that will be added to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity1;
+        /**
+          * The headless search engine.
+         */
+        "engine": InsightEngine;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize": ResultDisplayImageSize1;
+        "loadingFlag"?: string;
+        /**
+          * The result item.
+         */
+        "result": InsightResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ReturnType<typeof createAtomicInsightStore>;
+    }
+    interface AtomicInsightResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity1;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize1;
+    }
+    interface AtomicInsightResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": InsightResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -684,7 +762,7 @@ export namespace Components {
         /**
           * How large or small results should be.
          */
-        "density": ResultDisplayDensity;
+        "density": ResultDisplayDensity1;
         /**
           * How results should be displayed.
          */
@@ -697,11 +775,11 @@ export namespace Components {
         /**
           * @deprecated use `imageSize` instead.
          */
-        "image": ResultDisplayImageSize;
+        "image": ResultDisplayImageSize1;
         /**
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize1;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
@@ -738,7 +816,7 @@ export namespace Components {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize1;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -809,7 +887,7 @@ export namespace Components {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display": ResultDisplayLayout;
+        "display": ResultDisplayLayout1;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
           * @deprecated add it to atomic-search-interface instead
@@ -852,7 +930,7 @@ export namespace Components {
     }
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
-        "display": ResultDisplayLayout;
+        "display": ResultDisplayLayout1;
         "imageSize"?: ResultDisplayImageSize;
         "isChild": boolean;
     }
@@ -967,7 +1045,7 @@ export namespace Components {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display": ResultDisplayLayout;
+        "display": ResultDisplayLayout1;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -1380,11 +1458,47 @@ declare global {
         prototype: HTMLAtomicIconElement;
         new (): HTMLAtomicIconElement;
     };
+    interface HTMLAtomicIconButtonElement extends Components.AtomicIconButton, HTMLStencilElement {
+    }
+    var HTMLAtomicIconButtonElement: {
+        prototype: HTMLAtomicIconButtonElement;
+        new (): HTMLAtomicIconButtonElement;
+    };
+    interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightEditToggleElement: {
+        prototype: HTMLAtomicInsightEditToggleElement;
+        new (): HTMLAtomicInsightEditToggleElement;
+    };
+    interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightHistoryToggleElement: {
+        prototype: HTMLAtomicInsightHistoryToggleElement;
+        new (): HTMLAtomicInsightHistoryToggleElement;
+    };
     interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
     }
     var HTMLAtomicInsightInterfaceElement: {
         prototype: HTMLAtomicInsightInterfaceElement;
         new (): HTMLAtomicInsightInterfaceElement;
+    };
+    interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultElement: {
+        prototype: HTMLAtomicInsightResultElement;
+        new (): HTMLAtomicInsightResultElement;
+    };
+    interface HTMLAtomicInsightResultListElement extends Components.AtomicInsightResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultListElement: {
+        prototype: HTMLAtomicInsightResultListElement;
+        new (): HTMLAtomicInsightResultListElement;
+    };
+    interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultTemplateElement: {
+        prototype: HTMLAtomicInsightResultTemplateElement;
+        new (): HTMLAtomicInsightResultTemplateElement;
     };
     interface HTMLAtomicInsightSearchBoxElement extends Components.AtomicInsightSearchBox, HTMLStencilElement {
     }
@@ -1809,7 +1923,13 @@ declare global {
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-html": HTMLAtomicHtmlElement;
         "atomic-icon": HTMLAtomicIconElement;
+        "atomic-icon-button": HTMLAtomicIconButtonElement;
+        "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
+        "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
+        "atomic-insight-result": HTMLAtomicInsightResultElement;
+        "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
+        "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
@@ -2190,6 +2310,20 @@ declare namespace LocalJSX {
          */
         "icon": string;
     }
+    interface AtomicIconButton {
+        "clickCallback"?: () => void;
+        "icon": string;
+        "labelI18nKey": string;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightEditToggle {
+        "clickCallback"?: () => void;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightHistoryToggle {
+        "clickCallback"?: () => void;
+        "tooltip"?: string;
+    }
     interface AtomicInsightInterface {
         /**
           * Whether analytics should be enabled.
@@ -2199,6 +2333,10 @@ declare namespace LocalJSX {
           * The service insight interface headless engine.
          */
         "engine"?: InsightEngine;
+        /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
         /**
           * The service insight interface i18next instance.
          */
@@ -2220,7 +2358,62 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: InsightLogLevel;
+        /**
+          * Whether the interface should be shown in widget format.
+         */
+        "widget"?: boolean;
+    }
+    interface AtomicInsightResult {
+        /**
+          * Classes that will be added to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity1;
+        /**
+          * The headless search engine.
+         */
+        "engine": InsightEngine;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize"?: ResultDisplayImageSize1;
+        "loadingFlag"?: string;
+        /**
+          * The result item.
+         */
+        "result": InsightResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: ReturnType<typeof createAtomicInsightStore>;
+    }
+    interface AtomicInsightResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity1;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize1;
+    }
+    interface AtomicInsightResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: InsightResultTemplateCondition[];
     }
     interface AtomicInsightSearchBox {
         /**
@@ -2526,7 +2719,7 @@ declare namespace LocalJSX {
         /**
           * How large or small results should be.
          */
-        "density"?: ResultDisplayDensity;
+        "density"?: ResultDisplayDensity1;
         /**
           * How results should be displayed.
          */
@@ -2539,11 +2732,11 @@ declare namespace LocalJSX {
         /**
           * @deprecated use `imageSize` instead.
          */
-        "image"?: ResultDisplayImageSize;
+        "image"?: ResultDisplayImageSize1;
         /**
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize1;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
@@ -2580,7 +2773,7 @@ declare namespace LocalJSX {
         /**
           * The expected size of the image displayed in the children results.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize"?: ResultDisplayImageSize1;
         /**
           * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
          */
@@ -2647,7 +2840,7 @@ declare namespace LocalJSX {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ResultDisplayLayout1;
         /**
           * A list of non-default fields to include in the query results, separated by commas.
           * @deprecated add it to atomic-search-interface instead
@@ -2684,7 +2877,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultPlaceholder {
         "density": ResultDisplayDensity;
-        "display": ResultDisplayLayout;
+        "display": ResultDisplayLayout1;
         "imageSize"?: ResultDisplayImageSize;
         "isChild"?: boolean;
     }
@@ -2795,7 +2988,7 @@ declare namespace LocalJSX {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ResultDisplayLayout1;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -3097,7 +3290,13 @@ declare namespace LocalJSX {
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-html": AtomicHtml;
         "atomic-icon": AtomicIcon;
+        "atomic-icon-button": AtomicIconButton;
+        "atomic-insight-edit-toggle": AtomicInsightEditToggle;
+        "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
+        "atomic-insight-result": AtomicInsightResult;
+        "atomic-insight-result-list": AtomicInsightResultList;
+        "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
@@ -3191,7 +3390,13 @@ declare module "@stencil/core" {
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-icon-button": LocalJSX.AtomicIconButton & JSXBase.HTMLAttributes<HTMLAtomicIconButtonElement>;
+            "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
+            "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
+            "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
+            "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
+            "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;

@@ -47,9 +47,16 @@ function baseBreadcrumbManagerExpectations(
     },
     firstBreadcrumbValueLabelContains: (value: string) => {
       selector
-        .firstbreadcrumbValueLabel()
+        .firstBreadcrumbValueLabel()
         .contains(value)
         .logDetail(`should have the value "${value}" at first value`);
+    },
+    firstBreadcrumbAltTextEq: (value: string) => {
+      selector
+        .firstBreadcrumbAltText()
+        .invoke('attr', 'aria-label')
+        .should('eq', value)
+        .logDetail(`should have the "${value}" as aria-label at first value`);
     },
     displayShowMore: (display: boolean) => {
       selector

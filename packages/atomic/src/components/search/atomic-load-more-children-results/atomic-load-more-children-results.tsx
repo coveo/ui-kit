@@ -75,6 +75,7 @@ export class AtomicLoadMoreChildrenResults {
     }
     return '';
   }
+
   private getWrapperClass() {
     return getResultDisplayClasses(
       'list',

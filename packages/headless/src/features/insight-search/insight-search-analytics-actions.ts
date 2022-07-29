@@ -25,3 +25,38 @@ export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
         errorMessage: error.message,
       })
   )();
+
+export const logContextChanged = (caseId: string, caseNumber: string) =>
+  makeInsightAnalyticsAction(
+    'analytics/contextChanged',
+    AnalyticsType.Search,
+    (client, state) => {
+      const meta = {
+        caseId,
+        caseNumber,
+        caseContext: state.insightCaseContext?.caseContext || {},
+      };
+      client.logContextChanged(meta);
+    }
+  )();
+
+export const logExpandToFullUI = (
+  caseId: string,
+  caseNumber: string,
+  fullSearchComponentName: string,
+  triggeredBy: string
+) =>
+  makeInsightAnalyticsAction(
+    'analytics/expandToFullUI',
+    AnalyticsType.Custom,
+    (client, state) => {
+      const meta = {
+        caseId,
+        caseNumber,
+        fullSearchComponentName,
+        triggeredBy,
+        caseContext: state.insightCaseContext?.caseContext || {},
+      };
+      client.logExpandToFullUI(meta);
+    }
+  )();
