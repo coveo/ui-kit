@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.93.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.92.0...@coveo/atomic@1.93.0) (2022-07-29)
+
+
+### Features
+
+* **atomic:** fix scrollable mobile view overscrolling ([#2264](https://github.com/coveo/ui-kit/issues/2264)) ([d5632a4](https://github.com/coveo/ui-kit/commit/d5632a4bcea73fde715971a82c739eca5612ece6))
+
+
+
+
+
 # [1.92.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.91.0...@coveo/atomic@1.92.0) (2022-07-29)
 
 
