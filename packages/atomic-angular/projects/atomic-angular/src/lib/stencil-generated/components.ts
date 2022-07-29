@@ -392,19 +392,6 @@ export declare interface AtomicInsightEditToggle extends Components.AtomicInsigh
   inputs: ['clickCallback', 'tooltip']
 })
 export class AtomicInsightEditToggle {
-export declare interface AtomicInsightResult extends Components.AtomicInsightResult {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['classes', 'content', 'density', 'engine', 'imageSize', 'result', 'stopPropagation']
-})
-@Component({
-  selector: 'atomic-insight-result',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['classes', 'content', 'density', 'engine', 'imageSize', 'result', 'stopPropagation']
-})
-export class AtomicInsightResult {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -426,6 +413,35 @@ export declare interface AtomicInsightHistoryToggle extends Components.AtomicIns
   inputs: ['clickCallback', 'tooltip']
 })
 export class AtomicInsightHistoryToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightResult extends Components.AtomicInsightResult {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['classes', 'content', 'density', 'engine', 'imageSize', 'result', 'stopPropagation']
+})
+@Component({
+  selector: 'atomic-insight-result',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['classes', 'content', 'density', 'engine', 'imageSize', 'result', 'stopPropagation']
+})
+export class AtomicInsightResult {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicInsightResultList extends Components.AtomicInsightResultList {}
 
 @ProxyCmp({
@@ -595,7 +611,7 @@ export class AtomicNumericRange {
 
 export declare interface AtomicPager extends Components.AtomicPager {
   /**
-   *
+   *  
    */
   'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
 
@@ -1465,7 +1481,7 @@ export class AtomicSmartSnippet {
 
 export declare interface AtomicSmartSnippetFeedbackModal extends Components.AtomicSmartSnippetFeedbackModal {
   /**
-   *
+   *  
    */
   'feedbackSent': EventEmitter<CustomEvent<any>>;
 

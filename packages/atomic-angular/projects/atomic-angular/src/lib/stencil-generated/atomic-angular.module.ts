@@ -3,7 +3,7 @@
 import {CommonModule} from '@angular/common';
 import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular/core';
 
-
+        
 import {
 AtomicAriaLive,
 AtomicBreadbox,
@@ -86,11 +86,11 @@ AtomicTimeframe,
 AtomicTimeframeFacet
 } from './components';
 
-
+        
 import {defineCustomElements} from '@coveo/atomic/loader';
 defineCustomElements(window);
 
-
+        
 const DECLARATIONS = [
 AtomicAriaLive,
 AtomicBreadbox,
@@ -173,7 +173,7 @@ AtomicTimeframe,
 AtomicTimeframeFacet
 ]
 
-
+        
 const shimTemplates = ()=> {
   // Angular's renderer will add children to a <template> instead of to its
   // content. This shim will force any children added to a <template> to be
@@ -194,14 +194,14 @@ const shimTemplates = ()=> {
   };
 }
 
-
+        
 const SHIM_TEMPLATES_PROVIDER: Provider = {
   provide: APP_INITIALIZER,
   multi: true,
   useValue: shimTemplates
 }
 
-
+        
 @NgModule({
   declarations: DECLARATIONS,
   exports: DECLARATIONS,
@@ -217,3 +217,4 @@ export class AtomicAngularModule {
   }
 }
 
+        
