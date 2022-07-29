@@ -23,7 +23,7 @@ import {SortDropdownOption} from '../atomic-search-interface/store';
 import SortIcon from '../../../images/sort.svg';
 import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {BaseFacetElement} from '../facets/facet-common';
+import {BaseFacetElement} from '../../common/facets/facet-common';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.

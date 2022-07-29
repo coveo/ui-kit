@@ -7,27 +7,22 @@ import {
 import {VNode} from '@stencil/core';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {isInDocument} from '../../../utils/utils';
 import {
   createAtomicCommonStore,
   AtomicCommonStoreData,
   AtomicCommonStore,
 } from '../../common/interface/store';
-
-interface FacetInfo {
-  label: string;
-}
+import {
+  FacetInfo,
+  FacetStore,
+  FacetType,
+  FacetValueFormat,
+} from '../../common/facets/facet-common';
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;
 }
-
-interface FacetValueFormat<ValueType> {
-  format(facetValue: ValueType): string;
-  content?(facetValue: ValueType): VNode;
-}
-
-type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
-type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export interface SortDropdownOption {
   expression: string;
@@ -82,21 +77,6 @@ export function createAtomicStore(): AtomicStore {
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
   });
-
-  // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
-  const isInDocument = (element: Node) => {
-    let currentElement = element;
-    while (currentElement && currentElement.parentNode) {
-      if (currentElement.parentNode === document) {
-        return true;
-      } else if (currentElement.parentNode instanceof ShadowRoot) {
-        currentElement = currentElement.parentNode.host;
-      } else {
-        currentElement = currentElement.parentNode;
-      }
-    }
-    return false;
-  };
 
   return {
     ...commonStore,
