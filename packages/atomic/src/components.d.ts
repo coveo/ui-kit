@@ -345,8 +345,6 @@ export namespace Components {
         "clickCallback": () => void;
         "tooltip": string;
     }
-    interface AtomicInsightFacets {
-    }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
         "tooltip": string;
@@ -1467,12 +1465,6 @@ declare global {
         prototype: HTMLAtomicInsightEditToggleElement;
         new (): HTMLAtomicInsightEditToggleElement;
     };
-    interface HTMLAtomicInsightFacetsElement extends Components.AtomicInsightFacets, HTMLStencilElement {
-    }
-    var HTMLAtomicInsightFacetsElement: {
-        prototype: HTMLAtomicInsightFacetsElement;
-        new (): HTMLAtomicInsightFacetsElement;
-    };
     interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightHistoryToggleElement: {
@@ -1934,7 +1926,6 @@ declare global {
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-icon-button": HTMLAtomicIconButtonElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
-        "atomic-insight-facets": HTMLAtomicInsightFacetsElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
@@ -2331,8 +2322,6 @@ declare namespace LocalJSX {
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
-    }
-    interface AtomicInsightFacets {
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
@@ -3301,7 +3290,6 @@ declare namespace LocalJSX {
         "atomic-icon": AtomicIcon;
         "atomic-icon-button": AtomicIconButton;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
-        "atomic-insight-facets": AtomicInsightFacets;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
@@ -3403,7 +3391,6 @@ declare module "@stencil/core" {
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-icon-button": LocalJSX.AtomicIconButton & JSXBase.HTMLAttributes<HTMLAtomicIconButtonElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
-            "atomic-insight-facets": LocalJSX.AtomicInsightFacets & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetsElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
