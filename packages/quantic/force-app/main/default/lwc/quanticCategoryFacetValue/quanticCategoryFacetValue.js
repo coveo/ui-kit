@@ -1,6 +1,6 @@
 import {api, LightningElement} from 'lwc';
 
-import inLabel from "@salesforce/label/c.quantic_InLabel";
+import inLabel from '@salesforce/label/c.quantic_InLabel';
 
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 
@@ -8,6 +8,7 @@ import inLabel from "@salesforce/label/c.quantic_InLabel";
  * The `QuanticCategoryFacetValue` component is used by a `QuanticCategoryFacet` component to display a formatted facet value, path to that value and the number of results with that value.
  * @fires CustomEvent#selectvalue
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-category-facet-value onselectvalue={onSelect} item={result} is-search-result active-parent></c-quantic-category-facet-value>
  */
@@ -24,14 +25,14 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @defaultValue `false`
    */
   @api isSearchResult = false;
-  /** 
+  /**
    * Whether the value is an active parent node.
    * @api
    * @type {boolean}
    * @defaultValue `false`
    */
   @api activeParent = false;
-  /** 
+  /**
    * Whether the value is a non-active parent node.
    * @api
    * @type {boolean}
@@ -40,8 +41,8 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   @api nonActiveParent = false;
 
   labels = {
-    inLabel
-  }
+    inLabel,
+  };
 
   get categoryFacetLiClass() {
     return this.activeParent ? 'slds-var-m-left_large slds-grid' : 'slds-grid';
@@ -50,17 +51,18 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   get facetValue() {
     return this.item.value;
   }
-  
+
   /**
    * @param {Event} evt
    */
   onSelect(evt) {
     evt.preventDefault();
-    this.dispatchEvent(new CustomEvent(
-      'selectvalue', {
-      detail: {
-        value: this.facetValue
-      }
-    }));
+    this.dispatchEvent(
+      new CustomEvent('selectvalue', {
+        detail: {
+          value: this.facetValue,
+        },
+      })
+    );
   }
 }

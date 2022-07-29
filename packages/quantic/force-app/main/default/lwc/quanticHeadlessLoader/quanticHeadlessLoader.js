@@ -321,6 +321,24 @@ function getHeadlessBundle(engineId) {
   return window.coveoHeadless[engineId]?.bundle ?? CoveoHeadless;
 }
 
+/**
+ * Gets whether the specified engine is using the expected bundle.
+ * @param {string} engineId - The engine ID.
+ * @param {string} expectedBundleName - The expected headless bundle name.
+ * @returns 
+ */
+function isHeadlessBundle(engineId, expectedBundleName) {
+  let expectedBundle;
+  try {
+    expectedBundle = headlessBundles[expectedBundleName]?.bundle();
+  } catch (e) {
+    // Attempting to load a bundle for a different case will fail
+    // unless both bundles are loaded at the same time.
+  }
+
+  return getHeadlessBundle(engineId) === expectedBundle;
+}
+
 
 export {
   loadDependencies,
@@ -337,4 +355,5 @@ export {
   HeadlessBundleNames,
   getAllFacetsFromStore,
   getHeadlessBundle,
+  isHeadlessBundle,
 }

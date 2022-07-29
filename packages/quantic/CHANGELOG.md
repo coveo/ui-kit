@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.31.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.30.7...@coveo/quantic@1.31.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* **quantic:** Fix voiceover breadcrumb and style ([#2240](https://github.com/coveo/ui-kit/issues/2240)) ([c780cae](https://github.com/coveo/ui-kit/commit/c780cae77959096722ceecca1488cbd2951d0214))
+
+
+### Features
+
+* **quantic:** Recent queries accessibility fix ([#2247](https://github.com/coveo/ui-kit/issues/2247)) ([2e41e6d](https://github.com/coveo/ui-kit/commit/2e41e6d083aeb472a1a89ac6130eca5585c318be))
+* **quantic:** update Quantic components to work with different engines ([#2239](https://github.com/coveo/ui-kit/issues/2239)) ([bd245a7](https://github.com/coveo/ui-kit/commit/bd245a7f18aa767c3369fc64f7fa9b3991adcc17))
+
+
+
+
+
 ## [1.30.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.30.6...@coveo/quantic@1.30.7) (2022-07-27)
 
 **Note:** Version bump only for package @coveo/quantic
