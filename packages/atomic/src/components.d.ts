@@ -335,6 +335,7 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
+        "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback": () => void;
         "icon": string;
         "labelI18nKey": string;
@@ -343,6 +344,8 @@ export namespace Components {
     interface AtomicInsightEditToggle {
         "clickCallback": () => void;
         "tooltip": string;
+    }
+    interface AtomicInsightFacets {
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -399,6 +402,12 @@ export namespace Components {
           * Whether the interface should be shown in widget format.
          */
         "widget": boolean;
+    }
+    interface AtomicInsightRefineModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -1458,6 +1467,12 @@ declare global {
         prototype: HTMLAtomicInsightEditToggleElement;
         new (): HTMLAtomicInsightEditToggleElement;
     };
+    interface HTMLAtomicInsightFacetsElement extends Components.AtomicInsightFacets, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightFacetsElement: {
+        prototype: HTMLAtomicInsightFacetsElement;
+        new (): HTMLAtomicInsightFacetsElement;
+    };
     interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightHistoryToggleElement: {
@@ -1469,6 +1484,18 @@ declare global {
     var HTMLAtomicInsightInterfaceElement: {
         prototype: HTMLAtomicInsightInterfaceElement;
         new (): HTMLAtomicInsightInterfaceElement;
+    };
+    interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightRefineModalElement: {
+        prototype: HTMLAtomicInsightRefineModalElement;
+        new (): HTMLAtomicInsightRefineModalElement;
+    };
+    interface HTMLAtomicInsightRefineToggleElement extends Components.AtomicInsightRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightRefineToggleElement: {
+        prototype: HTMLAtomicInsightRefineToggleElement;
+        new (): HTMLAtomicInsightRefineToggleElement;
     };
     interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
     }
@@ -1907,8 +1934,11 @@ declare global {
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-icon-button": HTMLAtomicIconButtonElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
+        "atomic-insight-facets": HTMLAtomicInsightFacetsElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
+        "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
+        "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
@@ -2292,6 +2322,7 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
+        "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback"?: () => void;
         "icon": string;
         "labelI18nKey": string;
@@ -2300,6 +2331,8 @@ declare namespace LocalJSX {
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
+    }
+    interface AtomicInsightFacets {
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
@@ -2344,6 +2377,12 @@ declare namespace LocalJSX {
           * Whether the interface should be shown in widget format.
          */
         "widget"?: boolean;
+    }
+    interface AtomicInsightRefineModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -3262,8 +3301,11 @@ declare namespace LocalJSX {
         "atomic-icon": AtomicIcon;
         "atomic-icon-button": AtomicIconButton;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
+        "atomic-insight-facets": AtomicInsightFacets;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
+        "atomic-insight-refine-modal": AtomicInsightRefineModal;
+        "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
@@ -3361,8 +3403,11 @@ declare module "@stencil/core" {
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-icon-button": LocalJSX.AtomicIconButton & JSXBase.HTMLAttributes<HTMLAtomicIconButtonElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
+            "atomic-insight-facets": LocalJSX.AtomicInsightFacets & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetsElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
+            "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
+            "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
