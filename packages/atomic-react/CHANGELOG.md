@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.17.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.16.0...@coveo/atomic-react@1.17.0) (2022-07-29)
+
+
+### Features
+
+* **atomic:** add edit and history buttons to insight ([#2258](https://github.com/coveo/ui-kit/issues/2258)) ([bc0b928](https://github.com/coveo/ui-kit/commit/bc0b92865b3c25598de50cfc22eccb52a75568a3))
+
+
+
+
+
 # [1.16.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.15.26...@coveo/atomic-react@1.16.0) (2022-07-28)
 
 
