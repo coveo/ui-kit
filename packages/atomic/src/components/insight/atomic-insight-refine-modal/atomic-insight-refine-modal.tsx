@@ -53,23 +53,41 @@ export class AtomicInsightRefineModal
 
   private interfaceDimensions?: InsightInterfaceDimensions;
   private facetManager!: InsightFacetManager;
+  private resizeObserver?: ResizeObserver;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
     if (isOpen) {
-      // TODO: add resize observer
-      this.host.dispatchEvent(
-        buildCustomEvent(
-          'atomic/insight/getDimensions',
-          (dimensions: InsightInterfaceDimensions) => {
-            this.interfaceDimensions = dimensions;
-            this.loadingDimensions = false;
-          }
-        )
-      );
+      this.updateDimensions();
+      if (window.ResizeObserver) {
+        if (!this.resizeObserver) {
+          this.resizeObserver = new ResizeObserver(() =>
+            this.updateDimensions()
+          );
+        }
+        this.resizeObserver.observe(document.body);
+      }
     } else {
       this.loadingDimensions = true;
+      this.resizeObserver?.disconnect();
     }
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
+  }
+
+  public updateDimensions() {
+    this.loadingDimensions = true;
+    this.host.dispatchEvent(
+      buildCustomEvent(
+        'atomic/insight/getDimensions',
+        (dimensions: InsightInterfaceDimensions) => {
+          this.interfaceDimensions = dimensions;
+          this.loadingDimensions = false;
+        }
+      )
+    );
   }
 
   public initialize() {
