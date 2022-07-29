@@ -61,7 +61,8 @@ export default class QuanticCaseAssistInterface extends LightningElement {
               this.engineOptions,
               CoveoHeadlessCaseAssist.buildCaseAssistEngine,
               this.engineId,
-              this
+              this,
+              CoveoHeadlessCaseAssist
             );
             setInitializedCallback(this.initialize, this.engineId);
           }

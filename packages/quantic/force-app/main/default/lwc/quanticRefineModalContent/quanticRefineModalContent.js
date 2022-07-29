@@ -1,5 +1,8 @@
 import {LightningElement, api} from 'lwc';
-import {getAllFacetsFromStore} from 'c/quanticHeadlessLoader';
+import {
+  getAllFacetsFromStore,
+  getHeadlessBundle,
+} from 'c/quanticHeadlessLoader';
 import {
   initializeWithHeadless,
   registerComponentForInit,
@@ -27,6 +30,7 @@ import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
  * The `QuanticRefineModalContent` component displays a copy of the search interface facets and sort components. This component is intended to be displayed inside the Quantic Modal to assure the responsiveness when the search interface is displayed on smaller screens.
  *
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-refine-modal-content engine-id={engineId} hide-sort></c-quantic-refine-modal-content>
  */
@@ -53,6 +57,8 @@ export default class QuanticRefineModalContent extends LightningElement {
   data;
   /** @type {boolean} */
   hasActiveFilters = false;
+  /** @type {AnyHeadless} */
+  headless;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -71,8 +77,9 @@ export default class QuanticRefineModalContent extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
-    this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
+    this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
       this.gatherFacets()
     );

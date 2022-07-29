@@ -39,8 +39,8 @@ export default class QuanticPill extends LightningElement {
 
   get alternativeText() {
     let label = this.altText;
-    if(this.groupName && this.actionName) {
-      label = `${this.groupName} ${this.actionName}`.trim();
+    if(this.groupName && this.actionName && this.label) {
+      label = `${this.groupName} ${this.label} ${this.actionName}`.trim();
     }
     return label;
   }

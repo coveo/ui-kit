@@ -21,7 +21,8 @@ export interface WithDateRangeSelector extends ComponentSelector {
 export const TimeframeFacetSelectors: TimeframeFacetSelector = {
   get: () => cy.get(timeframeFacetComponent),
 
-  label: () => TimeframeFacetSelectors.get().find('header h2 > span'),
+  label: () =>
+    TimeframeFacetSelectors.get().find('header .card__header > span'),
   values: () => TimeframeFacetSelectors.get().find('c-quantic-facet-value'),
   clearFilterButton: () =>
     TimeframeFacetSelectors.get().find('.facet__clear-filter'),

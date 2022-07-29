@@ -1,8 +1,8 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
+import {Checkbox} from '../../../common/checkbox';
 import {FacetValueProps} from '../facet-common';
-import Checkbox from '../../../../images/checkbox.svg';
 
 export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
   props,
@@ -19,28 +19,18 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
 
   return (
     <li key={props.displayValue} class="relative flex items-center">
-      <button
+      <Checkbox
         id={id}
-        role="checkbox"
+        checked={props.isSelected}
+        onToggle={() => props.onClick()}
         part="value-checkbox"
-        onClick={() => props.onClick()}
+        class="value-checkbox"
+        ariaLabel={ariaLabel}
+        ref={props.buttonRef}
         onMouseDown={(e) =>
           createRipple(e, {color: 'neutral', parent: labelRef})
         }
-        aria-checked={props.isSelected.toString()}
-        class={`value-checkbox ${
-          props.isSelected
-            ? 'selected bg-primary'
-            : 'border border-neutral-dark'
-        }`}
-        aria-label={ariaLabel}
-        ref={props.buttonRef}
-      >
-        <atomic-icon
-          class={`w-3/5 svg-checkbox ${props.isSelected ? 'block' : 'hidden'}`}
-          icon={Checkbox}
-        ></atomic-icon>
-      </button>
+      />
       <label
         ref={(ref) => (labelRef = ref!)}
         htmlFor={id}

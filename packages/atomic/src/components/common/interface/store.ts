@@ -8,6 +8,7 @@ export type AtomicCommonStoreData = {
 
 export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
   extends CommonStencilStore<StoreData> {
+  getIconAssetsPath(): string;
   setLoadingFlag(flag: string): void;
   unsetLoadingFlag(loadingFlag: string): void;
   hasLoadingFlag(loadingFlag: string): boolean;
@@ -25,6 +26,11 @@ export function createAtomicCommonStore<
 
   return {
     ...stencilStore,
+
+    getIconAssetsPath() {
+      return stencilStore.get('iconAssetsPath');
+    },
+
     setLoadingFlag(loadingFlag: string) {
       const flags = stencilStore.get('loadingFlags');
       stencilStore.set('loadingFlags', flags.concat(loadingFlag));

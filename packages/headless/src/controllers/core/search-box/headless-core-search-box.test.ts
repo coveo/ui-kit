@@ -1,6 +1,6 @@
 import {
-  CoreSearchBox,
-  CoreSearchBoxProps,
+  SearchBox,
+  SearchBoxProps,
   SearchBoxOptions,
   buildCoreSearchBox,
 } from './headless-core-search-box';
@@ -39,8 +39,8 @@ describe('headless CoreSearchBox', () => {
   let state: SearchAppState;
 
   let engine: MockSearchEngine;
-  let searchBox: CoreSearchBox;
-  let props: CoreSearchBoxProps;
+  let searchBox: SearchBox;
+  let props: SearchBoxProps;
 
   beforeEach(() => {
     const options: SearchBoxOptions = {

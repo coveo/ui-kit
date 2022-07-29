@@ -17,7 +17,7 @@ import {
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../../atomic-result/atomic-result-display-options';
+} from '../../../common/layout/display-options';
 import {
   BaseResultList,
   ResultListCommon,
@@ -40,7 +40,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-folded-result-list',
-  styleUrl: '../result-list-common.pcss',
+  styleUrl: '../../../common/result-list/result-list.pcss',
   shadow: true,
 })
 export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {

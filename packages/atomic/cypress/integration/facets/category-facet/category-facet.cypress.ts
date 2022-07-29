@@ -369,28 +369,65 @@ describe('Category Facet Test Suites', () => {
     });
 
     describe('when selecting the "Show more" button, when there\'s no more "Show more" button', () => {
+      const numberOfValues = 3;
       function setupShowMore() {
-        setupWithDefaultSettings();
+        new TestFixture()
+          .with(
+            addCategoryFacet({
+              'number-of-values': numberOfValues,
+            })
+          )
+          .init();
         pressShowMore(CategoryFacetSelectors);
       }
 
       describe('verify rendering', () => {
         before(setupShowMore);
-        CategoryFacetAssertions.assertNumberOfChildValues(7);
+        CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues * 2);
         CommonFacetAssertions.assertDisplayShowMoreButton(
           CategoryFacetSelectors,
-          false
+          true
         );
         CommonFacetAssertions.assertDisplayShowLessButton(
           CategoryFacetSelectors,
           true
         );
-        CategoryFacetAssertions.assertFocusFirstChildValue();
+        CategoryFacetAssertions.assertFocusChildValue(numberOfValues);
       });
 
       describe('verify analytics', () => {
         before(setupShowMore);
         CategoryFacetAssertions.assertLogFacetShowMore();
+      });
+
+      describe('when there\'s no more "Show more" button', () => {
+        function setupRepeatShowMore() {
+          new TestFixture()
+            .with(
+              addCategoryFacet({
+                'number-of-values': numberOfValues,
+              })
+            )
+            .init();
+          pressShowMore(CategoryFacetSelectors);
+          CategoryFacetSelectors.childValue()
+            .its('length')
+            .should('eq', numberOfValues * 2);
+          pressShowMore(CategoryFacetSelectors);
+        }
+
+        describe('verify rendering', () => {
+          before(setupRepeatShowMore);
+
+          CommonFacetAssertions.assertDisplayShowMoreButton(
+            CategoryFacetSelectors,
+            false
+          );
+          CommonFacetAssertions.assertDisplayShowLessButton(
+            CategoryFacetSelectors,
+            true
+          );
+        });
       });
 
       describe('when selecting the "Show less" button', () => {
@@ -401,9 +438,7 @@ describe('Category Facet Test Suites', () => {
 
         describe('verify rendering', () => {
           before(setupShowLess);
-          CategoryFacetAssertions.assertNumberOfChildValues(
-            defaultNumberOfValues
-          );
+          CategoryFacetAssertions.assertNumberOfChildValues(numberOfValues);
           CommonFacetAssertions.assertDisplayShowMoreButton(
             CategoryFacetSelectors,
             true
@@ -412,7 +447,6 @@ describe('Category Facet Test Suites', () => {
             CategoryFacetSelectors,
             false
           );
-          CategoryFacetAssertions.assertFocusFirstChildValue();
         });
 
         describe('verify analytics', () => {

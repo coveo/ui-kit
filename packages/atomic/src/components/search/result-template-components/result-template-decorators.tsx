@@ -1,10 +1,11 @@
 import {FoldedResult, Result, ResultTemplatesManager} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
+import {closest} from '../../../utils/utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-} from '../atomic-result/atomic-result-display-options';
+} from '../../common/layout/display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
 
 export class MissingResultParentError extends Error {
@@ -108,7 +109,7 @@ export function resultContext<T extends Result | FoldedResult = Result>(
     );
     element.dispatchEvent(event);
 
-    if (!element.closest('atomic-result')) {
+    if (!closest(element, 'atomic-result')) {
       reject(new MissingResultParentError(element.nodeName.toLowerCase()));
     }
   });
