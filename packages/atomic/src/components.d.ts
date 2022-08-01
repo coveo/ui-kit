@@ -10,7 +10,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
-import { InsightEngine, InsightLogLevel, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
+import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { Section } from "./components/search/atomic-layout-section/sections";
@@ -344,6 +344,60 @@ export namespace Components {
     interface AtomicInsightEditToggle {
         "clickCallback": () => void;
         "tooltip": string;
+    }
+    interface AtomicInsightFacet {
+        /**
+          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+         */
+        "allowedValues"?: string;
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs": 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": InsightFacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch": boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -1465,6 +1519,12 @@ declare global {
         prototype: HTMLAtomicInsightEditToggleElement;
         new (): HTMLAtomicInsightEditToggleElement;
     };
+    interface HTMLAtomicInsightFacetElement extends Components.AtomicInsightFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightFacetElement: {
+        prototype: HTMLAtomicInsightFacetElement;
+        new (): HTMLAtomicInsightFacetElement;
+    };
     interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightHistoryToggleElement: {
@@ -1926,6 +1986,7 @@ declare global {
         "atomic-icon": HTMLAtomicIconElement;
         "atomic-icon-button": HTMLAtomicIconButtonElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
+        "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
@@ -2322,6 +2383,60 @@ declare namespace LocalJSX {
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
         "tooltip"?: string;
+    }
+    interface AtomicInsightFacet {
+        /**
+          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+         */
+        "allowedValues"?: string;
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: InsightFacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;
@@ -3290,6 +3405,7 @@ declare namespace LocalJSX {
         "atomic-icon": AtomicIcon;
         "atomic-icon-button": AtomicIconButton;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
+        "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
@@ -3391,6 +3507,7 @@ declare module "@stencil/core" {
             "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-icon-button": LocalJSX.AtomicIconButton & JSXBase.HTMLAttributes<HTMLAtomicIconButtonElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
+            "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
