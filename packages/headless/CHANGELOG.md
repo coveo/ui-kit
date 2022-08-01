@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.96.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.96.0...@coveo/headless@1.96.1) (2022-08-01)
+
+
+### Bug Fixes
+
+* **headless:** provide runtimeEnvironment for all Analytics Clients ([#2269](https://github.com/coveo/ui-kit/issues/2269)) ([27ea031](https://github.com/coveo/ui-kit/commit/27ea0313900e20b046e2c75250ba5c10debc111f))
+
+
+
+
+
 # [1.96.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.95.0...@coveo/headless@1.96.0) (2022-07-28)
 
 
