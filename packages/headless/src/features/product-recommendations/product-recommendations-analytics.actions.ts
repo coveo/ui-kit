@@ -2,7 +2,15 @@ import {
   ProductRecommendationAnalyticsProvider,
   StateNeededByProductRecommendationsAnalyticsProvider,
 } from '../../api/analytics/product-recommendations-analytics';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsType,
+  documentIdentifier,
+  makeAnalyticsAction,
+  partialRecommendationInformation,
+  validateResultPayload,
+} from '../analytics/analytics-utils';
+
+import {Result} from '../../api/search/search/result';
 
 export const logProductRecommendations = makeAnalyticsAction(
   'analytics/productrecommendations/load',
@@ -13,3 +21,20 @@ export const logProductRecommendations = makeAnalyticsAction(
       state as StateNeededByProductRecommendationsAnalyticsProvider
     )
 );
+
+export const logProductRecommendationOpen = (result: Result) =>
+  makeAnalyticsAction(
+    'analytics/productrecommendation/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(result);
+      return client.logRecommendationOpen(
+        partialRecommendationInformation(result, state),
+        documentIdentifier(result)
+      );
+    },
+    (s) =>
+      new ProductRecommendationAnalyticsProvider(
+        s as StateNeededByProductRecommendationsAnalyticsProvider
+      )
+  )();

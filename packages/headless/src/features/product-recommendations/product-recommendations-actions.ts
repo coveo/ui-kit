@@ -186,6 +186,8 @@ const mapResultToProductResult = (
   const ec_in_stock = result.raw.ec_in_stock as string | undefined;
 
   const recommendation: ProductRecommendation = {
+    documentUri: result.uri,
+    documentUriHash: result.raw.urihash,
     permanentid: result.raw.permanentid!,
     clickUri: result.clickUri,
     ec_name: result.raw.ec_name as string,
