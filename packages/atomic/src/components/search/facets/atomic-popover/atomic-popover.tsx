@@ -3,7 +3,15 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, Listen, State, Element} from '@stencil/core';
+import {
+  Component,
+  h,
+  Listen,
+  State,
+  Element,
+  EventEmitter,
+  Event,
+} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -37,11 +45,29 @@ export class AtomicPopover implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
+  popoverOpened() {
+    if (!this.isMenuVisible) {
+      const popoverOpened = new CustomEvent('popoverOpened', {
+        detail: this.facetLabel,
+      });
+      document.dispatchEvent(popoverOpened);
+    }
+
+    this.isMenuVisible = !this.isMenuVisible;
+  }
+
+  @Listen('popoverOpened', {target: 'document'})
+  popOpened(event: CustomEvent) {
+    if (event.detail !== this.facetLabel) {
+      this.isMenuVisible = false;
+    }
+  }
+
   renderValueButton() {
     return (
       <Button
         style="square-neutral"
-        onClick={() => (this.isMenuVisible = !this.isMenuVisible)}
+        onClick={() => this.popoverOpened()}
         class={`value-button rounded flex box-border h-full items-center p-2 group ${
           this.isMenuVisible
             ? 'selected border-primary shadow-inner-primary'
@@ -107,22 +133,14 @@ export class AtomicPopover implements InitializableComponent {
     return (
       <div part="popover-wrapper" class="popover-wrapper relative">
         {this.renderValueButton()}
-        <atomic-focus-detector
-          isHostVisible={this.isMenuVisible}
-          onFocusExit={() => this.hidePopoverMenu()}
+        <div
+          tabindex="0"
+          class={`slot-wrapper absolute z-10 hidden ${
+            this.isMenuVisible ? 'selected' : ''
+          }`}
         >
-          <div
-            tabindex="0"
-            onMouseDown={(e) => {
-              e.preventDefault();
-            }}
-            class={`slot-wrapper absolute z-10 hidden ${
-              this.isMenuVisible ? 'selected' : ''
-            }`}
-          >
-            <slot></slot>
-          </div>
-        </atomic-focus-detector>
+          <slot></slot>
+        </div>
       </div>
     );
   }
