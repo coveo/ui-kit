@@ -128,6 +128,10 @@
       atomic-search-layout {
         row-gap: var(--atomic-layout-spacing-y);
       }
+
+      atomic-layout-section[section='popovers'] {
+        display: flex;
+      }
     </style>
   </head>
 
@@ -197,12 +201,14 @@
           <atomic-segmented-facet-scrollable>
             <atomic-segmented-facet field="objecttype" number-of-values="20"></atomic-segmented-facet>
           </atomic-segmented-facet-scrollable>
-          <atomic-popover>
-            <atomic-facet field="objecttype" number-of-values="8"></atomic-facet>
-          </atomic-popover>
-          <atomic-popover>
-            <atomic-facet field="language" label="Language" number-of-values="8"></atomic-facet>
-          </atomic-popover>
+          <atomic-layout-section class="flex" section="popovers">
+            <atomic-popover>
+              <atomic-facet field="objecttype" number-of-values="8"></atomic-facet>
+            </atomic-popover>
+            <atomic-popover>
+              <atomic-facet field="language" label="Language" number-of-values="8"></atomic-facet>
+            </atomic-popover>
+          </atomic-layout-section>
           <atomic-layout-section section="status">
             <atomic-breadbox></atomic-breadbox>
             <atomic-query-summary></atomic-query-summary>

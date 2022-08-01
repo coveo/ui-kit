@@ -155,3 +155,31 @@ export function getFocusedElement(
 export async function defer() {
   return new Promise<void>((resolve) => setTimeout(resolve));
 }
+
+export function getParent(element: Element | ShadowRoot) {
+  if (element.parentNode) {
+    return element.parentNode as Element | ShadowRoot;
+  }
+  if (element instanceof ShadowRoot) {
+    return element.host;
+  }
+  return null;
+}
+
+export function isAncestorOf(
+  ancestor: Element | ShadowRoot,
+  element: Element | ShadowRoot
+): boolean {
+  if (element === ancestor) {
+    return true;
+  }
+  if (
+    element instanceof HTMLElement &&
+    element.assignedSlot &&
+    isAncestorOf(ancestor, element.assignedSlot)
+  ) {
+    return true;
+  }
+  const parent = getParent(element);
+  return parent === null ? false : isAncestorOf(ancestor, parent);
+}

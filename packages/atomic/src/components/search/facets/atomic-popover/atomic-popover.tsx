@@ -48,8 +48,21 @@ export class AtomicPopover implements InitializableComponent {
             : 'hover:border-primary-light focus-visible:border-primary-light'
         }`}
       >
-        {this.facetLabel}
-        <atomic-icon class="w-2.5 ml-2" icon={ArrowBottomIcon}></atomic-icon>
+        <span
+          title={this.facetLabel}
+          part="value-label"
+          class={`value-label truncate ${
+            this.isMenuVisible
+              ? 'text-primary'
+              : 'group-hover:text-primary-light group-focus:text-primary'
+          }`}
+        >
+          {this.facetLabel}
+        </span>
+        <atomic-icon
+          class={`w-2.5 ml-2 ${this.isMenuVisible ? 'rotate-180' : ''} `}
+          icon={ArrowBottomIcon}
+        ></atomic-icon>
       </Button>
     );
   }
@@ -75,37 +88,41 @@ export class AtomicPopover implements InitializableComponent {
     );
   }
 
-  @Listen('focusout')
   hidePopoverMenu() {
-    if (!this.host.shadowRoot!.contains(document.activeElement)) {
-      console.log(
-        'element contains no focused children',
-        document.activeElement
-      );
-      this.isMenuVisible = false;
-    }
+    //should only make menu invisible when mouse is not over the atomic popover component
+    this.isMenuVisible = false;
   }
+
+  //listen to popover-opened event and pass inside event.detail information about current open popoover
 
   render() {
     if (this.searchStatus.state.hasError) {
       return <Hidden></Hidden>;
     }
 
-    //return error if popover has more than 1 child
+    //return error with message: "Popover can only support one child" if popover has more than 1 child
 
     //hide if facet has 0 values
 
     return (
       <div part="popover-wrapper" class="popover-wrapper relative">
         {this.renderValueButton()}
-        <div
-          tabindex="0"
-          class={`slot-wrapper absolute top-10 z-10 hidden ${
-            this.isMenuVisible ? 'selected' : ''
-          }`}
+        <atomic-focus-detector
+          isHostVisible={this.isMenuVisible}
+          onFocusExit={() => this.hidePopoverMenu()}
         >
-          <slot></slot>
-        </div>
+          <div
+            tabindex="0"
+            onMouseDown={(e) => {
+              e.preventDefault();
+            }}
+            class={`slot-wrapper absolute z-10 hidden ${
+              this.isMenuVisible ? 'selected' : ''
+            }`}
+          >
+            <slot></slot>
+          </div>
+        </atomic-focus-detector>
       </div>
     );
   }
