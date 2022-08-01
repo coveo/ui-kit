@@ -26,6 +26,7 @@ export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTML
 export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
 export const AtomicIconButton = /*@__PURE__*/createReactComponent<JSX.AtomicIconButton, HTMLAtomicIconButtonElement>('atomic-icon-button');
 export const AtomicInsightEditToggle = /*@__PURE__*/createReactComponent<JSX.AtomicInsightEditToggle, HTMLAtomicInsightEditToggleElement>('atomic-insight-edit-toggle');
+export const AtomicInsightFacet = /*@__PURE__*/createReactComponent<JSX.AtomicInsightFacet, HTMLAtomicInsightFacetElement>('atomic-insight-facet');
 export const AtomicInsightHistoryToggle = /*@__PURE__*/createReactComponent<JSX.AtomicInsightHistoryToggle, HTMLAtomicInsightHistoryToggleElement>('atomic-insight-history-toggle');
 export const AtomicInsightRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicInsightRefineModal, HTMLAtomicInsightRefineModalElement>('atomic-insight-refine-modal');
 export const AtomicInsightRefineToggle = /*@__PURE__*/createReactComponent<JSX.AtomicInsightRefineToggle, HTMLAtomicInsightRefineToggleElement>('atomic-insight-refine-toggle');

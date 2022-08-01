@@ -400,6 +400,27 @@ export class AtomicInsightEditToggle {
 }
 
 
+export declare interface AtomicInsightFacet extends Components.AtomicInsightFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['allowedValues', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+})
+@Component({
+  selector: 'atomic-insight-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['allowedValues', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+})
+export class AtomicInsightFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicInsightHistoryToggle extends Components.AtomicInsightHistoryToggle {}
 
 @ProxyCmp({
