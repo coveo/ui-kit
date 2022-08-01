@@ -84,7 +84,7 @@ export const configurationReducer = createReducer(
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (!isNullOrUndefined(action.payload.enabled)) {
           if (!action.payload.enabled && state.analytics.enabled) {
-            clearAnalyticsClient();
+            clearAnalyticsClient(state.analytics);
           }
 
           state.analytics.enabled = action.payload.enabled;
@@ -120,7 +120,7 @@ export const configurationReducer = createReducer(
       })
       .addCase(disableAnalytics, (state) => {
         state.analytics.enabled = false;
-        clearAnalyticsClient();
+        clearAnalyticsClient(state.analytics);
       })
       .addCase(enableAnalytics, (state) => {
         state.analytics.enabled = true;
