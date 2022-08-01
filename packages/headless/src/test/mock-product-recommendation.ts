@@ -4,6 +4,8 @@ export function buildMockProductRecommendation(
   config: Partial<ProductRecommendation> = {}
 ): ProductRecommendation {
   return {
+    documentUri: '',
+    documentUriHash: '',
     permanentid: '',
     clickUri: '',
     ec_name: '',

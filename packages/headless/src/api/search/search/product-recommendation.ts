@@ -1,4 +1,6 @@
 export interface ProductRecommendation {
+  documentUri: string;
+  documentUriHash: string;
   /**
    * The SKU of the product.
    */
@@ -87,6 +89,8 @@ export interface ProductRecommendation {
 
 // Change this list when changing the fields exposed by `ProductRecommendation`
 export const ProductRecommendationDefaultFields: string[] = [
+  'uri',
+  'urihash',
   'permanentid',
   'ec_name',
   'ec_brand',
