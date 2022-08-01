@@ -7,6 +7,7 @@ import {
   togoHierarchy,
 } from './category-facet-actions';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 
 interface CategoryFacetOptions {
   field: string;
@@ -131,7 +132,9 @@ describe('quantic-category-facet', () => {
 
   describe('with default category facet', () => {
     it('should work as expected', () => {
-      visitCategoryFacetPage(defaultSettings);
+      visitCategoryFacetPage(defaultSettings, false);
+
+      performSearch();
 
       Expect.displayFacet(true);
       Expect.displayLabel(true);
@@ -142,7 +145,9 @@ describe('quantic-category-facet', () => {
 
     describe('when selecting on the level data set', () => {
       it('should bold the selected parent level', () => {
-        visitCategoryFacetPage(defaultSettings);
+        visitCategoryFacetPage(defaultSettings, false);
+
+        performSearch();
         // Verify all levels
         montrealHierarchy.forEach((value, index) => {
           const selectedPath = montrealHierarchy.slice(0, index + 1);

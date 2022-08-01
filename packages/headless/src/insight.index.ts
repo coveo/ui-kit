@@ -25,6 +25,7 @@ export * from './features/insight-search/insight-search-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 export * from './features/recent-results/recent-results-actions-loader';
+export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 
 // Controllers
 export type {
@@ -227,5 +228,11 @@ export {
   buildCriterionExpression,
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
+
+export type {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+} from './api/search/date/relative-date';
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';

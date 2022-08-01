@@ -11,13 +11,6 @@ export default class ExampleQuanticFacetManager extends LightningElement {
 
   options = [
     {
-      attribute: 'isSearch',
-      label: 'Is Search Interface',
-      description:
-        'Define if the use Case is search or else',
-      defaultValue: true,
-    },
-    {
       attribute: 'categoryDivider',
       label: 'Category Divider',
       description:
@@ -30,6 +23,13 @@ export default class ExampleQuanticFacetManager extends LightningElement {
       description:
         'Maximum number of displayed breadcrumb values. When more values are selected, additional values appear under the "More" button.',
       defaultValue: 5,
+    },
+    {
+      attribute: 'isSearch',
+      label: 'Is Search Use Case',
+      description:
+        'Define which use case to test, if true search use case else insight use case',
+      defaultValue: true,
     },
   ];
 
