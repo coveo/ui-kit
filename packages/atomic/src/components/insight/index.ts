@@ -15,8 +15,13 @@ export {
   SearchBox as InsightSearchBox,
   SearchBoxState as InsightSearchBoxState,
   buildSearchBox as buildInsightSearchBox,
+  Facet as InsightFacet,
   NumericFacetValue as InsightNumericFacetValue,
   DateFacetValue as InsightDateFacetValue,
   FacetManager as InsightFacetManager,
+  FacetConditionsManager as InsightFacetConditionsManager,
+  FacetConditionsManagerProps as InsightFacetConditionsManagerProps,
+  AnyFacetValuesCondition as InsightAnyFacetValuesCondition,
+  buildFacetConditionsManager as buildInsightFacetConditionsManager,
   buildFacetManager as buildInsightFacetManager,
 } from '@coveo/headless/insight';

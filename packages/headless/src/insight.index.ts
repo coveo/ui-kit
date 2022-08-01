@@ -238,6 +238,13 @@ export type {
 } from './controllers/insight/tab/headless-insight-tab';
 export {buildTab} from './controllers/insight/tab/headless-insight-tab';
 
+export type {
+  FacetConditionsManager,
+  FacetConditionsManagerProps,
+  AnyFacetValuesCondition,
+} from './controllers/insight/facet-conditions-manager/headless-facet-conditions-manager';
+export {buildFacetConditionsManager} from './controllers/insight/facet-conditions-manager/headless-facet-conditions-manager';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';

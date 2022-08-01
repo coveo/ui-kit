@@ -20,7 +20,7 @@ import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-requ
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {
-  buildFacetConditionsManager,
+  buildCoreFacetConditionsManager,
   FacetConditionsManager,
 } from './headless-facet-conditions-manager';
 
@@ -51,7 +51,7 @@ describe('facet conditions manager', () => {
     let condition: jest.Mock;
 
     function initCondition() {
-      facetConditionsManager = buildFacetConditionsManager(engine, {
+      facetConditionsManager = buildCoreFacetConditionsManager(engine, {
         facetId: facetId,
         conditions: [
           {
@@ -214,7 +214,7 @@ describe('facet conditions manager', () => {
       state.facetSet[parentFacetBId] = buildMockFacetRequest({
         facetId: parentFacetBId,
       });
-      buildFacetConditionsManager(engine, {
+      buildCoreFacetConditionsManager(engine, {
         facetId: facetId,
         conditions: [
           {
