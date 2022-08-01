@@ -41,7 +41,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
       >
         <atomic-icon
           icon={Checkmark}
-          aria-hidden={true}
+          aria-hidden="true"
           class="w-3.5"
         ></atomic-icon>
         <RadioButton
@@ -61,7 +61,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
       >
         <atomic-icon
           icon={Cross}
-          aria-hidden={true}
+          aria-hidden="true"
           class="w-3.5"
         ></atomic-icon>
         <RadioButton
@@ -115,7 +115,6 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
         part="feedback-inquiry-and-buttons"
         role="radiogroup"
         aria-labelledby={inquiryId}
-        aria-controls={thankYouId}
         class="inline-flex flex-wrap gap-4"
       >
         <Inquiry></Inquiry>
