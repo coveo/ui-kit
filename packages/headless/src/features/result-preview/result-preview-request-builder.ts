@@ -26,7 +26,7 @@ export async function buildResultPreviewRequest(
     organizationId,
     enableNavigation: false,
     ...(analytics.enabled && {
-      visitorId: await getVisitorID(),
+      visitorId: await getVisitorID(state.configuration.analytics),
     }),
     q,
     ...options,
