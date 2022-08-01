@@ -15,6 +15,7 @@ import {
 
 interface FacetInfo {
   label: string;
+  element: HTMLElement;
 }
 
 export interface ResultListInfo {
@@ -26,7 +27,11 @@ interface FacetValueFormat<ValueType> {
   content?(facetValue: ValueType): VNode;
 }
 
-type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
+export type StoreFacetType =
+  | 'facets'
+  | 'numericFacets'
+  | 'dateFacets'
+  | 'categoryFacets';
 type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export interface SortDropdownOption {
@@ -48,7 +53,7 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
 }
 
 export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
-  registerFacet<T extends FacetType, U extends string>(
+  registerFacet<T extends StoreFacetType, U extends string>(
     facetType: T,
     data: AtomicStoreData[T][U] & {facetId: U; element: HTMLElement}
   ): void;
@@ -100,7 +105,7 @@ export function createAtomicStore(): AtomicStore {
 
   return {
     ...commonStore,
-    registerFacet<T extends FacetType, U extends string>(
+    registerFacet<T extends StoreFacetType, U extends string>(
       facetType: T,
       data: AtomicStoreData[T][U] & {facetId: U; element: HTMLElement}
     ) {

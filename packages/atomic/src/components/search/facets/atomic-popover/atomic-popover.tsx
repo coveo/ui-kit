@@ -3,7 +3,7 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
-import {Component, h, Listen, State, Element} from '@stencil/core';
+import {Component, h, State, Listen, Element} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -13,6 +13,8 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
+import {InitPopoverEventPayload} from './popover-event';
+import {closest} from '../../../../utils/utils';
 
 @Component({
   tag: 'atomic-popover',
@@ -32,6 +34,7 @@ export class AtomicPopover implements InitializableComponent {
   @State() public isMenuVisible = false;
   @State() public facetLabel?: string = 'no-label';
   @Element() host!: HTMLElement;
+  private facetElement?: HTMLElement;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -68,61 +71,51 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   @Listen('facetInitialized')
-  injectPopoverClass(event: CustomEvent) {
-    if (!event.detail.element.shadowRoot) {
+  injectPopoverClass(event: CustomEvent<InitPopoverEventPayload>) {
+    console.log('init!', this.facetElement, event);
+    if (this.facetElement) {
       return;
     }
 
-    const facetContainer =
-      event.detail.element.shadowRoot.querySelector('[part="facet"]');
-
-    if (!facetContainer) {
+    const facet = this.bindings.store.get(event.detail.facetType)[
+      event.detail.facetId
+    ];
+    console.log('facet', facet);
+    if (!facet) {
+      // TODO: add error msg
+      console.error('no bueno');
       return;
     }
 
-    this.facetLabel = event.detail.label;
-
-    facetContainer.setAttribute(
-      'class',
-      facetContainer.className + ' popover-nested'
-    );
+    this.facetElement = facet.element;
+    this.facetLabel = facet.label;
+    this.facetElement.classList.add('popover-nested');
+    this.host.addEventListener('focusout', (e) => this.onFocusOut(e));
+    this.facetElement!.addEventListener('focusout', (e) => this.onFocusOut(e));
   }
 
-  hidePopoverMenu() {
-    //should only make menu invisible when mouse is not over the atomic popover component
-    this.isMenuVisible = false;
+  private onFocusOut(e: FocusEvent) {
+    const target = e.relatedTarget;
+    const isHost =
+      closest(target! as HTMLElement, 'atomic-popover') === this.host;
+    if (!isHost) {
+      this.isMenuVisible = false;
+    }
   }
-
-  //listen to popover-opened event and pass inside event.detail information about current open popoover
 
   render() {
     if (this.searchStatus.state.hasError) {
       return <Hidden></Hidden>;
     }
 
-    //return error with message: "Popover can only support one child" if popover has more than 1 child
-
-    //hide if facet has 0 values
+    // TODO: hide if facet has 0 values
+    // TODO: handle slot error ("Popover can only support one child" if popover has more than 1 child)
+    // TODO: add placeholder when facet isn't  ready
 
     return (
       <div part="popover-wrapper" class="popover-wrapper relative">
         {this.renderValueButton()}
-        <atomic-focus-detector
-          isHostVisible={this.isMenuVisible}
-          onFocusExit={() => this.hidePopoverMenu()}
-        >
-          <div
-            tabindex="0"
-            onMouseDown={(e) => {
-              e.preventDefault();
-            }}
-            class={`slot-wrapper absolute z-10 hidden ${
-              this.isMenuVisible ? 'selected' : ''
-            }`}
-          >
-            <slot></slot>
-          </div>
-        </atomic-focus-detector>
+        {this.isMenuVisible && <slot></slot>}
       </div>
     );
   }

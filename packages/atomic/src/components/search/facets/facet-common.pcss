@@ -2,6 +2,12 @@
   @apply ml-1.5 text-neutral-dark;
 }
 
-.popover-nested > button[part='label-button'] {
+:host(.popover-nested)::part(label-button) {
   display: none;
+}
+
+:host(.popover-nested) {
+  @apply absolute z-10;
+  position: absolute;
+  min-width: 250px;
 }
