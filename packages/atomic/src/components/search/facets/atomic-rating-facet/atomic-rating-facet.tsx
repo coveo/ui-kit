@@ -24,7 +24,10 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {parseDependsOn, validateDependsOn} from '../facet-common';
+import {
+  parseDependsOn,
+  validateDependsOn,
+} from '../../../common/facets/facet-common';
 import Star from '../../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
 import {Hidden} from '../../../common/hidden';

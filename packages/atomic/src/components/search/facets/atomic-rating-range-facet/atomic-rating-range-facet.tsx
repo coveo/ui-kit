@@ -23,7 +23,10 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {parseDependsOn, validateDependsOn} from '../facet-common';
+import {
+  parseDependsOn,
+  validateDependsOn,
+} from '../../../common/facets/facet-common';
 import Star from '../../../../images/star.svg';
 import {Hidden} from '../../../common/hidden';
 import {

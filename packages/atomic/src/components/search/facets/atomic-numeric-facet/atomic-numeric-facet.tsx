@@ -32,7 +32,7 @@ import {
   parseDependsOn,
   shouldDisplayInputForFacetRange,
   validateDependsOn,
-} from '../facet-common';
+} from '../../../common/facets/facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,

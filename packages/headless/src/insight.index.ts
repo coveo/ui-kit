@@ -85,6 +85,11 @@ export type {
 export {buildFacetManager} from './controllers/insight/facet-manager/headless-insight-facet-manager';
 
 export type {
+  CategoryFacetValueRequest,
+  CategoryFacetSortCriterion,
+} from './features/facets/category-facet-set/interfaces/request';
+
+export type {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
   CategoryFacetProps,
@@ -249,6 +254,11 @@ export type {InsightInterfaceState} from './features/insight-interface/insight-i
 
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
+
+export type {
+  FacetValueRequest,
+  FacetSortCriterion,
+} from './features/facets/facet-set/interfaces/request';
 
 // Types & Helpers
 export {

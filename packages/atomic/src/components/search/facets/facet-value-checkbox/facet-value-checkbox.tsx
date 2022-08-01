@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
 import {Checkbox} from '../../../common/checkbox';
-import {FacetValueProps} from '../facet-common';
+import {FacetValueProps} from '../../../common/facets/facet-common';
 
 export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
   props,

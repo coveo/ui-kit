@@ -31,7 +31,7 @@ import {
   parseDependsOn,
   shouldDisplayInputForFacetRange,
   validateDependsOn,
-} from '../facet-common';
+} from '../../../common/facets/facet-common';
 import {Timeframe} from '../atomic-timeframe/timeframe';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import dayjs from 'dayjs';

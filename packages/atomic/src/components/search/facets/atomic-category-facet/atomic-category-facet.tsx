@@ -27,7 +27,10 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {parseDependsOn, validateDependsOn} from '../facet-common';
+import {
+  parseDependsOn,
+  validateDependsOn,
+} from '../../../common/facets/facet-common';
 import {
   getFieldCaptions,
   getFieldValueCaption,
