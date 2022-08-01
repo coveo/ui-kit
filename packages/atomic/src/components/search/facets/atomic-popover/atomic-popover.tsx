@@ -94,6 +94,15 @@ export class AtomicPopover implements InitializableComponent {
     this.facetElement!.addEventListener('focusout', (e) => this.onFocusOut(e));
   }
 
+  @Listen('keydown')
+  closePopup(e: KeyboardEvent) {
+    if (e.key === 'Escape') {
+      this.isMenuVisible = false;
+      // TODO: improve accessibility
+      this.host.focus();
+    }
+  }
+
   private onFocusOut(e: FocusEvent) {
     const target = e.relatedTarget;
     const isHost =
@@ -108,7 +117,7 @@ export class AtomicPopover implements InitializableComponent {
       return <Hidden></Hidden>;
     }
 
-    // TODO: hide if facet has 0 values
+    // TODO: hide if facet has 0 values (use headless to retrive facet state)
     // TODO: handle slot error ("Popover can only support one child" if popover has more than 1 child)
     // TODO: add placeholder when facet isn't  ready
 
