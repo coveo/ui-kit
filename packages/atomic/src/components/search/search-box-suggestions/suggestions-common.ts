@@ -7,6 +7,7 @@ export interface SearchBoxSuggestionElement {
   key: string;
   content: Element | VNode;
   onSelect?(e: Event): void;
+  linkedBy?: string;
 
   query?: string;
   part?: string;

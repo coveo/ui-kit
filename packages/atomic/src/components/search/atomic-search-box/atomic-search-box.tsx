@@ -585,19 +585,23 @@ export class AtomicSearchBox {
     lastIndex: number,
     side: 'left' | 'right'
   ) {
-    const id = `${this.id}-${side}-suggestion-${item.key}`;
+    const id = this.getSuggestionId(side, item);
+
     const isSelected = id === this.activeDescendant;
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
+
     return (
       <li
         id={id}
         key={item.key}
         part={this.makeSuggestionPart(isSelected, !!item.query, item.part)}
-        class={`flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
-          isSelected ? 'bg-neutral-light' : ''
-        }`}
+        class={`flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${this.getSuggestionBackgroundClass(
+          isSelected,
+          side,
+          item
+        )}`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={(e: Event) => {
           this.onSuggestionClick(item, e);
@@ -615,6 +619,30 @@ export class AtomicSearchBox {
         {!isHTMLElement(item.content) && item.content}
       </li>
     );
+  }
+
+  private getSuggestionBackgroundClass(
+    isSelected: boolean,
+    side: 'left' | 'right',
+    item: SearchBoxSuggestionElement
+  ) {
+    if (isSelected) {
+      return 'bg-neutral-light';
+    }
+    if (side === 'left' && item.linkedBy) {
+      const isLinkedPanelActive = this.rightSuggestionElements.find((el) => {
+        return (
+          el.linkedBy &&
+          el.linkedBy === item.linkedBy &&
+          this.getSuggestionId('right', el) === this.activeDescendant
+        );
+      });
+
+      if (isLinkedPanelActive) {
+        return 'bg-neutral-light';
+      }
+    }
+    return '';
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
@@ -692,9 +720,15 @@ export class AtomicSearchBox {
     );
   }
 
+  private getSuggestionId(
+    side: 'left' | 'right',
+    item: SearchBoxSuggestionElement
+  ) {
+    return `${this.id}-${side}-suggestion-${item.key}`;
+  }
+
   public render() {
     this.updateBreakpoints();
-
     return [
       <SearchBoxWrapper disabled={this.disableSearch}>
         <SearchInput
