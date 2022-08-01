@@ -1,15 +1,12 @@
-import {Schema, StringValue} from '@coveo/bueno';
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   buildInsightFacet,
   buildInsightFacetConditionsManager,
   buildInsightSearchStatus,
   InsightFacet,
-  InsightFacetConditionsManager,
   InsightFacetOptions,
   InsightFacetSortCriterion,
   InsightFacetState,
-  InsightFacetValue,
   InsightSearchStatus,
   InsightSearchStatusState,
 } from '..';
@@ -18,43 +15,24 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {
-  getFieldCaptions,
-  getFieldValueCaption,
-} from '../../../utils/field-utils';
-import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
-import {BaseFacet} from '../../common/facets/facet-common';
-import {Hidden} from '../../common/hidden';
+import {
+  BaseFacet,
+  FacetCommon,
+  FacetDisplayValues,
+} from '../../common/facets/facet-common';
 
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
-import {
-  parseDependsOn,
-  validateDependsOn,
-} from '../../common/facets/facet-common';
-import {FacetContainer} from '../../common/facets/facet-container/facet-container';
-import {FacetHeader} from '../../common/facets/facet-header/facet-header';
-import {FacetSearchInput} from '../../common/facets/facet-search/facet-search-input';
-import {FacetSearchMatches} from '../../common/facets/facet-search/facet-search-matches';
-import {
-  shouldDisplaySearchResults,
-  shouldUpdateFacetSearchComponent,
-} from '../../common/facets/facet-search/facet-search-utils';
-import {FacetShowMoreLess} from '../../common/facets/facet-show-more-less/facet-show-more-less';
-import {FacetValueBox} from '../../common/facets/facet-value-box/facet-value-box';
-import {FacetValueCheckbox} from '../../common/facets/facet-value-checkbox/facet-value-checkbox';
-import {FacetValueLabelHighlight} from '../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import {FacetValueLink} from '../../common/facets/facet-value-link/facet-value-link';
-import {FacetValuesGroup} from '../../common/facets/facet-values-group/facet-values-group';
-
+import {parseDependsOn} from '../../common/facets/facet-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-facet` displays a facet of the results for the current query.
+ * An `atomic-insight-facet` displays a facet of the results for the current query.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -97,9 +75,8 @@ export class AtomicInsightFacet
   implements InitializableComponent<InsightBindings>, BaseFacet<InsightFacet>
 {
   @InitializeBindings() public bindings!: InsightBindings;
+  public facetCommon!: FacetCommon;
   public facet!: InsightFacet;
-  private dependenciesManager?: InsightFacetConditionsManager;
-  private resultIndexToFocusOnShowMore = 0;
   public searchStatus!: InsightSearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -144,7 +121,7 @@ export class AtomicInsightFacet
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
    */
-  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' | 'box' =
+  @Prop({reflect: true}) public displayValuesAs: FacetDisplayValues =
     'checkbox';
   /**
    * Specifies if the facet is collapsed.
@@ -171,19 +148,19 @@ export class AtomicInsightFacet
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
-   * <atomic-facet
+   * <atomic-insight-facet
    *   depends-on-abc
    *   ...
-   * ></atomic-facet>
+   * ></atomic-insight-facet>
    *
    * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
-   * <atomic-facet
+   * <atomic-insight-facet
    *   depends-on-abc="doc"
    *   ...
-   * ></atomic-facet>
+   * ></atomic-insight-facet>
    * ```
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
@@ -201,7 +178,7 @@ export class AtomicInsightFacet
    * those other values.
    *
    * ```html
-   * <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div>
+   * <atomic-insight-facet field="objecttype" allowed-values="Contact,Account,File"></div>
    * ```
    *
    * The maximum amount of allowed values is 25.
@@ -219,20 +196,7 @@ export class AtomicInsightFacet
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
-  private validateProps() {
-    new Schema({
-      displayValuesAs: new StringValue({
-        constrainTo: ['checkbox', 'link', 'box'],
-      }),
-    }).validate({
-      displayValuesAs: this.displayValuesAs,
-    });
-    validateDependsOn(this.dependsOn);
-  }
-
   public initialize() {
-    this.validateProps();
-    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
     const options: InsightFacetOptions = {
       facetId: this.facetId,
       field: this.field,
@@ -243,21 +207,35 @@ export class AtomicInsightFacet
       injectionDepth: this.injectionDepth,
       allowedValues: this.allowedValues?.trim().split(','),
     };
+
     this.facet = buildInsightFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.inititalizeDependenciesManager();
-    this.bindings.store.registerFacet('facets', {
+
+    this.facetCommon = new FacetCommon({
+      host: this.host,
+      bindings: this.bindings,
       label: this.label,
-      facetId: this.facetId!,
-      element: this.host,
+      field: this.field,
+      displayValuesAs: this.displayValuesAs,
+      dependsOn: this.dependsOn,
+      dependenciesManager: buildInsightFacetConditionsManager(
+        this.bindings.engine,
+        {
+          facetId: this.facetId!,
+          conditions: parseDependsOn(this.dependsOn),
+        }
+      ),
+      facet: this.facet,
+      facetId: this.facetId,
+      withSearch: this.withSearch,
+      sortCriteria: this.sortCriteria,
     });
+
+    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
-    if (this.host.isConnected) {
-      return;
-    }
-    this.dependenciesManager?.stopWatching();
+    this.facetCommon.disconnectedCallback();
   }
 
   public componentShouldUpdate(
@@ -265,250 +243,18 @@ export class AtomicInsightFacet
     prev: unknown,
     propName: keyof AtomicInsightFacet
   ) {
-    if (propName === 'facetState' && prev && this.withSearch) {
-      return shouldUpdateFacetSearchComponent(
+    return (
+      !this.facetCommon ||
+      this.facetCommon?.componentShouldUpdate(
         (next as InsightFacetState).facetSearch,
-        (prev as InsightFacetState).facetSearch
-      );
-    }
-
-    return true;
-  }
-
-  private get numberOfSelectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
-  }
-
-  private inititalizeDependenciesManager() {
-    this.dependenciesManager = buildInsightFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
-      }
-    );
-  }
-
-  private renderHeader() {
-    return (
-      <FacetHeader
-        i18n={this.bindings.i18n}
-        label={this.label}
-        onClearFilters={() => {
-          this.headerFocus.focusAfterSearch();
-          this.facet.deselectAll();
-        }}
-        numberOfSelectedValues={this.numberOfSelectedValues}
-        isCollapsed={this.isCollapsed}
-        headingLevel={this.headingLevel}
-        onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
-        headerRef={this.headerFocus.setTarget}
-      ></FacetHeader>
-    );
-  }
-
-  private renderSearchInput() {
-    const shouldDisplaySearch =
-      this.withSearch && this.facetState.canShowMoreValues;
-    if (!shouldDisplaySearch) {
-      return;
-    }
-
-    return (
-      <FacetSearchInput
-        i18n={this.bindings.i18n}
-        label={this.label}
-        query={this.facetState.facetSearch.query}
-        onChange={(value) => {
-          if (value === '') {
-            this.facet.facetSearch.clear();
-            return;
-          }
-          this.facet.facetSearch.updateCaptions(
-            getFieldCaptions(this.field, this.bindings.i18n)
-          );
-          this.facet.facetSearch.updateText(value);
-          this.facet.facetSearch.search();
-        }}
-        onClear={() => this.facet.facetSearch.clear()}
-      ></FacetSearchInput>
-    );
-  }
-
-  private renderValue(
-    facetValue: InsightFacetValue,
-    onClick: () => void,
-    isShowLessFocusTarget: boolean,
-    isShowMoreFocusTarget: boolean
-  ) {
-    const displayValue = getFieldValueCaption(
-      this.field,
-      facetValue.value,
-      this.bindings.i18n
-    );
-    const isSelected = facetValue.state === 'selected';
-    switch (this.displayValuesAs) {
-      case 'checkbox':
-        return (
-          <FacetValueCheckbox
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-            searchQuery={this.facetState.facetSearch.query}
-            buttonRef={(element) => {
-              isShowLessFocusTarget && this.showLessFocus.setTarget(element);
-              isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
-            }}
-          >
-            <FacetValueLabelHighlight
-              displayValue={displayValue}
-              isSelected={isSelected}
-              searchQuery={this.facetState.facetSearch.query}
-            ></FacetValueLabelHighlight>
-          </FacetValueCheckbox>
-        );
-      case 'link':
-        return (
-          <FacetValueLink
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-            searchQuery={this.facetState.facetSearch.query}
-            buttonRef={(element) => {
-              isShowLessFocusTarget && this.showLessFocus.setTarget(element);
-              isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
-            }}
-          >
-            <FacetValueLabelHighlight
-              displayValue={displayValue}
-              isSelected={isSelected}
-              searchQuery={this.facetState.facetSearch.query}
-            ></FacetValueLabelHighlight>
-          </FacetValueLink>
-        );
-      case 'box':
-        return (
-          <FacetValueBox
-            displayValue={displayValue}
-            numberOfResults={facetValue.numberOfResults}
-            isSelected={isSelected}
-            i18n={this.bindings.i18n}
-            onClick={onClick}
-            searchQuery={this.facetState.facetSearch.query}
-            buttonRef={(element) => {
-              isShowLessFocusTarget && this.showLessFocus.setTarget(element);
-              isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
-            }}
-          >
-            <FacetValueLabelHighlight
-              displayValue={displayValue}
-              isSelected={isSelected}
-              searchQuery={this.facetState.facetSearch.query}
-            ></FacetValueLabelHighlight>
-          </FacetValueBox>
-        );
-    }
-  }
-
-  private renderValuesContainer(children: VNode[], query?: string) {
-    const classes = `mt-3 ${
-      this.displayValuesAs === 'box' ? 'box-container' : ''
-    }`;
-    return (
-      <FacetValuesGroup
-        i18n={this.bindings.i18n}
-        label={this.label}
-        query={query}
-      >
-        <ul class={classes} part="values">
-          {children}
-        </ul>
-      </FacetValuesGroup>
-    );
-  }
-
-  private renderValues() {
-    return this.renderValuesContainer(
-      this.facetState.values.map((value, i) =>
-        this.renderValue(
-          value,
-          () =>
-            this.displayValuesAs === 'link'
-              ? this.facet.toggleSingleSelect(value)
-              : this.facet.toggleSelect(value),
-          i === 0,
-          i ===
-            (this.sortCriteria === 'automatic'
-              ? 0
-              : this.resultIndexToFocusOnShowMore)
-        )
+        (prev as InsightFacetState).facetSearch,
+        propName
       )
     );
   }
 
-  private renderSearchResults() {
-    return this.renderValuesContainer(
-      this.facetState.facetSearch.values.map((value) =>
-        this.renderValue(
-          {
-            state: 'idle',
-            numberOfResults: value.count,
-            value: value.rawValue,
-          },
-          () =>
-            this.displayValuesAs === 'link'
-              ? this.facet.facetSearch.singleSelect(value)
-              : this.facet.facetSearch.select(value),
-          false,
-          false
-        )
-      ),
-      this.facetState.facetSearch.query
-    );
-  }
-
-  private renderMatches() {
-    return (
-      <FacetSearchMatches
-        i18n={this.bindings.i18n}
-        query={this.facetState.facetSearch.query}
-        numberOfMatches={this.facetState.facetSearch.values.length}
-        hasMoreMatches={this.facetState.facetSearch.moreValuesAvailable}
-      ></FacetSearchMatches>
-    );
-  }
-
-  private renderShowMoreLess() {
-    return (
-      <FacetShowMoreLess
-        label={this.label}
-        i18n={this.bindings.i18n}
-        onShowMore={() => {
-          this.resultIndexToFocusOnShowMore = this.facet.state.values.length;
-          this.showMoreFocus.focusAfterSearch();
-          this.facet.showMoreValues();
-        }}
-        onShowLess={() => {
-          this.showLessFocus.focusAfterSearch();
-          this.facet.showLessValues();
-        }}
-        canShowMoreValues={this.facetState.canShowMoreValues}
-        canShowLessValues={this.facetState.canShowLessValues}
-      ></FacetShowMoreLess>
-    );
-  }
-
   public render() {
-    if (this.searchStatusState.hasError || !this.facet.state.enabled) {
-      return <Hidden></Hidden>;
-    }
-
-    if (!this.searchStatusState.firstSearchExecuted) {
+    if (!this.facetCommon) {
       return (
         <FacetPlaceholder
           numberOfValues={this.numberOfValues}
@@ -516,21 +262,16 @@ export class AtomicInsightFacet
         ></FacetPlaceholder>
       );
     }
-
-    if (!this.facetState.values.length) {
-      return <Hidden></Hidden>;
-    }
-
-    return (
-      <FacetContainer>
-        {this.renderHeader()}
-        {!this.isCollapsed && [
-          this.renderSearchInput(),
-          shouldDisplaySearchResults(this.facetState.facetSearch)
-            ? [this.renderSearchResults(), this.renderMatches()]
-            : [this.renderValues(), this.renderShowMoreLess()],
-        ]}
-      </FacetContainer>
-    );
+    return this.facetCommon.render({
+      hasError: this.searchStatusState.hasError,
+      firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
+      isCollapsed: this.isCollapsed,
+      numberOfValues: this.numberOfValues,
+      headerFocus: this.headerFocus,
+      headingLevel: this.headingLevel,
+      showLessFocus: this.showLessFocus,
+      showMoreFocus: this.showMoreFocus,
+      onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
+    });
   }
 }

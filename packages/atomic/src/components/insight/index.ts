@@ -20,6 +20,7 @@ export {
   buildSearchStatus as buildInsightSearchStatus,
   Facet as InsightFacet,
   FacetState as InsightFacetState,
+  FacetSearchState as InsightFacetSearchState,
   buildFacet as buildInsightFacet,
   FacetOptions as InsightFacetOptions,
   FacetValue as InsightFacetValue,

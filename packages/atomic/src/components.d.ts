@@ -11,6 +11,7 @@ import { NumberInputType } from "./components/search/facets/facet-number-input/n
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
 import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
+import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { Section } from "./components/search/atomic-layout-section/sections";
@@ -347,17 +348,17 @@ export namespace Components {
     }
     interface AtomicInsightFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-insight-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues"?: string;
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc   ... ></atomic-insight-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc="doc"   ... ></atomic-insight-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
-        "displayValuesAs": 'checkbox' | 'link' | 'box';
+        "displayValuesAs": FacetDisplayValues;
         /**
           * Specifies a unique identifier for the facet.
          */
@@ -2386,17 +2387,17 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-insight-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues"?: string;
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc   ... ></atomic-insight-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc="doc"   ... ></atomic-insight-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
-        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
+        "displayValuesAs"?: FacetDisplayValues;
         /**
           * Specifies a unique identifier for the facet.
          */
