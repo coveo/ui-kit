@@ -24,10 +24,10 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {FacetContainer} from '../facet-container/facet-container';
-import {FacetHeader} from '../facet-header/facet-header';
-import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
-import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
+import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {
   parseDependsOn,
   shouldDisplayInputForFacetRange,
@@ -38,7 +38,7 @@ import {
   NumberFormatter,
 } from '../../formats/format-common';
 import {NumberInputType} from '../facet-number-input/number-input-type';
-import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {Schema, StringValue} from '@coveo/bueno';
 import {Hidden} from '../../../common/hidden';
@@ -48,7 +48,7 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
-import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {BaseFacet} from '../../../common/facets/facet-common';
 
