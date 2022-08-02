@@ -1,14 +1,5 @@
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export type {Result} from './api/search/search/result';
-export type {
-  ResultTemplate,
-  ResultTemplateCondition,
-} from './features/result-templates/result-templates';
-export {ResultTemplatesHelpers} from './features';
-
-export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
-export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
 // Main App
 export type {
@@ -43,6 +34,8 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
+
+export type {HighlightKeyword} from './utils/highlight';
 
 export type {
   DidYouMean,
@@ -92,6 +85,14 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreCategoryFacet,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreCategoryFacetState,
 } from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 export {buildCategoryFacet} from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 
@@ -106,6 +107,14 @@ export type {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreFacet,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreFacetState,
 } from './controllers/insight/facets/facet/headless-insight-facet';
 export {buildFacet} from './controllers/insight/facets/facet/headless-insight-facet';
 
@@ -122,6 +131,9 @@ export {
   buildDateRange,
   buildDateFacet,
 } from './controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet';
+
+export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 
 export type {
   NumericRangeOptions,
@@ -241,7 +253,20 @@ export type {InsightInterfaceState} from './features/insight-interface/insight-i
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 
+// Features
+export type {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {ResultTemplatesHelpers} from './features';
+
 // Types & Helpers
+export type {Raw} from './api/search/search/raw';
+export type {InsightAPIErrorStatusResponse} from './api/service/insight/insight-api-client';
+export type {Result} from './api/search/search/result';
+
 export {
   SortOrder,
   buildDateSortCriterion,

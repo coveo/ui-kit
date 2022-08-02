@@ -11,6 +11,8 @@ import {
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
 import {
   buildCoreFacet,
+  CoreFacet,
+  CoreFacetState,
   Facet,
   FacetProps,
   FacetSearch,
@@ -52,6 +54,8 @@ export type {
   FacetSearchState,
   SpecificFacetSearchResult,
   FacetValue,
+  CoreFacet,
+  CoreFacetState,
 };
 
 /**
