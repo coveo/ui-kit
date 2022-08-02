@@ -93,20 +93,21 @@ describe('quantic-tab', () => {
   });
 
   describe('when using accessibility', () => {
-    it('when SpaceKey is pressed', () => {
+    beforeEach(() => {
       loadFromUrlHash({}, `tab=${tabs.all.label}`);
+    });
+
+    it('when SpaceKey is pressed', () => {
       TabSelectors.button().first().focus().type(' ');
       Expect.activeTabContains(tabs.all.label);
     });
 
     it('when TabKey && SpaceKey is pressed', () => {
-      loadFromUrlHash({}, `tab=${tabs.all.label}`);
       TabSelectors.button().first().focus().tab().type(' ');
       Expect.activeTabContains(tabs.case.label);
     });
-    it('when Shift && TabKey && SpaceKey is pressed', () => {
-      loadFromUrlHash({}, `tab=${tabs.all.label}`);
 
+    it('when Shift && TabKey && SpaceKey is pressed', () => {
       TabSelectors.button()
         .first()
         .focus()
