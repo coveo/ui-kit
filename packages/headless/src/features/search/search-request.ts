@@ -17,18 +17,18 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
     await buildSearchAndFoldingLoadCollectionRequest(state);
 
   // Corner case:
-  // If the number of results requested would go over the index limits (typically 5000 results is the maximum you can reach)
+  // If the number of results requested would go over the index limit (typically 5000 results is the maximum you can reach)
   // we need to request fewer results in order to ensure we do not receive an exception from the index
   const ensureNumberOfResultsDoesNotGoOverIndexLimit = () => {
     if (!state.pagination) {
       return undefined;
     }
 
-    const isOverIndexLimits =
+    const isOverIndexLimit =
       state.pagination.firstResult + state.pagination.numberOfResults >
       maximumNumberOfResultsFromIndex;
 
-    if (isOverIndexLimits) {
+    if (isOverIndexLimit) {
       return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
     }
     return state.pagination.numberOfResults;
