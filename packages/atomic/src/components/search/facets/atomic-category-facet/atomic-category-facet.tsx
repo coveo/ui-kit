@@ -408,7 +408,7 @@ export class AtomicCategoryFacet
             this.facet.deselectAll();
           }}
           searchQuery={this.facetState.facetSearch.query}
-          part="active-parent"
+          part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
           class="parent-active"
           buttonRef={this.activeValueFocus.setTarget}
         >
@@ -447,6 +447,7 @@ export class AtomicCategoryFacet
           isShowLessFocusTarget && this.showLessFocus.setTarget(element);
           isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
         }}
+        additionalPart={this.getIsLeafOrNodePart(facetValue)}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -472,6 +473,10 @@ export class AtomicCategoryFacet
         )}
       </ul>
     );
+  }
+
+  private getIsLeafOrNodePart(value: CategoryFacetValue) {
+    return value.isLeafValue ? 'leaf-value' : 'node-value';
   }
 
   private renderSearchResults() {

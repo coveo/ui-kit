@@ -10,6 +10,7 @@ export function buildMockCategoryFacetValue(
     state: 'idle',
     value: '',
     moreValuesAvailable: false,
+    isLeafValue: false,
     ...config,
   };
 }
