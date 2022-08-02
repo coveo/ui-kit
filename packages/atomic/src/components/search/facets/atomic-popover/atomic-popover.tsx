@@ -19,7 +19,7 @@ import {InitPopoverEventPayload} from './popover-event';
  * @internal
  * The `atomic-popover` displays a popover menu view of any facet
  * @part value-button - The button used to display the popover menu
- * @part value-label - The popover value label
+ * @part value-label - The popover button label.
  * @part arrow-icon - The arrow icon to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
  * @part popover-wrapper - The wrapper that contains the 'value-button' and the 'slot-wrapper'.
