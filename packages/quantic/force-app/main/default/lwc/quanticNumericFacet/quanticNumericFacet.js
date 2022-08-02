@@ -421,8 +421,8 @@ export default class QuanticNumericFacet extends LightningElement {
     evt.preventDefault();
 
     this.setValidityParameters();
-    // @ts-ignore
     const allValid = this.allInputs.reduce(
+      // @ts-ignore
       (validSoFar, inputCmp) => validSoFar && inputCmp.reportValidity(),
       true
     );

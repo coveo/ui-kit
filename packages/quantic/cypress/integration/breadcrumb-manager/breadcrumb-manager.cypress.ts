@@ -13,7 +13,7 @@ describe('quantic-breadcrumb-manager', () => {
   const numericField = 'ytlikecount';
   const dateField = 'date';
   const categoryField = 'geographicalhierarchy';
-  const clearActionName = 'Clear';
+  const clearActionName = 'Clear filter';
 
   interface BreadcrumbOptions {
     isSearch: boolean;
@@ -112,8 +112,8 @@ describe('quantic-breadcrumb-manager', () => {
             Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
               timeframeLabel1
             );
-            Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextContains(
-              `${dateFacetName} ${clearActionName}`
+            Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextEq(
+              `${dateFacetName} ${timeframeLabel1} ${clearActionName}`
             );
 
             Actions.timeframeFacet.selectValue(timeframeLabel2);
@@ -151,8 +151,8 @@ describe('quantic-breadcrumb-manager', () => {
             Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
               path[0]
             );
-            Expect.categoryFacetBreadcrumb.firstBreadcrumbAltTextContains(
-              `${categoryFacetName} ${clearActionName}`
+            Expect.categoryFacetBreadcrumb.firstBreadcrumbAltTextEq(
+              `${categoryFacetName} ${path[0]} ${clearActionName}`
             );
 
             Actions.categoryFacet.selectChildValue(path[1]);
@@ -250,8 +250,8 @@ describe('quantic-breadcrumb-manager', () => {
               Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
                 'Past 6 months'
               );
-              Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextContains(
-                `${dateFacetName} ${clearActionName}`
+              Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextEq(
+                `${dateFacetName} Past 6 months ${clearActionName}`
               );
               Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
               Expect.categoryFacetBreadcrumb.displayLabel(true);

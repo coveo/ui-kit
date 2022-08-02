@@ -1,8 +1,17 @@
 @import '../../../global/global.pcss';
 @import '../../common/search-box/search-box.pcss';
 
-:host {
-  @apply pt-8 pl-8 pr-8;
+[part='wrapper'] {
+  height: auto;
+}
+
+[part='input'] {
+  padding-top: 0.675rem;
+  padding-bottom: 0.675rem;
+}
+
+[part='submit-button'] {
+  @apply w-10;
 }
 
 .loading::after {

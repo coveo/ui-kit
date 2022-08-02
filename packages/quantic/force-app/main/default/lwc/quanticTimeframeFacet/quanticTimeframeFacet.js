@@ -247,7 +247,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   get currentValues() {
     return this.timeframes.map((timeframe) => {
       return timeframe.period === 'past'
-        ? this.headless.buildDateRange({
+        ? getHeadlessBundle(this.engineId).buildDateRange({
             start: {
               period: timeframe.period,
               unit: timeframe.unit,
@@ -255,7 +255,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
             },
             end: {period: 'now'},
           })
-        : this.headless.buildDateRange({
+        : getHeadlessBundle(this.engineId).buildDateRange({
             start: {period: 'now'},
             end: {
               period: timeframe.period,
@@ -634,13 +634,13 @@ export default class QuanticTimeframeFacet extends LightningElement {
   updateRangeInHeadless(startDate, endDate) {
     const engine = getHeadlessBindings(this.engineId).engine;
     engine.dispatch(
-      this.headless.loadDateFacetSetActions(engine).deselectAllDateFacetValues(
-        this.facet.state.facetId
-      )
+      getHeadlessBundle(this.engineId)
+        .loadDateFacetSetActions(engine)
+        .deselectAllDateFacetValues(this.facet.state.facetId)
     );
 
     this.dateFilter.setRange(
-      this.headless.buildDateRange({
+      getHeadlessBundle(this.engineId).buildDateRange({
         start: DateUtils.toLocalSearchApiDate(startDate),
         end: DateUtils.toLocalSearchApiDate(endDate),
       })

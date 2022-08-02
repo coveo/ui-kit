@@ -27,7 +27,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+import {parseDependsOn, validateDependsOn} from '../facet-common';
 import {
   getFieldCaptions,
   getFieldValueCaption,
@@ -45,6 +45,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

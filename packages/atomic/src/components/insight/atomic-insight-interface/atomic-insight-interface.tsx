@@ -1,9 +1,3 @@
-import {LogLevel} from '@coveo/headless';
-import {
-  buildInsightEngine,
-  InsightEngine,
-  InsightEngineConfiguration,
-} from '@coveo/headless/insight';
 import {
   Component,
   Element,
@@ -23,6 +17,12 @@ import {
 } from '../../common/interface/interface-common';
 import {AtomicInsightStore, createAtomicInsightStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
+import {
+  InsightLogLevel,
+  InsightEngine,
+  InsightEngineConfiguration,
+  buildInsightEngine,
+} from '..';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
@@ -32,6 +32,13 @@ export type InsightBindings = CommonBindings<
   HTMLAtomicInsightInterfaceElement
 >;
 
+export type InsightInterfaceDimensions = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+};
+
 /**
  * The `atomic-svg-insight-interface` component is the parent to all other atomic components in an service insight panel interface. It handles the headless insight engine and localization configurations.
  *
@@ -39,6 +46,7 @@ export type InsightBindings = CommonBindings<
  */
 @Component({
   tag: 'atomic-insight-interface',
+  styleUrl: 'atomic-insight-interface.pcss',
   shadow: true,
 })
 export class AtomicInsightInterface
@@ -48,6 +56,10 @@ export class AtomicInsightInterface
 
   @State() public error?: Error;
 
+  /**
+   * Whether the interface should be shown in widget format.
+   */
+  @Prop({mutable: true, reflect: true}) public widget = false;
   /**
    * The service insight interface headless engine.
    */
@@ -64,7 +76,7 @@ export class AtomicInsightInterface
   /**
    * The severity level of the messages to log in the console.
    */
-  @Prop({reflect: true}) public logLevel?: LogLevel;
+  @Prop({reflect: true}) public logLevel?: InsightLogLevel;
   /**
    * The service insight interface language.
    */
@@ -85,8 +97,27 @@ export class AtomicInsightInterface
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
+  /**
+   * A list of non-default fields to include in the query results, separated by commas.
+   */
+  @Prop({reflect: true}) public fieldsToInclude = '';
 
   @Element() public host!: HTMLAtomicInsightInterfaceElement;
+
+  @Listen('atomic/insight/getDimensions')
+  public getDimensions(
+    event: CustomEvent<(dimensions: InsightInterfaceDimensions) => void>
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    event.detail({
+      top: this.host.offsetTop,
+      left: this.host.offsetLeft,
+      height: this.host.clientHeight,
+      width: this.host.clientWidth,
+    });
+  }
 
   private store = createAtomicInsightStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<InsightEngine>;
@@ -100,6 +131,16 @@ export class AtomicInsightInterface
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.updateFieldsToInclude();
+  }
+
+  private updateFieldsToInclude() {
+    if (this.fieldsToInclude) {
+      this.store.set(
+        'fieldsToInclude',
+        this.fieldsToInclude.split(',').map((field) => field.trim())
+      );
+    }
   }
 
   /**
