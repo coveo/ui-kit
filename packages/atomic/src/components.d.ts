@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { InitPopoverEventPayload } from "./components/search/facets/atomic-popover/popover-event";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/search/atomic-result/atomic-result-display-options";
@@ -2050,7 +2051,7 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
          */
         "numberOfValues"?: number;
-        "onFacetInitialized"?: (event: CustomEvent<any>) => void;
+        "onFacetInitialized"?: (event: CustomEvent<InitPopoverEventPayload>) => void;
         /**
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */

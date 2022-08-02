@@ -54,6 +54,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {InitPopoverEventPayload} from '../atomic-popover/popover-event';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -214,7 +215,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
-  @Event() facetInitialized!: EventEmitter;
+  @Event() facetInitialized!: EventEmitter<InitPopoverEventPayload>;
 
   private validateProps() {
     new Schema({
@@ -252,10 +253,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
 
   public componentDidRender() {
     this.facetInitialized.emit({
-      label: this.label,
       facetId: this.facetId!,
-      element: this.host,
-      facetState: this.facet.state,
+      facetType: 'facets',
     });
   }
 
