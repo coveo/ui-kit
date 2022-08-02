@@ -1,5 +1,7 @@
 import {Component, h, State, Element} from '@stencil/core';
 import FilterIcon from '../../../images/filter.svg';
+import {InitializeBindings} from '../../../utils/initialization-utils';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  */
@@ -8,6 +10,7 @@ import FilterIcon from '../../../images/filter.svg';
   shadow: true,
 })
 export class AtomicInsightRefineToggle {
+  @InitializeBindings() public bindings!: InsightBindings;
   @Element() public host!: HTMLElement;
 
   @State() public error!: Error;
@@ -37,7 +40,11 @@ export class AtomicInsightRefineToggle {
       <atomic-icon-button
         icon={FilterIcon}
         labelI18nKey="insight-history"
-        clickCallback={() => this.enableModal()}
+        clickCallback={() => {
+          this.bindings.store.waitUntilAppLoaded(() => {
+            this.enableModal();
+          });
+        }}
         buttonRef={(button?: HTMLButtonElement) => {
           if (!button) {
             return;

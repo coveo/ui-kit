@@ -1,4 +1,13 @@
-import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Element,
+  Watch,
+  Host,
+  Listen,
+} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {
@@ -54,6 +63,14 @@ export class AtomicInsightRefineModal
   private interfaceDimensions?: InsightInterfaceDimensions;
   private facetManager!: InsightFacetManager;
   private resizeObserver?: ResizeObserver;
+  private scrollCallback?: () => void;
+
+  @Listen('wheel')
+  @Listen('touchmove')
+  @Listen('keydown')
+  handleScroll() {
+    this.updateDimensions();
+  }
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -67,14 +84,23 @@ export class AtomicInsightRefineModal
         }
         this.resizeObserver.observe(document.body);
       }
+
+      this.scrollCallback = () => this.updateDimensions();
+      document.addEventListener('scroll', this.scrollCallback);
     } else {
       this.loadingDimensions = true;
       this.resizeObserver?.disconnect();
+      if (this.scrollCallback) {
+        document.removeEventListener('scroll', this.scrollCallback);
+      }
     }
   }
 
   public disconnectedCallback() {
     this.resizeObserver?.disconnect();
+    if (this.scrollCallback) {
+      document.removeEventListener('scroll', this.scrollCallback);
+    }
   }
 
   public updateDimensions() {

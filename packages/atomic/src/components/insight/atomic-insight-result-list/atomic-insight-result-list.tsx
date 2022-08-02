@@ -19,6 +19,7 @@ import {
   InsightResultTemplatesManager,
   buildInsightResultList,
 } from '..';
+import {randomID} from '../../../utils/utils';
 
 export type TemplateContent = DocumentFragment;
 
@@ -75,8 +76,7 @@ export class AtomicInsightResultList {
   // TODO:
   // @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
-  // TODO:
-  // private loadingFlag = randomID('firstResultLoaded-');
+  private loadingFlag = randomID('firstInsightResultLoaded-');
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -102,6 +102,7 @@ export class AtomicInsightResultList {
       },
     });
     this.registerResultTemplates();
+    this.bindings.store.setLoadingFlag(this.loadingFlag);
     // TODO:
     // this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     // this.bindings.store.registerResultList(this);
@@ -201,12 +202,12 @@ export class AtomicInsightResultList {
                   imageSize={this.imageSize}
                   content={this.getContentOfResultTemplate(result)}
                   classes={this.getClasses()}
+                  loadingFlag={this.loadingFlag}
                   // TODO:
                   // indexOfResultToFocus={this.indexOfResultToFocus}
                   // newResultRef={(element) =>
                   //   this.onFirstNewResultRendered(element)
                   // }
-                  // loadingFlag={this.}
                   // ref={(element) =>
                   //   element &&
                   //   props.indexOfResultToFocus === index &&
