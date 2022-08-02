@@ -8,7 +8,7 @@
             <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
         </c-configurator>
 
-        <c-example-use-case slot="preview" is-search={isSearch} engine-id={engineId}>
+        <c-example-use-case slot="preview" is-search={config.isSearch} engine-id={engineId}>
             <c-quantic-facet
                 engine-id={engineId}
                 field={config.field}

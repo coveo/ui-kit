@@ -1,10 +1,10 @@
 export const uesCaseParamTest = [
   {
-    case: 'search',
+    isSearch: true,
     label: 'with search use case',
   },
   {
-    case: 'insight',
+    isSearch: false,
     label: 'with insight use case',
   },
 ];

@@ -14,6 +14,12 @@ export default class ExampleQuanticResultList extends LightningElement {
       description: 'A list of fields to include in the query results, separated by commas.',
       defaultValue: 'date,author,source,language,filetype,parents,sfknowledgearticleid',
     },
+    {
+      attribute: 'isSearch',
+      label: 'Is Search Interface',
+      description: 'Define if the use Case is search or else',
+      defaultValue: true,
+    },
   ];
   expectedEvents = ['registerresulttemplates'];
 

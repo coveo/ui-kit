@@ -12,11 +12,11 @@
       </c-configurator>
     </div>
 
-    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+    <c-example-use-case slot="preview" is-search={config.isSearch} engine-id={engineId}>
       <c-quantic-result-list
         engine-id={engineId}
         fields-to-include={config.fieldsToInclude}>
       </c-quantic-result-list>
-    </c-quantic-search-interface>
+    </c-example-use-case>
   </c-example-layout>
 </template>

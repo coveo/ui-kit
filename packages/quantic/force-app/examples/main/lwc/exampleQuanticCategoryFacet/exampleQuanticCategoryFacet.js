@@ -79,7 +79,7 @@ export default class ExampleQuanticFacet extends LightningElement {
       attribute: 'isSearch',
       label: 'Is Search Interface',
       description: 'Define if the use Case is search or else',
-      defaultValue: false,
+      defaultValue: true,
     },
   ];
 

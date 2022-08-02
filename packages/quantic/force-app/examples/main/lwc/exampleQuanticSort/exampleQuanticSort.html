@@ -8,8 +8,8 @@
       <c-configurator options={options} ontryitnow={handleTryItNow}></c-configurator>
     </div>
 
-    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+    <c-example-use-case slot="preview" is-search={config.isSearch} engine-id={engineId}>
       <c-quantic-sort engine-id={engineId}></c-quantic-sort>
-    </c-quantic-search-interface>
+    </c-example-use-case>
   </c-example-layout>
 </template>

@@ -1,10 +1,10 @@
 <template>
-  <template if:false={isSearch}>
+  <template if:true={isSearch}>
     <c-quantic-search-interface engine-id={engineId}>
       <slot></slot>
     </c-quantic-search-interface>
   </template>
-  <template if:true={isSearch}>
+  <template if:false={isSearch}>
     <c-quantic-insight-interface insight-id={insightId} engine-id={engineId}>
       <slot></slot>
     </c-quantic-insight-interface>

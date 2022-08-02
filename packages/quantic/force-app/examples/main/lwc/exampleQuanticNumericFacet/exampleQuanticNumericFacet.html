@@ -6,7 +6,7 @@
 
         <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
 
-        <c-quantic-search-interface slot="preview" engine-id={engineId}>
+        <c-example-use-case slot="preview" is-search={config.isSearch} engine-id={engineId}>
             <c-quantic-numeric-facet
                 engine-id={engineId}
                 field={config.field}
@@ -18,6 +18,6 @@
                 with-input={config.withInput}
                 is-collapsed={config.isCollapsed}>
             </c-quantic-numeric-facet>
-        </c-quantic-search-interface>
+        </c-example-use-case>
     </c-example-layout>
 </template>

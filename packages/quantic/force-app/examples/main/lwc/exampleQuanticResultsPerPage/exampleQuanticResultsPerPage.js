@@ -6,20 +6,29 @@ export default class ExampleResultsPerPage extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Results Per Page';
-  pageDescription = 'The Quantic Results Per Page component allows users to modify the number of results that are displayed simultaneously in the result list.';
+  pageDescription =
+    'The Quantic Results Per Page component allows users to modify the number of results that are displayed simultaneously in the result list.';
   options = [
     {
       attribute: 'initialChoice',
       label: 'Initial choice',
-      description: 'The number of results selected on the first load. The initial choice must be a value of "choicesDisplayed".',
+      description:
+        'The number of results selected on the first load. The initial choice must be a value of "choicesDisplayed".',
       defaultValue: 10,
     },
     {
       attribute: 'choicesDisplayed',
       label: 'Choices displayed',
-      description: 'The comma-separated list of choices that are available to users.',
+      description:
+        'The comma-separated list of choices that are available to users.',
       defaultValue: '10,25,50,100',
-    }
+    },
+    {
+      attribute: 'isSearch',
+      label: 'Is Search Interface',
+      description: 'Define if the use Case is search or else',
+      defaultValue: true,
+    },
   ];
 
   handleTryItNow(evt) {
