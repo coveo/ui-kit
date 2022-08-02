@@ -234,7 +234,7 @@ export const buildProductRecommendationsRequest = async (
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(),
+      visitorId: await getVisitorID(s.configuration.analytics),
     }),
     recommendation: s.productRecommendations.id,
     numberOfResults: s.productRecommendations.maxNumberOfRecommendations,

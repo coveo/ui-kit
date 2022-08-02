@@ -4,7 +4,12 @@ on:
     branches:
       - master
   pull_request:
-
+  workflow_run:
+    workflows:
+      - Master Robot
+      - Manual package creation
+    types:
+      - completed
 jobs:
   snyk:
     runs-on: ubuntu-latest

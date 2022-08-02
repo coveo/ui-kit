@@ -26,6 +26,7 @@ import {
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {IRuntimeEnvironment} from 'coveo.analytics';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -167,11 +168,14 @@ export const configureAnalytics = ({
   return client;
 };
 
-export const getVisitorID = () =>
-  new CoveoAnalyticsClient({}).getCurrentVisitorId();
+export const getVisitorID = (options: {
+  runtimeEnvironment?: IRuntimeEnvironment;
+}) => new CoveoAnalyticsClient(options).getCurrentVisitorId();
 
-export const clearAnalyticsClient = () => {
-  const client = new CoveoAnalyticsClient({});
+export const clearAnalyticsClient = (options: {
+  runtimeEnvironment?: IRuntimeEnvironment;
+}) => {
+  const client = new CoveoAnalyticsClient(options);
   client.clear();
   client.deleteHttpOnlyVisitorId();
 };

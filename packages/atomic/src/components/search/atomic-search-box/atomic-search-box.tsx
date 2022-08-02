@@ -370,7 +370,7 @@ export class AtomicSearchBox {
       if (prom.status === 'fulfilled') {
         fulfilledSuggestions.push(this.suggestions[j]);
       } else {
-        console.error(
+        this.bindings.engine.logger.warn(
           'Some query suggestions are not being shown because the promise timed out.'
         );
       }

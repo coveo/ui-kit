@@ -114,7 +114,7 @@ export const buildProductListingRequest = async (
   state: StateNeededByFetchProductListing
 ): Promise<ProductListingRequest> => {
   const facets = getFacets(state);
-  const visitorId = await getVisitorID();
+  const visitorId = await getVisitorID(state.configuration.analytics);
 
   return {
     accessToken: state.configuration.accessToken,
