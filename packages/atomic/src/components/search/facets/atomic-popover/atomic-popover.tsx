@@ -49,6 +49,18 @@ export class AtomicPopover implements InitializableComponent {
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
+
+    if (this.host.children.length === 0) {
+      this.error = {
+        name: 'No child in popover',
+        message: 'One child is required inside a set of popover tags',
+      };
+    } else if (this.host.children.length > 1) {
+      this.error = {
+        name: 'Too many children in popover',
+        message: 'Cannot have more than one child inside a set of popover tags',
+      };
+    }
   }
 
   popoverOpened() {
@@ -139,19 +151,6 @@ export class AtomicPopover implements InitializableComponent {
           aria-hidden
           class="h-10 w-24 mr-1.5 my-2 bg-neutral animate-pulse rounded"
         ></div>
-      );
-    }
-
-    if (this.host.children.length > 1) {
-      this.error = {
-        name: 'Too many children in popover',
-        message: 'Cannot have more than one child inside a set of popover tags',
-      };
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
       );
     }
 
