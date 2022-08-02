@@ -74,7 +74,8 @@ describe('quantic-tab', () => {
       Expect.activeTabContains(tabs.case.label);
 
       [tabs.all, tabs.case].forEach((next) => {
-        Actions.selectTab(next.label);
+        TabSelectors.button().contains(next.label);
+        Actions.selectButton(next.label);
         Expect.search.constantExpressionEqual(next.expression);
         Expect.logSelected(next.label);
         Expect.activeTabContains(next.label);

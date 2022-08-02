@@ -5,6 +5,9 @@ function tabActions(selector: TabSelector) {
     selectTab: (value: string) => {
       selector.tab().contains(value).click();
     },
+    selectButton: (value: string) => {
+      selector.button().contains(value).click();
+    },
   };
 }
 
