@@ -15,6 +15,17 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {InitPopoverEventPayload} from './popover-event';
 
+/**
+ * @internal
+ * The `atomic-popover` displays a popover menu view of any facet
+ * @part value-button - The button used to display the popover menu
+ * @part value-label - The popover value label
+ * @part arrow-icon - The arrow icon
+ * @part placeholder - The placeholder displayed when the facet isn't ready
+ * @part popover-wrapper - The wrapper that contains the value-button and the slot-wrapper
+ * @part slot-wrapper - The wrapper that contains the facet/slot
+ */
+
 @Component({
   tag: 'atomic-popover',
   styleUrl: 'atomic-popover.pcss',
@@ -63,6 +74,7 @@ export class AtomicPopover implements InitializableComponent {
       <Button
         style="square-neutral"
         onClick={() => this.popoverOpened()}
+        part="value-button"
         class={`value-button rounded flex box-border h-full items-center mr-1.5 p-2.5 group ${
           this.isMenuVisible
             ? 'selected border-primary shadow-outer-light-blue text-primary'
@@ -81,6 +93,7 @@ export class AtomicPopover implements InitializableComponent {
           {this.facetLabel}
         </span>
         <atomic-icon
+          part="arrow-icon"
           class={`w-2 ml-2 ${
             this.isMenuVisible
               ? 'rotate-180'
@@ -150,6 +163,7 @@ export class AtomicPopover implements InitializableComponent {
       <div part="popover-wrapper" class="popover-wrapper relative">
         {this.renderValueButton()}
         <div
+          part="slot-wrapper"
           class={`slot-wrapper absolute pt-2 z-10 hidden ${
             this.isMenuVisible ? 'selected' : ''
           }`}
