@@ -43,6 +43,7 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
     ...(facets.length && {facets}),
     ...(state.pagination && {
       numberOfResults: ensureNumberOfResultsDoesNotGoOverIndexLimit(),
+      firstResult: state.pagination.firstResult,
     }),
     ...(state.facetOptions && {
       facetOptions: {freezeFacetOrder: state.facetOptions.freezeFacetOrder},
