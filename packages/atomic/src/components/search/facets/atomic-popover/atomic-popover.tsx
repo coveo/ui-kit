@@ -21,7 +21,7 @@ import {InitPopoverEventPayload} from './popover-event';
  * @part value-button - The button used to display the popover menu
  * @part value-label - The popover value label
  * @part arrow-icon - The arrow icon
- * @part placeholder - The placeholder displayed when the facet isn't ready
+ * @part placeholder - The placeholder displayed when the facet is loading.
  * @part popover-wrapper - The wrapper that contains the 'value-button' and the 'slot-wrapper'.
  * @part slot-wrapper - The wrapper that contains the 'facet' or 'slot'.
  */
