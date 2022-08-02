@@ -89,7 +89,7 @@ export class AtomicPopover implements InitializableComponent {
         part="value-button"
         class={`value-button rounded flex box-border h-full items-center mr-1.5 p-2.5 group ${
           this.isMenuVisible
-            ? 'selected border-primary shadow-outer-light-blue text-primary'
+            ? 'selected border-primary ring ring-ring-primary-light text-primary'
             : 'hover:border-primary-light focus-visible:border-primary-light '
         }`}
       >
@@ -128,8 +128,10 @@ export class AtomicPopover implements InitializableComponent {
     ];
 
     if (!facet) {
-      // TODO: add error msg
-      console.error('No facet found inside the Store');
+      this.error = {
+        name: 'Undefined facet',
+        message: `No facet found inside store with facetId: ${event.detail.facetId}`,
+      };
       return;
     }
 

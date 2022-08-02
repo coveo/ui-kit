@@ -14,6 +14,7 @@ module.exports = {
         'primary-dark': 'var(--atomic-primary-dark)',
         'on-primary': 'var(--atomic-on-primary)',
         'ring-primary': 'var(--atomic-ring-primary)',
+        'ring-primary-light': 'var(--atomic-ring-primary-light)',
         // Neutral
         neutral: 'var(--atomic-neutral)',
         'neutral-light': 'var(--atomic-neutral-light)',

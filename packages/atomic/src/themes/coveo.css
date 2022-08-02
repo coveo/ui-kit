@@ -5,6 +5,7 @@
   --atomic-primary-dark: #1a50ad;
   --atomic-on-primary: #ffffff;
   --atomic-ring-primary: rgba(19, 114, 236, 0.5);
+  --atomic-ring-primary-light: rgba(57, 159, 254, 0.3);
 
   /* Neutral colors */
   --atomic-neutral-dark: #626971;
