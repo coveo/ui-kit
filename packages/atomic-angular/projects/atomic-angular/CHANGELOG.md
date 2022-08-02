@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.22.3...@coveo/atomic-angular@1.23.0) (2022-08-02)
+
+
+### Features
+
+* **atomic:** add insight refine toggle and insight refine modal ([#2268](https://github.com/coveo/ui-kit/issues/2268)) ([d742a51](https://github.com/coveo/ui-kit/commit/d742a517dcb29d42a9d898a22a448b912f628811))
+
+
+
+
+
 ## [1.22.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.22.2...@coveo/atomic-angular@1.22.3) (2022-08-01)
 
 **Note:** Version bump only for package @coveo/atomic-angular
