@@ -5,7 +5,8 @@ import {
   mockSearchNoResults,
 } from '../../page-objects/search';
 import {TabExpectations as Expect} from './tab-expectations';
-import {TabActions as Actions} from './tab-actions';
+import {TabActions as Actions, TabActions} from './tab-actions';
+import {TabSelector, TabSelectors} from './tab-selectors';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 interface TabOptions {
@@ -72,21 +73,12 @@ describe('quantic-tab', () => {
       Expect.tabsEqual([tabs.all.label, tabs.case.label, tabs.knowledge.label]);
       Expect.activeTabContains(tabs.case.label);
 
-      [tabs.all, tabs.knowledge].forEach((next) => {
+      [tabs.all, tabs.case].forEach((next) => {
         Actions.selectTab(next.label);
         Expect.search.constantExpressionEqual(next.expression);
         Expect.logSelected(next.label);
         Expect.activeTabContains(next.label);
       });
-
-      performSearch();
-      Expect.search.constantExpressionEqual(tabs.knowledge.expression);
-      Expect.displayTabs(true);
-
-      mockSearchNoResults();
-      performSearch();
-      cy.wait(InterceptAliases.Search);
-      Expect.displayTabs(true);
     });
   });
 
@@ -96,6 +88,32 @@ describe('quantic-tab', () => {
 
       Expect.search.constantExpressionEqual(tabs.knowledge.expression);
       Expect.activeTabContains(tabs.knowledge.label);
+    });
+  });
+
+  describe('when using accessibility', () => {
+    it('when SpaceKey is pressed', () => {
+      loadFromUrlHash({}, `tab=${tabs.all.label}`);
+      TabSelectors.button().first().focus().type(' ');
+      Expect.activeTabContains(tabs.all.label);
+    });
+
+    it('when TabKey && SpaceKey is pressed', () => {
+      loadFromUrlHash({}, `tab=${tabs.all.label}`);
+      TabSelectors.button().first().focus().tab().type(' ');
+      Expect.activeTabContains(tabs.case.label);
+    });
+    it('when Shift && TabKey && SpaceKey is pressed', () => {
+      loadFromUrlHash({}, `tab=${tabs.all.label}`);
+
+      TabSelectors.button()
+        .first()
+        .focus()
+        .tab()
+        .tab()
+        .tab({shift: true})
+        .type(' ');
+      Expect.activeTabContains(tabs.case.label);
     });
   });
 });

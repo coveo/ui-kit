@@ -104,7 +104,7 @@ export default class QuanticTab extends LightningElement {
     return `slds-tabs_default__item ${this.isActive ? 'slds-is-active' : ''}`;
   }
 
-  get arialLaelText() {
+  get arialLabelText() {
     return `Tab, ${this.label}`;
   }
 }
