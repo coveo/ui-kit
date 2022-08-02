@@ -57,7 +57,7 @@ export const buildFetchDocumentSuggestionsRequest = async (
   url: state.configuration.platformUrl,
   caseAssistId: state.caseAssistConfiguration.caseAssistId,
   ...(state.configuration.analytics.enabled && {
-    visitorId: await getVisitorID(),
+    visitorId: await getVisitorID(state.configuration.analytics),
   }),
   fields: state.caseInput,
   context: state.caseField

@@ -4,7 +4,6 @@ import {
   SortCriterion,
   SearchEngine,
 } from '@coveo/headless';
-import {VNode} from '@stencil/core';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -12,28 +11,16 @@ import {
   AtomicCommonStoreData,
   AtomicCommonStore,
 } from '../../common/interface/store';
-
-interface FacetInfo {
-  facetId: string;
-  label: string;
-  element: HTMLElement;
-}
+import {
+  FacetInfo,
+  FacetStore,
+  FacetType,
+  FacetValueFormat,
+} from '../../common/facets/facet-common';
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;
 }
-
-interface FacetValueFormat<ValueType> {
-  format(facetValue: ValueType): string;
-  content?(facetValue: ValueType): VNode;
-}
-
-export type StoreFacetType =
-  | 'facets'
-  | 'numericFacets'
-  | 'dateFacets'
-  | 'categoryFacets';
-type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export interface SortDropdownOption {
   expression: string;
@@ -46,7 +33,6 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  facetElements: HTMLElement[];
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
   fieldsToInclude: string[];
@@ -54,14 +40,12 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
 }
 
 export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
-  registerFacet<T extends StoreFacetType, U extends string>(
+  registerFacet<T extends FacetType, U extends string>(
     facetType: T,
     data: AtomicStoreData[T][U] & {facetId: U; element: HTMLElement}
   ): void;
 
   registerResultList(data: ResultListInfo): void;
-
-  getFacetElements(): HTMLElement[];
 
   getAllFacets(): {
     [facetId: string]:
@@ -71,8 +55,6 @@ export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
   };
 
   isMobile(): boolean;
-
-  getUniqueIDFromEngine(engine: SearchEngine): string;
 }
 
 export function createAtomicStore(): AtomicStore {
@@ -89,24 +71,9 @@ export function createAtomicStore(): AtomicStore {
     fieldsToInclude: [],
   });
 
-  // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
-  const isInDocument = (element: Node) => {
-    let currentElement = element;
-    while (currentElement && currentElement.parentNode) {
-      if (currentElement.parentNode === document) {
-        return true;
-      } else if (currentElement.parentNode instanceof ShadowRoot) {
-        currentElement = currentElement.parentNode.host;
-      } else {
-        currentElement = currentElement.parentNode;
-      }
-    }
-    return false;
-  };
-
   return {
     ...commonStore,
-    registerFacet<T extends StoreFacetType, U extends string>(
+    registerFacet<T extends FacetType, U extends string>(
       facetType: T,
       data: AtomicStoreData[T][U] & {facetId: U; element: HTMLElement}
     ) {
@@ -120,12 +87,6 @@ export function createAtomicStore(): AtomicStore {
 
     registerResultList(data: ResultListInfo) {
       commonStore.set('resultList', data);
-    },
-
-    getFacetElements() {
-      return commonStore.state.facetElements.filter((element) =>
-        isInDocument(element)
-      );
     },
 
     getAllFacets() {

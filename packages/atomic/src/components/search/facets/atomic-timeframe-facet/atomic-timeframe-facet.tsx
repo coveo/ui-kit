@@ -28,7 +28,6 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {
-  BaseFacet,
   parseDependsOn,
   shouldDisplayInputForFacetRange,
   validateDependsOn,
@@ -46,6 +45,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {randomID} from '../../../../utils/utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -63,13 +63,12 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-label - The facet value label, common for all displays.
  * @part value-count - The facet value count, common for all displays.
  * @part value-link - The facet value when display is 'link'.
+ * @part value-link-selected - The selected facet value when display is 'link'.
  *
  * @part input-start - The input for the starting value of the custom date range.
  * @part input-end - The input for the ending value of the custom date range.
  * @part input-label - The label for both the start and end input.
  * @part input-apply-button - The apply button for the custom range.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-timeframe-facet',

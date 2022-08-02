@@ -1,9 +1,4 @@
 import {Component, h, Prop, State} from '@stencil/core';
-import {
-  buildInsightSearchBox,
-  InsightSearchBox,
-  SearchBoxState,
-} from '@coveo/headless/insight';
 import {randomID} from '../../../utils/utils';
 import {
   BindStateToController,
@@ -13,6 +8,11 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SubmitButton} from '../../common/search-box/submit-button';
+import {
+  buildInsightSearchBox,
+  InsightSearchBox,
+  InsightSearchBoxState,
+} from '..';
 
 /**
  *
@@ -39,7 +39,7 @@ export class AtomicInsightSearchBox {
 
   @BindStateToController('searchBox')
   @State()
-  private searchBoxState!: SearchBoxState;
+  private searchBoxState!: InsightSearchBoxState;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
@@ -63,6 +63,18 @@ export class AtomicInsightSearchBox {
     });
   }
 
+  private onKeyDown(e: KeyboardEvent) {
+    if (this.disableSearch) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'Enter':
+        this.searchBox.submit();
+        break;
+    }
+  }
+
   public render() {
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
@@ -71,9 +83,9 @@ export class AtomicInsightSearchBox {
           loading={this.searchBoxState.isLoading}
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
-          state={this.searchBoxState}
-          searchBox={this.searchBox}
-          disabled={this.disableSearch}
+          value={this.searchBoxState.value}
+          onKeyDown={(e) => this.onKeyDown(e)}
+          onClear={() => this.searchBox.clear()}
           onInput={(e) => {
             this.searchBox.updateText((e.target as HTMLInputElement).value);
           }}
@@ -81,7 +93,7 @@ export class AtomicInsightSearchBox {
         <SubmitButton
           bindings={this.bindings}
           disabled={this.disableSearch}
-          searchBox={this.searchBox}
+          onClick={() => this.searchBox.submit()}
         />
       </SearchBoxWrapper>
     );

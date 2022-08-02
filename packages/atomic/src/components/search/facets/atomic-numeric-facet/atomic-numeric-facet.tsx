@@ -29,7 +29,6 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {
-  BaseFacet,
   parseDependsOn,
   shouldDisplayInputForFacetRange,
   validateDependsOn,
@@ -51,6 +50,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
@@ -73,17 +73,17 @@ interface NumericRangeWithLabel extends NumericRangeRequest {
  * @part value-count - The facet value count, common for all displays.
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
+ * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
- *
+ * @part value-link-selected - The selected facet value when display is 'link'.
+
  * @part input-form - The form that comprises the labels, inputs, and 'apply' button for the custom numeric range.
  * @part label-start - The label for the starting value of the custom numeric range.
  * @part label-end - The label for the ending value of the custom numeric range.
  * @part input-start - The input for the starting value of the custom numeric range.
  * @part input-end - The input for the ending value of the custom numeric range.
  * @part input-apply-button - The apply button for the custom range.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-numeric-facet',

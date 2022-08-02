@@ -12,26 +12,30 @@ import {
   ResultListProps,
 } from '@coveo/headless';
 import {InitializableComponent} from '../../../utils/initialization-utils';
-import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-  getResultDisplayClasses,
-} from '../atomic-result/atomic-result-display-options';
 import {TemplateContent} from '../result-templates/result-template-common';
 import {TableDisplayResultsPlaceholder} from './table-display-results-placeholder';
 import {TableDisplayResults} from './table-display-results';
 import {ListDisplayResults} from './list-display-results';
 import {GridDisplayResults} from './grid-display-results';
 import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
-import {ListDisplayResultsPlaceholder} from './list-display-results-placeholder';
+import {ListDisplayResultsPlaceholder} from '../../insight/atomic-insight-result-list/list-display-results-placeholder';
 import {once} from '../../../utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {
   FocusTargetController,
   getFirstFocusableDescendant,
 } from '../../../utils/accessibility-utils';
+import {
+  DisplayOptions,
+  ResultPlaceholderProps,
+} from '../../common/result-list/result-list';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+  getResultDisplayClasses,
+} from '../../common/layout/display-options';
 
 export interface BaseResultList extends InitializableComponent {
   host: HTMLElement;
@@ -49,16 +53,7 @@ export interface BaseResultList extends InitializableComponent {
 export type SetRenderFunction = (
   render: ResultRenderingFunction
 ) => Promise<void>;
-interface DisplayOptions {
-  density: ResultDisplayDensity;
-  imageSize?: ResultDisplayImageSize;
-  image?: ResultDisplayImageSize;
-  display?: ResultDisplayLayout;
-}
-export interface ResultPlaceholderProps extends Omit<DisplayOptions, 'image'> {
-  resultsPerPageState: ResultsPerPageState;
-  isChild?: boolean;
-}
+
 export interface ResultsProps extends DisplayOptions {
   host: HTMLElement;
   bindings: Bindings;
@@ -333,9 +328,9 @@ const ResultDisplayWrapper: FunctionalComponent<{
   );
 };
 
-const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
-  props
-) => {
+const ResultsPlaceholder: FunctionalComponent<
+  ResultPlaceholderProps<ResultsPerPageState>
+> = (props) => {
   switch (props.display) {
     case 'table':
       return <TableDisplayResultsPlaceholder {...props} />;

@@ -1,5 +1,6 @@
 import {NumberOfResultsParam} from '../../../platform-service-params';
 import {
+  ConstantQueryParam,
   FacetsParam,
   FirstResultParam,
   QueryParam,
@@ -15,7 +16,8 @@ export type InsightQueryRequest = InsightParam &
   FacetsParam &
   QueryParam &
   FirstResultParam &
-  NumberOfResultsParam;
+  NumberOfResultsParam &
+  ConstantQueryParam;
 
 interface CaseContextParam {
   caseContext?: Record<string, string>;

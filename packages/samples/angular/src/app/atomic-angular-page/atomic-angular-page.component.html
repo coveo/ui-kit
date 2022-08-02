@@ -1,4 +1,8 @@
-<atomic-search-interface searchHub="MainSearch" pipeline="Search">
+<atomic-search-interface
+  searchHub="MainSearch"
+  pipeline="Search"
+  fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+>
   <div class="search">
     <atomic-search-box>
       <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
@@ -88,11 +92,7 @@
   </div>
   <div class="results">
     <atomic-did-you-mean></atomic-did-you-mean>
-    <atomic-result-list
-      fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
-      display="grid"
-      image-size="large"
-    >
+    <atomic-result-list display="grid" image-size="large">
       <atomic-result-template>
         <template>
           <atomic-result-section-title>

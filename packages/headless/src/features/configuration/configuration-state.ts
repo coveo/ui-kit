@@ -3,8 +3,6 @@ import {IRuntimeEnvironment} from 'coveo.analytics';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import {AnalyticsParam} from '../../api/search/search-api-params';
-import {getPageID, getVisitorID} from '../../api/analytics/search-analytics';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -143,20 +141,3 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     documentLocation: '',
   },
 });
-
-export const fromAnalyticsStateToAnalyticsParams = async (
-  s: AnalyticsState
-): Promise<AnalyticsParam> => {
-  return {
-    analytics: {
-      clientId: await getVisitorID(),
-      clientTimestamp: new Date().toISOString(),
-      documentReferrer: s.originLevel3,
-      originContext: s.originContext,
-      ...(s.userDisplayName && {userDisplayName: s.userDisplayName}),
-      ...(s.documentLocation && {documentLocation: s.documentLocation}),
-      ...(s.deviceId && {deviceId: s.deviceId}),
-      ...(getPageID() && {pageId: getPageID()}),
-    },
-  };
-};

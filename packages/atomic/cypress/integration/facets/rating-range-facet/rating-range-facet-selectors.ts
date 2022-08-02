@@ -35,19 +35,23 @@ export const RatingRangeFacetSelectors = {
     return this.shadow().find('[part="value-label"]');
   },
   selectedLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="true"]');
+    return this.shadow().find(
+      '[part~="value-link"][part~="value-link-selected"][aria-pressed="true"]'
+    );
   },
   idleLinkValue() {
-    return this.shadow().find('[part="value-link"][aria-pressed="false"]');
+    return this.shadow().find(
+      '[part~="value-link"]:not([part~="value-link-selected"])[aria-pressed="false"]'
+    );
   },
   selectedLinkValueWithText(text: string) {
     return this.shadow().find(
-      `[part="value-link"][aria-pressed="true"] [part="value-rating"][aria-label="${text}"]`
+      `[part~="value-link"][part~="value-link-selected"][aria-pressed="true"] [part="value-rating"][aria-label="${text}"]`
     );
   },
   idleLinkValueLabel() {
     return this.shadow().find(
-      '[part="value-link"][aria-pressed="false"] [part="value-rating"]'
+      '[part~="value-link"]:not([part~="value-link-selected"])[aria-pressed="false"] [part="value-rating"]'
     );
   },
   facetValueAtIndex(index: number) {

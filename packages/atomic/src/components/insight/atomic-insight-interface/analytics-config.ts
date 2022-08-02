@@ -1,23 +1,20 @@
+import {InsightAnalyticsConfiguration, InsightEngineConfiguration} from '..';
 import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
 } from '../../common/interface/analytics-config';
-import {
-  AnalyticsConfiguration,
-  InsightEngineConfiguration,
-} from '@coveo/headless/insight';
 
 export function getAnalyticsConfig(
   searchEngineConfig: InsightEngineConfiguration,
   enabled: boolean
-): AnalyticsConfiguration {
+): InsightAnalyticsConfiguration {
   const analyticsClientMiddleware = (
     event: string,
     payload: AnalyticsPayload
   ) => augmentAnalytics(event, payload, searchEngineConfig);
 
-  const defaultConfiguration: AnalyticsConfiguration = {
+  const defaultConfiguration: InsightAnalyticsConfiguration = {
     analyticsClientMiddleware,
     enabled,
     documentLocation: document.location.href,

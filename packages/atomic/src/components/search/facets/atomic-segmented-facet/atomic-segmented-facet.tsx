@@ -4,7 +4,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {BaseFacet} from '../facet-common';
 import {
   buildFacet,
   buildSearchStatus,
@@ -22,6 +21,7 @@ import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * @internal
@@ -29,6 +29,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part segmented-container - The container that holds the segmented facets.
  * @part label - The facet value label.
  * @part values - The facet values container.
+ * @part value-box - The facet value.
+ * @part value-box-selected - The selected facet value.
  */
 @Component({
   tag: 'atomic-segmented-facet',
@@ -156,11 +158,21 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
-    if (
-      this.searchStatus.state.hasError ||
-      !this.facetState.values.length ||
-      !this.facet.state.enabled
-    ) {
+    if (this.searchStatus.state.hasError || !this.facet.state.enabled) {
+      return <Hidden></Hidden>;
+    }
+
+    if (!this.searchStatus.state.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-8 w-screen my-2 bg-neutral animate-pulse"
+        ></div>
+      );
+    }
+
+    if (!this.facetState.values.length) {
       return <Hidden></Hidden>;
     }
 
