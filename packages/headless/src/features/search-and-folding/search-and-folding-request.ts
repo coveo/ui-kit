@@ -1,7 +1,7 @@
 import {SearchAppState} from '../../state/search-app-state';
 import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
 import {ConfigurationSection} from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/configuration-state';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {isNullOrUndefined} from '@coveo/bueno';
 
@@ -21,7 +21,7 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     referrer: state.configuration.analytics.originLevel3,
     timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(),
+      visitorId: await getVisitorID(state.configuration.analytics),
       actionsHistory: historyStore.getHistory(),
     }),
     ...(state.advancedSearchQueries?.aq && {

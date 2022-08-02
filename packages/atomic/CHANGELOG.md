@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.93.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.93.1...@coveo/atomic@1.93.2) (2022-08-01)
+
+
+### Bug Fixes
+
+* **atomic:** ensured aria labels contain innerText ([#2255](https://github.com/coveo/ui-kit/issues/2255)) ([2f641c7](https://github.com/coveo/ui-kit/commit/2f641c70ad780d696c0fcfff90c4266ebdef8a9a))
+
+
+
+
+
+## [1.93.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.93.0...@coveo/atomic@1.93.1) (2022-08-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.93.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.92.0...@coveo/atomic@1.93.0) (2022-07-29)
 
 
