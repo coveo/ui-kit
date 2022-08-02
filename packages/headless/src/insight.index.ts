@@ -36,6 +36,8 @@ export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-ac
 export * from './features/recent-results/recent-results-actions-loader';
 export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
+export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
+export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 
 // Controllers
 export type {

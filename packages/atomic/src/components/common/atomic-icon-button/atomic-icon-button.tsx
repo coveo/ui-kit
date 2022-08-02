@@ -20,6 +20,7 @@ export class AtomicIconButton {
   @Prop({mutable: true}) public tooltip = '';
   @Prop({mutable: true}) public labelI18nKey!: string;
   @Prop({mutable: true}) public icon!: string;
+  @Prop({mutable: true}) public buttonRef?: (el?: HTMLButtonElement) => void;
 
   public render() {
     return (
@@ -30,6 +31,7 @@ export class AtomicIconButton {
         part="button"
         onClick={this.clickCallback}
         title={this.tooltip}
+        ref={this.buttonRef}
       >
         <atomic-icon
           icon={this.icon}
