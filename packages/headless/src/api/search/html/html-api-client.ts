@@ -39,6 +39,7 @@ export const getHtml = async (
       '/html'
     ),
     requestParams: pickNonBaseParams(req),
+    requestMetadata: {method: 'html'},
     ...options,
   });
 
