@@ -107,7 +107,6 @@ export class AtomicPopover implements InitializableComponent {
 
   @Listen('facetInitialized')
   injectPopoverClass(event: CustomEvent<InitPopoverEventPayload>) {
-    console.log('init!', this.facetElement, event);
     if (this.facetElement) {
       return;
     }
@@ -116,7 +115,6 @@ export class AtomicPopover implements InitializableComponent {
       event.detail.facetId
     ];
 
-    console.log('facet', facet);
     if (!facet) {
       // TODO: add error msg
       console.error('No facet found inside the Store');
