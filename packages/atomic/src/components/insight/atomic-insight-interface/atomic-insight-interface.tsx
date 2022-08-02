@@ -32,6 +32,13 @@ export type InsightBindings = CommonBindings<
   HTMLAtomicInsightInterfaceElement
 >;
 
+export type InsightInterfaceDimensions = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+};
+
 /**
  * The `atomic-svg-insight-interface` component is the parent to all other atomic components in an service insight panel interface. It handles the headless insight engine and localization configurations.
  *
@@ -96,6 +103,21 @@ export class AtomicInsightInterface
   @Prop({reflect: true}) public fieldsToInclude = '';
 
   @Element() public host!: HTMLAtomicInsightInterfaceElement;
+
+  @Listen('atomic/insight/getDimensions')
+  public getDimensions(
+    event: CustomEvent<(dimensions: InsightInterfaceDimensions) => void>
+  ) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    event.detail({
+      top: this.host.offsetTop,
+      left: this.host.offsetLeft,
+      height: this.host.clientHeight,
+      width: this.host.clientWidth,
+    });
+  }
 
   private store = createAtomicInsightStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<InsightEngine>;
