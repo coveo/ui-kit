@@ -73,13 +73,22 @@ describe('quantic-tab', () => {
       Expect.tabsEqual([tabs.all.label, tabs.case.label, tabs.knowledge.label]);
       Expect.activeTabContains(tabs.case.label);
 
-      [tabs.all, tabs.case].forEach((next) => {
+      [tabs.all, tabs.knowledge].forEach((next) => {
         TabSelectors.button().contains(next.label);
         Actions.selectButton(next.label);
         Expect.search.constantExpressionEqual(next.expression);
         Expect.logSelected(next.label);
         Expect.activeTabContains(next.label);
       });
+
+      performSearch();
+      Expect.search.constantExpressionEqual(tabs.knowledge.expression);
+      Expect.displayTabs(true);
+
+      mockSearchNoResults();
+      performSearch();
+      cy.wait(InterceptAliases.Search);
+      Expect.displayTabs(true);
     });
   });
 
