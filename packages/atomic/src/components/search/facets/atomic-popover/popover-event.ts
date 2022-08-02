@@ -1,6 +1,6 @@
-import {StoreFacetType} from '../../atomic-search-interface/store';
+import {FacetType} from '../../../common/facets/facet-common';
 
 export interface InitPopoverEventPayload {
   facetId: string;
-  facetType: StoreFacetType;
+  facetType: FacetType;
 }

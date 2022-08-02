@@ -15,7 +15,9 @@ import {
   RangeFacetSortCriterion,
 } from '@coveo/headless';
 export interface FacetInfo {
+  facetId: string;
   label: string;
+  element: HTMLElement;
 }
 
 export type FacetType =

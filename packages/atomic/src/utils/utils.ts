@@ -183,3 +183,18 @@ export function isAncestorOf(
   const parent = getParent(element);
   return parent === null ? false : isAncestorOf(ancestor, parent);
 }
+
+// https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
+export function isInDocument(element: Node) {
+  let currentElement = element;
+  while (currentElement && currentElement.parentNode) {
+    if (currentElement.parentNode === document) {
+      return true;
+    } else if (currentElement.parentNode instanceof ShadowRoot) {
+      currentElement = currentElement.parentNode.host;
+    } else {
+      currentElement = currentElement.parentNode;
+    }
+  }
+  return false;
+}

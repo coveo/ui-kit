@@ -124,7 +124,7 @@ export class AtomicPopover implements InitializableComponent {
     this.facetElement = facet.element;
     this.facetId = facet.facetId;
     this.facetLabel = facet.label;
-    this.facetElement.classList.add('popover-nested');
+    this.facetElement?.classList.add('popover-nested');
   }
 
   render() {
