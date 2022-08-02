@@ -148,12 +148,12 @@ export class AtomicExternal {
   }
 }
 
-
+import type { InitPopoverEventPayload as IAtomicFacetInitPopoverEventPayload } from '@coveo/atomic';
 export declare interface AtomicFacet extends Components.AtomicFacet {
   /**
    *  
    */
-  'facetInitialized': EventEmitter<CustomEvent<any>>;
+  'facetInitialized': EventEmitter<CustomEvent<IAtomicFacetInitPopoverEventPayload>>;
 
 }
 
