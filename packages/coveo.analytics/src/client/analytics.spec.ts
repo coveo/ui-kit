@@ -4,7 +4,7 @@ import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieAndLocalStorage, CookieStorage, NullStorage} from '../storage';
 import HistoryStore from '../history';
 import {mockFetch} from '../../tests/fetchMock';
-import {BrowserRuntime, NoopRuntime} from './runtimeEnvironment';
+import {BrowserRuntime} from './runtimeEnvironment';
 import * as doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
 

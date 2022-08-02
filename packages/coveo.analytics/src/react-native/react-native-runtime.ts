@@ -9,6 +9,7 @@ export class ReactNativeRuntime implements IRuntimeEnvironment {
     public client: AnalyticsFetchClient;
 
     // TODO: v3 switch to ClientOptions type, add default options
+    // TODO: v3 reuse own ReactNativeStorage to implement VisitorIdProvider's getCurrentVisitorId, setCurrentVisitorId
     constructor(clientOptions: IAnalyticsClientOptions) {
         this.storage = new ReactNativeStorage();
         this.client = new AnalyticsFetchClient(clientOptions);
