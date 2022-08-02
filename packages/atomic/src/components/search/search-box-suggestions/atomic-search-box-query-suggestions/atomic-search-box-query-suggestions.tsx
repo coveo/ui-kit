@@ -116,7 +116,6 @@ export class AtomicSearchBoxQuerySuggestions {
         </div>
       ),
       key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
-      linkedBy: suggestion.rawValue,
       query: suggestion.rawValue,
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);

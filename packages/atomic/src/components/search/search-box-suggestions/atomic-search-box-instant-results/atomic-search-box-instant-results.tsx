@@ -115,7 +115,6 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
     const elements: SearchBoxSuggestionElement[] = results.map(
       (result: Result) => ({
         key: `instant-result-${encodeForDomAttribute(result.uniqueId)}`,
-        linkedBy: this.instantResults.state.q,
         part: 'instant-results-item',
         content: (
           <atomic-result

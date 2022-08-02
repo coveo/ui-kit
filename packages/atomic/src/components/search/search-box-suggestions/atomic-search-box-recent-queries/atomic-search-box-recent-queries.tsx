@@ -157,7 +157,6 @@ export class AtomicSearchBoxRecentQueries {
     const query = this.bindings.searchBoxController.state.value;
     return {
       key: `recent-${encodeForDomAttribute(value)}`,
-      linkedBy: value,
       query: value,
       content: (
         <div class="flex items-center break-all">
