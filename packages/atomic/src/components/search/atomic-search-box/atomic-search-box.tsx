@@ -247,7 +247,7 @@ export class AtomicSearchBox {
     this.previousActiveDescendantElement = newPrevDescendantElement;
   }
 
-  private get activeDescendantElement(): HTMLLIElement | null {
+  private get activeDescendantElement(): HTMLElement | null {
     if (!this.hasActiveDescendant) {
       return null;
     }
