@@ -37,6 +37,8 @@ import {
   SimpleSearchSuggestion,
 } from './search-suggestion';
 
+import {isMacOS} from '../../../utils/device-utils';
+
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
@@ -341,6 +343,9 @@ export class AtomicSearchBox {
     this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
+    if (isMacOS()) {
+      this.ariaMessage = value.ariaLabel!;
+    }
   }
 
   private focusPanel(panel: HTMLElement | undefined) {
@@ -705,7 +710,11 @@ export class AtomicSearchBox {
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
           value={this.searchBoxState.value}
-          ariaLabel={this.bindings.i18n.t('search-box-with-suggestions')}
+          ariaLabel={this.bindings.i18n.t(
+            isMacOS()
+              ? 'search-box-with-suggestions-macos'
+              : 'search-box-with-suggestions'
+          )}
           onFocus={() => this.onFocus()}
           onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
           onBlur={() => this.clearSuggestions()}

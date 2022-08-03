@@ -69,6 +69,10 @@
     "en": "Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.",
     "fr": "Champ de recherche avec des suggestions. Pour commencer à naviguer à travers les suggestions, avec cible de saisie, appuyez sur Flèche Basse. Pour envoyer, appuyez sur Entrée."
   },
+  "search-box-with-suggestions-macos": {
+    "en": "Search field with suggestions. Suggestions may be available under this field. Press enter to send.",
+    "fr": "Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Appuyez sur Entrée pour envoyer."
+  },
   "search-suggestions-single-list": {
     "en": "Search suggestions. To navigate between suggestions, press Up Arrow or Down Arrow. To select a suggestion, press Enter.",
     "fr": "Liste de suggestions de recherche. Pour naviguer entre les suggestions, appuyez sur Flèche Haute ou Flèche Basse. Pour sélectionner une suggestion, appuyez sur Entrée."
