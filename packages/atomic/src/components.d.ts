@@ -7,10 +7,11 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { NumberInputType } from "./components/search/facets/facet-number-input/number-input-type";
+import { AnyBindings } from "./components/common/interface/bindings";
+import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
-import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
+import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
@@ -212,7 +213,7 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     interface AtomicFacetNumberInput {
-        "bindings": Bindings;
+        "bindings": AnyBindings;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -455,6 +456,60 @@ export namespace Components {
           * Whether the interface should be shown in widget format.
          */
         "widget": boolean;
+    }
+    interface AtomicInsightNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs": 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
+         */
+        "numberOfValues": number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm": InsightRangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": InsightRangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
+         */
+        "withInput"?: NumberInputType;
     }
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
@@ -1538,6 +1593,12 @@ declare global {
         prototype: HTMLAtomicInsightInterfaceElement;
         new (): HTMLAtomicInsightInterfaceElement;
     };
+    interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightNumericFacetElement: {
+        prototype: HTMLAtomicInsightNumericFacetElement;
+        new (): HTMLAtomicInsightNumericFacetElement;
+    };
     interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicInsightRefineModalElement: {
@@ -1990,6 +2051,7 @@ declare global {
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
+        "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
@@ -2256,7 +2318,7 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     interface AtomicFacetNumberInput {
-        "bindings": Bindings;
+        "bindings": AnyBindings;
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
@@ -2482,6 +2544,60 @@ declare namespace LocalJSX {
           * Whether the interface should be shown in widget format.
          */
         "widget"?: boolean;
+    }
+    interface AtomicInsightNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm"?: InsightRangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: InsightRangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
+         */
+        "withInput"?: NumberInputType;
     }
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
@@ -3409,6 +3525,7 @@ declare namespace LocalJSX {
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
+        "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
@@ -3511,6 +3628,7 @@ declare module "@stencil/core" {
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
+            "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;

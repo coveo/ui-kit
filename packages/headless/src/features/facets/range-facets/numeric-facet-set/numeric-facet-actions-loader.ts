@@ -1,6 +1,6 @@
+import {CoreEngine} from '../../../../app/engine';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {numericFacetSet} from '../../../../app/reducers';
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   deselectAllNumericFacetValues,
   registerNumericFacet,
@@ -80,7 +80,7 @@ export interface NumericFacetSetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadNumericFacetSetActions(
-  engine: SearchEngine
+  engine: CoreEngine
 ): NumericFacetSetActionCreators {
   engine.addReducers({numericFacetSet});
 
