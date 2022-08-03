@@ -94,7 +94,7 @@ export class AtomicInsightFacet
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
-   * Used in the `atomic-breadbox` component through the bindings store.
+   * Used in the `atomic-insight-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
