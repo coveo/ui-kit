@@ -25,7 +25,7 @@ import {
  * @part label - The popover button label.
  * @part arrow-icon - The arrow icon on the button to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
- * @part popover-wrapper - The wrapper that contains the 'value-button' and the 'slot-wrapper'.
+ * @part popover-wrapper - The wrapper that contains the 'popover-button' and the 'slot-wrapper'.
  * @part slot-wrapper - The wrapper that contains the 'facet' or 'slot'.
  */
 
