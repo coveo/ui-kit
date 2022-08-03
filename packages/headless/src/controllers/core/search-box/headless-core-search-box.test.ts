@@ -244,6 +244,16 @@ describe('headless CoreSearchBox', () => {
       expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
     });
 
+    it('when the #clearFilters option is false, it does not deselects all facets', () => {
+      searchBox = buildCoreSearchBox(engine, {
+        ...props,
+        options: {clearFilters: false},
+      });
+      searchBox.submit();
+
+      expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
+    });
+
     it('allows autoSelection', () => {
       searchBox.submit();
 

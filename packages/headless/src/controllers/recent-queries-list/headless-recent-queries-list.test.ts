@@ -114,5 +114,13 @@ describe('recent queries list', () => {
       expect(engine.actions).toContainEqual(updatePage(1));
       expect(engine.findAsyncAction(executeSearch.pending)).toBeDefined();
     });
+
+    it('should not clear filters if the #clearFilters option is false', () => {
+      recentQueriesList = buildRecentQueriesList(engine, {
+        options: {clearFilters: false, maxLength: 10},
+      });
+      recentQueriesList.executeRecentQuery(0);
+      expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
+    });
   });
 });

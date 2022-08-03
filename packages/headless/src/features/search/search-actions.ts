@@ -139,8 +139,9 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 
   if (payload.clearFilters) {
     dispatch(deselectAllBreadcrumbs());
-    dispatch(updateFacetAutoSelection({allow: true}));
   }
+
+  dispatch(updateFacetAutoSelection({allow: true}));
   dispatch(
     updateQuery({q: payload.q, enableQuerySyntax: payload.enableQuerySyntax})
   );
