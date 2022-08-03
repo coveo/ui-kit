@@ -239,8 +239,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     return (
       !this.facetCommon ||
       this.facetCommon?.componentShouldUpdate(
-        (next as FacetState).facetSearch,
-        (prev as FacetState).facetSearch,
+        (next as FacetState)?.facetSearch,
+        (prev as FacetState)?.facetSearch,
         propName
       )
     );
