@@ -158,7 +158,11 @@ export class AtomicSegmentedFacet
   }
 
   public render() {
-    if (this.searchStatus.state.hasError || !this.facet.state.enabled) {
+    if (
+      this.searchStatus.state.hasError ||
+      !this.facet.state.enabled ||
+      !this.searchStatus.state.hasResults
+    ) {
       return <Hidden></Hidden>;
     }
 
