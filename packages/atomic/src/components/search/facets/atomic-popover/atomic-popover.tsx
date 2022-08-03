@@ -23,7 +23,7 @@ import {
  * The `atomic-popover` component displays any facet as a popover menu.
  * @part popover-button - The button to click to display or hide the popover menu.
  * @part label - The popover button label.
- * @part arrow-icon - The arrow icon to display or hide the popover menu.
+ * @part arrow-icon - The arrow icon on the button to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
  * @part popover-wrapper - The wrapper that contains the 'value-button' and the 'slot-wrapper'.
  * @part slot-wrapper - The wrapper that contains the 'facet' or 'slot'.
