@@ -8,6 +8,16 @@ function tabActions(selector: TabSelector) {
     selectButton: (value: string) => {
       selector.button().contains(value).click();
     },
+    tabAndSelectNextButton: (value: string) => {
+      selector.button().contains(value).tab().type(' ');
+    },
+    tabAndSelectPreviousButton: (value: string) => {
+      selector.button().contains(value).tab({shift: true}).type(' ');
+    },
+
+    keyPressButton: (value: string, input = ' ') => {
+      selector.button().contains(value).type(input);
+    },
   };
 }
 

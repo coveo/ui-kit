@@ -5,7 +5,7 @@ import {
   mockSearchNoResults,
 } from '../../page-objects/search';
 import {TabExpectations as Expect} from './tab-expectations';
-import {TabActions as Actions, TabActions} from './tab-actions';
+import {TabActions as Actions} from './tab-actions';
 import {TabSelector, TabSelectors} from './tab-selectors';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
@@ -102,29 +102,17 @@ describe('quantic-tab', () => {
   });
 
   describe('when using accessibility', () => {
-    beforeEach(() => {
-      loadFromUrlHash({}, `tab=${tabs.all.label}`);
-    });
+    it('should be accessible to keyboard', () => {
+      loadFromUrlHash({}, `tab=${tabs.case.label}`);
 
-    it('when SpaceKey is pressed', () => {
-      TabSelectors.button().first().focus().type(' ');
+      Actions.keyPressButton(tabs.all.label);
       Expect.activeTabContains(tabs.all.label);
-    });
 
-    it('when TabKey && SpaceKey is pressed', () => {
-      TabSelectors.button().first().focus().tab().type(' ');
-      Expect.activeTabContains(tabs.case.label);
-    });
+      Actions.tabAndSelectNextButton(tabs.case.label);
+      Expect.activeTabContains(tabs.knowledge.label);
 
-    it('when Shift && TabKey && SpaceKey is pressed', () => {
-      TabSelectors.button()
-        .first()
-        .focus()
-        .tab()
-        .tab()
-        .tab({shift: true})
-        .type(' ');
-      Expect.activeTabContains(tabs.case.label);
+      Actions.tabAndSelectPreviousButton(tabs.case.label);
+      Expect.activeTabContains(tabs.all.label);
     });
   });
 });
