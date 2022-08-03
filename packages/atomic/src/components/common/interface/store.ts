@@ -1,19 +1,23 @@
 import {createStore} from '@stencil/store';
+import {isInDocument} from '../../../utils/utils';
 import {AnyEngineType, CommonStencilStore} from './bindings';
 
 export type AtomicCommonStoreData = {
   loadingFlags: string[];
   iconAssetsPath: string;
+  facetElements: HTMLElement[];
 };
 
 export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
   extends CommonStencilStore<StoreData> {
+  getIconAssetsPath(): string;
   setLoadingFlag(flag: string): void;
   unsetLoadingFlag(loadingFlag: string): void;
   hasLoadingFlag(loadingFlag: string): boolean;
   waitUntilAppLoaded(callback: () => void): void;
   isAppLoaded(): boolean;
   getUniqueIDFromEngine(engine: AnyEngineType): string;
+  getFacetElements(): HTMLElement[];
 }
 
 export function createAtomicCommonStore<
@@ -25,6 +29,11 @@ export function createAtomicCommonStore<
 
   return {
     ...stencilStore,
+
+    getIconAssetsPath() {
+      return stencilStore.get('iconAssetsPath');
+    },
+
     setLoadingFlag(loadingFlag: string) {
       const flags = stencilStore.get('loadingFlags');
       stencilStore.set('loadingFlags', flags.concat(loadingFlag));
@@ -59,6 +68,12 @@ export function createAtomicCommonStore<
       throw new Error(
         'getUniqueIDFromEngine not implemented at the common store level.'
       );
+    },
+
+    getFacetElements() {
+      return stencilStore
+        .get('facetElements')
+        .filter((element) => isInDocument(element));
     },
   };
 }

@@ -5,6 +5,7 @@ import {api, LightningElement} from 'lwc';
  *
  * A timeframe is a span of time from now to a specific time in the past, or the future.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-timeframe amount="6" unit="month"></c-quantic-timeframe>
  */

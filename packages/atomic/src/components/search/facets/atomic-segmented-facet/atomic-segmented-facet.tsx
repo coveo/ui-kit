@@ -4,7 +4,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {BaseFacet} from '../facet-common';
 import {
   buildFacet,
   buildSearchStatus,
@@ -22,6 +21,7 @@ import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * @internal

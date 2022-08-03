@@ -1,5 +1,14 @@
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
+export type {Result} from './api/search/search/result';
+export type {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
+export {ResultTemplatesHelpers} from './features';
+
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
 // Main App
 export type {
@@ -25,6 +34,10 @@ export * from './features/insight-search/insight-search-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 export * from './features/recent-results/recent-results-actions-loader';
+export * from './features/case-context/case-context-actions-loader';
+export * from './features/insight-search/insight-search-analytics-actions-loader';
+export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
+export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 
 // Controllers
 export type {
@@ -216,7 +229,17 @@ export type {
 } from './controllers/insight/sort/headless-insight-sort';
 export {buildSort} from './controllers/insight/sort/headless-insight-sort';
 
+export type {
+  TabInitialState,
+  TabOptions,
+  TabProps,
+  TabState,
+  Tab,
+} from './controllers/insight/tab/headless-insight-tab';
+export {buildTab} from './controllers/insight/tab/headless-insight-tab';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
+
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 

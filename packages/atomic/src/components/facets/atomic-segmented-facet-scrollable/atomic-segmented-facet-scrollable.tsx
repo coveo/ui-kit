@@ -44,6 +44,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
   public error!: Error;
 
   private horizontalScroll?: HTMLDivElement;
+  private arrowRef?: HTMLElement;
   @State() private hideLeftArrow = true;
   @State() private hideRightArrow = true;
   private observer!: ResizeObserver;
@@ -84,11 +85,12 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
 
   private slideHorizontally(direction: ArrowDirection) {
     const container = this.horizontalScroll;
+    const arrowWidth = this.arrowRef ? this.arrowRef.clientWidth : 50;
     if (!container) {
       return;
     }
 
-    const pixelsToScroll = container.clientWidth * 0.75;
+    const pixelsToScroll = (container.clientWidth - arrowWidth * 2) * 0.7;
     const isLeftEdge = container.scrollLeft - pixelsToScroll <= 0;
     const isRightEdge =
       container.scrollLeft + pixelsToScroll >=
@@ -154,6 +156,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         ariaHidden="true"
         tabIndex="-1"
         onClick={() => this.slideHorizontally(direction)}
+        ref={(el) => (this.arrowRef = el as HTMLElement)}
       >
         <atomic-icon
           part={`${direction}-arrow-icon`}

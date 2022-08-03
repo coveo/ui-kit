@@ -1,5 +1,6 @@
 import {LightningElement, api} from 'lwc';
 import {
+  getHeadlessBundle,
   initializeWithHeadless,
   registerComponentForInit,
 } from 'c/quanticHeadlessLoader';
@@ -20,6 +21,7 @@ import viewResults from '@salesforce/label/c.quantic_ViewResults';
 /**
  * The `QuanticRefineToggle` component displays a button that is used to open the refine modal.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen>
  *   <div slot="refine-title">Custom Title</div>
@@ -67,6 +69,8 @@ export default class QuanticRefineToggle extends LightningElement {
   activeFiltersCount = 0;
   /** @type {string} */
   modalId = 'refineModal';
+  /** @type {AnyHeadless} */
+  headless;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -80,8 +84,9 @@ export default class QuanticRefineToggle extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.querySummary = CoveoHeadless.buildQuerySummary(engine);
-    this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.querySummary = this.headless.buildQuerySummary(engine);
+    this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
 
     this.unsubscribeQuerySummary = this.querySummary.subscribe(() =>
       this.updateTotalResults()

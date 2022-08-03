@@ -84,6 +84,7 @@ describe('insight api client', () => {
         description: 'some description',
       },
       q: 'some agent query',
+      cq: 'some expression',
       facets: [],
     };
 
@@ -103,6 +104,7 @@ describe('insight api client', () => {
           caseContext: queryRequest.caseContext,
           facets: queryRequest.facets,
           q: queryRequest.q,
+          cq: queryRequest.cq,
         },
       });
     });

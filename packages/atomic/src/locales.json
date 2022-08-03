@@ -127,7 +127,7 @@
   },
   "show-more": {
     "en": "Show more",
-    "fr": "Voir plus de résultats",
+    "fr": "Voir plus",
     "cs": "Zobrazit více",
     "da": "Vis mere",
     "de": "Mehr anzeigen",
@@ -154,7 +154,7 @@
   },
   "show-less": {
     "en": "Show less",
-    "fr": "Voir moins de résultats",
+    "fr": "Voir moins",
     "cs": "Zobrazit méně",
     "da": "Vis mindre",
     "de": "Weniger anzeigen",
@@ -179,6 +179,14 @@
     "zh-CN": "显示较少的值",
     "zh-TW": "顯示較少的值"
   },
+  "show-less-facet-values": {
+    "en": "Show less values for the {{label}} facet",
+    "fr": "Voir moins de valeurs pour la facette {{label}}"
+  },
+  "show-more-facet-values": {
+    "en": "Show more values for the {{label}} facet",
+    "fr": "Voir plus de valeurs pour la facette {{label}}"
+  },
   "facet-values": {
     "en": "Values for the {{label}} facet",
     "fr": "Valeurs pour la facette {{label}}"
@@ -186,14 +194,6 @@
   "facet-search-results": {
     "en": "Values found for {{query}} in the {{label}} facet",
     "fr": "Valeurs trouvées pour {{query}} dans la facette {{label}}"
-  },
-  "show-less-facet-values": {
-    "en": "Show fewer values for the {{label}} facet",
-    "fr": "Afficher moins de valeurs pour la facette {{label}}"
-  },
-  "show-more-facet-values": {
-    "en": "Show more values for the {{label}} facet",
-    "fr": "Afficher plus de valeurs pour la facette {{label}}"
   },
   "pagination": {
     "en": "Pagination",
@@ -1306,8 +1306,8 @@
     "fr": "seulement {{count}} étoiles sur {{count}}"
   },
   "stars-range": {
-    "en": "{{value}} to {{count}} stars",
-    "fr": "{{value}} à {{count}} étoiles"
+    "en": "{{value}} out of {{count}} stars & up",
+    "fr": "{{value}} à {{count}} étoiles & plus"
   },
   "with-colon": {
     "en": "{{text}}:",
@@ -1381,5 +1381,11 @@
   "smart-snippet-people-also-ask": {
     "en": "People also ask",
     "fr": "Autres questions posées"
+  },
+  "edit-insight": {
+    "en": "Edit insight"
+  },
+  "insight-history": {
+    "en": "Insight action history"
   }
 }

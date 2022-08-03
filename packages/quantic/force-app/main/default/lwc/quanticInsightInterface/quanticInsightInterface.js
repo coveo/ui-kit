@@ -12,6 +12,13 @@ import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHead
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
 /** @typedef {import("coveo").InsightEngineOptions} InsightEngineOptions */
 
+/**
+ * The `QuanticInsightInterface` component handles the headless insight engine configuration.
+ * A single instance should be used for each instance of the Coveo Headless insight engine.
+ * @category Insight Panel
+ * @example
+ * <c-quantic-insight-interface engine-id={engineId} insight-id={insightId}></c-quantic-insight-interface>
+ */
 export default class QuanticInsightInterface extends LightningElement {
   /**
    * @api

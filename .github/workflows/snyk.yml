@@ -4,16 +4,14 @@ on:
     branches:
       - master
   pull_request:
-
+  workflow_run:
+    workflows:
+      - Master Robot
+      - Manual package creation
+    types:
+      - completed
 jobs:
-  allow-workflow:
-    name: 'Allow workflow'
-    if: "!startsWith(github.event.head_commit.message, '[Version Bump]')"
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Workflow allowed to start"
   snyk:
-    needs: allow-workflow
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3

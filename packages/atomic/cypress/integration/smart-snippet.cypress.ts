@@ -1,5 +1,8 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {SmartSnippetSelectors} from './smart-snippet-selectors';
+import {
+  smartSnippetComponent,
+  SmartSnippetSelectors,
+} from './smart-snippet-selectors';
 import * as CommonAssertions from './common-assertions';
 import * as SmartSnippetAssertions from './smart-snippet-assertions';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
@@ -151,6 +154,7 @@ describe('Smart Snippet Test Suites', () => {
     SmartSnippetAssertions.assertShowMore(true);
     SmartSnippetAssertions.assertShowLess(false);
     SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
+    CommonAssertions.assertAccessibility(smartSnippetComponent);
 
     describe('then pressing show more', () => {
       before(() => {
@@ -169,6 +173,7 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetAssertions.assertShowMore(true);
         SmartSnippetAssertions.assertShowLess(false);
         SmartSnippetAssertions.assertAnswerHeight(heightWhenCollapsed);
+        CommonAssertions.assertAccessibility(smartSnippetComponent);
       });
     });
   });

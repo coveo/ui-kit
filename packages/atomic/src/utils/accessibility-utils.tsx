@@ -133,11 +133,11 @@ function isFocusable(element: Element) {
   }
 }
 
-export function getFirstFocusableDescendant(
+export function* getFocusableDescendants(
   element: Element
-): HTMLElement | null {
+): Generator<HTMLElement> {
   if (isFocusable(element)) {
-    return element as HTMLElement;
+    yield element as HTMLElement;
   }
   let children = Array.from(element.children);
   if (element instanceof HTMLSlotElement) {
@@ -146,10 +146,12 @@ export function getFirstFocusableDescendant(
     children.push(...Array.from(element.shadowRoot.children));
   }
   for (const child of children) {
-    const focusableDescendant = getFirstFocusableDescendant(child);
-    if (focusableDescendant) {
-      return focusableDescendant;
-    }
+    yield* getFocusableDescendants(child);
   }
-  return null;
+}
+
+export function getFirstFocusableDescendant(
+  element: Element
+): HTMLElement | null {
+  return getFocusableDescendants(element).next().value ?? null;
 }
