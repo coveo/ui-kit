@@ -1,10 +1,10 @@
 export interface ProductRecommendation {
   /**
-   * Document Uri in the index. Still useful for analytics.
+   * Document Uri in the index. Useful for analytics.
    */
   documentUri: string;
   /**
-   * Document UriHash in the index. Still useful for analytics.
+   * Document UriHash in the index. Useful for analytics.
    */
   documentUriHash: string;
   /**
