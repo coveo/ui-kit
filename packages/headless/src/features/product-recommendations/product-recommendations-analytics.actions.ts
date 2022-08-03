@@ -103,7 +103,7 @@ export const logProductRecommendationOpen = (
   productRecommendation: ProductRecommendation
 ) =>
   makeAnalyticsAction(
-    'analytics/productrecommendation/open',
+    'analytics/productRecommendation/open',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(productRecommendation);
