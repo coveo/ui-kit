@@ -92,7 +92,10 @@ export class AtomicPager implements InitializableComponent {
         part="previous-button"
         disabled={!this.pagerState.hasPreviousPage}
       >
-        <atomic-icon icon={ArrowRight} class="w-5 rotate-180"></atomic-icon>
+        <atomic-icon
+          icon={ArrowRight}
+          class="w-5 align-middle rotate-180"
+        ></atomic-icon>
       </Button>
     );
   }
@@ -109,7 +112,7 @@ export class AtomicPager implements InitializableComponent {
         part="next-button"
         disabled={!this.pagerState.hasNextPage}
       >
-        <atomic-icon icon={ArrowRight} class="w-5"></atomic-icon>
+        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
       </Button>
     );
   }
