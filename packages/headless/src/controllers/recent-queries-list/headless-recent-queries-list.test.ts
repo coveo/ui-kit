@@ -64,6 +64,7 @@ describe('recent queries list', () => {
     };
     const testOptions = {
       maxLength: 5,
+      clearFilters: true,
     };
     const testProps = {
       initialState: testInitialState,
