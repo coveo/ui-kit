@@ -67,7 +67,7 @@
   },
   "search-box-with-suggestions": {
     "en": "Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.",
-    "fr": "Champ de rechercher avec des suggestions. Pour commencer à naviguer à travers les suggestions, avec cible de saisie, appuyez sur Flèche Basse. Pour envoyer, appuyez sur Entrée."
+    "fr": "Champ de recherche avec des suggestions. Pour commencer à naviguer à travers les suggestions, avec cible de saisie, appuyez sur Flèche Basse. Pour envoyer, appuyez sur Entrée."
   },
   "search-suggestions-single-list": {
     "en": "Search suggestions. To navigate between suggestions, press Up Arrow or Down Arrow. To select a suggestion, press Enter.",
@@ -619,7 +619,7 @@
   },
   "clear-recent-searches": {
     "en": "Clear recent searches",
-    "fr": "Effacer recherches récente"
+    "fr": "Effacer les recherches récentes"
   },
   "cancel-last-action": {
     "en": "Cancel last action",
