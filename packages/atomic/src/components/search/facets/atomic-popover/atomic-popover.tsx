@@ -2,6 +2,7 @@ import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
+  FacetState,
 } from '@coveo/headless';
 import {Component, h, Listen, State, Element} from '@stencil/core';
 import {
@@ -23,6 +24,7 @@ import {
  * The `atomic-popover` component displays any facet as a popover menu.
  * @part label-button - The button used to display the popover menu
  * @part label - The popover button label.
+ * @part value-count - Number of results for facet
  * @part arrow-icon - The arrow icon to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
  * @part popover-wrapper - The wrapper that contains the 'value-button' and the 'slot-wrapper'.
@@ -41,12 +43,16 @@ export class AtomicPopover implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('facet')
+  @State()
+  public facetState!: FacetState;
   @State()
   public error!: Error;
 
   @State() public isMenuVisible = false;
   @State() public facetId?: string;
   @State() public facetLabel?: string = 'no-label';
+  @State() public facetCount?: string = '999';
   @Element() host!: HTMLElement;
   private facetElement?: HTMLElement;
 
@@ -117,6 +123,19 @@ export class AtomicPopover implements InitializableComponent {
         >
           {this.facetLabel}
         </span>
+        <span
+          title={this.facetCount}
+          part="value-count"
+          class={`value-box-count truncate pl-1 w-auto mt-0 text-sm ${
+            this.isMenuVisible
+              ? 'text-primary'
+              : 'text-neutral-dark group-hover:text-primary-light group-focus:text-primary'
+          }`}
+        >
+          {this.bindings.i18n.t('between-parentheses', {
+            text: this.facetCount,
+          })}
+        </span>
         <atomic-icon
           part="arrow-icon"
           aria-hidden="true"
@@ -174,6 +193,8 @@ export class AtomicPopover implements InitializableComponent {
     }
 
     //TODO: hide if facet has 0 values (use headless to retrieve facet state)
+
+    console.log(this.facetState);
 
     return (
       <div
