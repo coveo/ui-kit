@@ -211,6 +211,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       bindings: this.bindings,
       label: this.label,
       field: this.field,
+      headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
       dependsOn: this.dependsOn,
       dependenciesManager: buildFacetConditionsManager(this.bindings.engine, {
@@ -260,7 +261,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       isCollapsed: this.isCollapsed,
       numberOfValues: this.numberOfValues,
       headerFocus: this.headerFocus,
-      headingLevel: this.headingLevel,
       showLessFocus: this.showLessFocus,
       showMoreFocus: this.showMoreFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
