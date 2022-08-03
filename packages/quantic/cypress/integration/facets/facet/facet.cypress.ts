@@ -121,7 +121,22 @@ describe('Facet Test Suite', () => {
       });
     });
   });
-
+  describe('with accessibility', () => {
+    function setupWithValues() {
+      visitFacetPage(
+        {
+          field: defaultField,
+          label: defaultLabel,
+          numberOfValues: defaultNumberOfValues,
+        },
+        false
+      );
+    }
+    it('should be accessible through keyboard', () => {
+      setupWithValues();
+      Actions.tabAndSelectNextValue(defaultLabel);
+    });
+  });
   describe('with values', () => {
     function setupWithValues() {
       visitFacetPage(

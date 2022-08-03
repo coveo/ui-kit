@@ -54,6 +54,9 @@ export const baseFacetActions = (selector: BaseFacetSelector) => {
     clickExpandButton: () => {
       selector.expandButton().click();
     },
+    tabAndSelectNextValue: (value: string) => {
+      selector.get().contains(value).focus().tab().type(' ');
+    },
   };
 };
 
