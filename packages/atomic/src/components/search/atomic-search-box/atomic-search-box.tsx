@@ -228,6 +228,14 @@ export class AtomicSearchBox {
     return this.activeDescendant !== '';
   }
 
+  private get isDoubleList() {
+    const numberOfSuggestionsLists =
+      (this.leftSuggestions.length ? 1 : 0) +
+      (this.rightSuggestions.length ? 1 : 0);
+
+    return numberOfSuggestionsLists === 2;
+  }
+
   private updateActiveDescendant(activeDescendant = '') {
     this.activeDescendant = activeDescendant;
   }
@@ -594,16 +602,21 @@ export class AtomicSearchBox {
         }
         el?.setAttribute(
           'aria-label',
-          this.bindings.i18n.t('search-suggestion', {
-            label:
-              item.ariaLabel ??
-              item.query ??
-              el?.innerText ??
-              this.bindings.i18n.t('no-title'),
-            position: index + 1,
-            count: lastIndex + 1,
-            side: this.bindings.i18n.t(side === 'left' ? 'left' : 'right'),
-          })
+          this.bindings.i18n.t(
+            this.isDoubleList
+              ? 'search-suggestion-double-list'
+              : 'search-suggestion-single-list',
+            {
+              label:
+                item.ariaLabel ??
+                item.query ??
+                el?.innerText ??
+                this.bindings.i18n.t('no-title'),
+              position: index + 1,
+              count: lastIndex + 1,
+              side: this.bindings.i18n.t(side === 'left' ? 'left' : 'right'),
+            }
+          )
         );
       },
     };
@@ -686,10 +699,6 @@ export class AtomicSearchBox {
       return null;
     }
 
-    const numberOfSuggestionsLists =
-      (this.leftSuggestions.length ? 1 : 0) +
-      (this.rightSuggestions.length ? 1 : 0);
-
     return (
       <div
         id={this.popupId}
@@ -699,7 +708,7 @@ export class AtomicSearchBox {
         }`}
         role="application"
         aria-label={this.bindings.i18n.t(
-          numberOfSuggestionsLists === 2
+          this.isDoubleList
             ? 'search-suggestions-double-list'
             : 'search-suggestions-single-list'
         )}

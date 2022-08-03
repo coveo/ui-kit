@@ -77,17 +77,21 @@
     "en": "Two lists of search box suggestions side-by-side. To navigate between suggestions, press Up Arrow or Down Arrow. To toggle between the two lists, press Left Arrow or Right Arrow. To select a suggestion, press Enter.",
     "fr": "Deux listes de suggestions de recherche côte à côte. Pour naviguer entre les suggestions, appuyez sur Flèche Haute ou Flèche Basse. Pour se déplacer d'une liste à l'autre, appuyez sur Flèche Gauche ou Flèche Droite. Pour sélectionner une suggestion, appuyez sur Entrée."
   },
-  "search-suggestion": {
+  "search-suggestion-single-list": {
+    "en": "{{label}}. {{position}} of {{count}}.",
+    "fr": "{{label}}. {{position}} sur {{count}}."
+  },
+  "search-suggestion-double-list": {
     "en": "{{label}}. {{position}} of {{count}}. In {{side}} list.",
-    "fr": "{{label}}. {{position}} de {{count}}. Dans la liste {{side}}."
+    "fr": "{{label}}. {{position}} sur {{count}}. Dans la liste {{side}}."
   },
   "query-suggestion-label": {
-    "en": "\"{{query}}\"",
+    "en": "“{{query}}”",
     "fr": "«\u00A0{{text}}\u00A0»"
   },
   "recent-query-suggestion-label": {
-    "en": "\"{{query}}\", recent query",
-    "fr": "\"{{query}}\", requête récente"
+    "en": "“{{query}}”, recent query",
+    "fr": "«\u00A0{{query}}\u00A0», requête récente"
   },
   "instant-results-suggestion-label": {
     "en": "{{title}}, instant result",
@@ -1317,10 +1321,10 @@
     "zh-TW": "{{text}}："
   },
   "between-quotations": {
-    "en": "\"{{text}}\"",
+    "en": "“{{text}}”",
     "fr": "«\u00A0{{text}}\u00A0»",
-    "zh-CN": "\"{{text}}\"",
-    "zh": "\"{{text}}\"",
+    "zh-CN": "“{{text}}”",
+    "zh": "“{{text}}”",
     "zh-TW": "「{{text}}」"
   },
   "between-parentheses": {
