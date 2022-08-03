@@ -21,8 +21,8 @@ import {
 /**
  * @internal
  * The `atomic-popover` component displays any facet as a popover menu.
- * @part value-button - The button used to display the popover menu
- * @part value-label - The popover button label.
+ * @part label-button - The button used to display the popover menu
+ * @part label - The popover button label.
  * @part arrow-icon - The arrow icon to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
  * @part popover-wrapper - The wrapper that contains the 'value-button' and the 'slot-wrapper'.
@@ -96,11 +96,11 @@ export class AtomicPopover implements InitializableComponent {
       <Button
         style="square-neutral"
         onClick={() => this.popoverOpened()}
-        part="value-button"
+        part="label-button"
         ariaExpanded={`${this.isMenuVisible}`}
         ariaLabel={`Pop-up filter on ${this.facetLabel} facet`}
         ariaControls={this.popoverId}
-        class={`value-button rounded flex box-border h-full items-center mr-1.5 p-2.5 group ${
+        class={`rounded flex box-border h-full items-center mr-1.5 p-2.5 group ${
           this.isMenuVisible
             ? 'selected border-primary ring ring-ring-primary-light text-primary'
             : 'hover:border-primary-light focus-visible:border-primary-light '
@@ -108,8 +108,8 @@ export class AtomicPopover implements InitializableComponent {
       >
         <span
           title={this.facetLabel}
-          part="value-label"
-          class={`value-label truncate ${
+          part="label"
+          class={`truncate ${
             this.isMenuVisible
               ? ''
               : 'group-hover:text-primary-light group-focus:text-primary'
@@ -156,7 +156,10 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   render() {
-    if (this.searchStatus.state.hasError) {
+    if (
+      this.searchStatus.state.hasError ||
+      !this.searchStatus.state.hasResults
+    ) {
       return <Hidden></Hidden>;
     }
 
