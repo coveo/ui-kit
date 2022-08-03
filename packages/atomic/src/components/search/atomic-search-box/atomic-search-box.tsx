@@ -343,9 +343,7 @@ export class AtomicSearchBox {
     this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
-    if (isMacOS()) {
-      this.ariaMessage = value.ariaLabel!;
-    }
+    this.updateAriaLiveActiveDescendant(value);
   }
 
   private focusPanel(panel: HTMLElement | undefined) {
@@ -356,11 +354,11 @@ export class AtomicSearchBox {
       const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
-      this.updateDescendants(
-        panelHasActiveDescendant
-          ? this.previousActiveDescendantElement!.id
-          : panel.firstElementChild.id
-      );
+      const newValue = panelHasActiveDescendant
+        ? this.previousActiveDescendantElement!
+        : (panel.firstElementChild as HTMLElement);
+      this.updateDescendants(newValue.id);
+      this.updateAriaLiveActiveDescendant(newValue);
     }
   }
 
@@ -484,6 +482,12 @@ export class AtomicSearchBox {
     if (suggestedQuery && this.searchBoxState.value !== suggestedQuery) {
       this.updateQuery(suggestedQuery);
       this.updateSuggestedQuery(suggestedQuery);
+    }
+  }
+
+  private updateAriaLiveActiveDescendant(value: HTMLElement) {
+    if (isMacOS()) {
+      this.ariaMessage = value.ariaLabel!;
     }
   }
 
