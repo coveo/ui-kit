@@ -81,10 +81,6 @@
     "en": "{{label}}. {{position}} of {{count}}. In {{side}} list.",
     "fr": "{{label}}. {{position}} de {{count}}. Dans la liste {{side}}."
   },
-  "search-suggestion-button": {
-    "en": "{{label}}. Button. {{position}} of {{count}}. In {{side}} list.",
-    "fr": "{{label}}. Button. {{position}} de {{count}}. Dans la liste {{side}}."
-  },
   "query-suggestion-label": {
     "en": "\"{{query}}\"",
     "fr": "«\u00A0{{text}}\u00A0»"

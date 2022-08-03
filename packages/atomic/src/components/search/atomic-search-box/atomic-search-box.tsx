@@ -593,19 +593,16 @@ export class AtomicSearchBox {
         }
         el?.setAttribute(
           'aria-label',
-          this.bindings.i18n.t(
-            isButton ? 'search-suggestion-button' : 'search-suggestion',
-            {
-              label:
-                item.ariaLabel ??
-                item.query ??
-                el?.innerText ??
-                this.bindings.i18n.t('no-title'),
-              position: index + 1,
-              count: lastIndex + 1,
-              side: this.bindings.i18n.t(side === 'left' ? 'left' : 'right'),
-            }
-          )
+          this.bindings.i18n.t('search-suggestion', {
+            label:
+              item.ariaLabel ??
+              item.query ??
+              el?.innerText ??
+              this.bindings.i18n.t('no-title'),
+            position: index + 1,
+            count: lastIndex + 1,
+            side: this.bindings.i18n.t(side === 'left' ? 'left' : 'right'),
+          })
         );
       },
     };
