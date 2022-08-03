@@ -1,13 +1,4 @@
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Element,
-  Watch,
-  Host,
-  Listen,
-} from '@stencil/core';
+import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {debounce} from 'ts-debounce';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
