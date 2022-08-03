@@ -1,5 +1,6 @@
 import {h, FunctionalComponent, VNode, Fragment} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
+import {isMacOS} from '../../../utils/device-utils';
 import {AnyBindings} from '../../common/interface/bindings';
 import {SearchBoxSuggestionElement} from '../search-box-suggestions/suggestions-common';
 
@@ -84,19 +85,22 @@ function getAriaLabelForRenderedSuggestion({
     suggestion.query ??
     renderedSuggestion.innerText ??
     bindings.i18n.t('no-title');
+  const labelWithType = isMacOS()
+    ? bindings.i18n.t('search-suggestion-button', {label: contentLabel})
+    : contentLabel;
   const position = index + 1;
   const count = lastIndex + 1;
 
   if (!isDoubleList) {
     return bindings.i18n.t('search-suggestion-single-list', {
-      label: contentLabel,
+      label: labelWithType,
       position,
       count,
     });
   }
 
   return bindings.i18n.t('search-suggestion-double-list', {
-    label: contentLabel,
+    label: labelWithType,
     position,
     count,
     side: bindings.i18n.t(side === 'left' ? 'left' : 'right'),
