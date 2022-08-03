@@ -90,8 +90,8 @@
     "fr": "{{label}}. {{position}} sur {{count}}. Dans la liste {{side}}."
   },
   "search-suggestion-button": {
-    "en": "{{label}}. Button.",
-    "fr": "{{label}}. Bouton."
+    "en": "{{label}}. Button",
+    "fr": "{{label}}. Bouton"
   },
   "query-suggestion-label": {
     "en": "“{{query}}”",
