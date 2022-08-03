@@ -50,7 +50,6 @@ function buildPartialDocumentInformation(
     documentUri: productRecommendation.documentUri,
     documentUriHash: productRecommendation.documentUriHash,
     documentUrl: productRecommendation.clickUri,
-    permanentid: productRecommendation.permanentid,
     rankingModifier: '',
     sourceName: 'unknown',
     queryPipeline: '',

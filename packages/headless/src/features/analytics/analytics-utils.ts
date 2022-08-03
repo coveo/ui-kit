@@ -277,7 +277,6 @@ function buildPartialDocumentInformation(
     documentUri: result.uri,
     documentUriHash: result.raw.urihash,
     documentUrl: result.clickUri,
-    permanentid: result.raw.permanentid || result.raw.urihash,
     rankingModifier: result.rankingModifier || '',
     sourceName: getSourceName(result),
     queryPipeline: state.pipeline || getPipelineInitialState(),
