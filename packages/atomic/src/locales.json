@@ -86,12 +86,12 @@
     "fr": "«\u00A0{{text}}\u00A0»"
   },
   "recent-query-suggestion-label": {
-    "en": "\"{{query}}\", recent query.",
-    "fr": "\"{{query}}\", requête récente."
+    "en": "\"{{query}}\", recent query",
+    "fr": "\"{{query}}\", requête récente"
   },
   "instant-results-suggestion-label": {
-    "en": "{{title}}, instant result.",
-    "fr": "{{title}}, résultat instantané."
+    "en": "{{title}}, instant result",
+    "fr": "{{title}}, résultat instantané"
   },
   "facet-search": {
     "en": "Search for values in the {{label}} facet",
