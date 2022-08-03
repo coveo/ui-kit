@@ -84,6 +84,7 @@ export class AtomicInsightSearchBox {
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
           value={this.searchBoxState.value}
+          ariaLabel={this.bindings.i18n.t('search-box')}
           onKeyDown={(e) => this.onKeyDown(e)}
           onClear={() => this.searchBox.clear()}
           onInput={(e) => {

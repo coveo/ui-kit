@@ -7,6 +7,7 @@ import {
   Watch,
   VNode,
   Element,
+  Fragment,
 } from '@stencil/core';
 import {
   SearchBox,
@@ -40,6 +41,7 @@ import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SubmitButton} from '../../common/search-box/submit-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {isMacOS} from '../../../utils/device-utils';
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
@@ -72,8 +74,8 @@ export class AtomicSearchBox {
   private searchBox!: SearchBox | StandaloneSearchBox;
   private id!: string;
   private inputRef!: HTMLInputElement;
-  private leftPanelRef: HTMLUListElement | undefined;
-  private rightPanelRef: HTMLUListElement | undefined;
+  private leftPanelRef: HTMLElement | undefined;
+  private rightPanelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
   private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
@@ -86,7 +88,7 @@ export class AtomicSearchBox {
   @State() private suggestedQuery = '';
   @State() private isExpanded = false;
   @State() private activeDescendant = '';
-  @State() private previousActiveDescendantElement: HTMLLIElement | null = null;
+  @State() private previousActiveDescendantElement: HTMLElement | null = null;
   @State() private leftSuggestions: SearchBoxSuggestions[] = [];
   @State() private leftSuggestionElements: SearchBoxSuggestionElement[] = [];
   @State() private rightSuggestions: SearchBoxSuggestions[] = [];
@@ -226,6 +228,10 @@ export class AtomicSearchBox {
     return this.activeDescendant !== '';
   }
 
+  private getOptionsInPanel(panel: HTMLElement) {
+    return Array.from(panel.querySelectorAll('[part~="suggestion"]'));
+  }
+
   private updateActiveDescendant(activeDescendant = '') {
     this.activeDescendant = activeDescendant;
   }
@@ -237,7 +243,7 @@ export class AtomicSearchBox {
     this.previousActiveDescendantElement = newPrevDescendantElement;
   }
 
-  private get activeDescendantElement(): HTMLLIElement | null {
+  private get activeDescendantElement(): HTMLElement | null {
     if (!this.hasActiveDescendant) {
       return null;
     }
@@ -250,29 +256,47 @@ export class AtomicSearchBox {
   }
 
   private get firstValue() {
-    return this.panelInFocus?.firstElementChild;
+    if (!this.panelInFocus) {
+      return null;
+    }
+    return this.getOptionsInPanel(this.panelInFocus)[0];
   }
 
   private get lastValue() {
-    return this.panelInFocus?.lastElementChild;
+    if (!this.panelInFocus) {
+      return null;
+    }
+    return this.getOptionsInPanel(this.panelInFocus).slice(-1)[0];
   }
 
   private get nextOrFirstValue() {
-    if (!this.hasActiveDescendant) {
+    if (!this.hasActiveDescendant || !this.panelInFocus) {
       return this.firstValue;
     }
 
-    return this.activeDescendantElement?.nextElementSibling || this.firstValue;
+    const elements = this.getOptionsInPanel(this.panelInFocus);
+    const currentIndex = elements.indexOf(this.activeDescendantElement!);
+
+    if (currentIndex === -1 || currentIndex === elements.length - 1) {
+      return this.firstValue;
+    }
+
+    return elements[currentIndex + 1];
   }
 
   private get previousOrLastValue() {
-    if (!this.hasActiveDescendant) {
+    if (!this.hasActiveDescendant || !this.panelInFocus) {
       return this.lastValue;
     }
 
-    return (
-      this.activeDescendantElement?.previousElementSibling || this.lastValue
-    );
+    const elements = this.getOptionsInPanel(this.panelInFocus);
+    const currentIndex = elements.indexOf(this.activeDescendantElement!);
+
+    if (currentIndex === -1 || currentIndex === 0) {
+      return this.lastValue;
+    }
+
+    return elements[currentIndex - 1];
   }
   private get showSuggestions() {
     return this.hasSuggestions && this.isExpanded && !this.disableSearch;
@@ -313,9 +337,7 @@ export class AtomicSearchBox {
       return;
     }
 
-    this.updateActiveDescendant(this.nextOrFirstValue.id);
-    this.scrollActiveDescendantIntoView();
-    this.updateQueryFromSuggestion();
+    this.focusValue(this.nextOrFirstValue as HTMLElement);
   }
 
   private focusPreviousValue() {
@@ -323,23 +345,30 @@ export class AtomicSearchBox {
       return;
     }
 
-    this.updateActiveDescendant(this.previousOrLastValue.id);
+    this.focusValue(this.previousOrLastValue as HTMLElement);
+  }
+
+  private focusValue(value: HTMLElement) {
+    this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
+    if (isMacOS()) {
+      this.ariaMessage = value.ariaLabel!;
+    }
   }
 
   private focusPanel(panel: HTMLElement | undefined) {
     if (this.panelInFocus === panel) {
       return;
     }
-    if (panel && panel.firstElementChild) {
+    if (panel && this.getOptionsInPanel(panel).length) {
       const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
       this.updateDescendants(
         panelHasActiveDescendant
           ? this.previousActiveDescendantElement!.id
-          : panel.firstElementChild.id
+          : this.getOptionsInPanel(panel)[0].id
       );
     }
   }
@@ -564,20 +593,6 @@ export class AtomicSearchBox {
     }
   }
 
-  private getAriaAttributes(
-    item: SearchBoxSuggestionElement,
-    isSelected: boolean
-  ) {
-    if (item.query) {
-      return {
-        role: 'option',
-        [queryDataAttribute]: item.query,
-        'aria-selected': `${isSelected}`,
-      };
-    }
-    return {};
-  }
-
   private renderSuggestion(
     item: SearchBoxSuggestionElement,
     index: number,
@@ -589,14 +604,51 @@ export class AtomicSearchBox {
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
+
+    const isButton = item.onSelect || item.query;
+    const commonAttributes = {
+      id: id,
+      key: item.key,
+      part: this.makeSuggestionPart(isSelected, !!item.query, item.part),
+      class: `flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
+        isSelected ? 'bg-neutral-light' : ''
+      }`,
+      ref: (el: HTMLElement | undefined) => {
+        if (isHTMLElement(item.content)) {
+          el?.replaceChildren(item.content);
+        }
+        el?.setAttribute(
+          'aria-label',
+          this.bindings.i18n.t(
+            isButton ? 'search-suggestion-button' : 'search-suggestion',
+            {
+              label:
+                item.ariaLabel ??
+                item.query ??
+                el?.innerText ??
+                this.bindings.i18n.t('no-title'),
+              position: index + 1,
+              count: lastIndex + 1,
+              side: this.bindings.i18n.t(side === 'left' ? 'left' : 'right'),
+            }
+          )
+        );
+      },
+    };
+
+    const vnodeContent: VNode = !isHTMLElement(item.content) ? (
+      item.content
+    ) : (
+      <Fragment></Fragment>
+    );
+
+    if (!isButton) {
+      return <span {...commonAttributes}>{vnodeContent}</span>;
+    }
+
     return (
-      <li
-        id={id}
-        key={item.key}
-        part={this.makeSuggestionPart(isSelected, !!item.query, item.part)}
-        class={`flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
-          isSelected ? 'bg-neutral-light' : ''
-        }`}
+      <button
+        {...commonAttributes}
         onMouseDown={(e) => e.preventDefault()}
         onClick={(e: Event) => {
           this.onSuggestionClick(item, e);
@@ -604,15 +656,11 @@ export class AtomicSearchBox {
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
         }}
-        ref={(el) => {
-          if (isHTMLElement(item.content)) {
-            el?.replaceChildren(item.content);
-          }
-        }}
-        {...this.getAriaAttributes(item, isSelected)}
+        aria-selected={`${isSelected}`}
+        {...{[queryDataAttribute]: item.query}}
       >
-        {!isHTMLElement(item.content) && item.content}
-      </li>
+        {vnodeContent}
+      </button>
     );
   }
 
@@ -635,17 +683,16 @@ export class AtomicSearchBox {
   private renderPanel(
     side: 'left' | 'right',
     elements: SearchBoxSuggestionElement[],
-    setRef: (el: HTMLUListElement | undefined) => void,
-    getRef: () => HTMLUListElement | undefined
+    setRef: (el: HTMLElement | undefined) => void,
+    getRef: () => HTMLElement | undefined
   ) {
     if (!elements.length) {
       return null;
     }
 
     return (
-      <ul
+      <div
         part={`suggestions suggestions-${side}`}
-        aria-label={this.bindings.i18n.t('query-suggestion-list')}
         ref={setRef}
         class="flex flex-grow basis-1/2 flex-col"
         onMouseDown={(e) => {
@@ -657,7 +704,7 @@ export class AtomicSearchBox {
         {elements.map((suggestion, index) =>
           this.renderSuggestion(suggestion, index, elements.length - 1, side)
         )}
-      </ul>
+      </div>
     );
   }
 
@@ -666,6 +713,10 @@ export class AtomicSearchBox {
       return null;
     }
 
+    const numberOfSuggestionsLists =
+      (this.leftSuggestions.length ? 1 : 0) +
+      (this.rightSuggestions.length ? 1 : 0);
+
     return (
       <div
         id={this.popupId}
@@ -673,7 +724,13 @@ export class AtomicSearchBox {
         class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
           this.showSuggestions ? '' : 'hidden'
         }`}
-        role="listbox"
+        role="application"
+        aria-label={this.bindings.i18n.t(
+          numberOfSuggestionsLists === 2
+            ? 'search-suggestions-double-list'
+            : 'search-suggestions-single-list'
+        )}
+        aria-activedescendant={this.activeDescendant}
       >
         {this.renderPanel(
           'left',
@@ -694,37 +751,44 @@ export class AtomicSearchBox {
   public render() {
     this.updateBreakpoints();
 
-    return [
-      <SearchBoxWrapper disabled={this.disableSearch}>
-        <SearchInput
-          inputRef={this.inputRef}
-          loading={this.searchBoxState.isLoading}
-          ref={(el) => (this.inputRef = el as HTMLInputElement)}
-          bindings={this.bindings}
-          value={this.searchBoxState.value}
-          onFocus={() => this.onFocus()}
-          onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-          onBlur={() => this.clearSuggestions()}
-          onKeyDown={(e) => this.onKeyDown(e)}
-          onClear={() => this.searchBox.clear()}
-          aria-owns={this.popupId}
-          aria-expanded={`${this.isExpanded}`}
-          aria-activedescendant={this.activeDescendant}
-        />
-        {this.renderSuggestions()}
-        <SubmitButton
-          bindings={this.bindings}
-          disabled={this.disableSearch}
-          onClick={() => this.searchBox.submit()}
-        />
-      </SearchBoxWrapper>,
-      !this.suggestions.length && (
-        <slot>
-          <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-          <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-        </slot>
-      ),
-    ];
+    return (
+      <Fragment>
+        <SearchBoxWrapper disabled={this.disableSearch}>
+          <SearchInput
+            inputRef={this.inputRef}
+            loading={this.searchBoxState.isLoading}
+            ref={(el) => (this.inputRef = el as HTMLInputElement)}
+            bindings={this.bindings}
+            value={this.searchBoxState.value}
+            ariaLabel={this.bindings.i18n.t(
+              isMacOS()
+                ? 'search-box-with-suggestions-macos'
+                : 'search-box-with-suggestions'
+            )}
+            onFocus={() => this.onFocus()}
+            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+            onBlur={() => this.clearSuggestions()}
+            onKeyDown={(e) => this.onKeyDown(e)}
+            onClear={() => this.searchBox.clear()}
+            aria-controls={this.popupId}
+            role="combobox"
+            aria-activedescendant={this.activeDescendant}
+          />
+          {this.renderSuggestions()}
+          <SubmitButton
+            bindings={this.bindings}
+            disabled={this.disableSearch}
+            onClick={() => this.searchBox.submit()}
+          />
+        </SearchBoxWrapper>
+        {!this.suggestions.length && (
+          <slot>
+            <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+          </slot>
+        )}
+      </Fragment>
+    );
   }
 }
 

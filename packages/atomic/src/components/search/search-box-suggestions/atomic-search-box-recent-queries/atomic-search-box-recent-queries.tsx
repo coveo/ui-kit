@@ -144,6 +144,9 @@ export class AtomicSearchBoxRecentQueries {
           <span part="recent-query-clear">{this.bindings.i18n.t('clear')}</span>
         </div>
       ),
+      ariaLabel: this.bindings.i18n.t('clear-recent-searches', {
+        interpolation: {escapeValue: false},
+      }),
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
@@ -186,6 +189,10 @@ export class AtomicSearchBoxRecentQueries {
           )}
         </div>
       ),
+      ariaLabel: this.bindings.i18n.t('recent-query-suggestion-label', {
+        query: value,
+        interpolation: {escapeValue: false},
+      }),
       onSelect: () => {
         if (this.bindings.isStandalone) {
           this.bindings.searchBoxController.updateText(value);

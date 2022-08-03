@@ -9,6 +9,7 @@ export interface SearchBoxSuggestionElement {
   onSelect?(e: Event): void;
 
   query?: string;
+  ariaLabel?: string;
   part?: string;
   hideIfLast?: boolean;
 }
