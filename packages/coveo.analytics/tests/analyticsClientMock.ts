@@ -1,6 +1,8 @@
 import {AnalyticsClient} from '../src/client/analytics';
 import {NoopRuntime} from '../src/client/runtimeEnvironment';
 
+export const visitorIdMock = 'mockvisitorid';
+
 export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
     getPayload: jest.fn((eventType, ...payload) => Promise.resolve()),
     getParameters: jest.fn((eventType, ...payload) => Promise.resolve()),
@@ -16,4 +18,5 @@ export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
     registerAfterSendEventHook: jest.fn(),
     runtime: new NoopRuntime(),
     currentVisitorId: '',
+    getCurrentVisitorId: jest.fn(() => Promise.resolve(visitorIdMock)),
 });

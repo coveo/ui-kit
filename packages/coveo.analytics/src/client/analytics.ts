@@ -54,6 +54,7 @@ export type EventTypeConfig = {
     newEventType: EventType;
     variableLengthArgumentsNames?: string[];
     addVisitorIdParameter?: boolean;
+    addClientIdParameter?: boolean;
     usesMeasurementProtocol?: boolean;
 };
 
@@ -75,6 +76,7 @@ export interface AnalyticsClient {
      * @deprecated
      */
     readonly currentVisitorId: string;
+    getCurrentVisitorId?(): Promise<string>; // TODO: v3 make required
 }
 
 export interface BufferedRequest {
@@ -205,8 +207,12 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     async resolveParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
-        const {variableLengthArgumentsNames = [], addVisitorIdParameter = false, usesMeasurementProtocol = false} =
-            this.eventTypeMapping[eventType] || {};
+        const {
+            variableLengthArgumentsNames = [],
+            addVisitorIdParameter = false,
+            usesMeasurementProtocol = false,
+            addClientIdParameter = false,
+        } = this.eventTypeMapping[eventType] || {};
 
         const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
             variableLengthArgumentsNames.length > 0
@@ -216,6 +222,15 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             ...currentPayload,
             visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
         });
+        const addClientIdStep: AsyncProcessPayloadStep = async (currentPayload) => {
+            if (addClientIdParameter) {
+                return {
+                    ...currentPayload,
+                    clientId: await this.getCurrentVisitorId(),
+                };
+            }
+            return currentPayload;
+        };
         const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
         const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
@@ -227,6 +242,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const parametersToSend = await [
             processVariableArgumentNamesStep,
             addVisitorIdStep,
+            addClientIdStep,
             setAnonymousUserStep,
             processBeforeSendHooksStep,
         ].reduce(async (payloadPromise, step) => {
