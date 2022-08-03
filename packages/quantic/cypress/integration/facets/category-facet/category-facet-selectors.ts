@@ -26,7 +26,7 @@ export type AllFacetSelectors = BaseFacetSelector &
 export const CategoryFacetSelectors: AllFacetSelectors = {
   get: () => cy.get(categoryFacetComponent),
 
-  label: () => CategoryFacetSelectors.get().find('header .card__header > span'),
+  label: () => CategoryFacetSelectors.get().find('header h2 > span'),
   values: () =>
     CategoryFacetSelectors.get().find('c-quantic-category-facet-value'),
   placeholder: () =>

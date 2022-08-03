@@ -56,11 +56,11 @@ export default class ExampleQuanticNumericFacet extends LightningElement {
       defaultValue: false,
     },
     {
-      attribute: 'isSearch',
-      label: 'Is Search Use Case',
+      attribute: 'useCase',
+      label: 'Use Case',
       description:
-        'Define which use case to test, if true search use case else insight use case',
-      defaultValue: true,
+        'Define which use case to test. Possible values: search, insight',
+      defaultValue: 'search',
     },
   ];
   formattingFunction = (item) =>

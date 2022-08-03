@@ -6,14 +6,23 @@ export default class ExampleQuanticPager extends LightningElement {
   isConfigured = false;
 
   pageTitle = 'Quantic Pager';
-  pageDescription = 'The Quantic Pager allows users to navigate the search results using pages.';
+  pageDescription =
+    'The Quantic Pager allows users to navigate the search results using pages.';
   options = [
     {
       attribute: 'numberOfPages',
       label: 'Number of pages',
-      description: 'The number of pages displayed simultaneously by the pager component.',
+      description:
+        'The number of pages displayed simultaneously by the pager component.',
       defaultValue: 5,
-    }
+    },
+    {
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values: search, insight',
+      defaultValue: 'search',
+    },
   ];
 
   get notConfigured() {

@@ -1,10 +1,15 @@
+export const enum useCaseEnum {
+  search = 'search',
+  insight = 'insight',
+}
+
 export const uesCaseParamTest = [
   {
-    isSearch: true,
+    useCase: useCaseEnum.search,
     label: 'with search use case',
   },
   {
-    isSearch: false,
+    useCase: useCaseEnum.insight,
     label: 'with insight use case',
   },
 ];

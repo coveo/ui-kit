@@ -7,7 +7,7 @@
 
         <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
 
-        <c-example-use-case slot="preview" is-search={config.isSearch} engine-id={engineId}>
+        <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
             <c-quantic-result-quickview
                 engine-id={engineId}
                 result={config.result}

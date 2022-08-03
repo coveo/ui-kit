@@ -11,10 +11,11 @@ export default class ExampleQuanticTabBar extends LightningElement {
 
   options = [
     {
-      attribute: 'isSearch',
-      label: 'Is Search Interface',
-      description: 'Define if the use Case is search or else',
-      defaultValue: true,
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values: search, insight',
+      defaultValue: 'search',
     },
   ];
   handleTryItNow(evt) {
