@@ -13,7 +13,10 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import {InitPopoverEventPayload} from './popover-event';
+import {
+  InitPopoverEventPayload,
+  ClearPopoversEventPayload,
+} from './popover-event';
 
 /**
  * @internal
@@ -63,20 +66,27 @@ export class AtomicPopover implements InitializableComponent {
     }
   }
 
+  private get popoverId() {
+    return `${this.facetId}-popover`;
+  }
+
   popoverOpened() {
     if (!this.isMenuVisible) {
-      const popoverOpened = new CustomEvent('popoverOpened', {
-        detail: this.facetId,
-      });
+      const popoverOpened = new CustomEvent<ClearPopoversEventPayload>(
+        'clearPopovers',
+        {
+          detail: {ignorePopoverFacetId: this.facetId},
+        }
+      );
       document.dispatchEvent(popoverOpened);
     }
 
     this.isMenuVisible = !this.isMenuVisible;
   }
 
-  @Listen('popoverOpened', {target: 'document'})
-  popOpened(event: CustomEvent) {
-    if (event.detail !== this.facetId) {
+  @Listen('clearPopovers', {target: 'document'})
+  popOpened(event: CustomEvent<ClearPopoversEventPayload>) {
+    if (event.detail.ignorePopoverFacetId !== this.facetId) {
       this.isMenuVisible = false;
     }
   }
@@ -87,6 +97,9 @@ export class AtomicPopover implements InitializableComponent {
         style="square-neutral"
         onClick={() => this.popoverOpened()}
         part="value-button"
+        ariaExpanded={`${this.isMenuVisible}`}
+        ariaLabel={`Pop-up filter on ${this.facetLabel} facet`}
+        ariaControls={this.popoverId}
         class={`value-button rounded flex box-border h-full items-center mr-1.5 p-2.5 group ${
           this.isMenuVisible
             ? 'selected border-primary ring ring-ring-primary-light text-primary'
@@ -106,6 +119,7 @@ export class AtomicPopover implements InitializableComponent {
         </span>
         <atomic-icon
           part="arrow-icon"
+          aria-hidden="true"
           class={`w-2 ml-2 ${
             this.isMenuVisible
               ? 'rotate-180'
@@ -159,7 +173,11 @@ export class AtomicPopover implements InitializableComponent {
     //TODO: hide if facet has 0 values (use headless to retrieve facet state)
 
     return (
-      <div part="popover-wrapper" class="popover-wrapper relative">
+      <div
+        id={this.popoverId}
+        part="popover-wrapper"
+        class="popover-wrapper relative"
+      >
         {this.renderValueButton()}
         <div
           part="slot-wrapper"
