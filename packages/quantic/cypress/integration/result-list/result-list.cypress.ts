@@ -9,8 +9,10 @@ import {ResultListExpectations as Expect} from './result-list-expectations';
 import {getNextResults} from '../../page-objects/actions/action-get-next-results';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {scope} from '../../reporters/detailed-collector';
+import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 
 interface ResultListOptions {
+  useCase: string;
   fieldsToInclude: string;
 }
 
@@ -27,12 +29,16 @@ describe('quantic-resultlist', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
+    if (options.useCase !== useCaseEnum.search) {
+      cy.wait(1000);
+      performSearch();
+    }
   }
 
-  function setupWithPauseBeforeSearch() {
+  function setupWithPauseBeforeSearch(useCase: string) {
     interceptSearchIndefinitely();
     cy.visit(pageUrl);
-    configure();
+    configure({useCase});
   }
 
   function aliasResultValues() {
@@ -42,56 +48,62 @@ describe('quantic-resultlist', () => {
     });
   }
 
-  it('should render a placeholder before results have returned', () => {
-    setupWithPauseBeforeSearch();
+  uesCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      it('should render a placeholder before results have returned', () => {
+        setupWithPauseBeforeSearch(param.useCase);
 
-    Expect.displayPlaceholder(true);
-    Expect.displayResults(false);
-  });
-
-  describe('with default options', () => {
-    it('should work as expected', () => {
-      visitResultList({
-        fieldsToInclude: defaultFieldsToInclude,
-      });
-      aliasResultValues();
-
-      scope('when loading the page', () => {
-        Expect.events.receivedEvent(true, registerResultTemplatesEvent);
-        Expect.resultsEqual(indexResultsAlias);
-
-        performSearch();
-
-        Expect.requestFields(defaultFieldsToInclude.split(','));
+        Expect.displayPlaceholder(true);
+        Expect.displayResults(false);
       });
 
-      scope('when getting different results', () => {
-        getNextResults();
+      describe('with default options', () => {
+        it('should work as expected', () => {
+          visitResultList({
+            fieldsToInclude: defaultFieldsToInclude,
+            useCase: param.useCase,
+          });
+          aliasResultValues();
 
-        Expect.resultsEqual(indexResultsAlias);
+          scope('when loading the page', () => {
+            Expect.events.receivedEvent(true, registerResultTemplatesEvent);
+            Expect.resultsEqual(indexResultsAlias);
 
-        performSearch();
+            performSearch();
 
-        Expect.requestFields(defaultFieldsToInclude.split(','));
+            Expect.requestFields(defaultFieldsToInclude.split(','));
+          });
+
+          scope('when getting different results', () => {
+            getNextResults();
+
+            Expect.resultsEqual(indexResultsAlias);
+
+            performSearch();
+
+            Expect.requestFields(defaultFieldsToInclude.split(','));
+          });
+        });
       });
-    });
-  });
 
-  describe('with custom options', () => {
-    const customFieldsToInclude =
-      'source,language,sfcasestatus,sfcreatedbyname';
+      describe('with custom options', () => {
+        const customFieldsToInclude =
+          'source,language,sfcasestatus,sfcreatedbyname';
 
-    it('should work as expected', () => {
-      visitResultList({
-        fieldsToInclude: customFieldsToInclude,
+        it('should work as expected', () => {
+          visitResultList({
+            fieldsToInclude: customFieldsToInclude,
+            useCase: param.useCase,
+          });
+          aliasResultValues();
+
+          Expect.resultsEqual(indexResultsAlias);
+
+          performSearch();
+
+          Expect.requestFields(customFieldsToInclude.split(','));
+        });
       });
-      aliasResultValues();
-
-      Expect.resultsEqual(indexResultsAlias);
-
-      performSearch();
-
-      Expect.requestFields(customFieldsToInclude.split(','));
     });
   });
 });

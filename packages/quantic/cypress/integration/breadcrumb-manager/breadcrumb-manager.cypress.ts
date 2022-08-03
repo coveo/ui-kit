@@ -1,7 +1,7 @@
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {configure, reset} from '../../page-objects/configurator';
 import {InterceptAliases, interceptSearch} from '../../page-objects/search';
-import {uesCaseParamTest} from '../../page-objects/use-case';
+import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 import {scope} from '../../reporters/detailed-collector';
 import {BreadcrumbManagerActions as Actions} from './breadcrumb-manager-actions';
 import {BreadcrumbManagerExpectations as Expect} from './breadcrumb-manager-expectations';
@@ -16,7 +16,7 @@ describe('quantic-breadcrumb-manager', () => {
   const clearActionName = 'Clear filter';
 
   interface BreadcrumbOptions {
-    isSearch: boolean;
+    useCase: string;
     categoryDivider: string;
     collapseThreshold: number;
   }
@@ -31,6 +31,10 @@ describe('quantic-breadcrumb-manager', () => {
     if (waitForSearch) {
       cy.wait(InterceptAliases.Search);
     }
+    if (options.useCase !== useCaseEnum.search) {
+      cy.wait(1000);
+      performSearch();
+    }
   }
 
   function loadFromUrlHash(urlHash: string) {
@@ -43,13 +47,7 @@ describe('quantic-breadcrumb-manager', () => {
     describe(param.label, () => {
       describe('with default values', () => {
         it('should work as expected', () => {
-          visitBreadcrumbManager({isSearch: param.isSearch}, param.isSearch);
-
-          if (!param.isSearch) {
-            cy.wait(1000);
-
-            performSearch();
-          }
+          visitBreadcrumbManager({useCase: param.useCase}, param.waitForSearch);
 
           scope('when selecting values in numeric facet', () => {
             Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
@@ -203,7 +201,7 @@ describe('quantic-breadcrumb-manager', () => {
         });
       });
 
-      if (param.isSearch) {
+      if (param.useCase === useCaseEnum.search) {
         describe('when loading from URL', () => {
           it('should work as expected', () => {
             scope('with one filter', () => {
@@ -273,16 +271,10 @@ describe('quantic-breadcrumb-manager', () => {
           visitBreadcrumbManager(
             {
               categoryDivider: '*',
-              isSearch: param.isSearch,
+              useCase: param.useCase,
             },
-            param.isSearch
+            param.waitForSearch
           );
-
-          if (!param.isSearch) {
-            cy.wait(1000);
-
-            performSearch();
-          }
 
           const path = ['North America', 'Canada', 'British Columbia'];
 
@@ -323,16 +315,10 @@ describe('quantic-breadcrumb-manager', () => {
           visitBreadcrumbManager(
             {
               collapseThreshold: 2,
-              isSearch: param.isSearch,
+              useCase: param.useCase,
             },
-            param.isSearch
+            param.waitForSearch
           );
-
-          if (!param.isSearch) {
-            cy.wait(1000);
-
-            performSearch();
-          }
 
           Actions.numericFacet.checkValueAt(0);
           Expect.numericFacetBreadcrumb.displayBreadcrumb(true);

@@ -8,7 +8,7 @@ import {
 } from './category-facet-actions';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
-import {uesCaseParamTest} from '../../../page-objects/use-case';
+import {uesCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
 
 interface CategoryFacetOptions {
   field: string;
@@ -21,7 +21,7 @@ interface CategoryFacetOptions {
   sortCriteria: string;
   withSearch: boolean;
   isCollapsed: boolean;
-  isSearch: boolean;
+  useCase: string;
 }
 
 const hierarchicalField = 'geographicalhierarchy';
@@ -67,6 +67,10 @@ describe('quantic-category-facet', () => {
     if (waitForSearch) {
       cy.wait(InterceptAliases.Search);
     }
+    if (options.useCase !== useCaseEnum.search) {
+      cy.wait(1000);
+      performSearch();
+    }
   }
 
   function loadFromUrlHash(
@@ -79,7 +83,11 @@ describe('quantic-category-facet', () => {
     cy.wait(InterceptAliases.Search);
   }
 
-  function setupWithCustomBasePath(hierarchy: string[], search?: boolean) {
+  function setupWithCustomBasePath(
+    hierarchy: string[],
+    useCase: string,
+    search?: boolean
+  ) {
     visitCategoryFacetPage(
       {
         field: defaultField,
@@ -87,41 +95,43 @@ describe('quantic-category-facet', () => {
         numberOfValues: defaultNumberOfValues,
         basePath: hierarchy.slice(0, 2).join(','),
         withSearch: search ? search : false,
+        useCase: useCase,
       },
       false
     );
   }
 
-  function setupWithCustomDelimitingCharacter() {
+  function setupWithCustomDelimitingCharacter(useCase: string) {
     visitCategoryFacetPage(
       {
         field: defaultField,
         label: defaultLabel,
         numberOfValues: defaultNumberOfValues,
         delimitingCharacter: '/',
+        useCase: useCase,
       },
       true
     );
   }
 
-  function setupGoDeeperOneLevel() {
-    visitCategoryFacetPage(defaultSettings);
+  function setupGoDeeperOneLevel(useCase: string) {
+    visitCategoryFacetPage({...defaultSettings, useCase: useCase});
     Actions.selectChildValue(montrealHierarchy[0]);
   }
 
-  function setupShowMore() {
-    setupGoDeeperOneLevel();
+  function setupShowMore(useCase: string) {
+    setupGoDeeperOneLevel(useCase);
     Actions.clickShowMoreButton();
   }
 
-  function setupShowLess() {
-    setupShowMore();
+  function setupShowLess(useCase: string) {
+    setupShowMore(useCase);
     cy.wait(InterceptAliases.Search);
     Actions.clickShowLessButton();
   }
 
-  function setupGoDeeperFourLevels() {
-    visitCategoryFacetPage(defaultSettings);
+  function setupGoDeeperFourLevels(useCase: string) {
+    visitCategoryFacetPage({...defaultSettings, useCase: useCase});
     Actions.selectChildValue(montrealHierarchy[0]);
     cy.wait(InterceptAliases.UA.Facet.Select);
     Actions.selectChildValue(montrealHierarchy[1]);
@@ -137,14 +147,9 @@ describe('quantic-category-facet', () => {
       describe('with default category facet', () => {
         it('should work as expected', () => {
           visitCategoryFacetPage(
-            {...defaultSettings, isSearch: param.isSearch},
-            param.isSearch
+            {...defaultSettings, useCase: param.useCase},
+            param.waitForSearch
           );
-
-          if (!param.isSearch) {
-            cy.wait(1000);
-            performSearch();
-          }
 
           Expect.displayFacet(true);
           Expect.displayLabel(true);
@@ -156,14 +161,10 @@ describe('quantic-category-facet', () => {
         describe('when selecting on the level data set', () => {
           it('should bold the selected parent level', () => {
             visitCategoryFacetPage(
-              {...defaultSettings, isSearch: param.isSearch},
-              param.isSearch
+              {...defaultSettings, useCase: param.useCase},
+              param.waitForSearch
             );
 
-            if (!param.isSearch) {
-              cy.wait(1000);
-              performSearch();
-            }
             // Verify all levels
             montrealHierarchy.forEach((value, index) => {
               const selectedPath = montrealHierarchy.slice(0, index + 1);
@@ -181,7 +182,7 @@ describe('quantic-category-facet', () => {
         describe('when selecting ShowMore button', () => {
           it('should double the existing list of child level', () => {
             const selectedPath = montrealHierarchy.slice(0, 1);
-            setupShowMore();
+            setupShowMore(param.useCase);
 
             Expect.numberOfParentValues(1);
             Expect.parentValueLabel(selectedPath[0]);
@@ -196,7 +197,7 @@ describe('quantic-category-facet', () => {
         describe('when selecting ShowLess button', () => {
           it('should collapsed the child list to default', () => {
             const selectedPath = montrealHierarchy.slice(0, 1);
-            setupShowLess();
+            setupShowLess(param.useCase);
 
             Expect.numberOfParentValues(1);
             Expect.parentValueLabel(selectedPath[0]);
@@ -210,7 +211,7 @@ describe('quantic-category-facet', () => {
 
         describe('when selecting value on 4nd level of data', () => {
           it('should redirect user up to parent level', () => {
-            setupGoDeeperFourLevels();
+            setupGoDeeperFourLevels(param.useCase);
 
             montrealHierarchy
               .slice(0, 3)
@@ -229,7 +230,7 @@ describe('quantic-category-facet', () => {
 
           describe('when selecting "All Categories"', () => {
             it('should redirect me to very first level of data set', () => {
-              setupGoDeeperFourLevels();
+              setupGoDeeperFourLevels(param.useCase);
 
               Actions.clickAllCategories();
 
@@ -240,7 +241,7 @@ describe('quantic-category-facet', () => {
             });
           });
         });
-        if (param.isSearch) {
+        if (param.useCase === useCaseEnum.search) {
           describe('when loading a path in the URL', () => {
             it('should bold the parent and show the children values', () => {
               const path = 'Africa,Togo';
@@ -267,14 +268,9 @@ describe('quantic-category-facet', () => {
           it('facet value should be filtered to match with the keywords', () => {
             const query = 'mal';
             visitCategoryFacetPage(
-              {...searchEnabledSettings, isSearch: param.isSearch},
-              param.isSearch
+              {...searchEnabledSettings, useCase: param.useCase},
+              param.waitForSearch
             );
-
-            if (!param.isSearch) {
-              cy.wait(1000);
-              performSearch();
-            }
 
             Actions.typeQueryInSearchInput(query);
 
@@ -295,14 +291,9 @@ describe('quantic-category-facet', () => {
             const selectedValue = 'Montreal';
 
             visitCategoryFacetPage(
-              {...searchEnabledSettings, isSearch: param.isSearch},
-              param.isSearch
+              {...searchEnabledSettings, useCase: param.useCase},
+              param.waitForSearch
             );
-
-            if (!param.isSearch) {
-              cy.wait(1000);
-              performSearch();
-            }
 
             Actions.typeQueryInSearchInput(query);
             Expect.logFacetSearch(hierarchicalField);
@@ -319,14 +310,9 @@ describe('quantic-category-facet', () => {
             const query = 'mont';
 
             visitCategoryFacetPage(
-              {...searchEnabledSettings, isSearch: param.isSearch},
-              param.isSearch
+              {...searchEnabledSettings, useCase: param.useCase},
+              param.waitForSearch
             );
-
-            if (!param.isSearch) {
-              cy.wait(1000);
-              performSearch();
-            }
 
             Actions.typeQueryInSearchInput(query);
             Expect.logFacetSearch(hierarchicalField);
@@ -344,14 +330,9 @@ describe('quantic-category-facet', () => {
             const query = 'something';
 
             visitCategoryFacetPage(
-              {...searchEnabledSettings, isSearch: param.isSearch},
-              param.isSearch
+              {...searchEnabledSettings, useCase: param.useCase},
+              param.waitForSearch
             );
-
-            if (!param.isSearch) {
-              cy.wait(1000);
-              performSearch();
-            }
 
             Actions.typeQueryInSearchInput(query);
 
@@ -367,7 +348,7 @@ describe('quantic-category-facet', () => {
       describe('setup with custom basePath', () => {
         describe('when loading', () => {
           it('should load the category facet component with data level start from custom basePath', () => {
-            setupWithCustomBasePath(togoHierarchy);
+            setupWithCustomBasePath(togoHierarchy, param.useCase);
 
             Expect.firstChildContains(togoHierarchy[2]);
             Expect.numberOfParentValues(0);
@@ -378,13 +359,13 @@ describe('quantic-category-facet', () => {
           });
         });
 
-        if (param.isSearch) {
+        if (param.useCase === useCaseEnum.search) {
           describe('when typing into facet search box input', () => {
             it('facet value should be filtered to match with the keywords', () => {
               const basePath = ['North America'];
               const query = 'can';
               const allCategories = 'All Categories';
-              setupWithCustomBasePath(basePath, true);
+              setupWithCustomBasePath(basePath, useCaseEnum.search, true);
 
               Actions.typeQueryInSearchInput(query);
               Expect.logFacetSearch(hierarchicalField);
@@ -399,7 +380,7 @@ describe('quantic-category-facet', () => {
             visitCategoryFacetPage(
               {
                 ...customBasePathWithFilterByBasePathSettings,
-                isSearch: param.isSearch,
+                useCase: param.useCase,
               },
               false
             );
@@ -412,7 +393,7 @@ describe('quantic-category-facet', () => {
         it('should show all path in children value', () => {
           const northamericaPath = 'North America';
           const canadaPath = 'North America;Canada';
-          setupWithCustomDelimitingCharacter();
+          setupWithCustomDelimitingCharacter(param.useCase);
 
           Actions.selectChildValue(northamericaPath);
           Expect.logCategoryFacetSelected(northamericaPath.split(';'));
@@ -431,8 +412,8 @@ describe('quantic-category-facet', () => {
       describe('setup with custom numberOfValues', () => {
         it('should show custom number of values', () => {
           visitCategoryFacetPage(
-            {...customNumberOfValuesSettings, isSearch: param.isSearch},
-            param.isSearch
+            {...customNumberOfValuesSettings, useCase: param.useCase},
+            param.waitForSearch
           );
 
           Expect.numberOfValues(customNumberOfValues);
@@ -445,7 +426,7 @@ describe('quantic-category-facet', () => {
             visitCategoryFacetPage(
               {
                 sortCriteria: sorting,
-                isSearch: param.isSearch,
+                useCase: param.useCase,
               },
               false
             );
@@ -464,9 +445,9 @@ describe('quantic-category-facet', () => {
               label: defaultLabel,
               numberOfValues: defaultNumberOfValues,
               isCollapsed: true,
-              isSearch: param.isSearch,
+              useCase: param.useCase,
             },
-            param.isSearch
+            param.waitForSearch
           );
         }
 

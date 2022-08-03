@@ -3,6 +3,7 @@ import {Interception} from 'cypress/types/net-stubbing';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {configure} from '../../page-objects/configurator';
 import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 import {scope} from '../../reporters/detailed-collector';
 import {FacetManagerExpectations as Expect} from './facet-manager-expectations';
 
@@ -10,14 +11,22 @@ describe('quantic-facet-manager', () => {
   const pageUrl = 's/quantic-facet-manager';
   const responseFacetIdsAlias = '@responseFacetIds';
 
-  function visit() {
+  interface FacetManagerOptions {
+    useCase: string;
+  }
+
+  function visit(options: Partial<FacetManagerOptions> = {}) {
     interceptSearch();
     cy.visit(pageUrl);
-    return configure({});
+    configure(options);
+    if (options.useCase !== useCaseEnum.search) {
+      cy.wait(1000);
+      performSearch();
+    }
   }
 
   function mockFacetOrder(facetIds: string[]) {
-    cy.intercept('POST', '**/rest/search/v2?*', (req) => {
+    cy.intercept('POST', '**/search*', (req) => {
       req.continue((res) => {
         const facets = res.body.facets;
         const reordered: unknown[] = [];
@@ -45,18 +54,23 @@ describe('quantic-facet-manager', () => {
     cy.wrap(ids).as(responseFacetIdsAlias.substring(1));
   }
 
-  it('should load facets in the same order as in the search response', () => {
-    visit()
-      .wait(InterceptAliases.Search)
-      .then((interception) => getFacetOrder(interception));
-    Expect.containsFacets(responseFacetIdsAlias);
+  uesCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      it('should load facets in the same order as in the search response', () => {
+        visit();
+        cy.wait(InterceptAliases.Search).then((interception) =>
+          getFacetOrder(interception)
+        );
+        Expect.containsFacets(responseFacetIdsAlias);
 
-    scope('when reordering the facets', () => {
-      mockFacetOrder(['language', 'objecttype', 'date']);
-      performSearch()
-        .wait(InterceptAliases.Search)
-        .then((interception) => getFacetOrder(interception));
-      Expect.containsFacets(responseFacetIdsAlias);
+        scope('when reordering the facets', () => {
+          mockFacetOrder(['language', 'objecttype', 'date']);
+          performSearch()
+            .wait(InterceptAliases.Search)
+            .then((interception) => getFacetOrder(interception));
+          Expect.containsFacets(responseFacetIdsAlias);
+        });
+      });
     });
   });
 });

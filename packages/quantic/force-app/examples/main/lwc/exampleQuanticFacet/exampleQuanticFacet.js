@@ -58,7 +58,7 @@ export default class ExampleQuanticFacet extends LightningElement {
       attribute: 'useCase',
       label: 'Use Case',
       description:
-        'Define which use case to test. Possible values: search, insight',
+        'Define which use case to test. Possible values are: search, insight',
       defaultValue: 'search',
     },
   ];
