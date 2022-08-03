@@ -74,7 +74,7 @@ describe('quantic-tab', () => {
       Expect.activeTabContains(tabs.case.label);
 
       [tabs.all, tabs.knowledge].forEach((next) => {
-        Actions.selectButton(next.label);
+        Actions.selectTab(next.label);
         Expect.search.constantExpressionEqual(next.expression);
         Expect.logSelected(next.label);
         Expect.activeTabContains(next.label);
@@ -104,13 +104,13 @@ describe('quantic-tab', () => {
     it('should be accessible to keyboard', () => {
       loadFromUrlHash({}, `tab=${tabs.case.label}`);
 
-      Actions.keyPressButton(tabs.all.label);
+      Actions.selectTab(tabs.all.label, ' ');
       Expect.activeTabContains(tabs.all.label);
 
-      Actions.tabAndSelectNextButton(tabs.case.label);
+      Actions.findTabPressTabPressSpace(tabs.case.label);
       Expect.activeTabContains(tabs.knowledge.label);
 
-      Actions.tabAndSelectPreviousButton(tabs.case.label);
+      Actions.findTabPressShiftTabPressSpace(tabs.case.label);
       Expect.activeTabContains(tabs.all.label);
     });
   });

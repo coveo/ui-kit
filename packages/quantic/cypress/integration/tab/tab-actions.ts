@@ -2,21 +2,16 @@ import {TabSelector, TabSelectors} from './tab-selectors';
 
 function tabActions(selector: TabSelector) {
   return {
-    selectTab: (value: string) => {
-      selector.tab().contains(value).click();
+    selectTab: (value: string, keyPress?: string) => {
+      if (!keyPress) {
+        selector.tab().contains(value).click();
+      } else selector.tab().contains(value).type(keyPress);
     },
-    selectButton: (value: string) => {
-      selector.button().contains(value).click();
+    findTabPressTabPressSpace: (value: string) => {
+      selector.tab().contains(value).tab().type(' ');
     },
-    tabAndSelectNextButton: (value: string) => {
-      selector.button().contains(value).tab().type(' ');
-    },
-    tabAndSelectPreviousButton: (value: string) => {
-      selector.button().contains(value).tab({shift: true}).type(' ');
-    },
-
-    keyPressButton: (value: string, input = ' ') => {
-      selector.button().contains(value).type(input);
+    findTabPressShiftTabPressSpace: (value: string) => {
+      selector.tab().contains(value).tab({shift: true}).type(' ');
     },
   };
 }

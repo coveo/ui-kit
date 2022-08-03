@@ -1,4 +1,5 @@
 .slds-tabs_button{
     padding: 0;
-    margin: 0;
+    margin: 0 0px;
+    padding:0 10px;
 }
