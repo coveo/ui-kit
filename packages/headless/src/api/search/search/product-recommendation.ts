@@ -1,5 +1,11 @@
 export interface ProductRecommendation {
+  /**
+   * Document Uri in the index. Still useful for analytics.
+   */
   documentUri: string;
+  /**
+   * Document UriHash in the index. Still useful for analytics.
+   */
   documentUriHash: string;
   /**
    * The SKU of the product.
