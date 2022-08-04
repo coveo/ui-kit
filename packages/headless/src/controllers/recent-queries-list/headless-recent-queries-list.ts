@@ -1,4 +1,4 @@
-import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
+import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
 import {buildController, Controller} from '../controller/headless-controller';
 import {search, recentQueries} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
@@ -32,13 +32,13 @@ export interface RecentQueriesListProps {
   options?: RecentQueriesListOptions;
 }
 
-const defaultRecentQueriesProps: Required<RecentQueriesListProps> = {
-  initialState: {
-    queries: [],
-  },
-  options: {
-    maxLength: 10,
-  },
+const defaultRecentQueriesState: Required<RecentQueriesListInitialState> = {
+  queries: [],
+};
+
+const defaultRecentQueriesOptions: Required<RecentQueriesListOptions> = {
+  maxLength: 10,
+  clearFilters: true,
 };
 
 export interface RecentQueriesListInitialState {
@@ -59,10 +59,16 @@ export interface RecentQueriesListOptions {
    * @defaultValue `10`
    */
   maxLength: number;
+  /**
+   * Whether to clear all active query filters when the end user submits a new query from the recent queries list.
+   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   */
+  clearFilters?: boolean;
 }
 
 const optionsSchema = new Schema<RecentQueriesListOptions>({
   maxLength: new NumberValue({required: true, min: 1}),
+  clearFilters: new BooleanValue(),
 });
 
 /**
@@ -140,16 +146,23 @@ export function buildRecentQueriesList(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const registrationProps: Required<RecentQueriesListProps> = {
-    ...defaultRecentQueriesProps,
-    ...props,
+  const registrationOptions: Required<RecentQueriesListOptions> = {
+    ...defaultRecentQueriesOptions,
+    ...props?.options,
+  };
+  const registrationState: Required<RecentQueriesListInitialState> = {
+    ...defaultRecentQueriesState,
+    ...props?.initialState,
   };
 
-  validateRecentQueriesProps(engine, registrationProps);
+  validateRecentQueriesProps(engine, {
+    options: registrationOptions,
+    initialState: registrationState,
+  });
 
   const options = {
-    queries: registrationProps.initialState.queries,
-    maxLength: registrationProps.options.maxLength,
+    queries: registrationState.queries,
+    maxLength: registrationOptions.maxLength,
   };
 
   dispatch(registerRecentQueries(options));
@@ -180,7 +193,12 @@ export function buildRecentQueriesList(
       if (errorMessage) {
         throw new Error(errorMessage);
       }
-      dispatch(prepareForSearchWithQuery({q: this.state.queries[index]}));
+      dispatch(
+        prepareForSearchWithQuery({
+          q: this.state.queries[index],
+          clearFilters: registrationOptions.clearFilters,
+        })
+      );
       dispatch(executeSearch(logRecentQueryClick()));
     },
   };
