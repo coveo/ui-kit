@@ -135,7 +135,7 @@ export class AtomicPopover implements InitializableComponent {
         <span
           title={this.numberOfSelectedValues}
           part="value-count"
-          class={`value-box-count truncate pl-1 w-auto mt-0 text-sm ${
+          class={`value-box-count truncate pl-0.5 w-auto mt-0 text-sm ${
             this.isMenuVisible
               ? 'text-primary'
               : 'text-neutral-dark group-hover:text-primary-light group-focus:text-primary'
