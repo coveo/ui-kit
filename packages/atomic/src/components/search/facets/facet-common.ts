@@ -17,6 +17,7 @@ export interface FacetValueProps {
   searchQuery?: string;
   class?: string;
   part?: string;
+  additionalPart?: string;
   buttonRef?: (element?: HTMLButtonElement) => void;
 }
 
