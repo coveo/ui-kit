@@ -1,6 +1,10 @@
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {configure, reset} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {
+  getAlias,
+  InterceptAliases,
+  interceptSearch,
+} from '../../page-objects/search';
 import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 import {scope} from '../../reporters/detailed-collector';
 import {BreadcrumbManagerActions as Actions} from './breadcrumb-manager-actions';
@@ -28,12 +32,12 @@ describe('quantic-breadcrumb-manager', () => {
     interceptSearch();
     cy.visit(breadcrumbManagertUrl);
     configure(options);
-    if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
-    }
     if (options.useCase !== useCaseEnum.search) {
       cy.wait(1000);
       performSearch();
+    }
+    if (waitForSearch) {
+      cy.wait(getAlias(options.useCase));
     }
   }
 
@@ -47,7 +51,7 @@ describe('quantic-breadcrumb-manager', () => {
     describe(param.label, () => {
       describe('with default values', () => {
         it('should work as expected', () => {
-          visitBreadcrumbManager({useCase: param.useCase}, param.waitForSearch);
+          visitBreadcrumbManager({useCase: param.useCase});
 
           scope('when selecting values in numeric facet', () => {
             Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
@@ -268,13 +272,10 @@ describe('quantic-breadcrumb-manager', () => {
 
       describe('with custom category divider', () => {
         it('should work as expected', () => {
-          visitBreadcrumbManager(
-            {
-              categoryDivider: '*',
-              useCase: param.useCase,
-            },
-            param.waitForSearch
-          );
+          visitBreadcrumbManager({
+            categoryDivider: '*',
+            useCase: param.useCase,
+          });
 
           const path = ['North America', 'Canada', 'British Columbia'];
 
@@ -312,13 +313,10 @@ describe('quantic-breadcrumb-manager', () => {
 
       describe('with custom collapse threshold', () => {
         it('should work as expected', () => {
-          visitBreadcrumbManager(
-            {
-              collapseThreshold: 2,
-              useCase: param.useCase,
-            },
-            param.waitForSearch
-          );
+          visitBreadcrumbManager({
+            collapseThreshold: 2,
+            useCase: param.useCase,
+          });
 
           Actions.numericFacet.checkValueAt(0);
           Expect.numericFacetBreadcrumb.displayBreadcrumb(true);

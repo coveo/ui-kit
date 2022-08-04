@@ -3,6 +3,7 @@ import {configure} from '../../../page-objects/configurator';
 import {FacetExpectations as Expect} from './facet-expectations';
 import {
   extractFacetValues,
+  getAlias,
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
@@ -13,6 +14,8 @@ import {
 } from '../../../page-objects/search';
 import {FacetActions as Actions} from './facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
+import {uesCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 
 interface FacetOptions {
   field: string;
@@ -22,6 +25,7 @@ interface FacetOptions {
   noSearch: boolean;
   isCollapsed: boolean;
   displayValuesAs: string;
+  useCase: string;
 }
 
 describe('Facet Test Suite', () => {
@@ -41,8 +45,12 @@ describe('Facet Test Suite', () => {
 
     cy.visit(pageUrl);
     configure(options);
+    if (options.useCase !== useCaseEnum.search) {
+      cy.wait(1000);
+      performSearch();
+    }
     if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
+      cy.wait(getAlias(options.useCase));
     }
   }
 
@@ -56,8 +64,8 @@ describe('Facet Test Suite', () => {
     configure(options);
   }
 
-  function aliasFacetValues() {
-    cy.wait(InterceptAliases.Search).then((interception) => {
+  function aliasFacetValues(useCase: string) {
+    cy.wait(getAlias(useCase)).then((interception) => {
       const indexValues = extractFacetValues(interception.response);
       cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
     });
@@ -84,733 +92,772 @@ describe('Facet Test Suite', () => {
     cy.wait(InterceptAliases.Search);
   }
 
-  describe('with default settings', () => {
-    it('should work as expected', () => {
-      scope('when loading', () => {
-        function setupWithPauseBeforeSearch() {
-          interceptSearchIndefinitely();
-          cy.visit(pageUrl);
-          configure({
+  uesCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      describe('with default settings', () => {
+        it('should work as expected', () => {
+          scope('when loading', () => {
+            function setupWithPauseBeforeSearch() {
+              interceptSearchIndefinitely();
+              cy.visit(pageUrl);
+              configure({
+                field: defaultField,
+                label: defaultLabel,
+                numberOfValues: defaultNumberOfValues,
+                useCase: param.useCase,
+              });
+            }
+            setupWithPauseBeforeSearch();
+            Expect.displayPlaceholder(true);
+          });
+
+          scope('when search returns an error', () => {
+            function setupWithError() {
+              interceptSearchWithError();
+              cy.visit(pageUrl);
+              configure({
+                field: defaultField,
+                label: defaultLabel,
+                numberOfValues: defaultNumberOfValues,
+                useCase: param.useCase,
+              });
+            }
+            setupWithError();
+
+            Expect.displayPlaceholder(false);
+            Expect.displayValues(false);
+            Expect.displayClearButton(false);
+            Expect.displayShowMoreButton(false);
+            Expect.displayShowLessButton(false);
+            Expect.displaySearchInput(false);
+          });
+        });
+      });
+
+      describe('with values', () => {
+        function setupWithValues() {
+          visitFacetPage(
+            {
+              field: defaultField,
+              label: defaultLabel,
+              numberOfValues: defaultNumberOfValues,
+              useCase: param.useCase,
+            },
+            false
+          );
+        }
+
+        function setupWithNoMoreValues() {
+          mockNoMoreFacetValues(defaultField, param.useCase);
+          visitFacetPage({
             field: defaultField,
             label: defaultLabel,
             numberOfValues: defaultNumberOfValues,
+            useCase: param.useCase,
+            noSearch: !(param.useCase === useCaseEnum.search),
           });
         }
-        setupWithPauseBeforeSearch();
-        Expect.displayPlaceholder(true);
-      });
 
-      scope('when search returns an error', () => {
-        function setupWithError() {
-          interceptSearchWithError();
-          cy.visit(pageUrl);
-          configure({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: defaultNumberOfValues,
+        function searchForValue(query: string) {
+          setupWithValues();
+          Actions.typeQueryInSearchInput(query);
+        }
+
+        it('should work as expected', () => {
+          setupWithValues();
+
+          scope('when loading', () => {
+            Expect.displayPlaceholder(false);
+            Expect.labelContains(defaultLabel);
+            Expect.displayValues(true);
+            Expect.numberOfSelectedCheckboxValues(0);
+            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+            Expect.displayClearButton(false);
+            Expect.displayShowMoreButton(true);
+            Expect.displayShowLessButton(false);
+            Expect.displaySearchInput(true);
+
+            aliasFacetValues(param.useCase);
+            Expect.facetValuesEqual(indexFacetValuesAlias);
+          });
+
+          scope('when selecting a value', () => {
+            function selectFirstFacetValue() {
+              Actions.checkFirstValue();
+            }
+
+            function collapseFacet() {
+              Actions.clickCollapseButton();
+              cy.wait(getAlias(param.useCase));
+            }
+
+            selectFirstFacetValue();
+            Expect.clearFilterContains('Clear filter');
+            Expect.numberOfSelectedCheckboxValues(1);
+            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+            Expect.logFacetSelect(defaultField, 0);
+
+            scope('when collapsing the facet', () => {
+              collapseFacet();
+
+              Expect.displayClearButton(true);
+              Expect.clearFilterContains('Clear filter');
+            });
+
+            scope('when selecting the "Clear" button', () => {
+              function clearSelectedValues() {
+                Actions.clickExpandButton();
+                Actions.clickClearFilter();
+                cy.wait(getAlias(param.useCase));
+              }
+              clearSelectedValues();
+
+              Expect.displayClearButton(false);
+              Expect.numberOfSelectedCheckboxValues(0);
+              Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+              Expect.logClearFacetValues(defaultField);
+            });
+
+            scope('when selecting a second value', () => {
+              const initialNumberOfSelectedValues = 2;
+              function selectTwoValues() {
+                Actions.checkFirstValue();
+                Expect.logFacetSelect(defaultField, 0);
+                Actions.checkLastValue();
+              }
+
+              selectTwoValues();
+
+              Expect.clearFilterContains('Clear 2 filters');
+              Expect.numberOfSelectedCheckboxValues(
+                initialNumberOfSelectedValues
+              );
+              Expect.numberOfIdleCheckboxValues(
+                defaultNumberOfValues - initialNumberOfSelectedValues
+              );
+
+              Expect.logFacetSelect(defaultField, 1);
+
+              scope('when collapsing the facet', () => {
+                collapseFacet();
+
+                Expect.displayClearButton(true);
+                Expect.clearFilterContains('Clear 2 filters');
+              });
+            });
+          });
+
+          if (param.useCase === useCaseEnum.search) {
+            scope('when searching for a value that returns results', () => {
+              const query = 'a';
+              searchForValue(query);
+
+              Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+              Expect.numberOfSelectedCheckboxValues(0);
+              Expect.displayMoreMatchesFound(true);
+              Expect.displayNoMatchesFound(false);
+              Expect.moreMatchesFoundContainsQuery(query);
+              Expect.displayShowMoreButton(false);
+              Expect.displaySearchClearButton(true);
+              Expect.highlightsResults(query);
+              Expect.logFacetSearch(defaultField);
+            });
+
+            scope('when clearing the facet search results', () => {
+              function clearSearchInput() {
+                Actions.clickSearchClearButton();
+              }
+              clearSearchInput();
+
+              Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+              Expect.numberOfSelectedCheckboxValues(0);
+              Expect.displayMoreMatchesFound(false);
+              Expect.displayNoMatchesFound(false);
+              Expect.displayShowMoreButton(true);
+              Expect.displayShowLessButton(false);
+              Expect.searchInputEmpty();
+              Expect.displaySearchClearButton(false);
+            });
+
+            scope('when searching for a value that returns no results', () => {
+              const query = 'this facet value does not exist';
+
+              Actions.typeQueryInSearchInput(query);
+
+              Expect.numberOfIdleCheckboxValues(0);
+              Expect.numberOfSelectedCheckboxValues(0);
+              Expect.displayMoreMatchesFound(false);
+              Expect.displayNoMatchesFound(true);
+              Expect.noMatchesFoundContainsQuery(query);
+              Expect.displaySearchClearButton(true);
+            });
+
+            scope('when selecting a search result', () => {
+              function selectSearchResult() {
+                Actions.clickSearchClearButton();
+                searchForFacetValue('account');
+                Actions.checkFirstValue();
+              }
+              selectSearchResult();
+
+              Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+              Expect.numberOfSelectedCheckboxValues(1);
+              Expect.displayMoreMatchesFound(false);
+              Expect.displayNoMatchesFound(false);
+              Expect.displayShowMoreButton(true);
+              Expect.displaySearchInput(true);
+              Expect.displaySearchClearButton(false);
+              Expect.logFacetSelect(defaultField, 0);
+            });
+            scope('when collapsing a facet', () => {
+              function collapseFacet() {
+                Actions.clickClearFilter();
+                Actions.clickCollapseButton();
+              }
+
+              collapseFacet();
+
+              Expect.labelContains(defaultLabel);
+              Expect.displayExpandButton(true);
+              Expect.displaySearchInput(false);
+              Expect.numberOfIdleCheckboxValues(0);
+              Expect.displayShowMoreButton(false);
+
+              scope('when expanding a facet', () => {
+                function expandFacet() {
+                  Actions.clickExpandButton();
+                }
+
+                expandFacet();
+
+                Expect.labelContains(defaultLabel);
+                Expect.displayCollapseButton(true);
+                Expect.displaySearchInput(true);
+                Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+                Expect.displayShowMoreButton(true);
+              });
+            });
+          }
+        });
+
+        if (param.useCase === useCaseEnum.search) {
+          it('should work as expected', () => {
+            scope(
+              'when searching for a value that returns a single result',
+              () => {
+                const queryValue = 'account';
+
+                setupWithSingleFacetSearchValue(queryValue);
+                searchForFacetValue(queryValue);
+
+                Expect.numberOfIdleCheckboxValues(1);
+                Expect.numberOfSelectedCheckboxValues(0);
+                Expect.displayMoreMatchesFound(false);
+                Expect.displayNoMatchesFound(false);
+                Expect.displaySearchClearButton(true);
+              }
+            );
           });
         }
-        setupWithError();
 
-        Expect.displayPlaceholder(false);
-        Expect.displayValues(false);
-        Expect.displayClearButton(false);
-        Expect.displayShowMoreButton(false);
-        Expect.displayShowLessButton(false);
-        Expect.displaySearchInput(false);
+        it('should show more/less values', () => {
+          scope('when clicking show more values', () => {
+            const smallNumberOfValues = 2;
+
+            function showMoreValues() {
+              visitFacetPage({
+                field: defaultField,
+                label: defaultLabel,
+                numberOfValues: smallNumberOfValues,
+                useCase: param.useCase,
+              });
+              Actions.clickShowMoreButton();
+            }
+            showMoreValues();
+            Expect.numberOfValues(smallNumberOfValues * 2);
+            aliasFacetValues(param.useCase);
+            Expect.facetValuesEqual(indexFacetValuesAlias);
+
+            scope('when clicking show more button again', () => {
+              function showMoreValuesAgain() {
+                Actions.clickShowMoreButton();
+              }
+
+              showMoreValuesAgain();
+              Expect.numberOfValues(smallNumberOfValues * 3);
+              aliasFacetValues(param.useCase);
+              Expect.facetValuesEqual(indexFacetValuesAlias);
+
+              scope('when clicking show less button', () => {
+                function showLessValues() {
+                  Actions.clickShowLessButton();
+                }
+
+                showLessValues();
+                Expect.numberOfValues(smallNumberOfValues);
+                aliasFacetValues(param.useCase);
+                Expect.facetValuesEqual(indexFacetValuesAlias);
+              });
+            });
+            scope('when facet has no more values', () => {
+              setupWithNoMoreValues();
+
+              Expect.displayValues(true);
+              Expect.displayShowMoreButton(false);
+              Expect.displayShowLessButton(false);
+            });
+          });
+          scope('when there is no more facet values to show', () => {
+            Expect.displayPlaceholder(false);
+            Expect.labelContains(defaultLabel);
+            Expect.displayValues(true);
+            Expect.numberOfSelectedCheckboxValues(0);
+            Expect.displayClearButton(false);
+            Expect.displayShowMoreButton(false);
+            Expect.displayShowLessButton(false);
+            Expect.displaySearchInput(false);
+          });
+        });
       });
-    });
-  });
 
-  describe('with values', () => {
-    function setupWithValues() {
-      visitFacetPage(
-        {
+      describe('with link values', () => {
+        const linkValueOptions = {
           field: defaultField,
           label: defaultLabel,
-          numberOfValues: defaultNumberOfValues,
-        },
-        false
-      );
-    }
+          displayValuesAs: 'link',
+          useCase: param.useCase,
+        };
 
-    function setupWithNoMoreValues() {
-      mockNoMoreFacetValues(defaultField);
-      cy.visit(pageUrl);
-      configure({
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-      });
-    }
-
-    function searchForValue(query: string) {
-      setupWithValues();
-      Actions.typeQueryInSearchInput(query);
-    }
-
-    it('should work as expected', () => {
-      setupWithValues();
-
-      scope('when loading', () => {
-        Expect.displayPlaceholder(false);
-        Expect.labelContains(defaultLabel);
-        Expect.displayValues(true);
-        Expect.numberOfSelectedCheckboxValues(0);
-        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-        Expect.displayClearButton(false);
-        Expect.displayShowMoreButton(true);
-        Expect.displayShowLessButton(false);
-        Expect.displaySearchInput(true);
-
-        aliasFacetValues();
-        Expect.facetValuesEqual(indexFacetValuesAlias);
-      });
-
-      scope('when selecting a value', () => {
-        function selectFirstFacetValue() {
-          Actions.checkFirstValue();
+        function setupWithLinkValues() {
+          visitFacetPage(linkValueOptions, false);
         }
 
-        function collapseFacet() {
-          Actions.clickCollapseButton();
-          cy.wait(InterceptAliases.Search);
-        }
-
-        selectFirstFacetValue();
-        Expect.clearFilterContains('Clear filter');
-        Expect.numberOfSelectedCheckboxValues(1);
-        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
-        Expect.logFacetSelect(defaultField, 0);
-
-        scope('when collapsing the facet', () => {
-          collapseFacet();
-
-          Expect.displayClearButton(true);
-          Expect.clearFilterContains('Clear filter');
-        });
-
-        scope('when selecting the "Clear" button', () => {
-          function clearSelectedValues() {
-            Actions.clickExpandButton();
-            Actions.clickClearFilter();
-            cy.wait(InterceptAliases.Search);
-          }
-          clearSelectedValues();
-
-          Expect.displayClearButton(false);
-          Expect.numberOfSelectedCheckboxValues(0);
-          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-          Expect.logClearFacetValues(defaultField);
-        });
-
-        scope('when selecting a second value', () => {
-          const initialNumberOfSelectedValues = 2;
-          function selectTwoValues() {
-            Actions.checkFirstValue();
-            Expect.logFacetSelect(defaultField, 0);
-            Actions.checkLastValue();
-          }
-
-          selectTwoValues();
-
-          Expect.clearFilterContains('Clear 2 filters');
-          Expect.numberOfSelectedCheckboxValues(initialNumberOfSelectedValues);
-          Expect.numberOfIdleCheckboxValues(
-            defaultNumberOfValues - initialNumberOfSelectedValues
-          );
-
-          Expect.logFacetSelect(defaultField, 1);
-
-          scope('when collapsing the facet', () => {
-            collapseFacet();
-
-            Expect.displayClearButton(true);
-            Expect.clearFilterContains('Clear 2 filters');
-          });
-        });
-      });
-
-      scope('when searching for a value that returns results', () => {
-        const query = 'a';
-        searchForValue(query);
-
-        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-        Expect.numberOfSelectedCheckboxValues(0);
-        Expect.displayMoreMatchesFound(true);
-        Expect.displayNoMatchesFound(false);
-        Expect.moreMatchesFoundContainsQuery(query);
-        Expect.displayShowMoreButton(false);
-        Expect.displaySearchClearButton(true);
-        Expect.highlightsResults(query);
-        Expect.logFacetSearch(defaultField);
-      });
-
-      scope('when clearing the facet search results', () => {
-        function clearSearchInput() {
-          Actions.clickSearchClearButton();
-        }
-        clearSearchInput();
-
-        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-        Expect.numberOfSelectedCheckboxValues(0);
-        Expect.displayMoreMatchesFound(false);
-        Expect.displayNoMatchesFound(false);
-        Expect.displayShowMoreButton(true);
-        Expect.displayShowLessButton(false);
-        Expect.searchInputEmpty();
-        Expect.displaySearchClearButton(false);
-      });
-
-      scope('when searching for a value that returns no results', () => {
-        const query = 'this facet value does not exist';
-
-        Actions.typeQueryInSearchInput(query);
-
-        Expect.numberOfIdleCheckboxValues(0);
-        Expect.numberOfSelectedCheckboxValues(0);
-        Expect.displayMoreMatchesFound(false);
-        Expect.displayNoMatchesFound(true);
-        Expect.noMatchesFoundContainsQuery(query);
-        Expect.displaySearchClearButton(true);
-      });
-
-      scope('when selecting a search result', () => {
-        function selectSearchResult() {
-          Actions.clickSearchClearButton();
-          searchForFacetValue('account');
-          Actions.checkFirstValue();
-        }
-        selectSearchResult();
-
-        Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
-        Expect.numberOfSelectedCheckboxValues(1);
-        Expect.displayMoreMatchesFound(false);
-        Expect.displayNoMatchesFound(false);
-        Expect.displayShowMoreButton(true);
-        Expect.displaySearchInput(true);
-        Expect.displaySearchClearButton(false);
-        Expect.logFacetSelect(defaultField, 0);
-      });
-
-      scope('when collapsing a facet', () => {
-        function collapseFacet() {
-          Actions.clickClearFilter();
-          Actions.clickCollapseButton();
-        }
-
-        collapseFacet();
-
-        Expect.labelContains(defaultLabel);
-        Expect.displayExpandButton(true);
-        Expect.displaySearchInput(false);
-        Expect.numberOfIdleCheckboxValues(0);
-        Expect.displayShowMoreButton(false);
-
-        scope('when expanding a facet', () => {
-          function expandFacet() {
-            Actions.clickExpandButton();
-          }
-
-          expandFacet();
-
-          Expect.labelContains(defaultLabel);
-          Expect.displayCollapseButton(true);
-          Expect.displaySearchInput(true);
-          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-          Expect.displayShowMoreButton(true);
-        });
-      });
-    });
-
-    it('should work as expected', () => {
-      scope('when searching for a value that returns a single result', () => {
-        const queryValue = 'account';
-
-        setupWithSingleFacetSearchValue(queryValue);
-        searchForFacetValue(queryValue);
-
-        Expect.numberOfIdleCheckboxValues(1);
-        Expect.numberOfSelectedCheckboxValues(0);
-        Expect.displayMoreMatchesFound(false);
-        Expect.displayNoMatchesFound(false);
-        Expect.displaySearchClearButton(true);
-      });
-    });
-
-    it('should show more/less values', () => {
-      scope('when clicking show more values', () => {
-        const smallNumberOfValues = 2;
-
-        function showMoreValues() {
+        function setupWithNoMoreValues() {
+          mockNoMoreFacetValues(defaultField, param.useCase);
           visitFacetPage({
             field: defaultField,
             label: defaultLabel,
-            numberOfValues: smallNumberOfValues,
+            numberOfValues: defaultNumberOfValues,
+            displayValuesAs: 'link',
+            useCase: param.useCase,
           });
-          Actions.clickShowMoreButton();
         }
-        showMoreValues();
-        Expect.numberOfValues(smallNumberOfValues * 2);
-        aliasFacetValues();
-        Expect.facetValuesEqual(indexFacetValuesAlias);
 
-        scope('when clicking show more button again', () => {
-          function showMoreValuesAgain() {
-            Actions.clickShowMoreButton();
-          }
+        it('should work as expected', () => {
+          scope('when loading', () => {
+            setupWithLinkValues();
 
-          showMoreValuesAgain();
-          Expect.numberOfValues(smallNumberOfValues * 3);
-          aliasFacetValues();
-          Expect.facetValuesEqual(indexFacetValuesAlias);
+            Expect.displayPlaceholder(false);
+            Expect.labelContains(defaultLabel);
+            Expect.displayValues(true);
+            Expect.hasCheckbox(false);
+            Expect.numberOfSelectedLinkValues(0);
+            Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+            Expect.displayClearButton(false);
+            Expect.displayShowMoreButton(true);
+            Expect.displayShowLessButton(false);
+            Expect.displaySearchInput(true);
 
-          scope('when clicking show less button', () => {
-            function showLessValues() {
-              Actions.clickShowLessButton();
-            }
-
-            showLessValues();
-            Expect.numberOfValues(smallNumberOfValues);
-            aliasFacetValues();
+            aliasFacetValues(param.useCase);
             Expect.facetValuesEqual(indexFacetValuesAlias);
           });
-        });
-        scope('when facet has no more values', () => {
-          setupWithNoMoreValues();
 
-          Expect.displayValues(true);
-          Expect.displayShowMoreButton(false);
-          Expect.displayShowLessButton(false);
-        });
-      });
-      scope('when there is no more facet values to show', () => {
-        Expect.displayPlaceholder(false);
-        Expect.labelContains(defaultLabel);
-        Expect.displayValues(true);
-        Expect.numberOfSelectedCheckboxValues(0);
-        Expect.displayClearButton(false);
-        Expect.displayShowMoreButton(false);
-        Expect.displayShowLessButton(false);
-        Expect.displaySearchInput(false);
-      });
-    });
-  });
+          scope('when selecting a value', () => {
+            function selectFirstFacetValue() {
+              Actions.selectFirstLinkValue();
+            }
 
-  describe('with link values', () => {
-    const linkValueOptions = {
-      field: defaultField,
-      label: defaultLabel,
-      displayValuesAs: 'link',
-    };
+            function collapseFacet() {
+              Actions.clickCollapseButton();
+            }
 
-    function setupWithLinkValues() {
-      visitFacetPage(linkValueOptions, false);
-    }
-
-    function setupWithNoMoreValues() {
-      mockNoMoreFacetValues(defaultField);
-      cy.visit(pageUrl);
-      configure({
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-        displayValuesAs: 'link',
-      });
-      cy.wait(InterceptAliases.Search);
-    }
-
-    it('should work as expected', () => {
-      scope('when loading', () => {
-        setupWithLinkValues();
-
-        Expect.displayPlaceholder(false);
-        Expect.labelContains(defaultLabel);
-        Expect.displayValues(true);
-        Expect.hasCheckbox(false);
-        Expect.numberOfSelectedLinkValues(0);
-        Expect.numberOfIdleLinkValues(defaultNumberOfValues);
-        Expect.displayClearButton(false);
-        Expect.displayShowMoreButton(true);
-        Expect.displayShowLessButton(false);
-        Expect.displaySearchInput(true);
-
-        aliasFacetValues();
-        Expect.facetValuesEqual(indexFacetValuesAlias);
-      });
-
-      scope('when selecting a value', () => {
-        function selectFirstFacetValue() {
-          Actions.selectFirstLinkValue();
-        }
-
-        function collapseFacet() {
-          Actions.clickCollapseButton();
-        }
-
-        selectFirstFacetValue();
-
-        Expect.clearFilterContains('Clear filter');
-        Expect.numberOfSelectedLinkValues(1);
-        Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
-        Expect.logFacetSelect(defaultField, 0);
-
-        scope('when collapsing the facet', () => {
-          collapseFacet();
-
-          Expect.displayClearButton(true);
-          Expect.clearFilterContains('Clear filter');
-        });
-
-        scope('when selecting the "Clear" button', () => {
-          function clearSelectedValues() {
-            Actions.clickExpandButton();
-            Actions.clickClearFilter();
-            cy.wait(InterceptAliases.Search);
-          }
-
-          clearSelectedValues();
-
-          Expect.displayClearButton(false);
-          Expect.numberOfSelectedLinkValues(0);
-          Expect.numberOfIdleLinkValues(defaultNumberOfValues);
-          Expect.logClearFacetValues(defaultField);
-        });
-
-        scope('when selecting a second value', () => {
-          function selectLastFacetValue() {
             selectFirstFacetValue();
-            Expect.logFacetSelect(defaultField, 0);
-            Actions.selectLastLinkValue();
-          }
-
-          selectLastFacetValue();
-
-          Expect.clearFilterContains('Clear filter');
-          Expect.numberOfSelectedLinkValues(1);
-          Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
-          Expect.logFacetSelect(defaultField, 0);
-
-          scope('when collapsing the facet', () => {
-            selectLastFacetValue();
-            collapseFacet();
 
             Expect.clearFilterContains('Clear filter');
-          });
-        });
-      });
-
-      scope('when searching for a value that returns results', () => {
-        const query = 'a';
-        setupWithLinkValues();
-
-        function searchForValue() {
-          Actions.typeQueryInSearchInput(query);
-        }
-
-        searchForValue();
-
-        Expect.numberOfIdleLinkValues(defaultNumberOfValues);
-        Expect.numberOfSelectedLinkValues(0);
-        Expect.displayMoreMatchesFound(true);
-        Expect.displayNoMatchesFound(false);
-        Expect.moreMatchesFoundContainsQuery(query);
-        Expect.displayShowMoreButton(false);
-        Expect.displaySearchClearButton(true);
-        Expect.highlightsResults(query);
-        Expect.logFacetSearch(defaultField);
-
-        scope('when clearing the facet search results', () => {
-          function clearSearchInput() {
-            Actions.clickSearchClearButton();
-          }
-          clearSearchInput();
-
-          Expect.numberOfIdleLinkValues(defaultNumberOfValues);
-          Expect.numberOfSelectedLinkValues(0);
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(false);
-          Expect.displayShowMoreButton(true);
-          Expect.displayShowLessButton(false);
-          Expect.searchInputEmpty();
-          Expect.displaySearchClearButton(false);
-        });
-
-        scope('when selecting a search result', () => {
-          function selectSearchResult() {
-            searchForValue();
-            Actions.selectFirstLinkValue();
-            cy.wait(InterceptAliases.UA.Facet.Select);
-          }
-
-          selectSearchResult();
-
-          Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
-          Expect.numberOfSelectedLinkValues(1);
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(false);
-          Expect.displayShowMoreButton(true);
-          Expect.displaySearchInput(true);
-          Expect.displaySearchClearButton(false);
-          Expect.logFacetSelect(defaultField, 0);
-
-          scope('when selecting a second search result', () => {
-            const secondQuery = 'Contact';
-            function selectOtherSearchResult() {
-              Actions.typeQueryInSearchInput(secondQuery);
-              Actions.selectFirstLinkValue();
-              cy.wait(InterceptAliases.UA.Facet.Select);
-            }
-
-            function selectASecondSearchResult() {
-              selectOtherSearchResult();
-            }
-
-            selectASecondSearchResult();
-
-            Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
             Expect.numberOfSelectedLinkValues(1);
-            Expect.selectedValuesContain(secondQuery);
-            Expect.displayMoreMatchesFound(false);
-            Expect.displayNoMatchesFound(false);
-            Expect.displayShowMoreButton(true);
-            Expect.displaySearchInput(true);
-            Expect.displaySearchClearButton(false);
+            Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
             Expect.logFacetSelect(defaultField, 0);
+
+            scope('when collapsing the facet', () => {
+              collapseFacet();
+
+              Expect.displayClearButton(true);
+              Expect.clearFilterContains('Clear filter');
+            });
+
+            scope('when selecting the "Clear" button', () => {
+              function clearSelectedValues() {
+                Actions.clickExpandButton();
+                Actions.clickClearFilter();
+                cy.wait(getAlias(param.useCase));
+              }
+
+              clearSelectedValues();
+
+              Expect.displayClearButton(false);
+              Expect.numberOfSelectedLinkValues(0);
+              Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+              Expect.logClearFacetValues(defaultField);
+            });
+
+            scope('when selecting a second value', () => {
+              function selectLastFacetValue() {
+                selectFirstFacetValue();
+                Expect.logFacetSelect(defaultField, 0);
+                Actions.selectLastLinkValue();
+              }
+
+              selectLastFacetValue();
+
+              Expect.clearFilterContains('Clear filter');
+              Expect.numberOfSelectedLinkValues(1);
+              Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
+              Expect.logFacetSelect(defaultField, 0);
+
+              scope('when collapsing the facet', () => {
+                selectLastFacetValue();
+                collapseFacet();
+
+                Expect.clearFilterContains('Clear filter');
+              });
+            });
           });
+
+          if (param.useCase === useCaseEnum.search) {
+            scope('when searching for a value that returns results', () => {
+              const query = 'a';
+              setupWithLinkValues();
+
+              function searchForValue() {
+                Actions.typeQueryInSearchInput(query);
+              }
+
+              searchForValue();
+
+              Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+              Expect.numberOfSelectedLinkValues(0);
+              Expect.displayMoreMatchesFound(true);
+              Expect.displayNoMatchesFound(false);
+              Expect.moreMatchesFoundContainsQuery(query);
+              Expect.displayShowMoreButton(false);
+              Expect.displaySearchClearButton(true);
+              Expect.highlightsResults(query);
+              Expect.logFacetSearch(defaultField);
+
+              scope('when clearing the facet search results', () => {
+                function clearSearchInput() {
+                  Actions.clickSearchClearButton();
+                }
+                clearSearchInput();
+
+                Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+                Expect.numberOfSelectedLinkValues(0);
+                Expect.displayMoreMatchesFound(false);
+                Expect.displayNoMatchesFound(false);
+                Expect.displayShowMoreButton(true);
+                Expect.displayShowLessButton(false);
+                Expect.searchInputEmpty();
+                Expect.displaySearchClearButton(false);
+              });
+
+              scope('when selecting a search result', () => {
+                function selectSearchResult() {
+                  searchForValue();
+                  Actions.selectFirstLinkValue();
+                  cy.wait(InterceptAliases.UA.Facet.Select);
+                }
+
+                selectSearchResult();
+
+                Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
+                Expect.numberOfSelectedLinkValues(1);
+                Expect.displayMoreMatchesFound(false);
+                Expect.displayNoMatchesFound(false);
+                Expect.displayShowMoreButton(true);
+                Expect.displaySearchInput(true);
+                Expect.displaySearchClearButton(false);
+                Expect.logFacetSelect(defaultField, 0);
+
+                scope('when selecting a second search result', () => {
+                  const secondQuery = 'Contact';
+                  function selectOtherSearchResult() {
+                    Actions.typeQueryInSearchInput(secondQuery);
+                    Actions.selectFirstLinkValue();
+                    cy.wait(InterceptAliases.UA.Facet.Select);
+                  }
+
+                  function selectASecondSearchResult() {
+                    selectOtherSearchResult();
+                  }
+
+                  selectASecondSearchResult();
+
+                  Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
+                  Expect.numberOfSelectedLinkValues(1);
+                  Expect.selectedValuesContain(secondQuery);
+                  Expect.displayMoreMatchesFound(false);
+                  Expect.displayNoMatchesFound(false);
+                  Expect.displayShowMoreButton(true);
+                  Expect.displaySearchInput(true);
+                  Expect.displaySearchClearButton(false);
+                  Expect.logFacetSelect(defaultField, 0);
+                });
+              });
+
+              scope(
+                'when searching for a value that returns no results',
+                () => {
+                  const query = 'this facet value does not exist';
+
+                  Actions.typeQueryInSearchInput(query);
+
+                  Expect.numberOfIdleLinkValues(0);
+                  Expect.numberOfSelectedLinkValues(0);
+                  Expect.displayMoreMatchesFound(false);
+                  Expect.displayNoMatchesFound(true);
+                  Expect.noMatchesFoundContainsQuery(query);
+                  Expect.displaySearchClearButton(true);
+                }
+              );
+            });
+
+            scope('when collapsing a facet', () => {
+              function collapseFacet() {
+                Actions.clickCollapseButton();
+              }
+              collapseFacet();
+
+              Expect.labelContains(defaultLabel);
+              Expect.displayExpandButton(true);
+              Expect.displaySearchInput(false);
+              Expect.numberOfIdleLinkValues(0);
+              Expect.displayShowMoreButton(false);
+
+              scope('when expanding a facet', () => {
+                function expandFacet() {
+                  Actions.clickClearFilter();
+                  Actions.clickExpandButton();
+                }
+                expandFacet();
+
+                Expect.labelContains(defaultLabel);
+                Expect.displayCollapseButton(true);
+                Expect.displaySearchInput(true);
+                Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+                Expect.displayShowMoreButton(true);
+              });
+            });
+          }
         });
 
-        scope('when searching for a value that returns no results', () => {
-          const query = 'this facet value does not exist';
+        if (param.useCase === useCaseEnum.search) {
+          it('should work as expected', () => {
+            scope(
+              'when searching for a value that returns a single result',
+              () => {
+                const queryValue = 'account';
 
-          Actions.typeQueryInSearchInput(query);
+                setupWithSingleFacetSearchValue(queryValue, linkValueOptions);
+                searchForFacetValue(queryValue);
 
-          Expect.numberOfIdleLinkValues(0);
-          Expect.numberOfSelectedLinkValues(0);
-          Expect.displayMoreMatchesFound(false);
-          Expect.displayNoMatchesFound(true);
-          Expect.noMatchesFoundContainsQuery(query);
-          Expect.displaySearchClearButton(true);
+                Expect.numberOfIdleLinkValues(1);
+                Expect.numberOfSelectedLinkValues(0);
+                Expect.displayMoreMatchesFound(false);
+                Expect.displayNoMatchesFound(false);
+                Expect.displaySearchClearButton(true);
+              }
+            );
+          });
+        }
+
+        it('should show more/less values', () => {
+          scope('when clicking show more values', () => {
+            const smallNumberOfValues = 2;
+
+            function showMoreValues() {
+              visitFacetPage({
+                field: defaultField,
+                label: defaultLabel,
+                numberOfValues: smallNumberOfValues,
+                useCase: param.useCase,
+                noSearch: !(param.useCase === useCaseEnum.search),
+              });
+              Actions.clickShowMoreButton();
+            }
+
+            showMoreValues();
+            Expect.numberOfValues(smallNumberOfValues * 2);
+            aliasFacetValues(param.useCase);
+            Expect.facetValuesEqual(indexFacetValuesAlias);
+
+            scope('when clicking show more button again', () => {
+              function showMoreValuesAgain() {
+                Actions.clickShowMoreButton();
+              }
+
+              showMoreValuesAgain();
+              Expect.numberOfValues(smallNumberOfValues * 3);
+              aliasFacetValues(param.useCase);
+              Expect.facetValuesEqual(indexFacetValuesAlias);
+
+              scope('when clicking show less button', () => {
+                function showLessValues() {
+                  showMoreValuesAgain();
+                  cy.wait(getAlias(param.useCase));
+                  Actions.clickShowLessButton();
+                }
+
+                showLessValues();
+                Expect.numberOfValues(smallNumberOfValues);
+                aliasFacetValues(param.useCase);
+                Expect.facetValuesEqual(indexFacetValuesAlias);
+              });
+            });
+          });
+
+          scope('with no more facet values to show', () => {
+            setupWithNoMoreValues();
+
+            Expect.displayPlaceholder(false);
+            Expect.labelContains(defaultLabel);
+            Expect.displayValues(true);
+            Expect.displayClearButton(false);
+            Expect.displayShowMoreButton(false);
+            Expect.displayShowLessButton(false);
+            Expect.displaySearchInput(false);
+          });
         });
       });
 
-      scope('when collapsing a facet', () => {
-        function collapseFacet() {
-          Actions.clickCollapseButton();
+      describe('with custom field, label, and number of results', () => {
+        function setupCustomOptions() {
+          visitFacetPage(
+            {
+              field: 'language',
+              label: 'Language',
+              numberOfValues: 3,
+              useCase: param.useCase,
+            },
+            false
+          );
+          aliasFacetValues(param.useCase);
         }
-        collapseFacet();
 
-        Expect.labelContains(defaultLabel);
-        Expect.displayExpandButton(true);
-        Expect.displaySearchInput(false);
-        Expect.numberOfIdleLinkValues(0);
-        Expect.displayShowMoreButton(false);
+        it('should render correctly', () => {
+          setupCustomOptions();
 
-        scope('when expanding a facet', () => {
-          function expandFacet() {
-            Actions.clickClearFilter();
-            Actions.clickExpandButton();
+          Expect.labelContains('Language');
+          Expect.numberOfIdleCheckboxValues(3);
+          Expect.facetValuesEqual(indexFacetValuesAlias);
+        });
+      });
+
+      describe('when field returns no results', () => {
+        before(() => {
+          visitFacetPage({
+            field: 'somethingthatdoesnotexist',
+            useCase: param.useCase,
+          });
+        });
+
+        it('should render correctly', () => {
+          Expect.displayLabel(false);
+        });
+      });
+
+      describe('with custom sorting', () => {
+        ['automatic', 'score', 'alphanumeric', 'occurrences'].forEach(
+          (sorting) => {
+            it(`should use "${sorting}" sorting in the facet request`, () => {
+              visitFacetPage(
+                {
+                  sortCriteria: sorting,
+                  useCase: param.useCase,
+                },
+                false
+              );
+              cy.wait(getAlias(param.useCase)).then((interception) => {
+                const facetRequest = interception.request.body.facets[0];
+                expect(facetRequest.sortCriteria).to.eq(sorting);
+              });
+            });
           }
-          expandFacet();
+        );
+      });
+
+      describe('with invalid sorting', () => {
+        before(() => {
+          visitFacetPage(
+            {
+              sortCriteria: 'invalid',
+              useCase: param.useCase,
+            },
+            false
+          );
+        });
+        it('should render correctly', () => {
+          Expect.displayLabel(false);
+        });
+      });
+
+      describe('with no search', () => {
+        function setupNoSearch() {
+          visitFacetPage({
+            noSearch: true,
+            useCase: param.useCase,
+          });
+        }
+
+        it('should render correctly', () => {
+          setupNoSearch();
+
+          Expect.displaySearchInput(false);
+          Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+          Expect.numberOfSelectedCheckboxValues(0);
+        });
+      });
+
+      describe('with is collapsed', () => {
+        function setupIsCollapsed() {
+          visitFacetPage({
+            isCollapsed: true,
+            useCase: param.useCase,
+          });
+        }
+
+        it('should render correctly', () => {
+          setupIsCollapsed();
 
           Expect.labelContains(defaultLabel);
-          Expect.displayCollapseButton(true);
-          Expect.displaySearchInput(true);
-          Expect.numberOfIdleLinkValues(defaultNumberOfValues);
-          Expect.displayShowMoreButton(true);
+          Expect.displayExpandButton(true);
+          Expect.displaySearchInput(false);
+          Expect.numberOfIdleCheckboxValues(0);
+          Expect.displayShowMoreButton(false);
         });
       });
-    });
 
-    it('should work as expected', () => {
-      scope('when searching for a value that returns a single result', () => {
-        const queryValue = 'account';
+      if (param.useCase === useCaseEnum.search) {
+        describe('with a selected value in the URL', () => {
+          const selectedValue = 'Account';
 
-        setupWithSingleFacetSearchValue(queryValue, linkValueOptions);
-        searchForFacetValue(queryValue);
-
-        Expect.numberOfIdleLinkValues(1);
-        Expect.numberOfSelectedLinkValues(0);
-        Expect.displayMoreMatchesFound(false);
-        Expect.displayNoMatchesFound(false);
-        Expect.displaySearchClearButton(true);
-      });
-    });
-
-    it('should show more/less values', () => {
-      scope('when clicking show more values', () => {
-        const smallNumberOfValues = 2;
-
-        function showMoreValues() {
-          visitFacetPage({
-            field: defaultField,
-            label: defaultLabel,
-            numberOfValues: smallNumberOfValues,
-          });
-          Actions.clickShowMoreButton();
-        }
-
-        showMoreValues();
-        Expect.numberOfValues(smallNumberOfValues * 2);
-        aliasFacetValues();
-        Expect.facetValuesEqual(indexFacetValuesAlias);
-
-        scope('when clicking show more button again', () => {
-          function showMoreValuesAgain() {
-            Actions.clickShowMoreButton();
+          function loadWithSelectedValue() {
+            loadFromUrlHash(
+              {
+                field: defaultField,
+              },
+              `f[objecttype]=${selectedValue}`
+            );
           }
 
-          showMoreValuesAgain();
-          Expect.numberOfValues(smallNumberOfValues * 3);
-          aliasFacetValues();
-          Expect.facetValuesEqual(indexFacetValuesAlias);
+          it('should render correctly', () => {
+            loadWithSelectedValue();
 
-          scope('when clicking show less button', () => {
-            function showLessValues() {
-              showMoreValuesAgain();
-              cy.wait(InterceptAliases.Search);
-              Actions.clickShowLessButton();
-            }
-
-            showLessValues();
-            Expect.numberOfValues(smallNumberOfValues);
-            aliasFacetValues();
-            Expect.facetValuesEqual(indexFacetValuesAlias);
+            Expect.numberOfSelectedCheckboxValues(1);
+            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+            Expect.selectedValuesContain(selectedValue);
           });
         });
-      });
-
-      scope('with no more facet values to show', () => {
-        setupWithNoMoreValues();
-
-        Expect.displayPlaceholder(false);
-        Expect.labelContains(defaultLabel);
-        Expect.displayValues(true);
-        Expect.displayClearButton(false);
-        Expect.displayShowMoreButton(false);
-        Expect.displayShowLessButton(false);
-        Expect.displaySearchInput(false);
-      });
-    });
-  });
-
-  describe('with custom field, label, and number of results', () => {
-    function setupCustomOptions() {
-      visitFacetPage(
-        {
-          field: 'language',
-          label: 'Language',
-          numberOfValues: 3,
-        },
-        false
-      );
-      aliasFacetValues();
-    }
-
-    it('should render correctly', () => {
-      setupCustomOptions();
-
-      Expect.labelContains('Language');
-      Expect.numberOfIdleCheckboxValues(3);
-      Expect.facetValuesEqual(indexFacetValuesAlias);
-    });
-  });
-
-  describe('when field returns no results', () => {
-    before(() => {
-      visitFacetPage({
-        field: 'somethingthatdoesnotexist',
-      });
-    });
-
-    it('should render correctly', () => {
-      Expect.displayLabel(false);
-    });
-  });
-
-  describe('with custom sorting', () => {
-    ['automatic', 'score', 'alphanumeric', 'occurrences'].forEach((sorting) => {
-      it(`should use "${sorting}" sorting in the facet request`, () => {
-        visitFacetPage(
-          {
-            sortCriteria: sorting,
-          },
-          false
-        );
-        cy.wait(InterceptAliases.Search).then((interception) => {
-          const facetRequest = interception.request.body.facets[0];
-          expect(facetRequest.sortCriteria).to.eq(sorting);
-        });
-      });
-    });
-  });
-
-  describe('with invalid sorting', () => {
-    before(() => {
-      visitFacetPage(
-        {
-          sortCriteria: 'invalid',
-        },
-        false
-      );
-    });
-    it('should render correctly', () => {
-      Expect.displayLabel(false);
-    });
-  });
-
-  describe('with no search', () => {
-    function setupNoSearch() {
-      visitFacetPage({
-        noSearch: true,
-      });
-    }
-
-    it('should render correctly', () => {
-      setupNoSearch();
-
-      Expect.displaySearchInput(false);
-      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-      Expect.numberOfSelectedCheckboxValues(0);
-    });
-  });
-
-  describe('with is collapsed', () => {
-    function setupIsCollapsed() {
-      visitFacetPage({
-        isCollapsed: true,
-      });
-    }
-
-    it('should render correctly', () => {
-      setupIsCollapsed();
-
-      Expect.labelContains(defaultLabel);
-      Expect.displayExpandButton(true);
-      Expect.displaySearchInput(false);
-      Expect.numberOfIdleCheckboxValues(0);
-      Expect.displayShowMoreButton(false);
-    });
-  });
-
-  describe('with a selected value in the URL', () => {
-    const selectedValue = 'Account';
-
-    function loadWithSelectedValue() {
-      loadFromUrlHash(
-        {
-          field: defaultField,
-        },
-        `f[objecttype]=${selectedValue}`
-      );
-    }
-
-    it('should render correctly', () => {
-      loadWithSelectedValue();
-
-      Expect.numberOfSelectedCheckboxValues(1);
-      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
-      Expect.selectedValuesContain(selectedValue);
+      }
     });
   });
 });

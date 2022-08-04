@@ -1,4 +1,8 @@
-import {baselineAlias, InterceptAliases} from '../page-objects/search';
+import {
+  baselineAlias,
+  getAlias,
+  InterceptAliases,
+} from '../page-objects/search';
 
 export const SearchExpectations = {
   sortedBy: (sortCriteria: string) => {
@@ -7,8 +11,8 @@ export const SearchExpectations = {
     });
   },
 
-  numberOfResults: (value: number) => {
-    cy.wait(InterceptAliases.Search).then((interception) =>
+  numberOfResults: (value: number, useCase: string) => {
+    cy.wait(getAlias(useCase)).then((interception) =>
       expect(interception.response?.body.results.length).to.equal(
         value,
         `search response should contain ${value} results`
@@ -25,9 +29,9 @@ export const SearchExpectations = {
     });
   },
 
-  numberOfSearchRequests: (expected: number) => {
+  numberOfSearchRequests: (expected: number, useCase: string) => {
     cy.get(baselineAlias).then((baseline) => {
-      cy.get(`${InterceptAliases.Search}.all`)
+      cy.get(`${getAlias(useCase)}.all`)
         .should('have.length', Number(baseline) + expected)
         .logDetail(`should send ${expected} search requests`);
     });

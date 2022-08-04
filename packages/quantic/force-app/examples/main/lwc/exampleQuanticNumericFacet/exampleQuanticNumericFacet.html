@@ -4,7 +4,9 @@
         description={pageDescription}
         show-preview={isConfigured}>
 
-        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+            <c-action-perform-search slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-perform-search>
+        </c-configurator>
 
         <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
             <c-quantic-numeric-facet

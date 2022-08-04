@@ -1,3 +1,4 @@
+import {use} from 'chai';
 import {
   CyHttpMessages,
   HttpResponseInterceptor,
@@ -5,6 +6,7 @@ import {
   StaticResponse,
   // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
+import {useCaseEnum} from './use-case';
 
 type RequestParams = Record<string, string | number | boolean | undefined>;
 
@@ -49,6 +51,7 @@ export const InterceptAliases = {
   Search: '@coveoSearch',
   FacetSearch: '@coveoFacetSearch',
   ResultHtml: '@coveoResultHtml',
+  Insight: '@CoveoInsight',
 };
 
 export const routeMatchers = {
@@ -56,6 +59,7 @@ export const routeMatchers = {
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
+  insight: '**rest/organizations/*/insight/v1/configs/*/search',
   html: '**/rest/search/v2/html?*',
 };
 
@@ -76,7 +80,10 @@ export function interceptSearch() {
     .as(InterceptAliases.Search.substring(1))
 
     .intercept('POST', routeMatchers.facetSearch)
-    .as(InterceptAliases.FacetSearch.substring(1));
+    .as(InterceptAliases.FacetSearch.substring(1))
+
+    .intercept('POST', routeMatchers.insight)
+    .as(InterceptAliases.Insight.substring(1));
 }
 
 export function interceptSearchWithError(
@@ -105,15 +112,15 @@ export function extractResults(
   return response.body.results;
 }
 
-export function mockNoMoreFacetValues(field: string) {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockNoMoreFacetValues(field: string, useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.facets.find(
         (facet) => facet.field === field
       ).moreValuesAvailable = false;
       res.send();
     });
-  }).as(InterceptAliases.Search.substring(1));
+  }).as(getAlias(useCase).substring(1));
 }
 
 export function mockFacetSearchSingleValue(queryString: string) {
@@ -162,15 +169,15 @@ export function interceptSearchIndefinitely(): {sendResponse: () => void} {
   return interceptIndefinitely(routeMatchers.search);
 }
 
-export function mockSearchNoResults() {
-  cy.intercept(routeMatchers.search, (req) => {
+export function mockSearchNoResults(useCase?: string) {
+  cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
       res.body.results = [];
       res.body.totalCount = 0;
       res.body.totalCountFiltered = 0;
       res.send();
     });
-  }).as(InterceptAliases.Search.substring(1));
+  }).as(getAlias(useCase).substring(1));
 }
 
 export function mockSearchWithResults() {
@@ -219,4 +226,16 @@ export function captureBaselineNumberOfRequests(interceptAlias: string) {
   cy.get(`${interceptAlias}.all`).then((calls) =>
     cy.wrap(calls.length).as(baselineAlias.substring(1))
   );
+}
+
+export function getAlias(useCase?: string) {
+  return useCase === useCaseEnum.insight
+    ? InterceptAliases.Insight
+    : InterceptAliases.Search;
+}
+
+export function getRoute(useCase?: string) {
+  return useCase === useCaseEnum.insight
+    ? routeMatchers.insight
+    : routeMatchers.search;
 }

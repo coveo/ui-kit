@@ -6,7 +6,11 @@ import {
   CategoryFacetActions as Actions,
   togoHierarchy,
 } from './category-facet-actions';
-import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
+import {
+  getAlias,
+  InterceptAliases,
+  interceptSearch,
+} from '../../../page-objects/search';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {uesCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
 
@@ -64,12 +68,12 @@ describe('quantic-category-facet', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
-    if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
-    }
     if (options.useCase !== useCaseEnum.search) {
       cy.wait(1000);
       performSearch();
+    }
+    if (waitForSearch) {
+      cy.wait(getAlias(options.useCase));
     }
   }
 
@@ -102,16 +106,13 @@ describe('quantic-category-facet', () => {
   }
 
   function setupWithCustomDelimitingCharacter(useCase: string) {
-    visitCategoryFacetPage(
-      {
-        field: defaultField,
-        label: defaultLabel,
-        numberOfValues: defaultNumberOfValues,
-        delimitingCharacter: '/',
-        useCase: useCase,
-      },
-      true
-    );
+    visitCategoryFacetPage({
+      field: defaultField,
+      label: defaultLabel,
+      numberOfValues: defaultNumberOfValues,
+      delimitingCharacter: '/',
+      useCase: useCase,
+    });
   }
 
   function setupGoDeeperOneLevel(useCase: string) {
@@ -126,7 +127,7 @@ describe('quantic-category-facet', () => {
 
   function setupShowLess(useCase: string) {
     setupShowMore(useCase);
-    cy.wait(InterceptAliases.Search);
+    cy.wait(getAlias(useCase));
     Actions.clickShowLessButton();
   }
 
@@ -146,10 +147,7 @@ describe('quantic-category-facet', () => {
     describe(param.label, () => {
       describe('with default category facet', () => {
         it('should work as expected', () => {
-          visitCategoryFacetPage(
-            {...defaultSettings, useCase: param.useCase},
-            param.waitForSearch
-          );
+          visitCategoryFacetPage({...defaultSettings, useCase: param.useCase});
 
           Expect.displayFacet(true);
           Expect.displayLabel(true);
@@ -160,10 +158,10 @@ describe('quantic-category-facet', () => {
 
         describe('when selecting on the level data set', () => {
           it('should bold the selected parent level', () => {
-            visitCategoryFacetPage(
-              {...defaultSettings, useCase: param.useCase},
-              param.waitForSearch
-            );
+            visitCategoryFacetPage({
+              ...defaultSettings,
+              useCase: param.useCase,
+            });
 
             // Verify all levels
             montrealHierarchy.forEach((value, index) => {
@@ -174,7 +172,9 @@ describe('quantic-category-facet', () => {
               Expect.logCategoryFacetSelected(selectedPath);
               Expect.numberOfParentValues(index + 1);
               Expect.parentValueLabel(value);
-              Expect.urlHashContains(selectedPath);
+              if (param.useCase === useCaseEnum.search) {
+                Expect.urlHashContains(selectedPath);
+              }
             });
           });
         });
@@ -189,8 +189,10 @@ describe('quantic-category-facet', () => {
             Expect.numberOfChildValues(defaultNumberOfValues * 2);
             Expect.displayShowMoreButton(true);
             Expect.displayShowLessButton(true);
-            Expect.urlHashContains(selectedPath);
             Expect.logCategoryFacetSelected(selectedPath);
+            if (param.useCase === useCaseEnum.search) {
+              Expect.urlHashContains(selectedPath);
+            }
           });
         });
 
@@ -204,8 +206,10 @@ describe('quantic-category-facet', () => {
             Expect.numberOfChildValues(defaultNumberOfValues);
             Expect.displayShowMoreButton(true);
             Expect.displayShowLessButton(false);
-            Expect.urlHashContains(selectedPath);
             Expect.logCategoryFacetSelected(selectedPath);
+            if (param.useCase === useCaseEnum.search) {
+              Expect.urlHashContains(selectedPath);
+            }
           });
         });
 
@@ -224,7 +228,9 @@ describe('quantic-category-facet', () => {
                 Expect.logCategoryFacetSelected(selectedPath);
                 Expect.numberOfParentValues(3 - index);
                 Expect.parentValueLabel(value);
-                Expect.urlHashContains(selectedPath);
+                if (param.useCase === useCaseEnum.search) {
+                  Expect.urlHashContains(selectedPath);
+                }
               });
           });
 
@@ -263,87 +269,89 @@ describe('quantic-category-facet', () => {
         }
       });
 
-      describe('with option search is enabled in category facet', () => {
-        describe('when typing into facet search input box', () => {
-          it('facet value should be filtered to match with the keywords', () => {
-            const query = 'mal';
-            visitCategoryFacetPage(
-              {...searchEnabledSettings, useCase: param.useCase},
-              param.waitForSearch
-            );
+      if (param.useCase === useCaseEnum.search) {
+        describe('with option search is enabled in category facet', () => {
+          describe('when typing into facet search input box', () => {
+            it('facet value should be filtered to match with the keywords', () => {
+              const query = 'mal';
+              visitCategoryFacetPage({
+                ...searchEnabledSettings,
+                useCase: param.useCase,
+              });
 
-            Actions.typeQueryInSearchInput(query);
+              Actions.typeQueryInSearchInput(query);
 
-            Expect.logFacetSearch(hierarchicalField);
-            Expect.displayFacet(true);
-            Expect.displayNoMatchesFound(false);
-            Expect.displayMoreMatchesFound(true);
-            Expect.moreMatchesFoundContainsQuery(query);
-            Expect.highlightsResults(query);
-            Expect.displaySearchResultsPath();
-            Expect.searchResults(defaultNumberOfValues);
+              Expect.logFacetSearch(hierarchicalField);
+              Expect.displayFacet(true);
+              Expect.displayNoMatchesFound(false);
+              Expect.displayMoreMatchesFound(true);
+              Expect.moreMatchesFoundContainsQuery(query);
+              Expect.highlightsResults(query);
+              Expect.displaySearchResultsPath();
+              Expect.searchResults(defaultNumberOfValues);
+            });
+          });
+
+          describe('when selecting a value from the search result', () => {
+            it('should select that category facet level', () => {
+              const query = 'mont';
+              const selectedValue = 'Montreal';
+
+              visitCategoryFacetPage({
+                ...searchEnabledSettings,
+                useCase: param.useCase,
+              });
+
+              Actions.typeQueryInSearchInput(query);
+              Expect.logFacetSearch(hierarchicalField);
+
+              Actions.selectSearchResult(selectedValue);
+              Expect.logCategoryFacetSelected(montrealHierarchy);
+              Expect.numberOfParentValues(4);
+              Expect.urlHashContains(montrealHierarchy);
+            });
+          });
+
+          describe('when clearing the facet search results', () => {
+            it('should clear the search input', () => {
+              const query = 'mont';
+
+              visitCategoryFacetPage({
+                ...searchEnabledSettings,
+                useCase: param.useCase,
+              });
+
+              Actions.typeQueryInSearchInput(query);
+              Expect.logFacetSearch(hierarchicalField);
+              Expect.searchResults(8);
+
+              Actions.clickSearchClearButton();
+              Expect.logFacetSearch(hierarchicalField);
+              Expect.numberOfValues(defaultNumberOfValues - 1);
+              Expect.searchInputEmpty();
+            });
+          });
+
+          describe('when searching for a random value', () => {
+            it('should return no results', () => {
+              const query = 'something';
+
+              visitCategoryFacetPage({
+                ...searchEnabledSettings,
+                useCase: param.useCase,
+              });
+
+              Actions.typeQueryInSearchInput(query);
+
+              Expect.logFacetSearch(hierarchicalField);
+              Expect.displayNoMatchesFound(true);
+              Expect.noMatchesFoundContainsQuery(query);
+              Expect.displaySearchClearButton(true);
+              Expect.searchResults(0);
+            });
           });
         });
-
-        describe('when selecting a value from the search result', () => {
-          it('should select that category facet level', () => {
-            const query = 'mont';
-            const selectedValue = 'Montreal';
-
-            visitCategoryFacetPage(
-              {...searchEnabledSettings, useCase: param.useCase},
-              param.waitForSearch
-            );
-
-            Actions.typeQueryInSearchInput(query);
-            Expect.logFacetSearch(hierarchicalField);
-
-            Actions.selectSearchResult(selectedValue);
-            Expect.logCategoryFacetSelected(montrealHierarchy);
-            Expect.numberOfParentValues(4);
-            Expect.urlHashContains(montrealHierarchy);
-          });
-        });
-
-        describe('when clearing the facet search results', () => {
-          it('should clear the search input', () => {
-            const query = 'mont';
-
-            visitCategoryFacetPage(
-              {...searchEnabledSettings, useCase: param.useCase},
-              param.waitForSearch
-            );
-
-            Actions.typeQueryInSearchInput(query);
-            Expect.logFacetSearch(hierarchicalField);
-            Expect.searchResults(8);
-
-            Actions.clickSearchClearButton();
-            Expect.logFacetSearch(hierarchicalField);
-            Expect.numberOfValues(defaultNumberOfValues - 1);
-            Expect.searchInputEmpty();
-          });
-        });
-
-        describe('when searching for a random value', () => {
-          it('should return no results', () => {
-            const query = 'something';
-
-            visitCategoryFacetPage(
-              {...searchEnabledSettings, useCase: param.useCase},
-              param.waitForSearch
-            );
-
-            Actions.typeQueryInSearchInput(query);
-
-            Expect.logFacetSearch(hierarchicalField);
-            Expect.displayNoMatchesFound(true);
-            Expect.noMatchesFoundContainsQuery(query);
-            Expect.displaySearchClearButton(true);
-            Expect.searchResults(0);
-          });
-        });
-      });
+      }
 
       describe('setup with custom basePath', () => {
         describe('when loading', () => {
@@ -352,7 +360,7 @@ describe('quantic-category-facet', () => {
 
             Expect.firstChildContains(togoHierarchy[2]);
             Expect.numberOfParentValues(0);
-            Expect.search.numberOfResults(1);
+            Expect.search.numberOfResults(1, param.useCase);
 
             Actions.selectChildValue(togoHierarchy[2]);
             Expect.logCategoryFacetSelected(togoHierarchy.slice(2, 3));
@@ -385,7 +393,7 @@ describe('quantic-category-facet', () => {
               false
             );
 
-            Expect.search.numberOfResults(10);
+            Expect.search.numberOfResults(10, param.useCase);
           });
         });
       });
@@ -411,10 +419,10 @@ describe('quantic-category-facet', () => {
       });
       describe('setup with custom numberOfValues', () => {
         it('should show custom number of values', () => {
-          visitCategoryFacetPage(
-            {...customNumberOfValuesSettings, useCase: param.useCase},
-            param.waitForSearch
-          );
+          visitCategoryFacetPage({
+            ...customNumberOfValuesSettings,
+            useCase: param.useCase,
+          });
 
           Expect.numberOfValues(customNumberOfValues);
           Expect.displayShowMoreButton(true);
@@ -430,7 +438,7 @@ describe('quantic-category-facet', () => {
               },
               false
             );
-            cy.wait(InterceptAliases.Search).then((interception) => {
+            cy.wait(getAlias(param.useCase)).then((interception) => {
               const facetRequest = interception.request.body.facets[0];
               expect(facetRequest.sortCriteria).to.eq(sorting);
             });
@@ -439,16 +447,13 @@ describe('quantic-category-facet', () => {
       });
       describe('with isCollapsed', () => {
         function setupIsCollapsed() {
-          visitCategoryFacetPage(
-            {
-              field: defaultField,
-              label: defaultLabel,
-              numberOfValues: defaultNumberOfValues,
-              isCollapsed: true,
-              useCase: param.useCase,
-            },
-            param.waitForSearch
-          );
+          visitCategoryFacetPage({
+            field: defaultField,
+            label: defaultLabel,
+            numberOfValues: defaultNumberOfValues,
+            isCollapsed: true,
+            useCase: param.useCase,
+          });
         }
 
         it('should render correctly', () => {
