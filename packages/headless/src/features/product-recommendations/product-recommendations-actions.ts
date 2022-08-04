@@ -193,6 +193,7 @@ const mapResultToProductResult = (
     ec_name: result.raw.ec_name as string,
     ec_brand: result.raw.ec_brand as string,
     ec_category: result.raw.ec_category as string,
+    ec_item_group_id: result.raw.ec_item_group_id as string,
     ec_price,
     ec_shortdesc: result.raw.ec_shortdesc as string,
     ec_thumbnails: result.raw.ec_thumbnails as string[],

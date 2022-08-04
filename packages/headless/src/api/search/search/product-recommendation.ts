@@ -34,6 +34,12 @@ export interface ProductRecommendation {
    */
   ec_category?: string;
   /**
+   * The id used for Product Grouping.
+   *
+   * From the `ec_item_group_id` field.
+   */
+  ec_item_group_id?: string;
+  /**
    * The base price of the product or variant.
    *
    * From the `ec_price` field.
@@ -101,6 +107,7 @@ export const ProductRecommendationDefaultFields: string[] = [
   'ec_name',
   'ec_brand',
   'ec_category',
+  'ec_item_group_id',
   'ec_price',
   'ec_promo_price',
   'ec_shortdesc',
