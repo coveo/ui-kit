@@ -129,7 +129,10 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public clearFilters = true;
 
   @AriaLiveRegion('search-box')
-  protected ariaMessage!: string;
+  protected searchBoxAriaMessage!: string;
+
+  @AriaLiveRegion('search-suggestions', true)
+  protected suggestionsAriaMessage!: string;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
@@ -364,7 +367,7 @@ export class AtomicSearchBox {
 
   private updateAriaMessage() {
     const elsLength = this.allSuggestionElements.filter(elementHasQuery).length;
-    this.ariaMessage = elsLength
+    this.searchBoxAriaMessage = elsLength
       ? this.bindings.i18n.t('query-suggestions-available', {
           count: elsLength,
         })
@@ -487,7 +490,7 @@ export class AtomicSearchBox {
 
   private updateAriaLiveActiveDescendant(value: HTMLElement) {
     if (isMacOS()) {
-      this.ariaMessage = value.ariaLabel!;
+      this.suggestionsAriaMessage = value.ariaLabel!;
     }
   }
 
@@ -547,7 +550,7 @@ export class AtomicSearchBox {
   private clearSuggestionElements() {
     this.leftSuggestionElements = [];
     this.rightSuggestionElements = [];
-    this.ariaMessage = '';
+    this.searchBoxAriaMessage = '';
   }
 
   private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
