@@ -78,6 +78,8 @@ import {BaseFacet} from '../../../common/facets/facet-common';
  * @part value-link - The child facet value.
  * @part value-label - The facet value label.
  * @part value-count - The facet value count.
+ * @part leaf-value - A facet value with no child value
+ * @part node-value - A facet value with children values
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -408,7 +410,7 @@ export class AtomicCategoryFacet
             this.facet.deselectAll();
           }}
           searchQuery={this.facetState.facetSearch.query}
-          part="active-parent"
+          part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
           class="parent-active"
           buttonRef={this.activeValueFocus.setTarget}
         >
@@ -447,6 +449,7 @@ export class AtomicCategoryFacet
           isShowLessFocusTarget && this.showLessFocus.setTarget(element);
           isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
         }}
+        additionalPart={this.getIsLeafOrNodePart(facetValue)}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -472,6 +475,10 @@ export class AtomicCategoryFacet
         )}
       </ul>
     );
+  }
+
+  private getIsLeafOrNodePart(value: CategoryFacetValue) {
+    return value.isLeafValue ? 'leaf-value' : 'node-value';
   }
 
   private renderSearchResults() {
