@@ -101,15 +101,12 @@ export default class QuanticTab extends LightningElement {
   }
 
   get tabClass() {
-    return `slds-tabs_default__item slds-tabs_button slds-button ${
+    return `slds-button slds-tabs_default__item tab_button ${
       this.isActive ? 'slds-is-active' : ''
     }`;
   }
+
   get isPressed() {
     return `${this.isActive}`;
-  }
-
-  get arialLabelText() {
-    return `${this.label}`;
   }
 }

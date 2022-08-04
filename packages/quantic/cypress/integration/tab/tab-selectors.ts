@@ -10,7 +10,7 @@ export interface TabSelector extends ComponentSelector {
 export const TabSelectors: TabSelector = {
   get: () => cy.get(tabComponent),
   tab: () =>
-    TabSelectors.get().find('button.slds-tabs_default__item.slds-tabs_button'),
+    TabSelectors.get().find('button.slds-tabs_default__item.tab_button'),
   active: () =>
     TabSelectors.get().find('button.slds-tabs_default__item.slds-is-active'),
 };

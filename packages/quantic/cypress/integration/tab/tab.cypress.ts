@@ -6,7 +6,6 @@ import {
 } from '../../page-objects/search';
 import {TabExpectations as Expect} from './tab-expectations';
 import {TabActions as Actions} from './tab-actions';
-import {TabSelector, TabSelectors} from './tab-selectors';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 interface TabOptions {
@@ -104,6 +103,7 @@ describe('quantic-tab', () => {
     it('should be accessible to keyboard', () => {
       loadFromUrlHash({}, `tab=${tabs.case.label}`);
 
+      // Select tab using the space bar
       Actions.selectTab(tabs.all.label, ' ');
       Expect.activeTabContains(tabs.all.label);
 
