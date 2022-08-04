@@ -34,6 +34,7 @@ export const AtomicInsightRefineToggle = /*@__PURE__*/createReactComponent<JSX.A
 export const AtomicInsightResult = /*@__PURE__*/createReactComponent<JSX.AtomicInsightResult, HTMLAtomicInsightResultElement>('atomic-insight-result');
 export const AtomicInsightResultList = /*@__PURE__*/createReactComponent<JSX.AtomicInsightResultList, HTMLAtomicInsightResultListElement>('atomic-insight-result-list');
 export const AtomicInsightResultTemplate = /*@__PURE__*/createReactComponent<JSX.AtomicInsightResultTemplate, HTMLAtomicInsightResultTemplateElement>('atomic-insight-result-template');
+export const AtomicInsightTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicInsightTimeframeFacet, HTMLAtomicInsightTimeframeFacetElement>('atomic-insight-timeframe-facet');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicLoadMoreChildrenResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreChildrenResults, HTMLAtomicLoadMoreChildrenResultsElement>('atomic-load-more-children-results');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
