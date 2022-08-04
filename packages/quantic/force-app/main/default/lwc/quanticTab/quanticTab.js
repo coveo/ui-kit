@@ -107,6 +107,7 @@ export default class QuanticTab extends LightningElement {
   }
 
   get isPressed() {
+    // convert type boolean to type string for attribute aria-pressed
     return `${this.isActive}`;
   }
 }
