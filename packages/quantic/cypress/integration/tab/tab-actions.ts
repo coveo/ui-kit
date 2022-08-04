@@ -14,7 +14,7 @@ function tabActions(selector: TabSelector) {
       selector.tab().contains(value).tab().type(' ');
     },
     findTabPressShiftTabPressSpace: (value: string) => {
-      // .tab() is equivalent to pressing the Tab; .type(' ') is equivalent to pressing the space bar;
+      // tab({shift: true}) is equivalent to pressing the Shift and the Tab; .type(' ') is equivalent to pressing the space bar;
       selector.tab().contains(value).tab({shift: true}).type(' ');
     },
   };
