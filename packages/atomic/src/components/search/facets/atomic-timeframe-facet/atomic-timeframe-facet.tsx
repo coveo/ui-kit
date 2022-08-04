@@ -72,7 +72,7 @@ import {BaseFacet} from '../../../common/facets/facet-common';
  */
 @Component({
   tag: 'atomic-timeframe-facet',
-  styleUrl: 'atomic-timeframe-facet.pcss',
+  styleUrl: '../../../common/facets/timeframe-facet-common.pcss',
   shadow: true,
 })
 export class AtomicTimeframeFacet

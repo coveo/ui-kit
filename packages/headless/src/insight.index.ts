@@ -274,4 +274,10 @@ export {
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
 
+export type {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+} from './api/search/date/relative-date';
+
 export {deserializeRelativeDate} from './api/search/date/relative-date';
