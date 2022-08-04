@@ -66,6 +66,7 @@ import {
   updateInstantResultsQuery,
 } from '../instant-results/instant-results-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+import {SearchOrigin} from '../../api/search/search-metadata';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -108,10 +109,14 @@ export interface ExecuteSearchThunkReturn {
 const fetchFromAPI = async (
   client: SearchAPIClient,
   state: StateNeededByExecuteSearch,
-  {request, mappings}: MappedSearchRequest
+  {request, mappings}: MappedSearchRequest,
+  origin: SearchOrigin
 ) => {
   const startedAt = new Date().getTime();
-  const response = mapSearchResponse(await client.search(request), mappings);
+  const response = mapSearchResponse(
+    await client.search(request, {origin}),
+    mappings
+  );
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {response, duration, queryExecuted, requestExecuted: request};
@@ -149,7 +154,8 @@ export const executeSearch = createAsyncThunk<
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      await buildSearchRequest(state)
+      await buildSearchRequest(state),
+      'mainSearch'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -224,7 +230,8 @@ export const fetchPage = createAsyncThunk<
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      await buildSearchRequest(state)
+      await buildSearchRequest(state),
+      'mainSearch'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -254,7 +261,8 @@ export const fetchMoreResults = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      await buildFetchMoreRequest(state)
+      await buildFetchMoreRequest(state),
+      'mainSearch'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -288,7 +296,8 @@ export const fetchFacetValues = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      await buildFetchFacetValuesRequest(state)
+      await buildFetchFacetValuesRequest(state),
+      'facetValues'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -313,7 +322,7 @@ export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsActionCreatorPayload,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch & InstantResultSection>
 >(
-  'instantResults/fetch',
+  'search/fetchInstantResults',
   async (
     payload: FetchInstantResultsActionCreatorPayload,
     {getState, dispatch, rejectWithValue, extra: {apiClient, validatePayload}}
@@ -382,7 +391,10 @@ async function fetchInstantResultsFromAPI(
     numberOfResults
   );
   return mapSearchResponse(
-    await apiClient.search(request, {disableAbortWarning: true}),
+    await apiClient.search(request, {
+      disableAbortWarning: true,
+      origin: 'instantResults',
+    }),
     mappings
   );
 }
@@ -429,7 +441,8 @@ const automaticallyRetryQueryWithCorrection = async (
   const fetched = await fetchFromAPI(
     client,
     getState(),
-    await buildSearchRequest(getState())
+    await buildSearchRequest(getState()),
+    'mainSearch'
   );
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
