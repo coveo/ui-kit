@@ -71,7 +71,7 @@ export class AtomicSearchBoxRecentQueries {
     this.storage = new SafeStorage();
     this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
       initialState: {queries: this.retrieveLocalStorage()},
-      options: {maxLength: 1000},
+      options: {maxLength: 1000, clearFilters: this.bindings.clearFilters},
     });
 
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());

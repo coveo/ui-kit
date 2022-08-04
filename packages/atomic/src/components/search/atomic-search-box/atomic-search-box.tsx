@@ -8,6 +8,7 @@ import {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
   buildStandaloneSearchBox,
+  SearchBoxOptions,
 } from '@coveo/headless';
 import {
   BindStateToController,
@@ -119,6 +120,12 @@ export class AtomicSearchBox {
    */
   @Prop({reflect: true}) public disableSearch = false;
 
+  /**
+   * Whether to clear all active query filters when the end user submits a new query from the search box.
+   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   */
+  @Prop({reflect: true}) public clearFilters = true;
+
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
 
@@ -126,7 +133,7 @@ export class AtomicSearchBox {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
 
-    const searchBoxOptions = {
+    const searchBoxOptions: SearchBoxOptions = {
       id: this.id,
       numberOfSuggestions: 0,
       highlightOptions: {
@@ -139,6 +146,7 @@ export class AtomicSearchBox {
           close: '</span>',
         },
       },
+      clearFilters: this.clearFilters,
     };
 
     this.searchBox = this.redirectionUrl
@@ -201,6 +209,7 @@ export class AtomicSearchBox {
       isStandalone: !!this.redirectionUrl,
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
+      clearFilters: this.clearFilters,
       suggestedQuery: () => this.suggestedQuery,
       clearSuggestions: () => this.clearSuggestions(),
       triggerSuggestions: () => this.triggerSuggestions(),
@@ -560,7 +569,12 @@ export class AtomicSearchBox {
     side: 'left' | 'right'
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
-    const isSelected = id === this.activeDescendant;
+
+    const isSelected =
+      id === this.activeDescendant ||
+      (this.suggestedQuery === item.query &&
+        !this.panelInFocus?.getAttribute('part')?.includes(side));
+
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
@@ -683,7 +697,6 @@ export class AtomicSearchBox {
 
   public render() {
     this.updateBreakpoints();
-
     return [
       <SearchBoxWrapper disabled={this.disableSearch}>
         <SearchInput
