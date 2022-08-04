@@ -17,7 +17,7 @@ import {Schema} from '@coveo/bueno';
 import {Result} from '../../api/search/search/result';
 
 export const logProductRecommendations = makeAnalyticsAction(
-  'analytics/productrecommendations/load',
+  'analytics/productRecommendations/load',
   AnalyticsType.Search,
   (client) => client.logRecommendationInterfaceLoad(),
   (state) =>
