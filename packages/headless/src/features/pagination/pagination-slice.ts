@@ -156,7 +156,7 @@ export function calculateFirstResult(page: number, numberOfResults: number) {
 }
 
 export function calculatePage(firstResult: number, numberOfResults: number) {
-  return firstResult / numberOfResults + 1;
+  return Math.round(firstResult / numberOfResults) + 1;
 }
 
 export function calculateMaxPage(
