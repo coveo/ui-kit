@@ -105,6 +105,9 @@ export default class QuanticTab extends LightningElement {
       this.isActive ? 'slds-is-active' : ''
     }`;
   }
+  get isPressed() {
+    return `${this.isActive}`;
+  }
 
   get arialLabelText() {
     return `${this.label}`;
