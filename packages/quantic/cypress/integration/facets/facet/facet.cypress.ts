@@ -134,7 +134,8 @@ describe('Facet Test Suite', () => {
     }
     it('should be accessible through keyboard', () => {
       setupWithValues();
-      Actions.tabAndSelectNextValue(defaultLabel);
+      Actions.findValuePressTabPressSpace(defaultLabel);
+      Actions.findValuePressShiftTabPressSpace(defaultLabel);
     });
   });
   describe('with values', () => {
