@@ -280,6 +280,7 @@ interface FacetCommonOptions {
   bindings: Bindings | InsightBindings;
   label: string;
   field: string;
+  headingLevel: number;
   displayValuesAs: FacetDisplayValues;
   dependsOn: Record<string, string>;
   dependenciesManager: FacetConditionsManager | InsightFacetConditionsManager;
@@ -295,7 +296,6 @@ interface FacetCommonRenderProps {
   isCollapsed: boolean;
   numberOfValues: number;
   headerFocus: FocusTargetController;
-  headingLevel: number;
   showLessFocus: FocusTargetController;
   showMoreFocus: FocusTargetController;
   onToggleCollapse: () => boolean;
@@ -306,6 +306,7 @@ export class FacetCommon {
   private bindings: Bindings | InsightBindings;
   private label: string;
   private field: string;
+  private headingLevel: number;
   private displayValuesAs: FacetDisplayValues;
   private dependsOn: Record<string, string>;
   public dependenciesManager:
@@ -323,6 +324,7 @@ export class FacetCommon {
     this.bindings = opts.bindings;
     this.label = opts.label;
     this.field = opts.field;
+    this.headingLevel = opts.headingLevel;
     this.displayValuesAs = opts.displayValuesAs;
     this.dependsOn = opts.dependsOn;
     this.dependenciesManager = opts.dependenciesManager;
@@ -372,7 +374,6 @@ export class FacetCommon {
 
   public renderHeader(
     headerFocus: FocusTargetController,
-    headingLevel: number,
     isCollapsed: boolean,
     onToggleCollapse: () => boolean
   ) {
@@ -389,7 +390,7 @@ export class FacetCommon {
             .length
         }
         isCollapsed={isCollapsed}
-        headingLevel={headingLevel}
+        headingLevel={this.headingLevel}
         onToggleCollapse={onToggleCollapse}
         headerRef={headerFocus.setTarget}
       ></FacetHeader>
@@ -630,7 +631,6 @@ export class FacetCommon {
     isCollapsed,
     numberOfValues,
     headerFocus,
-    headingLevel,
     showLessFocus,
     showMoreFocus,
     onToggleCollapse,
@@ -654,12 +654,7 @@ export class FacetCommon {
 
     return (
       <FacetContainer>
-        {this.renderHeader(
-          headerFocus,
-          headingLevel,
-          isCollapsed,
-          onToggleCollapse
-        )}
+        {this.renderHeader(headerFocus, isCollapsed, onToggleCollapse)}
         {!isCollapsed && this.renderBody(showLessFocus, showMoreFocus)}
       </FacetContainer>
     );

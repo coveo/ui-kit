@@ -350,14 +350,6 @@ export namespace Components {
     }
     interface AtomicInsightFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-insight-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues"?: string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc   ... ></atomic-insight-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc="doc"   ... ></atomic-insight-facet> ```
-         */
-        "dependsOn": Record<string, string>;
-        /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs": FacetDisplayValues;
@@ -386,7 +378,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-insight-breadbox` component through the bindings store.
          */
         "label": string;
         /**
@@ -397,10 +389,6 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": InsightFacetSortCriterion;
-        /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
-         */
-        "withSearch": boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback": () => void;
@@ -2450,14 +2438,6 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-insight-facet field="objecttype" allowed-values="Contact,Account,File"></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-         */
-        "allowedValues"?: string;
-        /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc   ... ></atomic-insight-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-facet   depends-on-abc="doc"   ... ></atomic-insight-facet> ```
-         */
-        "dependsOn"?: Record<string, string>;
-        /**
           * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
          */
         "displayValuesAs"?: FacetDisplayValues;
@@ -2486,7 +2466,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+          * The non-localized label for the facet. Used in the `atomic-insight-breadbox` component through the bindings store.
          */
         "label"?: string;
         /**
@@ -2497,10 +2477,6 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: InsightFacetSortCriterion;
-        /**
-          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
-         */
-        "withSearch"?: boolean;
     }
     interface AtomicInsightHistoryToggle {
         "clickCallback"?: () => void;

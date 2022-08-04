@@ -65,7 +65,8 @@
     "focus-visible": "5.2.0",
     "i18next": "20.6.1",
     "i18next-http-backend": "1.4.1",
-    "stencil-inline-svg": "1.1.0"
+    "stencil-inline-svg": "1.1.0",
+    "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.26.1",

@@ -111,11 +111,12 @@ export class AtomicInsightInterface
     event.preventDefault();
     event.stopPropagation();
 
+    const rect = this.host.getBoundingClientRect();
     event.detail({
-      top: this.host.offsetTop,
-      left: this.host.offsetLeft,
-      height: this.host.clientHeight,
-      width: this.host.clientWidth,
+      top: rect.top,
+      left: rect.left,
+      height: rect.height,
+      width: rect.width,
     });
   }
 

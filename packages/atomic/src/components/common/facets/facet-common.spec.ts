@@ -1,5 +1,5 @@
 import {NumericFacetValue, SearchStatusState} from '@coveo/headless';
-import {shouldDisplayInputForFacetRange} from '../../search/facets/facet-common';
+import {shouldDisplayInputForFacetRange} from './facet-common';
 
 describe('facet common', () => {
   describe('shouldDisplayInputForFacetRange', () => {

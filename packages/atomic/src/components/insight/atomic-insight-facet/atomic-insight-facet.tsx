@@ -19,7 +19,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {MapProp} from '../../../utils/props-utils';
 import {
   BaseFacet,
   FacetCommon,
@@ -41,14 +40,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @part label-button-icon - The label button icon.
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
- *
- * @part search-input - The search box input.
- * @part search-icon - The search box submit button.
- * @part search-clear-button - The button to clear the search box of input.
- * @part more-matches - The label indicating there are more matches for the current facet search query.
- * @part no-matches - The label indicating there are no matches for the current facet search query.
- * @part matches-query - The highlighted query inside the matches labels.
- * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
@@ -78,6 +69,8 @@ export class AtomicInsightFacet
   public facetCommon!: FacetCommon;
   public facet!: InsightFacet;
   public searchStatus!: InsightSearchStatus;
+  public withSearch = false;
+  public dependsOn = {};
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
@@ -94,7 +87,7 @@ export class AtomicInsightFacet
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
-   * Used in the `atomic-breadbox` component through the bindings store.
+   * Used in the `atomic-insight-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -106,11 +99,6 @@ export class AtomicInsightFacet
    * Also determines the number of additional values to request each time more values are shown.
    */
   @Prop({reflect: true}) public numberOfValues = 8;
-  /**
-   * Whether this facet should contain a search box.
-   * When "true", the search is only enabled when more facet values are available.
-   */
-  @Prop({reflect: true}) public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
@@ -142,50 +130,6 @@ export class AtomicInsightFacet
    * Default: `1000`
    */
   @Prop() public injectionDepth = 1000;
-  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
-
-  /**
-   * The required facets and values for this facet to be displayed.
-   * Examples:
-   * ```html
-   * <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>
-   *
-   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
-   * <atomic-insight-facet
-   *   depends-on-abc
-   *   ...
-   * ></atomic-insight-facet>
-   *
-   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
-   * <atomic-insight-facet
-   *   depends-on-abc="doc"
-   *   ...
-   * ></atomic-insight-facet>
-   * ```
-   */
-  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
-
-  /**
-   * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.
-   *
-   * If you specify a list of values for this option, the facet uses only these values (if they are available in
-   * the current result set).
-   *
-   * Example:
-   *
-   * The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the
-   * current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use
-   * those other values.
-   *
-   * ```html
-   * <atomic-insight-facet field="objecttype" allowed-values="Contact,Account,File"></div>
-   * ```
-   *
-   * The maximum amount of allowed values is 25.
-   *
-   * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-   */
-  @Prop() public allowedValues?: string;
 
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
@@ -205,7 +149,6 @@ export class AtomicInsightFacet
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues?.trim().split(','),
     };
 
     this.facet = buildInsightFacet(this.bindings.engine, {options});
@@ -216,6 +159,7 @@ export class AtomicInsightFacet
       bindings: this.bindings,
       label: this.label,
       field: this.field,
+      headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
       dependsOn: this.dependsOn,
       dependenciesManager: buildInsightFacetConditionsManager(
@@ -238,21 +182,6 @@ export class AtomicInsightFacet
     this.facetCommon.disconnectedCallback();
   }
 
-  public componentShouldUpdate(
-    next: unknown,
-    prev: unknown,
-    propName: keyof AtomicInsightFacet
-  ) {
-    return (
-      !this.facetCommon ||
-      this.facetCommon?.componentShouldUpdate(
-        (next as InsightFacetState).facetSearch,
-        (prev as InsightFacetState).facetSearch,
-        propName
-      )
-    );
-  }
-
   public render() {
     if (!this.facetCommon) {
       return (
@@ -268,7 +197,6 @@ export class AtomicInsightFacet
       isCollapsed: this.isCollapsed,
       numberOfValues: this.numberOfValues,
       headerFocus: this.headerFocus,
-      headingLevel: this.headingLevel,
       showLessFocus: this.showLessFocus,
       showMoreFocus: this.showMoreFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
