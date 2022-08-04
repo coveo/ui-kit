@@ -211,7 +211,7 @@ describe('simpleanalytics', () => {
             expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({somedata: 'asd'});
         });
 
-        it.only('can send view event with clientId', async () => {
+        it('can send view event with clientId', async () => {
             handleOneAnalyticsEvent('init', 'MYTOKEN', {plugins: []});
             await handleOneAnalyticsEvent('send', 'view');
 
