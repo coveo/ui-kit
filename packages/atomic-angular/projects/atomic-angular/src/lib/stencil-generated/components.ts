@@ -442,6 +442,27 @@ export class AtomicInsightHistoryToggle {
 }
 
 
+export declare interface AtomicInsightNumericFacet extends Components.AtomicInsightNumericFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput']
+})
+@Component({
+  selector: 'atomic-insight-numeric-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'withInput']
+})
+export class AtomicInsightNumericFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicInsightRefineModal extends Components.AtomicInsightRefineModal {}
 
 @ProxyCmp({
