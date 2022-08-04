@@ -144,7 +144,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       elements.push({
         key: 'instant-results-show-all-button',
         content: (
-          <Button style="text-primary">
+          <Button part="instant-results-show-all-button" style="text-primary">
             {this.bindings.i18n.t('show-all-results')}
           </Button>
         ),
