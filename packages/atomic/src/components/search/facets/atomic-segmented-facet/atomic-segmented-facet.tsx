@@ -161,7 +161,8 @@ export class AtomicSegmentedFacet
     if (
       this.searchStatus.state.hasError ||
       !this.facet.state.enabled ||
-      !this.searchStatus.state.hasResults
+      (!this.searchStatus.state.hasResults &&
+        this.searchStatus.state.firstSearchExecuted)
     ) {
       return <Hidden></Hidden>;
     }
