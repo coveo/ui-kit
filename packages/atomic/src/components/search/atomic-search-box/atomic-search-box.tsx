@@ -595,10 +595,16 @@ export class AtomicSearchBox {
     side: 'left' | 'right'
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
-    const isSelected = id === this.activeDescendant;
+
+    const isSelected =
+      id === this.activeDescendant ||
+      (this.suggestedQuery === item.query &&
+        !this.panelInFocus?.getAttribute('part')?.includes(side));
+
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
+
     return (
       <li
         id={id}
@@ -703,7 +709,6 @@ export class AtomicSearchBox {
 
   public render() {
     this.updateBreakpoints();
-
     return [
       <SearchBoxWrapper disabled={this.disableSearch}>
         <SearchInput
