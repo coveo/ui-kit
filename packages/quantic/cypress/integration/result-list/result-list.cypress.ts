@@ -1,7 +1,7 @@
 import {configure} from '../../page-objects/configurator';
 import {
   extractResults,
-  InterceptAliases,
+  getAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../page-objects/search';
@@ -41,8 +41,8 @@ describe('quantic-resultlist', () => {
     configure({useCase});
   }
 
-  function aliasResultValues() {
-    cy.wait(InterceptAliases.Search).then((interception) => {
+  function aliasResultValues(useCase: string) {
+    cy.wait(getAlias(useCase)).then((interception) => {
       const results = extractResults(interception.response);
       cy.wrap(results).as(indexResultsAlias.substring(1));
     });
@@ -63,7 +63,7 @@ describe('quantic-resultlist', () => {
             fieldsToInclude: defaultFieldsToInclude,
             useCase: param.useCase,
           });
-          aliasResultValues();
+          aliasResultValues(param.useCase);
 
           scope('when loading the page', () => {
             Expect.events.receivedEvent(true, registerResultTemplatesEvent);
@@ -71,7 +71,10 @@ describe('quantic-resultlist', () => {
 
             performSearch();
 
-            Expect.requestFields(defaultFieldsToInclude.split(','));
+            Expect.requestFields(
+              defaultFieldsToInclude.split(','),
+              param.useCase
+            );
           });
 
           scope('when getting different results', () => {
@@ -81,7 +84,10 @@ describe('quantic-resultlist', () => {
 
             performSearch();
 
-            Expect.requestFields(defaultFieldsToInclude.split(','));
+            Expect.requestFields(
+              defaultFieldsToInclude.split(','),
+              param.useCase
+            );
           });
         });
       });
@@ -95,13 +101,13 @@ describe('quantic-resultlist', () => {
             fieldsToInclude: customFieldsToInclude,
             useCase: param.useCase,
           });
-          aliasResultValues();
+          aliasResultValues(param.useCase);
 
           Expect.resultsEqual(indexResultsAlias);
 
           performSearch();
 
-          Expect.requestFields(customFieldsToInclude.split(','));
+          Expect.requestFields(customFieldsToInclude.split(','), param.useCase);
         });
       });
     });

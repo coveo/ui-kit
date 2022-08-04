@@ -522,31 +522,33 @@ describe('quantic-timeframe-facet', () => {
           Expect.displayLabel(false);
         });
 
-        it('should display facet if custom range is specified', () => {
-          loadFromUrlHashWithNoResults(
-            {
-              withDatePicker: true,
-            },
-            `df[Date_input]=${validRange.filter}`
-          );
+        if (param.useCase === useCaseEnum.search) {
+          it('should display facet if custom range is specified', () => {
+            loadFromUrlHashWithNoResults(
+              {
+                withDatePicker: true,
+              },
+              `df[Date_input]=${validRange.filter}`
+            );
 
-          Expect.displayPlaceholder(false);
-          Expect.displayLabel(true);
-          Expect.displayStartInput(true);
-          Expect.displayEndInput(true);
-          Expect.displayApplyButton(true);
-          Expect.displayValues(false);
-        });
+            Expect.displayPlaceholder(false);
+            Expect.displayLabel(true);
+            Expect.displayStartInput(true);
+            Expect.displayEndInput(true);
+            Expect.displayApplyButton(true);
+            Expect.displayValues(false);
+          });
 
-        it('should display facet if timeframe is specified', () => {
-          loadFromUrlHashWithNoResults({}, 'df[Date]=past-1-year..now');
+          it('should display facet if timeframe is specified', () => {
+            loadFromUrlHashWithNoResults({}, 'df[Date]=past-1-year..now');
 
-          Expect.displayPlaceholder(false);
-          Expect.displayLabel(true);
-          Expect.displayValues(true);
-          Expect.numberOfSelectedValues(1);
-          Expect.numberOfValues(1);
-        });
+            Expect.displayPlaceholder(false);
+            Expect.displayLabel(true);
+            Expect.displayValues(true);
+            Expect.numberOfSelectedValues(1);
+            Expect.numberOfValues(1);
+          });
+        }
       });
     });
   });

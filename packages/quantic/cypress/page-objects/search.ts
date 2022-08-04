@@ -1,4 +1,3 @@
-import {use} from 'chai';
 import {
   CyHttpMessages,
   HttpResponseInterceptor,
@@ -208,7 +207,7 @@ export function mockResultHtmlContent(tag: string, innerHtml?: string) {
       res.body = element;
       res.send();
     });
-  });
+  }).as(InterceptAliases.ResultHtml.substring(1));
 }
 
 export function interceptQuerySuggestWithParam(
