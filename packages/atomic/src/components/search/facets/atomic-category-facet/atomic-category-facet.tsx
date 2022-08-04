@@ -78,6 +78,8 @@ import {BaseFacet} from '../../../common/facets/facet-common';
  * @part value-link - The child facet value.
  * @part value-label - The facet value label.
  * @part value-count - The facet value count.
+ * @part leaf-value - A facet value with no child value
+ * @part node-value - A facet value with children values
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
