@@ -17,6 +17,7 @@ import {
   DateFacetSection,
   DidYouMeanSection,
   FacetSection,
+  FieldsSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
   NumericFacetSection,
@@ -66,7 +67,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       CategoryFacetSection &
       PaginationSection &
       DidYouMeanSection &
-      TabSection
+      TabSection &
+      FieldsSection
   >;
 
 const fetchFromAPI = async (
@@ -307,6 +309,13 @@ const buildInsightSearchRequest = (
       numberOfResults: state.pagination.numberOfResults,
     }),
     ...(cq && {cq}),
+    ...(state.fields &&
+      !state.fields.fetchAllFields && {
+        fieldsToInclude: state.fields.fieldsToInclude,
+      }),
+    ...(state.didYouMean && {
+      enableDidYouMean: state.didYouMean.enableDidYouMean,
+    }),
   });
 };
 
