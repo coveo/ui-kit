@@ -51,6 +51,7 @@ interface NumericFacetCommonOptions {
   bindings: Bindings | InsightBindings;
   label: string;
   field: string;
+  headingLevel: number;
   displayValuesAs: NumericFacetDisplayValues;
   dependsOn: Record<string, string>;
   withInput?: NumberInputType;
@@ -77,7 +78,6 @@ interface NumericFacetCommonRenderProps {
   firstSearchExecuted: boolean;
   isCollapsed: boolean;
   headerFocus: FocusTargetController;
-  headingLevel: number;
   onToggleCollapse: () => boolean;
 }
 
@@ -86,6 +86,7 @@ export class NumericFacetCommon {
   private bindings: Bindings | InsightBindings;
   private label: string;
   private field: string;
+  private headingLevel: number;
   private filter?: InsightNumericFilter | NumericFilter;
   private dependsOn: Record<string, string>;
   private displayValuesAs: NumericFacetDisplayValues;
@@ -111,6 +112,7 @@ export class NumericFacetCommon {
     this.bindings = props.bindings;
     this.label = props.label;
     this.field = props.field;
+    this.headingLevel = props.headingLevel;
     this.dependsOn = props.dependsOn;
     this.displayValuesAs = props.displayValuesAs;
     this.withInput = props.withInput;
@@ -139,6 +141,9 @@ export class NumericFacetCommon {
     if (this.withInput) {
       this.facetForInput = props.initializeFacetForInput();
       this.filter = props.initializeFilter();
+      if (!this.facetId) {
+        this.facetId = this.filter.state.facetId;
+      }
     }
     this.dependenciesManager = props.buildDependenciesManager();
     this.registerFacetToStore();
@@ -345,7 +350,6 @@ export class NumericFacetCommon {
   private renderHeader(
     headerFocus: FocusTargetController,
     isCollapsed: boolean,
-    headingLevel: number,
     onToggleCollapse: () => void
   ) {
     return (
@@ -362,7 +366,7 @@ export class NumericFacetCommon {
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={isCollapsed}
-        headingLevel={headingLevel}
+        headingLevel={this.headingLevel}
         onToggleCollapse={onToggleCollapse}
         headerRef={headerFocus.setTarget}
       ></FacetHeader>
@@ -374,7 +378,6 @@ export class NumericFacetCommon {
     firstSearchExecuted,
     isCollapsed,
     headerFocus,
-    headingLevel,
     onToggleCollapse,
   }: NumericFacetCommonRenderProps) {
     if (hasError || !this.enabled) {
@@ -396,12 +399,7 @@ export class NumericFacetCommon {
 
     return (
       <FacetContainer>
-        {this.renderHeader(
-          headerFocus,
-          isCollapsed,
-          headingLevel,
-          onToggleCollapse
-        )}
+        {this.renderHeader(headerFocus, isCollapsed, onToggleCollapse)}
         {!isCollapsed && [
           this.shouldRenderValues && this.renderValues(),
           this.shouldRenderInput && this.renderNumberInput(),

@@ -192,6 +192,7 @@ export class AtomicInsightNumericFacet
       bindings: this.bindings,
       label: this.label,
       field: this.field,
+      headingLevel: this.headingLevel,
       dependsOn: this.dependsOn,
       displayValuesAs: this.displayValuesAs,
       withInput: this.withInput,
@@ -298,7 +299,6 @@ export class AtomicInsightNumericFacet
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       headerFocus: this.headerFocus,
-      headingLevel: this.headingLevel,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
   }

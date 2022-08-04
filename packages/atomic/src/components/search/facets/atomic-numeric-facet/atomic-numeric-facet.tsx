@@ -9,7 +9,6 @@ import {
   NumericFacetState,
   NumericFilter,
   NumericFilterState,
-  NumericRangeRequest,
   RangeFacetRangeAlgorithm,
   RangeFacetSortCriterion,
   SearchStatus,
@@ -30,16 +29,15 @@ import {randomID} from '../../../../utils/utils';
 import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
 import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {NumericFacetCommon} from '../../../common/facets/numeric-facet-common';
+import {
+  NumericFacetCommon,
+  NumericRangeWithLabel,
+} from '../../../common/facets/numeric-facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../../common/formats/format-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-
-interface NumericRangeWithLabel extends NumericRangeRequest {
-  label?: string;
-}
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -192,6 +190,7 @@ export class AtomicNumericFacet
       bindings: this.bindings,
       label: this.label,
       field: this.field,
+      headingLevel: this.headingLevel,
       dependsOn: this.dependsOn,
       displayValuesAs: this.displayValuesAs,
       withInput: this.withInput,
@@ -298,7 +297,6 @@ export class AtomicNumericFacet
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
       isCollapsed: this.isCollapsed,
       headerFocus: this.headerFocus,
-      headingLevel: this.headingLevel,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
   }
