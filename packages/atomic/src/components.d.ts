@@ -335,6 +335,7 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
+        "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback": () => void;
         "icon": string;
         "labelI18nKey": string;
@@ -399,6 +400,12 @@ export namespace Components {
           * Whether the interface should be shown in widget format.
          */
         "widget": boolean;
+    }
+    interface AtomicInsightRefineModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -1009,6 +1016,10 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         /**
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+         */
+        "clearFilters": boolean;
+        /**
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch": boolean;
@@ -1470,6 +1481,18 @@ declare global {
         prototype: HTMLAtomicInsightInterfaceElement;
         new (): HTMLAtomicInsightInterfaceElement;
     };
+    interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightRefineModalElement: {
+        prototype: HTMLAtomicInsightRefineModalElement;
+        new (): HTMLAtomicInsightRefineModalElement;
+    };
+    interface HTMLAtomicInsightRefineToggleElement extends Components.AtomicInsightRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightRefineToggleElement: {
+        prototype: HTMLAtomicInsightRefineToggleElement;
+        new (): HTMLAtomicInsightRefineToggleElement;
+    };
     interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultElement: {
@@ -1909,6 +1932,8 @@ declare global {
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
+        "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
+        "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
@@ -2292,6 +2317,7 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
+        "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback"?: () => void;
         "icon": string;
         "labelI18nKey": string;
@@ -2344,6 +2370,12 @@ declare namespace LocalJSX {
           * Whether the interface should be shown in widget format.
          */
         "widget"?: boolean;
+    }
+    interface AtomicInsightRefineModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicInsightRefineToggle {
     }
     interface AtomicInsightResult {
         /**
@@ -2934,6 +2966,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         /**
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+         */
+        "clearFilters"?: boolean;
+        /**
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch"?: boolean;
@@ -3264,6 +3300,8 @@ declare namespace LocalJSX {
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
+        "atomic-insight-refine-modal": AtomicInsightRefineModal;
+        "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
@@ -3363,6 +3401,8 @@ declare module "@stencil/core" {
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
+            "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
+            "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;

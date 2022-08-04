@@ -12,7 +12,11 @@ export {
   ResultTemplateCondition as InsightResultTemplateCondition,
   ResultTemplatesManager as InsightResultTemplatesManager,
   buildResultTemplatesManager as insightBuildResultTemplatesManager,
-  buildSearchBox as buildInsightSearchBox,
   SearchBox as InsightSearchBox,
   SearchBoxState as InsightSearchBoxState,
+  buildSearchBox as buildInsightSearchBox,
+  NumericFacetValue as InsightNumericFacetValue,
+  DateFacetValue as InsightDateFacetValue,
+  FacetManager as InsightFacetManager,
+  buildFacetManager as buildInsightFacetManager,
 } from '@coveo/headless/insight';

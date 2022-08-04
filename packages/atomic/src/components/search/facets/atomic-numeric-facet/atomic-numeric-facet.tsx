@@ -29,7 +29,6 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {
-  BaseFacet,
   parseDependsOn,
   shouldDisplayInputForFacetRange,
   validateDependsOn,
@@ -51,6 +50,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;

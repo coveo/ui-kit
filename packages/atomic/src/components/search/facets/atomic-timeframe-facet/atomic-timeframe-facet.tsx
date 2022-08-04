@@ -28,7 +28,6 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {
-  BaseFacet,
   parseDependsOn,
   shouldDisplayInputForFacetRange,
   validateDependsOn,
@@ -46,6 +45,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {randomID} from '../../../../utils/utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.

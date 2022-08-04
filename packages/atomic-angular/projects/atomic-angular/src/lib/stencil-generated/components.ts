@@ -362,13 +362,13 @@ export declare interface AtomicIconButton extends Components.AtomicIconButton {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['clickCallback', 'icon', 'labelI18nKey', 'tooltip']
+  inputs: ['buttonRef', 'clickCallback', 'icon', 'labelI18nKey', 'tooltip']
 })
 @Component({
   selector: 'atomic-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['clickCallback', 'icon', 'labelI18nKey', 'tooltip']
+  inputs: ['buttonRef', 'clickCallback', 'icon', 'labelI18nKey', 'tooltip']
 })
 export class AtomicIconButton {
   protected el: HTMLElement;
@@ -413,6 +413,46 @@ export declare interface AtomicInsightHistoryToggle extends Components.AtomicIns
   inputs: ['clickCallback', 'tooltip']
 })
 export class AtomicInsightHistoryToggle {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightRefineModal extends Components.AtomicInsightRefineModal {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['isOpen', 'openButton']
+})
+@Component({
+  selector: 'atomic-insight-refine-modal',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['isOpen', 'openButton']
+})
+export class AtomicInsightRefineModal {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicInsightRefineToggle extends Components.AtomicInsightRefineToggle {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-insight-refine-toggle',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicInsightRefineToggle {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -1334,13 +1374,13 @@ export declare interface AtomicSearchBox extends Components.AtomicSearchBox {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'numberOfQueries', 'redirectionUrl', 'suggestionTimeout']
 })
 export class AtomicSearchBox {
   protected el: HTMLElement;
