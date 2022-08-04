@@ -22,12 +22,12 @@ import {
 /**
  * @internal
  * The `atomic-popover` component displays any facet as a popover menu.
- * @part label-button - The button used to display the popover menu
+ * @part popover-button - The button to click to display or hide the popover menu.
  * @part label - The popover button label.
- * @part value-count - Number of results for facet
- * @part arrow-icon - The arrow icon to display or hide the popover menu.
+ * @part value-count - Number of selected values for the facet
+ * @part arrow-icon - The arrow icon on the button to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
- * @part popover-wrapper - The wrapper that contains the 'value-button' and the 'slot-wrapper'.
+ * @part popover-wrapper - The wrapper that contains the 'popover-button' and the 'slot-wrapper'.
  * @part slot-wrapper - The wrapper that contains the 'facet' or 'slot'.
  */
 
