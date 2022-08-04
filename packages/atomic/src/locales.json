@@ -113,10 +113,6 @@
     "en": "Remove inclusion filter on {{value}}",
     "fr": "Enlever le filtre d'inclusion sur {{value}}"
   },
-  "query-suggestion-list": {
-    "en": "Search suggestions. Select one to search.",
-    "fr": "Suggestions de recherche. Sélectionnez-en un pour rechercher."
-  },
   "clear": {
     "en": "Clear",
     "fr": "Effacer"

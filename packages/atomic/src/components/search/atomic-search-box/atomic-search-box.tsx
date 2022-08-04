@@ -1,14 +1,4 @@
-import {
-  Component,
-  h,
-  State,
-  Prop,
-  Listen,
-  Watch,
-  VNode,
-  Element,
-  Fragment,
-} from '@stencil/core';
+import {Component, h, State, Prop, Listen, Watch, Element} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -25,7 +15,6 @@ import {
 } from '../../../utils/initialization-utils';
 import {once, randomID} from '../../../utils/utils';
 import {
-  queryDataAttribute,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
@@ -41,6 +30,11 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SubmitButton} from '../../common/search-box/submit-button';
+import {
+  ButtonSearchSuggestion,
+  queryDataAttribute,
+  SimpleSearchSuggestion,
+} from './search-suggestion';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -538,28 +532,11 @@ export class AtomicSearchBox {
     this.ariaMessage = '';
   }
 
-  private makeSuggestionPart(
-    isSelected: boolean,
-    hasQuery: boolean,
-    itemPart?: string
-  ) {
-    let part = 'suggestion';
-    if (isSelected) {
-      part += ' active-suggestion';
-    }
-    if (hasQuery) {
-      part += ' suggestion-with-query';
-    }
-    if (itemPart) {
-      part += ` ${itemPart}`;
-    }
-    return part;
-  }
-
   private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
     item.onSelect && item.onSelect(e);
     item.query && this.clearSuggestions();
   }
+
   private onSuggestionMouseOver(
     item: SearchBoxSuggestionElement,
     side: 'left' | 'right',
@@ -587,65 +564,40 @@ export class AtomicSearchBox {
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
-
     const isButton = item.onSelect || item.query;
-    const commonAttributes = {
-      id: id,
-      key: item.key,
-      part: this.makeSuggestionPart(isSelected, !!item.query, item.part),
-      class: `flex px-4 min-h-[40px] items-center text-neutral-dark hover:bg-neutral-light cursor-pointer ${
-        isSelected ? 'bg-neutral-light' : ''
-      }`,
-      ref: (el: HTMLElement | undefined) => {
-        if (isHTMLElement(item.content)) {
-          el?.replaceChildren(item.content);
-        }
-        el?.setAttribute(
-          'aria-label',
-          this.bindings.i18n.t(
-            this.isDoubleList
-              ? 'search-suggestion-double-list'
-              : 'search-suggestion-single-list',
-            {
-              label:
-                item.ariaLabel ??
-                item.query ??
-                el?.innerText ??
-                this.bindings.i18n.t('no-title'),
-              position: index + 1,
-              count: lastIndex + 1,
-              side: this.bindings.i18n.t(side === 'left' ? 'left' : 'right'),
-            }
-          )
-        );
-      },
-    };
-
-    const vnodeContent: VNode = !isHTMLElement(item.content) ? (
-      item.content
-    ) : (
-      <Fragment></Fragment>
-    );
 
     if (!isButton) {
-      return <span {...commonAttributes}>{vnodeContent}</span>;
+      return (
+        <SimpleSearchSuggestion
+          bindings={this.bindings}
+          id={id}
+          suggestion={item}
+          isSelected={isSelected}
+          side={side}
+          index={index}
+          lastIndex={lastIndex}
+          isDoubleList={this.isDoubleList}
+        ></SimpleSearchSuggestion>
+      );
     }
 
     return (
-      <button
-        {...commonAttributes}
-        onMouseDown={(e) => e.preventDefault()}
+      <ButtonSearchSuggestion
+        bindings={this.bindings}
+        id={id}
+        suggestion={item}
+        isSelected={isSelected}
+        side={side}
+        index={index}
+        lastIndex={lastIndex}
+        isDoubleList={this.isDoubleList}
         onClick={(e: Event) => {
           this.onSuggestionClick(item, e);
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
         }}
-        aria-selected={`${isSelected}`}
-        {...{[queryDataAttribute]: item.query}}
-      >
-        {vnodeContent}
-      </button>
+      ></ButtonSearchSuggestion>
     );
   }
 
@@ -678,7 +630,6 @@ export class AtomicSearchBox {
     return (
       <div
         part={`suggestions suggestions-${side}`}
-        aria-label={this.bindings.i18n.t('query-suggestion-list')}
         ref={setRef}
         class="flex flex-grow basis-1/2 flex-col"
         onMouseDown={(e) => {
@@ -766,8 +717,4 @@ export class AtomicSearchBox {
       ),
     ];
   }
-}
-
-function isHTMLElement(el: VNode | Element): el is HTMLElement {
-  return el instanceof HTMLElement;
 }

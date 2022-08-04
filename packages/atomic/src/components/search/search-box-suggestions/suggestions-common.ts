@@ -61,4 +61,3 @@ export function elementHasNoQuery(el: SearchBoxSuggestionElement) {
 export function elementHasQuery(el: SearchBoxSuggestionElement) {
   return !!el.query;
 }
-export const queryDataAttribute = 'data-query';
