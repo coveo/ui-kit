@@ -37,7 +37,7 @@ import {
   SimpleSearchSuggestion,
 } from './search-suggestion';
 
-import {isMacOS} from '../../../utils/device-utils';
+import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -238,8 +238,8 @@ export class AtomicSearchBox {
 
   private get isDoubleList() {
     const numberOfSuggestionsLists =
-      (this.leftSuggestions.length ? 1 : 0) +
-      (this.rightSuggestions.length ? 1 : 0);
+      (this.leftSuggestionElements.length ? 1 : 0) +
+      (this.rightSuggestionElements.length ? 1 : 0);
 
     return numberOfSuggestionsLists === 2;
   }
@@ -707,6 +707,16 @@ export class AtomicSearchBox {
     );
   }
 
+  private getSearchInputLabel() {
+    if (isMacOS()) {
+      return this.bindings.i18n.t('search-box-with-suggestions-macos');
+    }
+    if (!hasKeyboard()) {
+      return this.bindings.i18n.t('search-box-with-suggestions-keyboardless');
+    }
+    return this.bindings.i18n.t('search-box-with-suggestions');
+  }
+
   public render() {
     this.updateBreakpoints();
     return [
@@ -717,11 +727,7 @@ export class AtomicSearchBox {
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
           value={this.searchBoxState.value}
-          ariaLabel={this.bindings.i18n.t(
-            isMacOS()
-              ? 'search-box-with-suggestions-macos'
-              : 'search-box-with-suggestions'
-          )}
+          ariaLabel={this.getSearchInputLabel()}
           onFocus={() => this.onFocus()}
           onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
           onBlur={() => this.clearSuggestions()}
