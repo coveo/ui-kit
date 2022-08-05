@@ -511,6 +511,22 @@ export namespace Components {
          */
         "disableSearch": boolean;
     }
+    interface AtomicInsightTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active": boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label": string;
+    }
+    interface AtomicInsightTabs {
+    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -1566,6 +1582,18 @@ declare global {
         prototype: HTMLAtomicInsightSearchBoxElement;
         new (): HTMLAtomicInsightSearchBoxElement;
     };
+    interface HTMLAtomicInsightTabElement extends Components.AtomicInsightTab, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightTabElement: {
+        prototype: HTMLAtomicInsightTabElement;
+        new (): HTMLAtomicInsightTabElement;
+    };
+    interface HTMLAtomicInsightTabsElement extends Components.AtomicInsightTabs, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightTabsElement: {
+        prototype: HTMLAtomicInsightTabsElement;
+        new (): HTMLAtomicInsightTabsElement;
+    };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
     var HTMLAtomicLayoutSectionElement: {
@@ -1988,6 +2016,8 @@ declare global {
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
+        "atomic-insight-tab": HTMLAtomicInsightTabElement;
+        "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -2525,6 +2555,22 @@ declare namespace LocalJSX {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch"?: boolean;
+    }
+    interface AtomicInsightTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active"?: boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label"?: string;
+    }
+    interface AtomicInsightTabs {
     }
     interface AtomicLayoutSection {
         /**
@@ -3399,6 +3445,8 @@ declare namespace LocalJSX {
         "atomic-insight-result-list": AtomicInsightResultList;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
+        "atomic-insight-tab": AtomicInsightTab;
+        "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -3501,6 +3549,8 @@ declare module "@stencil/core" {
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
+            "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
+            "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;

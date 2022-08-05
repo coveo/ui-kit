@@ -36,7 +36,13 @@
         width: 100%;
         display: grid;
         grid-template-columns: 1fr auto auto auto;
+        /* grid-template-areas:
+          '1fr auto auto auto'
+          'tags tags tags tags'; */
+
         grid-gap: 0.5rem;
+
+        background: var(--atomic-neutral-light);
 
         padding-top: 1.5rem;
         padding-left: 1.5rem;
@@ -56,6 +62,12 @@
           </atomic-insight-refine-toggle>
           <atomic-insight-edit-toggle tooltip="This is a tooltip"></atomic-insight-edit-toggle>
           <atomic-insight-history-toggle tooltip="This is a tooltip"></atomic-insight-history-toggle>
+          <atomic-insight-tabs>
+            <atomic-insight-tab label="Youtube" expression="@filetype==YouTubeVideo"></atomic-insight-tab>
+            <atomic-insight-tab label="PDF" expression="@filetype==pdf"></atomic-insight-tab>
+            <atomic-insight-tab label="HTML" expression="@filetype==html"></atomic-insight-tab>
+            <atomic-insight-tab label="Txt" expression="@filetype==txt"></atomic-insight-tab>
+          </atomic-insight-tabs>
         </div>
         <atomic-layout-section section="results">
           <atomic-insight-result-list image-size="none">

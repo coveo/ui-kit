@@ -1,0 +1,21 @@
+@import '../../../global/global.pcss';
+
+button {
+  @apply pb-3 mt-1 mr-6;
+  font-weight: 600;
+  position: relative;
+  border-radius: none;
+}
+
+.active {
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--atomic-primary);
+    position: absolute;
+    bottom: 0;
+  }
+}

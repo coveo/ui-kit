@@ -35,4 +35,7 @@ export {
   AnyFacetValuesCondition as InsightAnyFacetValuesCondition,
   buildFacetConditionsManager as buildInsightFacetConditionsManager,
   buildFacetManager as buildInsightFacetManager,
+  Tab as InsightTab,
+  TabState as InsightTabState,
+  buildTab as buildInsightTab,
 } from '@coveo/headless/insight';
