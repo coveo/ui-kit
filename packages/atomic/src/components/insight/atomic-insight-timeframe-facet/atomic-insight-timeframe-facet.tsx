@@ -130,7 +130,7 @@ export class AtomicInsightTimeframeFacet
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
    * <atomic-insight-timeframe-facet
