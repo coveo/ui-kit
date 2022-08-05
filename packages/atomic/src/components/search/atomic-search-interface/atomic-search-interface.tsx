@@ -21,6 +21,8 @@ import {
   loadSearchConfigurationActions,
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
+  RedirectionTrigger,
+  buildRedirectionTrigger,
 } from '@coveo/headless';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
@@ -36,6 +38,7 @@ import {
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
 import {CommonBindings} from '../../common/interface/bindings';
+import {filterProtocol} from '../../../utils/xss-utils';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -58,8 +61,10 @@ export class AtomicSearchInterface
 {
   private urlManager!: UrlManager;
   private searchStatus!: SearchStatus;
+  private redirectionTrigger!: RedirectionTrigger;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
+  private unsubscribeRedirectionTrigger: Unsubscribe = () => {};
   private initialized = false;
   private store = createAtomicStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<SearchEngine>;
@@ -207,6 +212,7 @@ export class AtomicSearchInterface
   public disconnectedCallback() {
     this.unsubscribeUrlManager();
     this.unsubscribeSearchStatus();
+    this.unsubscribeRedirectionTrigger();
     window.removeEventListener('hashchange', this.onHashChange);
   }
 
@@ -411,6 +417,19 @@ export class AtomicSearchInterface
     });
   }
 
+  private initRedirectionTrigger() {
+    this.redirectionTrigger = buildRedirectionTrigger(this.engine!);
+    this.unsubscribeRedirectionTrigger = this.redirectionTrigger.subscribe(
+      () => {
+        const {redirectTo} = this.redirectionTrigger.state;
+        const urlToRedirectTo = filterProtocol(redirectTo);
+        if (urlToRedirectTo) {
+          window.location.replace(urlToRedirectTo);
+        }
+      }
+    );
+  }
+
   private updateHash() {
     history.pushState(
       null,
@@ -425,6 +444,7 @@ export class AtomicSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.initRedirectionTrigger();
     this.initSearchStatus();
     this.initUrlManager();
     this.initAriaLive();
