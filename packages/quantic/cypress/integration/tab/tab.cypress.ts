@@ -1,17 +1,19 @@
 import {configure} from '../../page-objects/configurator';
 import {
-  InterceptAliases,
+  getAlias,
   interceptSearch,
   mockSearchNoResults,
 } from '../../page-objects/search';
 import {TabExpectations as Expect} from './tab-expectations';
 import {TabActions as Actions} from './tab-actions';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
+import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 
 interface TabOptions {
   label: string;
   expression: string;
   isActive: boolean;
+  useCase: string;
 }
 
 describe('quantic-tab', () => {
@@ -36,8 +38,12 @@ describe('quantic-tab', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
+    if (options.useCase !== useCaseEnum.search) {
+      cy.wait(1000);
+      performSearch();
+    }
     if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
+      cy.wait(getAlias(options.useCase));
     }
   }
 
@@ -47,55 +53,78 @@ describe('quantic-tab', () => {
     configure(options);
   }
 
-  describe('with active tab', () => {
-    beforeEach(() => {
-      visitTab(
-        {
-          label: tabs.case.label,
-          expression: tabs.case.expression,
-          isActive: true,
-        },
-        false
-      );
-    });
+  uesCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      describe('with active tab', () => {
+        beforeEach(() => {
+          visitTab(
+            {
+              label: tabs.case.label,
+              expression: tabs.case.expression,
+              isActive: true,
+              useCase: param.useCase,
+            },
+            false
+          );
+        });
 
-    it('should not show tabs before search completes', () => {
-      Expect.displayTabs(false);
+        it('should not show tabs before search completes', () => {
+          Expect.displayTabs(false);
 
-      cy.wait(InterceptAliases.Search);
-      Expect.displayTabs(true);
-    });
+          cy.wait(getAlias(param.useCase));
+          Expect.displayTabs(true);
+        });
 
-    it('should work as expected', () => {
-      Expect.search.constantExpressionEqual(tabs.case.expression);
-      Expect.numberOfTabs(3);
-      Expect.tabsEqual([tabs.all.label, tabs.case.label, tabs.knowledge.label]);
-      Expect.activeTabContains(tabs.case.label);
+        it('should work as expected', () => {
+          Expect.search.constantExpressionEqual(
+            tabs.case.expression,
+            param.useCase
+          );
+          Expect.numberOfTabs(3);
+          Expect.tabsEqual([
+            tabs.all.label,
+            tabs.case.label,
+            tabs.knowledge.label,
+          ]);
+          Expect.activeTabContains(tabs.case.label);
 
-      [tabs.all, tabs.knowledge].forEach((next) => {
-        Actions.selectTab(next.label);
-        Expect.search.constantExpressionEqual(next.expression);
-        Expect.logSelected(next.label);
-        Expect.activeTabContains(next.label);
+          [tabs.all, tabs.knowledge].forEach((next) => {
+            Actions.selectTab(next.label);
+            Expect.search.constantExpressionEqual(
+              next.expression,
+              param.useCase
+            );
+            Expect.logSelected(next.label);
+            Expect.activeTabContains(next.label);
+          });
+
+          performSearch();
+          Expect.search.constantExpressionEqual(
+            tabs.knowledge.expression,
+            param.useCase
+          );
+          Expect.displayTabs(true);
+
+          mockSearchNoResults(param.useCase);
+          performSearch();
+          cy.wait(getAlias(param.useCase));
+          Expect.displayTabs(true);
+        });
       });
 
-      performSearch();
-      Expect.search.constantExpressionEqual(tabs.knowledge.expression);
-      Expect.displayTabs(true);
+      if (param.useCase === useCaseEnum.search) {
+        describe('when loading selected tab from URL', () => {
+          it('should make the right tab active', () => {
+            loadFromUrlHash({}, `tab=${tabs.knowledge.label}`);
 
-      mockSearchNoResults();
-      performSearch();
-      cy.wait(InterceptAliases.Search);
-      Expect.displayTabs(true);
-    });
-  });
-
-  describe('when loading selected tab from URL', () => {
-    it('should make the right tab active', () => {
-      loadFromUrlHash({}, `tab=${tabs.knowledge.label}`);
-
-      Expect.search.constantExpressionEqual(tabs.knowledge.expression);
-      Expect.activeTabContains(tabs.knowledge.label);
+            Expect.search.constantExpressionEqual(
+              tabs.knowledge.expression,
+              param.useCase
+            );
+            Expect.activeTabContains(tabs.knowledge.label);
+          });
+        });
+      }
     });
   });
 });

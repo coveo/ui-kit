@@ -1,3 +1,4 @@
+import { getHeadlessBundle } from 'c/quanticHeadlessLoader';
 import { api, LightningElement } from 'lwc';
 
 export default class ActionResultsPerPage extends LightningElement {
@@ -6,6 +7,7 @@ export default class ActionResultsPerPage extends LightningElement {
 
   resultsPerPage;
   input;
+  headless;
 
   handle () {
     if(!this.input) {
@@ -24,9 +26,10 @@ export default class ActionResultsPerPage extends LightningElement {
   }
 
   resolveResultsPerPageController() {
+    this.headless = getHeadlessBundle(this.engineId);
     return window.coveoHeadless?.[this.engineId]?.enginePromise
       .then((engine) => {
-        return CoveoHeadless.buildResultsPerPage(engine, {
+        return this.headless.buildResultsPerPage(engine, {
           initialState: {numberOfResults: 10},
         });
       });

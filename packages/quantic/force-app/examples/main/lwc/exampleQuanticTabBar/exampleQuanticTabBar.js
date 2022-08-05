@@ -1,7 +1,7 @@
 import {api, LightningElement, track} from 'lwc';
 
 export default class ExampleQuanticTabBar extends LightningElement {
-  @api engineId = 'quantic-tab-engine';
+  @api engineId = 'quantic-tab-bar-engine';
   @track config = {};
   isConfigured = false;
 

@@ -1,5 +1,6 @@
 import {configure} from '../../page-objects/configurator';
 import {
+  getAlias,
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
@@ -7,6 +8,8 @@ import {
 import {SortExpectations as Expect} from './sort-expectations';
 import {SortActions as Actions} from './sort-actions';
 import {SearchExpectations} from '../search-expectations';
+import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 describe('quantic-sort', () => {
   const sortUrl = 's/quantic-sort';
@@ -28,12 +31,20 @@ describe('quantic-sort', () => {
   ];
   const sortOptionValues = sortOptions.map((option) => option.value);
 
-  function visitSort(waitForSearch = true) {
+  interface SortOptions {
+    useCase: string;
+  }
+
+  function visitSort(options: Partial<SortOptions>, waitForSearch = true) {
     interceptSearch();
     cy.visit(sortUrl);
-    configure();
+    configure(options);
+    if (options.useCase === useCaseEnum.insight) {
+      cy.wait(1000);
+      performSearch();
+    }
     if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
+      cy.wait(getAlias(options.useCase));
     }
   }
 
@@ -43,62 +54,68 @@ describe('quantic-sort', () => {
     configure();
   }
 
-  function setupWithPauseBeforeSearch() {
+  function setupWithPauseBeforeSearch(useCase: string) {
     interceptSearchIndefinitely();
     cy.visit(sortUrl);
-    configure();
+    configure({useCase: useCase});
   }
 
-  it('should not render before results have returned', () => {
-    setupWithPauseBeforeSearch();
+  uesCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      it('should not render before results have returned', () => {
+        setupWithPauseBeforeSearch(param.useCase);
 
-    Expect.displaySortDropdown(false);
-  });
-
-  describe('when loading default sort', () => {
-    it('should work as expected', () => {
-      visitSort();
-
-      Expect.displaySortDropdown(true);
-      Expect.labelContains('Sort by');
-
-      Actions.openDropdown();
-
-      Expect.containsOptions(sortOptionValues);
-      Expect.optionsEqual(sortOptions);
-      Expect.selectedOption(defaultOptionValue);
-    });
-  });
-
-  describe('when selecting a sort option', () => {
-    sortOptionValues
-      .filter((value) => value !== defaultOptionValue)
-      .forEach((option) => {
-        it(`should update the shown selected option to ${option}`, () => {
-          visitSort();
-          Actions.selectOption(option);
-
-          Expect.selectedOption(option);
-          SearchExpectations.sortedBy(option);
-          Expect.logSortResults(option);
-        });
+        Expect.displaySortDropdown(false);
       });
-  });
 
-  describe('when loading sort selection from URL', () => {
-    sortOptions
-      .filter((option) => option.value !== defaultOptionValue)
-      .forEach((option) => {
-        it(`should sort by ${option.value}`, () => {
-          loadFromUrlHash(`sortCriteria=${encodeURI(option.value)}`);
+      describe('when loading default sort', () => {
+        it('should work as expected', () => {
+          visitSort({useCase: param.useCase});
 
-          SearchExpectations.sortedBy(option.value);
+          Expect.displaySortDropdown(true);
+          Expect.labelContains('Sort by');
 
           Actions.openDropdown();
 
-          Expect.displaySortDropdown(true);
-          Expect.selectedOption(option.value);
+          Expect.containsOptions(sortOptionValues);
+          Expect.optionsEqual(sortOptions);
+          Expect.selectedOption(defaultOptionValue);
         });
       });
+
+      describe('when selecting a sort option', () => {
+        sortOptionValues
+          .filter((value) => value !== defaultOptionValue)
+          .forEach((option) => {
+            it(`should update the shown selected option to ${option}`, () => {
+              visitSort({useCase: param.useCase});
+              Actions.selectOption(option);
+
+              Expect.selectedOption(option);
+              SearchExpectations.sortedBy(option, param.useCase);
+              Expect.logSortResults(option);
+            });
+          });
+      });
+
+      if (param.useCase === useCaseEnum.search) {
+        describe('when loading sort selection from URL', () => {
+          sortOptions
+            .filter((option) => option.value !== defaultOptionValue)
+            .forEach((option) => {
+              it(`should sort by ${option.value}`, () => {
+                loadFromUrlHash(`sortCriteria=${encodeURI(option.value)}`);
+
+                SearchExpectations.sortedBy(option.value, param.useCase);
+
+                Actions.openDropdown();
+
+                Expect.displaySortDropdown(true);
+                Expect.selectedOption(option.value);
+              });
+            });
+        });
+      }
+    });
   });
 });

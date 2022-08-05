@@ -1,12 +1,8 @@
-import {
-  baselineAlias,
-  getAlias,
-  InterceptAliases,
-} from '../page-objects/search';
+import {baselineAlias, getAlias} from '../page-objects/search';
 
 export const SearchExpectations = {
-  sortedBy: (sortCriteria: string) => {
-    cy.wait(InterceptAliases.Search).then((interception) => {
+  sortedBy: (sortCriteria: string, useCase: string) => {
+    cy.wait(getAlias(useCase)).then((interception) => {
       expect(interception.request?.body?.sortCriteria).to.equal(sortCriteria);
     });
   },
@@ -20,8 +16,11 @@ export const SearchExpectations = {
     );
   },
 
-  constantExpressionEqual: (expression: string | undefined) => {
-    cy.wait(InterceptAliases.Search).then((interception) => {
+  constantExpressionEqual: (
+    expression: string | undefined,
+    useCase: string
+  ) => {
+    cy.wait(getAlias(useCase)).then((interception) => {
       expect(interception.request.body.cq).to.equal(
         expression,
         `search request constant query expression should be '${expression}'`
