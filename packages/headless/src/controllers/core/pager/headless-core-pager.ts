@@ -7,12 +7,12 @@ import {
   registerPage,
   updatePage,
 } from '../../../features/pagination/pagination-actions';
+import {minimumPage} from '../../../features/pagination/pagination-constants';
 import {
   currentPageSelector,
   currentPagesSelector,
   maxPageSelector,
 } from '../../../features/pagination/pagination-selectors';
-import {minimumPage} from '../../../features/pagination/pagination-slice';
 import {
   ConfigurationSection,
   PaginationSection,

@@ -14,6 +14,7 @@ import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
 import {omit} from '../../utils/utils';
 import {FacetRequest} from '../facets/facet-set/interfaces/request';
 import {FacetSetState} from '../facets/facet-set/facet-set-state';
+import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -48,6 +49,15 @@ describe('search request', () => {
     const params = (await buildSearchRequest(state)).request;
 
     expect(params.numberOfResults).toBe(state.pagination.numberOfResults);
+  });
+
+  it('#searchRequest will modify #numberOfResults if it goes over index limits', async () => {
+    state.pagination.numberOfResults = 10;
+    state.pagination.firstResult = maximumNumberOfResultsFromIndex - 9;
+
+    const params = (await buildSearchRequest(state)).request;
+
+    expect(params.numberOfResults).toBe(9);
   });
 
   it('#searchRequest returns the state #firstResult', async () => {
