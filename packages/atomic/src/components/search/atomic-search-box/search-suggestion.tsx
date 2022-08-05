@@ -89,7 +89,10 @@ function getAriaLabelForRenderedSuggestion({
     bindings.i18n.t('no-title');
   const labelWithType =
     isMacOS() && isButton
-      ? bindings.i18n.t('search-suggestion-button', {label: contentLabel})
+      ? bindings.i18n.t('search-suggestion-button', {
+          label: contentLabel,
+          interpolation: {escapeValue: false},
+        })
       : contentLabel;
   const position = index + 1;
   const count = lastIndex + 1;
@@ -99,6 +102,7 @@ function getAriaLabelForRenderedSuggestion({
       label: labelWithType,
       position,
       count,
+      interpolation: {escapeValue: false},
     });
   }
 
@@ -107,6 +111,7 @@ function getAriaLabelForRenderedSuggestion({
     position,
     count,
     side: bindings.i18n.t(side === 'left' ? 'left' : 'right'),
+    interpolation: {escapeValue: false},
   });
 }
 
