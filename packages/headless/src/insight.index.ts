@@ -76,6 +76,11 @@ export type {
 export {buildFacetManager} from './controllers/insight/facet-manager/headless-insight-facet-manager';
 
 export type {
+  CategoryFacetValueRequest,
+  CategoryFacetSortCriterion,
+} from './features/facets/category-facet-set/interfaces/request';
+
+export type {
   CategoryFacetOptions,
   CategoryFacetSearchOptions,
   CategoryFacetProps,
@@ -131,9 +136,6 @@ export {
   buildDateRange,
   buildDateFacet,
 } from './controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet';
-
-export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
-export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 
 export type {
   NumericRangeOptions,
@@ -248,6 +250,13 @@ export type {
 } from './controllers/insight/tab/headless-insight-tab';
 export {buildTab} from './controllers/insight/tab/headless-insight-tab';
 
+export type {
+  FacetConditionsManager,
+  FacetConditionsManagerProps,
+  AnyFacetValuesCondition,
+} from './controllers/insight/facet-conditions-manager/headless-facet-conditions-manager';
+export {buildFacetConditionsManager} from './controllers/insight/facet-conditions-manager/headless-facet-conditions-manager';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
@@ -261,6 +270,20 @@ export type {
 export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {ResultTemplatesHelpers} from './features';
+
+export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+
+export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
+
+export type {
+  FacetValueRequest,
+  FacetSortCriterion,
+} from './features/facets/facet-set/interfaces/request';
+
+export type {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from './features/facets/range-facets/generic/interfaces/request';
 
 // Types & Helpers
 export type {Raw} from './api/search/search/raw';

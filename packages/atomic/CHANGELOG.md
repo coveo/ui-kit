@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.94.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.93.2...@coveo/atomic@1.94.0) (2022-08-02)
+
+
+### Bug Fixes
+
+* **atomic:** change timeout message from error to warning ([#2276](https://github.com/coveo/ui-kit/issues/2276)) ([4a8eecc](https://github.com/coveo/ui-kit/commit/4a8eeccd01dcf76d085277a7d74169c3d99dbdea))
+
+
+### Features
+
+* **atomic:** add insight refine toggle and insight refine modal ([#2268](https://github.com/coveo/ui-kit/issues/2268)) ([d742a51](https://github.com/coveo/ui-kit/commit/d742a517dcb29d42a9d898a22a448b912f628811))
+* **atomic:** scrollable tests ([#2225](https://github.com/coveo/ui-kit/issues/2225)) ([fca12a7](https://github.com/coveo/ui-kit/commit/fca12a7a81582011136546667235b8ad5fc7f1a3))
+
+
+
+
+
+## [1.93.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.93.1...@coveo/atomic@1.93.2) (2022-08-01)
+
+
+### Bug Fixes
+
+* **atomic:** ensured aria labels contain innerText ([#2255](https://github.com/coveo/ui-kit/issues/2255)) ([2f641c7](https://github.com/coveo/ui-kit/commit/2f641c70ad780d696c0fcfff90c4266ebdef8a9a))
+
+
+
+
+
 ## [1.93.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.93.0...@coveo/atomic@1.93.1) (2022-08-01)
 
 **Note:** Version bump only for package @coveo/atomic

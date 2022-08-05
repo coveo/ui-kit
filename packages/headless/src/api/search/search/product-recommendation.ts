@@ -1,5 +1,13 @@
 export interface ProductRecommendation {
   /**
+   * Document Uri in the index. Useful for analytics.
+   */
+  documentUri: string;
+  /**
+   * Document UriHash in the index. Useful for analytics.
+   */
+  documentUriHash: string;
+  /**
    * The SKU of the product.
    */
   permanentid: string;
@@ -25,6 +33,12 @@ export interface ProductRecommendation {
    * From the `ec_category` field.
    */
   ec_category?: string;
+  /**
+   * The id used for Product Grouping.
+   *
+   * From the `ec_item_group_id` field.
+   */
+  ec_item_group_id?: string;
   /**
    * The base price of the product or variant.
    *
@@ -87,10 +101,13 @@ export interface ProductRecommendation {
 
 // Change this list when changing the fields exposed by `ProductRecommendation`
 export const ProductRecommendationDefaultFields: string[] = [
+  'uri',
+  'urihash',
   'permanentid',
   'ec_name',
   'ec_brand',
   'ec_category',
+  'ec_item_group_id',
   'ec_price',
   'ec_promo_price',
   'ec_shortdesc',

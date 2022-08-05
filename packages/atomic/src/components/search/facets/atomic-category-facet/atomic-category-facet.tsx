@@ -17,23 +17,26 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
-import {FacetContainer} from '../facet-container/facet-container';
-import {FacetHeader} from '../facet-header/facet-header';
-import {FacetSearchInput} from '../facet-search/facet-search-input';
-import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
-import {FacetSearchMatches} from '../facet-search/facet-search-matches';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
+import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
 import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
-} from '../facet-search/facet-search-utils';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+} from '../../../common/facets/facet-search/facet-search-utils';
+import {
+  parseDependsOn,
+  validateDependsOn,
+} from '../../../common/facets/facet-common';
 import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../../utils/field-utils';
-import {FacetValueLink} from '../facet-value-link/facet-value-link';
-import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
 import {Button} from '../../../common/button';
@@ -43,8 +46,9 @@ import {
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -77,6 +81,8 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-link - The child facet value.
  * @part value-label - The facet value label.
  * @part value-count - The facet value count.
+ * @part leaf-value - A facet value with no child value
+ * @part node-value - A facet value with children values
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -407,7 +413,7 @@ export class AtomicCategoryFacet
             this.facet.deselectAll();
           }}
           searchQuery={this.facetState.facetSearch.query}
-          part="active-parent"
+          part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
           class="parent-active"
           buttonRef={this.activeValueFocus.setTarget}
         >
@@ -446,6 +452,7 @@ export class AtomicCategoryFacet
           isShowLessFocusTarget && this.showLessFocus.setTarget(element);
           isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
         }}
+        additionalPart={this.getIsLeafOrNodePart(facetValue)}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -471,6 +478,10 @@ export class AtomicCategoryFacet
         )}
       </ul>
     );
+  }
+
+  private getIsLeafOrNodePart(value: CategoryFacetValue) {
+    return value.isLeafValue ? 'leaf-value' : 'node-value';
   }
 
   private renderSearchResults() {

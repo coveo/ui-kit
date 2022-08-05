@@ -193,6 +193,7 @@ describe('search api client', () => {
           actionsHistory: expect.any(Array),
         },
         preprocessRequest: NoopPreprocessRequest,
+        requestMetadata: {method: 'search'},
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -254,6 +255,7 @@ describe('search api client', () => {
           visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
+        requestMetadata: {method: 'plan'},
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -304,6 +306,7 @@ describe('search api client', () => {
           visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
+        requestMetadata: {method: 'querySuggest'},
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -342,15 +345,19 @@ describe('search api client', () => {
         searchAPIClient.facetSearch(req);
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
-
-        expect(request).toMatchObject({
+        const expectedRequest: Partial<PlatformClientCallOptions> = {
           accessToken: state.configuration.accessToken,
           method: 'POST',
           contentType: 'application/json',
           url: `${
             state.configuration.search.apiBaseUrl
           }/facet?${getOrganizationIdQueryParam(req)}`,
-        });
+          requestMetadata: {
+            method: 'facetSearch',
+          },
+        };
+
+        expect(request).toMatchObject(expectedRequest);
       });
 
       it('with an authentication provider it calls Platform.call with the right options', async () => {
@@ -507,6 +514,7 @@ describe('search api client', () => {
           visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
+        requestMetadata: {method: 'recommendations'},
       };
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -589,6 +597,25 @@ describe('search api client', () => {
           },
         },
         preprocessRequest: NoopPreprocessRequest,
+        requestMetadata: {method: 'productRecommendations'},
+      };
+
+      expect(request).toMatchObject(expectedRequest);
+    });
+
+    it(`when calling SearchAPIClient.fieldDescriptions
+    should call PlatformClient.call with the right options`, async () => {
+      const req = (await buildSearchRequest(state)).request;
+
+      searchAPIClient.fieldDescriptions(req);
+      const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+
+      const expectedRequest: Partial<PlatformClientCallOptions> = {
+        requestMetadata: {method: 'fieldDescriptions'},
+        method: 'GET',
+        url: `${
+          state.configuration.search.apiBaseUrl
+        }/fields?${getOrganizationIdQueryParam(req)}`,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -616,6 +643,16 @@ describe('search api client', () => {
         const res = await searchAPIClient.html(req);
 
         expect(res.success).toBe('hello');
+      });
+
+      it('when calling SearchAPIClient.html should call PlatformClient.call with the right options', async () => {
+        const req = await buildResultPreviewRequest(state, {uniqueId: '1'});
+        searchAPIClient.html(req);
+        const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+        const expectedRequest: Partial<PlatformClientCallOptions> = {
+          requestMetadata: {method: 'html'},
+        };
+        expect(request).toMatchObject(expectedRequest);
       });
     });
   });

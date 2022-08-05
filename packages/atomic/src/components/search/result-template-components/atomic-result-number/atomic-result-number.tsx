@@ -5,7 +5,7 @@ import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {
   defaultNumberFormatter,
   NumberFormatter,
-} from '../../formats/format-common';
+} from '../../../common/formats/format-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

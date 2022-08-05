@@ -14,7 +14,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {BaseFacetElement} from '../facets/facet-common';
+import {BaseFacetElement} from '../../common/facets/facet-common';
 
 /**
  * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
