@@ -1,47 +1,48 @@
-import {
-  buildFacetConditionsManager,
-  buildNumericFacet,
-  buildNumericFilter,
-  buildNumericRange,
-  buildSearchStatus,
-  loadNumericFacetSetActions,
-  NumericFacet,
-  NumericFacetState,
-  NumericFilter,
-  NumericFilterState,
-  RangeFacetRangeAlgorithm,
-  RangeFacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {
+  buildInsightFacetConditionsManager,
+  buildInsightNumericFacet,
+  buildInsightNumericFilter,
+  buildInsightNumericRange,
+  buildInsightSearchStatus,
+  InsightNumericFacet,
+  InsightNumericFacetState,
+  InsightNumericFilter,
+  InsightNumericFilterState,
+  InsightRangeFacetRangeAlgorithm,
+  InsightRangeFacetSortCriterion,
+  InsightSearchStatus,
+  InsightSearchStatusState,
+  loadInsightNumericFacetSetActions,
+} from '..';
 import {
   FocusTarget,
   FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
-import {randomID} from '../../../../utils/utils';
-import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
-import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+} from '../../../utils/initialization-utils';
+import {MapProp} from '../../../utils/props-utils';
+import {randomID} from '../../../utils/utils';
+import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
+import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {
+  InsightNumericRangeWithLabel,
   NumericFacetCommon,
-  NumericRangeWithLabel,
-} from '../../../common/facets/numeric-facet-common';
+  NumericFacetDisplayValues,
+} from '../../common/facets/numeric-facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
-} from '../../../common/formats/format-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+} from '../../common/formats/format-common';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
+ * An `atomic-insight-numeric-facet` displays a facet of the results for the current query as numeric ranges.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -69,36 +70,37 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part input-apply-button - The apply button for the custom range.
  */
 @Component({
-  tag: 'atomic-numeric-facet',
-  styleUrl: './atomic-numeric-facet.pcss',
+  tag: 'atomic-insight-numeric-facet',
+  styleUrl: './atomic-insight-numeric-facet.pcss',
   shadow: true,
 })
-export class AtomicNumericFacet
-  implements InitializableComponent, BaseFacet<NumericFacet>
+export class AtomicInsightNumericFacet
+  implements
+    InitializableComponent<InsightBindings>,
+    BaseFacet<InsightNumericFacet>
 {
-  @InitializeBindings() public bindings!: Bindings;
-  public facetForRange?: NumericFacet;
-  public facetForInput?: NumericFacet;
-  public filter?: NumericFilter;
-  public searchStatus!: SearchStatus;
+  @InitializeBindings() public bindings!: InsightBindings;
+  public facetForRange?: InsightNumericFacet;
+  public facetForInput?: InsightNumericFacet;
+  public filter?: InsightNumericFilter;
+  public searchStatus!: InsightSearchStatus;
+  private manualRanges: InsightNumericRangeWithLabel[] = [];
   @Element() private host!: HTMLElement;
-  private manualRanges: NumericRangeWithLabel[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
   private numericFacetCommon!: NumericFacetCommon;
-
   @BindStateToController('facetForRange')
   @State()
-  public facetState!: NumericFacetState;
+  public facetState!: InsightNumericFacetState;
   @BindStateToController('filter')
   @State()
-  public filterState?: NumericFilterState;
+  public filterState?: InsightNumericFilterState;
   @BindStateToController('searchStatus')
   @State()
-  public searchStatusState!: SearchStatusState;
+  public searchStatusState!: InsightSearchStatusState;
   @State() public error!: Error;
   @BindStateToController('facetForInput')
   @State()
-  public facetForInputState?: NumericFacetState;
+  public facetForInputState?: InsightNumericFacetState;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -127,18 +129,18 @@ export class AtomicNumericFacet
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'ascending' and 'descending'.
    */
-  @Prop({reflect: true}) public sortCriteria: RangeFacetSortCriterion =
+  @Prop({reflect: true}) public sortCriteria: InsightRangeFacetSortCriterion =
     'ascending';
   /**
    * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
    */
-  @Prop({reflect: true}) public rangeAlgorithm: RangeFacetRangeAlgorithm =
-    'equiprobable';
+  @Prop({reflect: true})
+  public rangeAlgorithm: InsightRangeFacetRangeAlgorithm = 'equiprobable';
   /**
    * Whether to display the facet values as checkboxes (multiple selection) or links (single selection).
    * Possible values are 'checkbox' and 'link'.
    */
-  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' =
+  @Prop({reflect: true}) public displayValuesAs: NumericFacetDisplayValues =
     'checkbox';
   /**
    * Specifies if the facet is collapsed.
@@ -164,19 +166,19 @@ export class AtomicNumericFacet
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
-   * <atomic-numeric-facet
+   * <atomic-insight-numeric-facet
    *   depends-on-abc
    *   ...
-   * ></atomic-numeric-facet>
+   * ></atomic-insight-numeric-facet>
    *
    * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
-   * <atomic-numeric-facet
+   * <atomic-insight-numeric-facet
    *   depends-on-abc="doc"
    *   ...
-   * ></atomic-numeric-facet>
+   * ></atomic-insight-numeric-facet>
    * ```
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
@@ -200,17 +202,17 @@ export class AtomicNumericFacet
       getFormatter: () => this.formatter,
       getSearchStatusState: () => this.searchStatusState,
       buildDependenciesManager: () =>
-        buildFacetConditionsManager(this.bindings.engine, {
+        buildInsightFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
           conditions: parseDependsOn(this.dependsOn),
         }),
-      buildNumericRange: buildNumericRange,
+      buildNumericRange: buildInsightNumericRange,
       initializeFacetForInput: () => this.initializeFacetForInput(),
       initializeFacetForRange: () => this.initializeFacetForRange(),
       initializeFilter: () => this.initializeFilter(),
     });
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
@@ -218,7 +220,7 @@ export class AtomicNumericFacet
   }
 
   private initializeFacetForInput() {
-    this.facetForInput = buildNumericFacet(this.bindings.engine, {
+    this.facetForInput = buildInsightNumericFacet(this.bindings.engine, {
       options: {
         numberOfValues: 1,
         generateAutomaticRanges: true,
@@ -235,7 +237,7 @@ export class AtomicNumericFacet
   }
 
   private initializeFacetForRange() {
-    this.facetForRange = buildNumericFacet(this.bindings.engine, {
+    this.facetForRange = buildInsightNumericFacet(this.bindings.engine, {
       options: {
         facetId: this.facetId,
         field: this.field,
@@ -253,7 +255,7 @@ export class AtomicNumericFacet
   }
 
   private initializeFilter() {
-    this.filter = buildNumericFilter(this.bindings.engine, {
+    this.filter = buildInsightNumericFilter(this.bindings.engine, {
       options: {
         facetId: this.facetId ? `${this.facetId}_input` : undefined,
         field: this.field,
@@ -277,7 +279,7 @@ export class AtomicNumericFacet
   public applyNumberInput() {
     this.facetId &&
       this.bindings.engine.dispatch(
-        loadNumericFacetSetActions(
+        loadInsightNumericFacetSetActions(
           this.bindings.engine
         ).deselectAllNumericFacetValues(this.facetId)
       );

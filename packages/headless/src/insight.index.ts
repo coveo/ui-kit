@@ -260,6 +260,11 @@ export type {
   FacetSortCriterion,
 } from './features/facets/facet-set/interfaces/request';
 
+export type {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from './features/facets/range-facets/generic/interfaces/request';
+
 // Types & Helpers
 export {
   SortOrder,

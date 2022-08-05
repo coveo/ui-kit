@@ -1,8 +1,8 @@
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {NumericFilter, NumericFilterState} from '@coveo/headless';
 import {NumberInputType} from './number-input-type';
-import {Button} from '../../../common/button';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Button} from '../../button';
+import {AnyBindings} from '../../interface/bindings';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
@@ -19,7 +19,7 @@ export class FacetNumberInput {
   private startRef!: HTMLInputElement;
   private endRef!: HTMLInputElement;
 
-  @Prop() public bindings!: Bindings;
+  @Prop() public bindings!: AnyBindings;
   @Prop() public type!: NumberInputType;
   @Prop() public filter!: NumericFilter;
   @Prop() public filterState!: NumericFilterState;
