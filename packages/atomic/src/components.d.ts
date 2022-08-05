@@ -338,6 +338,7 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
+        "badge"?: string;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback": () => void;
         "icon": string;
@@ -2430,6 +2431,7 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
+        "badge"?: string;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback"?: () => void;
         "icon": string;
