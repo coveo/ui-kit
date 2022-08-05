@@ -51,7 +51,7 @@ describe('Popover Test Suites', () => {
     });
   });
   describe('with two facet children', () => {
-    function setupPopover() {
+    function setupPopoverTwoFacets() {
       new TestFixture()
         .with(
           addPopoverTwoFacets(
@@ -62,29 +62,29 @@ describe('Popover Test Suites', () => {
         .init();
     }
     describe('verify rendering', () => {
-      before(setupPopover);
+      before(setupPopoverTwoFacets);
       CommonAssertions.assertContainsComponentError(PopoverSelectors, true);
       PopoverAssertions.assertDisplayPopover(false);
     });
   });
   describe('with zero facet children', () => {
-    function setupPopover() {
+    function setupPopoverNoFacet() {
       new TestFixture().with(addPopoverNoFacets()).init();
     }
     describe('verify rendering', () => {
-      before(setupPopover);
+      before(setupPopoverNoFacet);
       CommonAssertions.assertContainsComponentError(PopoverSelectors, true);
       PopoverAssertions.assertDisplayPopover(false);
     });
   });
   describe('with invalid facet child', () => {
-    function setupPopover() {
+    function setupPopoverInvalidFacet() {
       new TestFixture()
         .with(addPopover({field: 'invalidd', 'number-of-values': 5}))
         .init();
     }
     describe('verify rendering', () => {
-      before(setupPopover);
+      before(setupPopoverInvalidFacet);
       CommonAssertions.assertContainsComponentError(PopoverSelectors, false);
       PopoverAssertions.assertDisplayPopover(false);
     });
