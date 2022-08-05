@@ -35,7 +35,6 @@ module.exports = {
       },
       boxShadow: {
         'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)',
-        'outer-light-blue': '0px 0px 0px 3px rgba(57, 159, 254, 0.3)'
       },
       fontWeight: {
         normal: 'var(--atomic-font-normal)',

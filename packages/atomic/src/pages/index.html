@@ -128,10 +128,6 @@
       atomic-search-layout {
         row-gap: var(--atomic-layout-spacing-y);
       }
-
-      atomic-layout-section[section='popovers'] {
-        display: flex;
-      }
     </style>
   </head>
 
@@ -198,33 +194,35 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-segmented-facet-scrollable>
-            <atomic-segmented-facet
-              facet-id="segment"
-              field="objecttype"
-              number-of-values="20"
-            ></atomic-segmented-facet>
-          </atomic-segmented-facet-scrollable>
-          <atomic-layout-section class="flex" section="popovers">
-            <atomic-popover>
-              <atomic-facet
-                facet-id="objecttype-popover"
-                label="Facet title"
+          <atomic-layout-section section="horizontal-filters">
+            <atomic-segmented-facet-scrollable>
+              <atomic-segmented-facet
+                facet-id="segment"
                 field="objecttype"
-                number-of-values="8"
-              ></atomic-facet>
-            </atomic-popover>
-            <atomic-popover>
-              <atomic-facet
-                facet-id="language-popover"
-                field="language"
-                label="Language"
-                number-of-values="8"
-              ></atomic-facet>
-            </atomic-popover>
-            <atomic-popover>
-              <atomic-facet facet-id="source-popover" field="source" label="Source" number-of-values="8"></atomic-facet>
-            </atomic-popover>
+                number-of-values="20"
+              ></atomic-segmented-facet>
+            </atomic-segmented-facet-scrollable>
+            <atomic-layout-section section="popovers">
+              <atomic-popover>
+                <atomic-facet facet-id="objecttype-popover" field="objecttype" number-of-values="8"></atomic-facet>
+              </atomic-popover>
+              <atomic-popover>
+                <atomic-facet
+                  facet-id="language-popover"
+                  field="language"
+                  label="Language"
+                  number-of-values="8"
+                ></atomic-facet>
+              </atomic-popover>
+              <atomic-popover>
+                <atomic-facet
+                  facet-id="source-popover"
+                  field="source"
+                  label="Source"
+                  number-of-values="8"
+                ></atomic-facet>
+              </atomic-popover>
+            </atomic-layout-section>
           </atomic-layout-section>
           <atomic-layout-section section="status">
             <atomic-breadbox></atomic-breadbox>
