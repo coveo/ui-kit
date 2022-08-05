@@ -14,3 +14,12 @@ export function assertDisplaySlotWrapper(display: boolean) {
     );
   });
 }
+
+export function assertNumberOfSelectedValues(numberOfSelectedValues: string) {
+  it(`should have ${numberOfSelectedValues} selected values`, () => {
+    console.log(PopoverSelectors.valueCount());
+    PopoverSelectors.valueCount()
+      .invoke('attr', 'title')
+      .should('eq', numberOfSelectedValues);
+  });
+}
