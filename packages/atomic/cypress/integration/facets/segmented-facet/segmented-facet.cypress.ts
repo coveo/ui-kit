@@ -134,7 +134,7 @@ describe('Segmented Facet Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label}))
-        .withHash(`f[${field}]=Cervantes`)
+        .withHash(`f[${field}]=LilyC`)
         .init();
     });
 
@@ -143,7 +143,7 @@ describe('Segmented Facet Test Suites', () => {
     FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues - 1);
     CommonFacetAssertions.assertFirstValueContains(
       SegmentedFacetSelectors,
-      'Cervantes'
+      'LilyC'
     );
   });
 
