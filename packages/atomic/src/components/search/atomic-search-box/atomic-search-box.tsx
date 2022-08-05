@@ -37,6 +37,8 @@ import {
   SimpleSearchSuggestion,
 } from './search-suggestion';
 
+import {isMacOS} from '../../../utils/device-utils';
+
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
@@ -127,7 +129,10 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public clearFilters = true;
 
   @AriaLiveRegion('search-box')
-  protected ariaMessage!: string;
+  protected searchBoxAriaMessage!: string;
+
+  @AriaLiveRegion('search-suggestions', true)
+  protected suggestionsAriaMessage!: string;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
@@ -341,6 +346,7 @@ export class AtomicSearchBox {
     this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
+    this.updateAriaLiveActiveDescendant(value);
   }
 
   private focusPanel(panel: HTMLElement | undefined) {
@@ -351,17 +357,17 @@ export class AtomicSearchBox {
       const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
-      this.updateDescendants(
-        panelHasActiveDescendant
-          ? this.previousActiveDescendantElement!.id
-          : panel.firstElementChild.id
-      );
+      const newValue = panelHasActiveDescendant
+        ? this.previousActiveDescendantElement!
+        : (panel.firstElementChild as HTMLElement);
+      this.updateDescendants(newValue.id);
+      this.updateAriaLiveActiveDescendant(newValue);
     }
   }
 
   private updateAriaMessage() {
     const elsLength = this.allSuggestionElements.filter(elementHasQuery).length;
-    this.ariaMessage = elsLength
+    this.searchBoxAriaMessage = elsLength
       ? this.bindings.i18n.t('query-suggestions-available', {
           count: elsLength,
         })
@@ -482,6 +488,12 @@ export class AtomicSearchBox {
     }
   }
 
+  private updateAriaLiveActiveDescendant(value: HTMLElement) {
+    if (isMacOS()) {
+      this.suggestionsAriaMessage = value.ariaLabel!;
+    }
+  }
+
   private updateSuggestionElements(query: string) {
     if (!this.isPanelInFocus(this.leftPanelRef, query)) {
       this.leftSuggestionElements = this.getSuggestionElements(
@@ -538,7 +550,7 @@ export class AtomicSearchBox {
   private clearSuggestionElements() {
     this.leftSuggestionElements = [];
     this.rightSuggestionElements = [];
-    this.ariaMessage = '';
+    this.searchBoxAriaMessage = '';
   }
 
   private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
@@ -705,7 +717,11 @@ export class AtomicSearchBox {
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
           value={this.searchBoxState.value}
-          ariaLabel={this.bindings.i18n.t('search-box-with-suggestions')}
+          ariaLabel={this.bindings.i18n.t(
+            isMacOS()
+              ? 'search-box-with-suggestions-macos'
+              : 'search-box-with-suggestions'
+          )}
           onFocus={() => this.onFocus()}
           onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
           onBlur={() => this.clearSuggestions()}

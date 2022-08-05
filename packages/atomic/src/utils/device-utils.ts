@@ -13,3 +13,8 @@ export function isIOS() {
 
   return isIOS || (isAppleDevice && (isTouchScreen || iosQuirkPresent()));
 }
+
+export function isMacOS() {
+  // Source: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform#examples
+  return navigator.platform.startsWith('Mac');
+}

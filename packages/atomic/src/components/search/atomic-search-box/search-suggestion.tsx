@@ -1,5 +1,6 @@
 import {h, FunctionalComponent, VNode, Fragment} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
+import {isMacOS} from '../../../utils/device-utils';
 import {AnyBindings} from '../../common/interface/bindings';
 import {SearchBoxSuggestionElement} from '../search-box-suggestions/suggestions-common';
 
@@ -70,6 +71,7 @@ function getAriaLabelForRenderedSuggestion({
   index,
   lastIndex,
   isDoubleList,
+  isButton,
 }: {
   bindings: AnyBindings;
   renderedSuggestion: HTMLElement;
@@ -78,28 +80,38 @@ function getAriaLabelForRenderedSuggestion({
   index: number;
   lastIndex: number;
   isDoubleList: boolean;
+  isButton: boolean;
 }) {
   const contentLabel =
     suggestion.ariaLabel ??
     suggestion.query ??
     renderedSuggestion.innerText ??
     bindings.i18n.t('no-title');
+  const labelWithType =
+    isMacOS() && isButton
+      ? bindings.i18n.t('search-suggestion-button', {
+          label: contentLabel,
+          interpolation: {escapeValue: false},
+        })
+      : contentLabel;
   const position = index + 1;
   const count = lastIndex + 1;
 
   if (!isDoubleList) {
     return bindings.i18n.t('search-suggestion-single-list', {
-      label: contentLabel,
+      label: labelWithType,
       position,
       count,
+      interpolation: {escapeValue: false},
     });
   }
 
   return bindings.i18n.t('search-suggestion-double-list', {
-    label: contentLabel,
+    label: labelWithType,
     position,
     count,
     side: bindings.i18n.t(side === 'left' ? 'left' : 'right'),
+    interpolation: {escapeValue: false},
   });
 }
 
@@ -111,16 +123,19 @@ function getContentForSuggestion(suggestion: SearchBoxSuggestionElement) {
   );
 }
 
-function getCommonSearchSuggestionAttributes({
-  bindings,
-  id,
-  suggestion,
-  isSelected,
-  side,
-  index,
-  lastIndex,
-  isDoubleList,
-}: SearchSuggestionProps): JSXBase.HTMLAttributes<HTMLElement> {
+function getCommonSearchSuggestionAttributes(
+  {
+    bindings,
+    id,
+    suggestion,
+    isSelected,
+    side,
+    index,
+    lastIndex,
+    isDoubleList,
+  }: SearchSuggestionProps,
+  isButton: boolean
+): JSXBase.HTMLAttributes<HTMLElement> {
   return {
     id: id,
     key: suggestion.key,
@@ -144,6 +159,7 @@ function getCommonSearchSuggestionAttributes({
           index,
           lastIndex,
           isDoubleList,
+          isButton,
         })
       );
     },
@@ -154,7 +170,7 @@ export const SimpleSearchSuggestion: FunctionalComponent<
   SearchSuggestionProps
 > = (props) => {
   return (
-    <span {...getCommonSearchSuggestionAttributes(props)}>
+    <span {...getCommonSearchSuggestionAttributes(props, false)}>
       {getContentForSuggestion(props.suggestion)}
     </span>
   );
@@ -165,7 +181,7 @@ export const ButtonSearchSuggestion: FunctionalComponent<
 > = (props) => {
   return (
     <button
-      {...getCommonSearchSuggestionAttributes(props)}
+      {...getCommonSearchSuggestionAttributes(props, true)}
       onMouseDown={(e) => e.preventDefault()}
       onClick={(e: Event) => props.onClick?.(e)}
       onMouseOver={(e: Event) => props.onMouseOver?.(e)}
