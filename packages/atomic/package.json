@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.93.0",
+  "version": "1.94.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "0.42.1",
-    "@coveo/headless": "1.96.0",
+    "@coveo/headless": "1.97.0",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "2.15.2",
     "@stencil/store": "1.5.0",
@@ -65,7 +65,8 @@
     "focus-visible": "5.2.0",
     "i18next": "20.6.1",
     "i18next-http-backend": "1.4.1",
-    "stencil-inline-svg": "1.1.0"
+    "stencil-inline-svg": "1.1.0",
+    "ts-debounce": "^4.0.0"
   },
   "devDependencies": {
     "@applitools/eyes-cypress": "^3.26.1",

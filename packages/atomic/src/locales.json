@@ -53,9 +53,57 @@
     "zh-CN": "无标题",
     "zh-TW": "無標題"
   },
+  "left": {
+    "en": "Left",
+    "fr": "Gauche"
+  },
+  "right": {
+    "en": "Right",
+    "fr": "Droit"
+  },
   "search-box": {
-    "en": "Input field to perform a search. Insert a query. Press enter to send.",
-    "fr": "Champ de texte pour performer une recherche. Insérer une requête. Appuyez sur Entrée pour envoyer."
+    "en": "Input field to perform a search. Insert a query. To send, press Enter.",
+    "fr": "Champ de texte pour performer une recherche. Insérer une requête. Pour envoyer, appuyez sur Entrée."
+  },
+  "search-box-with-suggestions": {
+    "en": "Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.",
+    "fr": "Champ de recherche avec des suggestions. Pour commencer à naviguer à travers les suggestions, avec cible de saisie, appuyez sur Flèche Basse. Pour envoyer, appuyez sur Entrée."
+  },
+  "search-box-with-suggestions-macos": {
+    "en": "Search field with suggestions. Suggestions may be available under this field. To send, press Enter.",
+    "fr": "Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée."
+  },
+  "search-suggestions-single-list": {
+    "en": "Search suggestions. To navigate between suggestions, press Up Arrow or Down Arrow. To select a suggestion, press Enter.",
+    "fr": "Liste de suggestions de recherche. Pour naviguer entre les suggestions, appuyez sur Flèche Haute ou Flèche Basse. Pour sélectionner une suggestion, appuyez sur Entrée."
+  },
+  "search-suggestions-double-list": {
+    "en": "Two lists of search box suggestions side-by-side. To navigate between suggestions, press Up Arrow or Down Arrow. To toggle between the two lists, press Left Arrow or Right Arrow. To select a suggestion, press Enter.",
+    "fr": "Deux listes de suggestions de recherche côte à côte. Pour naviguer entre les suggestions, appuyez sur Flèche Haute ou Flèche Basse. Pour se déplacer d'une liste à l'autre, appuyez sur Flèche Gauche ou Flèche Droite. Pour sélectionner une suggestion, appuyez sur Entrée."
+  },
+  "search-suggestion-single-list": {
+    "en": "{{label}}. {{position}} of {{count}}.",
+    "fr": "{{label}}. {{position}} sur {{count}}."
+  },
+  "search-suggestion-double-list": {
+    "en": "{{label}}. {{position}} of {{count}}. In {{side}} list.",
+    "fr": "{{label}}. {{position}} sur {{count}}. Dans la liste {{side}}."
+  },
+  "search-suggestion-button": {
+    "en": "{{label}}. Button",
+    "fr": "{{label}}. Bouton"
+  },
+  "query-suggestion-label": {
+    "en": "“{{query}}”",
+    "fr": "«\u00A0{{text}}\u00A0»"
+  },
+  "recent-query-suggestion-label": {
+    "en": "“{{query}}”, recent query",
+    "fr": "«\u00A0{{query}}\u00A0», requête récente"
+  },
+  "instant-results-suggestion-label": {
+    "en": "{{title}}, instant result",
+    "fr": "{{title}}, résultat instantané"
   },
   "facet-search": {
     "en": "Search for values in the {{label}} facet",
@@ -73,10 +121,6 @@
     "en": "Remove inclusion filter on {{value}}",
     "fr": "Enlever le filtre d'inclusion sur {{value}}"
   },
-  "query-suggestion-list": {
-    "en": "Search suggestions. Select one to search.",
-    "fr": "Suggestions de recherche. Sélectionnez-en un pour rechercher."
-  },
   "clear": {
     "en": "Clear",
     "fr": "Effacer"
@@ -91,7 +135,7 @@
   },
   "show-more": {
     "en": "Show more",
-    "fr": "Voir plus de résultats",
+    "fr": "Voir plus",
     "cs": "Zobrazit více",
     "da": "Vis mere",
     "de": "Mehr anzeigen",
@@ -118,7 +162,7 @@
   },
   "show-less": {
     "en": "Show less",
-    "fr": "Voir moins de résultats",
+    "fr": "Voir moins",
     "cs": "Zobrazit méně",
     "da": "Vis mindre",
     "de": "Weniger anzeigen",
@@ -143,6 +187,14 @@
     "zh-CN": "显示较少的值",
     "zh-TW": "顯示較少的值"
   },
+  "show-less-facet-values": {
+    "en": "Show less values for the {{label}} facet",
+    "fr": "Voir moins de valeurs pour la facette {{label}}"
+  },
+  "show-more-facet-values": {
+    "en": "Show more values for the {{label}} facet",
+    "fr": "Voir plus de valeurs pour la facette {{label}}"
+  },
   "facet-values": {
     "en": "Values for the {{label}} facet",
     "fr": "Valeurs pour la facette {{label}}"
@@ -150,14 +202,6 @@
   "facet-search-results": {
     "en": "Values found for {{query}} in the {{label}} facet",
     "fr": "Valeurs trouvées pour {{query}} dans la facette {{label}}"
-  },
-  "show-less-facet-values": {
-    "en": "Show fewer values for the {{label}} facet",
-    "fr": "Afficher moins de valeurs pour la facette {{label}}"
-  },
-  "show-more-facet-values": {
-    "en": "Show more values for the {{label}} facet",
-    "fr": "Afficher plus de valeurs pour la facette {{label}}"
   },
   "pagination": {
     "en": "Pagination",
@@ -576,6 +620,10 @@
   "recent-searches": {
     "en": "Recent searches",
     "fr": "Recherches récente"
+  },
+  "clear-recent-searches": {
+    "en": "Clear recent searches",
+    "fr": "Effacer les recherches récentes"
   },
   "cancel-last-action": {
     "en": "Cancel last action",
@@ -1266,8 +1314,8 @@
     "fr": "seulement {{count}} étoiles sur {{count}}"
   },
   "stars-range": {
-    "en": "{{value}} to {{count}} stars",
-    "fr": "{{value}} à {{count}} étoiles"
+    "en": "{{value}} out of {{count}} stars & up",
+    "fr": "{{value}} à {{count}} étoiles & plus"
   },
   "with-colon": {
     "en": "{{text}}:",
@@ -1277,10 +1325,10 @@
     "zh-TW": "{{text}}："
   },
   "between-quotations": {
-    "en": "\"{{text}}\"",
+    "en": "“{{text}}”",
     "fr": "«\u00A0{{text}}\u00A0»",
-    "zh-CN": "\"{{text}}\"",
-    "zh": "\"{{text}}\"",
+    "zh-CN": "“{{text}}”",
+    "zh": "“{{text}}”",
     "zh-TW": "「{{text}}」"
   },
   "between-parentheses": {
