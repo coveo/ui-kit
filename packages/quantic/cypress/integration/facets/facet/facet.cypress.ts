@@ -121,6 +121,7 @@ describe('Facet Test Suite', () => {
       });
     });
   });
+
   describe('with accessibility', () => {
     function setupWithValues() {
       visitFacetPage(
@@ -134,10 +135,13 @@ describe('Facet Test Suite', () => {
     }
     it('should be accessible through keyboard', () => {
       setupWithValues();
-      Actions.findValuePressTabPressSpace(defaultLabel);
-      Actions.findValuePressShiftTabPressSpace(defaultLabel);
+
+      Actions.findSearchInputPressTab();
+      Expect.selectedValuesContain('People');
+      Expect.numberOfSelectedLinkValues(1);
     });
   });
+
   describe('with values', () => {
     function setupWithValues() {
       visitFacetPage(

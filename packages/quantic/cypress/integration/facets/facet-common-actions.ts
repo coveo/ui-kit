@@ -54,11 +54,8 @@ export const baseFacetActions = (selector: BaseFacetSelector) => {
     clickExpandButton: () => {
       selector.expandButton().click();
     },
-    findValuePressTabPressSpace: (value: string) => {
-      selector.get().contains(value).focus().tab().type(' ');
-    },
-    findValuePressShiftTabPressSpace: (value: string) => {
-      selector.get().contains(value).focus().tab({shift: true}).type(' ');
+    findSearchInputPressTab: () => {
+      selector.searchInput().focus().tab().tab().type(' ', {force: true});
     },
   };
 };
