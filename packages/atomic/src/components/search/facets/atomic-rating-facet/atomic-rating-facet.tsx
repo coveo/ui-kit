@@ -24,7 +24,7 @@ import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+import {parseDependsOn, validateDependsOn} from '../facet-common';
 import Star from '../../../../images/star.svg';
 import {Schema, StringValue} from '@coveo/bueno';
 import {Hidden} from '../../../common/hidden';
@@ -35,6 +35,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -54,11 +55,10 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-rating - The facet value rating, common for all displays.
  *
  * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
+ * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
  * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
  * @part value-link - The facet value when display is 'link'.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
- *
+ * @part value-link-selected - The selected facet value when display is 'link'.
  */
 @Component({
   tag: 'atomic-rating-facet',

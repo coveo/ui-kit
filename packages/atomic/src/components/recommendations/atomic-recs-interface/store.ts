@@ -13,6 +13,7 @@ export function createAtomicRecsStore(): AtomicRecsStore {
   const commonStore = createAtomicCommonStore<AtomicRecsStoreData>({
     loadingFlags: [],
     iconAssetsPath: '',
+    facetElements: [],
   });
   return {
     ...commonStore,

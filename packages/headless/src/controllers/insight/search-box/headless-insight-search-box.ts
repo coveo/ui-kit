@@ -5,8 +5,8 @@ import {
 } from '../../../features/insight-search/insight-search-actions';
 import {
   buildCoreSearchBox,
-  CoreSearchBox,
   Delimiters,
+  SearchBox,
   SearchBoxState,
   Suggestion,
   SuggestionHighlightingOptions,
@@ -16,35 +16,30 @@ import {SearchBoxOptions} from '../../core/search-box/headless-core-search-box-o
 export type {
   SearchBoxOptions,
   SearchBoxState,
+  SearchBox,
   SuggestionHighlightingOptions,
   Suggestion,
   Delimiters,
 };
 
-export interface InsightSearchBoxProps {
+export interface SearchBoxProps {
   /**
-   * The `InsightSearchBox` controller options.
+   * The `SearchBox` controller options.
    */
   options?: SearchBoxOptions;
 }
 
 /**
- * The `InsightSearchBox` headless controller offers a high-level interface for designing a common search box UI controller
- * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
- */
-export interface InsightSearchBox extends CoreSearchBox {}
-
-/**
- * Creates an `InsightSearchBox` controller instance.
+ * Creates an insight `SearchBox` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
  * @param props - The configurable `SearchBox` properties.
- * @returns An `InsightSearchBox` controller instance.
+ * @returns A `SearchBox` controller instance.
  */
-export function buildInsightSearchBox(
+export function buildSearchBox(
   engine: InsightEngine,
-  props: InsightSearchBoxProps = {}
-): InsightSearchBox {
+  props: SearchBoxProps = {}
+): SearchBox {
   return buildCoreSearchBox(engine, {
     ...props,
     executeSearchActionCreator: executeSearch,

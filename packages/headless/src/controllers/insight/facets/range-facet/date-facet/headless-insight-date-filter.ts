@@ -31,8 +31,8 @@ export type {
 };
 
 /**
- * Creates a `DateFilter` controller instance.
- * @param engine - The headless engine.
+ * Creates an insight `DateFilter` controller instance.
+ * @param engine - The insight engine.
  * @param props - The configurable `DateFilter` controller properties.
  * @returns A `DateFilter` controller instance.
  */

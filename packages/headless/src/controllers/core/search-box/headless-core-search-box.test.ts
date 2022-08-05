@@ -1,6 +1,6 @@
 import {
-  CoreSearchBox,
-  CoreSearchBoxProps,
+  SearchBox,
+  SearchBoxProps,
   SearchBoxOptions,
   buildCoreSearchBox,
 } from './headless-core-search-box';
@@ -39,8 +39,8 @@ describe('headless CoreSearchBox', () => {
   let state: SearchAppState;
 
   let engine: MockSearchEngine;
-  let searchBox: CoreSearchBox;
-  let props: CoreSearchBoxProps;
+  let searchBox: SearchBox;
+  let props: SearchBoxProps;
 
   beforeEach(() => {
     const options: SearchBoxOptions = {
@@ -242,6 +242,16 @@ describe('headless CoreSearchBox', () => {
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
+    });
+
+    it('when the #clearFilters option is false, it does not deselects all facets', () => {
+      searchBox = buildCoreSearchBox(engine, {
+        ...props,
+        options: {clearFilters: false},
+      });
+      searchBox.submit();
+
+      expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
     });
 
     it('allows autoSelection', () => {

@@ -34,9 +34,9 @@ export type {
 export {buildNumericRange};
 
 /**
- * Creates a `NumericFacet` controller instance.
+ * Creates an insight `NumericFacet` controller instance.
  *
- * @param engine - The headless engine.
+ * @param engine - The insight engine.
  * @param props - The configurable `NumericFacet` properties.
  * @returns A `NumericFacet` controller instance.
  */

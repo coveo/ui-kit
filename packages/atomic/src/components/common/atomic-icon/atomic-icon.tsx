@@ -14,7 +14,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
+import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -27,10 +28,12 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: false,
   assetsDirs: ['assets'],
 })
-export class AtomicIcon implements InitializableComponent {
+export class AtomicIcon
+  implements InitializableComponent<Bindings | InsightBindings>
+{
   @Element() host!: HTMLElement;
 
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: Bindings | InsightBindings;
 
   /**
    * The SVG icon to display.
@@ -64,7 +67,7 @@ export class AtomicIcon implements InitializableComponent {
   private async getIcon() {
     const url = parseAssetURL(
       this.icon,
-      this.bindings.store.get('iconAssetsPath')
+      this.bindings.store.getIconAssetsPath()
     );
     const svg = url ? await this.fetchIcon(url) : this.icon;
     const sanitizedSvg = svg

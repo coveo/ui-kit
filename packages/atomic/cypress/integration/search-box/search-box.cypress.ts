@@ -10,6 +10,10 @@ import * as SearchBoxAssertions from './search-box-assertions';
 import {addQuerySummary} from '../query-summary-actions';
 import * as QuerySummaryAssertions from '../query-summary-assertions';
 import {RouteAlias} from '../../utils/setupComponent';
+import {addFacet, field} from '../facets/facet/facet-actions';
+import {FacetSelectors} from '../facets/facet/facet-selectors';
+import {selectIdleCheckboxValueAt} from '../facets/facet-common-actions';
+import * as FacetCommonAssertions from '../facets/facet-common-assertions';
 
 const setSuggestions = (count: number) => () => {
   cy.intercept(
@@ -176,5 +180,41 @@ describe('Search Box Test Suites', () => {
     SearchBoxAssertions.assertHasText('test');
     QuerySummaryAssertions.assertHasPlaceholder();
     CommonAssertions.assertConsoleError(false);
+  });
+
+  describe('with a facet & clear-filters set to false', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addSearchBox({props: {'clear-filters': 'false'}}))
+        .with(addFacet({field}))
+        .init();
+      selectIdleCheckboxValueAt(FacetSelectors, 0);
+      cy.wait(TestFixture.interceptAliases.Search);
+      SearchBoxSelectors.submitButton().click({force: true});
+      cy.wait(TestFixture.interceptAliases.Search);
+    });
+
+    FacetCommonAssertions.assertNumberOfSelectedCheckboxValues(
+      FacetSelectors,
+      1
+    );
+  });
+
+  describe('with a facet & clear-filters set to true', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addSearchBox({props: {'clear-filters': 'true'}}))
+        .with(addFacet({field}))
+        .init();
+      selectIdleCheckboxValueAt(FacetSelectors, 0);
+      cy.wait(TestFixture.interceptAliases.Search);
+      SearchBoxSelectors.submitButton().click({force: true});
+      cy.wait(TestFixture.interceptAliases.Search);
+    });
+
+    FacetCommonAssertions.assertNumberOfSelectedCheckboxValues(
+      FacetSelectors,
+      0
+    );
   });
 });

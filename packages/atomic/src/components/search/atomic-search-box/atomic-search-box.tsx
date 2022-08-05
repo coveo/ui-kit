@@ -17,6 +17,7 @@ import {
   StandaloneSearchBox,
   StandaloneSearchBoxState,
   buildStandaloneSearchBox,
+  SearchBoxOptions,
 } from '@coveo/headless';
 import {
   BindStateToController,
@@ -36,10 +37,11 @@ import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SubmitButton} from '../../common/search-box/submit-button';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
@@ -123,6 +125,12 @@ export class AtomicSearchBox {
    */
   @Prop({reflect: true}) public disableSearch = false;
 
+  /**
+   * Whether to clear all active query filters when the end user submits a new query from the search box.
+   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   */
+  @Prop({reflect: true}) public clearFilters = true;
+
   @AriaLiveRegion('search-box')
   protected ariaMessage!: string;
 
@@ -130,7 +138,7 @@ export class AtomicSearchBox {
     this.id = randomID('atomic-search-box-');
     this.querySetActions = loadQuerySetActions(this.bindings.engine);
 
-    const searchBoxOptions = {
+    const searchBoxOptions: SearchBoxOptions = {
       id: this.id,
       numberOfSuggestions: 0,
       highlightOptions: {
@@ -143,6 +151,7 @@ export class AtomicSearchBox {
           close: '</span>',
         },
       },
+      clearFilters: this.clearFilters,
     };
 
     this.searchBox = this.redirectionUrl
@@ -205,6 +214,7 @@ export class AtomicSearchBox {
       isStandalone: !!this.redirectionUrl,
       searchBoxController: this.searchBox,
       numberOfQueries: this.numberOfQueries,
+      clearFilters: this.clearFilters,
       suggestedQuery: () => this.suggestedQuery,
       clearSuggestions: () => this.clearSuggestions(),
       triggerSuggestions: () => this.triggerSuggestions(),
@@ -369,7 +379,7 @@ export class AtomicSearchBox {
       if (prom.status === 'fulfilled') {
         fulfilledSuggestions.push(this.suggestions[j]);
       } else {
-        console.error(
+        this.bindings.engine.logger.warn(
           'Some query suggestions are not being shown because the promise timed out.'
         );
       }
@@ -585,10 +595,16 @@ export class AtomicSearchBox {
     side: 'left' | 'right'
   ) {
     const id = `${this.id}-${side}-suggestion-${item.key}`;
-    const isSelected = id === this.activeDescendant;
+
+    const isSelected =
+      id === this.activeDescendant ||
+      (this.suggestedQuery === item.query &&
+        !this.panelInFocus?.getAttribute('part')?.includes(side));
+
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
+
     return (
       <li
         id={id}
@@ -693,7 +709,6 @@ export class AtomicSearchBox {
 
   public render() {
     this.updateBreakpoints();
-
     return [
       <SearchBoxWrapper disabled={this.disableSearch}>
         <SearchInput

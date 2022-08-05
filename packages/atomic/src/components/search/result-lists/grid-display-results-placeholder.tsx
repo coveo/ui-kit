@@ -1,8 +1,9 @@
+import {ResultsPerPageState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
-import {ResultPlaceholderProps} from './result-list-common';
+import {ResultPlaceholderProps} from '../../common/result-list/result-list';
 
 export const GridDisplayResultsPlaceholder: FunctionalComponent<
-  ResultPlaceholderProps
+  ResultPlaceholderProps<ResultsPerPageState>
 > = (props) => {
   return Array.from(
     {length: props.resultsPerPageState.numberOfResults},

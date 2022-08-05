@@ -1,3 +1,4 @@
+// TODO: move to common components
 import {
   Component,
   h,
@@ -17,7 +18,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../utils/utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {AnyBindings} from '../interface/bindings';
 
 /**
  * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
@@ -38,8 +39,8 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   styleUrl: 'atomic-modal.pcss',
   shadow: true,
 })
-export class AtomicModal implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicModal implements InitializableComponent<AnyBindings> {
+  @InitializeBindings() public bindings!: AnyBindings;
   @Element() public host!: HTMLElement;
 
   @State() public error!: Error;

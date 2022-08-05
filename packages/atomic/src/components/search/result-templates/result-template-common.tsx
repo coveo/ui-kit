@@ -1,9 +1,5 @@
 import {h} from '@stencil/core';
-import {
-  ResultTemplate,
-  ResultTemplateCondition,
-  ResultTemplatesHelpers,
-} from '@coveo/headless';
+import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 
 export type TemplateContent = DocumentFragment;
 
@@ -71,22 +67,6 @@ export class ResultTemplateCommon {
       console.warn(
         'Any "script" tags defined inside of "template" elements are not supported and will not be executed when the results are rendered',
         host
-      );
-    }
-  }
-
-  addMatchConditions(
-    mustMatch: Record<string, string[]>,
-    mustNotMatch: Record<string, string[]>
-  ) {
-    for (const field in mustMatch) {
-      this.matchConditions.push(
-        ResultTemplatesHelpers.fieldMustMatch(field, mustMatch[field])
-      );
-    }
-    for (const field in mustNotMatch) {
-      this.matchConditions.push(
-        ResultTemplatesHelpers.fieldMustNotMatch(field, mustNotMatch[field])
       );
     }
   }

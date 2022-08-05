@@ -8,13 +8,13 @@ import {
 } from '../../../test';
 import {
   buildCoreQuerySummary,
-  CoreQuerySummary,
+  QuerySummary,
 } from './headless-core-query-summary';
 
 describe('CoreQuerySummary', () => {
   let engine: MockSearchEngine;
   let state: SearchAppState;
-  let coreQuerySummary: CoreQuerySummary;
+  let coreQuerySummary: QuerySummary;
 
   beforeEach(() => {
     state = createMockState();

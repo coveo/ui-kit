@@ -2,21 +2,15 @@ import {facetOptions, productListing} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
 import {sortFacets} from '../../../utils/facet-utils';
 import {buildController} from '../../controller/headless-controller';
-import {CoreFacetManager} from '../../core/facet-manager/headless-core-facet-manager';
 import {
   FacetManager,
   FacetManagerPayload,
   FacetManagerState,
-} from '../../facet-manager/headless-facet-manager';
+} from '../../core/facet-manager/headless-core-facet-manager';
 import {ProductListingSection} from '../../../state/state-sections';
 import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
 
-export type {
-  CoreFacetManager,
-  FacetManager,
-  FacetManagerState,
-  FacetManagerPayload,
-};
+export type {FacetManager, FacetManagerState, FacetManagerPayload};
 
 /**
  * Creates a `FacetManager` instance for the product listing.

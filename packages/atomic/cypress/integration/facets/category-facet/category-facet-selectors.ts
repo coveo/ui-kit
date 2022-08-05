@@ -41,7 +41,7 @@ export const CategoryFacetSelectors = {
     return this.shadow().find('[part="values"]');
   },
   childValue() {
-    return this.shadow().find('[part="value-link"]');
+    return this.shadow().find('[part~="value-link"]');
   },
   childValueLabel() {
     return this.childValue().find('[part="value-label"]');
@@ -53,10 +53,10 @@ export const CategoryFacetSelectors = {
     return this.shadow().find('[part="parent-button"]');
   },
   activeParentValue() {
-    return this.shadow().find('[part="active-parent"]');
+    return this.shadow().find('[part~="active-parent"]');
   },
   activeParentValueWithText(text: string) {
-    return this.shadow().find(`[part="active-parent"]:contains("${text}")`);
+    return this.shadow().find(`[part~="active-parent"]:contains("${text}")`);
   },
   showMoreButton() {
     return this.shadow().find('[part="show-more"]');

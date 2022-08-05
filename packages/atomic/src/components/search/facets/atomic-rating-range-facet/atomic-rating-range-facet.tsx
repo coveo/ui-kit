@@ -23,7 +23,7 @@ import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+import {parseDependsOn, validateDependsOn} from '../facet-common';
 import Star from '../../../../images/star.svg';
 import {Hidden} from '../../../common/hidden';
 import {
@@ -33,6 +33,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -52,10 +53,9 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-count - The facet value count, common for all displays.
  *
  * @part value-link - The facet value when display is 'link'.
+ * @part value-link-selected - The selected facet value when display is 'link'.
  * @part value-box - The facet value when display is 'box'.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
- *
+ * @part value-box-selected - The selected facet value when display is 'box'.
  */
 @Component({
   tag: 'atomic-rating-range-facet',

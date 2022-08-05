@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.97.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.96.1...@coveo/headless@1.97.0) (2022-08-02)
+
+
+### Features
+
+* **atomic:** add insight refine toggle and insight refine modal ([#2268](https://github.com/coveo/ui-kit/issues/2268)) ([d742a51](https://github.com/coveo/ui-kit/commit/d742a517dcb29d42a9d898a22a448b912f628811))
+
+
+
+
+
+## [1.96.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.96.0...@coveo/headless@1.96.1) (2022-08-01)
+
+
+### Bug Fixes
+
+* **headless:** provide runtimeEnvironment for all Analytics Clients ([#2269](https://github.com/coveo/ui-kit/issues/2269)) ([27ea031](https://github.com/coveo/ui-kit/commit/27ea0313900e20b046e2c75250ba5c10debc111f))
+
+
+
+
+
+# [1.96.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.95.0...@coveo/headless@1.96.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* **headless:** Active tab added to the insight query request ([#2263](https://github.com/coveo/ui-kit/issues/2263)) ([13fe868](https://github.com/coveo/ui-kit/commit/13fe868ab8a91ac2fb67b5adcf1ee3bfa2c59161))
+
+
+### Features
+
+* **atomic,headless:** add result list and result template to insight ([#2197](https://github.com/coveo/ui-kit/issues/2197)) ([767b242](https://github.com/coveo/ui-kit/commit/767b24200e8fc43b64fb85075a97b574de5bc9ba))
+
+
+
+
+
+# [1.95.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.94.0...@coveo/headless@1.95.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* **headless:** exporting the missing pieces ([#2259](https://github.com/coveo/ui-kit/issues/2259)) ([f2da211](https://github.com/coveo/ui-kit/commit/f2da211de4ff71faf1312230085c59c115db20b5))
+
+
+### Features
+
+* **quantic:** update Quantic components to work with different engines ([#2239](https://github.com/coveo/ui-kit/issues/2239)) ([bd245a7](https://github.com/coveo/ui-kit/commit/bd245a7f18aa767c3369fc64f7fa9b3991adcc17))
+
+
+
+
+
+# [1.94.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.93.0...@coveo/headless@1.94.0) (2022-07-27)
+
+
+### Features
+
+* **headless:** Refactor core and insight controllers ([#2215](https://github.com/coveo/ui-kit/issues/2215)) ([25fb657](https://github.com/coveo/ui-kit/commit/25fb657e43c725beb83a48a9e5fc8393a649c051))
+
+
+
+
+
+# [1.93.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.92.0...@coveo/headless@1.93.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP Tab controller ([#2200](https://github.com/coveo/ui-kit/issues/2200)) ([c6e531c](https://github.com/coveo/ui-kit/commit/c6e531c0313cefb70d78a7bc448f84025b88fd18))
+
+
+
+
+
+# [1.92.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.91.0...@coveo/headless@1.92.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP DidYouMean controller ([#2233](https://github.com/coveo/ui-kit/issues/2233)) ([4bd62e5](https://github.com/coveo/ui-kit/commit/4bd62e57e9edb8ad3e18758ad067072170991a8b))
+
+
+
+
+
+# [1.91.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.90.0...@coveo/headless@1.91.0) (2022-07-25)
+
+
+### Features
+
+* **headless:** Add IP Search Parameters controller ([#2231](https://github.com/coveo/ui-kit/issues/2231)) ([07d9ab0](https://github.com/coveo/ui-kit/commit/07d9ab0de18cb6cfdc6f9bc0f73f43c720a1480a))
+
+
+
+
+
 # [1.90.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.89.0...@coveo/headless@1.90.0) (2022-07-22)
 
 

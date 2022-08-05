@@ -99,7 +99,8 @@ export default class QuanticSearchInterface extends LightningElement {
               this.engineOptions,
               CoveoHeadless.buildSearchEngine,
               this.engineId,
-              this
+              this,
+              CoveoHeadless
             );
             setInitializedCallback(this.initialize, this.engineId);
           }

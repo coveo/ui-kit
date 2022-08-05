@@ -37,7 +37,7 @@ node('heavy && linux && docker') {
           'SFDX_AUTH_JWT_USERNAME=sfdc.integration.devv2.hub@coveo.com'
         ]) {
           sh 'npm run build'
-          sh 'cd packages/quantic && ./node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote --ci'
+          sh 'cd packages/quantic && npx --no-install ts-node scripts/build/create-package.ts --remove-translations --promote --ci'
         }
       }
     }

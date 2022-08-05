@@ -27,7 +27,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {BaseFacet, parseDependsOn, validateDependsOn} from '../facet-common';
+import {parseDependsOn, validateDependsOn} from '../facet-common';
 import {
   getFieldCaptions,
   getFieldValueCaption,
@@ -45,6 +45,7 @@ import {
 import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -77,12 +78,12 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part value-link - The child facet value.
  * @part value-label - The facet value label.
  * @part value-count - The facet value count.
+ * @part leaf-value - A facet value with no child value
+ * @part node-value - A facet value with children values
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
- *
- * @part ripple - The ripple effect of the component's interactive elements.
  */
 @Component({
   tag: 'atomic-category-facet',
@@ -95,6 +96,7 @@ export class AtomicCategoryFacet
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
   private dependenciesManager?: FacetConditionsManager;
+  private resultIndexToFocusOnShowMore = 0;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
 
@@ -191,7 +193,10 @@ export class AtomicCategoryFacet
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   @FocusTarget()
-  private showMoreLessFocus!: FocusTargetController;
+  private showLessFocus!: FocusTargetController;
+
+  @FocusTarget()
+  private showMoreFocus!: FocusTargetController;
 
   @FocusTarget()
   private headerFocus!: FocusTargetController;
@@ -405,7 +410,7 @@ export class AtomicCategoryFacet
             this.facet.deselectAll();
           }}
           searchQuery={this.facetState.facetSearch.query}
-          part="active-parent"
+          part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
           class="parent-active"
           buttonRef={this.activeValueFocus.setTarget}
         >
@@ -420,7 +425,8 @@ export class AtomicCategoryFacet
 
   private renderValue(
     facetValue: CategoryFacetValue,
-    isShowMoreLessFocusTarget: boolean
+    isShowLessFocusTarget: boolean,
+    isShowMoreFocusTarget: boolean
   ) {
     const displayValue = getFieldValueCaption(
       this.field,
@@ -439,9 +445,11 @@ export class AtomicCategoryFacet
           this.facet.toggleSelect(facetValue);
         }}
         searchQuery={this.facetState.facetSearch.query}
-        buttonRef={(element) =>
-          isShowMoreLessFocusTarget && this.showMoreLessFocus.setTarget(element)
-        }
+        buttonRef={(element) => {
+          isShowLessFocusTarget && this.showLessFocus.setTarget(element);
+          isShowMoreFocusTarget && this.showMoreFocus.setTarget(element);
+        }}
+        additionalPart={this.getIsLeafOrNodePart(facetValue)}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
@@ -459,10 +467,18 @@ export class AtomicCategoryFacet
     return (
       <ul part="values" class={this.hasParents ? 'pl-9' : 'mt-3'}>
         {this.facetState.values.map((value, i) =>
-          this.renderValue(value, i === 0)
+          this.renderValue(
+            value,
+            i === 0,
+            i === this.resultIndexToFocusOnShowMore
+          )
         )}
       </ul>
     );
+  }
+
+  private getIsLeafOrNodePart(value: CategoryFacetValue) {
+    return value.isLeafValue ? 'leaf-value' : 'node-value';
   }
 
   private renderSearchResults() {
@@ -502,11 +518,12 @@ export class AtomicCategoryFacet
           label={this.label}
           i18n={this.bindings.i18n}
           onShowMore={() => {
-            this.showMoreLessFocus.focusAfterSearch();
+            this.resultIndexToFocusOnShowMore = this.facetState.values.length;
+            this.showMoreFocus.focusAfterSearch();
             this.facet.showMoreValues();
           }}
           onShowLess={() => {
-            this.showMoreLessFocus.focusAfterSearch();
+            this.showLessFocus.focusAfterSearch();
             this.facet.showLessValues();
           }}
           canShowLessValues={this.facetState.canShowLessValues}
