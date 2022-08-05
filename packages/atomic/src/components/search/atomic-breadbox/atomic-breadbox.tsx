@@ -21,6 +21,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {closest} from '../../../utils/utils';
 
 interface Breadcrumb {
   facetId: string;
@@ -84,12 +85,18 @@ export class AtomicBreadbox implements InitializableComponent {
   private breadcrumbShowLessFocus!: FocusTargetController;
 
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
-    this.facetManager = buildFacetManager(this.bindings.engine);
+    if (!closest(this.host, 'atomic-search-interface')) {
+      this.bindings.engine.logger.warn(
+        'The atomic-breadbox component can only be implemented in an atomic-search-interface. Nothing will be rendered.'
+      );
+    } else {
+      this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
+      this.facetManager = buildFacetManager(this.bindings.engine);
 
-    if (window.ResizeObserver) {
-      this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
-      this.resizeObserver.observe(this.host.parentElement!);
+      if (window.ResizeObserver) {
+        this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
+        this.resizeObserver.observe(this.host.parentElement!);
+      }
     }
   }
 
