@@ -91,8 +91,12 @@ export class AtomicPager implements InitializableComponent {
         }}
         part="previous-button"
         disabled={!this.pagerState.hasPreviousPage}
+        class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
-        <atomic-icon icon={ArrowRight} class="w-5 rotate-180"></atomic-icon>
+        <atomic-icon
+          icon={ArrowRight}
+          class="w-5 align-middle rotate-180"
+        ></atomic-icon>
       </Button>
     );
   }
@@ -108,8 +112,9 @@ export class AtomicPager implements InitializableComponent {
         }}
         part="next-button"
         disabled={!this.pagerState.hasNextPage}
+        class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
       >
-        <atomic-icon icon={ArrowRight} class="w-5"></atomic-icon>
+        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
       </Button>
     );
   }
@@ -138,7 +143,7 @@ export class AtomicPager implements InitializableComponent {
         ariaCurrent={isSelected ? 'page' : 'false'}
         ariaLabel={this.bindings.i18n.t('page-number', {page})}
         onChecked={() => this.selectPage(page)}
-        class="btn-page focus-visible:bg-neutral-light"
+        class="btn-page focus-visible:bg-neutral-light p-1 min-w-[2.5rem] min-h-[2.5rem]"
         part={parts.join(' ')}
         text={page.toLocaleString(this.bindings.i18n.language)}
         ref={isSelected ? this.activePage.setTarget : undefined}
