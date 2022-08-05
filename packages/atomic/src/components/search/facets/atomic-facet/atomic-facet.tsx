@@ -258,6 +258,12 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
     this.facetInitialized.emit({
       facetId: this.facetId!,
       facetType: 'facets',
+      getHasValues: () => {
+        return this.facet.state.values.length > 0;
+      },
+      getNumberOfSelectedValues: () => {
+        return this.numberOfSelectedValues;
+      },
     });
   }
 

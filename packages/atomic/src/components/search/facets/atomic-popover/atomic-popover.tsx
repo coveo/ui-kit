@@ -2,6 +2,7 @@ import {
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
+  FacetState,
 } from '@coveo/headless';
 import {Component, h, Listen, State, Element} from '@stencil/core';
 import {
@@ -23,6 +24,7 @@ import {
  * The `atomic-popover` component displays any facet as a popover menu.
  * @part popover-button - The button to click to display or hide the popover menu.
  * @part label - The popover button label.
+ * @part value-count - Number of selected values for the facet
  * @part arrow-icon - The arrow icon on the button to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
  * @part popover-wrapper - The wrapper that contains the 'popover-button' and the 'slot-wrapper'.
@@ -40,14 +42,21 @@ export class AtomicPopover implements InitializableComponent {
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
+  @BindStateToController('facet')
+  @State()
+  public facetState!: FacetState;
   @State()
   public error!: Error;
 
   @State() public isMenuVisible = false;
   @State() public facetId?: string;
   @State() public facetLabel?: string = 'no-label';
+  @State() public hasValues?: boolean = false;
+  @State() public numberOfSelectedValues?: number = 0;
   @Element() host!: HTMLElement;
   private facetElement?: HTMLElement;
+  private getHasValues?: () => boolean;
+  private getNumberOfSelectedValues?: () => number;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -66,6 +75,12 @@ export class AtomicPopover implements InitializableComponent {
         message: 'Cannot have more than one child inside a set of popover tags',
       };
     }
+  }
+
+  componentWillRender() {
+    this.numberOfSelectedValues =
+      this.getNumberOfSelectedValues && this.getNumberOfSelectedValues();
+    this.hasValues = this.getHasValues && this.getHasValues();
   }
 
   private get popoverId() {
@@ -98,7 +113,7 @@ export class AtomicPopover implements InitializableComponent {
       <Button
         style="square-neutral"
         onClick={() => this.popoverOpened()}
-        part="label-button"
+        part="popover-button"
         ariaExpanded={`${this.isMenuVisible}`}
         ariaLabel={`Pop-up filter on ${this.facetLabel} facet`}
         ariaControls={this.popoverId}
@@ -118,6 +133,19 @@ export class AtomicPopover implements InitializableComponent {
           }`}
         >
           {this.facetLabel}
+        </span>
+        <span
+          title={this.numberOfSelectedValues?.toLocaleString()}
+          part="value-count"
+          class={`value-box-count truncate pl-0.5 w-auto mt-0 text-sm ${
+            this.isMenuVisible
+              ? 'text-primary'
+              : 'text-neutral-dark group-hover:text-primary-light group-focus:text-primary'
+          }`}
+        >
+          {this.bindings.i18n.t('between-parentheses', {
+            text: this.numberOfSelectedValues,
+          })}
         </span>
         <atomic-icon
           part="arrow-icon"
@@ -151,16 +179,20 @@ export class AtomicPopover implements InitializableComponent {
       return;
     }
 
-    this.facetElement = facet.element;
     this.facetId = facet.facetId;
     this.facetLabel = facet.label;
+    this.facetElement = facet.element;
     this.facetElement?.classList.add('popover-nested');
+
+    this.getHasValues = event.detail.getHasValues;
+    this.getNumberOfSelectedValues = event.detail.getNumberOfSelectedValues;
   }
 
   render() {
     if (
       this.searchStatus.state.hasError ||
-      !this.searchStatus.state.hasResults
+      !this.searchStatus.state.hasResults ||
+      !this.hasValues
     ) {
       return <Hidden></Hidden>;
     }
@@ -174,8 +206,6 @@ export class AtomicPopover implements InitializableComponent {
         ></div>
       );
     }
-
-    //TODO: hide if facet has 0 values (use headless to retrieve facet state)
 
     return (
       <div
