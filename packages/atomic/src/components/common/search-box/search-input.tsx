@@ -8,6 +8,7 @@ interface Props extends JSXBase.InputHTMLAttributes<HTMLInputElement> {
   loading: boolean;
   bindings: AnyBindings;
   value: string;
+  ariaLabel: string;
   ariaOwns?: string;
   isExpanded?: string;
   activeDescendant?: string;
@@ -20,13 +21,14 @@ export const SearchInput: FunctionalComponent<Props> = ({
   bindings,
   onKeyDown,
   value,
+  ariaLabel,
   onClear,
   ...defaultInputProps
 }) => (
   <div class="grow flex items-center">
     <input
       part="input"
-      aria-label={bindings.i18n.t('search-box')}
+      aria-label={ariaLabel}
       aria-autocomplete="both"
       aria-haspopup="true"
       autocomplete="off"
