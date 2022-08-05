@@ -1,11 +1,12 @@
 import {handleOneAnalyticsEvent} from './simpleanalytics';
-import {createAnalyticsClientMock} from '../../tests/analyticsClientMock';
+import {createAnalyticsClientMock, visitorIdMock} from '../../tests/analyticsClientMock';
 import {EC} from '../plugins/ec';
 import {SVC} from '../plugins/svc';
 import {TestPlugin} from '../../tests/pluginMock';
 import {uuidv4} from '../client/crypto';
 import {PluginOptions} from '../plugins/BasePlugin';
 import {mockFetch} from '../../tests/fetchMock';
+import {CookieStorage} from '../storage';
 
 jest.mock('../plugins/svc', () => {
     const SVC = jest.fn().mockImplementation(() => {});
@@ -21,6 +22,11 @@ jest.mock('../plugins/ec', () => {
         EC: EC,
     };
 });
+
+const uuidv4Mock = jest.fn();
+jest.mock('../client/crypto', () => ({
+    uuidv4: () => uuidv4Mock(),
+}));
 
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 
@@ -46,7 +52,10 @@ describe('simpleanalytics', () => {
         jest.clearAllMocks();
         fetchMockBeforeEach();
 
+        new CookieStorage().removeItem('visitorId');
+        localStorage.clear();
         fetchMock.mock('*', {});
+        uuidv4Mock.mockImplementationOnce(() => visitorIdMock);
         handleOneAnalyticsEvent('reset');
     });
 
@@ -199,7 +208,16 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/pageview`);
-            expect(JSON.parse(fetchMock.lastCall()[1].body.toString())).toEqual({somedata: 'asd'});
+            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({somedata: 'asd'});
+        });
+
+        it('can send view event with clientId', async () => {
+            handleOneAnalyticsEvent('init', 'MYTOKEN', {plugins: []});
+            await handleOneAnalyticsEvent('send', 'view');
+
+            expect(fetchMock.calls().length).toBe(1);
+            expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/view?visitor=${visitorIdMock}`);
+            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString()).clientId).toBe(visitorIdMock);
         });
 
         it('can send any event to the endpoint', async () => {
@@ -227,7 +245,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
-            expect(JSON.parse(fetchMock.lastCall()[1].body.toString())).toEqual({userId: 'something'});
+            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({userId: 'something'});
         });
 
         it('can set parameters using an object', async () => {
@@ -239,7 +257,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
-            expect(JSON.parse(fetchMock.lastCall()[1].body.toString())).toEqual({userId: 'something'});
+            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({userId: 'something'});
         });
     });
 
@@ -360,7 +378,7 @@ describe('simpleanalytics', () => {
 
             expect(fetchMock.calls().length).toBe(1);
             expect(fetchMock.lastUrl()).toBe(`${analyticsEndpoint}/${someRandomEventName}`);
-            expect(JSON.parse(fetchMock.lastCall()[1].body.toString())).toEqual({});
+            expect(JSON.parse(fetchMock.lastCall()![1]!.body!.toString())).toEqual({});
         });
     });
 

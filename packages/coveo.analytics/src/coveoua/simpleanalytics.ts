@@ -1,4 +1,4 @@
-import {AnyEventResponse, SendEventArguments, VariableArgumentsPayload} from '../events';
+import {AnyEventResponse, EventType, SendEventArguments, VariableArgumentsPayload} from '../events';
 import {AnalyticsClient, CoveoAnalyticsClient, Endpoints} from '../client/analytics';
 import {Plugins} from './plugins';
 import {PluginOptions} from '../plugins/BasePlugin';
@@ -45,6 +45,7 @@ export class CoveoUA {
                 ...payload,
                 ...this.params,
             }));
+            this.client.addEventTypeMapping(EventType.view, {newEventType: EventType.view, addClientIdParameter: true});
         } else {
             throw new Error(`You must pass either your token or a valid object when you call 'init'`);
         }

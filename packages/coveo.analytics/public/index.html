@@ -19,6 +19,7 @@
         });
         coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
         coveoua('send', 'pageview', '/firstpage');
+        coveoua('send', 'view', {contentIdKey: 'test', contentIdValue: 'value', contentType: 'product'});
 
         setTimeout(function () {
             coveoua('ec:setAction', 'purchase', {storeid: 'amazing'});
