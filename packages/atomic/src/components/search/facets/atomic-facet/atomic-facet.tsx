@@ -255,9 +255,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetId: this.facetId!,
       element: this.host,
     });
-  }
-
-  public componentDidRender() {
     this.facetInitialized.emit({
       facetId: this.facetId!,
       facetType: 'facets',

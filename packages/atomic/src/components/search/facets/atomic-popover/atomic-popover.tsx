@@ -28,7 +28,6 @@ import {
  * @part popover-wrapper - The wrapper that contains the 'popover-button' and the 'slot-wrapper'.
  * @part slot-wrapper - The wrapper that contains the 'facet' or 'slot'.
  */
-
 @Component({
   tag: 'atomic-popover',
   styleUrl: 'atomic-popover.pcss',
@@ -58,7 +57,10 @@ export class AtomicPopover implements InitializableComponent {
         name: 'No child in popover',
         message: 'One child is required inside a set of popover tags',
       };
-    } else if (this.host.children.length > 1) {
+      return;
+    }
+
+    if (this.host.children.length > 1) {
       this.error = {
         name: 'Too many children in popover',
         message: 'Cannot have more than one child inside a set of popover tags',
@@ -102,7 +104,7 @@ export class AtomicPopover implements InitializableComponent {
         ariaControls={this.popoverId}
         class={`rounded flex box-border h-full items-center mr-1.5 p-2.5 group ${
           this.isMenuVisible
-            ? 'selected border-primary ring ring-ring-primary-light text-primary'
+            ? 'border-primary ring ring-ring-primary text-primary'
             : 'hover:border-primary-light focus-visible:border-primary-light '
         }`}
       >
@@ -132,7 +134,7 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   @Listen('facetInitialized')
-  injectPopoverClass(event: CustomEvent<InitPopoverEventPayload>) {
+  linkFacet(event: CustomEvent<InitPopoverEventPayload>) {
     if (this.facetElement) {
       return;
     }
@@ -184,8 +186,8 @@ export class AtomicPopover implements InitializableComponent {
         {this.renderValueButton()}
         <div
           part="slot-wrapper"
-          class={`slot-wrapper absolute pt-2 z-10 hidden ${
-            this.isMenuVisible ? 'selected' : ''
+          class={`absolute pt-2 z-10 ${
+            this.isMenuVisible ? 'block' : 'hidden'
           }`}
         >
           <slot></slot>
