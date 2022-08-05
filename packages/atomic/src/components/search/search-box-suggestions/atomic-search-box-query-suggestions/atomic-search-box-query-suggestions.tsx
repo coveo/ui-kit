@@ -122,6 +122,10 @@ export class AtomicSearchBoxQuerySuggestions {
       ),
       key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
       query: suggestion.rawValue,
+      ariaLabel: this.bindings.i18n.t('query-suggestion-label', {
+        query: suggestion.rawValue,
+        interpolation: {escapeValue: false},
+      }),
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },

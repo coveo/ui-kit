@@ -18,12 +18,15 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
-import {FacetContainer} from '../facet-container/facet-container';
-import {FacetHeader} from '../facet-header/facet-header';
-import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {Rating} from '../../atomic-rating/atomic-rating';
-import {parseDependsOn, validateDependsOn} from '../facet-common';
+import {
+  parseDependsOn,
+  validateDependsOn,
+} from '../../../common/facets/facet-common';
 import Star from '../../../../images/star.svg';
 import {Hidden} from '../../../common/hidden';
 import {
@@ -31,7 +34,7 @@ import {
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {FacetValuesGroup} from '../facet-values-group/facet-values-group';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {BaseFacet} from '../../../common/facets/facet-common';
 

@@ -375,7 +375,7 @@ export type {
   FacetConditionsManager,
   AnyFacetValuesCondition,
 } from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
-export {buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
+export {buildCoreFacetConditionsManager as buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
 
 export type {
   FieldSuggestions,

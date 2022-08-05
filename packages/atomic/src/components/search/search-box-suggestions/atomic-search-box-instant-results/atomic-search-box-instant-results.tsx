@@ -130,6 +130,10 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
             renderingFunction={this.renderingFunction}
           ></atomic-result>
         ),
+        ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
+          title: result.title,
+          interpolation: {escapeValue: false},
+        }),
         onSelect: (e: MouseEvent) => {
           const link = this.getLink(e.target as HTMLElement);
 
@@ -141,14 +145,17 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       })
     );
     if (elements.length) {
+      const showAllText = this.bindings.i18n.t('show-all-results');
+
       elements.push({
         key: 'instant-results-show-all-button',
         content: (
           <Button part="instant-results-show-all-button" style="text-primary">
-            {this.bindings.i18n.t('show-all-results')}
+            {showAllText}
           </Button>
         ),
         part: 'instant-results-show-all',
+        ariaLabel: showAllText,
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(
