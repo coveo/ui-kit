@@ -71,6 +71,7 @@ function getAriaLabelForRenderedSuggestion({
   index,
   lastIndex,
   isDoubleList,
+  isButton,
 }: {
   bindings: AnyBindings;
   renderedSuggestion: HTMLElement;
@@ -79,15 +80,17 @@ function getAriaLabelForRenderedSuggestion({
   index: number;
   lastIndex: number;
   isDoubleList: boolean;
+  isButton: boolean;
 }) {
   const contentLabel =
     suggestion.ariaLabel ??
     suggestion.query ??
     renderedSuggestion.innerText ??
     bindings.i18n.t('no-title');
-  const labelWithType = isMacOS()
-    ? bindings.i18n.t('search-suggestion-button', {label: contentLabel})
-    : contentLabel;
+  const labelWithType =
+    isMacOS() && isButton
+      ? bindings.i18n.t('search-suggestion-button', {label: contentLabel})
+      : contentLabel;
   const position = index + 1;
   const count = lastIndex + 1;
 
@@ -115,16 +118,19 @@ function getContentForSuggestion(suggestion: SearchBoxSuggestionElement) {
   );
 }
 
-function getCommonSearchSuggestionAttributes({
-  bindings,
-  id,
-  suggestion,
-  isSelected,
-  side,
-  index,
-  lastIndex,
-  isDoubleList,
-}: SearchSuggestionProps): JSXBase.HTMLAttributes<HTMLElement> {
+function getCommonSearchSuggestionAttributes(
+  {
+    bindings,
+    id,
+    suggestion,
+    isSelected,
+    side,
+    index,
+    lastIndex,
+    isDoubleList,
+  }: SearchSuggestionProps,
+  isButton: boolean
+): JSXBase.HTMLAttributes<HTMLElement> {
   return {
     id: id,
     key: suggestion.key,
@@ -148,6 +154,7 @@ function getCommonSearchSuggestionAttributes({
           index,
           lastIndex,
           isDoubleList,
+          isButton,
         })
       );
     },
@@ -158,7 +165,7 @@ export const SimpleSearchSuggestion: FunctionalComponent<
   SearchSuggestionProps
 > = (props) => {
   return (
-    <span {...getCommonSearchSuggestionAttributes(props)}>
+    <span {...getCommonSearchSuggestionAttributes(props, false)}>
       {getContentForSuggestion(props.suggestion)}
     </span>
   );
@@ -169,7 +176,7 @@ export const ButtonSearchSuggestion: FunctionalComponent<
 > = (props) => {
   return (
     <button
-      {...getCommonSearchSuggestionAttributes(props)}
+      {...getCommonSearchSuggestionAttributes(props, true)}
       onMouseDown={(e) => e.preventDefault()}
       onClick={(e: Event) => props.onClick?.(e)}
       onMouseOver={(e: Event) => props.onMouseOver?.(e)}
