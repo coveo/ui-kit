@@ -71,7 +71,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  */
 @Component({
   tag: 'atomic-insight-numeric-facet',
-  styleUrl: '../../common/facets/numeric-facet-common.pcss',
+  styleUrl: './atomic-insight-numeric-facet.pcss',
   shadow: true,
 })
 export class AtomicInsightNumericFacet
