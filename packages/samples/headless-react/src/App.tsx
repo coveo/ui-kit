@@ -2,6 +2,7 @@ import {SearchPage, SearchPageProps} from './pages/SearchPage';
 import {AboutPage} from './pages/AboutPage';
 import {BrowserRouter, NavLink, Switch, Route} from 'react-router-dom';
 import {RecommendationPage} from './pages/RecommendationPage';
+import {ProductRecommendationsPage} from './pages/ProductRecommendationsPage';
 import {StandaloneSearchBoxPage} from './pages/StandaloneSearchBoxPage';
 import {SamlPage} from './pages/SamlPage';
 import {DependentFacetPage} from './pages/DependentFacetPage';
@@ -49,6 +50,11 @@ function App(props: SearchPageProps) {
               Analytics hook (Google Tag Manager)
             </NavLink>
           </button>
+          <button>
+            <NavLink to="/product-recommendations" activeStyle={activeNavLink}>
+              Product Recommendations
+            </NavLink>
+          </button>
         </nav>
         <Switch>
           <Route path="/recommendation">
@@ -68,6 +74,9 @@ function App(props: SearchPageProps) {
           </Route>
           <Route path="/analyticshooks">
             <AnalyticsHook />
+          </Route>
+          <Route path="/product-recommendations">
+            <ProductRecommendationsPage />
           </Route>
           <Route path="/search-page">
             <SearchPage {...props} />
