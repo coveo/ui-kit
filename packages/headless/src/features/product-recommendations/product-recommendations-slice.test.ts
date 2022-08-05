@@ -61,7 +61,7 @@ describe('product-recommendations-slice', () => {
       statusCode: 500,
       type: 'type',
     };
-    const action = {type: 'productrecommendations/get/rejected', payload: err};
+    const action = {type: 'productRecommendations/get/rejected', payload: err};
     const finalState = productRecommendationsReducer(state, action);
     expect(finalState.error).toEqual(err);
     expect(finalState.isLoading).toBe(false);

@@ -190,9 +190,15 @@ export function buildCoreSearchBox(
   const getValue = () => engine.state.querySet[options.id];
 
   const performSearch = async (analytics: SearchAction) => {
-    const {enableQuerySyntax} = options;
+    const {enableQuerySyntax, clearFilters} = options;
 
-    dispatch(prepareForSearchWithQuery({q: getValue(), enableQuerySyntax}));
+    dispatch(
+      prepareForSearchWithQuery({
+        q: getValue(),
+        enableQuerySyntax,
+        clearFilters,
+      })
+    );
 
     await dispatch(props.executeSearchActionCreator(analytics));
   };

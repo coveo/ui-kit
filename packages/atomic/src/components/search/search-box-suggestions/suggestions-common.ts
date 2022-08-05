@@ -29,6 +29,7 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   isStandalone: boolean;
   searchBoxController: SearchBox;
   numberOfQueries: number;
+  clearFilters: boolean;
   suggestedQuery(): string;
   clearSuggestions(): void;
   triggerSuggestions(): void;
