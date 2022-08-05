@@ -1,6 +1,6 @@
 import {h, FunctionalComponent} from '@stencil/core';
 import {i18n} from 'i18next';
-import {FieldsetGroup} from '../../../common/fieldset-group';
+import {FieldsetGroup} from '../../fieldset-group';
 
 export interface FacetValuesGroupProps {
   i18n: i18n;

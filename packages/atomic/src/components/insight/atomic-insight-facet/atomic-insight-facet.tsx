@@ -1,36 +1,37 @@
 import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
-  Facet,
-  buildFacet,
-  FacetState,
-  FacetOptions,
-  FacetSortCriterion,
-  SearchStatus,
-  SearchStatusState,
-  buildSearchStatus,
-  buildFacetConditionsManager,
-} from '@coveo/headless';
+  buildInsightFacet,
+  buildInsightFacetConditionsManager,
+  buildInsightSearchStatus,
+  InsightFacet,
+  InsightFacetOptions,
+  InsightFacetSortCriterion,
+  InsightFacetState,
+  InsightSearchStatus,
+  InsightSearchStatusState,
+} from '..';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {MapProp} from '../../../../utils/props-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+} from '../../../utils/initialization-utils';
 import {
   BaseFacet,
   FacetCommon,
-  parseDependsOn,
-} from '../../../common/facets/facet-common';
+  FacetDisplayValues,
+} from '../../common/facets/facet-common';
+
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
+import {parseDependsOn} from '../../common/facets/facet-common';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-facet` displays a facet of the results for the current query.
+ * An `atomic-insight-facet` displays a facet of the results for the current query.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -39,14 +40,6 @@ import {
  * @part label-button-icon - The label button icon.
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
- *
- * @part search-input - The search box input.
- * @part search-icon - The search box submit button.
- * @part search-clear-button - The button to clear the search box of input.
- * @part more-matches - The label indicating there are more matches for the current facet search query.
- * @part no-matches - The label indicating there are no matches for the current facet search query.
- * @part matches-query - The highlighted query inside the matches labels.
- * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.
@@ -65,23 +58,27 @@ import {
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @Component({
-  tag: 'atomic-facet',
-  styleUrl: 'atomic-facet.pcss',
+  tag: 'atomic-insight-facet',
+  styleUrl: 'atomic-insight-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicInsightFacet
+  implements InitializableComponent<InsightBindings>, BaseFacet<InsightFacet>
+{
+  @InitializeBindings() public bindings!: InsightBindings;
   public facetCommon!: FacetCommon;
-  public facet!: Facet;
-  public searchStatus!: SearchStatus;
+  public facet!: InsightFacet;
+  public searchStatus!: InsightSearchStatus;
+  public withSearch = false;
+  public dependsOn = {};
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facet')
   @State()
-  public facetState!: FacetState;
+  public facetState!: InsightFacetState;
   @BindStateToController('searchStatus')
   @State()
-  public searchStatusState!: SearchStatusState;
+  public searchStatusState!: InsightSearchStatusState;
   @State() public error!: Error;
 
   /**
@@ -90,7 +87,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({mutable: true, reflect: true}) public facetId?: string;
   /**
    * The non-localized label for the facet.
-   * Used in the `atomic-breadbox` component through the bindings store.
+   * Used in the `atomic-insight-breadbox` component through the bindings store.
    */
   @Prop({reflect: true}) public label = 'no-label';
   /**
@@ -103,20 +100,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    */
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
-   * Whether this facet should contain a search box.
-   * When "true", the search is only enabled when more facet values are available.
-   */
-  @Prop({reflect: true}) public withSearch = true;
-  /**
    * The sort criterion to apply to the returned facet values.
    * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
-  @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
+  @Prop({reflect: true}) public sortCriteria: InsightFacetSortCriterion =
+    'automatic';
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
    */
-  @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' | 'box' =
+  @Prop({reflect: true}) public displayValuesAs: FacetDisplayValues =
     'checkbox';
   /**
    * Specifies if the facet is collapsed.
@@ -137,50 +130,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Default: `1000`
    */
   @Prop() public injectionDepth = 1000;
-  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
-
-  /**
-   * The required facets and values for this facet to be displayed.
-   * Examples:
-   * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
-   *
-   * <!-- To show the facet when any value is selected in the facet with id "abc": -->
-   * <atomic-facet
-   *   depends-on-abc
-   *   ...
-   * ></atomic-facet>
-   *
-   * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
-   * <atomic-facet
-   *   depends-on-abc="doc"
-   *   ...
-   * ></atomic-facet>
-   * ```
-   */
-  @MapProp() @Prop() public dependsOn: Record<string, string> = {};
-
-  /**
-   * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.
-   *
-   * If you specify a list of values for this option, the facet uses only these values (if they are available in
-   * the current result set).
-   *
-   * Example:
-   *
-   * The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the
-   * current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use
-   * those other values.
-   *
-   * ```html
-   * <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div>
-   * ```
-   *
-   * The maximum amount of allowed values is 25.
-   *
-   * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
-   */
-  @Prop() public allowedValues?: string;
 
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
@@ -192,7 +141,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   private headerFocus!: FocusTargetController;
 
   public initialize() {
-    const options: FacetOptions = {
+    const options: InsightFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       numberOfValues: this.numberOfValues,
@@ -200,10 +149,9 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues?.trim().split(','),
     };
 
-    this.facet = buildFacet(this.bindings.engine, {options});
+    this.facet = buildInsightFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
 
     this.facetCommon = new FacetCommon({
@@ -214,36 +162,24 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       headingLevel: this.headingLevel,
       displayValuesAs: this.displayValuesAs,
       dependsOn: this.dependsOn,
-      dependenciesManager: buildFacetConditionsManager(this.bindings.engine, {
-        facetId: this.facetId!,
-        conditions: parseDependsOn(this.dependsOn),
-      }),
+      dependenciesManager: buildInsightFacetConditionsManager(
+        this.bindings.engine,
+        {
+          facetId: this.facetId!,
+          conditions: parseDependsOn(this.dependsOn),
+        }
+      ),
       facet: this.facet,
       facetId: this.facetId,
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
     });
 
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
     this.facetCommon.disconnectedCallback();
-  }
-
-  public componentShouldUpdate(
-    next: unknown,
-    prev: unknown,
-    propName: keyof AtomicFacet
-  ) {
-    return (
-      !this.facetCommon ||
-      this.facetCommon?.componentShouldUpdate(
-        (next as FacetState)?.facetSearch,
-        (prev as FacetState)?.facetSearch,
-        propName
-      )
-    );
   }
 
   public render() {
