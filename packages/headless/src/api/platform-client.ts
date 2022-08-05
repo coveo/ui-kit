@@ -8,7 +8,11 @@ import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
-import {PlatformRequestOptions, PreprocessRequest} from './preprocess-request';
+import {
+  PlatformRequestOptions,
+  PreprocessRequest,
+  RequestMetadata,
+} from './preprocess-request';
 
 function isThrottled(status: number): boolean {
   return status === 429;
@@ -22,6 +26,7 @@ export interface PlatformClientCallOptions {
   requestParams: unknown;
   accessToken: string;
   preprocessRequest: PreprocessRequest;
+  requestMetadata?: RequestMetadata;
   logger: Logger;
   signal?: AbortSignal;
 }
@@ -41,12 +46,16 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ): Promise<Response | PlatformClientCallError> {
     const defaultRequestOptions = buildDefaultRequestOptions(options);
-    const {preprocessRequest, logger} = options;
+    const {preprocessRequest, logger, requestMetadata} = options;
 
     const requestInfo: PlatformRequestOptions = {
       ...defaultRequestOptions,
       ...(preprocessRequest
-        ? await preprocessRequest(defaultRequestOptions, 'searchApiFetch')
+        ? await preprocessRequest(
+            defaultRequestOptions,
+            'searchApiFetch',
+            requestMetadata
+          )
         : {}),
     };
 

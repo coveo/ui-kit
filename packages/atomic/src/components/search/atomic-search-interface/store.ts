@@ -4,7 +4,6 @@ import {
   SortCriterion,
   SearchEngine,
 } from '@coveo/headless';
-import {VNode} from '@stencil/core';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
@@ -12,22 +11,16 @@ import {
   AtomicCommonStoreData,
   AtomicCommonStore,
 } from '../../common/interface/store';
-
-interface FacetInfo {
-  label: string;
-}
+import {
+  FacetInfo,
+  FacetStore,
+  FacetType,
+  FacetValueFormat,
+} from '../../common/facets/facet-common';
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;
 }
-
-interface FacetValueFormat<ValueType> {
-  format(facetValue: ValueType): string;
-  content?(facetValue: ValueType): VNode;
-}
-
-type FacetType = 'facets' | 'numericFacets' | 'dateFacets' | 'categoryFacets';
-type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export interface SortDropdownOption {
   expression: string;
@@ -40,7 +33,6 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  facetElements: HTMLElement[];
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
   fieldsToInclude: string[];
@@ -55,8 +47,6 @@ export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
 
   registerResultList(data: ResultListInfo): void;
 
-  getFacetElements(): HTMLElement[];
-
   getAllFacets(): {
     [facetId: string]:
       | FacetInfo
@@ -65,8 +55,6 @@ export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
   };
 
   isMobile(): boolean;
-
-  getUniqueIDFromEngine(engine: SearchEngine): string;
 }
 
 export function createAtomicStore(): AtomicStore {
@@ -82,21 +70,6 @@ export function createAtomicStore(): AtomicStore {
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     fieldsToInclude: [],
   });
-
-  // https://terodox.tech/how-to-tell-if-an-element-is-in-the-dom-including-the-shadow-dom/
-  const isInDocument = (element: Node) => {
-    let currentElement = element;
-    while (currentElement && currentElement.parentNode) {
-      if (currentElement.parentNode === document) {
-        return true;
-      } else if (currentElement.parentNode instanceof ShadowRoot) {
-        currentElement = currentElement.parentNode.host;
-      } else {
-        currentElement = currentElement.parentNode;
-      }
-    }
-    return false;
-  };
 
   return {
     ...commonStore,
@@ -114,12 +87,6 @@ export function createAtomicStore(): AtomicStore {
 
     registerResultList(data: ResultListInfo) {
       commonStore.set('resultList', data);
-    },
-
-    getFacetElements() {
-      return commonStore.state.facetElements.filter((element) =>
-        isInDocument(element)
-      );
     },
 
     getAllFacets() {

@@ -88,16 +88,19 @@ export const loadCollection = createAsyncThunk<
     const sharedWithSearchRequest =
       await buildSearchAndFoldingLoadCollectionRequest(state);
 
-    const response = await apiClient.search({
-      ...sharedWithSearchRequest,
-      q: getQForHighlighting(state),
-      enableQuerySyntax: true,
-      cq: `@${state.folding.fields.collection}=${collectionId}`,
-      filterField: state.folding.fields.collection,
-      childField: state.folding.fields.parent,
-      parentField: state.folding.fields.child,
-      filterFieldRange: 100,
-    });
+    const response = await apiClient.search(
+      {
+        ...sharedWithSearchRequest,
+        q: getQForHighlighting(state),
+        enableQuerySyntax: true,
+        cq: `@${state.folding.fields.collection}=${collectionId}`,
+        filterField: state.folding.fields.collection,
+        childField: state.folding.fields.parent,
+        parentField: state.folding.fields.child,
+        filterFieldRange: 100,
+      },
+      {origin: 'foldingCollection'}
+    );
 
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
