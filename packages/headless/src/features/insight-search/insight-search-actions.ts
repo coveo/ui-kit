@@ -24,14 +24,13 @@ import {
   PaginationSection,
   QuerySection,
   SearchSection,
+  SortSection,
   TabSection,
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {
@@ -43,17 +42,17 @@ import {
 import {updateQuery} from '../query/query-actions';
 import {getQueryInitialState} from '../query/query-state';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
-import {
-  MappedSearchRequest,
-  mapSearchRequest,
-  mapSearchResponse,
-  SuccessResponse,
-} from '../search/search-mappings';
+import {mapSearchResponse, SuccessResponse} from '../search/search-mappings';
 import {getSearchInitialState} from '../search/search-state';
 import {
   logFetchMoreResults,
   logQueryError,
 } from './insight-search-analytics-actions';
+import {
+  buildInsightFetchFacetValuesRequest,
+  buildInsightFetchMoreResultsRequest,
+  buildInsightSearchRequest,
+} from './insight-search-request';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   InsightConfigurationSection &
@@ -66,9 +65,10 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       DateFacetSection &
       CategoryFacetSection &
       PaginationSection &
-      DidYouMeanSection &
       TabSection &
-      FieldsSection
+      FieldsSection &
+      DidYouMeanSection &
+      SortSection
   >;
 
 const fetchFromAPI = async (
@@ -291,54 +291,6 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
-const buildInsightSearchRequest = (
-  state: StateNeededByExecuteSearch
-): MappedSearchRequest<InsightQueryRequest> => {
-  const cq = buildConstantQuery(state);
-  const facets = getAllFacets(state);
-  return mapSearchRequest<InsightQueryRequest>({
-    accessToken: state.configuration.accessToken,
-    organizationId: state.configuration.organizationId,
-    url: state.configuration.platformUrl,
-    insightId: state.insightConfiguration.insightId,
-    q: state.query?.q,
-    ...(facets.length && {facets}),
-    caseContext: state.insightCaseContext?.caseContext,
-    ...(state.pagination && {
-      firstResult: state.pagination.firstResult,
-      numberOfResults: state.pagination.numberOfResults,
-    }),
-    ...(cq && {cq}),
-    ...(state.fields &&
-      !state.fields.fetchAllFields && {
-        fieldsToInclude: state.fields.fieldsToInclude,
-      }),
-    ...(state.didYouMean && {
-      enableDidYouMean: state.didYouMean.enableDidYouMean,
-    }),
-  });
-};
-
-const buildInsightFetchMoreResultsRequest = (
-  state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
-    firstResult:
-      (state.pagination?.firstResult ?? 0) +
-      (state.pagination?.numberOfResults ?? 0),
-  };
-};
-
-const buildInsightFetchFacetValuesRequest = (
-  state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
-    numberOfResults: 0,
-  };
-};
-
 const automaticallyRetryQueryWithCorrection = async (
   client: InsightAPIClient,
   correction: string,
@@ -374,35 +326,6 @@ const shouldReExecuteTheQueryWithCorrections = (
   }
   return false;
 };
-
-function getAllFacets(state: StateNeededByExecuteSearch) {
-  return [
-    ...getFacetRequests({
-      ...state.facetSet,
-      ...state.numericFacetSet,
-      ...state.dateFacetSet,
-    }),
-    ...getCategoryFacetRequests(state.categoryFacetSet),
-  ];
-}
-
-function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
-  return Object.values(state || {}).map((slice) => slice!.request);
-}
-function getFacetRequests<T extends AnyFacetRequest>(
-  requests: Record<string, T> = {}
-) {
-  return Object.keys(requests).map((id) => requests[id]);
-}
-
-function buildConstantQuery(state: StateNeededByExecuteSearch) {
-  const activeTab = Object.values(state.tabSet || {}).find(
-    (tab) => tab.isActive
-  );
-  const tabExpression = activeTab?.expression.trim() || '';
-
-  return tabExpression;
-}
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';
