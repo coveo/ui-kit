@@ -52,12 +52,12 @@ export class AtomicPopover implements InitializableComponent {
   @State() public isMenuVisible = false;
   @State() public facetId?: string;
   @State() public facetLabel?: string = 'no-label';
-  @State() public numberOfValues?: number = 0;
-  @State() public numberOfSelectedValues?: string = '0';
+  @State() public hasValues?: boolean = false;
+  @State() public numberOfSelectedValues?: number = 0;
   @Element() host!: HTMLElement;
   private facetElement?: HTMLElement;
-  private getNumberOfValues?: () => number;
-  private getNumberOfSelectedValues?: () => string;
+  private getHasValues?: () => boolean;
+  private getNumberOfSelectedValues?: () => number;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -78,7 +78,7 @@ export class AtomicPopover implements InitializableComponent {
   componentWillRender() {
     this.numberOfSelectedValues =
       this.getNumberOfSelectedValues && this.getNumberOfSelectedValues();
-    this.numberOfValues = this.getNumberOfValues && this.getNumberOfValues();
+    this.hasValues = this.getHasValues && this.getHasValues();
   }
 
   private get popoverId() {
@@ -133,7 +133,7 @@ export class AtomicPopover implements InitializableComponent {
           {this.facetLabel}
         </span>
         <span
-          title={this.numberOfSelectedValues}
+          title={this.numberOfSelectedValues?.toLocaleString()}
           part="value-count"
           class={`value-box-count truncate pl-0.5 w-auto mt-0 text-sm ${
             this.isMenuVisible
@@ -182,7 +182,7 @@ export class AtomicPopover implements InitializableComponent {
     this.facetElement = facet.element;
     this.facetElement?.classList.add('popover-nested');
 
-    this.getNumberOfValues = event.detail.getNumberOfValues;
+    this.getHasValues = event.detail.getHasValues;
     this.getNumberOfSelectedValues = event.detail.getNumberOfSelectedValues;
   }
 
@@ -190,7 +190,7 @@ export class AtomicPopover implements InitializableComponent {
     if (
       this.searchStatus.state.hasError ||
       !this.searchStatus.state.hasResults ||
-      this.numberOfValues === 0
+      !this.hasValues
     ) {
       return <Hidden></Hidden>;
     }

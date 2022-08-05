@@ -3,8 +3,8 @@ import {FacetType} from '../../../common/facets/facet-common';
 export interface InitPopoverEventPayload {
   facetId: string;
   facetType: FacetType;
-  getNumberOfValues: () => number;
-  getNumberOfSelectedValues: () => string;
+  getHasValues: () => boolean;
+  getNumberOfSelectedValues: () => number;
 }
 
 export interface ClearPopoversEventPayload {
