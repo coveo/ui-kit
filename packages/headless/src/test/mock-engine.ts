@@ -36,6 +36,8 @@ import {InsightAppState} from '../state/insight-app-state';
 import {buildMockInsightState} from './mock-insight-state';
 import {buildMockInsightAPIClient} from './mock-insight-api-client';
 import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
+import {SearchAPIClient} from '../api/search/search-api-client';
+import {InsightAPIClient} from '../api/service/insight/insight-api-client';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -44,6 +46,8 @@ type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   never,
   {arg: ThunkArg; requestId: string}
 >;
+
+type AnyApiClient = SearchAPIClient | InsightAPIClient;
 
 type AppState =
   | SearchAppState
@@ -58,13 +62,16 @@ interface MockEngine {
   findAsyncAction: <ThunkArg>(
     action: AsyncActionCreator<ThunkArg>
   ) => ReturnType<AsyncActionCreator<ThunkArg>> | undefined;
+  apiClient: AnyApiClient;
 }
 
 type DispatchExts = ThunkDispatch<AppState, void, AnyAction>;
 
 export interface MockSearchEngine
   extends SearchEngine<SearchAppState>,
-    MockEngine {}
+    MockEngine {
+  apiClient: SearchAPIClient;
+}
 
 /**
  * For internal use only.
@@ -80,6 +87,7 @@ export function buildMockSearchAppEngine(
     ...engine,
     executeFirstSearch: jest.fn(),
     executeFirstSearchAfterStandaloneSearchBoxRedirect: jest.fn(),
+    apiClient: engine.apiClient as SearchAPIClient,
   };
 }
 
@@ -175,18 +183,21 @@ function buildMockCoreEngine<T extends AppState>(
   buildStore: (
     logger: pino.Logger,
     state: AppState
-  ) => MockStoreCreator<AppState, DispatchExts> = configureMockStore
+  ) => {
+    store: MockStoreCreator<AppState, DispatchExts>;
+    apiClient: AnyApiClient;
+  } = configureMockStore
 ): MockCoreEngine<T> {
   const logger = pino({level: 'silent'});
   const coreState = buildCoreState(config, mockState);
-  const storeConfiguration = buildStore(logger, coreState);
+  const {store: storeConfiguration, apiClient} = buildStore(logger, coreState);
   const store = storeConfiguration(coreState);
   const unsubscribe = () => {};
-
   const {state, ...rest} = config;
 
   return {
     store,
+    apiClient,
     state: buildCoreState(config, mockState),
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
@@ -226,13 +237,16 @@ const configureMockStore = (logger: Logger) => {
     validatePayload: validatePayloadAndThrow,
     logger,
   };
-  return configureStore<AppState, DispatchExts>([
-    logActionErrorMiddleware(logger),
-    analyticsMiddleware,
-    thunk.withExtraArgument(thunkExtraArguments),
-    ...getDefaultMiddleware(),
-    logActionMiddleware(logger),
-  ]);
+  return {
+    store: configureStore<AppState, DispatchExts>([
+      logActionErrorMiddleware(logger),
+      analyticsMiddleware,
+      thunk.withExtraArgument(thunkExtraArguments),
+      ...getDefaultMiddleware(),
+      logActionMiddleware(logger),
+    ]),
+    apiClient: thunkExtraArguments.apiClient,
+  };
 };
 
 const configureInsightMockStore = (logger: Logger) => {
@@ -244,13 +258,16 @@ const configureInsightMockStore = (logger: Logger) => {
     validatePayload: validatePayloadAndThrow,
     logger,
   };
-  return configureStore<AppState, DispatchExts>([
-    logActionErrorMiddleware(logger),
-    analyticsMiddleware,
-    thunk.withExtraArgument(thunkExtraArguments),
-    ...getDefaultMiddleware(),
-    logActionMiddleware(logger),
-  ]);
+  return {
+    store: configureStore<AppState, DispatchExts>([
+      logActionErrorMiddleware(logger),
+      analyticsMiddleware,
+      thunk.withExtraArgument(thunkExtraArguments),
+      ...getDefaultMiddleware(),
+      logActionMiddleware(logger),
+    ]),
+    apiClient: thunkExtraArguments.apiClient,
+  };
 };
 
 function isAsyncAction<ThunkArg>(

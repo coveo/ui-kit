@@ -32,9 +32,10 @@ import {selectFacetSearchResult} from '../facets/facet-search-set/specific/speci
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
 import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
-
-export const minimumPage = 1;
-export const maximumNumberOfResultsFromIndex = 5000;
+import {
+  maximumNumberOfResultsFromIndex,
+  minimumPage,
+} from './pagination-constants';
 
 export const paginationReducer = createReducer(
   getPaginationInitialState(),
@@ -155,7 +156,7 @@ export function calculateFirstResult(page: number, numberOfResults: number) {
 }
 
 export function calculatePage(firstResult: number, numberOfResults: number) {
-  return firstResult / numberOfResults + 1;
+  return Math.round(firstResult / numberOfResults) + 1;
 }
 
 export function calculateMaxPage(
