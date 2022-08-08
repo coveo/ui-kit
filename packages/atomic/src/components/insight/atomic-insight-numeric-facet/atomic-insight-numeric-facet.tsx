@@ -71,7 +71,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  */
 @Component({
   tag: 'atomic-insight-numeric-facet',
-  styleUrl: '../../common/facets/numeric-facet-common.pcss',
+  styleUrl: './atomic-insight-numeric-facet.pcss',
   shadow: true,
 })
 export class AtomicInsightNumericFacet
@@ -166,7 +166,7 @@ export class AtomicInsightNumericFacet
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
    * <atomic-insight-numeric-facet

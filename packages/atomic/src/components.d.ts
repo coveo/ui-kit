@@ -23,7 +23,7 @@ import { InitializationOptions } from "./components/search/atomic-search-interfa
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
-        "updateMessage": (region: string, message: string) => Promise<void>;
+        "updateMessage": (region: string, message: string, assertive: boolean) => Promise<void>;
     }
     interface AtomicBreadbox {
     }
@@ -448,7 +448,7 @@ export namespace Components {
     }
     interface AtomicInsightNumericFacet {
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
          */
         "dependsOn": Record<string, string>;
         /**
@@ -2573,7 +2573,7 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightNumericFacet {
         /**
-          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
          */
         "dependsOn"?: Record<string, string>;
         /**

@@ -70,7 +70,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-numeric-facet',
-  styleUrl: '../../../common/facets/numeric-facet-common.pcss',
+  styleUrl: './atomic-numeric-facet.pcss',
   shadow: true,
 })
 export class AtomicNumericFacet

@@ -7,7 +7,7 @@ describe('c-quantic-search-interface', () => {
     while (document.body.firstChild) {
       document.body.removeChild(document.body.firstChild);
     }
-  }  
+  }
 
   afterEach(() => {
     cleanup();
