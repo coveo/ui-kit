@@ -44,8 +44,6 @@ export default class QuanticFacetValue extends LightningElement {
    */
   @api formattingFunction;
 
-  @api displayNew = false;
-
   get isStandardFacet() {
     return !this.formattingFunction;
   }
@@ -82,7 +80,7 @@ export default class QuanticFacetValue extends LightningElement {
       })
     );
   }
-  
+
   /**
    * @param {KeyboardEvent} evt
    */

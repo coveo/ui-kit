@@ -122,33 +122,6 @@ describe('Facet Test Suite', () => {
     });
   });
 
-  describe('with accessibility', () => {
-    function setupWithValues() {
-      visitFacetPage(
-        {
-          field: defaultField,
-          label: defaultLabel,
-          numberOfValues: defaultNumberOfValues,
-        },
-        false
-      );
-    }
-    it('should be accessible through keyboard', () => {
-      setupWithValues();
-      const selectedValue = 'People';
-      scope('should be selected when space is pressed', () => {
-        Actions.findSearchInputPressTabPressSpace();
-        Expect.selectedValuesContain(selectedValue);
-        Expect.numberOfSelectedLinkValues(1);
-      });
-      scope('should be selected when Enter is pressed', () => {
-        Actions.findSearchInputPressTabPressEnter();
-        Expect.selectedValuesContain(selectedValue);
-        Expect.numberOfSelectedLinkValues(1);
-      });
-    });
-  });
-
   describe('with values', () => {
     function setupWithValues() {
       visitFacetPage(
@@ -362,6 +335,21 @@ describe('Facet Test Suite', () => {
         Expect.displayMoreMatchesFound(false);
         Expect.displayNoMatchesFound(false);
         Expect.displaySearchClearButton(true);
+      });
+    });
+
+    it('should work as expected with accessibility support', () => {
+      setupWithValues();
+      const selectedValue = 'People';
+      scope('should be selected when space is pressed', () => {
+        Actions.findSearchInputPressTabPressSpace();
+        Expect.selectedValuesContain(selectedValue);
+        Expect.numberOfSelectedLinkValues(1);
+      });
+      scope('should be selected when Enter is pressed', () => {
+        Actions.findSearchInputPressTabPressEnter();
+        Expect.selectedValuesContain(selectedValue);
+        Expect.numberOfSelectedLinkValues(1);
       });
     });
 
