@@ -151,7 +151,7 @@ export class AtomicResultChildren implements BaseResultList {
     }
     return (
       <atomic-result
-        key={child.result.uniqueId}
+        key={child.result.uniqueId + child.children.length}
         content={content}
         result={child}
         engine={this.bindings.engine}
