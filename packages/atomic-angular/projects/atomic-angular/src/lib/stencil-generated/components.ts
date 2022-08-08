@@ -148,14 +148,8 @@ export class AtomicExternal {
   }
 }
 
-import type { InitPopoverEventPayload as IAtomicFacetInitPopoverEventPayload } from '@coveo/atomic';
-export declare interface AtomicFacet extends Components.AtomicFacet {
-  /**
-   *  
-   */
-  'facetInitialized': EventEmitter<CustomEvent<IAtomicFacetInitPopoverEventPayload>>;
 
-}
+export declare interface AtomicFacet extends Components.AtomicFacet {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -172,7 +166,6 @@ export class AtomicFacet {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['facetInitialized']);
   }
 }
 
