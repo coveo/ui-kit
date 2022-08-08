@@ -40,7 +40,7 @@ import {
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., accending, descending).
  * An `atomic-numeric-facet` displays a facet of the results for the current query as numeric ranges.
  *
  * @part facet - The wrapper for the entire facet.
