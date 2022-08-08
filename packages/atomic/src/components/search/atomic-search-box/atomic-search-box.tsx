@@ -37,6 +37,8 @@ import {
   SimpleSearchSuggestion,
 } from './search-suggestion';
 
+import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
+
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
  *
@@ -55,9 +57,25 @@ import {
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
  * @part suggestion-with-query - An item in the list that will update the search box query.
+ *
+ * @part query-suggestion-item - A suggestion from the `atomic-search-box-query-suggestions` component.
+ * @part query-suggestion-content - The contents of a suggestion from the `atomic-search-box-query-suggestions` component.
+ * @part query-suggestion-icon - The icon of a suggestion from the `atomic-search-box-query-suggestions` component.
+ * @part query-suggestion-text - The text of a suggestion from the `atomic-search-box-query-suggestions` component.
+ *
+ * @part recent-query-item - A suggestion from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-content - The contents of a suggestion from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-icon - The icon of a suggestion from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-text - The text of a suggestion from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-text-highlight - The highlighted portion of the text of a suggestion from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-title-item - The clear button above suggestions from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
+ * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
+ *
  * @part instant-results-item - An instant result rendered by an `atomic-search-box-instant-results` component.
- * @part instant-result-show-all-button - The button to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
-
+ * @part instant-result-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
+ * @part instant-result-show-all-button - The button inside the clickable suggestion from the `atomic-search-box-instant-results` component.
  */
 @Component({
   tag: 'atomic-search-box',
@@ -127,7 +145,10 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public clearFilters = true;
 
   @AriaLiveRegion('search-box')
-  protected ariaMessage!: string;
+  protected searchBoxAriaMessage!: string;
+
+  @AriaLiveRegion('search-suggestions', true)
+  protected suggestionsAriaMessage!: string;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
@@ -232,11 +253,9 @@ export class AtomicSearchBox {
   }
 
   private get isDoubleList() {
-    const numberOfSuggestionsLists =
-      (this.leftSuggestions.length ? 1 : 0) +
-      (this.rightSuggestions.length ? 1 : 0);
-
-    return numberOfSuggestionsLists === 2;
+    return Boolean(
+      this.leftSuggestionElements.length && this.rightSuggestionElements.length
+    );
   }
 
   private updateActiveDescendant(activeDescendant = '') {
@@ -341,6 +360,7 @@ export class AtomicSearchBox {
     this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
+    this.updateAriaLiveActiveDescendant(value);
   }
 
   private focusPanel(panel: HTMLElement | undefined) {
@@ -351,17 +371,17 @@ export class AtomicSearchBox {
       const panelHasActiveDescendant =
         this.previousActiveDescendantElement &&
         panel.contains(this.previousActiveDescendantElement);
-      this.updateDescendants(
-        panelHasActiveDescendant
-          ? this.previousActiveDescendantElement!.id
-          : panel.firstElementChild.id
-      );
+      const newValue = panelHasActiveDescendant
+        ? this.previousActiveDescendantElement!
+        : (panel.firstElementChild as HTMLElement);
+      this.updateDescendants(newValue.id);
+      this.updateAriaLiveActiveDescendant(newValue);
     }
   }
 
   private updateAriaMessage() {
     const elsLength = this.allSuggestionElements.filter(elementHasQuery).length;
-    this.ariaMessage = elsLength
+    this.searchBoxAriaMessage = elsLength
       ? this.bindings.i18n.t('query-suggestions-available', {
           count: elsLength,
         })
@@ -482,6 +502,12 @@ export class AtomicSearchBox {
     }
   }
 
+  private updateAriaLiveActiveDescendant(value: HTMLElement) {
+    if (isMacOS()) {
+      this.suggestionsAriaMessage = value.ariaLabel!;
+    }
+  }
+
   private updateSuggestionElements(query: string) {
     if (!this.isPanelInFocus(this.leftPanelRef, query)) {
       this.leftSuggestionElements = this.getSuggestionElements(
@@ -538,7 +564,7 @@ export class AtomicSearchBox {
   private clearSuggestionElements() {
     this.leftSuggestionElements = [];
     this.rightSuggestionElements = [];
-    this.ariaMessage = '';
+    this.searchBoxAriaMessage = '';
   }
 
   private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
@@ -695,6 +721,16 @@ export class AtomicSearchBox {
     );
   }
 
+  private getSearchInputLabel() {
+    if (isMacOS()) {
+      return this.bindings.i18n.t('search-box-with-suggestions-macos');
+    }
+    if (!hasKeyboard()) {
+      return this.bindings.i18n.t('search-box-with-suggestions-keyboardless');
+    }
+    return this.bindings.i18n.t('search-box-with-suggestions');
+  }
+
   public render() {
     this.updateBreakpoints();
     return [
@@ -705,7 +741,7 @@ export class AtomicSearchBox {
           ref={(el) => (this.inputRef = el as HTMLInputElement)}
           bindings={this.bindings}
           value={this.searchBoxState.value}
-          ariaLabel={this.bindings.i18n.t('search-box-with-suggestions')}
+          ariaLabel={this.getSearchInputLabel()}
           onFocus={() => this.onFocus()}
           onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
           onBlur={() => this.clearSuggestions()}

@@ -149,7 +149,11 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
 
       elements.push({
         key: 'instant-results-show-all-button',
-        content: <Button style="text-primary">{showAllText}</Button>,
+        content: (
+          <Button part="instant-results-show-all-button" style="text-primary">
+            {showAllText}
+          </Button>
+        ),
         part: 'instant-results-show-all',
         ariaLabel: showAllText,
         onSelect: () => {

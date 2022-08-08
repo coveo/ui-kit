@@ -23,7 +23,7 @@ import { InitializationOptions } from "./components/search/atomic-search-interfa
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
-        "updateMessage": (region: string, message: string) => Promise<void>;
+        "updateMessage": (region: string, message: string, assertive: boolean) => Promise<void>;
     }
     interface AtomicBreadbox {
     }
@@ -378,7 +378,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the `atomic-insight-breadbox` component through the bindings store.
+          * The non-localized label for the facet.
          */
         "label": string;
         /**
@@ -2470,7 +2470,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the `atomic-insight-breadbox` component through the bindings store.
+          * The non-localized label for the facet.
          */
         "label"?: string;
         /**
