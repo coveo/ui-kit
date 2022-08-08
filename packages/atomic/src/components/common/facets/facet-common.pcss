@@ -2,6 +2,10 @@
   @apply ml-1.5 text-neutral-dark;
 }
 
-:host(.popover-nested)::part(label-button) {
-  @apply hidden;
+:host(.popover-nested) {
+  @apply min-w-[18rem];
+
+  &::part(label-button) {
+    @apply hidden;
+  }
 }
