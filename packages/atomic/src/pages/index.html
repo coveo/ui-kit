@@ -143,10 +143,8 @@
           <atomic-facet-manager>
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
-            <atomic-facet field="source" label="Source"></atomic-facet>
             <atomic-facet field="author" label="Authors"></atomic-facet>
-            <atomic-facet field="language" label="Language"></atomic-facet>
-            <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
+            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
             <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
             <atomic-numeric-facet
               field="ytviewcount"
@@ -165,7 +163,7 @@
               <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
               <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
             </atomic-numeric-facet>
-            <atomic-numeric-facet field="sncost" label="Cost">
+            <atomic-numeric-facet field="sncost" label="Cost Range (auto)">
               <atomic-format-currency currency="CAD"></atomic-format-currency>
             </atomic-numeric-facet>
             <atomic-timeframe-facet label="Timeframe" with-date-picker>
@@ -181,7 +179,7 @@
             <atomic-rating-range-facet
               facet-id="snrating_range"
               field="snrating"
-              label="Rating Range"
+              label="Rating Range (auto)"
               number-of-intervals="5"
             >
             </atomic-rating-range-facet>
@@ -194,22 +192,15 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-layout-section section="horizontal-filters">
+          <atomic-layout-section section="horizontal-facets">
             <atomic-segmented-facet-scrollable>
-              <atomic-segmented-facet
-                facet-id="segment"
-                field="objecttype"
-                number-of-values="20"
-              ></atomic-segmented-facet>
+              <atomic-segmented-facet field="objecttype" label="Type" number-of-values="3"></atomic-segmented-facet>
             </atomic-segmented-facet-scrollable>
             <atomic-popover>
-              <atomic-facet facet-id="objecttype-popover" field="objecttype"></atomic-facet>
+              <atomic-facet field="inat_family" label="Family"></atomic-facet>
             </atomic-popover>
             <atomic-popover>
-              <atomic-facet facet-id="language-popover" field="language" label="Language"></atomic-facet>
-            </atomic-popover>
-            <atomic-popover>
-              <atomic-facet facet-id="source-popover" field="source" label="Source"></atomic-facet>
+              <atomic-facet field="inat_class" label="Class"></atomic-facet>
             </atomic-popover>
           </atomic-layout-section>
           <atomic-layout-section section="status">

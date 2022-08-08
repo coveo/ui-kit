@@ -14,11 +14,17 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import {InitializePopoverEvent, ClearPopoverEvent} from './popover-event';
+import {InitializePopoverEvent} from './popover-event';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
+
+interface ClearPopoverEvent {
+  ownId?: string;
+}
 
 /**
  * @internal
  * The `atomic-popover` component displays any facet as a popover menu.
+ *
  * @part popover-button - The button to click to display or hide the popover menu.
  * @part label - The popover button label.
  * @part value-count - Number of selected values for the facet
@@ -33,9 +39,13 @@ import {InitializePopoverEvent, ClearPopoverEvent} from './popover-event';
   shadow: true,
 })
 export class AtomicPopover implements InitializableComponent {
+  @Element() host!: HTMLElement;
+  private getHasValues?: () => boolean;
+  private getNumberOfSelectedValues?: () => number;
   @InitializeBindings()
   public bindings!: Bindings;
-  public searchStatus!: SearchStatus;
+  private searchStatus!: SearchStatus;
+
   @BindStateToController('searchStatus')
   @State()
   public searchStatusState!: SearchStatusState;
@@ -44,52 +54,56 @@ export class AtomicPopover implements InitializableComponent {
   public facetState!: FacetState;
   @State()
   public error!: Error;
-
-  @State() public isMenuVisible = false;
-  @State() public facetId?: string;
-  @State() public facetLabel?: string = 'no-label';
-  @State() public hasValues?: boolean = false;
-  @State() public numberOfSelectedValues?: number = 0;
-  @Element() host!: HTMLElement;
-  private facetElement?: HTMLElement;
-  private getHasValues?: () => boolean;
-  private getNumberOfSelectedValues?: () => number;
+  @State() private isMenuVisible = false;
+  @State() private facetInfo?: FacetInfo;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
 
     if (this.host.children.length === 0) {
-      this.error = {
-        name: 'No child in popover',
-        message: 'One child is required inside a set of popover tags',
-      };
+      this.error = new Error(
+        'One child is required inside a set of popover tags.'
+      );
+
       return;
     }
 
     if (this.host.children.length > 1) {
-      this.error = {
-        name: 'Too many children in popover',
-        message: 'Cannot have more than one child inside a set of popover tags',
-      };
+      this.error = new Error(
+        'Cannot have more than one child inside a set of popover tags.'
+      );
     }
   }
 
-  componentWillRender() {
-    this.numberOfSelectedValues =
-      this.getNumberOfSelectedValues && this.getNumberOfSelectedValues();
-    this.hasValues = this.getHasValues && this.getHasValues();
+  @Listen('atomic/clearPopovers', {target: 'document'})
+  public popOpened(event: CustomEvent<ClearPopoverEvent>) {
+    if (event.detail.ownId !== this.facetInfo?.facetId) {
+      this.isMenuVisible = false;
+    }
+  }
+
+  @Listen('atomic/initializePopover')
+  public initializePopover(event: CustomEvent<InitializePopoverEvent>) {
+    if (this.facetInfo || !event.detail) {
+      return;
+    }
+
+    this.facetInfo = event.detail.facetInfo;
+    this.facetInfo.element.classList.add('popover-nested');
+    this.getHasValues = event.detail.getHasValues;
+    this.getNumberOfSelectedValues = event.detail.getNumberOfSelectedValues;
   }
 
   private get popoverId() {
-    return `${this.facetId}-popover`;
+    return `${this.facetInfo?.facetId}-popover`;
   }
 
-  popoverOpened() {
+  private popoverOpened() {
     if (!this.isMenuVisible) {
       const popoverOpened = new CustomEvent<ClearPopoverEvent>(
-        'clearPopovers',
+        'atomic/clearPopovers',
         {
-          detail: {ignorePopoverFacetId: this.facetId},
+          detail: {ownId: this.facetInfo?.facetId},
         }
       );
       document.dispatchEvent(popoverOpened);
@@ -98,56 +112,51 @@ export class AtomicPopover implements InitializableComponent {
     this.isMenuVisible = !this.isMenuVisible;
   }
 
-  @Listen('clearPopovers', {target: 'document'})
-  popOpened(event: CustomEvent<ClearPopoverEvent>) {
-    if (event.detail.ignorePopoverFacetId !== this.facetId) {
-      this.isMenuVisible = false;
-    }
-  }
-
-  renderValueButton() {
+  private renderValueButton() {
     return (
       <Button
         style="square-neutral"
         onClick={() => this.popoverOpened()}
         part="popover-button"
         ariaExpanded={`${this.isMenuVisible}`}
-        ariaLabel={`Pop-up filter on ${this.facetLabel} facet`}
+        ariaLabel={`Pop-up filter on ${this.facetInfo?.label} facet`} // TODO: localize for show/hide
         ariaControls={this.popoverId}
-        class={`rounded flex box-border h-full items-center mr-1.5 p-2.5 group ${
+        class={`rounded flex box-border h-full items-center min-w-[6rem] max-w-[15rem] p-2.5 group ${
           this.isMenuVisible
             ? 'border-primary ring ring-ring-primary text-primary'
             : 'hover:border-primary-light focus-visible:border-primary-light '
         }`}
       >
         <span
-          title={this.facetLabel}
+          title={this.facetInfo?.label}
           part="label"
-          class={`truncate ${
+          class={`truncate mr-0.5 ${
             this.isMenuVisible
               ? ''
               : 'group-hover:text-primary-light group-focus:text-primary'
           }`}
         >
-          {this.facetLabel}
+          {this.facetInfo?.label}
         </span>
         <span
-          title={this.numberOfSelectedValues?.toLocaleString()}
+          title={this.getNumberOfSelectedValues?.().toLocaleString()}
           part="value-count"
-          class={`value-box-count truncate pl-0.5 w-auto mt-0 text-sm ${
+          class={`truncate text-sm ${
+            this.getNumberOfSelectedValues?.() ? '' : 'hidden'
+          } ${
             this.isMenuVisible
               ? 'text-primary'
               : 'text-neutral-dark group-hover:text-primary-light group-focus:text-primary'
           }`}
         >
           {this.bindings.i18n.t('between-parentheses', {
-            text: this.numberOfSelectedValues,
+            text: this.getNumberOfSelectedValues?.(),
           })}
         </span>
         <atomic-icon
           part="arrow-icon"
           aria-hidden="true"
-          class={`w-2 ml-2 ${
+          class={`w-2 ml-auto ${
             this.isMenuVisible
               ? 'rotate-180'
               : 'group-hover:text-primary-light group-focus:text-primary'
@@ -158,38 +167,11 @@ export class AtomicPopover implements InitializableComponent {
     );
   }
 
-  @Listen('facetInitialized')
-  linkFacet(event: CustomEvent<InitializePopoverEvent>) {
-    if (this.facetElement) {
-      return;
-    }
-
-    const facet = this.bindings.store.get(event.detail.facetType)[
-      event.detail.facetId
-    ];
-
-    if (!facet) {
-      this.error = {
-        name: 'Undefined facet',
-        message: `No facet found inside store with facetId: ${event.detail.facetId}`,
-      };
-      return;
-    }
-
-    this.facetId = facet.facetId;
-    this.facetLabel = facet.label;
-    this.facetElement = facet.element;
-    this.facetElement?.classList.add('popover-nested');
-
-    this.getHasValues = event.detail.getHasValues;
-    this.getNumberOfSelectedValues = event.detail.getNumberOfSelectedValues;
-  }
-
-  render() {
+  public render() {
     if (
       this.searchStatus.state.hasError ||
       !this.searchStatus.state.hasResults ||
-      !this.hasValues
+      !this.getHasValues?.()
     ) {
       return <Hidden></Hidden>;
     }
@@ -199,17 +181,13 @@ export class AtomicPopover implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-10 w-24 mr-1.5 my-2 bg-neutral animate-pulse rounded"
+          class="h-10 w-24 my-2 bg-neutral animate-pulse rounded"
         ></div>
       );
     }
 
     return (
-      <div
-        id={this.popoverId}
-        part="popover-wrapper"
-        class="popover-wrapper relative"
-      >
+      <div id={this.popoverId} part="popover-wrapper" class="relative">
         {this.renderValueButton()}
         <div
           part="slot-wrapper"

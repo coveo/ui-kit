@@ -1,12 +1,7 @@
-import {FacetType} from '../../../common/facets/facet-common';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
 
 export interface InitializePopoverEvent {
-  facetId: string;
-  facetType: FacetType;
+  facetInfo: FacetInfo;
   getHasValues: () => boolean;
   getNumberOfSelectedValues: () => number;
-}
-
-export interface ClearPopoverEvent {
-  ignorePopoverFacetId?: string;
 }
