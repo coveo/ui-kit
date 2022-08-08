@@ -66,6 +66,7 @@ import {
   updateInstantResultsQuery,
 } from '../instant-results/instant-results-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+import {SearchOrigin} from '../../api/search/search-metadata';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -105,13 +106,25 @@ export interface ExecuteSearchThunkReturn {
   analyticsAction: SearchAction;
 }
 
+interface PrepareForSearchWithQueryOptions {
+  /**
+   * Whether to clear all active query filters when the end user submits a new query from the search box.
+   * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+   */
+  clearFilters: boolean;
+}
+
 const fetchFromAPI = async (
   client: SearchAPIClient,
   state: StateNeededByExecuteSearch,
-  {request, mappings}: MappedSearchRequest
+  {request, mappings}: MappedSearchRequest,
+  origin: SearchOrigin
 ) => {
   const startedAt = new Date().getTime();
-  const response = mapSearchResponse(await client.search(request), mappings);
+  const response = mapSearchResponse(
+    await client.search(request, {origin}),
+    mappings
+  );
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
   return {response, duration, queryExecuted, requestExecuted: request};
@@ -119,18 +132,24 @@ const fetchFromAPI = async (
 
 export const prepareForSearchWithQuery = createAsyncThunk<
   void,
-  UpdateQueryActionCreatorPayload,
+  UpdateQueryActionCreatorPayload & PrepareForSearchWithQueryOptions,
   AsyncThunkOptions<StateNeededByExecuteSearch>
 >('search/prepareForSearchWithQuery', (payload, thunk) => {
   const {dispatch} = thunk;
   validatePayload(payload, {
     q: new StringValue(),
     enableQuerySyntax: new BooleanValue(),
+    clearFilters: new BooleanValue(),
   });
 
-  dispatch(deselectAllBreadcrumbs());
+  if (payload.clearFilters) {
+    dispatch(deselectAllBreadcrumbs());
+  }
+
   dispatch(updateFacetAutoSelection({allow: true}));
-  dispatch(updateQuery(payload));
+  dispatch(
+    updateQuery({q: payload.q, enableQuerySyntax: payload.enableQuerySyntax})
+  );
   dispatch(updatePage(1));
 });
 
@@ -149,7 +168,8 @@ export const executeSearch = createAsyncThunk<
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      await buildSearchRequest(state)
+      await buildSearchRequest(state),
+      'mainSearch'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -224,7 +244,8 @@ export const fetchPage = createAsyncThunk<
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      await buildSearchRequest(state)
+      await buildSearchRequest(state),
+      'mainSearch'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -254,7 +275,8 @@ export const fetchMoreResults = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      await buildFetchMoreRequest(state)
+      await buildFetchMoreRequest(state),
+      'mainSearch'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -288,7 +310,8 @@ export const fetchFacetValues = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      await buildFetchFacetValuesRequest(state)
+      await buildFetchFacetValuesRequest(state),
+      'facetValues'
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -313,7 +336,7 @@ export const fetchInstantResults = createAsyncThunk<
   FetchInstantResultsActionCreatorPayload,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch & InstantResultSection>
 >(
-  'instantResults/fetch',
+  'search/fetchInstantResults',
   async (
     payload: FetchInstantResultsActionCreatorPayload,
     {getState, dispatch, rejectWithValue, extra: {apiClient, validatePayload}}
@@ -382,7 +405,10 @@ async function fetchInstantResultsFromAPI(
     numberOfResults
   );
   return mapSearchResponse(
-    await apiClient.search(request, {disableAbortWarning: true}),
+    await apiClient.search(request, {
+      disableAbortWarning: true,
+      origin: 'instantResults',
+    }),
     mappings
   );
 }
@@ -429,7 +455,8 @@ const automaticallyRetryQueryWithCorrection = async (
   const fetched = await fetchFromAPI(
     client,
     getState(),
-    await buildSearchRequest(getState())
+    await buildSearchRequest(getState()),
+    'mainSearch'
   );
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;

@@ -18,9 +18,7 @@ export const TabBarSelectors: TabBarSelector = {
 
   allTabs: () => TabBarSelectors.get().find(tabComponent),
   activeTab: () =>
-    TabBarSelectors.get().find(
-      'li.slds-tabs_default__item.slds-is-active a[role="tab"]'
-    ),
+    TabBarSelectors.get().find('button.slds-tabs_default__item.slds-is-active'),
   moreButton: () => TabBarSelectors.get().find('.tab-bar_more-button'),
   moreButtonLabel: () =>
     TabBarSelectors.moreButton().find('button').invoke('text'),

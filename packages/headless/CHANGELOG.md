@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.98.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.97.0...@coveo/headless@1.98.0) (2022-08-08)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fix atomic pager size overflow + headless page fraction ([#2289](https://github.com/coveo/ui-kit/issues/2289)) ([a0b01d3](https://github.com/coveo/ui-kit/commit/a0b01d313dd40e1c388ddc5ca711d6a588c007a4))
+* **headless:** respect index limits when reaching max page ([#2279](https://github.com/coveo/ui-kit/issues/2279)) ([2f36e73](https://github.com/coveo/ui-kit/commit/2f36e73b7230892dcfdb94336502dbcd911adbef))
+
+
+### Features
+
+* **atomic,headless:** add atomic insight facet component ([#2272](https://github.com/coveo/ui-kit/issues/2272)) ([e1a275e](https://github.com/coveo/ui-kit/commit/e1a275efecc425e27a2922654d71b461ac5ca723)), closes [#2278](https://github.com/coveo/ui-kit/issues/2278)
+* **atomic,headless:** add clearFilters option on search box ([#2285](https://github.com/coveo/ui-kit/issues/2285)) ([3300e97](https://github.com/coveo/ui-kit/commit/3300e97f89b7e29c7f01f85514f60c2bb176e4d4))
+* **atomic,headless:** add insight numeric facet ([#2290](https://github.com/coveo/ui-kit/issues/2290)) ([195ff75](https://github.com/coveo/ui-kit/commit/195ff75e0e2e2223cc28ffa31fe9a07f930871eb)), closes [#2278](https://github.com/coveo/ui-kit/issues/2278)
+* **atomic:** add leaf and node value part for category facet ([#2282](https://github.com/coveo/ui-kit/issues/2282)) ([1301a4a](https://github.com/coveo/ui-kit/commit/1301a4aab7a5a4c9b04fae87dedb52f764b23162))
+* **headless:** log clicks for product recommendations ([#2287](https://github.com/coveo/ui-kit/issues/2287)) ([36336de](https://github.com/coveo/ui-kit/commit/36336de8c9a165a46c9824f0b87f18b015c546c8))
+* **headless:** provide more details for request preprocessor ([#2265](https://github.com/coveo/ui-kit/issues/2265)) ([945675d](https://github.com/coveo/ui-kit/commit/945675dd1f917d1161d92b82916954c4e49b9efd))
+
+
+
+
+
+# [1.97.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.96.1...@coveo/headless@1.97.0) (2022-08-02)
+
+
+### Features
+
+* **atomic:** add insight refine toggle and insight refine modal ([#2268](https://github.com/coveo/ui-kit/issues/2268)) ([d742a51](https://github.com/coveo/ui-kit/commit/d742a517dcb29d42a9d898a22a448b912f628811))
+
+
+
+
+
 ## [1.96.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.96.0...@coveo/headless@1.96.1) (2022-08-01)
 
 

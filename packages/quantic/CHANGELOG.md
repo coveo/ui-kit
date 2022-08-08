@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.32.2...@coveo/quantic@1.33.0) (2022-08-08)
+
+
+### Features
+
+* **quantic:** added accessibility for quanticTab ([#2238](https://github.com/coveo/ui-kit/issues/2238)) ([5668a69](https://github.com/coveo/ui-kit/commit/5668a6987647859d188f76560b9b4e956736a056))
+
+
+
+
+
+## [1.32.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.32.1...@coveo/quantic@1.32.2) (2022-08-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.32.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.32.0...@coveo/quantic@1.32.1) (2022-08-01)
 
 **Note:** Version bump only for package @coveo/quantic

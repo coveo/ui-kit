@@ -35,6 +35,7 @@ import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
 import {pickNonBaseParams, unwrapError} from '../api-client-utils';
+import {SearchOrigin} from './search-metadata';
 
 export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
@@ -42,6 +43,7 @@ export interface FacetSearchAPIClient {
 
 export interface SearchOptions {
   disableAbortWarning?: boolean;
+  origin: SearchOrigin;
 }
 
 export type AllSearchAPIResponse =
@@ -83,6 +85,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req),
+      requestMetadata: {method: 'plan'},
       ...this.options,
     });
 
@@ -106,6 +109,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
+      requestMetadata: {method: 'querySuggest'},
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
@@ -133,10 +137,10 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
   async search(
     req: SearchRequest,
-    options: SearchOptions = {}
+    options?: SearchOptions
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     if (this.searchAbortController) {
-      !options.disableAbortWarning &&
+      !options?.disableAbortWarning &&
         this.options.logger.warn('Cancelling current pending search query');
       this.searchAbortController.abort();
     }
@@ -145,6 +149,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
+      requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
       signal: this.searchAbortController?.signal,
     });
@@ -152,7 +157,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     if (response instanceof Error) {
       return buildAPIResponseFromErrorOrThrow(
         response,
-        options.disableAbortWarning
+        options?.disableAbortWarning
       );
     }
 
@@ -179,6 +184,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
+      requestMetadata: {method: 'facetSearch'},
       ...this.options,
     });
 
@@ -199,6 +205,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
+      requestMetadata: {method: 'recommendations'},
       ...this.options,
     });
 
@@ -218,13 +225,14 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   }
 
   async html(req: HtmlRequest) {
-    return getHtml(req, this.options);
+    return getHtml(req, {...this.options});
   }
 
   async productRecommendations(req: ProductRecommendationsRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
+      requestMetadata: {method: 'productRecommendations'},
       ...this.options,
     });
 
@@ -247,6 +255,7 @@ export class SearchAPIClient implements FacetSearchAPIClient {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'GET', 'application/json', '/fields'),
       requestParams: {},
+      requestMetadata: {method: 'fieldDescriptions'},
       ...this.options,
     });
     if (response instanceof Error) {

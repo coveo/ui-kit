@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.95.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.94.0...@coveo/atomic@1.95.0) (2022-08-08)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fix atomic pager size overflow + headless page fraction ([#2289](https://github.com/coveo/ui-kit/issues/2289)) ([a0b01d3](https://github.com/coveo/ui-kit/commit/a0b01d313dd40e1c388ddc5ca711d6a588c007a4))
+* **atomic:** added missing parts for search box suggestions ([#2293](https://github.com/coveo/ui-kit/issues/2293)) ([c7669f9](https://github.com/coveo/ui-kit/commit/c7669f9dbe0125931b80144c7c54319dd83dce5f))
+* **atomic:** improved accessibility for search box suggestions ([#2286](https://github.com/coveo/ui-kit/issues/2286)) ([ba3fd33](https://github.com/coveo/ui-kit/commit/ba3fd336b398eefdcf35c41be1187eff76b9712c))
+* **atomic:** improved search box accessibility for macOS VoiceOver ([#2288](https://github.com/coveo/ui-kit/issues/2288)) ([2837801](https://github.com/coveo/ui-kit/commit/28378017b4e22d9f670bbf03e4c333bc353b6e99))
+* **atomic:** updated search box instructions when there's no keyboard ([#2300](https://github.com/coveo/ui-kit/issues/2300)) ([2d5a7d7](https://github.com/coveo/ui-kit/commit/2d5a7d7d7e3b4fe9b9864d3e2d3ccadc1714dc3c))
+
+
+### Features
+
+* **atomic,headless:** add atomic insight facet component ([#2272](https://github.com/coveo/ui-kit/issues/2272)) ([e1a275e](https://github.com/coveo/ui-kit/commit/e1a275efecc425e27a2922654d71b461ac5ca723)), closes [#2278](https://github.com/coveo/ui-kit/issues/2278)
+* **atomic,headless:** add clearFilters option on search box ([#2285](https://github.com/coveo/ui-kit/issues/2285)) ([3300e97](https://github.com/coveo/ui-kit/commit/3300e97f89b7e29c7f01f85514f60c2bb176e4d4))
+* **atomic,headless:** add insight numeric facet ([#2290](https://github.com/coveo/ui-kit/issues/2290)) ([195ff75](https://github.com/coveo/ui-kit/commit/195ff75e0e2e2223cc28ffa31fe9a07f930871eb)), closes [#2278](https://github.com/coveo/ui-kit/issues/2278)
+* **atomic:** add leaf and node value part for category facet ([#2282](https://github.com/coveo/ui-kit/issues/2282)) ([1301a4a](https://github.com/coveo/ui-kit/commit/1301a4aab7a5a4c9b04fae87dedb52f764b23162))
+* **atomic:** keep suggestion active background when navigating in instant result ([#2275](https://github.com/coveo/ui-kit/issues/2275)) ([15032ee](https://github.com/coveo/ui-kit/commit/15032ee287cf17b8bdff130ecc637cacb3c58772))
+
+
+
+
+
+# [1.94.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.93.2...@coveo/atomic@1.94.0) (2022-08-02)
+
+
+### Bug Fixes
+
+* **atomic:** change timeout message from error to warning ([#2276](https://github.com/coveo/ui-kit/issues/2276)) ([4a8eecc](https://github.com/coveo/ui-kit/commit/4a8eeccd01dcf76d085277a7d74169c3d99dbdea))
+
+
+### Features
+
+* **atomic:** add insight refine toggle and insight refine modal ([#2268](https://github.com/coveo/ui-kit/issues/2268)) ([d742a51](https://github.com/coveo/ui-kit/commit/d742a517dcb29d42a9d898a22a448b912f628811))
+* **atomic:** scrollable tests ([#2225](https://github.com/coveo/ui-kit/issues/2225)) ([fca12a7](https://github.com/coveo/ui-kit/commit/fca12a7a81582011136546667235b8ad5fc7f1a3))
+
+
+
+
+
 ## [1.93.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.93.1...@coveo/atomic@1.93.2) (2022-08-01)
 
 

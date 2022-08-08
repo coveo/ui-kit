@@ -64,7 +64,7 @@ export interface FacetConditionsManager {
  * @param props - The configurable `FacetConditionsManager` properties.
  * @returns A new facet conditions manager.
  */
-export function buildFacetConditionsManager(
+export function buildCoreFacetConditionsManager(
   engine: CoreEngine,
   props: FacetConditionsManagerProps
 ): FacetConditionsManager {

@@ -3,6 +3,7 @@ import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
+import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {mapSearchRequest} from './search-mappings';
 
@@ -15,6 +16,24 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
   const sharedWithFoldingRequest =
     await buildSearchAndFoldingLoadCollectionRequest(state);
 
+  // Corner case:
+  // If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)
+  // we need to request fewer results in order to ensure we do not receive an exception from the index
+  const getNumberOfResultsWithinIndexLimit = () => {
+    if (!state.pagination) {
+      return undefined;
+    }
+
+    const isOverIndexLimit =
+      state.pagination.firstResult + state.pagination.numberOfResults >
+      maximumNumberOfResultsFromIndex;
+
+    if (isOverIndexLimit) {
+      return maximumNumberOfResultsFromIndex - state.pagination.firstResult;
+    }
+    return state.pagination.numberOfResults;
+  };
+
   return mapSearchRequest({
     ...sharedWithFoldingRequest,
     ...(state.didYouMean && {
@@ -23,7 +42,7 @@ export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
     ...(cq && {cq}),
     ...(facets.length && {facets}),
     ...(state.pagination && {
-      numberOfResults: state.pagination.numberOfResults,
+      numberOfResults: getNumberOfResultsWithinIndexLimit(),
       firstResult: state.pagination.firstResult,
     }),
     ...(state.facetOptions && {

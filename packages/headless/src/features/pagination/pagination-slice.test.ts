@@ -151,6 +151,16 @@ describe('pagination slice', () => {
     expect(determinePage(finalState)).toBe(1);
   });
 
+  it('does not return fraction of pages', () => {
+    state.numberOfResults = 3;
+
+    state.firstResult = 2;
+    expect(determinePage(state)).toBe(2);
+
+    state.firstResult = 4;
+    expect(determinePage(state)).toBe(2);
+  });
+
   it('executeSearch.fulfilled updates totalCountFiltered to the response value', () => {
     const search = buildMockSearch();
     search.response.totalCountFiltered = 100;

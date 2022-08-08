@@ -52,11 +52,15 @@ export function createAtomicCommonStore<
     },
 
     waitUntilAppLoaded(callback: () => void) {
-      stencilStore.onChange('loadingFlags', (flags) => {
-        if (!flags.length) {
-          callback();
-        }
-      });
+      if (!stencilStore.get('loadingFlags').length) {
+        callback();
+      } else {
+        stencilStore.onChange('loadingFlags', (flags) => {
+          if (!flags.length) {
+            callback();
+          }
+        });
+      }
     },
 
     isAppLoaded() {
