@@ -237,11 +237,9 @@ export class AtomicSearchBox {
   }
 
   private get isDoubleList() {
-    const numberOfSuggestionsLists =
-      (this.leftSuggestionElements.length ? 1 : 0) +
-      (this.rightSuggestionElements.length ? 1 : 0);
-
-    return numberOfSuggestionsLists === 2;
+    return Boolean(
+      this.leftSuggestionElements.length && this.rightSuggestionElements.length
+    );
   }
 
   private updateActiveDescendant(activeDescendant = '') {
