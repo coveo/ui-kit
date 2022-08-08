@@ -9,7 +9,6 @@ export interface BaseFacetSelector extends ComponentSelector {
   collapseButton: () => CypressSelector;
   expandButton: () => CypressSelector;
   placeholder: () => CypressSelector;
-  searchInput: () => CypressSelector;
 }
 
 export interface FacetWithValuesSelector extends ComponentSelector {
