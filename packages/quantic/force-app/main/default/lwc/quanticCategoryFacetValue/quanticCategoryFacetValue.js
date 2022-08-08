@@ -25,13 +25,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @defaultValue `false`
    */
   @api isSearchResult = false;
-  /**
-   * Whether the value is an active parent node.
-   * @api
-   * @type {boolean}
-   * @defaultValue `false`
-   */
-  @api activeParent = false;
+
   /**
    * Whether the value is a non-active parent node.
    * @api
@@ -44,12 +38,12 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     inLabel,
   };
 
-  get categoryFacetLiClass() {
-    return this.activeParent ? 'slds-var-m-left_large slds-grid' : 'slds-grid';
-  }
-
   get facetValue() {
     return this.item.value;
+  }
+
+  get isPressed() {
+    return this.item.state === 'selected';
   }
 
   /**
@@ -64,5 +58,21 @@ export default class QuanticCategoryFacetValue extends LightningElement {
         },
       })
     );
+  }
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  onKeyDown(evt) {
+    if (evt.code === 'Enter' || evt.code === 'Space') {
+      evt.preventDefault();
+      this.dispatchEvent(
+        new CustomEvent('selectvalue', {
+          detail: {
+            value: this.facetValue,
+          },
+        })
+      );
+    }
   }
 }

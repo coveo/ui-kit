@@ -332,6 +332,10 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.withSearch && !!this.input?.value?.length;
   }
 
+  get categoryFacetLiClass() {
+    return this.activeParent ? 'slds-var-m-left_large slds-grid' : 'slds-grid';
+  }
+
   getSearchValues() {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
