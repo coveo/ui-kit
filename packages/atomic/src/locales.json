@@ -1338,6 +1338,10 @@
     "zh": "（{{text}}）",
     "zh-TW": "（{{text}}）"
   },
+  "notification": {
+    "en": "Notification",
+    "fr": "Notification"
+  },
   "smart-snippet": {
     "en": "Potential answer to your question",
     "fr": "Réponse potentielle à votre question"

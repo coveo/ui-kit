@@ -3,6 +3,7 @@ export type Section =
   | 'facets'
   | 'main'
   | 'status'
+  | 'notification'
   | 'results'
   | 'pagination';
 
