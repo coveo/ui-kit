@@ -80,6 +80,13 @@ describe('quantic-numeric-facet', () => {
         Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
       });
 
+      scope('testing accessibility', () => {
+        Actions.findCollapseButtonPressTabPressSpace();
+        Expect.displayClearButton(true);
+        Expect.clearFilterContains('Clear filter');
+        Expect.numberOfSelectedCheckboxValues(1);
+      });
+
       scope('when selecting a value', () => {
         const min = 0;
         const max = 8000;
@@ -130,6 +137,7 @@ describe('quantic-numeric-facet', () => {
       });
     });
   });
+
   describe('with custom withInput', () => {
     it('should work as expected', () => {
       visitNumericFacetPage(customWithInputSettings);

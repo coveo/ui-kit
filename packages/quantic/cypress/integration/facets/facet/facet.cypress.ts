@@ -135,10 +135,17 @@ describe('Facet Test Suite', () => {
     }
     it('should be accessible through keyboard', () => {
       setupWithValues();
-
-      Actions.findSearchInputPressTab();
-      Expect.selectedValuesContain('People');
-      Expect.numberOfSelectedLinkValues(1);
+      const selectedValue = 'People';
+      scope('should be selected when space is pressed', () => {
+        Actions.findSearchInputPressTabPressSpace();
+        Expect.selectedValuesContain(selectedValue);
+        Expect.numberOfSelectedLinkValues(1);
+      });
+      scope('should be selected when Enter is pressed', () => {
+        Actions.findSearchInputPressTabPressEnter();
+        Expect.selectedValuesContain(selectedValue);
+        Expect.numberOfSelectedLinkValues(1);
+      });
     });
   });
 

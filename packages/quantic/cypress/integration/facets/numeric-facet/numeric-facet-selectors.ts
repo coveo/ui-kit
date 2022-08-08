@@ -21,7 +21,7 @@ export type AllFacetSelectors = BaseFacetSelector &
 
 export const NumericFacetSelectors: AllFacetSelectors = {
   get: () => cy.get(numericFacetComponent),
-
+  searchInput: () => NumericFacetSelectors.get().find('input[type="search"]'),
   label: () => NumericFacetSelectors.get().find('header .card__header > span'),
   values: () => NumericFacetSelectors.get().find('c-quantic-facet-value'),
   inputMin: () => NumericFacetSelectors.get().find('.numeric__input-min input'),
@@ -33,7 +33,10 @@ export const NumericFacetSelectors: AllFacetSelectors = {
   valueLabel: () => NumericFacetSelectors.get().find('.facet__value-text'),
   facetValueLabelAtIndex: (index: number) =>
     NumericFacetSelectors.valueLabel().eq(index),
-  collapseButton: () => NumericFacetSelectors.get().find('.facet__collapse'),
+  collapseButton: () =>
+    NumericFacetSelectors.get()
+      .find('.facet__collapse')
+      .find('button.slds-button'),
   expandButton: () => NumericFacetSelectors.get().find('.facet__expand'),
   placeholder: () =>
     NumericFacetSelectors.get().find('.placeholder__card-container'),

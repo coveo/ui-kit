@@ -18,6 +18,9 @@ const numericFacetActions = (selector: AllFacetSelectors) => {
     submitManualRange: () => {
       selector.searchForm().submit();
     },
+    findCollapseButtonPressTabPressSpace: () => {
+      selector.collapseButton().tab().type(' ', {force: true});
+    },
   };
 };
 
