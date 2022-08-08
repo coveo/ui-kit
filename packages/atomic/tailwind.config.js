@@ -14,7 +14,6 @@ module.exports = {
         'primary-dark': 'var(--atomic-primary-dark)',
         'on-primary': 'var(--atomic-on-primary)',
         'ring-primary': 'var(--atomic-ring-primary)',
-        'ring-primary-light': 'var(--atomic-ring-primary-light)',
         // Neutral
         neutral: 'var(--atomic-neutral)',
         'neutral-light': 'var(--atomic-neutral-light)',
@@ -34,7 +33,7 @@ module.exports = {
         xl: 'var(--atomic-border-radius-xl)',
       },
       boxShadow: {
-        'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)',
+        'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)'
       },
       fontWeight: {
         normal: 'var(--atomic-font-normal)',

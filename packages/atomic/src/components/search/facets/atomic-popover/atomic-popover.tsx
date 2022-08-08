@@ -14,10 +14,7 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import {
-  InitPopoverEventPayload,
-  ClearPopoversEventPayload,
-} from './popover-event';
+import {InitializePopoverEvent, ClearPopoverEvent} from './popover-event';
 
 /**
  * @internal
@@ -89,7 +86,7 @@ export class AtomicPopover implements InitializableComponent {
 
   popoverOpened() {
     if (!this.isMenuVisible) {
-      const popoverOpened = new CustomEvent<ClearPopoversEventPayload>(
+      const popoverOpened = new CustomEvent<ClearPopoverEvent>(
         'clearPopovers',
         {
           detail: {ignorePopoverFacetId: this.facetId},
@@ -102,7 +99,7 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   @Listen('clearPopovers', {target: 'document'})
-  popOpened(event: CustomEvent<ClearPopoversEventPayload>) {
+  popOpened(event: CustomEvent<ClearPopoverEvent>) {
     if (event.detail.ignorePopoverFacetId !== this.facetId) {
       this.isMenuVisible = false;
     }
@@ -162,7 +159,7 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   @Listen('facetInitialized')
-  linkFacet(event: CustomEvent<InitPopoverEventPayload>) {
+  linkFacet(event: CustomEvent<InitializePopoverEvent>) {
     if (this.facetElement) {
       return;
     }
