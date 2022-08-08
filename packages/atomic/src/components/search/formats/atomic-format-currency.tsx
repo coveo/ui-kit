@@ -1,5 +1,8 @@
 import {Component, Element, Prop, State, h} from '@stencil/core';
-import {dispatchNumberFormatEvent, NumberFormatter} from './format-common';
+import {
+  dispatchNumberFormatEvent,
+  NumberFormatter,
+} from '../../common/formats/format-common';
 
 /**
  * The `atomic-format-currency` component is used for formatting currencies.

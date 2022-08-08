@@ -16,6 +16,7 @@ import {
 export class AtomicAriaLive {
   @Element() private host!: HTMLAtomicAriaLiveElement;
   @State() private message = '';
+  @State() private assertive = false;
 
   private lastUpdatedRegion?: string;
   private disconnectFindAriaLiveEvent?: () => void;
@@ -41,7 +42,11 @@ export class AtomicAriaLive {
    * @internal
    */
   @Method()
-  public async updateMessage(region: string, message: string) {
+  public async updateMessage(
+    region: string,
+    message: string,
+    assertive: boolean
+  ) {
     const wouldOverwriteAnotherRegion = region !== this.lastUpdatedRegion;
     if (wouldOverwriteAnotherRegion) {
       this.lastUpdatedRegion = region;
@@ -50,6 +55,7 @@ export class AtomicAriaLive {
       }
     }
     this.message = message;
+    this.assertive = assertive;
   }
 
   public connectedCallback() {
@@ -68,7 +74,7 @@ export class AtomicAriaLive {
     return (
       <Host
         style={{position: 'absolute', right: '10000px'}}
-        aria-live="polite"
+        aria-live={this.assertive ? 'assertive' : 'polite'}
         role="status"
       >
         {this.message}

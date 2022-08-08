@@ -1,7 +1,13 @@
 <template>
   <template if:true={shouldDisplay}>
-    <li class={tabClass} title={label} role="presentation">
-      <a class="slds-tabs_default__link" role="tab" onclick={select}>{label}</a>
-    </li>
+    <button
+      class={tabClass}
+      onclick={select}
+      aria-label={arialLabelText}
+      aria-pressed={isPressed}
+      title={label}
+    >
+      <span class="slds-tabs_default__link">{label}</span>
+    </button>
   </template>
 </template>
