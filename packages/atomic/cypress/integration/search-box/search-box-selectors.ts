@@ -6,6 +6,8 @@ export const SearchBoxSelectors = {
   submitButton: () =>
     SearchBoxSelectors.shadow().find('[part="submit-button"]'),
   querySuggestions: () => SearchBoxSelectors.shadow().find('[data-query]'),
+  recentQueriesItem: () =>
+    SearchBoxSelectors.shadow().find('[part~="recent-query-item"]'),
 };
 
 export const ButtonText = {
