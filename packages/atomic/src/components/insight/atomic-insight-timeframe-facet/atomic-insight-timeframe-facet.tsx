@@ -55,6 +55,8 @@ import {
  * @part input-end - The input for the ending value of the custom date range.
  * @part input-label - The label for both the start and end input.
  * @part input-apply-button - The apply button for the custom range.
+ *
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-timeframe-facet',
@@ -204,6 +206,7 @@ export class AtomicInsightTimeframeFacet
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
     };
+
     this.facetForDateRange = buildInsightDateFacet(this.bindings.engine, {
       options,
     });

@@ -214,7 +214,6 @@ export class TimeframeFacetCommon {
 
   private validateProps() {
     validateDependsOn(this.dependsOn);
-    this.manualTimeframes = this.getManualTimeframes();
   }
 
   private registerFacetToStore() {

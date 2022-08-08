@@ -3,6 +3,7 @@ import {
   buildDateFilter,
   buildDateRange,
   buildFacetConditionsManager,
+  buildSearchStatus,
   DateFacet,
   DateFacetOptions,
   DateFacetState,
@@ -169,6 +170,7 @@ export class AtomicTimeframeFacet
         this.initializeFacetForDateRange(values),
       initializeFilter: () => this.initializeFilter(),
     });
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
