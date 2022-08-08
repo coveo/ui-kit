@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {InsightBindings} from '../components/insight/atomic-insight-interface/atomic-insight-interface';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
@@ -9,7 +10,7 @@ export interface FindAriaLiveEventArgs {
   element?: HTMLAtomicAriaLiveElement;
 }
 
-export function AriaLiveRegion(regionName: string) {
+export function AriaLiveRegion(regionName: string, assertive = false) {
   function dispatchMessage(message: string) {
     const event = buildCustomEvent<FindAriaLiveEventArgs>(
       findAriaLiveEventName,
@@ -18,7 +19,7 @@ export function AriaLiveRegion(regionName: string) {
     document.dispatchEvent(event);
     const {element} = event.detail;
     if (element) {
-      element.updateMessage(regionName, message);
+      element.updateMessage(regionName, message, assertive);
     }
   }
 
@@ -37,7 +38,10 @@ export interface FocusTargetController {
 }
 
 export function FocusTarget() {
-  return (component: InitializableComponent, setterName: string) => {
+  return (
+    component: InitializableComponent | InitializableComponent<InsightBindings>,
+    setterName: string
+  ) => {
     const {componentWillLoad} = component;
 
     component.componentWillLoad = function () {

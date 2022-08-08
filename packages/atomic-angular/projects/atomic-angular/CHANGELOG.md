@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.24.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.23.0...@coveo/atomic-angular@1.24.0) (2022-08-08)
+
+
+### Features
+
+* **atomic,headless:** add atomic insight facet component ([#2272](https://github.com/coveo/ui-kit/issues/2272)) ([e1a275e](https://github.com/coveo/ui-kit/commit/e1a275efecc425e27a2922654d71b461ac5ca723)), closes [#2278](https://github.com/coveo/ui-kit/issues/2278)
+* **atomic,headless:** add clearFilters option on search box ([#2285](https://github.com/coveo/ui-kit/issues/2285)) ([3300e97](https://github.com/coveo/ui-kit/commit/3300e97f89b7e29c7f01f85514f60c2bb176e4d4))
+* **atomic,headless:** add insight numeric facet ([#2290](https://github.com/coveo/ui-kit/issues/2290)) ([195ff75](https://github.com/coveo/ui-kit/commit/195ff75e0e2e2223cc28ffa31fe9a07f930871eb)), closes [#2278](https://github.com/coveo/ui-kit/issues/2278)
+
+
+
+
+
 # [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.22.3...@coveo/atomic-angular@1.23.0) (2022-08-02)
 
 

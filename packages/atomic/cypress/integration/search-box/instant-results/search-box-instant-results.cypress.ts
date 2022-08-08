@@ -79,6 +79,7 @@ describe('Instant Results Test Suites', () => {
         maxRecentQueriesWithoutQuery.toString()
       );
       InstantResultsAssertions.assertResultIsSelected(0);
+      SearchBoxAssertions.assertSuggestionIsHighlighted(1);
     });
     describe('when navigating back from result to query', () => {
       before(() => {
@@ -203,7 +204,7 @@ describe('Instant Results Test Suites', () => {
       });
       InstantResultsAssertions.assertHasResultCount(2);
       InstantResultsAssertions.assertResultIsSelected(1);
-      SearchBoxAssertions.assertNoSuggestionIsSelected();
+      SearchBoxAssertions.assertSuggestionIsHighlighted(1);
 
       describe('when hovering over a different query', () => {
         before(() => {

@@ -95,10 +95,12 @@ export class AtomicSearchBoxQuerySuggestions {
   private renderItem(suggestion: Suggestion) {
     const hasQuery = this.bindings.searchBoxController.state.value !== '';
     return {
+      part: 'query-suggestion-item',
       content: (
-        <div class="flex items-center">
+        <div part="query-suggestion-content" class="flex items-center">
           {this.bindings.getSuggestions().length > 1 && (
             <atomic-icon
+              part="query-suggestion-icon"
               icon={this.renderIcon()}
               class="w-4 h-4 mr-2 shrink-0"
             ></atomic-icon>
@@ -106,17 +108,24 @@ export class AtomicSearchBoxQuerySuggestions {
           {hasQuery ? (
             // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
             <span
+              part="query-suggestion-text"
               class="break-all line-clamp-2"
               // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
               innerHTML={suggestion.highlightedValue}
             ></span>
           ) : (
-            <span class="break-all line-clamp-2">{suggestion.rawValue}</span>
+            <span part="query-suggestion-text" class="break-all line-clamp-2">
+              {suggestion.rawValue}
+            </span>
           )}
         </div>
       ),
       key: `qs-${encodeForDomAttribute(suggestion.rawValue)}`,
       query: suggestion.rawValue,
+      ariaLabel: this.bindings.i18n.t('query-suggestion-label', {
+        query: suggestion.rawValue,
+        interpolation: {escapeValue: false},
+      }),
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },

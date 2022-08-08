@@ -9,6 +9,7 @@ export interface SearchBoxSuggestionElement {
   onSelect?(e: Event): void;
 
   query?: string;
+  ariaLabel?: string;
   part?: string;
   hideIfLast?: boolean;
 }
@@ -29,6 +30,7 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
   isStandalone: boolean;
   searchBoxController: SearchBox;
   numberOfQueries: number;
+  clearFilters: boolean;
   suggestedQuery(): string;
   clearSuggestions(): void;
   triggerSuggestions(): void;
@@ -60,4 +62,3 @@ export function elementHasNoQuery(el: SearchBoxSuggestionElement) {
 export function elementHasQuery(el: SearchBoxSuggestionElement) {
   return !!el.query;
 }
-export const queryDataAttribute = 'data-query';

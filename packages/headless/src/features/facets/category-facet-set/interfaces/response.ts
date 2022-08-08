@@ -31,6 +31,10 @@ export interface CategoryFacetValue {
    * The facet value.
    * */
   value: string;
+  /**
+   * When the hierarchical value has no children, this property is true.
+   */
+  isLeafValue: boolean;
 }
 
 export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue>;

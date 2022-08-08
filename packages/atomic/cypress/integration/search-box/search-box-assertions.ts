@@ -29,6 +29,15 @@ export function assertSuggestionIsSelected(index: number) {
   });
 }
 
+export function assertSuggestionIsHighlighted(index: number) {
+  it(`should have higlighted suggestion ${index}`, () => {
+    SearchBoxSelectors.querySuggestions()
+      .eq(index)
+      .invoke('attr', 'class')
+      .should('contain', 'bg-neutral-light');
+  });
+}
+
 export function assertNoSuggestionIsSelected() {
   it('should have no selected result', () => {
     SearchBoxSelectors.querySuggestions().each((el) =>
