@@ -60,7 +60,9 @@ import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-ins
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
 
 export interface FacetInfo {
+  facetId: string;
   label: string;
+  element: HTMLElement;
 }
 
 export type FacetType =

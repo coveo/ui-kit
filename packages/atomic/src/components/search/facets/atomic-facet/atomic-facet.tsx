@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Component, h, State, Prop, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -22,7 +22,11 @@ import {
 } from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {BaseFacet} from '../../../common/facets/facet-common';
+import {
+  BaseFacet,
+  FacetCommon,
+  parseDependsOn,
+} from '../../../common/facets/facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -187,17 +191,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @FocusTarget()
   private headerFocus!: FocusTargetController;
 
-  private validateProps() {
-    new Schema({
-      displayValuesAs: new StringValue({
-        constrainTo: ['checkbox', 'link', 'box'],
-      }),
-    }).validate({
-      displayValuesAs: this.displayValuesAs,
-    });
-    validateDependsOn(this.dependsOn);
-  }
-
   public initialize() {
     const options: FacetOptions = {
       facetId: this.facetId,
@@ -230,6 +223,8 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       withSearch: this.withSearch,
       sortCriteria: this.sortCriteria,
     });
+
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
