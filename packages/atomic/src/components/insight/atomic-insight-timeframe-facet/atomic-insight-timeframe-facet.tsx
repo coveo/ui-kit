@@ -58,7 +58,7 @@ import {
  */
 @Component({
   tag: 'atomic-insight-timeframe-facet',
-  styleUrl: '../../common/facets/timeframe-facet-common.pcss',
+  styleUrl: './atomic-insight-timeframe-facet.pcss',
   shadow: true,
 })
 export class AtomicInsightTimeframeFacet

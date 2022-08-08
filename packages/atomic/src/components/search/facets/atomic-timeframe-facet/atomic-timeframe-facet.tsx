@@ -56,7 +56,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-timeframe-facet',
-  styleUrl: '../../../common/facets/timeframe-facet-common.pcss',
+  styleUrl: './atomic-timeframe-facet.pcss',
   shadow: true,
 })
 export class AtomicTimeframeFacet
