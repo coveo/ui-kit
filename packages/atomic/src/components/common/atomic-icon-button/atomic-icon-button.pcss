@@ -1,10 +1,19 @@
 @import '../../../global/global.pcss';
 
 :host {
-  position: relative;
+  @apply relative;
 }
 
 button {
   width: 2.6rem;
   height: 2.6rem;
+}
+
+[part='badge'] {
+  @apply absolute block h-4 w-4 text-center bg-primary text-on-primary;
+  border-radius: 100%;
+  font-size: 0.6rem;
+  line-height: 1rem;
+  top: -0.4rem;
+  right: -0.4rem;
 }

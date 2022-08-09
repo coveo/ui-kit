@@ -1,11 +1,12 @@
-import {Component, h, Host, Prop, State} from '@stencil/core';
+import {Component, h, Host, Prop, State, VNode} from '@stencil/core';
 import {InitializeBindings} from '../../../utils/initialization-utils';
 import {AnyBindings} from '../interface/bindings';
 import {Button} from '../button';
 
 /**
  *
- * @part button - The insight edit toggle button.
+ * @part button - The button element.
+ * @part badge - The span element that wraps the badge.
  */
 @Component({
   tag: 'atomic-icon-button',
@@ -21,7 +22,7 @@ export class AtomicIconButton {
   @Prop({mutable: true}) public labelI18nKey!: string;
   @Prop({mutable: true}) public icon!: string;
   @Prop({mutable: true}) public buttonRef?: (el?: HTMLButtonElement) => void;
-  @Prop({mutable: true}) public badge?: string;
+  @Prop({mutable: true}) public badge?: VNode;
 
   public render() {
     return (

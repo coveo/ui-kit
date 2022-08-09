@@ -15,7 +15,6 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  */
 @Component({
   tag: 'atomic-insight-refine-toggle',
-  styleUrl: './atomic-insight-refine-toggle.pcss',
   shadow: true,
 })
 export class AtomicInsightRefineToggle {
@@ -83,9 +82,9 @@ export class AtomicInsightRefineToggle {
           this.loadModal();
         }}
         badge={
-          this.breadcrumbManagerState.hasBreadcrumbs
-            ? this.numberOfBreadcrumbs.toString()
-            : undefined
+          this.breadcrumbManagerState.hasBreadcrumbs ? (
+            <slot>{this.numberOfBreadcrumbs.toString()}</slot>
+          ) : undefined
         }
       />
     );
