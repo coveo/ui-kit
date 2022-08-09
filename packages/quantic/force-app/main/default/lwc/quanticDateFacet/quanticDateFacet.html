@@ -22,18 +22,22 @@
           </button>
         </template>
         <template if:false={isCollapsed}>
-          <ul class="slds-has-dividers_around-space slds-m-top_medium">
-            <template for:each={values} for:item="v">
-              <c-quantic-facet-value
-                onselectvalue={onSelectValue} 
-                key={v.start} 
-                item={v} 
-                is-checked={v.checked}
-                formatting-function={formattingFunction}
-              >
-              </c-quantic-facet-value>
-            </template>
-          </ul>
+          <fieldset>
+            <legend class="slds-assistive-text">{field}</legend>
+            <ul class="slds-has-dividers_around-space slds-m-top_medium">
+              <template for:each={values} for:item="v">
+                <li class="slds-grid" key={v.value}>
+                  <c-quantic-facet-value
+                    onselectvalue={onSelectValue} 
+                    key={v.start} 
+                    item={v} 
+                    is-checked={v.checked}
+                    formatting-function={formattingFunction}
+                  ></c-quantic-facet-value>
+                </li>
+              </template>
+            </ul>
+          </fieldset>
         </template>
       </c-quantic-card-container>
     </div>

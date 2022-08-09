@@ -68,15 +68,22 @@
               </div>
             </template>
             <template if:true={showValues}>
-               <template for:each={values} for:item="v">
-                <c-quantic-facet-value 
-                  onselectvalue={onSelectValue} 
-                  key={v.key} 
-                  item={v} 
-                  is-checked={v.checked}
-                  formatting-function={formattingFunction}>
-                </c-quantic-facet-value>
-              </template>
+              <fieldset>
+                <legend class="slds-assistive-text">{field}</legend>
+                <ul>
+                  <template for:each={values} for:item="v">
+                    <li class="slds-grid" key={v.value}>
+                      <c-quantic-facet-value 
+                        onselectvalue={onSelectValue} 
+                        key={v.key} 
+                        item={v} 
+                        is-checked={v.checked}
+                        formatting-function={formattingFunction}>
+                      </c-quantic-facet-value>
+                    </li>
+                  </template>
+                </ul>
+              </fieldset>
             </template>
           </ul>
         </template>
