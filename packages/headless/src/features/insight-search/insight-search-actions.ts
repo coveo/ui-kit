@@ -98,12 +98,9 @@ export const executeSearch = createAsyncThunk<
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
+    const mappedRequest = buildInsightSearchRequest(state);
 
-    const fetched = await fetchFromAPI(
-      extra.apiClient,
-      state,
-      buildInsightSearchRequest(state)
-    );
+    const fetched = await fetchFromAPI(extra.apiClient, state, mappedRequest);
 
     if (isErrorResponse(fetched.response)) {
       dispatch(logQueryError(fetched.response.error));
