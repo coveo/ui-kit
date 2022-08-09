@@ -64,7 +64,8 @@ export class AtomicInsightTab
         style="text-transparent"
         part="tab"
         class={this.tabState.isActive ? 'active' : ''}
-        ariaLabel={this.label}
+        ariaLabel={this.bindings.i18n.t('tab-search', {label: this.label})}
+        ariaPressed={`${this.tabState.isActive}`}
         onClick={() => this.tab.select()}
       >
         {this.label}
