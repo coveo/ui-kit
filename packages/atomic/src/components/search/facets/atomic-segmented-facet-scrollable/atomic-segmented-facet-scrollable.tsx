@@ -20,12 +20,17 @@ type ArrowDirection = 'right' | 'left';
 /**
  * @internal
  * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
+ *
+ * @slot default - One or multiple atomic-segmented-facet components
+ *
  * @part scrollable-container - The wrapper for the entire component including the horizontal-scroll container and the arrow buttons.
  * @part horizontal-scroll - The scrollable container for the segmented facets.
- * @part left-arrow-box - The left arrow box containing both the left arrow button and the fade.
- * @part right-arrow-box - The right arrow box containing both the right arrow button and the fade.
- * @part arrow-button - The arrow button used to scroll left or right.
- * @part fade - The white to transparent gradient.
+ * @part left-arrow-icon - The arrow icon on the left.
+ * @part right-arrow-icon - The arrow icon on the right.
+ * @part left-arrow-button - The arrow button used to scroll on the left.
+ * @part right-arrow-button - The arrow button used to scroll on the left.
+ * @part left-fade - The white to transparent gradient on the left.
+ * @part right-fade - The white to transparent gradient on the right.
  */
 
 @Component({
@@ -53,11 +58,11 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
-  componentDidLoad() {
+  public componentDidLoad() {
     this.observer = new ResizeObserver(() => {
       this.handleScroll();
     });
-    this.observer.observe(this.horizontalScroll as HTMLDivElement);
+    this.observer.observe(this.horizontalScroll!);
   }
 
   disconnectedCallback() {
@@ -67,7 +72,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
   @Listen('wheel')
   @Listen('touchmove')
   @Listen('keydown')
-  handleScroll() {
+  public handleScroll() {
     if (!this.horizontalScroll) {
       return;
     }
@@ -102,78 +107,62 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     if (direction === 'left') {
       container.scrollLeft -= pixelsToScroll;
       this.hideLeftArrow = isLeftEdge;
-    } else {
-      container.scrollLeft += pixelsToScroll;
-      this.hideRightArrow = isRightEdge;
+      return;
     }
+
+    container.scrollLeft += pixelsToScroll;
+    this.hideRightArrow = isRightEdge;
   }
 
-  private renderArrowClass(direction: ArrowDirection) {
+  private getArrowClass(direction: ArrowDirection) {
     if (direction === 'left') {
-      return (
-        'left-0 ' +
-        (this.hideLeftArrow || !this.searchStatusState.firstSearchExecuted
-          ? 'invisible opacity-0'
-          : '')
-      );
-    } else {
-      return (
-        'right-0 ' +
-        (this.hideRightArrow || !this.searchStatusState.firstSearchExecuted
-          ? 'invisible opacity-0'
-          : '')
-      );
+      return `left-0 ${this.hideLeftArrow ? 'invisible opacity-0' : ''}`;
     }
+
+    return `right-0 ${this.hideRightArrow ? 'invisible opacity-0' : ''}`;
   }
 
-  private renderFadeClass(direction: ArrowDirection) {
+  private getFadeClass(direction: ArrowDirection) {
     if (direction === 'left') {
-      return (
-        'bg-gradient-to-r left-0 ' +
-        (this.hideLeftArrow || !this.searchStatusState.firstSearchExecuted
-          ? 'opacity-0'
-          : '')
-      );
-    } else {
-      return (
-        'bg-gradient-to-l right-0 ' +
-        (this.hideRightArrow || !this.searchStatusState.firstSearchExecuted
-          ? 'opacity-0'
-          : '')
-      );
+      return `bg-gradient-to-r left-0 ${this.hideLeftArrow ? 'opacity-0' : ''}`;
     }
+
+    return `bg-gradient-to-l right-0 ${this.hideRightArrow ? 'opacity-0' : ''}`;
   }
 
   private renderArrow(direction: ArrowDirection) {
-    const isLeft = direction === 'left';
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return;
+    }
+
     return [
       <Button
         part={`${direction}-arrow-button`}
         style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-[2] h-10 w-10 top-0 bottom-0 transition-visi-opacity ease-in-out duration-300 ${this.renderArrowClass(
+        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-1 h-10 w-10 top-0 bottom-0 transition-visi-opacity ease-in-out duration-300 ${this.getArrowClass(
           direction
         )}`}
         ariaHidden="true"
         tabIndex="-1"
         onClick={() => this.slideHorizontally(direction)}
-        ref={(el) => (this.arrowRef = el as HTMLElement)}
+        ref={(el) => (this.arrowRef = el)}
       >
         <atomic-icon
           part={`${direction}-arrow-icon`}
           class="w-3.5"
-          icon={isLeft ? ArrowLeftIcon : ArrowRightIcon}
+          icon={direction === 'left' ? ArrowLeftIcon : ArrowRightIcon}
         ></atomic-icon>
       </Button>,
       <div
         part={`${direction}-fade`}
-        class={`w-20 h-10 absolute top-0  z-[1] pointer-events-none from-background-60 transition-visi-opacity ease-in-out duration-300 ${this.renderFadeClass(
+        class={`w-20 h-10 absolute top-0 z-0 pointer-events-none from-background-60 transition-visi-opacity ease-in-out duration-300 ${this.getFadeClass(
           direction
         )}`}
       ></div>,
     ];
   }
 
-  render() {
+  public render() {
     if (this.searchStatus.state.hasError) {
       return <Hidden></Hidden>;
     }
@@ -184,7 +173,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         <div
           part="horizontal-scroll"
           class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
-          ref={(el) => (this.horizontalScroll = el as HTMLDivElement)}
+          ref={(el) => (this.horizontalScroll = el)}
         >
           <slot></slot>
         </div>

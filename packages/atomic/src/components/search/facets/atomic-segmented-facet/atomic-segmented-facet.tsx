@@ -31,6 +31,7 @@ import {BaseFacet} from '../../../common/facets/facet-common';
  * @part values - The facet values container.
  * @part value-box - The facet value.
  * @part value-box-selected - The selected facet value.
+ * @part placeholder - The placeholder displayed when the facet is loading.
  */
 @Component({
   tag: 'atomic-segmented-facet',
