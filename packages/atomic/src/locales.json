@@ -600,6 +600,10 @@
     "zh-CN": "没有找到与 {{query}} 相关的结果",
     "zh-TW": "沒有找到與 {{query}} 相關的結果"
   },
+  "showing-results-for": {
+    "en": "Showing results for {{query}}",
+    "fr": "Résultats affichés pour {{query}}"
+  },
   "search-tips": {
     "en": "You may want to try using different keywords, deselecting filters, or checking for spelling mistakes.",
     "fr": "Essayez différents mots-clés, déselectionnez des filtres ou vérifiez l'orthographe de vos mots-clés."
