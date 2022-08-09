@@ -56,7 +56,7 @@ import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {InitializePopoverEvent} from '../../search/facets/atomic-popover/popover-type';
+import {PopoverChildFacet} from '../../search/facets/atomic-popover/popover-type';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {FacetInfo} from './facet-common-store';
 
@@ -329,10 +329,10 @@ export class FacetCommon {
     };
     this.bindings.store.registerFacet('facets', facetInfo);
     this.host.dispatchEvent(
-      buildCustomEvent<InitializePopoverEvent>('atomic/initializePopover', {
-        facetInfo,
-        getHasValues: () => !!this.facet.state.values.length,
-        getNumberOfSelectedValues: () => this.numberOfSelectedValues,
+      buildCustomEvent<PopoverChildFacet>('atomic/initializePopover', {
+        ...facetInfo,
+        hasValues: () => !!this.facet.state.values.length,
+        numberOfSelectedValues: () => this.numberOfSelectedValues,
       })
     );
   }

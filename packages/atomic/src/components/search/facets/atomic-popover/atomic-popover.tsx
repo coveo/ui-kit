@@ -22,12 +22,11 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import {InitializePopoverEvent, popoverClass} from './popover-type';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
-
-interface ClearPopoverEvent {
-  ownId?: string;
-}
+import {
+  ClearPopoverEvent,
+  PopoverChildFacet,
+  popoverClass,
+} from './popover-type';
 
 /**
  * @internal
@@ -39,7 +38,7 @@ interface ClearPopoverEvent {
  * @part value-count - Number of selected values for the facet
  * @part arrow-icon - The arrow icon on the button to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
- * @part slot-wrapper - The wrapper that contains the 'facet' or 'slot'.
+ * @part facet - The wrapper that contains the slotted 'facet'.
  */
 @Component({
   tag: 'atomic-popover',
@@ -48,8 +47,6 @@ interface ClearPopoverEvent {
 })
 export class AtomicPopover implements InitializableComponent {
   @Element() host!: HTMLElement;
-  private hasValues?: () => boolean;
-  private numberOfSelectedValues?: () => number;
   @InitializeBindings()
   public bindings!: Bindings;
   private searchStatus!: SearchStatus;
@@ -63,7 +60,7 @@ export class AtomicPopover implements InitializableComponent {
   @State()
   public error!: Error;
   @State() private isOpen = false;
-  @State() private facetInfo?: FacetInfo;
+  @State() private childFacet?: PopoverChildFacet;
 
   @Event({
     eventName: 'atomic/closePopovers',
@@ -90,43 +87,38 @@ export class AtomicPopover implements InitializableComponent {
 
   @Listen('atomic/closePopovers', {target: 'document'})
   public popOpened(event: CustomEvent<ClearPopoverEvent>) {
-    if (event.detail.ownId !== this.facetInfo?.facetId) {
+    if (event.detail.popoverEmitterId !== this.childFacet?.facetId) {
       this.isOpen = false;
     }
   }
 
   @Listen('atomic/initializePopover')
-  public initializePopover(event: CustomEvent<InitializePopoverEvent>) {
-    if (this.facetInfo || !event.detail) {
+  public initializePopover(event: CustomEvent<PopoverChildFacet>) {
+    if (this.childFacet || !event.detail) {
       return;
     }
 
-    this.facetInfo = event.detail.facetInfo;
-    this.facetInfo.element.classList.add(popoverClass);
-    this.hasValues = event.detail.getHasValues;
-    this.numberOfSelectedValues = event.detail.getNumberOfSelectedValues;
+    this.childFacet = event.detail;
+    this.childFacet.element.classList.add(popoverClass);
   }
 
   private get popoverId() {
-    return `${this.facetInfo?.facetId}-popover`;
+    return `${this.childFacet?.facetId}-popover`;
   }
 
   private togglePopover() {
     if (!this.isOpen) {
-      this.closePopovers.emit({ownId: this.facetInfo?.facetId});
+      this.closePopovers.emit({popoverEmitterId: this.childFacet?.facetId});
     }
 
     this.isOpen = !this.isOpen;
   }
 
   private renderDropdownButton() {
-    const label = this.bindings.i18n.t(this.facetInfo!.label);
-    const hasSelectedValues = !!this.numberOfSelectedValues?.();
-    const count = this.numberOfSelectedValues?.().toLocaleString();
-    const ariaLabel = this.bindings.i18n.t(
-      this.isOpen ? 'close-popover' : 'open-popover',
-      {label}
-    );
+    const label = this.bindings.i18n.t(this.childFacet!.label);
+    const hasSelectedValues = !!this.childFacet!.numberOfSelectedValues();
+    const count = this.childFacet!.numberOfSelectedValues().toLocaleString();
+    const ariaLabel = this.bindings.i18n.t('popover', {label});
 
     return (
       <Button
@@ -190,15 +182,16 @@ export class AtomicPopover implements InitializableComponent {
       );
     }
 
-    if (!this.searchStatus.state.hasResults || !this.hasValues?.()) {
+    if (!this.searchStatus.state.hasResults || !this.childFacet?.hasValues()) {
       return <Hidden></Hidden>;
     }
 
     return (
-      <div id={this.popoverId} class="relative">
+      <div class="relative">
         {this.renderDropdownButton()}
         <div
-          part="slot-wrapper"
+          id={this.popoverId}
+          part="facet"
           class={`absolute pt-0.5 z-10 ${this.isOpen ? 'block' : 'hidden'}`}
         >
           <slot></slot>

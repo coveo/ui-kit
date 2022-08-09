@@ -1121,13 +1121,9 @@
     "en": "No",
     "fr": "Non"
   },
-  "open-popover": {
-    "en": "Open the popover menu for the {{label}} facet",
-    "fr": "Ouvrir le menu contextuel de la facette {{label}}"
-  },
-  "close-popover": {
-    "en": "Close the popover menu for the {{label}} facet",
-    "fr": "Fermer le menu contextuel de la facette {{label}}"
+  "popover": {
+    "en": "Popover menu for the {{label}} facet",
+    "fr": "Menu contextuel de la facette {{label}}"
   },
   "number-input-minimum": {
     "en": "Enter a minimum numerical value for the {{label}} facet",
