@@ -1,4 +1,5 @@
 import 'cypress-plugin-tab';
+import 'cypress-axe';
 import './commands';
 
 Cypress.on('uncaught:exception', (err) => {
