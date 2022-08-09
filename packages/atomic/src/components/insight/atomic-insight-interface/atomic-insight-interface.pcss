@@ -1,7 +1,8 @@
 @import '../../../global/global.pcss';
 
 :host([widget]) {
-  max-height: calc(100% - 4rem);
-  overflow: scroll;
+  max-height: 100%;
   box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto 8fr 1fr;
 }

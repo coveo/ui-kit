@@ -1,9 +1,12 @@
 import {NumberOfResultsParam} from '../../../platform-service-params';
 import {
   ConstantQueryParam,
+  EnableDidYouMeanParam,
   FacetsParam,
+  FieldsToIncludeParam,
   FirstResultParam,
   QueryParam,
+  SortCriteriaParam,
 } from '../../../search/search-api-params';
 import {
   baseInsightRequest,
@@ -17,6 +20,9 @@ export type InsightQueryRequest = InsightParam &
   QueryParam &
   FirstResultParam &
   NumberOfResultsParam &
+  SortCriteriaParam &
+  FieldsToIncludeParam &
+  EnableDidYouMeanParam &
   ConstantQueryParam;
 
 interface CaseContextParam {

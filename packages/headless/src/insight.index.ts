@@ -23,6 +23,7 @@ export type {LogLevel} from './app/logger';
 export * from './features/insight-interface/insight-interface-actions-loader';
 export * from './features/insight-search/insight-search-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
+export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 export * from './features/recent-results/recent-results-actions-loader';
 export * from './features/case-context/case-context-actions-loader';
@@ -296,5 +297,11 @@ export {
   buildCriterionExpression,
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
+
+export type {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+} from './api/search/date/relative-date';
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';

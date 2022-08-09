@@ -2,6 +2,7 @@ import {generateComponentHTML} from '../../fixtures/test-fixture';
 import {
   resultChildrenComponent,
   resultChildrenTemplateComponent,
+  loadMoreChildrenComponent,
 } from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
 import {resultSectionTags} from './result-list-selectors';
@@ -34,4 +35,12 @@ export function buildResultChildren(grandChildren?: HTMLElement): HTMLElement {
   childrenTemplate.appendChild(template);
   children.appendChild(childrenTemplate);
   return children;
+}
+
+export function buildLoadMoreChildren(): HTMLElement[] {
+  return [
+    generateComponentHTML(loadMoreChildrenComponent),
+    generateComponentHTML(resultLinkComponent),
+    buildResultChildren(buildResultChildren()),
+  ];
 }

@@ -1,40 +1,41 @@
-import {
-  buildDateFacet,
-  buildDateFilter,
-  buildDateRange,
-  buildFacetConditionsManager,
-  buildSearchStatus,
-  DateFacet,
-  DateFacetOptions,
-  DateFacetState,
-  DateFilter,
-  DateFilterState,
-  DateRangeRequest,
-  deserializeRelativeDate,
-  loadDateFacetSetActions,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+
 import {
   FocusTarget,
   FocusTargetController,
-} from '../../../../utils/accessibility-utils';
+} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {MapProp} from '../../../../utils/props-utils';
-import {randomID} from '../../../../utils/utils';
-import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+} from '../../../utils/initialization-utils';
+import {MapProp} from '../../../utils/props-utils';
+import {randomID} from '../../../utils/utils';
+import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
+import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
+import {
+  buildInsightDateFacet,
+  buildInsightDateFilter,
+  buildInsightDateRange,
+  buildInsightFacetConditionsManager,
+  buildInsightSearchStatus,
+  deserializeInsightRelativeDate,
+  InsightDateFacet,
+  InsightDateFacetOptions,
+  InsightDateFacetState,
+  InsightDateFilter,
+  InsightDateFilterState,
+  InsightDateRangeRequest,
+  InsightSearchStatus,
+  InsightSearchStatusState,
+  loadInsightDateFacetSetActions,
+} from '..';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
- * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
+ * An `atomic-insight-timeframe-facet` displays a facet of the results for the current query as date intervals.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -54,36 +55,40 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part input-end - The input for the ending value of the custom date range.
  * @part input-label - The label for both the start and end input.
  * @part input-apply-button - The apply button for the custom range.
+ *
+ * @internal
  */
 @Component({
-  tag: 'atomic-timeframe-facet',
-  styleUrl: './atomic-timeframe-facet.pcss',
+  tag: 'atomic-insight-timeframe-facet',
+  styleUrl: './atomic-insight-timeframe-facet.pcss',
   shadow: true,
 })
-export class AtomicTimeframeFacet
-  implements InitializableComponent, BaseFacet<DateFacet>
+export class AtomicInsightTimeframeFacet
+  implements
+    InitializableComponent<InsightBindings>,
+    BaseFacet<InsightDateFacet>
 {
-  @InitializeBindings() public bindings!: Bindings;
-  public facetForDateRange?: DateFacet;
-  public facetForDatePicker?: DateFacet;
+  @InitializeBindings() public bindings!: InsightBindings;
+  public facetForDateRange?: InsightDateFacet;
+  public facetForDatePicker?: InsightDateFacet;
 
   private timeframeFacetCommon!: TimeframeFacetCommon;
-  public filter?: DateFilter;
-  public searchStatus!: SearchStatus;
+  public filter?: InsightDateFilter;
+  public searchStatus!: InsightSearchStatus;
   @Element() private host!: HTMLElement;
 
   @BindStateToController('facetForDateRange')
   @State()
-  public facetState!: DateFacetState;
+  public facetState!: InsightDateFacetState;
   @BindStateToController('facetForDatePicker')
   @State()
-  public facetForDatePickerState?: DateFacetState;
+  public facetForDatePickerState?: InsightDateFacetState;
   @BindStateToController('filter')
   @State()
-  public filterState?: DateFilterState;
+  public filterState?: InsightDateFilterState;
   @BindStateToController('searchStatus')
   @State()
-  public searchStatusState!: SearchStatusState;
+  public searchStatusState!: InsightSearchStatusState;
   @State() public error!: Error;
 
   /**
@@ -127,19 +132,19 @@ export class AtomicTimeframeFacet
    * The required facets and values for this facet to be displayed.
    * Examples:
    * ```html
-   * <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>
+   * <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>
    *
    * <!-- To show the facet when any value is selected in the facet with id "abc": -->
-   * <atomic-timeframe-facet
+   * <atomic-insight-timeframe-facet
    *   depends-on-abc
    *   ...
-   * ></atomic-timeframe-facet>
+   * ></atomic-insight-timeframe-facet>
    *
    * <!-- To show the facet when value "doc" is selected in the facet with id "abc": -->
-   * <atomic-timeframe-facet
+   * <atomic-insight-timeframe-facet
    *   depends-on-abc="doc"
    *   ...
-   * ></atomic-timeframe-facet>
+   * ></atomic-insight-timeframe-facet>
    * ```
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
@@ -157,20 +162,20 @@ export class AtomicTimeframeFacet
       dependsOn: this.dependsOn,
       withDatePicker: this.withDatePicker,
       buildDependenciesManager: () =>
-        buildFacetConditionsManager(this.bindings.engine, {
+        buildInsightFacetConditionsManager(this.bindings.engine, {
           facetId:
             this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
           conditions: parseDependsOn(this.dependsOn),
         }),
-      buildDateRange,
+      buildDateRange: buildInsightDateRange,
       getSearchStatusState: () => this.searchStatusState,
-      deserializeRelativeDate,
+      deserializeRelativeDate: deserializeInsightRelativeDate,
       initializeFacetForDatePicker: () => this.initializeFacetForDatePicker(),
-      initializeFacetForDateRange: (values: DateRangeRequest[]) =>
+      initializeFacetForDateRange: (values: InsightDateRangeRequest[]) =>
         this.initializeFacetForDateRange(values),
       initializeFilter: () => this.initializeFilter(),
     });
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
   public disconnectedCallback() {
@@ -178,7 +183,7 @@ export class AtomicTimeframeFacet
   }
 
   private initializeFacetForDatePicker() {
-    this.facetForDatePicker = buildDateFacet(this.bindings.engine, {
+    this.facetForDatePicker = buildInsightDateFacet(this.bindings.engine, {
       options: {
         numberOfValues: 1,
         generateAutomaticRanges: true,
@@ -191,8 +196,8 @@ export class AtomicTimeframeFacet
     return this.facetForDatePicker;
   }
 
-  private initializeFacetForDateRange(values: DateRangeRequest[]) {
-    const options: DateFacetOptions = {
+  private initializeFacetForDateRange(values: InsightDateRangeRequest[]) {
+    const options: InsightDateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       currentValues: values,
@@ -201,13 +206,16 @@ export class AtomicTimeframeFacet
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
     };
-    this.facetForDateRange = buildDateFacet(this.bindings.engine, {options});
+
+    this.facetForDateRange = buildInsightDateFacet(this.bindings.engine, {
+      options,
+    });
     this.facetId = this.facetForDateRange.state.facetId;
     return this.facetForDateRange;
   }
 
   private initializeFilter() {
-    this.filter = buildDateFilter(this.bindings.engine, {
+    this.filter = buildInsightDateFilter(this.bindings.engine, {
       options: {
         facetId: this.facetId ? `${this.facetId}_input` : undefined,
         field: this.field,
@@ -224,7 +232,7 @@ export class AtomicTimeframeFacet
   public applyDateInput() {
     this.facetId &&
       this.bindings.engine.dispatch(
-        loadDateFacetSetActions(
+        loadInsightDateFacetSetActions(
           this.bindings.engine
         ).deselectAllDateFacetValues(this.facetId)
       );
