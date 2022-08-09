@@ -123,6 +123,10 @@ export class AtomicPopover implements InitializableComponent {
     const label = this.bindings.i18n.t(this.facetInfo!.label);
     const hasSelectedValues = !!this.numberOfSelectedValues?.();
     const count = this.numberOfSelectedValues?.().toLocaleString();
+    const ariaLabel = this.bindings.i18n.t(
+      this.isOpen ? 'close-popover' : 'open-popover',
+      {label}
+    );
 
     return (
       <Button
@@ -130,7 +134,7 @@ export class AtomicPopover implements InitializableComponent {
         onClick={() => this.togglePopover()}
         part="popover-button"
         ariaExpanded={`${this.isOpen}`}
-        ariaLabel={`Pop-up filter on ${label} facet`} // TODO: localize for show/hide
+        ariaLabel={ariaLabel}
         ariaControls={this.popoverId}
         class={`rounded flex box-border h-full items-center min-w-[6rem] max-w-[15rem] p-2.5 group hover:border-primary-light focus-visible:border-primary-light ${
           this.isOpen
