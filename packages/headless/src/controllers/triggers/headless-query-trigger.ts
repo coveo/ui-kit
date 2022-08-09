@@ -67,6 +67,10 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
         const currentTrigger = getState().triggers.query;
         const currentQuery = getState().query.q;
 
+        if (currentQuery === currentTrigger) {
+          return;
+        }
+
         const hasQueryBeenTriggered = !!currentTrigger;
         if (hasQueryBeenTriggered) {
           originalQuery = currentQuery;

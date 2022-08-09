@@ -110,7 +110,7 @@ describe('QueryTrigger', () => {
       expect(queryTrigger.state.newQuery).toEqual(newQuery);
     });
 
-    describe('when the corrected search resolves', () => {
+    describe('when the search resolves', () => {
       beforeEach(() => {
         listener.mockReset();
         const [firstListener] = registeredListeners();
@@ -120,7 +120,7 @@ describe('QueryTrigger', () => {
         firstListener();
       });
 
-      it('it does not call the listener', () => {
+      it("it doesn't call the listener", () => {
         expect(listener).toHaveBeenCalledTimes(0);
       });
 
@@ -128,7 +128,7 @@ describe('QueryTrigger', () => {
         expect(queryTrigger.state.wasQueryModified).toEqual(true);
       });
 
-      describe('when a different search is performed', () => {
+      describe('then a different search is performed', () => {
         beforeEach(() => {
           const [firstListener] = registeredListeners();
 
