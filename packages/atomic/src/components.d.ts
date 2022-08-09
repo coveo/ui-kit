@@ -16,6 +16,7 @@ import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
+import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/search/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
@@ -539,7 +540,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicInsightStore>;
+        "store"?: AtomicInsightStore;
     }
     interface AtomicInsightResultList {
         /**
@@ -2619,7 +2620,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicInsightStore>;
+        "store"?: AtomicInsightStore;
     }
     interface AtomicInsightResultList {
         /**
