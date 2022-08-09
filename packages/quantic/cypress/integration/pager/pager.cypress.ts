@@ -1,5 +1,6 @@
 import {configure} from '../../page-objects/configurator';
 import {
+  getAlias,
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
@@ -9,7 +10,7 @@ import {PagerActions as Actions} from './pager-actions';
 import {stubConsoleError} from '../console-selectors';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {scope} from '../../reporters/detailed-collector';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 
 interface PagerOptions {
   useCase: string;
@@ -23,12 +24,12 @@ describe('quantic-pager', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
-    if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
-    }
     if (options.useCase !== useCaseEnum.search) {
       cy.wait(1000);
       performSearch();
+    }
+    if (waitForSearch) {
+      cy.wait(getAlias(options.useCase));
     }
   }
 
@@ -50,7 +51,7 @@ describe('quantic-pager', () => {
     });
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       it('should not render before results have returned', () => {
         setupWithPauseBeforeSearch(param.useCase);
@@ -62,13 +63,10 @@ describe('quantic-pager', () => {
 
       describe('with default options', () => {
         it('should work as expected', () => {
-          visitPager(
-            {
-              numberOfPages: 5,
-              useCase: param.useCase,
-            },
-            param.waitForSearch
-          );
+          visitPager({
+            numberOfPages: 5,
+            useCase: param.useCase,
+          });
 
           scope('when loading the page', () => {
             Expect.displayPrevious(true);
@@ -99,9 +97,7 @@ describe('quantic-pager', () => {
 
           scope('when performing a new search query', () => {
             performSearch();
-            param.useCase === useCaseEnum.search
-              ? cy.wait(InterceptAliases.Search)
-              : cy.wait(1000);
+            cy.wait(getAlias(param.useCase));
             Expect.selectedPageContains(1);
           });
         });
@@ -109,13 +105,10 @@ describe('quantic-pager', () => {
 
       describe('with custom number of pages', () => {
         it('should display the right number of pages', () => {
-          visitPager(
-            {
-              numberOfPages: 10,
-              useCase: param.useCase,
-            },
-            param.waitForSearch
-          );
+          visitPager({
+            numberOfPages: 10,
+            useCase: param.useCase,
+          });
 
           Expect.numberOfPages(10);
         });

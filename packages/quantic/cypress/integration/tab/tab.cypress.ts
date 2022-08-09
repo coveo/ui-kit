@@ -7,7 +7,7 @@ import {
 import {TabExpectations as Expect} from './tab-expectations';
 import {TabActions as Actions} from './tab-actions';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 
 interface TabOptions {
   label: string;
@@ -53,7 +53,7 @@ describe('quantic-tab', () => {
     configure(options);
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       describe('with active tab', () => {
         beforeEach(() => {

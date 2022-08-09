@@ -6,7 +6,6 @@ import {
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
-  routeMatchers,
 } from '../../../page-objects/search';
 import {scope} from '../../../reporters/detailed-collector';
 
@@ -28,13 +27,13 @@ describe('quantic-timeframe-facet', () => {
   const pageUrl = 's/quantic-timeframe-facet';
 
   const validRange = {
-    start: '01/01/2000',
-    end: '31/12/2000',
+    start: '2000-01-01',
+    end: '2000-12-31',
     filter: '2000/01/01@00:00:00..2000/12/31@23:59:59',
   };
   const invalidRange = {
-    start: '31/12/2000',
-    end: '01/01/2000',
+    start: '2000-12-31',
+    end: '2000-01-01',
     filter: '2000/12/31@00:00:00..2000/01/01@23:59:59',
   };
 
@@ -122,7 +121,9 @@ describe('quantic-timeframe-facet', () => {
 
             Expect.numberOfSelectedValues(1);
             Expect.selectedValueContains('Past year');
-            Expect.urlHashContains('Date', 'past-1-year..now');
+            if (param.useCase === useCaseEnum.search) {
+              Expect.urlHashContains('Date', 'past-1-year..now');
+            }
             Expect.displayClearButton(true);
             Expect.logSelectedValue('Date', 'past-1-year..now');
           });
@@ -132,7 +133,9 @@ describe('quantic-timeframe-facet', () => {
 
             Expect.numberOfSelectedValues(1);
             Expect.selectedValueContains('Last decade');
-            Expect.urlHashContains('Date', 'past-10-year..now');
+            if (param.useCase === useCaseEnum.search) {
+              Expect.urlHashContains('Date', 'past-10-year..now');
+            }
             Expect.displayClearButton(true);
             Expect.logSelectedValue('Date', 'past-10-year..now');
           });

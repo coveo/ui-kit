@@ -58,7 +58,7 @@ export const routeMatchers = {
   querySuggest: '**/rest/search/v2/querySuggest?*',
   search: '**/rest/search/v2?*',
   facetSearch: '**/rest/search/v2/facet?*',
-  insight: '**rest/organizations/*/insight/v1/configs/*/search',
+  insight: '**/rest/organizations/*/insight/v1/configs/*/search',
   html: '**/rest/search/v2/html?*',
 };
 

@@ -9,7 +9,7 @@ import {ResultListExpectations as Expect} from './result-list-expectations';
 import {getNextResults} from '../../page-objects/actions/action-get-next-results';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {scope} from '../../reporters/detailed-collector';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 
 interface ResultListOptions {
   useCase: string;
@@ -48,7 +48,7 @@ describe('quantic-resultlist', () => {
     });
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       it('should render a placeholder before results have returned', () => {
         setupWithPauseBeforeSearch(param.useCase);

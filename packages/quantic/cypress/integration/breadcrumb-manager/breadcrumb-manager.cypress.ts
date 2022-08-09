@@ -5,7 +5,7 @@ import {
   InterceptAliases,
   interceptSearch,
 } from '../../page-objects/search';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 import {scope} from '../../reporters/detailed-collector';
 import {BreadcrumbManagerActions as Actions} from './breadcrumb-manager-actions';
 import {BreadcrumbManagerExpectations as Expect} from './breadcrumb-manager-expectations';
@@ -47,7 +47,7 @@ describe('quantic-breadcrumb-manager', () => {
     configure();
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       describe('with default values', () => {
         it('should work as expected', () => {
@@ -195,10 +195,10 @@ describe('quantic-breadcrumb-manager', () => {
             Expect.facetBreadcrumb.numberOfValues(1);
 
             Actions.facet.clickShowMoreButton();
-            cy.wait(InterceptAliases.Search);
+            cy.wait(getAlias(param.useCase));
 
             Actions.facet.selectLastLinkValue();
-            cy.wait(InterceptAliases.Search);
+            cy.wait(getAlias(param.useCase));
 
             Expect.facetBreadcrumb.numberOfValues(1);
           });

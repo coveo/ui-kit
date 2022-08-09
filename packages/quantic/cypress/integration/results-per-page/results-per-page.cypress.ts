@@ -4,7 +4,7 @@ import {ResultsPerPageExpectations as Expect} from './results-per-page-expectati
 import {ResultsPerPageActions as Actions} from './results-per-page-actions';
 import {stubConsoleError} from '../console-selectors';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 
 interface ResultsPerPageOptions {
   initialChoice: number;
@@ -47,7 +47,7 @@ describe('quantic-result-per-page', () => {
     configure(options);
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       describe('with default options', () => {
         it('should work as expected', () => {

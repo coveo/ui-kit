@@ -12,7 +12,7 @@ import {
   interceptSearch,
 } from '../../../page-objects/search';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
-import {uesCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
 
 interface CategoryFacetOptions {
   field: string;
@@ -143,7 +143,7 @@ describe('quantic-category-facet', () => {
     cy.wait(InterceptAliases.UA.Facet.Select);
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       describe('with default category facet', () => {
         it('should work as expected', () => {
@@ -213,7 +213,7 @@ describe('quantic-category-facet', () => {
           });
         });
 
-        describe('when selecting value on 4nd level of data', () => {
+        describe('when selecting value on 4th level of data', () => {
           it('should redirect user up to parent level', () => {
             setupGoDeeperFourLevels(param.useCase);
 

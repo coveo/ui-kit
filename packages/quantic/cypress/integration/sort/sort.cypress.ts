@@ -1,14 +1,13 @@
 import {configure} from '../../page-objects/configurator';
 import {
   getAlias,
-  InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../page-objects/search';
 import {SortExpectations as Expect} from './sort-expectations';
 import {SortActions as Actions} from './sort-actions';
 import {SearchExpectations} from '../search-expectations';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 describe('quantic-sort', () => {
@@ -60,7 +59,7 @@ describe('quantic-sort', () => {
     configure({useCase: useCase});
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       it('should not render before results have returned', () => {
         setupWithPauseBeforeSearch(param.useCase);

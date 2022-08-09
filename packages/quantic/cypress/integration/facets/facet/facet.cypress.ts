@@ -14,7 +14,7 @@ import {
 } from '../../../page-objects/search';
 import {FacetActions as Actions} from './facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
-import {uesCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 
 interface FacetOptions {
@@ -92,7 +92,7 @@ describe('Facet Test Suite', () => {
     cy.wait(InterceptAliases.Search);
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       describe('with default settings', () => {
         it('should work as expected', () => {
@@ -154,7 +154,7 @@ describe('Facet Test Suite', () => {
             label: defaultLabel,
             numberOfValues: defaultNumberOfValues,
             useCase: param.useCase,
-            noSearch: !(param.useCase === useCaseEnum.search),
+            noSearch: param.useCase !== useCaseEnum.search,
           });
         }
 
@@ -680,7 +680,7 @@ describe('Facet Test Suite', () => {
                 label: defaultLabel,
                 numberOfValues: smallNumberOfValues,
                 useCase: param.useCase,
-                noSearch: !(param.useCase === useCaseEnum.search),
+                noSearch: param.useCase !== useCaseEnum.search,
               });
               Actions.clickShowMoreButton();
             }

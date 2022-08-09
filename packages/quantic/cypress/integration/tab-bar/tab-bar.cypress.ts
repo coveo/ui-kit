@@ -3,7 +3,7 @@ import {getAlias, interceptSearch} from '../../page-objects/search';
 import {TabBarExpectations as Expect} from './tab-bar-expectations';
 import {TabBarActions as Actions} from './tab-bar-actions';
 import {scope} from '../../reporters/detailed-collector';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 describe('quantic-tab-bar', () => {
@@ -30,7 +30,7 @@ describe('quantic-tab-bar', () => {
     }
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       describe("when the container's width can fit all the tabs", () => {
         it('should display all the tabs without displaying the dropdown list', () => {

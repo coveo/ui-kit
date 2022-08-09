@@ -12,7 +12,7 @@ import {
 } from '../../../page-objects/search';
 import {NumericFacetActions as Actions} from './numeric-facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
-import {uesCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 
 interface NumericFacetOptions {
@@ -71,14 +71,16 @@ describe('quantic-numeric-facet', () => {
     cy.wait(InterceptAliases.Search);
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       describe('with default numeric facet', () => {
         it('should work as expected', () => {
           visitNumericFacetPage({...defaultSettings, useCase: param.useCase});
 
           scope('on initial load', () => {
-            Expect.logFacetLoad();
+            if (param.useCase === useCaseEnum.search) {
+              Expect.logFacetLoad();
+            }
             Expect.displayFacet(true);
             Expect.displayLabel(true);
             Expect.displaySearchForm(false);

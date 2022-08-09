@@ -1,7 +1,6 @@
 import {configure} from '../../page-objects/configurator';
 import {
   getAlias,
-  InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
   mockSearchNoResults,
@@ -12,7 +11,7 @@ import {
   setPageSizeValue,
   setResultsPerPage,
 } from '../../page-objects/actions/action-set-results-per-page';
-import {uesCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 describe('quantic-summary', () => {
@@ -45,7 +44,7 @@ describe('quantic-summary', () => {
     configure();
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       it('should not render before results have returned', () => {
         setupWithPauseBeforeSearch(param.useCase);

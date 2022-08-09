@@ -3,7 +3,7 @@ export const enum useCaseEnum {
   insight = 'insight',
 }
 
-export const uesCaseParamTest = [
+export const useCaseParamTest = [
   {
     useCase: useCaseEnum.search,
     label: 'with search use case',
