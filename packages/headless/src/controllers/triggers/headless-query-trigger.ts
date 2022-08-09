@@ -56,25 +56,36 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
   const getState = () => engine.state;
 
-  let previousQueryTrigger: string = getState().triggers.query;
-  let originalQuery: string = getState().query.q;
+  let originalQuery = '';
+  let newQuery = '';
 
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        const hasChanged = previousQueryTrigger !== this.state.newQuery;
-        previousQueryTrigger = this.state.newQuery;
+        const currentTrigger = getState().triggers.query;
+        const currentQuery = getState().query.q;
 
-        if (hasChanged && this.state.newQuery) {
-          originalQuery = getState().query.q;
+        const hasQueryBeenTriggered = !!currentTrigger;
+
+        if (hasQueryBeenTriggered) {
+          originalQuery = currentQuery;
+          newQuery = currentTrigger;
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
-            q: getState().triggers.query,
+            q: currentTrigger,
           };
           dispatch(updateQuery(updateQueryPayload));
           listener();
           dispatch(executeSearch(logTriggerQuery()));
+          return;
+        }
+
+        const hasNewQueryWhichOverridesCorrectedQuery =
+          this.state.wasQueryModified && currentQuery !== newQuery;
+        if (hasNewQueryWhichOverridesCorrectedQuery) {
+          originalQuery = newQuery = '';
+          listener();
         }
       };
       strictListener();
@@ -83,9 +94,9 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
     get state() {
       return {
-        newQuery: getState().triggers.query,
+        newQuery,
         originalQuery,
-        wasQueryModified: getState().triggers.query !== '',
+        wasQueryModified: originalQuery !== newQuery,
       };
     },
   };
