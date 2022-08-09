@@ -2858,6 +2858,7 @@ declare namespace LocalJSX {
         "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicPopover {
+        "onAtomic/closePopovers"?: (event: CustomEvent<ClearPopoverEvent>) => void;
     }
     interface AtomicQueryError {
     }

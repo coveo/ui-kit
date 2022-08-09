@@ -24,6 +24,7 @@ import SortIcon from '../../../images/sort.svg';
 import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {BaseFacetElement} from '../../common/facets/facet-common';
+import {popoverClass} from '../facets/atomic-popover/popover-type';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -115,6 +116,7 @@ export class AtomicRefineModal implements InitializableComponent {
     sortedFacetsElements.forEach((facetElement) => {
       const clone = facetElement.cloneNode(true) as BaseFacetElement;
       clone.isCollapsed = true;
+      clone.classList.remove(popoverClass);
       divSlot.append(clone);
     });
 

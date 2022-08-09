@@ -4,7 +4,15 @@ import {
   SearchStatusState,
   FacetState,
 } from '@coveo/headless';
-import {Component, h, Listen, State, Element} from '@stencil/core';
+import {
+  Component,
+  h,
+  Listen,
+  State,
+  Element,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -14,7 +22,7 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import {InitializePopoverEvent} from './popover-event';
+import {InitializePopoverEvent, popoverClass} from './popover-type';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 
 interface ClearPopoverEvent {
@@ -54,8 +62,13 @@ export class AtomicPopover implements InitializableComponent {
   public facetState!: FacetState;
   @State()
   public error!: Error;
-  @State() private isMenuVisible = false;
+  @State() private isOpen = false;
   @State() private facetInfo?: FacetInfo;
+
+  @Event({
+    eventName: 'atomic/closePopovers',
+  })
+  private closePopovers!: EventEmitter<ClearPopoverEvent>;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -75,10 +88,10 @@ export class AtomicPopover implements InitializableComponent {
     }
   }
 
-  @Listen('atomic/clearPopovers', {target: 'document'})
+  @Listen('atomic/closePopovers', {target: 'document'})
   public popOpened(event: CustomEvent<ClearPopoverEvent>) {
     if (event.detail.ownId !== this.facetInfo?.facetId) {
-      this.isMenuVisible = false;
+      this.isOpen = false;
     }
   }
 
@@ -89,7 +102,7 @@ export class AtomicPopover implements InitializableComponent {
     }
 
     this.facetInfo = event.detail.facetInfo;
-    this.facetInfo.element.classList.add('popover-nested');
+    this.facetInfo.element.classList.add(popoverClass);
     this.getHasValues = event.detail.getHasValues;
     this.getNumberOfSelectedValues = event.detail.getNumberOfSelectedValues;
   }
@@ -99,17 +112,11 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   private popoverOpened() {
-    if (!this.isMenuVisible) {
-      const popoverOpened = new CustomEvent<ClearPopoverEvent>(
-        'atomic/clearPopovers',
-        {
-          detail: {ownId: this.facetInfo?.facetId},
-        }
-      );
-      document.dispatchEvent(popoverOpened);
+    if (!this.isOpen) {
+      this.closePopovers.emit({ownId: this.facetInfo?.facetId});
     }
 
-    this.isMenuVisible = !this.isMenuVisible;
+    this.isOpen = !this.isOpen;
   }
 
   private renderValueButton() {
@@ -118,11 +125,11 @@ export class AtomicPopover implements InitializableComponent {
         style="square-neutral"
         onClick={() => this.popoverOpened()}
         part="popover-button"
-        ariaExpanded={`${this.isMenuVisible}`}
+        ariaExpanded={`${this.isOpen}`}
         ariaLabel={`Pop-up filter on ${this.facetInfo?.label} facet`} // TODO: localize for show/hide
         ariaControls={this.popoverId}
         class={`rounded flex box-border h-full items-center min-w-[6rem] max-w-[15rem] p-2.5 group ${
-          this.isMenuVisible
+          this.isOpen
             ? 'border-primary ring ring-ring-primary text-primary'
             : 'hover:border-primary-light focus-visible:border-primary-light '
         }`}
@@ -131,7 +138,7 @@ export class AtomicPopover implements InitializableComponent {
           title={this.facetInfo?.label}
           part="label"
           class={`truncate mr-0.5 ${
-            this.isMenuVisible
+            this.isOpen
               ? ''
               : 'group-hover:text-primary-light group-focus:text-primary'
           }`}
@@ -144,7 +151,7 @@ export class AtomicPopover implements InitializableComponent {
           class={`truncate text-sm ${
             this.getNumberOfSelectedValues?.() ? '' : 'hidden'
           } ${
-            this.isMenuVisible
+            this.isOpen
               ? 'text-primary'
               : 'text-neutral-dark group-hover:text-primary-light group-focus:text-primary'
           }`}
@@ -157,7 +164,7 @@ export class AtomicPopover implements InitializableComponent {
           part="arrow-icon"
           aria-hidden="true"
           class={`w-2 ml-auto ${
-            this.isMenuVisible
+            this.isOpen
               ? 'rotate-180'
               : 'group-hover:text-primary-light group-focus:text-primary'
           } `}
@@ -168,11 +175,7 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   public render() {
-    if (
-      this.searchStatus.state.hasError ||
-      !this.searchStatus.state.hasResults ||
-      !this.getHasValues?.()
-    ) {
+    if (this.searchStatus.state.hasError) {
       return <Hidden></Hidden>;
     }
 
@@ -181,9 +184,13 @@ export class AtomicPopover implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-10 w-24 my-2 bg-neutral animate-pulse rounded"
+          class="h-8 w-32 bg-neutral animate-pulse rounded"
         ></div>
       );
+    }
+
+    if (!this.searchStatus.state.hasResults || !this.getHasValues?.()) {
+      return <Hidden></Hidden>;
     }
 
     return (
@@ -191,9 +198,7 @@ export class AtomicPopover implements InitializableComponent {
         {this.renderValueButton()}
         <div
           part="slot-wrapper"
-          class={`absolute pt-2 z-10 ${
-            this.isMenuVisible ? 'block' : 'hidden'
-          }`}
+          class={`absolute pt-0.5 z-10 ${this.isOpen ? 'block' : 'hidden'}`}
         >
           <slot></slot>
         </div>

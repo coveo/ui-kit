@@ -47,6 +47,12 @@ export function buildSearchLayout(
       ${cleanStatusSelector} ${layoutSelector} ${sectionSelector('facets')} {
         display: block;
       }
+
+      ${layoutSelector} ${sectionSelector(
+      'horizontal-facets'
+    )} > atomic-popover {
+        display: block;
+      }
     }`;
   };
 

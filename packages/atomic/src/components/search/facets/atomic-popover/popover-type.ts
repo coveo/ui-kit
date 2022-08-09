@@ -5,3 +5,5 @@ export interface InitializePopoverEvent {
   getHasValues: () => boolean;
   getNumberOfSelectedValues: () => number;
 }
+
+export const popoverClass = 'popover-nested';
