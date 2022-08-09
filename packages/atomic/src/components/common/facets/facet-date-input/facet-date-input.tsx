@@ -1,8 +1,8 @@
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {DateFilter, DateFilterState, buildDateRange} from '@coveo/headless';
 import dayjs from 'dayjs';
-import {Button} from '../../../common/button';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {Button} from '../../button';
+import {AnyBindings} from '../../interface/bindings';
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.
@@ -18,7 +18,7 @@ export class FacetDateInput {
   private startRef!: HTMLInputElement;
   private endRef!: HTMLInputElement;
 
-  @Prop() public bindings!: Bindings;
+  @Prop() public bindings!: AnyBindings;
   @Prop() public filter!: DateFilter;
   @Prop() public filterState!: DateFilterState;
   @Prop() public label!: string;

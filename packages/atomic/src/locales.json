@@ -73,6 +73,10 @@
     "en": "Search field with suggestions. Suggestions may be available under this field. To send, press Enter.",
     "fr": "Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée."
   },
+  "search-box-with-suggestions-keyboardless": {
+    "en": "Search field with suggestions. Suggestions may be available under this field. To send, press Enter.",
+    "fr": "Champ de recherche avec suggestions. Des suggestions pourraient être disponibles sous ce champ. Pour envoyer, appuyez sur Entrée."
+  },
   "search-suggestions-single-list": {
     "en": "Search suggestions. To navigate between suggestions, press Up Arrow or Down Arrow. To select a suggestion, press Enter.",
     "fr": "Liste de suggestions de recherche. Pour naviguer entre les suggestions, appuyez sur Flèche Haute ou Flèche Basse. Pour sélectionner une suggestion, appuyez sur Entrée."

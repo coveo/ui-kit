@@ -141,8 +141,10 @@ export type SuccessResponse = {
   success: SearchResponseSuccess;
 };
 
-export function mapSearchResponse(
-  response: SearchAPIClientResponse<SearchResponseSuccess>,
+export function mapSearchResponse<
+  ResponseSuccess extends SearchAPIClientResponse<SearchResponseSuccess>
+>(
+  response: ResponseSuccess,
   mappings: SearchMappings
 ): SuccessResponse | ErrorResponse {
   if ('success' in response) {
