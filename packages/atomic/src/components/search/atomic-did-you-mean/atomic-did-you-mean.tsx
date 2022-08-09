@@ -77,7 +77,7 @@ export class AtomicDidYouMean implements InitializableComponent {
     return (
       // file deepcode ignore ReactSetInnerHtml: This was escaped
       <p
-        class="text-on-background text-lg mb-1"
+        class="text-on-background leading-5 text-lg mb-1"
         part="showing-results-for"
         innerHTML={showingResultsFor}
       ></p>
