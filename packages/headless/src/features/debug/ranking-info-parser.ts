@@ -266,7 +266,7 @@ const parseTermsWeights = (
 
 const parseQREWeights = (value: string): QueryRankingExpressionWeights[] => {
   const REGEX_EXTRACT_QRE_WEIGHTS =
-    /(Expression:\s".*")\sScore:\s(?!0)([0-9]+)\n+/g;
+    /(Expression:\s".*")\sScore:\s(?!0)([-0-9]+)\n+/g;
 
   let qreWeightsRegexResult = REGEX_EXTRACT_QRE_WEIGHTS.exec(value);
 

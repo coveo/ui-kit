@@ -98,11 +98,11 @@ describe('insight search request', () => {
     state.fields.fetchAllFields = true;
     expect(
       (await buildInsightSearchRequest(state)).request.fieldsToInclude
-    ).not.toBeDefined();
+    ).toBeUndefined();
   });
 
   it('when there are no cq expressions in state, cq is undefined', async () => {
-    expect((await buildInsightSearchRequest(state)).request.cq).toBe(undefined);
+    expect((await buildInsightSearchRequest(state)).request.cq).toBeUndefined();
   });
 
   it('when there is an active tab, it sets cq to the active tab expression', async () => {

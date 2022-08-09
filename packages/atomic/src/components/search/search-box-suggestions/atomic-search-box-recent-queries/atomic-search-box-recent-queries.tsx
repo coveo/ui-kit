@@ -137,18 +137,24 @@ export class AtomicSearchBoxRecentQueries {
     return {
       key: 'recent-query-clear',
       content: (
-        <div class="flex justify-between w-full">
+        <div
+          part="recent-query-title-content"
+          class="flex justify-between w-full"
+        >
           <span class="font-bold" part="recent-query-title">
             {this.bindings.i18n.t('recent-searches')}
           </span>
           <span part="recent-query-clear">{this.bindings.i18n.t('clear')}</span>
         </div>
       ),
+      ariaLabel: this.bindings.i18n.t('clear-recent-searches', {
+        interpolation: {escapeValue: false},
+      }),
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
       },
-      part: 'suggestion-divider',
+      part: 'recent-query-title-item suggestion-divider',
       hideIfLast: true,
     };
   }
@@ -158,22 +164,28 @@ export class AtomicSearchBoxRecentQueries {
     return {
       key: `recent-${encodeForDomAttribute(value)}`,
       query: value,
+      part: 'recent-query-item',
       content: (
-        <div class="flex items-center break-all">
+        <div part="recent-query-content" class="flex items-center break-all">
           <atomic-icon
+            part="recent-query-icon"
             icon={this.renderIcon()}
             class="w-4 h-4 mr-2 shrink-0"
           ></atomic-icon>
           {query === '' ? (
-            <span class="break-all line-clamp-2">{value}</span>
+            <span part="recent-query-text" class="break-all line-clamp-2">
+              {value}
+            </span>
           ) : (
             // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
             <span
+              part="recent-query-text"
               class="break-all line-clamp-2"
               // deepcode ignore DOMXSS: Value escaped in upstream code, deepcode ignore ReactSetInnerHtml: This is not React code.
               innerHTML={HighlightUtils.highlightString({
                 content: value,
-                openingDelimiter: '<span class="font-bold">',
+                openingDelimiter:
+                  '<span part="recent-query-text-highlight" class="font-bold">',
                 closingDelimiter: '</span>',
                 highlights: [
                   {
@@ -186,6 +198,10 @@ export class AtomicSearchBoxRecentQueries {
           )}
         </div>
       ),
+      ariaLabel: this.bindings.i18n.t('recent-query-suggestion-label', {
+        query: value,
+        interpolation: {escapeValue: false},
+      }),
       onSelect: () => {
         if (this.bindings.isStandalone) {
           this.bindings.searchBoxController.updateText(value);

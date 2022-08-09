@@ -47,7 +47,11 @@ export class ProductRecommendationAnalyticsProvider
   }
 
   private mapResultsToAnalyticsDocument() {
-    return [];
+    return this.state.productRecommendations?.recommendations.map((r) => ({
+      documentUri: r.documentUri,
+      documentUriHash: r.documentUriHash,
+      permanentid: r.permanentid,
+    }));
   }
 
   private get responseTime() {

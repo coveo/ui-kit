@@ -32,6 +32,7 @@ export type {LogLevel} from './app/logger';
 export * from './features/insight-interface/insight-interface-actions-loader';
 export * from './features/insight-search/insight-search-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
+export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 export * from './features/recent-results/recent-results-actions-loader';
 export * from './features/case-context/case-context-actions-loader';
@@ -83,6 +84,11 @@ export type {
   FacetManager,
 } from './controllers/insight/facet-manager/headless-insight-facet-manager';
 export {buildFacetManager} from './controllers/insight/facet-manager/headless-insight-facet-manager';
+
+export type {
+  CategoryFacetValueRequest,
+  CategoryFacetSortCriterion,
+} from './features/facets/category-facet-set/interfaces/request';
 
 export type {
   CategoryFacetOptions,
@@ -238,10 +244,27 @@ export type {
 } from './controllers/insight/tab/headless-insight-tab';
 export {buildTab} from './controllers/insight/tab/headless-insight-tab';
 
+export type {
+  FacetConditionsManager,
+  FacetConditionsManagerProps,
+  AnyFacetValuesCondition,
+} from './controllers/insight/facet-conditions-manager/headless-facet-conditions-manager';
+export {buildFacetConditionsManager} from './controllers/insight/facet-conditions-manager/headless-facet-conditions-manager';
+
 export type {InsightInterfaceState} from './features/insight-interface/insight-interface-state';
 
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
+
+export type {
+  FacetValueRequest,
+  FacetSortCriterion,
+} from './features/facets/facet-set/interfaces/request';
+
+export type {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from './features/facets/range-facets/generic/interfaces/request';
 
 // Types & Helpers
 export {
@@ -250,5 +273,11 @@ export {
   buildCriterionExpression,
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria';
+
+export type {
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+} from './api/search/date/relative-date';
 
 export {deserializeRelativeDate} from './api/search/date/relative-date';

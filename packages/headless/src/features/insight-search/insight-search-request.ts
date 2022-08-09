@@ -57,24 +57,28 @@ export const buildInsightSearchRequest = (
   });
 };
 
-export const buildInsightFetchMoreResultsRequest = (
+export const buildInsightFetchMoreResultsRequest = async (
   state: StateNeededBySearchRequest
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
+): Promise<MappedSearchRequest<InsightQueryRequest>> => {
+  const mappedRequest = await buildInsightSearchRequest(state);
+  mappedRequest.request = {
+    ...mappedRequest.request,
     firstResult:
       (state.pagination?.firstResult ?? 0) +
       (state.pagination?.numberOfResults ?? 0),
   };
+  return mappedRequest;
 };
 
-export const buildInsightFetchFacetValuesRequest = (
+export const buildInsightFetchFacetValuesRequest = async (
   state: StateNeededBySearchRequest
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
+): Promise<MappedSearchRequest<InsightQueryRequest>> => {
+  const mappedRequest = await buildInsightSearchRequest(state);
+  mappedRequest.request = {
+    ...mappedRequest.request,
     numberOfResults: 0,
   };
+  return mappedRequest;
 };
 
 function getAllFacets(state: StateNeededBySearchRequest) {
