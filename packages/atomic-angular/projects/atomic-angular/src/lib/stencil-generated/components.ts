@@ -567,27 +567,6 @@ export class AtomicInsightResultTemplate {
 }
 
 
-export declare interface AtomicInsightTimeframeFacet extends Components.AtomicInsightTimeframeFacet {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'withDatePicker']
-})
-@Component({
-  selector: 'atomic-insight-timeframe-facet',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'withDatePicker']
-})
-export class AtomicInsightTimeframeFacet {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
 export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
 
 @ProxyCmp({
