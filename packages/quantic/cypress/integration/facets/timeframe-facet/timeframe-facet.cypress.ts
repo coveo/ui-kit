@@ -13,7 +13,7 @@ import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectatio
 import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
 import {SearchExpectations} from '../../search-expectations';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
-import {uesCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
+import {useCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
 
 interface TimeframeFacetOptions {
   field: string;
@@ -95,7 +95,7 @@ describe('quantic-timeframe-facet', () => {
     }).as(getAlias(useCase).substring(1));
   }
 
-  uesCaseParamTest.forEach((param) => {
+  useCaseParamTest.forEach((param) => {
     describe(param.label, () => {
       it('should show placeholder before search completes', () => {
         setupWithPauseBeforeSearch(param.useCase);
