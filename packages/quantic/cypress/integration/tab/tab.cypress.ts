@@ -98,4 +98,20 @@ describe('quantic-tab', () => {
       Expect.activeTabContains(tabs.knowledge.label);
     });
   });
+
+  describe('when using accessibility', () => {
+    it('should be accessible to keyboard', () => {
+      loadFromUrlHash({}, `tab=${tabs.case.label}`);
+
+      // Select tab using the space bar
+      Actions.selectTab(tabs.all.label, ' ');
+      Expect.activeTabContains(tabs.all.label);
+
+      Actions.findTabPressTabPressSpace(tabs.case.label);
+      Expect.activeTabContains(tabs.knowledge.label);
+
+      Actions.findTabPressShiftTabPressSpace(tabs.case.label);
+      Expect.activeTabContains(tabs.all.label);
+    });
+  });
 });

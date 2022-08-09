@@ -62,14 +62,20 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 
-    describe('with screen size increase', () => {
-      before(() => {
-        setupWithOverflowFacets();
-        cy.viewport(7680, 4320);
-      });
-      ScrollableAssertions.assertDisplayScrollable(true);
-      ScrollableAssertions.assertDisplayArrows(false, false);
-    });
+    describe(
+      'with screen size increase',
+      {
+        viewportHeight: 4320,
+        viewportWidth: 7680,
+      },
+      () => {
+        before(() => {
+          setupWithOverflowFacets();
+        });
+        ScrollableAssertions.assertDisplayScrollable(true);
+        ScrollableAssertions.assertDisplayArrows(false, false);
+      }
+    );
   });
   describe('without overflowing segmented facets', () => {
     function setupWithoutOverflowFacets() {
@@ -84,15 +90,20 @@ describe('Segmented Facet Scrollable Test Suites', () => {
       ScrollableAssertions.assertDisplayArrows(false, false);
     });
 
-    describe('with screen size decrease', () => {
-      before(() => {
-        setupWithoutOverflowFacets();
-        cy.viewport(320, 480);
-      });
-
-      ScrollableAssertions.assertDisplayScrollable(true);
-      ScrollableAssertions.assertDisplayArrows(false, true);
-    });
+    describe(
+      'with screen size decrease',
+      {
+        viewportHeight: 320,
+        viewportWidth: 400,
+      },
+      () => {
+        before(() => {
+          setupWithoutOverflowFacets();
+        });
+        ScrollableAssertions.assertDisplayScrollable(true);
+        ScrollableAssertions.assertDisplayArrows(false, true);
+      }
+    );
   });
 
   describe('with invalid segmented facets', () => {

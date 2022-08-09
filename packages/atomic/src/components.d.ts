@@ -379,7 +379,7 @@ export namespace Components {
          */
         "isCollapsed": boolean;
         /**
-          * The non-localized label for the facet. Used in the `atomic-insight-breadbox` component through the bindings store.
+          * The non-localized label for the facet.
          */
         "label": string;
         /**
@@ -2472,7 +2472,7 @@ declare namespace LocalJSX {
          */
         "isCollapsed"?: boolean;
         /**
-          * The non-localized label for the facet. Used in the `atomic-insight-breadbox` component through the bindings store.
+          * The non-localized label for the facet.
          */
         "label"?: string;
         /**
