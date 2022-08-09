@@ -125,6 +125,14 @@
     "en": "Remove inclusion filter on {{value}}",
     "fr": "Enlever le filtre d'inclusion sur {{value}}"
   },
+  "query-suggestion-list": {
+    "en": "Search suggestions. Select one to search.",
+    "fr": "Suggestions de recherche. Sélectionnez-en un pour rechercher."
+  },
+  "tab-search": {
+    "en": "Search for values in the {{label}} tab.",
+    "fr": "Rechercher des valeurs dans la facette {{label}}"
+  },
   "clear": {
     "en": "Clear",
     "fr": "Effacer"
