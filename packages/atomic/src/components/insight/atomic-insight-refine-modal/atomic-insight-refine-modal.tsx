@@ -3,6 +3,7 @@ import {debounce} from 'ts-debounce';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {
+  BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -11,7 +12,13 @@ import {
   InsightBindings,
   InsightInterfaceDimensions,
 } from '../atomic-insight-interface/atomic-insight-interface';
-import {buildInsightFacetManager, InsightFacetManager} from '..';
+import {
+  buildInsightFacetManager,
+  buildInsightQuerySummary,
+  InsightFacetManager,
+  InsightQuerySummary,
+  InsightQuerySummaryState,
+} from '..';
 import {BaseFacetElement} from '../../common/facets/facet-common';
 
 /**
@@ -42,6 +49,10 @@ export class AtomicInsightRefineModal
   @InitializeBindings() public bindings!: InsightBindings;
   @Element() public host!: HTMLElement;
 
+  @BindStateToController('querySummary')
+  @State()
+  private querySummaryState!: InsightQuerySummaryState;
+
   @State()
   public error!: Error;
 
@@ -57,6 +68,7 @@ export class AtomicInsightRefineModal
   private resizeObserver?: ResizeObserver;
   private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
   private scrollCallback = () => this.debouncedUpdateDimensions();
+  public querySummary!: InsightQuerySummary;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -99,6 +111,7 @@ export class AtomicInsightRefineModal
 
   public initialize() {
     this.facetManager = buildInsightFacetManager(this.bindings.engine);
+    this.querySummary = buildInsightQuerySummary(this.bindings.engine);
   }
 
   private renderHeader() {
@@ -130,6 +143,30 @@ export class AtomicInsightRefineModal
     ];
   }
 
+  private renderFooter() {
+    return (
+      <div slot="footer">
+        <Button
+          style="primary"
+          part="footer-button"
+          class="w-full p-3 flex text-lg justify-center"
+          onClick={() => (this.isOpen = false)}
+        >
+          <span class="truncate mr-1">
+            {this.bindings.i18n.t('view-results')}
+          </span>
+          <span>
+            {this.bindings.i18n.t('between-parentheses', {
+              text: this.querySummaryState.total.toLocaleString(
+                this.bindings.i18n.language
+              ),
+            })}
+          </span>
+        </Button>
+      </div>
+    );
+  }
+
   public render() {
     return (
       <Host>
@@ -149,10 +186,11 @@ export class AtomicInsightRefineModal
           source={this.openButton}
           container={this.host}
           close={() => (this.isOpen = false)}
-          exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper"
+          exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
         >
           {this.renderHeader()}
           {this.renderBody()}
+          {this.renderFooter()}
         </atomic-modal>
       </Host>
     );
