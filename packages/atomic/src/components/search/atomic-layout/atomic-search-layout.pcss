@@ -54,9 +54,11 @@ atomic-search-layout {
   atomic-layout-section[section='horizontal-facets'] {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 0.5rem;
+    margin-bottom: var(--atomic-layout-spacing-y);
+    gap: 0.5rem;
 
     & > atomic-segmented-facet-scrollable,
+    & > atomic-segmented-facet,
     & > atomic-popover {
       max-width: 100%;
     }

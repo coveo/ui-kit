@@ -47,12 +47,6 @@ export function buildSearchLayout(
       ${cleanStatusSelector} ${layoutSelector} ${sectionSelector('facets')} {
         display: block;
       }
-
-      ${layoutSelector} ${sectionSelector(
-      'horizontal-facets'
-    )} > atomic-popover {
-        display: block;
-      }
     }`;
   };
 
@@ -83,7 +77,17 @@ export function buildSearchLayout(
     }`;
   };
 
-  return [display, facets(), refine()]
+  const horizontalFacets = () => {
+    return `${mediaQuerySelector} {
+      ${layoutSelector} ${sectionSelector(
+      'horizontal-facets'
+    )} > atomic-popover {
+        display: block;
+      }
+    }`;
+  };
+
+  return [display, facets(), refine(), horizontalFacets()]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
 }
