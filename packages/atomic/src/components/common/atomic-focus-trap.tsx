@@ -1,11 +1,34 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
-import {
-  defer,
-  getFocusedElement,
-  getParent,
-  isAncestorOf,
-} from '../../utils/utils';
+import {defer, getFocusedElement} from '../../utils/utils';
+
+function getParent(element: Element | ShadowRoot) {
+  if (element.parentNode) {
+    return element.parentNode as Element | ShadowRoot;
+  }
+  if (element instanceof ShadowRoot) {
+    return element.host;
+  }
+  return null;
+}
+
+function contains(
+  ancestor: Element | ShadowRoot,
+  element: Element | ShadowRoot
+): boolean {
+  if (element === ancestor) {
+    return true;
+  }
+  if (
+    element instanceof HTMLElement &&
+    element.assignedSlot &&
+    contains(ancestor, element.assignedSlot)
+  ) {
+    return true;
+  }
+  const parent = getParent(element);
+  return parent === null ? false : contains(ancestor, parent);
+}
 
 /**
  * @internal
@@ -51,10 +74,7 @@ export class AtomicFocusTrap {
       if (sibling === element) {
         return;
       }
-      if (
-        sibling.assignedSlot &&
-        isAncestorOf(this.host, sibling.assignedSlot)
-      ) {
+      if (sibling.assignedSlot && contains(this.host, sibling.assignedSlot)) {
         return;
       }
       this.hide(sibling);
@@ -110,7 +130,7 @@ export class AtomicFocusTrap {
 
     const focusedElement = getFocusedElement();
 
-    if (focusedElement && isAncestorOf(this.host, focusedElement)) {
+    if (focusedElement && contains(this.host, focusedElement)) {
       return;
     }
 
