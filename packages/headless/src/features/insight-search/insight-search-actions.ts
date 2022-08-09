@@ -72,13 +72,18 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
 const fetchFromAPI = async (
   client: InsightAPIClient,
   state: StateNeededByExecuteSearch,
-  request: InsightQueryRequest
+  {request, mappings}: MappedSearchRequest<InsightQueryRequest>
 ) => {
   const startedAt = new Date().getTime();
-  const response = await client.query(request);
+  const response = mapSearchResponse(await client.query(request), mappings);
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
-  return {response, duration, queryExecuted, requestExecuted: request};
+  return {
+    response,
+    duration,
+    queryExecuted,
+    requestExecuted: request,
+  };
 };
 
 export const executeSearch = createAsyncThunk<
@@ -93,13 +98,9 @@ export const executeSearch = createAsyncThunk<
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
-
     const mappedRequest = buildInsightSearchRequest(state);
-    const fetched = await fetchFromAPI(
-      extra.apiClient,
-      state,
-      mappedRequest.request
-    );
+
+    const fetched = await fetchFromAPI(extra.apiClient, state, mappedRequest);
 
     if (isErrorResponse(fetched.response)) {
       dispatch(logQueryError(fetched.response.error));
@@ -176,11 +177,10 @@ export const fetchPage = createAsyncThunk<
     const state = getState();
     addEntryInActionsHistory(state);
 
-    const mappedRequest = buildInsightSearchRequest(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      mappedRequest.request
+      buildInsightSearchRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -210,7 +210,7 @@ export const fetchMoreResults = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      buildInsightFetchMoreResultsRequest(state)
+      await buildInsightFetchMoreResultsRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -244,7 +244,7 @@ export const fetchFacetValues = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      buildInsightFetchFacetValuesRequest(state)
+      await buildInsightFetchFacetValuesRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -310,24 +310,28 @@ const buildInsightSearchRequest = (
   });
 };
 
-const buildInsightFetchMoreResultsRequest = (
+const buildInsightFetchMoreResultsRequest = async (
   state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
+): Promise<MappedSearchRequest<InsightQueryRequest>> => {
+  const mappedRequest = await buildInsightSearchRequest(state);
+  mappedRequest.request = {
+    ...mappedRequest.request,
     firstResult:
       (state.pagination?.firstResult ?? 0) +
       (state.pagination?.numberOfResults ?? 0),
   };
+  return mappedRequest;
 };
 
-const buildInsightFetchFacetValuesRequest = (
+const buildInsightFetchFacetValuesRequest = async (
   state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
+): Promise<MappedSearchRequest<InsightQueryRequest>> => {
+  const mappedRequest = await buildInsightSearchRequest(state);
+  mappedRequest.request = {
+    ...mappedRequest.request,
     numberOfResults: 0,
   };
+  return mappedRequest;
 };
 
 const automaticallyRetryQueryWithCorrection = async (
@@ -346,7 +350,7 @@ const automaticallyRetryQueryWithCorrection = async (
   const fetched = await fetchFromAPI(
     client,
     getState(),
-    await buildInsightSearchRequest(getState()).request
+    await buildInsightSearchRequest(getState())
   );
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
