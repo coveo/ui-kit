@@ -95,6 +95,9 @@ type InitializeBindingsProps = {
   forceUpdate?: boolean;
 };
 
+const renderedAttribute = 'data-atomic-rendered';
+const loadedAttribute = 'data-atomic-loaded';
+
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used on a property named `bindings`.
  * This will automatically fetch the `Bindings` from the parent `atomic-search-interface` or `atomic-external` components.
@@ -135,6 +138,8 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
 
     component.componentWillLoad = function () {
       const element = getElement(this);
+      element.setAttribute(renderedAttribute, 'false');
+      element.setAttribute(loadedAttribute, 'false');
       const event = buildCustomEvent(
         initializeEventName,
         (bindings: SpecificBindings) => {
@@ -173,9 +178,6 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       return componentWillLoad && componentWillLoad.call(this);
     };
 
-    component['hasRendered'] = false;
-    component['hasLoaded'] = false;
-
     component.render = function () {
       if (this.error) {
         return (
@@ -190,32 +192,33 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         return <Hidden></Hidden>;
       }
 
-      component['hasRendered'] = true;
+      getElement(this).setAttribute(renderedAttribute, 'true');
       return render && render.call(this);
     };
 
     component.disconnectedCallback = function () {
-      component['hasRendered'] = false;
-      component['hasLoaded'] = false;
+      const element = getElement(this);
+      element.setAttribute(renderedAttribute, 'false');
+      element.setAttribute(loadedAttribute, 'false');
       unsubscribeLanguage();
       disconnectedCallback && disconnectedCallback.call(this);
     };
 
     component.componentDidRender = function () {
-      if (!component['hasRendered']) {
+      const element = getElement(this);
+      if (element.getAttribute(renderedAttribute) === 'false') {
         return;
       }
 
       componentDidRender && componentDidRender.call(this);
-      if (!component['hasLoaded']) {
+      if (element.getAttribute(loadedAttribute) === 'false') {
+        element.setAttribute(loadedAttribute, 'true');
+        applyFocusVisiblePolyfill(getElement(this));
         componentDidLoad && componentDidLoad.call(this);
-        component['hasLoaded'] = true;
       }
     };
 
-    component.componentDidLoad = function () {
-      applyFocusVisiblePolyfill(getElement(this));
-    };
+    component.componentDidLoad = function () {};
   };
 }
 
