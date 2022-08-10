@@ -60,7 +60,7 @@
     "jsdoc": "3.6.10",
     "jsdoc-tsimport-plugin": "1.0.5",
     "ncp": "2.0.0",
-    "sfdx-cli": "7.150.0",
+    "sfdx-cli": "7.162.0",
     "strip-color": "0.1.0",
     "ts-node": "10.7.0",
     "wait-on": "6.0.1",
