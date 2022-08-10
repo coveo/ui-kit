@@ -137,7 +137,7 @@ export class AtomicPopover implements InitializableComponent {
         <span
           title={label}
           part="value-label"
-          class={`truncate mr-0.5 ${
+          class={`truncate mr-1.5 ${
             this.isOpen
               ? ''
               : 'group-hover:text-primary-light group-focus:text-primary'
@@ -147,7 +147,7 @@ export class AtomicPopover implements InitializableComponent {
         </span>
         <span
           part="value-count"
-          class={`truncate text-sm group-hover:text-primary-light group-focus:text-primary ${
+          class={`truncate mr-1.5 text-sm group-hover:text-primary-light group-focus:text-primary ${
             hasSelectedValues ? '' : 'hidden'
           } ${this.isOpen ? 'text-primary' : 'text-neutral-dark'}`}
         >
