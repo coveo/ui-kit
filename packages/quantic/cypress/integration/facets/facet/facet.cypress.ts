@@ -816,20 +816,23 @@ describe('Facet Test Suite', () => {
   });
 
   describe('with a11y', () => {
-    function setupWithValues() {
+    beforeEach('', () => {
       visitFacetPage(
         {
           field: defaultField,
           label: defaultLabel,
           numberOfValues: defaultNumberOfValues,
         },
-        false
+        true
       );
-    }
-    beforeEach('', () => {
-      setupWithValues();
       cy.injectAxe();
     });
-    CommonAssertion.assertAccessibility(() => cy.get('c-quantic-facet'));
+    it('should be accessible through keyboard', () => {
+      Actions.selectFirstFacetValueWithKeyboardTab();
+      Expect.clearFilterContains('Clear filter');
+      Expect.numberOfSelectedCheckboxValues(1);
+      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+    });
+    //CommonAssertion.assertAccessibility(() => cy.get('c-quantic-facet'));
   });
 });

@@ -11,6 +11,7 @@ import {
 } from '../../../page-objects/search';
 import {NumericFacetActions as Actions} from './numeric-facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
+import * as CommonAssertion from '../../common-assertions';
 
 interface NumericFacetOptions {
   field: string;
@@ -78,13 +79,6 @@ describe('quantic-numeric-facet', () => {
         Expect.numberOfValues(defaultNumberOfValues);
         Expect.numberOfSelectedCheckboxValues(0);
         Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-      });
-
-      scope('testing accessibility', () => {
-        Actions.findCollapseButtonPressTabPressSpace();
-        Expect.displayClearButton(true);
-        Expect.clearFilterContains('Clear filter');
-        Expect.numberOfSelectedCheckboxValues(1);
       });
 
       scope('when selecting a value', () => {
@@ -382,5 +376,23 @@ describe('quantic-numeric-facet', () => {
         Expect.displayValues(false);
       });
     });
+  });
+
+  describe('with a11y', () => {
+    beforeEach('', () => {
+      visitNumericFacetPage(defaultSettings);
+      cy.injectAxe();
+    });
+
+    it('should be accessible through keyboard', () => {
+      Actions.selectFirstNumericFacetValueWithKeyboardTab();
+      Expect.numberOfSelectedCheckboxValues(1);
+      Actions.selectFirstNumericFacetValueWithKeyboardEnter();
+      Expect.numberOfSelectedCheckboxValues(0);
+    });
+
+    //CommonAssertion.assertAccessibility(() =>
+    //  cy.get('c-quantic-numeric-facet')
+    //);
   });
 });

@@ -11,6 +11,7 @@ import {scope} from '../../../reporters/detailed-collector';
 import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
 import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
 import {SearchExpectations} from '../../search-expectations';
+import * as CommonAssertion from '../../common-assertions';
 
 interface TimeframeFacetOptions {
   field: string;

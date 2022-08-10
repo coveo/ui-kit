@@ -22,7 +22,7 @@
           </button>
         </template>
         <template if:false={isCollapsed}>
-          <ul class="slds-has-dividers_around-space slds-var-m-top_medium">
+          <div class="slds-has-dividers_around-space slds-var-m-top_medium">
             <template if:true={withInput}>
               <div class="slds-p-horizontal_x-small">
                 <form onsubmit={onApply} class="facet__search-form slds-grid slds-gutters slds-var-p-bottom_small slds-var-p-top_small">
@@ -74,8 +74,7 @@
                   <template for:each={values} for:item="v">
                     <li class="slds-grid" key={v.value}>
                       <c-quantic-facet-value 
-                        onselectvalue={onSelectValue} 
-                        key={v.key} 
+                        onselectvalue={onSelectValue}  
                         item={v} 
                         is-checked={v.checked}
                         formatting-function={formattingFunction}>
@@ -85,7 +84,7 @@
                 </ul>
               </fieldset>
             </template>
-          </ul>
+          </div>
         </template>
       </c-quantic-card-container>
     </div>

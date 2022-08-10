@@ -18,8 +18,11 @@ const numericFacetActions = (selector: AllFacetSelectors) => {
     submitManualRange: () => {
       selector.searchForm().submit();
     },
-    findCollapseButtonPressTabPressSpace: () => {
+    selectFirstNumericFacetValueWithKeyboardTab: () => {
       selector.collapseButton().tab().type(' ', {force: true});
+    },
+    selectFirstNumericFacetValueWithKeyboardEnter: () => {
+      selector.collapseButton().tab().type('{Enter}', {force: true});
     },
   };
 };
