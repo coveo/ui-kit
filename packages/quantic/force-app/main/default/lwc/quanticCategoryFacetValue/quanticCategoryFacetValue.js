@@ -52,6 +52,10 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     return this.item.value;
   }
 
+  get ariaLabelVoiceOver() {
+    return `Inclusion filter on ${this.facetValue};`;
+  }
+
   /**
    * @param {Event} evt
    */
