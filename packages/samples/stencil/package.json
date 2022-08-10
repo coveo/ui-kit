@@ -12,7 +12,7 @@
     "@stencil/core": "2.15.0"
   },
   "devDependencies": {
-    "cypress": "9.5.3",
+    "cypress": "10.4.0",
     "rollup-plugin-html": "0.2.1"
   }
 }
