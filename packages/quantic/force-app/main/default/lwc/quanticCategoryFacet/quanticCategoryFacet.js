@@ -128,7 +128,6 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
   /** @type {boolean} */
   _isCollapsed = false;
-
   static attributes = [
     'facetId',
     'field',
@@ -141,10 +140,8 @@ export default class QuanticCategoryFacet extends LightningElement {
     'sortCriteria',
     'withSearch',
   ];
-
   /** @type {CategoryFacetState} */
   @track state;
-
   /** @type {CategoryFacet} */
   facet;
   /** @type {SearchStatus} */
@@ -161,7 +158,6 @@ export default class QuanticCategoryFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
-
   labels = {
     clear,
     showMore,
@@ -175,11 +171,9 @@ export default class QuanticCategoryFacet extends LightningElement {
     collapseFacet,
     expandFacet,
   };
-
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
-
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
@@ -332,10 +326,6 @@ export default class QuanticCategoryFacet extends LightningElement {
     return this.withSearch && !!this.input?.value?.length;
   }
 
-  get categoryFacetLiClass() {
-    return this.activeParent ? 'slds-var-m-left_large slds-grid' : 'slds-grid';
-  }
-
   getSearchValues() {
     return this.facet?.state?.facetSearch?.values ?? [];
   }
@@ -382,6 +372,16 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   reset() {
     this.facet.deselectAll();
+  }
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  onKeyDownReset(evt) {
+    if (evt.code === 'Enter' || evt.code === 'Space') {
+      evt.preventDefault();
+      this.facet.deselectAll();
+    }
   }
 
   toggleFacetVisibility() {

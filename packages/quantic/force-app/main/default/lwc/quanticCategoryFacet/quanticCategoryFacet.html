@@ -15,7 +15,7 @@
       >
       </lightning-button-icon>
       <template if:false={isCollapsed}>
-        <div class="slds-has-dividers_around-space slds-m-top_medium">
+        <ul class="slds-has-dividers_around-space slds-m-top_medium">
           <template if:true={withSearch}>
             <div onchange={handleKeyUp} class="slds-size_1-of-1">
               <lightning-input
@@ -28,75 +28,56 @@
               ></lightning-input>
             </div>
           </template>
-
           <template if:false={isFacetSearchActive}>
-            <fieldset>
-              <legend class="slds-assistive-text">{field}</legend>
-              <ul>
-                <template if:true={hasParents}>
-                  <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
-                    <div
-                      class="facet__allCategories slds-grid slds-grid_vertical-align-center"
-                      role="button"
-                      aria-pressed="false"
-                      onclick={reset}
-                    >
-                      <lightning-icon
-                        class="slds-m-right_xxx-small"
-                        icon-name="utility:chevronleft"
-                        size="xx-small"
-                      ></lightning-icon>
-                      <span class="nowrap">{labels.allCategories}</span>
-                    </div>
-                  </li>
-                </template>
-
-                <template for:each={nonActiveParents} for:item="v">
-                  <li class={categoryFacetLiClass} key={v.value}>
-                    <c-quantic-category-facet-value
-                      onselectvalue={onSelectValue}
-                      item={v}
-                      non-active-parent="true"
-                    ></c-quantic-category-facet-value>
-                  </li>
-                </template>
-
-                <template if:true={activeParent}>
-                  <li
-                    class="facet__active-parent slds-grid slds-grid_vertical-align-center slds-p-around_x-small slds-m-left_medium"
-                    key={activeParent.value}
-                  >
-                    <c-quantic-category-facet-value
-                      onselectvalue={onSelectValue}
-                      item={activeParent}
-                    ></c-quantic-category-facet-value>
-                  </li>
-                </template>
-              </ul>
-              <ul>
-                <template for:each={values} for:item="v">
-                  <li class={categoryFacetLiClass} key={v.value}>
-                    <c-quantic-category-facet-value onselectvalue={onSelectValue} item={v}>
-                    </c-quantic-category-facet-value>
-                  </li>
-                </template>
-              </ul>
-            </fieldset>
-          </template>
-
-          <template if:true={isFacetSearchActive}>
-            <template if:true={hasSearchResults}>
+            <template if:true={hasParents}>
+              <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
+                <div
+                  role="button"
+                  class="facet__allCategories slds-grid slds-grid_vertical-align-center"
+                  tabindex="0"
+                  onclick={reset}
+                  onkeydown={onKeyDownReset}
+                >
+                  <lightning-icon class="slds-m-right_xxx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
+                  <span class="nowrap">{labels.allCategories}</span>
+                </div>
+              </li>
+            </template>
+            <template for:each={nonActiveParents} for:item="v">
+              <li class="slds-grid" key={v.value}>
+                <c-quantic-category-facet-value
+                  onselectvalue={onSelectValue}
+                  item={v}
+                  non-active-parent="true"
+                ></c-quantic-category-facet-value>
+              </li>
+            </template>
+            <template if:true={activeParent}>
+              <li class="facet__active-parent slds-grid slds-grid_vertical-align-center slds-p-around_x-small slds-m-left_medium">
+                <span class="nowrap parent-text__bold">{activeParent.value}</span>
+                <span class="facet__number-of-results parent-text__bold slds-var-m-left_xx-small">({activeParent.numberOfResults})</span>
+              </li>
+            </template>
+            <li class="slds-grid">
               <fieldset>
                 <legend class="slds-assistive-text">{field}</legend>
                 <ul class="slds-size_1-of-1">
-                  <template for:each={facetSearchResults} for:item="v">
-                    <li class={categoryFacetLiClass} key={v.value}>
-                      <c-quantic-category-facet-value onselectvalue={onSelectValue} item={v} is-search-result="true">
+                  <template for:each={values} for:item="v">
+                    <li class="slds-var-m-left_large slds-grid" key={v.value}>
+                      <c-quantic-category-facet-value onselectvalue={onSelectValue} item={v} active-parent={activeParent}>
                       </c-quantic-category-facet-value>
                     </li>
                   </template>
                 </ul>
               </fieldset>
+            </li>
+          </template>
+          <template if:true={isFacetSearchActive}>
+            <template if:true={hasSearchResults}>
+              <template for:each={facetSearchResults} for:item="result">
+                <c-quantic-category-facet-value onselectvalue={onSelectValue} key={result.index} item={result} is-search-result="true">
+                </c-quantic-category-facet-value>
+              </template>
             </template>
             <div class="slds-p-horizontal_x-small">
               <template if:false={hasSearchResults}>
@@ -113,25 +94,15 @@
               </template>
             </div>
           </template>
-        </div>
+        </ul>
         <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
           <template if:true={canShowLess}>
-            <button
-              variant="base"
-              aria-label="Show less"
-              class="facet__show-less slds-p-around_none"
-              onclick={showLess}
-            >
+            <button variant="base" label={labels.showLess} class="facet__show-less slds-p-around_none" onclick={showLess}>
               <span class="facet__show-less_text">{labels.showLess}</span>
             </button>
           </template>
           <template if:true={canShowMore}>
-            <button
-              variant="base"
-              aria-label="Show more"
-              class="facet__show-more slds-p-around_none"
-              onclick={showMore}
-            >
+            <button variant="base" label={labels.showMore} class="facet__show-more slds-p-around_none" onclick={showMore}>
               <span class="facet__show-more_text">{labels.showMore}</span>
             </button>
           </template>

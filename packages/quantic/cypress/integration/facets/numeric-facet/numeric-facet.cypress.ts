@@ -11,7 +11,6 @@ import {
 } from '../../../page-objects/search';
 import {NumericFacetActions as Actions} from './numeric-facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
-import * as CommonAssertion from '../../common-assertions';
 
 interface NumericFacetOptions {
   field: string;
@@ -381,7 +380,6 @@ describe('quantic-numeric-facet', () => {
   describe('with a11y', () => {
     beforeEach('', () => {
       visitNumericFacetPage(defaultSettings);
-      cy.injectAxe();
     });
 
     it('should be accessible through keyboard', () => {
@@ -390,9 +388,5 @@ describe('quantic-numeric-facet', () => {
       Actions.selectFirstNumericFacetValueWithKeyboardEnter();
       Expect.numberOfSelectedCheckboxValues(0);
     });
-
-    //CommonAssertion.assertAccessibility(() =>
-    //  cy.get('c-quantic-numeric-facet')
-    //);
   });
 });

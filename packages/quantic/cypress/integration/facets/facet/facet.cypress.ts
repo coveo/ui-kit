@@ -13,7 +13,6 @@ import {
 } from '../../../page-objects/search';
 import {FacetActions as Actions} from './facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
-import * as CommonAssertion from '../../common-assertions';
 
 interface FacetOptions {
   field: string;
@@ -816,7 +815,7 @@ describe('Facet Test Suite', () => {
   });
 
   describe('with a11y', () => {
-    beforeEach('', () => {
+    beforeEach(() => {
       visitFacetPage(
         {
           field: defaultField,
@@ -825,14 +824,13 @@ describe('Facet Test Suite', () => {
         },
         true
       );
-      cy.injectAxe();
     });
+
     it('should be accessible through keyboard', () => {
       Actions.selectFirstFacetValueWithKeyboardTab();
       Expect.clearFilterContains('Clear filter');
       Expect.numberOfSelectedCheckboxValues(1);
       Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
     });
-    //CommonAssertion.assertAccessibility(() => cy.get('c-quantic-facet'));
   });
 });
