@@ -412,7 +412,7 @@ describe('quantic-category-facet', () => {
     });
   });
 
-  describe('with a11y and default category facet a11y', () => {
+  describe('with a11y', () => {
     beforeEach('', () => {
       visitCategoryFacetPage(defaultSettings);
       cy.injectAxe();

@@ -13,6 +13,7 @@ import {
 } from '../../../page-objects/search';
 import {FacetActions as Actions} from './facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
+import * as CommonAssertion from '../../common-assertions';
 
 interface FacetOptions {
   field: string;
@@ -335,21 +336,6 @@ describe('Facet Test Suite', () => {
         Expect.displayMoreMatchesFound(false);
         Expect.displayNoMatchesFound(false);
         Expect.displaySearchClearButton(true);
-      });
-    });
-
-    it('should work as expected with accessibility support', () => {
-      setupWithValues();
-      const selectedValue = 'People';
-      scope('should be selected when space is pressed', () => {
-        Actions.findSearchInputPressTabPressSpace();
-        Expect.selectedValuesContain(selectedValue);
-        Expect.numberOfSelectedLinkValues(1);
-      });
-      scope('should be selected when Enter is pressed', () => {
-        Actions.findSearchInputPressTabPressEnter();
-        Expect.selectedValuesContain(selectedValue);
-        Expect.numberOfSelectedLinkValues(1);
       });
     });
 
@@ -827,5 +813,23 @@ describe('Facet Test Suite', () => {
       Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
       Expect.selectedValuesContain(selectedValue);
     });
+  });
+
+  describe('with a11y', () => {
+    function setupWithValues() {
+      visitFacetPage(
+        {
+          field: defaultField,
+          label: defaultLabel,
+          numberOfValues: defaultNumberOfValues,
+        },
+        false
+      );
+    }
+    beforeEach('', () => {
+      setupWithValues();
+      cy.injectAxe();
+    });
+    CommonAssertion.assertAccessibility(() => cy.get('c-quantic-facet'));
   });
 });
