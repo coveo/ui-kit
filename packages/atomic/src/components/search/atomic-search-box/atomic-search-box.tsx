@@ -14,7 +14,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {once, randomID} from '../../../utils/utils';
+import {getUniqueItemsByProperties, once, randomID} from '../../../utils/utils';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
@@ -419,9 +419,8 @@ export class AtomicSearchBox {
         .sort(this.sortSuggestions);
 
     this.leftSuggestions = splitSuggestions('left', true);
-    this.leftSuggestionElements = this.getSuggestionElements(
-      this.leftSuggestions
-    );
+    this.leftSuggestionElements = this.getAndFilterLeftSuggestionElements();
+
     this.rightSuggestions = splitSuggestions('right');
     this.rightSuggestionElements = this.getSuggestionElements(
       this.rightSuggestions
@@ -510,16 +509,19 @@ export class AtomicSearchBox {
 
   private updateSuggestionElements(query: string) {
     if (!this.isPanelInFocus(this.leftPanelRef, query)) {
-      this.leftSuggestionElements = this.getSuggestionElements(
-        this.leftSuggestions
-      );
-    }
+      this.leftSuggestionElements = this.getAndFilterLeftSuggestionElements();
 
-    if (!this.isPanelInFocus(this.rightPanelRef, query)) {
-      this.rightSuggestionElements = this.getSuggestionElements(
-        this.rightSuggestions
-      );
+      if (!this.isPanelInFocus(this.rightPanelRef, query)) {
+        this.rightSuggestionElements = this.getSuggestionElements(
+          this.rightSuggestions
+        );
+      }
     }
+  }
+
+  private getAndFilterLeftSuggestionElements() {
+    const suggestionElements = this.getSuggestionElements(this.leftSuggestions);
+    return getUniqueItemsByProperties(suggestionElements, ['query']);
   }
 
   private onKeyDown(e: KeyboardEvent) {

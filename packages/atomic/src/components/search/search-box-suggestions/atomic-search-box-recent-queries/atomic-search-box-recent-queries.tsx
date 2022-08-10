@@ -114,18 +114,13 @@ export class AtomicSearchBoxRecentQueries {
     }
 
     const query = this.bindings.searchBoxController.state.value;
-    const querySuggestions =
-      this.bindings.searchBoxController.state.suggestions.map((s) =>
-        s.rawValue.toLowerCase()
-      );
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
       .filter(
         (recentQuery) =>
           recentQuery !== query &&
-          recentQuery.toLowerCase().startsWith(query.toLowerCase()) &&
-          querySuggestions.indexOf(recentQuery) === -1
+          recentQuery.toLowerCase().startsWith(query.toLowerCase())
       )
       .slice(0, max);
 

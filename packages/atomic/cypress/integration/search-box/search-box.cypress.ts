@@ -187,6 +187,7 @@ describe('Search Box Test Suites', () => {
         });
 
         it('correctly hides recent queries when there is a match and there is a duplicate', () => {
+          setupDuplicateRecentQueriesAndSuggestions();
           SearchBoxSelectors.inputBox().type('dupl');
           SearchBoxSelectors.recentQueriesItem().should('have.length', 0);
         });
