@@ -9,6 +9,7 @@ const links = [
   {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
   {href: '/examples/instantResults.html', label: 'Instant Results'},
   {href: '/examples/insights.html', label: 'Insights Panel'},
+  {href: '/examples/horizontal-facets.html', label: 'Horizontal Facets'},
   {
     href: '/accessibility/commerce-full.html',
     label: 'Accessible Commerce Full',

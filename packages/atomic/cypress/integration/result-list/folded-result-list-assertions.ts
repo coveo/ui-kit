@@ -19,3 +19,14 @@ export function assertRendersGrandchildren() {
       .contains('Specklebelly Lichens');
   });
 }
+
+export function assertRendersWholeCollection() {
+  it('should render whole collection', () => {
+    FoldedResultListSelectors.childResult(0).should('have.length', 10);
+    FoldedResultListSelectors.childResult(0)
+      .eq(9)
+      .shadow()
+      .find(resultLinkComponent)
+      .contains('lobster mushroom');
+  });
+}

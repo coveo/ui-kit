@@ -18,3 +18,7 @@ export function isMacOS() {
   // Source: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform#examples
   return navigator.platform.startsWith('Mac');
 }
+
+export function hasKeyboard() {
+  return window.matchMedia('(any-hover: hover)').matches;
+}

@@ -362,13 +362,13 @@ export declare interface AtomicIconButton extends Components.AtomicIconButton {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['buttonRef', 'clickCallback', 'icon', 'labelI18nKey', 'tooltip']
+  inputs: ['badge', 'buttonRef', 'clickCallback', 'icon', 'labelI18nKey', 'tooltip']
 })
 @Component({
   selector: 'atomic-icon-button',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['buttonRef', 'clickCallback', 'icon', 'labelI18nKey', 'tooltip']
+  inputs: ['badge', 'buttonRef', 'clickCallback', 'icon', 'labelI18nKey', 'tooltip']
 })
 export class AtomicIconButton {
   protected el: HTMLElement;

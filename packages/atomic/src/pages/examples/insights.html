@@ -13,7 +13,6 @@
         await customElements.whenDefined('atomic-insight-interface');
         const insightInterface = document.querySelector('atomic-insight-interface');
         await insightInterface.initialize({
-          // TODO: update org with an insight supported one
           insightId: '6a333202-b1e0-451e-8664-26a1f93c2faf',
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
@@ -36,12 +35,28 @@
         width: 100%;
         display: grid;
         grid-template-columns: 1fr auto auto auto;
+
         grid-gap: 0.5rem;
+
+        background: var(--atomic-neutral-light);
 
         padding-top: 1.5rem;
         padding-left: 1.5rem;
         padding-right: 1.5rem;
         box-sizing: border-box;
+      }
+
+      atomic-insight-tabs {
+        grid-column: 1 / 5;
+      }
+
+      atomic-insight-refine-modal {
+        grid-row-start: 5;
+      }
+
+      atomic-layout-section[section='results'] {
+        overflow-y: auto;
+        overflow-x: hidden;
       }
     </style>
   </head>
@@ -65,9 +80,24 @@
               <atomic-numeric-range start="8000" end="100000" label="Popular"></atomic-numeric-range>
               <atomic-numeric-range start="100000" end="999999999" label="Treasured"></atomic-numeric-range>
             </atomic-insight-numeric-facet>
+            <atomic-insight-timeframe-facet label="Listed within" with-date-picker heading-level="2">
+              <atomic-timeframe unit="hour"></atomic-timeframe>
+              <atomic-timeframe unit="day"></atomic-timeframe>
+              <atomic-timeframe unit="week"></atomic-timeframe>
+              <atomic-timeframe unit="month"></atomic-timeframe>
+              <atomic-timeframe unit="quarter"></atomic-timeframe>
+              <atomic-timeframe unit="year"></atomic-timeframe>
+              <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
+            </atomic-insight-timeframe-facet>
           </atomic-insight-refine-toggle>
           <atomic-insight-edit-toggle tooltip="This is a tooltip"></atomic-insight-edit-toggle>
           <atomic-insight-history-toggle tooltip="This is a tooltip"></atomic-insight-history-toggle>
+          <atomic-insight-tabs>
+            <atomic-insight-tab label="Youtube" expression="@filetype==YouTubeVideo"></atomic-insight-tab>
+            <atomic-insight-tab label="PDF" expression="@filetype==pdf"></atomic-insight-tab>
+            <atomic-insight-tab label="HTML" expression="@filetype==html"></atomic-insight-tab>
+            <atomic-insight-tab label="Txt" expression="@filetype==txt"></atomic-insight-tab>
+          </atomic-insight-tabs>
         </div>
         <atomic-layout-section section="results">
           <atomic-insight-result-list image-size="none">

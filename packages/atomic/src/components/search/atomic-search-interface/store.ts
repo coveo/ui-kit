@@ -16,7 +16,7 @@ import {
   FacetStore,
   FacetType,
   FacetValueFormat,
-} from '../../common/facets/facet-common';
+} from '../../common/facets/facet-common-store';
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;

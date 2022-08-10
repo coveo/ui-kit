@@ -33,7 +33,9 @@ export class AtomicIcon
 {
   @Element() host!: HTMLElement;
 
-  @InitializeBindings() public bindings!: Bindings | InsightBindings;
+  @InitializeBindings({forceUpdate: true}) public bindings!:
+    | Bindings
+    | InsightBindings;
 
   /**
    * The SVG icon to display.

@@ -9,6 +9,8 @@ export {bindLogDocumentOpenOnResult} from './utils/result-utils';
 export {MissingInterfaceParentError} from './utils/initialization-utils';
 import {initializeBindings as genericInitializeBindings} from './utils/initialization-utils';
 
+export {PopoverChildFacet} from './components/search/facets/atomic-popover/popover-type';
+
 export function initializeBindings(element: Element) {
   return genericInitializeBindings<Bindings>(element);
 }

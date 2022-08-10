@@ -20,6 +20,7 @@ import {InsightAppState} from '../state/insight-app-state';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
+import {getFieldsInitialState} from '../features/fields/fields-state';
 
 export function buildMockInsightState(
   config: Partial<InsightAppState> = {}
@@ -47,6 +48,7 @@ export function buildMockInsightState(
     didYouMean: getDidYouMeanInitialState(),
     staticFilterSet: getStaticFilterSetInitialState(),
     tabSet: getTabSetInitialState(),
+    fields: getFieldsInitialState(),
     ...config,
   };
 }
