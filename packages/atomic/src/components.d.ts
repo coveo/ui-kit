@@ -666,7 +666,7 @@ export namespace Components {
     }
     interface AtomicNotification {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notification, from 1 to 5.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notification, from 1 to 6.
          */
         "headingLevel": number;
     }
@@ -2841,7 +2841,7 @@ declare namespace LocalJSX {
     }
     interface AtomicNotification {
         /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notification, from 1 to 5.
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notification, from 1 to 6.
          */
         "headingLevel"?: number;
     }
