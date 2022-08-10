@@ -6,6 +6,7 @@ import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-ins
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
+import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 
 interface RefineModalCommonRenderProps {
   isOpen: boolean;
@@ -131,6 +132,7 @@ export function getClonedFacetElements(
   sortedFacetsElements.forEach((facetElement) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
     clone.isCollapsed = true;
+    clone.classList.remove(popoverClass);
     divSlot.append(clone);
   });
 
