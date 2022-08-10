@@ -25,6 +25,7 @@
               icon-name="utility:close"
               alternative-text={altText}
               size="xx-small"
+              aria-hidden
             ></lightning-icon>
             <span class="nowrap pill__text-container slds-truncate">{clearFilterLabel}</span>
           </button>
@@ -65,24 +66,12 @@
               </fieldset>
               <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
                 <template if:true={canShowLess}>
-                  <button
-                    variant="base"
-                    class="facet__show-less slds-p-around_none"
-                    aria-label="Show less"
-                    onclick={showLess}
-                    data-cy="less"
-                  >
+                  <button variant="base" class="facet__show-less slds-p-around_none" onclick={showLess} data-cy="less">
                     <span class="facet__show-less_text">{labels.showLess}</span>
                   </button>
                 </template>
                 <template if:true={canShowMore}>
-                  <button
-                    variant="base"
-                    aria-label="Show more"
-                    class="facet__show-more slds-p-around_none"
-                    onclick={showMore}
-                    data-cy="more"
-                  >
+                  <button variant="base" class="facet__show-more slds-p-around_none" onclick={showMore} data-cy="more">
                     <span class="facet__show-more_text">{labels.showMore}</span>
                   </button>
                 </template>
