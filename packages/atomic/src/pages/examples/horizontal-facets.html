@@ -61,15 +61,11 @@
             </atomic-segmented-facet-scrollable>
 
             <atomic-popover>
-              <atomic-facet field="author" label="Authors"></atomic-facet>
-            </atomic-popover>
-
-            <atomic-popover>
               <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
             </atomic-popover>
 
             <atomic-popover>
-              <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
+              <atomic-facet field="author" label="Authors (dependent)" depends-on-source></atomic-facet>
             </atomic-popover>
 
             <atomic-popover>
