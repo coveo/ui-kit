@@ -17,20 +17,20 @@ import {
   DateFacetSection,
   DidYouMeanSection,
   FacetSection,
+  FieldsSection,
   InsightCaseContextSection,
   InsightConfigurationSection,
   NumericFacetSection,
   PaginationSection,
   QuerySection,
   SearchSection,
+  SortSection,
   TabSection,
 } from '../../state/state-sections';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {InsightAction} from '../analytics/analytics-utils';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analytics-actions';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {
@@ -44,7 +44,6 @@ import {getQueryInitialState} from '../query/query-state';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {
   MappedSearchRequest,
-  mapSearchRequest,
   mapSearchResponse,
   SuccessResponse,
 } from '../search/search-mappings';
@@ -53,6 +52,11 @@ import {
   logFetchMoreResults,
   logQueryError,
 } from './insight-search-analytics-actions';
+import {
+  buildInsightFetchFacetValuesRequest,
+  buildInsightFetchMoreResultsRequest,
+  buildInsightSearchRequest,
+} from './insight-search-request';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   InsightConfigurationSection &
@@ -65,20 +69,27 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       DateFacetSection &
       CategoryFacetSection &
       PaginationSection &
+      TabSection &
+      FieldsSection &
       DidYouMeanSection &
-      TabSection
+      SortSection
   >;
 
 const fetchFromAPI = async (
   client: InsightAPIClient,
   state: StateNeededByExecuteSearch,
-  request: InsightQueryRequest
+  {request, mappings}: MappedSearchRequest<InsightQueryRequest>
 ) => {
   const startedAt = new Date().getTime();
-  const response = await client.query(request);
+  const response = mapSearchResponse(await client.query(request), mappings);
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
-  return {response, duration, queryExecuted, requestExecuted: request};
+  return {
+    response,
+    duration,
+    queryExecuted,
+    requestExecuted: request,
+  };
 };
 
 export const executeSearch = createAsyncThunk<
@@ -93,13 +104,9 @@ export const executeSearch = createAsyncThunk<
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
-
     const mappedRequest = buildInsightSearchRequest(state);
-    const fetched = await fetchFromAPI(
-      extra.apiClient,
-      state,
-      mappedRequest.request
-    );
+
+    const fetched = await fetchFromAPI(extra.apiClient, state, mappedRequest);
 
     if (isErrorResponse(fetched.response)) {
       dispatch(logQueryError(fetched.response.error));
@@ -176,11 +183,10 @@ export const fetchPage = createAsyncThunk<
     const state = getState();
     addEntryInActionsHistory(state);
 
-    const mappedRequest = buildInsightSearchRequest(state);
     const fetched = await fetchFromAPI(
       extra.apiClient,
       state,
-      mappedRequest.request
+      buildInsightSearchRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -210,7 +216,7 @@ export const fetchMoreResults = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      buildInsightFetchMoreResultsRequest(state)
+      await buildInsightFetchMoreResultsRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -244,7 +250,7 @@ export const fetchFacetValues = createAsyncThunk<
     const fetched = await fetchFromAPI(
       apiClient,
       state,
-      buildInsightFetchFacetValuesRequest(state)
+      await buildInsightFetchFacetValuesRequest(state)
     );
 
     if (isErrorResponse(fetched.response)) {
@@ -289,47 +295,6 @@ export const fetchQuerySuggestions = createAsyncThunk<
   }
 );
 
-const buildInsightSearchRequest = (
-  state: StateNeededByExecuteSearch
-): MappedSearchRequest<InsightQueryRequest> => {
-  const cq = buildConstantQuery(state);
-  const facets = getAllFacets(state);
-  return mapSearchRequest<InsightQueryRequest>({
-    accessToken: state.configuration.accessToken,
-    organizationId: state.configuration.organizationId,
-    url: state.configuration.platformUrl,
-    insightId: state.insightConfiguration.insightId,
-    q: state.query?.q,
-    ...(facets.length && {facets}),
-    caseContext: state.insightCaseContext?.caseContext,
-    ...(state.pagination && {
-      firstResult: state.pagination.firstResult,
-      numberOfResults: state.pagination.numberOfResults,
-    }),
-    ...(cq && {cq}),
-  });
-};
-
-const buildInsightFetchMoreResultsRequest = (
-  state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
-    firstResult:
-      (state.pagination?.firstResult ?? 0) +
-      (state.pagination?.numberOfResults ?? 0),
-  };
-};
-
-const buildInsightFetchFacetValuesRequest = (
-  state: StateNeededByExecuteSearch
-): InsightQueryRequest => {
-  return {
-    ...buildInsightSearchRequest(state).request,
-    numberOfResults: 0,
-  };
-};
-
 const automaticallyRetryQueryWithCorrection = async (
   client: InsightAPIClient,
   correction: string,
@@ -346,7 +311,7 @@ const automaticallyRetryQueryWithCorrection = async (
   const fetched = await fetchFromAPI(
     client,
     getState(),
-    await buildInsightSearchRequest(getState()).request
+    await buildInsightSearchRequest(getState())
   );
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
@@ -365,35 +330,6 @@ const shouldReExecuteTheQueryWithCorrections = (
   }
   return false;
 };
-
-function getAllFacets(state: StateNeededByExecuteSearch) {
-  return [
-    ...getFacetRequests({
-      ...state.facetSet,
-      ...state.numericFacetSet,
-      ...state.dateFacetSet,
-    }),
-    ...getCategoryFacetRequests(state.categoryFacetSet),
-  ];
-}
-
-function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
-  return Object.values(state || {}).map((slice) => slice!.request);
-}
-function getFacetRequests<T extends AnyFacetRequest>(
-  requests: Record<string, T> = {}
-) {
-  return Object.keys(requests).map((id) => requests[id]);
-}
-
-function buildConstantQuery(state: StateNeededByExecuteSearch) {
-  const activeTab = Object.values(state.tabSet || {}).find(
-    (tab) => tab.isActive
-  );
-  const tabExpression = activeTab?.expression.trim() || '';
-
-  return tabExpression;
-}
 
 const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
   state.query?.q !== undefined ? state.query.q : '';

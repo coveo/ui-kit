@@ -149,9 +149,13 @@ export class AtomicResultChildren implements BaseResultList {
     if (!content) {
       return null;
     }
+
+    const key =
+      child.result.uniqueId +
+      child.children.map((child) => child.result.uniqueId);
     return (
       <atomic-result
-        key={child.result.uniqueId}
+        key={key}
         content={content}
         result={child}
         engine={this.bindings.engine}
