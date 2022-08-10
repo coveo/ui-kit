@@ -46,6 +46,14 @@
         box-sizing: border-box;
       }
 
+      .footer-wrapper {
+        background: var(--atomic-neutral-light);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: stretch;
+      }
+
       atomic-insight-tabs {
         grid-column: 1 / 5;
       }
@@ -235,6 +243,9 @@
             </atomic-insight-result-template>
           </atomic-insight-result-list>
         </atomic-layout-section>
+        <div class="footer-wrapper">
+          <atomic-insight-pager></atomic-insight-pager>
+        </div>
       </atomic-insight-interface>
     </div>
     <script src="../header.js" type="text/javascript"></script>
