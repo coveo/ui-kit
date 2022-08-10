@@ -1,9 +1,6 @@
 <template>
   <template if:true={showPlaceholder}>
-    <c-quantic-placeholder
-      variant="card"
-      number-of-rows={numberOfValues}
-    ></c-quantic-placeholder>
+    <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
   </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
@@ -29,9 +26,7 @@
               alternative-text={altText}
               size="xx-small"
             ></lightning-icon>
-            <span class="nowrap pill__text-container slds-truncate"
-              >{clearFilterLabel}</span
-            >
+            <span class="nowrap pill__text-container slds-truncate">{clearFilterLabel}</span>
           </button>
         </template>
         <template if:false={isCollapsed}>
@@ -68,14 +63,12 @@
                   </template>
                 </ul>
               </fieldset>
-              <div
-                class="facet__show slds-m-top_x-small slds-p-horizontal_x-small"
-              >
+              <div class="facet__show slds-m-top_x-small slds-p-horizontal_x-small">
                 <template if:true={canShowLess}>
                   <button
                     variant="base"
-                    label={labels.showLess}
                     class="facet__show-less slds-p-around_none"
+                    aria-label="Show less"
                     onclick={showLess}
                     data-cy="less"
                   >
@@ -85,7 +78,7 @@
                 <template if:true={canShowMore}>
                   <button
                     variant="base"
-                    label={labels.showMore}
+                    aria-label="Show more"
                     class="facet__show-more slds-p-around_none"
                     onclick={showMore}
                     data-cy="more"
@@ -112,18 +105,14 @@
               <div class="slds-p-horizontal_x-small">
                 <template if:false={hasSearchResults}>
                   <li class="slds-grid slds-m-top_x-small">
-                    <span
-                      class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match"
+                    <span class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match"
                       >{noMatchesForLabel}</span
                     >
                   </li>
                 </template>
                 <template if:true={canShowMoreSearchResults}>
                   <li>
-                    <span
-                      class="slds-truncate facet__search-results_more-matches"
-                      >{moreMatchesForLabel}</span
-                    >
+                    <span class="slds-truncate facet__search-results_more-matches">{moreMatchesForLabel}</span>
                   </li>
                 </template>
               </div>

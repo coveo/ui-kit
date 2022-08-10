@@ -7,7 +7,7 @@ import {
   togoHierarchy,
 } from './category-facet-actions';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
-
+import * as CommonAssertion from '../../common-assertions';
 interface CategoryFacetOptions {
   field: string;
   label: string;
@@ -410,5 +410,15 @@ describe('quantic-category-facet', () => {
       Expect.displayValues(false);
       Expect.displayExpandButton(true);
     });
+  });
+
+  describe('with a11y and default category facet a11y', () => {
+    beforeEach('', () => {
+      visitCategoryFacetPage(defaultSettings);
+      cy.injectAxe();
+    });
+    CommonAssertion.assertAccessibility(() =>
+      cy.get('c-quantic-category-facet')
+    );
   });
 });

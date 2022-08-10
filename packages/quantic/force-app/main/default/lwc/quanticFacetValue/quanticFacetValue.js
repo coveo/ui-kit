@@ -64,7 +64,7 @@ export default class QuanticFacetValue extends LightningElement {
   }
 
   get ariaLabelVoiceOver() {
-    return `Filter, ${this.formattedFacetValue}, ${this.numberOfResults}`;
+    return `Inclusion filter on ${this.formattedFacetValue}; ${this.numberOfResults} result`;
   }
 
   /**

@@ -50,7 +50,13 @@ export function assertAccessibility(
   );
 
   it('should pass accessibility tests', () => {
-    cy.checkA11y();
+    if (typeof component === 'string') {
+      cy.checkA11y(component, {rules});
+    } else {
+      component().should(([el]) => {
+        cy.checkA11y(el, {rules});
+      });
+    }
   });
 
   it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {

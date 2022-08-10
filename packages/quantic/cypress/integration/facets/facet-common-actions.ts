@@ -54,13 +54,6 @@ export const baseFacetActions = (selector: BaseFacetSelector) => {
     clickExpandButton: () => {
       selector.expandButton().click();
     },
-    findSearchInputPressTabPressSpace: () => {
-      // tab() is from library "cypress-plugin-tab" and it does not generate the same "tab order" as browsers.
-      selector.searchInput().focus().tab().type(' ', {force: true});
-    },
-    findSearchInputPressTabPressEnter: () => {
-      selector.searchInput().focus().tab().type('{Enter}', {force: true});
-    },
   };
 };
 
