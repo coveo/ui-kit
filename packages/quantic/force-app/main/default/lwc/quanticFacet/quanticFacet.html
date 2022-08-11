@@ -25,7 +25,7 @@
               icon-name="utility:close"
               alternative-text={altText}
               size="xx-small"
-              aria-hidden
+              aria-hidden="true"
             ></lightning-icon>
             <span class="nowrap pill__text-container slds-truncate">{clearFilterLabel}</span>
           </button>
@@ -94,9 +94,9 @@
               <div class="slds-p-horizontal_x-small">
                 <template if:false={hasSearchResults}>
                   <li class="slds-grid slds-m-top_x-small">
-                    <span class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match"
-                      >{noMatchesForLabel}</span
-                    >
+                    <span class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match">
+                      {noMatchesForLabel}
+                    </span>
                   </li>
                 </template>
                 <template if:true={canShowMoreSearchResults}>
