@@ -1,4 +1,4 @@
-import {Component, h, Listen, State} from '@stencil/core';
+import {Component, Element, h, Listen, State} from '@stencil/core';
 import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {Button} from '../../../common/button';
@@ -41,7 +41,8 @@ type ArrowDirection = 'right' | 'left';
   shadow: true,
 })
 export class AtomicSegmentedFacetScrollable implements InitializableComponent {
-  private horizontalScroll?: HTMLDivElement;
+  @Element() private host!: HTMLElement;
+  private horizontalScrollRef?: HTMLElement;
   private arrowRef?: HTMLElement;
   private observer!: ResizeObserver;
 
@@ -64,7 +65,9 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     this.observer = new ResizeObserver(() => {
       this.handleScroll();
     });
-    this.observer.observe(this.horizontalScroll!);
+
+    Array.from(this.host.children).forEach((el) => this.observer.observe(el));
+    this.observer.observe(this.horizontalScrollRef!);
   }
 
   disconnectedCallback() {
@@ -75,32 +78,33 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
   @Listen('touchmove')
   @Listen('keydown')
   public handleScroll() {
-    if (!this.horizontalScroll) {
+    if (!this.horizontalScrollRef) {
       return;
     }
 
     const isScrollable =
-      this.horizontalScroll.clientWidth < this.horizontalScroll.scrollWidth;
-    const isLeftEdge = Math.floor(this.horizontalScroll.scrollLeft) <= 0;
+      this.horizontalScrollRef.clientWidth <
+      this.horizontalScrollRef.scrollWidth;
+    const isLeftEdge = Math.floor(this.horizontalScrollRef.scrollLeft) <= 0;
     const isRightEdge =
-      Math.ceil(this.horizontalScroll.scrollLeft) >=
-      this.horizontalScroll.scrollWidth - this.horizontalScroll.clientWidth;
+      Math.ceil(this.horizontalScrollRef.scrollLeft) >=
+      this.horizontalScrollRef.scrollWidth -
+        this.horizontalScrollRef.clientWidth;
 
     this.hideLeftArrow = !isScrollable || isLeftEdge;
     this.hideRightArrow = !isScrollable || isRightEdge;
   }
 
   private slideHorizontally(direction: ArrowDirection) {
-    const container = this.horizontalScroll;
-    const arrowWidth = this.arrowRef ? this.arrowRef.clientWidth : 50;
-    if (!container) {
+    if (!this.horizontalScrollRef || !this.arrowRef) {
       return;
     }
-
-    const pixelsToScroll = (container.clientWidth - arrowWidth * 2) * 0.7;
-    const isLeftEdge = container.scrollLeft - pixelsToScroll <= 0;
+    const container = this.horizontalScrollRef;
+    const arrowsWidth = this.arrowRef.clientWidth * 2;
+    const pixelsToScroll = (container.clientWidth - arrowsWidth) * 0.7;
+    const isLeftEdge = Math.floor(container.scrollLeft - pixelsToScroll) <= 0;
     const isRightEdge =
-      container.scrollLeft + pixelsToScroll >=
+      Math.ceil(container.scrollLeft + pixelsToScroll) >=
       container.scrollWidth - container.clientWidth;
 
     this.hideLeftArrow = false;
@@ -170,7 +174,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         <div
           part="horizontal-scroll"
           class="wrapper-segmented flex flex-row overflow-x-scroll scroll-smooth"
-          ref={(el) => (this.horizontalScroll = el)}
+          ref={(el) => (this.horizontalScrollRef = el)}
         >
           <slot></slot>
         </div>
