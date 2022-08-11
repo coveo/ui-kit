@@ -34,11 +34,21 @@ import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 import {FacetHeader} from './facet-header/facet-header';
 import {SearchStatusState} from '../types';
 
-export interface Timeframe extends RelativeDate {
-  label?: string;
-}
+export type RelativeDatePeriod = 'past' | 'now' | 'next';
 
-export interface InsightTimeframe extends InsightRelativeDate {
+export type RelativeDateUnit =
+  | 'minute'
+  | 'hour'
+  | 'day'
+  | 'week'
+  | 'month'
+  | 'quarter'
+  | 'year';
+
+export interface Timeframe {
+  period: RelativeDatePeriod;
+  unit?: RelativeDateUnit;
+  amount?: number;
   label?: string;
 }
 
@@ -85,7 +95,7 @@ export class TimeframeFacetCommon {
   private facetForDatePicker?: InsightDateFacet | DateFacet;
   private facetForDateRange?: InsightDateFacet | DateFacet;
   private filter?: InsightDateFilter | DateFilter;
-  private manualTimeframes: Timeframe[] | InsightTimeframe[] = [];
+  private manualTimeframes: Timeframe[] = [];
   private dependenciesManager?:
     | InsightFacetConditionsManager
     | FacetConditionsManager;
