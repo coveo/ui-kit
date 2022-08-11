@@ -7,10 +7,10 @@ import {
 } from './result-list-selectors';
 
 export const foldedResultListComponent = 'atomic-folded-result-list';
+export const loadMoreChildrenComponent = 'atomic-load-more-children-results';
 export const resultChildrenComponent = 'atomic-result-children';
 export const resultChildrenTemplateComponent =
   'atomic-result-children-template';
-
 export const beforeChildrenSlotName = 'before-children';
 export const afterChildrenSlotName = 'after-children';
 
@@ -23,12 +23,26 @@ export const FoldedResultListSelectors = {
   resultAt: (index = 0) =>
     FoldedResultListSelectors.result().shadow().eq(index),
   firstResult: () => FoldedResultListSelectors.result().first().shadow(),
+  loadMoreChildren: () =>
+    FoldedResultListSelectors.firstResult()
+      .find(loadMoreChildrenComponent)
+      .shadow()
+      .find('button'),
   firstResultRoot: () =>
     FoldedResultListSelectors.firstResult().find(resultRoot),
   resultChildren: (resultIndex = 0) =>
     FoldedResultListSelectors.resultAt(resultIndex).find(
       resultChildrenComponent
     ),
+  childResult: (childResultIndex: number, resultIndex = 0) =>
+    FoldedResultListSelectors.resultChildren(resultIndex)
+      .eq(childResultIndex)
+      .shadow()
+      .find(resultComponent),
+  collapseButton: () =>
+    FoldedResultListSelectors.shadow().find('[part~="show-hide-button"]', {
+      includeShadowDom: true,
+    }),
   childResultAtIndex: (childResultIndex: number, resultIndex = 0) =>
     FoldedResultListSelectors.resultChildren(resultIndex)
       .shadow()
