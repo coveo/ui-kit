@@ -18,10 +18,6 @@ atomic-layout-section[section='status'] {
   grid-area: atomic-section-status;
 }
 
-atomic-layout-section[section='notification'] {
-  grid-area: atomic-section-notification;
-}
-
 atomic-layout-section[section='pagination'] {
   grid-area: atomic-section-pagination;
 }
@@ -74,7 +70,8 @@ atomic-search-layout {
     grid-template-areas:
       'atomic-breadbox      atomic-breadbox'
       'atomic-query-summary atomic-sort'
-      'atomic-did-you-mean  atomic-did-you-mean';
+      'atomic-did-you-mean  atomic-did-you-mean'
+      'atomic-notification  atomic-notification';
 
     & > * {
       margin-bottom: var(--atomic-layout-spacing-y);
@@ -102,13 +99,9 @@ atomic-search-layout {
     atomic-did-you-mean {
       grid-area: atomic-did-you-mean;
     }
-  }
-
-  atomic-layout-section[section='notification'] {
-    display: block;
 
     atomic-notification {
-      margin-bottom: 2rem;
+      grid-area: atomic-notification;
     }
   }
 
