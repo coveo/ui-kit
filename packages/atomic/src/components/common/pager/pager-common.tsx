@@ -1,26 +1,24 @@
-import {Pager, SearchStatus} from '@coveo/headless';
 import {EventEmitter, h} from '@stencil/core';
 import ArrowRight from '../../../images/arrow-right.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {randomID} from '../../../utils/utils';
-import {InsightPager, InsightSearchStatus} from '../../insight';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Button} from '../button';
+import {AnyBindings} from '../interface/bindings';
 import {RadioButton} from '../radio-button';
+import {Pager, SearchStatus} from '../types';
 
 interface SearchStatusOptions {
-  bindings: Bindings | InsightBindings;
-  initializeSearchStatus(): SearchStatus | InsightSearchStatus;
-  initializePager(): Pager | InsightPager;
+  bindings: AnyBindings;
+  initializeSearchStatus(): SearchStatus;
+  initializePager(): Pager;
   getEventEmitter(): EventEmitter | undefined;
   getActivePage(): FocusTargetController | undefined;
 }
 
 export class PagerCommon {
-  private bindings: Bindings | InsightBindings;
-  private searchStatus: SearchStatus | InsightSearchStatus;
-  private pager: Pager | InsightPager;
+  private bindings: AnyBindings;
+  private searchStatus: SearchStatus;
+  private pager: Pager;
   private getEventEmitter: () => EventEmitter | undefined;
   private getActivePage: () => FocusTargetController | undefined;
   private readonly radioGroupName = randomID('atomic-insight-pager-');

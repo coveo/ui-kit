@@ -16,7 +16,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
 import {Hidden} from '../../common/hidden';
 import {PagerCommon} from '../../common/pager/pager-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
