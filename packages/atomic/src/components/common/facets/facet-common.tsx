@@ -14,11 +14,9 @@ import {
   FacetValue,
   AnyFacetValuesCondition,
   AnyFacetValueRequest,
-  CategoryFacetValueRequest,
   FacetValueRequest,
 } from '@coveo/headless';
 import {
-  InsightCategoryFacetValueRequest,
   InsightFacet,
   InsightFacetSortCriterion,
   InsightFacetValue,
@@ -48,6 +46,7 @@ import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
 import {
+  CategoryFacetValueRequest,
   FacetConditionsManager,
   FacetSearchState,
   SearchStatus,
@@ -171,7 +170,7 @@ export interface FacetValueProps {
 
 function isCategoryFacetValueRequest(
   value: AnyFacetValueRequest
-): value is CategoryFacetValueRequest | InsightCategoryFacetValueRequest {
+): value is CategoryFacetValueRequest {
   return 'children' in value && Array.isArray(value.children);
 }
 

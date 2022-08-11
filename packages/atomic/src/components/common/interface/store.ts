@@ -1,3 +1,4 @@
+import {FacetValueState} from '@coveo/headless';
 import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
 import {
@@ -7,8 +8,6 @@ import {
   FacetValueFormat,
 } from '../facets/facet-common';
 import {AnyEngineType, CommonStencilStore} from './bindings';
-
-type FacetValueState = 'idle' | 'selected';
 
 type BaseFacetValue = {
   numberOfResults: number;

@@ -18,6 +18,8 @@ export type Pager = {
   };
 };
 
+type FacetValueState = 'idle' | 'selected';
+
 type FacetManagerPayload = {
   facetId: string;
   payload: HTMLElement;
@@ -25,12 +27,6 @@ type FacetManagerPayload = {
 
 export type FacetManager = {
   sort(payload: FacetManagerPayload[]): FacetManagerPayload[];
-};
-
-export type QuerySummary = {
-  state: {
-    total: number;
-  };
 };
 
 export type FacetSearchState = {
@@ -42,4 +38,16 @@ export type FacetSearchState = {
 
 export type FacetConditionsManager = {
   stopWatching(): void;
+};
+
+export type CategoryFacetValueRequest = {
+  state: FacetValueState;
+  value: string;
+  children: CategoryFacetValueRequest[];
+};
+
+export type QuerySummary = {
+  state: {
+    total: number;
+  };
 };
