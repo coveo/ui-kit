@@ -1,24 +1,19 @@
 import {Schema, StringValue} from '@coveo/bueno';
+import {VNode, h} from '@stencil/core';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
+import {getFieldValueCaption} from '../../../utils/field-utils';
+import {NumberFormatter} from '../formats/format-common';
+import {Hidden} from '../hidden';
+import {AnyBindings} from '../interface/bindings';
 import {
+  FacetConditionsManager,
   NumericFacet,
   NumericFacetValue,
   NumericFilter,
   NumericRangeOptions,
   NumericRangeRequest,
-} from '@coveo/headless';
-import {VNode, h} from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
-import {getFieldValueCaption} from '../../../utils/field-utils';
-import {
-  InsightNumericFacet,
-  InsightNumericFacetValue,
-  InsightNumericFilter,
-  InsightNumericRangeRequest,
-} from '../../insight';
-import {NumberFormatter} from '../formats/format-common';
-import {Hidden} from '../hidden';
-import {AnyBindings} from '../interface/bindings';
-import {FacetConditionsManager, SearchStatusState} from '../types';
+  SearchStatusState,
+} from '../types';
 import {
   shouldDisplayInputForFacetRange,
   validateDependsOn,
@@ -32,10 +27,6 @@ import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-valu
 import {FacetValueLink} from './facet-value-link/facet-value-link';
 import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 
-export interface InsightNumericRangeWithLabel
-  extends InsightNumericRangeRequest {
-  label?: string;
-}
 export interface NumericRangeWithLabel extends NumericRangeRequest {
   label?: string;
 }
@@ -54,17 +45,15 @@ interface NumericFacetCommonOptions {
   numberOfValues: number;
   setFacetId(id: string): string;
   setManualRanges(
-    manualRanges: InsightNumericRangeWithLabel[] | NumericRangeWithLabel[]
-  ): InsightNumericRangeWithLabel[] | NumericRangeWithLabel[];
+    manualRanges: NumericRangeWithLabel[]
+  ): NumericRangeWithLabel[];
   getFormatter(): NumberFormatter;
   getSearchStatusState(): SearchStatusState;
   buildDependenciesManager(): FacetConditionsManager;
-  buildNumericRange(
-    config: NumericRangeOptions
-  ): InsightNumericRangeRequest | NumericRangeRequest;
-  initializeFacetForInput(): InsightNumericFacet | NumericFacet;
-  initializeFacetForRange(): InsightNumericFacet | NumericFacet;
-  initializeFilter(): InsightNumericFilter | NumericFilter;
+  buildNumericRange(config: NumericRangeOptions): NumericRangeRequest;
+  initializeFacetForInput(): NumericFacet;
+  initializeFacetForRange(): NumericFacet;
+  initializeFilter(): NumericFilter;
 }
 
 interface NumericFacetCommonRenderProps {
@@ -81,17 +70,15 @@ export class NumericFacetCommon {
   private label: string;
   private field: string;
   private headingLevel: number;
-  private filter?: InsightNumericFilter | NumericFilter;
+  private filter?: NumericFilter;
   private dependsOn: Record<string, string>;
   private displayValuesAs: NumericFacetDisplayValues;
   private withInput?: NumberInputType;
   private numberOfValues: number;
   private facetId?: string;
-  private manualRanges:
-    | InsightNumericRangeWithLabel[]
-    | NumericRangeWithLabel[] = [];
-  private facetForRange?: InsightNumericFacet | NumericFacet;
-  private facetForInput?: InsightNumericFacet | NumericFacet;
+  private manualRanges: NumericRangeWithLabel[] = [];
+  private facetForRange?: NumericFacet;
+  private facetForInput?: NumericFacet;
   private getFormatter: () => NumberFormatter;
   private getSearchStatusState: () => SearchStatusState;
 
@@ -219,9 +206,7 @@ export class NumericFacetCommon {
     }
   }
 
-  private formatFacetValue(
-    facetValue: InsightNumericFacetValue | NumericFacetValue
-  ) {
+  private formatFacetValue(facetValue: NumericFacetValue) {
     const manualRangeLabel = this.manualRanges.find((range) =>
       this.areRangesEqual(range, facetValue)
     )?.label;
@@ -246,8 +231,8 @@ export class NumericFacetCommon {
   }
 
   private areRangesEqual(
-    firstRange: InsightNumericRangeRequest | NumericRangeRequest,
-    secondRange: InsightNumericRangeRequest | NumericRangeRequest
+    firstRange: NumericRangeRequest,
+    secondRange: NumericRangeRequest
   ) {
     return (
       firstRange.start === secondRange.start &&
@@ -256,10 +241,7 @@ export class NumericFacetCommon {
     );
   }
 
-  private renderValue(
-    facetValue: InsightNumericFacetValue,
-    onClick: () => void
-  ) {
+  private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {

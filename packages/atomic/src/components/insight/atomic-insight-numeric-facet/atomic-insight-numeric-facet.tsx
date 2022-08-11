@@ -30,9 +30,9 @@ import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {
-  InsightNumericRangeWithLabel,
   NumericFacetCommon,
   NumericFacetDisplayValues,
+  NumericRangeWithLabel,
 } from '../../common/facets/numeric-facet-common';
 import {
   defaultNumberFormatter,
@@ -84,7 +84,7 @@ export class AtomicInsightNumericFacet
   public facetForInput?: InsightNumericFacet;
   public filter?: InsightNumericFilter;
   public searchStatus!: InsightSearchStatus;
-  private manualRanges: InsightNumericRangeWithLabel[] = [];
+  private manualRanges: NumericRangeWithLabel[] = [];
   @Element() private host!: HTMLElement;
   private formatter: NumberFormatter = defaultNumberFormatter;
   private numericFacetCommon!: NumericFacetCommon;

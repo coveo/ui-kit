@@ -125,12 +125,15 @@ export type DateFacet = {
   deselectAll(): void;
 };
 
-export type DateFacetValue = {
+type Range<T = string | number> = {
+  start: T;
+  end: T;
+  endInclusive: boolean;
+};
+
+export type DateFacetValue = Range<string> & {
   state: FacetValueState;
   numberOfResults: number;
-  start: string;
-  end: string;
-  endInclusive: boolean;
 };
 
 export type DateRangeOptions = {
@@ -138,37 +141,61 @@ export type DateRangeOptions = {
   end: RelativeDate;
 };
 
-export type DateRangeRequest = {
+export type DateRangeRequest = Range<string> & {
   state: FacetValueState;
-  start: string;
-  end: string;
-  endInclusive: boolean;
+};
+
+export type DateFilterState = {
+  enabled: boolean;
+  facetId: string;
+  isLoading: boolean;
+  range?: DateFacetValue;
 };
 
 export type DateFilter = {
-  state: {
-    enabled: boolean;
-    facetId: string;
-    isLoading: boolean;
-    range?: DateFacetValue;
-  };
+  state: DateFilterState;
   clear(): void;
-  setRange(range: {start: string; end: string; endInclusive: boolean}): boolean;
+  setRange(range: Range<string>): boolean;
   enable(): void;
   disable(): void;
   subscribe(listener: () => void): () => void;
-};
-
-export type NumericFacetValue = {
-  state: FacetValueState;
-  end: number;
-  start: number;
-  numberOfResults: number;
-  endInclusive: boolean;
 };
 
 export type QuerySummary = {
   state: {
     total: number;
   };
+};
+
+export type NumericFacetValue = Range<number> & {
+  state: FacetValueState;
+  numberOfResults: number;
+};
+
+export type NumericFacet = {
+  state: {facetId: string; enabled: boolean; values: NumericFacetValue[]};
+  toggleSelect(value: NumericFacetValue): void;
+  toggleSingleSelect(value: NumericFacetValue): void;
+  deselectAll(): void;
+};
+
+export type NumericFilterState = {
+  facetId: string;
+  enabled: boolean;
+  isLoading: boolean;
+  range?: NumericFacetValue;
+};
+
+export type NumericFilter = {
+  state: NumericFilterState;
+  clear(): void;
+  setRange(range: {start: number; end: number}): boolean;
+  enable(): void;
+  disable(): void;
+  subscribe(listener: () => void): () => void;
+};
+
+export type NumericRangeOptions = Range<number>;
+export type NumericRangeRequest = Range<number> & {
+  state: FacetValueState;
 };
