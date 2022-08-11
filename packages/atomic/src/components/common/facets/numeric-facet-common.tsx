@@ -1,6 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {
-  FacetConditionsManager,
   NumericFacet,
   NumericFacetValue,
   NumericFilter,
@@ -11,7 +10,6 @@ import {VNode, h} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
-  InsightFacetConditionsManager,
   InsightNumericFacet,
   InsightNumericFacetValue,
   InsightNumericFilter,
@@ -20,7 +18,7 @@ import {
 import {NumberFormatter} from '../formats/format-common';
 import {Hidden} from '../hidden';
 import {AnyBindings} from '../interface/bindings';
-import {SearchStatusState} from '../types';
+import {FacetConditionsManager, SearchStatusState} from '../types';
 import {
   shouldDisplayInputForFacetRange,
   validateDependsOn,
@@ -60,9 +58,7 @@ interface NumericFacetCommonOptions {
   ): InsightNumericRangeWithLabel[] | NumericRangeWithLabel[];
   getFormatter(): NumberFormatter;
   getSearchStatusState(): SearchStatusState;
-  buildDependenciesManager():
-    | InsightFacetConditionsManager
-    | FacetConditionsManager;
+  buildDependenciesManager(): FacetConditionsManager;
   buildNumericRange(
     config: NumericRangeOptions
   ): InsightNumericRangeRequest | NumericRangeRequest;
@@ -99,9 +95,7 @@ export class NumericFacetCommon {
   private getFormatter: () => NumberFormatter;
   private getSearchStatusState: () => SearchStatusState;
 
-  private dependenciesManager:
-    | InsightFacetConditionsManager
-    | FacetConditionsManager;
+  private dependenciesManager: FacetConditionsManager;
 
   constructor(props: NumericFacetCommonOptions) {
     this.host = props.host;

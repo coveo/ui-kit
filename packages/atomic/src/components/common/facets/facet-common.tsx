@@ -16,12 +16,10 @@ import {
   AnyFacetValueRequest,
   CategoryFacetValueRequest,
   FacetValueRequest,
-  FacetConditionsManager,
 } from '@coveo/headless';
 import {
   InsightCategoryFacetValueRequest,
   InsightFacet,
-  InsightFacetConditionsManager,
   InsightFacetSortCriterion,
   InsightFacetValue,
   InsightFacetValueRequest,
@@ -49,7 +47,12 @@ import {FacetSearchMatches} from './facet-search/facet-search-matches';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
-import {FacetSearchState, SearchStatus, SearchStatusState} from '../types';
+import {
+  FacetConditionsManager,
+  FacetSearchState,
+  SearchStatus,
+  SearchStatusState,
+} from '../types';
 import {AnyBindings} from '../interface/bindings';
 
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
@@ -279,7 +282,7 @@ interface FacetCommonOptions {
   headingLevel: number;
   displayValuesAs: FacetDisplayValues;
   dependsOn: Record<string, string>;
-  dependenciesManager: FacetConditionsManager | InsightFacetConditionsManager;
+  dependenciesManager: FacetConditionsManager;
   facet: Facet | InsightFacet;
   facetId: string;
   sortCriteria: FacetSortCriterion | InsightFacetSortCriterion;
@@ -305,9 +308,7 @@ export class FacetCommon {
   private headingLevel: number;
   private displayValuesAs: FacetDisplayValues;
   private dependsOn: Record<string, string>;
-  public dependenciesManager:
-    | FacetConditionsManager
-    | InsightFacetConditionsManager;
+  public dependenciesManager: FacetConditionsManager;
   private facet: Facet | InsightFacet;
   private facetId: string;
   private sortCriteria: FacetSortCriterion | InsightFacetSortCriterion;

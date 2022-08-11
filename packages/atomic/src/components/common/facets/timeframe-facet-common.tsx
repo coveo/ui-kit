@@ -4,7 +4,6 @@ import {
   DateFacetValue,
   DateFilter,
   DateRangeRequest,
-  FacetConditionsManager,
   RelativeDate,
 } from '@coveo/headless';
 import dayjs from 'dayjs';
@@ -16,7 +15,6 @@ import {
   InsightDateFilter,
   InsightDateRangeOptions,
   InsightDateRangeRequest,
-  InsightFacetConditionsManager,
   InsightRelativeDate,
 } from '../../insight';
 import {Hidden} from '../hidden';
@@ -31,7 +29,7 @@ import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-valu
 import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 import {FacetHeader} from './facet-header/facet-header';
 import {AnyBindings} from '../interface/bindings';
-import {SearchStatusState} from '../types';
+import {FacetConditionsManager, SearchStatusState} from '../types';
 
 export type RelativeDatePeriod = 'past' | 'now' | 'next';
 
@@ -60,9 +58,7 @@ interface TimeframeFacetCommonOptions {
   dependsOn: Record<string, string>;
   withDatePicker: boolean;
   getSearchStatusState(): SearchStatusState;
-  buildDependenciesManager():
-    | InsightFacetConditionsManager
-    | FacetConditionsManager;
+  buildDependenciesManager(): FacetConditionsManager;
   deserializeRelativeDate(date: string): InsightRelativeDate | RelativeDate;
   buildDateRange(
     config: InsightDateRangeOptions | InsightDateRangeOptions
@@ -95,9 +91,7 @@ export class TimeframeFacetCommon {
   private facetForDateRange?: InsightDateFacet | DateFacet;
   private filter?: InsightDateFilter | DateFilter;
   private manualTimeframes: Timeframe[] = [];
-  private dependenciesManager?:
-    | InsightFacetConditionsManager
-    | FacetConditionsManager;
+  private dependenciesManager?: FacetConditionsManager;
   private deserializeRelativeDate: (
     date: string
   ) => InsightRelativeDate | RelativeDate;

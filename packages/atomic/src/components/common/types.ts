@@ -39,3 +39,7 @@ export type FacetSearchState = {
   moreValuesAvailable: boolean;
   query: string;
 };
+
+export type FacetConditionsManager = {
+  stopWatching(): void;
+};
