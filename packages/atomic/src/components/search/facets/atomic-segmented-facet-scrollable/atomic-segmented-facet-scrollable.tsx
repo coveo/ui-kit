@@ -81,27 +81,24 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     if (!this.horizontalScrollRef) {
       return;
     }
+    const container = this.horizontalScrollRef;
+    const isScrollable = container.clientWidth < container.scrollWidth;
 
-    const isScrollable =
-      this.horizontalScrollRef.clientWidth <
-      this.horizontalScrollRef.scrollWidth;
-    const isLeftEdge = Math.floor(this.horizontalScrollRef.scrollLeft) <= 0;
+    const isLeftEdge = Math.floor(container.scrollLeft) <= 0;
     const isRightEdge =
-      Math.ceil(this.horizontalScrollRef.scrollLeft) >=
-      this.horizontalScrollRef.scrollWidth -
-        this.horizontalScrollRef.clientWidth;
+      Math.ceil(container.scrollLeft) >=
+      container.scrollWidth - container.clientWidth;
 
     this.hideLeftArrow = !isScrollable || isLeftEdge;
     this.hideRightArrow = !isScrollable || isRightEdge;
   }
 
   private slideHorizontally(direction: ArrowDirection) {
-    if (!this.horizontalScrollRef || !this.arrowRef) {
-      return;
-    }
-    const container = this.horizontalScrollRef;
-    const arrowsWidth = this.arrowRef.clientWidth * 2;
+    const container = this.horizontalScrollRef!;
+    const arrowsWidth = this.arrowRef!.clientWidth * 2;
+
     const pixelsToScroll = (container.clientWidth - arrowsWidth) * 0.7;
+
     const isLeftEdge = Math.floor(container.scrollLeft - pixelsToScroll) <= 0;
     const isRightEdge =
       Math.ceil(container.scrollLeft + pixelsToScroll) >=
