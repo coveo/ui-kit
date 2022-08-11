@@ -14,7 +14,10 @@ import {
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
-import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
+import {
+  BasicFacetSortCriterionOrCustom,
+  FaceSortCriterionStringOrExplicit,
+} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   disableFacet,
   enableFacet,
@@ -30,13 +33,13 @@ import {
 } from '../../../../state/state-sections';
 import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
 import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions';
-import {validateOptions} from '../../../../utils/validate-payload';
 import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {
   FacetOptions,
   facetOptionsSchema,
   FacetSearchOptions,
+  validateFacetOptions,
 } from './headless-core-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
 import {FacetValueState} from '../../../../features/facets/facet-api/value';
@@ -51,6 +54,7 @@ import {CoreEngine} from '../../../../app/engine';
 import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
 import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 import {omit} from '../../../../utils/utils';
+import {arrayEqual} from '../../../../utils/compare-utils';
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -109,7 +113,7 @@ export interface CoreFacet extends Controller {
    *
    * @param criterion - The criterion to use for sorting values.
    */
-  sortBy(criterion: FacetSortCriterion): void;
+  sortBy(criterion: FaceSortCriterionStringOrExplicit): void;
 
   /**
    * Checks whether the facet values are sorted according to the specified criterion.
@@ -117,7 +121,7 @@ export interface CoreFacet extends Controller {
    * @param criterion - The criterion to compare.
    * @returns Whether the facet values are sorted according to the specified criterion.
    */
-  isSortedBy(criterion: FacetSortCriterion): boolean;
+  isSortedBy(criterion: FaceSortCriterionStringOrExplicit): boolean;
 
   /**
    * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
@@ -161,7 +165,7 @@ export interface CoreFacetState {
   values: FacetValue[];
 
   /** The active sortCriterion of the facet. */
-  sortCriterion: FacetSortCriterion;
+  sortCriterion: BasicFacetSortCriterionOrCustom;
 
   /** `true` if a search is in progress and `false` otherwise. */
   isLoading: boolean;
@@ -177,6 +181,9 @@ export interface CoreFacetState {
 
   /** Whether the facet is enabled and its values are used to filter search results. */
   enabled: boolean;
+
+  /** The custom sort applied to facet values */
+  customSort: string[];
 }
 
 export interface FacetSearch {
@@ -305,12 +312,13 @@ export function buildCoreFacet(
     field: props.options.field,
     facetId,
   };
+
   const options: Required<FacetOptions> = {
     facetSearch: {...defaultFacetSearchOptions, ...props.options.facetSearch},
     ...registrationOptions,
   };
 
-  validateOptions(engine, optionsSchema, options, 'buildFacet');
+  validateFacetOptions(engine, options, optionsSchema, 'buildFacet');
 
   const getRequest = () => facetRequestSelector(engine.state, facetId);
   const getResponse = () => facetResponseSelector(engine.state, facetId);
@@ -354,12 +362,19 @@ export function buildCoreFacet(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
 
-    sortBy(criterion: FacetSortCriterion) {
+    sortBy(criterion: FaceSortCriterionStringOrExplicit) {
       dispatch(updateFacetSortCriterion({facetId, criterion}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
     },
 
-    isSortedBy(criterion: FacetSortCriterion) {
+    isSortedBy(criterion: FaceSortCriterionStringOrExplicit) {
+      if (this.state.sortCriterion === 'custom') {
+        if (typeof criterion === 'string') {
+          return false;
+        }
+        return arrayEqual(this.state.customSort, criterion.customSort);
+      }
+
       return this.state.sortCriterion === criterion;
     },
 
@@ -403,7 +418,16 @@ export function buildCoreFacet(
       const isLoading = getIsLoading();
       const enabled = getIsEnabled();
 
-      const sortCriterion = request.sortCriteria;
+      const sortCriterion =
+        typeof request.sortCriteria === 'string'
+          ? request.sortCriteria
+          : request.sortCriteria.type;
+
+      const customSort =
+        typeof request.sortCriteria === 'string'
+          ? []
+          : request.sortCriteria.customSort;
+
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'
@@ -419,6 +443,7 @@ export function buildCoreFacet(
         canShowMoreValues,
         canShowLessValues: computeCanShowLessValues(),
         enabled,
+        customSort,
       };
     },
   };

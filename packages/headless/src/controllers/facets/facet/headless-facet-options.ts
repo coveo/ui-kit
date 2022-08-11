@@ -1,8 +1,5 @@
-import {Schema, StringValue} from '@coveo/bueno';
-import {
-  facetSortCriteria,
-  FacetSortCriterion,
-} from '../../../features/facets/facet-set/interfaces/request';
+import {Schema} from '@coveo/bueno';
+import {FaceSortCriterionStringOrExplicit} from '../../../features/facets/facet-set/interfaces/request';
 import {
   facetId,
   field,
@@ -69,7 +66,7 @@ export interface FacetOptions {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion;
+  sortCriteria?: FaceSortCriterionStringOrExplicit;
 
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request.
@@ -109,14 +106,15 @@ export interface FacetSearchOptions {
   query?: string;
 }
 
-export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
+export const facetOptionsSchema = new Schema<
+  Required<Omit<FacetOptions, 'sortCriteria'>>
+>({
   facetId,
   field,
   delimitingCharacter,
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
   facetSearch,
   allowedValues,
   hasBreadcrumbs,

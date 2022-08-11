@@ -253,6 +253,18 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
+    it('dispatches a #updateFacetSortCriterion action with the passed explicit value', () => {
+      const criterion = {type: 'custom' as const, customSort: ['foo', 'bar']};
+      facet.sortBy(criterion);
+
+      const action = updateFacetSortCriterion({
+        facetId,
+        criterion,
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       facet.sortBy('score');
 
@@ -273,6 +285,50 @@ describe('facet', () => {
     setFacetRequest({sortCriteria: 'alphanumeric'});
 
     expect(facet.isSortedBy('score')).toBe(false);
+  });
+
+  it('when the passed explicit criterion matches the active sort explicit criterion, #isSortedBy returns true', () => {
+    const criterion = {type: 'custom' as const, customSort: ['foo', 'bar']};
+    setFacetRequest({sortCriteria: criterion});
+
+    expect(facet.isSortedBy(criterion)).toBe(true);
+  });
+
+  it('when the passed explicit criterion does not match the active sort explicit criterion, #isSortedBy returns false', () => {
+    const currentCriterion = {
+      type: 'custom' as const,
+      customSort: ['foo', 'bar'],
+    };
+    const targetCriterion = {
+      type: 'custom' as const,
+      customSort: ['foo', 'bazz'],
+    };
+    setFacetRequest({sortCriteria: currentCriterion});
+
+    expect(facet.isSortedBy(targetCriterion)).toBe(false);
+  });
+
+  it('when the passed string criterion does not match the active sort explicit criterion, #isSortedBy returns false', () => {
+    const currentCriterion = {
+      type: 'custom' as const,
+      customSort: ['foo', 'bar'],
+    };
+    const targetCriterion = 'occurrences';
+    setFacetRequest({sortCriteria: currentCriterion});
+
+    expect(facet.isSortedBy(targetCriterion)).toBe(false);
+  });
+
+  it('when the passed explicit criterion does not match the active sort string criterion, #isSortedBy returns false', () => {
+    const currentCriterion = 'occurrences';
+    const targetCriterion = {
+      type: 'custom' as const,
+      customSort: ['foo', 'bar'],
+    };
+
+    setFacetRequest({sortCriteria: currentCriterion});
+
+    expect(facet.isSortedBy(targetCriterion)).toBe(false);
   });
 
   describe('#showMoreValues', () => {

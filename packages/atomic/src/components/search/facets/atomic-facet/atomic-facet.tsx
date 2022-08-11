@@ -113,6 +113,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
   /**
+   * Specifies a custom order by which to sort the facet values.
+   *
+   * Example:
+   * ```html
+   * <!-- Sort @ticketstatus facet values in a logical order for support tickets -->
+   * <atomic-facet field="@ticketstatus" custom-sort="New,Opened,Feedback,Resolved"></atomic-facet>
+   * ```
+   */
+  @Prop({reflect: true}) public customSort?: string;
+  /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
    */
@@ -137,8 +147,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * Default: `1000`
    */
   @Prop() public injectionDepth = 1000;
-  // @Prop() public customSort?: string; TODO: KIT-753 Add customSort option for facet
-
   /**
    * The required facets and values for this facet to be displayed.
    * Examples:
@@ -202,6 +210,13 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       injectionDepth: this.injectionDepth,
       allowedValues: this.allowedValues?.trim().split(','),
     };
+
+    if (this.customSort) {
+      options.sortCriteria = {
+        type: 'custom',
+        customSort: this.customSort.split(','),
+      };
+    }
 
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;

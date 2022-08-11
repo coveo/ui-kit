@@ -1,8 +1,10 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {ArrayValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {CoreEngine} from '../../../../app/engine';
 import {
+  FaceSortCriterionStringOrExplicit,
   facetSortCriteria,
-  FacetSortCriterion,
 } from '../../../../features/facets/facet-set/interfaces/request';
+import {validateOptions} from '../../../../utils/validate-payload';
 import {
   facetId,
   field,
@@ -67,7 +69,7 @@ export interface FacetOptions {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion;
+  sortCriteria?: FaceSortCriterionStringOrExplicit;
 }
 
 export interface FacetSearchOptions {
@@ -89,7 +91,7 @@ export interface FacetSearchOptions {
   query?: string;
 }
 
-export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
+export const facetOptionsSchema = new Schema({
   facetId,
   field,
   // TODO: Remove on next major version
@@ -97,6 +99,55 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
   facetSearch,
 });
+
+export const facetOptionSortCriteriaStringSchema = new Schema({
+  sortCriteria: new StringValue({
+    constrainTo: facetSortCriteria,
+  }),
+});
+
+export const facetOptionSortCriteriaExplicitSchema = new Schema({
+  sortCriteria: new RecordValue({
+    values: {
+      type: new StringValue({
+        constrainTo: [...facetSortCriteria, 'custom'],
+        required: true,
+        emptyAllowed: false,
+      }),
+      customSort: new ArrayValue({
+        required: false,
+        each: new StringValue({emptyAllowed: false}),
+      }),
+    },
+  }),
+});
+
+export function validateFacetOptions(
+  engine: CoreEngine,
+  options: Required<FacetOptions>,
+  schema: Schema<object>,
+  functionName: string
+) {
+  const {sortCriteria, ...allOthers} = options;
+  validateOptions(engine, schema, allOthers, functionName);
+
+  if (!sortCriteria) {
+    return;
+  }
+
+  const schemaForSortCriteria = getSortCriteriaPolymorphicSchema(sortCriteria);
+
+  validateOptions(engine, schemaForSortCriteria!, {sortCriteria}, functionName);
+}
+
+export function getSortCriteriaPolymorphicSchema(
+  sortCriteria: FaceSortCriterionStringOrExplicit
+) {
+  if (typeof sortCriteria === 'string') {
+    return facetOptionSortCriteriaStringSchema;
+  }
+
+  return facetOptionSortCriteriaExplicitSchema;
+}

@@ -365,6 +365,24 @@ describe('facet-set slice', () => {
     );
   });
 
+  it('dispatching #updateFacetSortCriterion with an explicit object update the state', () => {
+    const customSort = {customSort: ['foo', 'bar'], type: 'custom' as const};
+
+    buildRegistrationOptions({facetId: '1', field: 'author'});
+    const registedFacetState = facetSetReducer(
+      state,
+      registerFacet(buildRegistrationOptions({facetId: '1', field: 'author'}))
+    );
+    expect(registedFacetState['1'].sortCriteria).toBe('automatic');
+
+    const action = updateFacetSortCriterion({
+      facetId: '1',
+      criterion: customSort,
+    });
+    const newState = facetSetReducer(registedFacetState, action);
+    expect(newState['1'].sortCriteria).toMatchObject(customSort);
+  });
+
   it('dispatching #updateFacetNumberOfValues calls #handleFacetUpdateNumberOfValues', () => {
     jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
     facetSetReducer(

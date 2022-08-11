@@ -10,11 +10,7 @@ import {
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
-import {
-  FacetOptions,
-  FacetSearchOptions,
-  facetOptionsSchema,
-} from './headless-facet-options';
+import {FacetOptions, FacetSearchOptions} from './headless-facet-options';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
@@ -79,22 +75,18 @@ export function buildFacet(
   }
 
   const {dispatch} = engine;
-  const coreController = buildCoreFacet(
-    engine,
-    {
-      ...props,
-      options: {
-        ...props.options,
-        ...(props.options.allowedValues && {
-          allowedValues: {
-            type: 'simple',
-            values: props.options.allowedValues,
-          },
-        }),
-      },
+  const coreController = buildCoreFacet(engine, {
+    ...props,
+    options: {
+      ...props.options,
+      ...(props.options.allowedValues && {
+        allowedValues: {
+          type: 'simple',
+          values: props.options.allowedValues,
+        },
+      }),
     },
-    facetOptionsSchema
-  );
+  });
   const getFacetId = () => coreController.state.facetId;
 
   const createFacetSearch = () => {

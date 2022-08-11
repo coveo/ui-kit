@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {FacetSortCriterion} from './interfaces/request';
+import {FaceSortCriterionStringOrExplicit} from './interfaces/request';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
   StringValue,
@@ -62,7 +62,7 @@ export interface RegisterFacetActionCreatorPayload {
    *
    * @defaultValue `automatic`
    */
-  sortCriteria?: FacetSortCriterion;
+  sortCriteria?: FaceSortCriterionStringOrExplicit;
 
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request.
@@ -88,7 +88,7 @@ const facetRegistrationOptionsDefinition = {
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
-  sortCriteria: new Value<FacetSortCriterion>({required: false}),
+  sortCriteria: new Value<FaceSortCriterionStringOrExplicit>({required: false}),
   allowedValues: allowedValues,
 };
 
@@ -133,7 +133,7 @@ export interface UpdateFacetSortCriterionActionCreatorPayload {
   /**
    * The criterion by which to sort the facet.
    */
-  criterion: FacetSortCriterion;
+  criterion: FaceSortCriterionStringOrExplicit;
 }
 
 export const updateFacetSortCriterion = createAction(
@@ -141,7 +141,7 @@ export const updateFacetSortCriterion = createAction(
   (payload: UpdateFacetSortCriterionActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
-      criterion: new Value<FacetSortCriterion>({required: true}),
+      criterion: new Value<FaceSortCriterionStringOrExplicit>({required: true}),
     })
 );
 

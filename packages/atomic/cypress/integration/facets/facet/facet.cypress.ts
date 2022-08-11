@@ -1083,4 +1083,18 @@ describe('Facet v1 Test Suites', () => {
         .should('not.contain.text', 'Message');
     });
   });
+
+  describe('with custom-sort', () => {
+    it('returns values sorted', () => {
+      new TestFixture()
+        .with(
+          addFacet({field: 'objecttype', 'custom-sort': 'People,File,Contact'})
+        )
+        .init();
+
+      FacetSelectors.valueLabel().eq(0).should('have.text', 'People');
+      FacetSelectors.valueLabel().eq(1).should('have.text', 'File');
+      FacetSelectors.valueLabel().eq(2).should('have.text', 'Contact');
+    });
+  });
 });

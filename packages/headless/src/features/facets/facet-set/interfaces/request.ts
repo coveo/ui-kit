@@ -4,7 +4,6 @@ import {
   Freezable,
   Delimitable,
   Type,
-  SortCriteria,
   BaseFacetValueRequest,
   Expandable,
   AllowedValues,
@@ -23,9 +22,20 @@ export type FacetSortCriterion =
   | 'occurrences'
   | 'automatic';
 
+export type BasicFacetSortCriterionOrCustom = FacetSortCriterion | 'custom';
+
 export interface FacetValueRequest extends BaseFacetValueRequest {
   value: string;
 }
+
+export type FacetSortCriterionExplicit = {
+  type: BasicFacetSortCriterionOrCustom;
+  customSort: string[];
+};
+
+export type FaceSortCriterionStringOrExplicit =
+  | FacetSortCriterion
+  | FacetSortCriterionExplicit;
 
 export interface FacetRequest
   extends BaseFacetRequest,
@@ -34,10 +44,8 @@ export interface FacetRequest
     Freezable,
     Delimitable,
     Type<'specific'>,
-    AllowedValues,
-    SortCriteria<FacetSortCriterion> {
-  /** @defaultValue `automatic` */
-  sortCriteria: FacetSortCriterion;
+    AllowedValues {
+  sortCriteria: FaceSortCriterionStringOrExplicit;
   hasBreadcrumbs?: boolean;
 }
 
