@@ -25,10 +25,12 @@ type ArrowDirection = 'right' | 'left';
  *
  * @part scrollable-container - The wrapper for the entire component including the horizontal-scroll container and the arrow buttons.
  * @part horizontal-scroll - The scrollable container for the segmented facets.
+ * @part left-arrow-wrapper - The wrapper for the arrow button & fade on the left.
+ * @part right-arrow-wrapper - The wrapper for the arrow button & fade on the right.
+ * @part left-arrow-button - The arrow button used to scroll on the left.
+ * @part right-arrow-button - The arrow button used to scroll on the right.
  * @part left-arrow-icon - The arrow icon on the left.
  * @part right-arrow-icon - The arrow icon on the right.
- * @part left-arrow-button - The arrow button used to scroll on the left.
- * @part right-arrow-button - The arrow button used to scroll on the left.
  * @part left-fade - The white to transparent gradient on the left.
  * @part right-fade - The white to transparent gradient on the right.
  */
@@ -39,6 +41,10 @@ type ArrowDirection = 'right' | 'left';
   shadow: true,
 })
 export class AtomicSegmentedFacetScrollable implements InitializableComponent {
+  private horizontalScroll?: HTMLDivElement;
+  private arrowRef?: HTMLElement;
+  private observer!: ResizeObserver;
+
   @InitializeBindings()
   public bindings!: Bindings;
   public searchStatus!: SearchStatus;
@@ -47,12 +53,8 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
   public searchStatusState!: SearchStatusState;
   @State()
   public error!: Error;
-
-  private horizontalScroll?: HTMLDivElement;
-  private arrowRef?: HTMLElement;
   @State() private hideLeftArrow = true;
   @State() private hideRightArrow = true;
-  private observer!: ResizeObserver;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -114,52 +116,47 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
     this.hideRightArrow = isRightEdge;
   }
 
-  private getArrowClass(direction: ArrowDirection) {
-    if (direction === 'left') {
-      return `left-0 ${this.hideLeftArrow ? 'invisible opacity-0' : ''}`;
-    }
-
-    return `right-0 ${this.hideRightArrow ? 'invisible opacity-0' : ''}`;
-  }
-
-  private getFadeClass(direction: ArrowDirection) {
-    if (direction === 'left') {
-      return `bg-gradient-to-r left-0 ${this.hideLeftArrow ? 'opacity-0' : ''}`;
-    }
-
-    return `bg-gradient-to-l right-0 ${this.hideRightArrow ? 'opacity-0' : ''}`;
-  }
-
   private renderArrow(direction: ArrowDirection) {
-    if (!this.searchStatusState.firstSearchExecuted) {
-      return;
-    }
+    const hide =
+      (direction === 'left' && this.hideLeftArrow) ||
+      (direction === 'right' && this.hideRightArrow);
+    const hiddenClass = hide ? 'invisible opacity-0' : '';
+    const transitionClass = this.bindings.store.isAppLoaded()
+      ? 'transition-visi-opacity ease-in-out duration-300'
+      : '';
 
-    return [
-      <Button
-        part={`${direction}-arrow-button`}
-        style="square-neutral"
-        class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-1 h-10 w-10 top-0 bottom-0 transition-visi-opacity ease-in-out duration-300 ${this.getArrowClass(
-          direction
-        )}`}
-        ariaHidden="true"
-        tabIndex="-1"
-        onClick={() => this.slideHorizontally(direction)}
-        ref={(el) => (this.arrowRef = el)}
-      >
-        <atomic-icon
-          part={`${direction}-arrow-icon`}
-          class="w-3.5"
-          icon={direction === 'left' ? ArrowLeftIcon : ArrowRightIcon}
-        ></atomic-icon>
-      </Button>,
+    return (
       <div
-        part={`${direction}-fade`}
-        class={`w-20 h-10 absolute top-0 z-0 pointer-events-none from-background-60 transition-visi-opacity ease-in-out duration-300 ${this.getFadeClass(
-          direction
-        )}`}
-      ></div>,
-    ];
+        part={`${direction}-arrow-wrapper`}
+        class={`${hiddenClass} ${transitionClass}`}
+      >
+        <Button
+          part={`${direction}-arrow-button`}
+          style="square-neutral"
+          class={`flex shrink-0 basis-8 justify-center items-center rounded absolute z-1 h-10 w-10 top-0 bottom-0 ${
+            direction === 'left' ? 'left-0' : 'right-0'
+          }`}
+          ariaHidden="true"
+          tabIndex="-1"
+          onClick={() => this.slideHorizontally(direction)}
+          ref={(el) => (this.arrowRef = el)}
+        >
+          <atomic-icon
+            part={`${direction}-arrow-icon`}
+            class="w-3.5"
+            icon={direction === 'left' ? ArrowLeftIcon : ArrowRightIcon}
+          ></atomic-icon>
+        </Button>
+        <div
+          part={`${direction}-fade`}
+          class={`w-20 h-10 absolute top-0 z-0 pointer-events-none from-background-60 ${
+            direction === 'left'
+              ? 'left-0 bg-gradient-to-r'
+              : 'right-0 bg-gradient-to-l'
+          }`}
+        ></div>
+      </div>
+    );
   }
 
   public render() {
