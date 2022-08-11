@@ -26,16 +26,10 @@ export type FacetSortCriterion =
 
 type FacetValueState = 'idle' | 'selected';
 
-type CategoryFacetSearchResult = {
-  displayValue: string;
-  rawValue: string;
-  count: number;
-};
-
 export type FacetValue = {
-  state: FacetValueState;
-  numberOfResults: number;
   value: string;
+  numberOfResults: number;
+  state: FacetValueState;
 };
 
 export type FacetSearchState = {
@@ -45,7 +39,7 @@ export type FacetSearchState = {
   isLoading: boolean;
 };
 
-type FacetState = {
+export type FacetState = {
   values: FacetValue[];
   enabled: boolean;
   facetSearch: FacetSearchState;
@@ -58,7 +52,6 @@ export type Facet = {
   facetSearch: {
     clear(): void;
     search(): void;
-
     singleSelect(value: CategoryFacetSearchResult): void;
     select(value: CategoryFacetSearchResult): void;
     updateCaptions(captions: any): void;
@@ -115,12 +108,14 @@ export type RelativeDate = {
   amount?: number;
 };
 
+export type DateFacetState = {
+  facetId: string;
+  enabled: boolean;
+  values: DateFacetValue[];
+};
+
 export type DateFacet = {
-  state: {
-    facetId: string;
-    enabled: boolean;
-    values: DateFacetValue[];
-  };
+  state: DateFacetState;
   toggleSingleSelect(value: DateFacetValue): void;
   deselectAll(): void;
 };
@@ -172,8 +167,14 @@ export type NumericFacetValue = Range<number> & {
   numberOfResults: number;
 };
 
+export type NumericFacetState = {
+  facetId: string;
+  enabled: boolean;
+  values: NumericFacetValue[];
+};
+
 export type NumericFacet = {
-  state: {facetId: string; enabled: boolean; values: NumericFacetValue[]};
+  state: NumericFacetState;
   toggleSelect(value: NumericFacetValue): void;
   toggleSingleSelect(value: NumericFacetValue): void;
   deselectAll(): void;
@@ -199,3 +200,36 @@ export type NumericRangeOptions = Range<number>;
 export type NumericRangeRequest = Range<number> & {
   state: FacetValueState;
 };
+
+type CategoryFacetSearchResult = {
+  displayValue: string;
+  rawValue: string;
+  count: number;
+  path: string[];
+};
+
+export type CategoryFacetSearch = {
+  updateText(text: string): void;
+  showMoreResults(): void;
+  search(): void;
+  select(value: CategoryFacetSearchResult): void;
+  clear(): void;
+  updateCaptions(captions: Record<string, string>): void;
+};
+
+export type CategoryFacet = {
+  facetSearch: CategoryFacetSearch;
+  state: CategoryFacetState;
+};
+
+export type CategoryFacetState = {
+  facetSearch: {
+    values: CategoryFacetSearchResult[];
+    isLoading: boolean;
+    moreValuesAvailable: boolean;
+    query: string;
+  };
+};
+
+export type CategoryFacetSortCriterion = 'alphanumeric' | 'occurrences';
+export type RangeFacetSortCriterion = 'ascending' | 'descending';
