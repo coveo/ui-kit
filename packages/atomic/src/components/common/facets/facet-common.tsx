@@ -56,25 +56,10 @@ import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
+import {FacetInfo} from './facet-common-store';
 
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
-
-export interface FacetInfo {
-  label: string;
-}
-
-export type FacetType =
-  | 'facets'
-  | 'numericFacets'
-  | 'dateFacets'
-  | 'categoryFacets';
-
-export interface FacetValueFormat<ValueType> {
-  format(facetValue: ValueType): string;
-  content?(facetValue: ValueType): VNode;
-}
-
-export type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export type PropsOnAllFacets = {
   facetId?: string;
@@ -336,10 +321,16 @@ export class FacetCommon {
 
     this.validateProps();
 
-    this.bindings.store.registerFacet('facets', {
+    const facetInfo: FacetInfo = {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+    };
+    this.bindings.store.registerFacet('facets', facetInfo);
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => !!this.facet.state.values.length,
+      numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
   }
 
@@ -386,16 +377,18 @@ export class FacetCommon {
           headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={
-          this.facet.state.values.filter(({state}) => state === 'selected')
-            .length
-        }
+        numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={onToggleCollapse}
         headerRef={headerFocus.setTarget}
       ></FacetHeader>
     );
+  }
+
+  private get numberOfSelectedValues() {
+    return this.facet.state.values.filter(({state}) => state === 'selected')
+      .length;
   }
 
   private renderSearchInput() {

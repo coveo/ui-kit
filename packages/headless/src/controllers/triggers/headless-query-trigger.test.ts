@@ -71,15 +71,18 @@ describe('QueryTrigger', () => {
     });
   });
 
-  describe('when the #engine.state.triggers.query is updated', () => {
+  describe('when a search is performed with a query trigger', () => {
     const listener = jest.fn();
+    const originalQuery = 'yellow fruit';
+    const newQuery = 'bananas';
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
       initQueryTrigger();
       queryTrigger.subscribe(listener);
-      engine.state.triggers.query = 'bananas';
-
       const [firstListener] = registeredListeners();
+
+      engine.state.query.q = originalQuery;
+      engine.state.triggers.query = newQuery;
       firstListener();
     });
 
@@ -98,14 +101,60 @@ describe('QueryTrigger', () => {
     it('#state.wasQueryModified should be true', () => {
       expect(queryTrigger.state.wasQueryModified).toEqual(true);
     });
+
+    it("#state.originalQuery should be the user's query", () => {
+      expect(queryTrigger.state.originalQuery).toEqual(originalQuery);
+    });
+
+    it('#state.originalQuery should be the new query', () => {
+      expect(queryTrigger.state.newQuery).toEqual(newQuery);
+    });
+
+    describe('when the search resolves', () => {
+      beforeEach(() => {
+        listener.mockReset();
+        const [firstListener] = registeredListeners();
+
+        engine.state.query.q = newQuery;
+        engine.state.triggers.query = '';
+        firstListener();
+      });
+
+      it("it doesn't call the listener", () => {
+        expect(listener).toHaveBeenCalledTimes(0);
+      });
+
+      it('#state.wasQueryModified should be true', () => {
+        expect(queryTrigger.state.wasQueryModified).toEqual(true);
+      });
+
+      describe('then a different search is performed', () => {
+        beforeEach(() => {
+          const [firstListener] = registeredListeners();
+
+          engine.state.query.q = 'Oranges';
+          engine.state.triggers.query = '';
+          firstListener();
+        });
+
+        it('it calls the listener', () => {
+          expect(listener).toHaveBeenCalledTimes(1);
+        });
+
+        it('#state.wasQueryModified should be false', () => {
+          expect(queryTrigger.state.wasQueryModified).toEqual(false);
+        });
+      });
+    });
   });
 
-  describe('when the #engine.state.triggers.query is updated to the empty string', () => {
+  describe('when a search without a trigger is performed', () => {
     const listener = jest.fn();
     beforeEach(() => {
       engine = buildMockSearchAppEngine();
       initQueryTrigger();
       queryTrigger.subscribe(listener);
+      engine.state.query.q = 'Oranges';
       engine.state.triggers.query = '';
 
       const [firstListener] = registeredListeners();

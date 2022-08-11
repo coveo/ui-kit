@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "clean": "rimraf -rf dist/* headless/*",
-    "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook",
+    "build": "npm run build:locales && npm run build:stencil && npm run doc:list-assets && npm run build:storybook && npm run validate:definitions",
     "build:locales": "node ./scripts/create-generated-folder.js && node ./scripts/split-locales.js && node ./scripts/copy-dayjs-locales.js",
     "build:stencil": "npm run copy:headless && node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
     "copy:headless": "node scripts/copy-headless.js",
@@ -50,7 +50,8 @@
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
     "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx",
-    "doc:list-assets": "node scripts/list-assets.js"
+    "doc:list-assets": "node scripts/list-assets.js",
+    "validate:definitions": "! tsc --allowSyntheticDefaultImports dist/types/index.d.ts | grep -q 'components.d.ts'"
   },
   "dependencies": {
     "@coveo/bueno": "0.42.1",
