@@ -2,6 +2,7 @@
   <div
     role={divRole}
     aria-checked={isChecked}
+    aria-pressed={isChecked}
     onclick={onSelect}
     class="facet__value-container facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small"
     tabindex="0"
@@ -21,19 +22,25 @@
       ></lightning-input>
     </template>
     <template if:true={isChecked}>
-      <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_selected"
+      <span
+        class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_selected"
         >{formattedFacetValue}</span
       >
-      <span class="nowrap slds-var-m-top_xxx-small facet__number-of-results facet__value_selected">({numberOfResults})</span>
+      <span class="nowrap slds-var-m-top_xxx-small facet__number-of-results facet__value_selected"
+        >({numberOfResults})</span
+      >
     </template>
     <template if:false={isChecked}>
       <template if:true={isStandardFacet}>
-        <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle">
+        <span
+          class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle"
+        >
           <lightning-formatted-rich-text value={item.highlightedResult}></lightning-formatted-rich-text>
         </span>
       </template>
       <template if:false={isStandardFacet}>
-        <span class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle"
+        <span
+          class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small nowrap facet__value-text facet__value_idle"
           >{formattedFacetValue}</span
         >
       </template>

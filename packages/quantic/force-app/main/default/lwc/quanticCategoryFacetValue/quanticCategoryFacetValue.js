@@ -56,6 +56,10 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     return `Inclusion filter on ${this.facetValue};`;
   }
 
+  get isPressed() {
+    return this.item.state === 'selected';
+  }
+
   /**
    * @param {Event} evt
    */

@@ -3,6 +3,7 @@
     role="button"
     class="slds-size_1-of-1 facet__value-container"
     onclick={onSelect}
+    aria-pressed={isPressed}
     tabindex="0"
     onkeydown={onKeyDown}
     aria-label={ariaLabelVoiceOver}
@@ -28,7 +29,9 @@
       <template if:true={isSearchResult}>
         <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small slds-text-color_default">
           <div class="slds-grid slds-grid_vertical">
-            <div class="slds-col slds-p-left_none slds-grid_vertical-align-center facet__search-results slds-m-bottom_xxx-small">
+            <div
+              class="slds-col slds-p-left_none slds-grid_vertical-align-center facet__search-results slds-m-bottom_xxx-small"
+            >
               <lightning-formatted-rich-text
                 class="slds-truncate slds-float_left"
                 value={item.highlightedResult}
