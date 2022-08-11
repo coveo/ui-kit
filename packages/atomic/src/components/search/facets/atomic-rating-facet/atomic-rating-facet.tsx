@@ -217,7 +217,7 @@ export class AtomicRatingFacet
     });
     initializePopover(this.host, {
       ...facetInfo,
-      hasValues: () => !!this.facet.state.values.length,
+      hasValues: () => !!this.valuesToRender.length,
       numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
   }
