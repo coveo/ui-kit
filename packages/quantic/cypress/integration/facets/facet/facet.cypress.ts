@@ -814,7 +814,7 @@ describe('Facet Test Suite', () => {
     });
   });
 
-  describe('with a11y', () => {
+  describe('with values testing accessibility', () => {
     beforeEach(() => {
       visitFacetPage(
         {
