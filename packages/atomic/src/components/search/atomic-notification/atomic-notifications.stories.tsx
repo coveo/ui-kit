@@ -1,8 +1,8 @@
 import defaultStory from '../../../../.storybook/default-story';
 
 const {defaultModuleExport, exportedStory} = defaultStory(
-  'Atomic/Notification',
-  'atomic-notification',
+  'Atomic/Notifications',
+  'atomic-notifications',
   {},
   {
     engineConfig: {
@@ -12,7 +12,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
             {
               type: 'notify',
               content:
-                'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
+                'This is a demo notifications. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
             },
           ];
           return response;
@@ -23,4 +23,4 @@ const {defaultModuleExport, exportedStory} = defaultStory(
 );
 
 export default defaultModuleExport;
-export const DefaultNotification = exportedStory;
+export const DefaultNotifications = exportedStory;

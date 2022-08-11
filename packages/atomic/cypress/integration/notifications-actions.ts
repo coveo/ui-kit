@@ -1,24 +1,24 @@
 import {addTag, TestFixture} from '../fixtures/test-fixture';
-import {notificationComponent} from './notification-selectors';
+import {notificationsComponent} from './notifications-selectors';
 
-export interface AddNotificationProps {
+export interface AddNotificationsProps {
   props?: {
     'heading-level'?: number;
   };
 }
 
-export const addNotification =
-  (options: AddNotificationProps = {}) =>
+export const addNotifications =
+  (options: AddNotificationsProps = {}) =>
   (env: TestFixture) =>
-    addTag(env, notificationComponent, options.props ?? {});
+    addTag(env, notificationsComponent, options.props ?? {});
 
 export const addNotifyTriggers =
   (notifications: string[]) => (env: TestFixture) => {
     env.withCustomResponse((response) => ({
       ...response,
-      triggers: notifications.map((notification) => ({
+      triggers: notifications.map((notifications) => ({
         type: 'notify',
-        content: notification,
+        content: notifications,
       })),
     }));
   };
