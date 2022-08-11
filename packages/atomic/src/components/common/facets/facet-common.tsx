@@ -1,17 +1,5 @@
 import {VNode, h} from '@stencil/core';
-import {
-  NumericFacet,
-  CategoryFacet,
-  DateFacet,
-  FacetState,
-  NumericFacetState,
-  CategoryFacetState,
-  DateFacetState,
-  CategoryFacetSortCriterion,
-  RangeFacetSortCriterion,
-  AnyFacetValuesCondition,
-  AnyFacetValueRequest,
-} from '@coveo/headless';
+import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
 import {i18n} from 'i18next';
 import {Schema, StringValue} from '@coveo/bueno';
 import {
@@ -36,13 +24,22 @@ import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
 import {
+  CategoryFacet,
+  CategoryFacetSortCriterion,
+  CategoryFacetState,
   CategoryFacetValueRequest,
+  DateFacet,
+  DateFacetState,
   Facet,
   FacetConditionsManager,
   FacetSearchState,
   FacetSortCriterion,
+  FacetState,
   FacetValue,
   FacetValueRequest,
+  NumericFacet,
+  NumericFacetState,
+  RangeFacetSortCriterion,
   SearchStatus,
   SearchStatusState,
 } from '../types';
