@@ -40,6 +40,14 @@ export type FacetConditionsManager = {
   stopWatching(): void;
 };
 
+export type FacetValueRequest = {
+  value: string;
+  children?: FacetValueRequest;
+  state: FacetValueState;
+  retrieveChildren: boolean;
+  retrieveCount: number;
+};
+
 export type CategoryFacetValueRequest = {
   state: FacetValueState;
   value: string;

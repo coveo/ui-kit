@@ -14,13 +14,11 @@ import {
   FacetValue,
   AnyFacetValuesCondition,
   AnyFacetValueRequest,
-  FacetValueRequest,
 } from '@coveo/headless';
 import {
   InsightFacet,
   InsightFacetSortCriterion,
   InsightFacetValue,
-  InsightFacetValueRequest,
 } from '../../insight';
 import {i18n} from 'i18next';
 import {Schema, StringValue} from '@coveo/bueno';
@@ -49,6 +47,7 @@ import {
   CategoryFacetValueRequest,
   FacetConditionsManager,
   FacetSearchState,
+  FacetValueRequest,
   SearchStatus,
   SearchStatusState,
 } from '../types';
@@ -176,7 +175,7 @@ function isCategoryFacetValueRequest(
 
 function isFacetValueRequest(
   value: AnyFacetValueRequest
-): value is FacetValueRequest | InsightFacetValueRequest {
+): value is FacetValueRequest {
   return (
     'value' in value &&
     typeof value.value === 'string' &&
