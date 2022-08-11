@@ -12,7 +12,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
             {
               type: 'notify',
               content:
-                'This is a demo notifications. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
+                'This is a demo notification. It contains text that may span over a different number of lines depending on your screen width. Notifications are returned by the Coveo Search API.',
             },
           ];
           return response;
