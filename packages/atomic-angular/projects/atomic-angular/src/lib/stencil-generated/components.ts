@@ -653,13 +653,13 @@ export declare interface AtomicNotifications extends Components.AtomicNotificati
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['headingLevel']
+  inputs: ['headingLevel', 'icon']
 })
 @Component({
   selector: 'atomic-notifications',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['headingLevel']
+  inputs: ['headingLevel', 'icon']
 })
 export class AtomicNotifications {
   protected el: HTMLElement;
