@@ -1,6 +1,5 @@
 import {VNode, h} from '@stencil/core';
 import {
-  Facet,
   NumericFacet,
   CategoryFacet,
   DateFacet,
@@ -8,18 +7,11 @@ import {
   NumericFacetState,
   CategoryFacetState,
   DateFacetState,
-  FacetSortCriterion,
   CategoryFacetSortCriterion,
   RangeFacetSortCriterion,
-  FacetValue,
   AnyFacetValuesCondition,
   AnyFacetValueRequest,
 } from '@coveo/headless';
-import {
-  InsightFacet,
-  InsightFacetSortCriterion,
-  InsightFacetValue,
-} from '../../insight';
 import {i18n} from 'i18next';
 import {Schema, StringValue} from '@coveo/bueno';
 import {
@@ -45,8 +37,11 @@ import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
 import {
   CategoryFacetValueRequest,
+  Facet,
   FacetConditionsManager,
   FacetSearchState,
+  FacetSortCriterion,
+  FacetValue,
   FacetValueRequest,
   SearchStatus,
   SearchStatusState,
@@ -242,10 +237,7 @@ export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;
   searchStatusState: SearchStatusState;
-  facetValues: Pick<
-    FacetValue | InsightFacetValue,
-    'numberOfResults' | 'state'
-  >[];
+  facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
 }) {
   const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
   if (!hasInput) {
@@ -281,9 +273,9 @@ interface FacetCommonOptions {
   displayValuesAs: FacetDisplayValues;
   dependsOn: Record<string, string>;
   dependenciesManager: FacetConditionsManager;
-  facet: Facet | InsightFacet;
+  facet: Facet;
   facetId: string;
-  sortCriteria: FacetSortCriterion | InsightFacetSortCriterion;
+  sortCriteria: FacetSortCriterion;
   withSearch: boolean;
 }
 
@@ -307,9 +299,9 @@ export class FacetCommon {
   private displayValuesAs: FacetDisplayValues;
   private dependsOn: Record<string, string>;
   public dependenciesManager: FacetConditionsManager;
-  private facet: Facet | InsightFacet;
+  private facet: Facet;
   private facetId: string;
-  private sortCriteria: FacetSortCriterion | InsightFacetSortCriterion;
+  private sortCriteria: FacetSortCriterion;
   private withSearch: boolean;
 
   private resultIndexToFocusOnShowMore = 0;
@@ -499,7 +491,7 @@ export class FacetCommon {
   }
 
   private renderValue(
-    facetValue: InsightFacetValue,
+    facetValue: FacetValue,
     onClick: () => void,
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean,

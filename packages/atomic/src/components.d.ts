@@ -22,7 +22,7 @@ import { Bindings } from "./components/search/atomic-search-interface/atomic-sea
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-import { RelativeDateUnit } from "./components/common/facets/timeframe-facet-common";
+import { RelativeDateUnit } from "./components/common/types";
 export namespace Components {
     interface AtomicAriaLive {
         "updateMessage": (region: string, message: string, assertive: boolean) => Promise<void>;

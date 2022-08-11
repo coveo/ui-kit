@@ -1,4 +1,3 @@
-import {FacetValueState} from '@coveo/headless';
 import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
 import {
@@ -7,23 +6,8 @@ import {
   FacetStore,
   FacetValueFormat,
 } from '../facets/facet-common';
+import {DateFacetValue, NumericFacetValue} from '../types';
 import {AnyEngineType, CommonStencilStore} from './bindings';
-
-type BaseFacetValue = {
-  numberOfResults: number;
-  endInclusive: boolean;
-  state: FacetValueState;
-};
-
-type DateFacetValue = BaseFacetValue & {
-  start: string;
-  end: string;
-};
-
-type NumericFacetValue = BaseFacetValue & {
-  start: number;
-  end: number;
-};
 
 export type AtomicCommonStoreData = {
   facets: FacetStore<FacetInfo>;
