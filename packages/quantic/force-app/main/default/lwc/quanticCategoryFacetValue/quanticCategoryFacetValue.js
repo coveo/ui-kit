@@ -52,12 +52,13 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     return this.item.value;
   }
 
-  get ariaLabelVoiceOver() {
+  get ariaLabelValue() {
     return `Inclusion filter on ${this.facetValue};`;
   }
 
   get isPressed() {
-    return this.item.state === 'selected';
+    // convert type boolean to type string for attribute aria-pressed
+    return this.item?.state === 'selected' ? 'true' : 'false';
   }
 
   /**

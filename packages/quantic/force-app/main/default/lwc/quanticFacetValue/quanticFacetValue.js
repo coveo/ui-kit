@@ -63,7 +63,7 @@ export default class QuanticFacetValue extends LightningElement {
     return this.displayAsLink ? 'button' : 'checkbox';
   }
 
-  get ariaLabelVoiceOver() {
+  get ariaLabelValue() {
     return `Inclusion filter on ${this.formattedFacetValue}; ${this.numberOfResults} result`;
   }
 
