@@ -1,7 +1,5 @@
 import {VNode, h} from '@stencil/core';
 import {
-  SearchStatus,
-  SearchStatusState,
   Facet,
   NumericFacet,
   CategoryFacet,
@@ -29,7 +27,6 @@ import {
   InsightFacetSortCriterion,
   InsightFacetValue,
   InsightFacetValueRequest,
-  InsightSearchStatusState,
 } from '../../insight';
 import {i18n} from 'i18next';
 import {Schema, StringValue} from '@coveo/bueno';
@@ -56,6 +53,7 @@ import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
+import {SearchStatus, SearchStatusState} from '../types';
 
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
 
@@ -245,7 +243,7 @@ export function validateDependsOn(dependsOn: Record<string, string>) {
 export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;
-  searchStatusState: SearchStatusState | InsightSearchStatusState;
+  searchStatusState: SearchStatusState;
   facetValues: Pick<
     FacetValue | InsightFacetValue,
     'numberOfResults' | 'state'

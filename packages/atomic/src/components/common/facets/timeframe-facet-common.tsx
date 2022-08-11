@@ -6,7 +6,6 @@ import {
   DateRangeRequest,
   FacetConditionsManager,
   RelativeDate,
-  SearchStatusState,
 } from '@coveo/headless';
 import dayjs from 'dayjs';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -19,7 +18,6 @@ import {
   InsightDateRangeRequest,
   InsightFacetConditionsManager,
   InsightRelativeDate,
-  InsightSearchStatusState,
 } from '../../insight';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
@@ -34,6 +32,7 @@ import {FacetValueLink} from './facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 import {FacetHeader} from './facet-header/facet-header';
+import {SearchStatusState} from '../types';
 
 export interface Timeframe extends RelativeDate {
   label?: string;
@@ -51,7 +50,7 @@ interface TimeframeFacetCommonOptions {
   headingLevel: number;
   dependsOn: Record<string, string>;
   withDatePicker: boolean;
-  getSearchStatusState(): InsightSearchStatusState | SearchStatusState;
+  getSearchStatusState(): SearchStatusState;
   buildDependenciesManager():
     | InsightFacetConditionsManager
     | FacetConditionsManager;
@@ -93,9 +92,7 @@ export class TimeframeFacetCommon {
   private deserializeRelativeDate: (
     date: string
   ) => InsightRelativeDate | RelativeDate;
-  private getSearchStatusState: () =>
-    | InsightSearchStatusState
-    | SearchStatusState;
+  private getSearchStatusState: () => SearchStatusState;
 
   private buildDateRange: (
     config: InsightDateRangeOptions | InsightDateRangeOptions

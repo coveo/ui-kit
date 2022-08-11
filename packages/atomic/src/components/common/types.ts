@@ -1,7 +1,9 @@
+export type SearchStatusState = {
+  hasResults: boolean;
+};
+
 export type SearchStatus = {
-  state: {
-    hasResults: boolean;
-  };
+  state: SearchStatusState;
 };
 
 export type Pager = {

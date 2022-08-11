@@ -6,7 +6,6 @@ import {
   NumericFilter,
   NumericRangeOptions,
   NumericRangeRequest,
-  SearchStatusState,
 } from '@coveo/headless';
 import {VNode, h} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -17,12 +16,12 @@ import {
   InsightNumericFacetValue,
   InsightNumericFilter,
   InsightNumericRangeRequest,
-  InsightSearchStatusState,
 } from '../../insight';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {NumberFormatter} from '../formats/format-common';
 import {Hidden} from '../hidden';
+import {SearchStatusState} from '../types';
 import {
   shouldDisplayInputForFacetRange,
   validateDependsOn,
@@ -61,7 +60,7 @@ interface NumericFacetCommonOptions {
     manualRanges: InsightNumericRangeWithLabel[] | NumericRangeWithLabel[]
   ): InsightNumericRangeWithLabel[] | NumericRangeWithLabel[];
   getFormatter(): NumberFormatter;
-  getSearchStatusState(): InsightSearchStatusState | SearchStatusState;
+  getSearchStatusState(): SearchStatusState;
   buildDependenciesManager():
     | InsightFacetConditionsManager
     | FacetConditionsManager;
@@ -99,9 +98,7 @@ export class NumericFacetCommon {
   private facetForRange?: InsightNumericFacet | NumericFacet;
   private facetForInput?: InsightNumericFacet | NumericFacet;
   private getFormatter: () => NumberFormatter;
-  private getSearchStatusState: () =>
-    | InsightSearchStatusState
-    | SearchStatusState;
+  private getSearchStatusState: () => SearchStatusState;
 
   private dependenciesManager:
     | InsightFacetConditionsManager
