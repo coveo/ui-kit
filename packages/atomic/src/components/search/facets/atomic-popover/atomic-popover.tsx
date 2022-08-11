@@ -192,7 +192,7 @@ export class AtomicPopover implements InitializableComponent {
         <div
           id={this.popoverId}
           part="facet"
-          class={`absolute pt-0.5 z-10 ${this.isOpen ? 'block' : 'hidden'}`}
+          class={`absolute pt-0.5 z-1 ${this.isOpen ? 'block' : 'hidden'}`}
         >
           <slot></slot>
         </div>
