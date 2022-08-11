@@ -51,9 +51,8 @@ import {FacetSearchMatches} from './facet-search/facet-search-matches';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {SearchStatus, SearchStatusState} from '../types';
+import {AnyBindings} from '../interface/bindings';
 
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
 
@@ -276,7 +275,7 @@ export function shouldDisplayInputForFacetRange(facetRange: {
 
 interface FacetCommonOptions {
   host: HTMLElement;
-  bindings: Bindings | InsightBindings;
+  bindings: AnyBindings;
   label: string;
   field: string;
   headingLevel: number;
@@ -302,7 +301,7 @@ interface FacetCommonRenderProps {
 
 export class FacetCommon {
   private host: HTMLElement;
-  private bindings: Bindings | InsightBindings;
+  private bindings: AnyBindings;
   private label: string;
   private field: string;
   private headingLevel: number;

@@ -1,10 +1,39 @@
 import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
+import {
+  FacetType,
+  FacetInfo,
+  FacetStore,
+  FacetValueFormat,
+} from '../facets/facet-common';
 import {AnyEngineType, CommonStencilStore} from './bindings';
 
+type FacetValueState = 'idle' | 'selected';
+
+type BaseFacetValue = {
+  numberOfResults: number;
+  endInclusive: boolean;
+  state: FacetValueState;
+};
+
+type DateFacetValue = BaseFacetValue & {
+  start: string;
+  end: string;
+};
+
+type NumericFacetValue = BaseFacetValue & {
+  start: number;
+  end: number;
+};
+
 export type AtomicCommonStoreData = {
+  facets: FacetStore<FacetInfo>;
+  numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
+  dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
+  categoryFacets: FacetStore<FacetInfo>;
   loadingFlags: string[];
   iconAssetsPath: string;
+  fieldsToInclude: string[];
   facetElements: HTMLElement[];
 };
 
@@ -18,6 +47,10 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
   isAppLoaded(): boolean;
   getUniqueIDFromEngine(engine: AnyEngineType): string;
   getFacetElements(): HTMLElement[];
+  registerFacet<T extends FacetType, U extends string>(
+    facetType: T,
+    data: StoreData[T][U] & {facetId: U; element: HTMLElement}
+  ): void;
 }
 
 export function createAtomicCommonStore<
@@ -29,6 +62,18 @@ export function createAtomicCommonStore<
 
   return {
     ...stencilStore,
+
+    registerFacet<T extends FacetType, U extends string>(
+      facetType: T,
+      data: StoreData[T][U] & {facetId: U; element: HTMLElement}
+    ) {
+      if (stencilStore.state[facetType][data.facetId]) {
+        return;
+      }
+
+      stencilStore.state[facetType][data.facetId] = data;
+      stencilStore.state.facetElements.push(data.element);
+    },
 
     getIconAssetsPath() {
       return stencilStore.get('iconAssetsPath');

@@ -17,10 +17,9 @@ import {
   InsightNumericFilter,
   InsightNumericRangeRequest,
 } from '../../insight';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {NumberFormatter} from '../formats/format-common';
 import {Hidden} from '../hidden';
+import {AnyBindings} from '../interface/bindings';
 import {SearchStatusState} from '../types';
 import {
   shouldDisplayInputForFacetRange,
@@ -47,7 +46,7 @@ export type NumericFacetDisplayValues = 'checkbox' | 'link';
 
 interface NumericFacetCommonOptions {
   host: HTMLElement;
-  bindings: Bindings | InsightBindings;
+  bindings: AnyBindings;
   label: string;
   field: string;
   headingLevel: number;
@@ -82,7 +81,7 @@ interface NumericFacetCommonRenderProps {
 
 export class NumericFacetCommon {
   private host: HTMLElement;
-  private bindings: Bindings | InsightBindings;
+  private bindings: AnyBindings;
   private label: string;
   private field: string;
   private headingLevel: number;

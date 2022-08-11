@@ -2,10 +2,9 @@ import {h, VNode} from '@stencil/core';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {FacetManager, QuerySummary} from '@coveo/headless';
 import {InsightFacetManager, InsightQuerySummary} from '../../insight';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
+import {AnyBindings} from '../interface/bindings';
 
 interface RefineModalCommonRenderProps {
   isOpen: boolean;
@@ -14,14 +13,14 @@ interface RefineModalCommonRenderProps {
 
 interface RefineModalCommonOptions {
   host: HTMLElement;
-  bindings: Bindings | InsightBindings;
+  bindings: AnyBindings;
   initializeQuerySummary(): QuerySummary | InsightQuerySummary;
   onClose(): void;
 }
 
 export class RefineModalCommon {
   private host: HTMLElement;
-  private bindings: Bindings | InsightBindings;
+  private bindings: AnyBindings;
   private querySummary: QuerySummary | InsightQuerySummary;
   private onClose: () => void;
 

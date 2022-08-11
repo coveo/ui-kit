@@ -19,8 +19,6 @@ import {
   InsightFacetConditionsManager,
   InsightRelativeDate,
 } from '../../insight';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../hidden';
 import {
   shouldDisplayInputForFacetRange,
@@ -32,6 +30,7 @@ import {FacetValueLink} from './facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 import {FacetHeader} from './facet-header/facet-header';
+import {AnyBindings} from '../interface/bindings';
 import {SearchStatusState} from '../types';
 
 export type RelativeDatePeriod = 'past' | 'now' | 'next';
@@ -54,7 +53,7 @@ export interface Timeframe {
 
 interface TimeframeFacetCommonOptions {
   host: HTMLElement;
-  bindings: Bindings | InsightBindings;
+  bindings: AnyBindings;
   label: string;
   field: string;
   headingLevel: number;
@@ -85,7 +84,7 @@ interface TimeframeFacetCommonRenderProps {
 
 export class TimeframeFacetCommon {
   private host: HTMLElement;
-  private bindings: Bindings | InsightBindings;
+  private bindings: AnyBindings;
   private label: string;
   private field: string;
   private headingLevel: number;
