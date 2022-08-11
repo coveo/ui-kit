@@ -510,12 +510,12 @@ export class AtomicSearchBox {
   private updateSuggestionElements(query: string) {
     if (!this.isPanelInFocus(this.leftPanelRef, query)) {
       this.leftSuggestionElements = this.getAndFilterLeftSuggestionElements();
+    }
 
-      if (!this.isPanelInFocus(this.rightPanelRef, query)) {
-        this.rightSuggestionElements = this.getSuggestionElements(
-          this.rightSuggestions
-        );
-      }
+    if (!this.isPanelInFocus(this.rightPanelRef, query)) {
+      this.rightSuggestionElements = this.getSuggestionElements(
+        this.rightSuggestions
+      );
     }
   }
 
