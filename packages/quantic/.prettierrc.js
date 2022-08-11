@@ -6,7 +6,7 @@ module.exports = {
     overrides: [
       {
         files: '**/lwc/**/*.html',
-        options: {parser: 'lwc', printWidth: 140},
+        options: {parser: 'lwc'},
       },
     ],
   },
