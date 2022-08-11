@@ -26,3 +26,9 @@ type FacetManagerPayload = {
 export type FacetManager = {
   sort(payload: FacetManagerPayload[]): FacetManagerPayload[];
 };
+
+export type QuerySummary = {
+  state: {
+    total: number;
+  };
+};
