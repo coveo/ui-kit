@@ -63,12 +63,12 @@ export function buildSearchLayout(
 
     const statusSelector = `${layoutSelector} ${sectionSelector('status')}`;
     return `${statusSelector} atomic-sort-dropdown {
-      display:none;
+      display: none;
     }
 
     ${mediaQuerySelector} {
      ${statusSelector} atomic-sort-dropdown {
-       display:block;
+       display: block;
       }
 
       ${statusSelector} atomic-refine-toggle {
@@ -81,7 +81,7 @@ export function buildSearchLayout(
     return `${mediaQuerySelector} {
       ${layoutSelector} ${sectionSelector(
       'horizontal-facets'
-    )} > atomic-popover {
+    )} > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }`;

@@ -27,7 +27,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
     }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover {
+      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"
@@ -38,12 +38,12 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
-      display:none;
+      display: none;
     }
 
     @media only screen and (min-width: 1024px) {
      atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
-       display:block;
+       display: block;
       }
 
       atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-refine-toggle {
@@ -52,7 +52,7 @@ atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort
     }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover {
+      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"
@@ -63,7 +63,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
 "atomic-search-layout#abc { display: grid }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover {
+      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"
@@ -96,7 +96,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
     }
 
 @media only screen and (min-width: 1024px) {
-      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover {
+      atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
         display: block;
       }
     }"
