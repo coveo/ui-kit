@@ -17,13 +17,11 @@ import {
   CategoryFacetValueRequest,
   FacetValueRequest,
   FacetConditionsManager,
-  FacetSearchState,
 } from '@coveo/headless';
 import {
   InsightCategoryFacetValueRequest,
   InsightFacet,
   InsightFacetConditionsManager,
-  InsightFacetSearchState,
   InsightFacetSortCriterion,
   InsightFacetValue,
   InsightFacetValueRequest,
@@ -51,7 +49,7 @@ import {FacetSearchMatches} from './facet-search/facet-search-matches';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
-import {SearchStatus, SearchStatusState} from '../types';
+import {FacetSearchState, SearchStatus, SearchStatusState} from '../types';
 import {AnyBindings} from '../interface/bindings';
 
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
@@ -359,8 +357,8 @@ export class FacetCommon {
   }
 
   public componentShouldUpdate(
-    next: FacetSearchState | InsightFacetSearchState,
-    prev: FacetSearchState | InsightFacetSearchState,
+    next: FacetSearchState,
+    prev: FacetSearchState,
     propName: string
   ) {
     if (propName === 'facetState' && prev && this.withSearch) {

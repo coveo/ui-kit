@@ -32,3 +32,10 @@ export type QuerySummary = {
     total: number;
   };
 };
+
+export type FacetSearchState = {
+  values: {displayValue: string; rawValue: string; count: number}[];
+  isLoading: boolean;
+  moreValuesAvailable: boolean;
+  query: string;
+};
