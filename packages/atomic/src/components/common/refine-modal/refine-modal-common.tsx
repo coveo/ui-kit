@@ -1,10 +1,11 @@
 import {h, VNode} from '@stencil/core';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
-import {FacetManager, QuerySummary} from '@coveo/headless';
-import {InsightFacetManager, InsightQuerySummary} from '../../insight';
+import {QuerySummary} from '@coveo/headless';
+import {InsightQuerySummary} from '../../insight';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
+import {FacetManager} from '../types';
 
 interface RefineModalCommonRenderProps {
   isOpen: boolean;
@@ -111,7 +112,7 @@ export class RefineModalCommon {
 
 export function getClonedFacetElements(
   facetElements: HTMLElement[],
-  facetManager: FacetManager | InsightFacetManager
+  facetManager: FacetManager
 ): HTMLDivElement {
   const divSlot = document.createElement('div');
   divSlot.setAttribute('slot', 'facets');

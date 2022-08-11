@@ -17,3 +17,12 @@ export type Pager = {
     currentPages: number[];
   };
 };
+
+type FacetManagerPayload = {
+  facetId: string;
+  payload: HTMLElement;
+};
+
+export type FacetManager = {
+  sort(payload: FacetManagerPayload[]): FacetManagerPayload[];
+};
