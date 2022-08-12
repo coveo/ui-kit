@@ -1,11 +1,11 @@
 import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
 import {
-  FacetType,
   FacetInfo,
   FacetStore,
+  FacetType,
   FacetValueFormat,
-} from '../facets/facet-common';
+} from '../facets/facet-common-store';
 import {DateFacetValue, NumericFacetValue} from '../types';
 import {AnyEngineType, CommonStencilStore} from './bindings';
 
