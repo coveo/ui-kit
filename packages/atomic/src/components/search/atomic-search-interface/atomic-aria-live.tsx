@@ -1,13 +1,20 @@
-import {Component, h, Host, State, Element, Method} from '@stencil/core';
 import {
-  FindAriaLiveEventArgs,
-  findAriaLiveEventName,
-} from '../../../utils/accessibility-utils';
+  Component,
+  h,
+  Host,
+  State,
+  Element,
+  Method,
+  Listen,
+} from '@stencil/core';
+import {FindAriaLiveEventArgs} from '../../../utils/accessibility-utils';
+import {buildDebouncedQueue} from '../../../utils/debounce-utils';
+import {randomID} from '../../../utils/utils';
+
+type Regions = {[regionName: string]: {assertive: boolean; message: string}};
 
 /**
  * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
- *
- * We do not recommend dynamically adding/removing this component from the page. It is better to have this component during the initial render of the page.
  */
 @Component({
   tag: 'atomic-aria-live',
@@ -15,13 +22,13 @@ import {
 })
 export class AtomicAriaLive {
   @Element() private host!: HTMLAtomicAriaLiveElement;
-  @State() private message = '';
-  @State() private assertive = false;
+  @State() private regions: Readonly<Regions> = {};
 
-  private lastUpdatedRegion?: string;
-  private disconnectFindAriaLiveEvent?: () => void;
+  private messagesQueue = buildDebouncedQueue({delay: 500});
+  private id = randomID('aria-live-');
 
-  protected onFindAriaLive(args: FindAriaLiveEventArgs) {
+  @Listen('atomic/accessibility/findAriaLive', {target: 'document'})
+  protected onFindAriaLive({detail: args}: CustomEvent<FindAriaLiveEventArgs>) {
     if (!args.element || !this.isInSearchInterface) {
       args.element = this.host;
     }
@@ -47,37 +54,55 @@ export class AtomicAriaLive {
     message: string,
     assertive: boolean
   ) {
-    const wouldOverwriteAnotherRegion = region !== this.lastUpdatedRegion;
-    if (wouldOverwriteAnotherRegion) {
-      this.lastUpdatedRegion = region;
-      if (!message) {
-        return;
-      }
+    const updateRegion = () =>
+      (this.regions = {...this.regions, [region]: {assertive, message}});
+
+    if (message) {
+      this.messagesQueue.enqueue(updateRegion, region);
+    } else {
+      this.messagesQueue.cancelActionIfQueued(region);
+      updateRegion();
     }
-    this.message = message;
-    this.assertive = assertive;
   }
 
-  public connectedCallback() {
-    const eventListener = (ev: Event) =>
-      this.onFindAriaLive((ev as CustomEvent<FindAriaLiveEventArgs>).detail);
-    document.addEventListener(findAriaLiveEventName, eventListener);
-    this.disconnectFindAriaLiveEvent = () =>
-      document.removeEventListener(findAriaLiveEventName, eventListener);
+  /**
+   * @internal
+   */
+  @Method()
+  public async registerRegion(region: string, assertive: boolean) {
+    if (region in this.regions) {
+      return;
+    }
+    this.regions = {...this.regions, [region]: {assertive, message: ''}};
   }
 
   public disconnectedCallback() {
-    this.disconnectFindAriaLiveEvent?.();
+    this.messagesQueue.clear();
   }
 
   public render() {
     return (
       <Host
-        style={{position: 'absolute', right: '10000px'}}
-        aria-live={this.assertive ? 'assertive' : 'polite'}
-        role="status"
+        style={{
+          position: 'absolute',
+          display: 'block',
+          height: '0',
+          overflow: 'hidden',
+          margin: '0',
+        }}
       >
-        {this.message}
+        {Object.entries(this.regions).map(
+          ([regionName, {assertive, message}]) => (
+            <div
+              key={regionName}
+              id={`${this.id}-${regionName}`}
+              aria-live={assertive ? 'assertive' : 'polite'}
+              role="status"
+            >
+              {message}
+            </div>
+          )
+        )}
       </Host>
     );
   }
