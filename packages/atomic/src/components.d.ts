@@ -448,9 +448,8 @@ export namespace Components {
     }
     interface AtomicInsightLayout {
         /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+          * Whether the interface should be shown in widget format.
          */
-        "mobileBreakpoint": string;
         "widget": boolean;
     }
     interface AtomicInsightNumericFacet {
@@ -2636,9 +2635,8 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightLayout {
         /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+          * Whether the interface should be shown in widget format.
          */
-        "mobileBreakpoint"?: string;
         "widget"?: boolean;
     }
     interface AtomicInsightNumericFacet {

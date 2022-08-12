@@ -1,5 +1,4 @@
 import {Component, Element, Prop, Watch} from '@stencil/core';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {randomID} from '../../../utils/utils';
 import {buildInsightLayout} from './insight-layout';
 
@@ -14,10 +13,8 @@ export class AtomicInsightLayout {
   private styleTag?: HTMLStyleElement;
   @Element() private host!: HTMLElement;
   /**
-   * CSS value that defines where the layout goes from mobile to desktop.
-   * e.g., 800px, 65rem.
+   * Whether the interface should be shown in widget format.
    */
-  @Prop({reflect: true}) public mobileBreakpoint = DEFAULT_MOBILE_BREAKPOINT;
   @Prop({reflect: true, mutable: true}) public widget = false;
 
   @Watch('widget')
