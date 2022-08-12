@@ -129,7 +129,7 @@ export class AtomicPopover implements InitializableComponent {
 
     this.popperInstance = createPopper(this.buttonRef, this.popupRef, {
       placement: 'bottom-start',
-      modifiers: [preventOverflow /*, flip*/],
+      modifiers: [preventOverflow],
     });
   }
 
