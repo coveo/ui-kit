@@ -7,7 +7,11 @@ import {
   logSearchFromLink,
   logOmniboxFromLink,
 } from './analytics-actions';
-import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
+import {
+  AnalyticsType,
+  AsyncThunkAnalyticsOptions,
+  AsyncThunkInsightAnalyticsOptions,
+} from './analytics-utils';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
 import {
   logCategoryFacetBreadcrumb,
@@ -78,6 +82,14 @@ import {
   LogStaticFilterClearAllActionCreatorPayload,
   StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions';
+import {
+  logNotifyTrigger,
+  logTriggerExecute,
+  logTriggerQuery,
+  logTriggerRedirect,
+  logUndoTriggerQuery,
+  LogUndoTriggerQueryActionCreatorPayload,
+} from '../triggers/trigger-analytics-actions';
 
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -652,6 +664,64 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when a user action triggers a new query set in the effective query pipeline on the search page.
+   *
+   * @returns A dispatchable action.
+   */
+  logTriggerQuery(): AsyncThunkAction<
+    {analyticsType: AnalyticsType.Search},
+    void,
+    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user undoes a query set in the effective query pipeline on the search page.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logUndoTriggerQuery(
+    payload: LogUndoTriggerQueryActionCreatorPayload
+  ): AsyncThunkAction<
+    {analyticsType: AnalyticsType.Search},
+    void,
+    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user action triggers a notification set in the effective query pipeline on the search page.
+   *
+   * @returns A dispatchable action.
+   */
+  logNotifyTrigger(): AsyncThunkAction<
+    {analyticsType: AnalyticsType.Search},
+    void,
+    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user action redirects them to a URL set in the effective query pipeline on the search page.
+   *
+   * @returns A dispatchable action.
+   */
+  logTriggerRedirect(): AsyncThunkAction<
+    {analyticsType: AnalyticsType.Search},
+    void,
+    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a user action executes a JavaScript function set in the effective query pipeline on the search page.
+   *
+   * @returns A dispatchable action.
+   */
+  logTriggerExecute(): AsyncThunkAction<
+    {analyticsType: AnalyticsType.Search},
+    void,
+    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
 }
 
 /**
@@ -705,5 +775,10 @@ export function loadSearchAnalyticsActions(
     logStaticFilterSelect,
     logStaticFilterDeselect,
     logStaticFilterClearAll,
+    logTriggerQuery,
+    logUndoTriggerQuery,
+    logNotifyTrigger,
+    logTriggerRedirect,
+    logTriggerExecute,
   };
 }
