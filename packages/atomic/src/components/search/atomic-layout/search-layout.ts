@@ -63,12 +63,12 @@ export function buildSearchLayout(
 
     const statusSelector = `${layoutSelector} ${sectionSelector('status')}`;
     return `${statusSelector} atomic-sort-dropdown {
-      display:none;
+      display: none;
     }
 
     ${mediaQuerySelector} {
      ${statusSelector} atomic-sort-dropdown {
-       display:block;
+       display: block;
       }
 
       ${statusSelector} atomic-refine-toggle {
@@ -77,7 +77,17 @@ export function buildSearchLayout(
     }`;
   };
 
-  return [display, facets(), refine()]
+  const horizontalFacets = () => {
+    return `${mediaQuerySelector} {
+      ${layoutSelector} ${sectionSelector(
+      'horizontal-facets'
+    )} > atomic-popover:not(.atomic-hidden) {
+        display: block;
+      }
+    }`;
+  };
+
+  return [display, facets(), refine(), horizontalFacets()]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
 }

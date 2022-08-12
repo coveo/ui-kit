@@ -3,3 +3,19 @@
 .value-count {
   @apply ml-1.5 text-neutral-dark;
 }
+
+:host(.popover-nested) {
+  @apply min-w-[18rem];
+
+  &::part(label-button) {
+    @apply hidden;
+  }
+
+  &::part(facet) {
+    @apply shadow-lg;
+  }
+
+  &::part(values) {
+    @apply max-h-96 overflow-y-auto;
+  }
+}

@@ -2,6 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {VNode, h} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {NumberFormatter} from '../formats/format-common';
 import {Hidden} from '../hidden';
 import {AnyBindings} from '../interface/bindings';
@@ -18,6 +19,7 @@ import {
   shouldDisplayInputForFacetRange,
   validateDependsOn,
 } from './facet-common';
+import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/facet-container';
 import {FacetHeader} from './facet-header/facet-header';
 import {NumberInputType} from './facet-number-input/number-input-type';
@@ -135,6 +137,14 @@ export class NumericFacetCommon {
     );
   }
 
+  private get hasValues() {
+    if (this.filter?.state.range) {
+      return true;
+    }
+
+    return !!this.facetForRange?.state.values.length;
+  }
+
   private get numberOfSelectedValues() {
     if (this.filter?.state.range) {
       return 1;
@@ -193,11 +203,21 @@ export class NumericFacetCommon {
   }
 
   private registerFacetToStore() {
-    this.bindings.store.registerFacet('numericFacets', {
+    const facetInfo: FacetInfo = {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+    };
+
+    this.bindings.store.registerFacet('numericFacets', {
+      ...facetInfo,
       format: (value) => this.formatFacetValue(value),
+    });
+
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => this.hasValues,
+      numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
 
     if (this.filter) {

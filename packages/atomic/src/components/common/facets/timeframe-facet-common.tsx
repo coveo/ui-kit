@@ -26,6 +26,8 @@ import {
   RelativeDateUnit,
   SearchStatusState,
 } from '../types';
+import {FacetInfo} from './facet-common-store';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
@@ -152,6 +154,14 @@ export class TimeframeFacetCommon {
     });
   }
 
+  private get hasValues() {
+    if (this.filter?.state.range) {
+      return true;
+    }
+
+    return !!this.facetForDateRange?.state.values.length;
+  }
+
   private get numberOfSelectedValues() {
     if (this.filter?.state?.range) {
       return 1;
@@ -197,11 +207,22 @@ export class TimeframeFacetCommon {
     if (!this.facetForDateRange) {
       return;
     }
-    this.bindings.store.registerFacet('dateFacets', {
+
+    const facetInfo: FacetInfo = {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+    };
+
+    this.bindings.store.registerFacet('dateFacets', {
+      ...facetInfo,
       format: (value) => this.formatFacetValue(value),
+    });
+
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => this.hasValues,
+      numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
 
     if (this.filter) {

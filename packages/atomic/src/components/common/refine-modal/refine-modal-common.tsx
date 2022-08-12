@@ -4,6 +4,7 @@ import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
 import {FacetManager, QuerySummary} from '../types';
+import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 
 interface RefineModalCommonRenderProps {
   isOpen: boolean;
@@ -129,6 +130,7 @@ export function getClonedFacetElements(
   sortedFacetsElements.forEach((facetElement) => {
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
     clone.isCollapsed = true;
+    clone.classList.remove(popoverClass);
     divSlot.append(clone);
   });
 

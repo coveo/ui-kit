@@ -1129,6 +1129,10 @@
     "en": "No",
     "fr": "Non"
   },
+  "popover": {
+    "en": "Popover menu for the {{label}} facet",
+    "fr": "Menu contextuel de la facette {{label}}"
+  },
   "number-input-minimum": {
     "en": "Enter a minimum numerical value for the {{label}} facet",
     "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"

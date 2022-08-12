@@ -17,7 +17,9 @@ import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
+import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/search/atomic-layout-section/sections";
+import { ClearPopoverEvent } from "./components/search/facets/atomic-popover/popover-type";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
@@ -548,7 +550,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicInsightStore>;
+        "store"?: AtomicInsightStore;
     }
     interface AtomicInsightResultList {
         /**
@@ -746,6 +748,8 @@ export namespace Components {
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages": number;
+    }
+    interface AtomicPopover {
     }
     interface AtomicQueryError {
     }
@@ -1763,6 +1767,12 @@ declare global {
         prototype: HTMLAtomicPagerElement;
         new (): HTMLAtomicPagerElement;
     };
+    interface HTMLAtomicPopoverElement extends Components.AtomicPopover, HTMLStencilElement {
+    }
+    var HTMLAtomicPopoverElement: {
+        prototype: HTMLAtomicPopoverElement;
+        new (): HTMLAtomicPopoverElement;
+    };
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
     }
     var HTMLAtomicQueryErrorElement: {
@@ -2150,6 +2160,7 @@ declare global {
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
+        "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -2718,7 +2729,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicInsightStore>;
+        "store"?: AtomicInsightStore;
     }
     interface AtomicInsightResultList {
         /**
@@ -2914,6 +2925,9 @@ declare namespace LocalJSX {
          */
         "numberOfPages"?: number;
         "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
+    }
+    interface AtomicPopover {
+        "onAtomic/closePopovers"?: (event: CustomEvent<ClearPopoverEvent>) => void;
     }
     interface AtomicQueryError {
     }
@@ -3682,6 +3696,7 @@ declare namespace LocalJSX {
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
+        "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -3789,6 +3804,7 @@ declare module "@stencil/core" {
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
+            "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;

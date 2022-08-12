@@ -12,7 +12,8 @@ import {
   FacetInfo,
   FacetStore,
   FacetValueFormat,
-} from '../../common/facets/facet-common';
+} from '../../common/facets/facet-common-store';
+
 export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   fieldsToInclude: string[];
   facets: FacetStore<FacetInfo>;
