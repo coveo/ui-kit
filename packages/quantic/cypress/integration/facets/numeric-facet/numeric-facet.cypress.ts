@@ -378,7 +378,7 @@ describe('quantic-numeric-facet', () => {
   });
 
   describe('with default numeric facet testing accessibility', () => {
-    beforeEach('', () => {
+    beforeEach(() => {
       visitNumericFacetPage(defaultSettings);
     });
 
