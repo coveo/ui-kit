@@ -75,6 +75,10 @@ export enum SearchPageEvents {
      */
     triggerQuery = 'query',
     /**
+     * Identifies the custom event that gets logged when a user undoes a query set in the effective query pipeline on the search page.
+     */
+    undoTriggerQuery = 'undoQuery',
+    /**
      * Identifies the custom event that gets logged when a user action redirects them to a URL set in the effective query pipeline on the search page.
      */
     triggerRedirect = 'redirect',
@@ -268,6 +272,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.triggerNotify]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerExecute]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerQuery]: 'queryPipelineTriggers',
+    [SearchPageEvents.undoTriggerQuery]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerRedirect]: 'queryPipelineTriggers',
     [SearchPageEvents.queryError]: 'errors',
     [SearchPageEvents.queryErrorBack]: 'errors',
@@ -361,6 +366,10 @@ export interface TriggerNotifyMetadata {
 
 export interface TriggerExecuteMetadata {
     executed: string;
+}
+
+export interface UndoTriggerRedirectMetadata {
+    undoneQuery: string;
 }
 
 export interface TriggerRedirectMetadata {

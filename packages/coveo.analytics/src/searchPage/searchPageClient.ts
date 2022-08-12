@@ -25,6 +25,7 @@ import {
     SmartSnippetDocumentIdentifier,
     StaticFilterMetadata,
     StaticFilterToggleValueMetadata,
+    UndoTriggerRedirectMetadata,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -168,6 +169,10 @@ export class CoveoSearchPageClient {
     public logTriggerQuery() {
         const meta = {query: this.provider.getSearchEventRequestPayload().queryText};
         return this.logCustomEvent(SearchPageEvents.triggerQuery, meta);
+    }
+
+    public logUndoTriggerQuery(meta: UndoTriggerRedirectMetadata) {
+        return this.logCustomEvent(SearchPageEvents.undoTriggerQuery, meta);
     }
 
     public logTriggerRedirect(meta: TriggerRedirectMetadata) {
