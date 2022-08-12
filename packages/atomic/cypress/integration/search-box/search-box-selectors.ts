@@ -10,6 +10,8 @@ export const SearchBoxSelectors = {
   querySuggestions: () => SearchBoxSelectors.shadow().find('[data-query]'),
   searchBoxAriaLive: () => AriaLiveSelectors.region('search-box'),
   suggestionsAriaLive: () => AriaLiveSelectors.region('search-suggestions'),
+  recentQueriesItem: () =>
+    SearchBoxSelectors.shadow().find('[part~="recent-query-item"]'),
 };
 
 export const ButtonText = {
