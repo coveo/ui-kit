@@ -1,11 +1,8 @@
 <template>
-  <lightning-button
-    key={pageNumber}
-    variant={variant}
-    label={number}
-    title={number}
-    class="slds-m-left_xx-small"
-    value={number}
-    onclick={select}
-  ></lightning-button>
+  <template if:true={selected}>
+    <button class="slds-button slds-button_brand slds-m-left_xx-small" aria-pressed="true" key={pageNumber} onclick={select}>{number}</button>
+  </template>
+  <template if:false={selected}>
+    <button class="slds-button slds-button_outline-brand slds-m-left_xx-small" aria-pressed="false" key={pageNumber} onclick={select}>{number}</button>
+  </template>
 </template>
