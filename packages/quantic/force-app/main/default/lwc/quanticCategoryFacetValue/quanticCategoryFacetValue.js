@@ -53,7 +53,7 @@ export default class QuanticCategoryFacetValue extends LightningElement {
   }
 
   get ariaLabelValue() {
-    return `Inclusion filter on ${this.facetValue};`;
+    return `Inclusion filter on ${this.facetValue}`;
   }
 
   get isPressed() {
