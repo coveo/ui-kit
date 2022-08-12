@@ -52,7 +52,8 @@ import {
 })
 export class AtomicPopover implements InitializableComponent {
   @Element() private host!: HTMLElement;
-  private containerRef!: HTMLElement;
+  private buttonRef!: HTMLElement;
+  private popupRef!: HTMLElement;
   private popperInstance?: PopperInstance;
   @InitializeBindings()
   public bindings!: Bindings;
@@ -122,15 +123,14 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   public componentDidRender() {
-    if (this.popperInstance || !this.containerRef) {
+    if (this.popperInstance || !this.buttonRef || !this.popupRef) {
       return;
     }
 
-    this.popperInstance = createPopper(
-      this.containerRef,
-      this.host.children.item(0)! as HTMLElement,
-      {placement: 'bottom-start', modifiers: [preventOverflow /*, flip*/]}
-    );
+    this.popperInstance = createPopper(this.buttonRef, this.popupRef, {
+      placement: 'bottom-start',
+      modifiers: [preventOverflow /*, flip*/],
+    });
   }
 
   public componentDidUpdate() {
@@ -145,6 +145,7 @@ export class AtomicPopover implements InitializableComponent {
 
     return (
       <Button
+        ref={(el) => (this.buttonRef = el!)}
         style="square-neutral"
         onClick={() => this.togglePopover()}
         part="popover-button"
@@ -214,7 +215,7 @@ export class AtomicPopover implements InitializableComponent {
         {this.renderDropdownButton()}
         <div
           id={this.popoverId}
-          ref={(el) => (this.containerRef = el!)}
+          ref={(el) => (this.popupRef = el!)}
           part="facet"
           class={`absolute pt-0.5 z-1 ${this.isOpen ? 'block' : 'hidden'}`}
         >
