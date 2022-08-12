@@ -3,10 +3,7 @@ import {
   TestFixture,
   generateComponentHTML,
 } from '../fixtures/test-fixture';
-import {
-  scrollableComponent,
-  ScrollableSelectors,
-} from './segmented-facet-scrollable-selectors';
+import {ScrollableSelectors} from './segmented-facet-scrollable-selectors';
 
 type direction = 'right' | 'left';
 
@@ -26,13 +23,4 @@ export function clickArrow(direction: direction) {
   direction === 'left'
     ? ScrollableSelectors.leftArrow().click()
     : ScrollableSelectors.rightArrow().click();
-}
-
-export function scroll(direction: direction, msDuration: number) {
-  ScrollableSelectors.horizontalScroll().scrollTo(direction, {
-    duration: msDuration,
-  });
-  cy.get(scrollableComponent).then(([el]) =>
-    el.dispatchEvent(new Event('wheel'))
-  );
 }
