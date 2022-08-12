@@ -57,10 +57,6 @@ export class AtomicInsightInterface
   @State() public error?: Error;
 
   /**
-   * Whether the interface should be shown in widget format.
-   */
-  @Prop({mutable: true, reflect: true}) public widget = false;
-  /**
    * The service insight interface headless engine.
    */
   @Prop({mutable: true}) public engine?: InsightEngine;
