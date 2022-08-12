@@ -442,6 +442,27 @@ export class AtomicInsightHistoryToggle {
 }
 
 
+export declare interface AtomicInsightLayout extends Components.AtomicInsightLayout {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['widget']
+})
+@Component({
+  selector: 'atomic-insight-layout',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['widget']
+})
+export class AtomicInsightLayout {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicInsightNumericFacet extends Components.AtomicInsightNumericFacet {}
 
 @ProxyCmp({
