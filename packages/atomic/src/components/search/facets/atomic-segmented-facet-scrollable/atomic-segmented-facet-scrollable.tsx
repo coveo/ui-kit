@@ -34,7 +34,6 @@ type ArrowDirection = 'right' | 'left';
  * @part left-fade - The white to transparent gradient on the left.
  * @part right-fade - The white to transparent gradient on the right.
  */
-
 @Component({
   tag: 'atomic-segmented-facet-scrollable',
   styleUrl: 'atomic-segmented-facet-scrollable.pcss',
