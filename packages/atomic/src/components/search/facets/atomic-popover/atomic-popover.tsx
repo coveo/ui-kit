@@ -27,6 +27,11 @@ import {
   PopoverChildFacet,
   popoverClass,
 } from './popover-type';
+import {
+  createPopperLite as createPopper,
+  preventOverflow,
+  Instance as PopperInstance,
+} from '@popperjs/core';
 
 /**
  * @internal
@@ -46,7 +51,9 @@ import {
   shadow: true,
 })
 export class AtomicPopover implements InitializableComponent {
-  @Element() host!: HTMLElement;
+  @Element() private host!: HTMLElement;
+  private containerRef!: HTMLElement;
+  private popperInstance?: PopperInstance;
   @InitializeBindings()
   public bindings!: Bindings;
   private searchStatus!: SearchStatus;
@@ -112,6 +119,22 @@ export class AtomicPopover implements InitializableComponent {
     }
 
     this.isOpen = !this.isOpen;
+  }
+
+  public componentDidRender() {
+    if (this.popperInstance || !this.containerRef) {
+      return;
+    }
+
+    this.popperInstance = createPopper(
+      this.containerRef,
+      this.host.children.item(0)! as HTMLElement,
+      {placement: 'bottom-start', modifiers: [preventOverflow /*, flip*/]}
+    );
+  }
+
+  public componentDidUpdate() {
+    this.popperInstance?.forceUpdate();
   }
 
   private renderDropdownButton() {
@@ -191,6 +214,7 @@ export class AtomicPopover implements InitializableComponent {
         {this.renderDropdownButton()}
         <div
           id={this.popoverId}
+          ref={(el) => (this.containerRef = el!)}
           part="facet"
           class={`absolute pt-0.5 z-1 ${this.isOpen ? 'block' : 'hidden'}`}
         >
