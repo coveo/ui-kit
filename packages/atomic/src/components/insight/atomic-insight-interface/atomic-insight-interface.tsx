@@ -40,8 +40,6 @@ export type InsightInterfaceDimensions = {
 };
 
 /**
- * The `atomic-svg-insight-interface` component is the parent to all other atomic components in an service insight panel interface. It handles the headless insight engine and localization configurations.
- *
  * @internal
  */
 @Component({

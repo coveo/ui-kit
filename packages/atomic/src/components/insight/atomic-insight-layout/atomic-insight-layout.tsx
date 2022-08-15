@@ -3,7 +3,7 @@ import {randomID} from '../../../utils/utils';
 import {buildInsightLayout} from './insight-layout';
 
 /**
- * The `atomic-insight-layout` helps organize elements in the page.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-layout',
