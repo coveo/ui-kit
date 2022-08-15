@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.20.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.19.2...@coveo/atomic-react@1.20.0) (2022-08-15)
+
+
+### Features
+
+* **atomic:** add insight layout ([#2318](https://github.com/coveo/ui-kit/issues/2318)) ([cc2f579](https://github.com/coveo/ui-kit/commit/cc2f5797d66b54253524908ec10c3456b2bd5948))
+
+
+
+
+
 ## [1.19.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.19.1...@coveo/atomic-react@1.19.2) (2022-08-15)
 
 **Note:** Version bump only for package @coveo/atomic-react
