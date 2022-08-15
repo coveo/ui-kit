@@ -1,6 +1,5 @@
 .facet__show-less {
   font-size: 12px;
-  outline: 0;
   background-color: white;
   color: #8e959d;
   border: none;
@@ -9,7 +8,6 @@
 
 .facet__show-more {
   font-size: 12px;
-  outline: 0;
   background-color: white;
   color: var(--lwc-brandTextLink, dodgerblue);
   border: none;
