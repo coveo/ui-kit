@@ -159,7 +159,7 @@ export class TimeframeFacetCommon {
       return true;
     }
 
-    return !!this.facetForDateRange?.state.values.length;
+    return !!this.valuesToRender.length;
   }
 
   private get numberOfSelectedValues() {

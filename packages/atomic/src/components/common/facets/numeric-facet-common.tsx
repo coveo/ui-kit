@@ -142,7 +142,7 @@ export class NumericFacetCommon {
       return true;
     }
 
-    return !!this.facetForRange?.state.values.length;
+    return !!this.valuesToRender.length;
   }
 
   private get numberOfSelectedValues() {
