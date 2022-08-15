@@ -172,7 +172,7 @@ export class CoveoSearchPageClient {
     }
 
     public logUndoTriggerQuery(meta: UndoTriggerRedirectMetadata) {
-        return this.logCustomEvent(SearchPageEvents.undoTriggerQuery, meta);
+        return this.logSearchEvent(SearchPageEvents.undoTriggerQuery, meta);
     }
 
     public logTriggerRedirect(meta: TriggerRedirectMetadata) {

@@ -290,7 +290,7 @@ describe('SearchPageClient', () => {
             undoneQuery: 'foo',
         };
         await client.logUndoTriggerQuery(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.undoTriggerQuery, meta);
+        expectMatchPayload(SearchPageEvents.undoTriggerQuery, meta);
     });
 
     it('should send proper payload for #logTriggerRedirect', async () => {
