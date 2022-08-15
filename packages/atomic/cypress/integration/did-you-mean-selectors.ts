@@ -8,6 +8,7 @@ export const DidYouMeanSelectors = {
     DidYouMeanSelectors.shadow().find('[part="showing-results-for"]'),
   searchInsteadFor: () =>
     DidYouMeanSelectors.shadow().find('[part="search-instead-for"]'),
+  didYouMean: () => DidYouMeanSelectors.shadow().find('[part="did-you-mean"]'),
   correctionButton: () =>
     DidYouMeanSelectors.shadow().find('[part="correction-btn"]'),
   undoButton: () => DidYouMeanSelectors.shadow().find('[part="undo-btn"]'),

@@ -34,7 +34,7 @@ describe('Did You Mean Test Suites', () => {
 
     QuerySummaryAssertions.assertHasQuery(newQuery);
     DidYouMeanAssertions.assertDisplayAutoCorrected(true);
-    DidYouMeanAssertions.assertDisplayCorrectionButton(false);
+    DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
     DidYouMeanAssertions.assertDisplayQueryTriggered(false);
     DidYouMeanAssertions.assertDisplayUndoButton(false);
   });
@@ -48,7 +48,7 @@ describe('Did You Mean Test Suites', () => {
 
     QuerySummaryAssertions.assertHasQuery(originalQuery);
     DidYouMeanAssertions.assertDisplayAutoCorrected(false);
-    DidYouMeanAssertions.assertDisplayCorrectionButton(true);
+    DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(true);
     DidYouMeanAssertions.assertDisplayQueryTriggered(false);
     DidYouMeanAssertions.assertDisplayUndoButton(false);
 
@@ -58,7 +58,7 @@ describe('Did You Mean Test Suites', () => {
       });
       QuerySummaryAssertions.assertHasQuery(newQuery);
       DidYouMeanAssertions.assertDisplayAutoCorrected(false);
-      DidYouMeanAssertions.assertDisplayCorrectionButton(false);
+      DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
       DidYouMeanAssertions.assertDisplayQueryTriggered(false);
       DidYouMeanAssertions.assertDisplayUndoButton(false);
     });
@@ -84,7 +84,7 @@ describe('Did You Mean Test Suites', () => {
 
     QuerySummaryAssertions.assertHasQuery(newQuery);
     DidYouMeanAssertions.assertDisplayAutoCorrected(false);
-    DidYouMeanAssertions.assertDisplayCorrectionButton(false);
+    DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
     DidYouMeanAssertions.assertDisplayQueryTriggered(true);
     DidYouMeanAssertions.assertDisplayUndoButton(true);
 
@@ -95,7 +95,7 @@ describe('Did You Mean Test Suites', () => {
 
       QuerySummaryAssertions.assertHasQuery(originalQuery);
       DidYouMeanAssertions.assertDisplayAutoCorrected(false);
-      DidYouMeanAssertions.assertDisplayCorrectionButton(false);
+      DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
       DidYouMeanAssertions.assertDisplayQueryTriggered(false);
       DidYouMeanAssertions.assertDisplayUndoButton(false);
     });

@@ -23,8 +23,13 @@ export function assertDisplayQueryTriggered(display: boolean) {
   });
 }
 
-export function assertDisplayCorrectionButton(display: boolean) {
-  it(`${should(display)} display a manual correction button`, () => {
+export function assertDisplayDidYouMeanWithButton(display: boolean) {
+  it(`${should(
+    display
+  )} display "did you mean" text with a manual correction button`, () => {
+    DidYouMeanSelectors.didYouMean().should(
+      display ? 'be.visible' : 'not.exist'
+    );
     DidYouMeanSelectors.correctionButton().should(
       display ? 'be.visible' : 'not.exist'
     );

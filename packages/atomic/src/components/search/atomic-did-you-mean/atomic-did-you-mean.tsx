@@ -23,6 +23,7 @@ import {LocalizedString} from '../../../utils/jsx-utils';
  * @part auto-corrected - The text displayed for the automatically corrected query.
  * @part showing-results-for - The first paragraph of the text displayed when a query trigger changes a query.
  * @part search-instead-for - The second paragraph of the text displayed when a query trigger changes a query.
+ * @part did-you-mean - The text displayed around the button to manually correct a query.
  * @part correction-btn - The button used to manually correct a query.
  * @part undo-btn - The button used to undo a query changed by a query trigger.
  * @part highlight - The query highlights.
@@ -51,11 +52,7 @@ export class AtomicDidYouMean implements InitializableComponent {
   }
 
   private withQuery(
-    key:
-      | 'no-results-for'
-      | 'query-auto-corrected-to'
-      | 'did-you-mean'
-      | 'showing-results-for',
+    key: 'no-results-for' | 'query-auto-corrected-to' | 'showing-results-for',
     query: string
   ) {
     return (
@@ -124,16 +121,23 @@ export class AtomicDidYouMean implements InitializableComponent {
 
   private renderDidYouMeanCorrection() {
     return (
-      <button
-        class="link py-1"
-        part="correction-btn"
-        onClick={() => this.didYouMean.applyCorrection()}
-      >
-        {this.withQuery(
-          'did-you-mean',
-          this.didYouMeanState!.queryCorrection.correctedQuery
-        )}
-      </button>
+      <p class="text-on-background" part="did-you-mean">
+        <LocalizedString
+          bindings={this.bindings}
+          key="did-you-mean"
+          params={{
+            query: (
+              <button
+                class="link py-1"
+                part="correction-btn"
+                onClick={() => this.didYouMean.applyCorrection()}
+              >
+                {this.didYouMeanState!.queryCorrection.correctedQuery}
+              </button>
+            ),
+          }}
+        />
+      </p>
     );
   }
 
