@@ -56,6 +56,7 @@
   "dependencies": {
     "@coveo/bueno": "0.42.1",
     "@coveo/headless": "1.98.0",
+    "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "2.15.2",
     "@stencil/store": "1.5.0",
