@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.97.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.97.0...@coveo/atomic@1.97.1) (2022-08-15)
+
+
+### Bug Fixes
+
+* **atomic:** made search box suggestions usable on iOS VoiceOver ([#2338](https://github.com/coveo/ui-kit/issues/2338)) ([d191a7a](https://github.com/coveo/ui-kit/commit/d191a7ad0e3204e00c1825d10672798339c6a17b))
+
+
+
+
+
 # [1.97.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.96.1...@coveo/atomic@1.97.0) (2022-08-15)
 
 
