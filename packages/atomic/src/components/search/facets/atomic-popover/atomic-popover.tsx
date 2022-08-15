@@ -27,6 +27,11 @@ import {
   PopoverChildFacet,
   popoverClass,
 } from './popover-type';
+import {
+  createPopperLite as createPopper,
+  preventOverflow,
+  Instance as PopperInstance,
+} from '@popperjs/core';
 
 /**
  * @internal
@@ -46,7 +51,10 @@ import {
   shadow: true,
 })
 export class AtomicPopover implements InitializableComponent {
-  @Element() host!: HTMLElement;
+  @Element() private host!: HTMLElement;
+  private buttonRef!: HTMLElement;
+  private popupRef!: HTMLElement;
+  private popperInstance?: PopperInstance;
   @InitializeBindings()
   public bindings!: Bindings;
   private searchStatus!: SearchStatus;
@@ -114,6 +122,21 @@ export class AtomicPopover implements InitializableComponent {
     this.isOpen = !this.isOpen;
   }
 
+  public componentDidRender() {
+    if (this.popperInstance || !this.buttonRef || !this.popupRef) {
+      return;
+    }
+
+    this.popperInstance = createPopper(this.buttonRef, this.popupRef, {
+      placement: 'bottom-start',
+      modifiers: [preventOverflow],
+    });
+  }
+
+  public componentDidUpdate() {
+    this.popperInstance?.forceUpdate();
+  }
+
   private renderDropdownButton() {
     const label = this.bindings.i18n.t(this.childFacet!.label);
     const hasSelectedValues = !!this.childFacet!.numberOfSelectedValues();
@@ -122,6 +145,7 @@ export class AtomicPopover implements InitializableComponent {
 
     return (
       <Button
+        ref={(el) => (this.buttonRef = el!)}
         style="square-neutral"
         onClick={() => this.togglePopover()}
         part="popover-button"
@@ -191,6 +215,7 @@ export class AtomicPopover implements InitializableComponent {
         {this.renderDropdownButton()}
         <div
           id={this.popoverId}
+          ref={(el) => (this.popupRef = el!)}
           part="facet"
           class={`absolute pt-0.5 z-1 ${this.isOpen ? 'block' : 'hidden'}`}
         >

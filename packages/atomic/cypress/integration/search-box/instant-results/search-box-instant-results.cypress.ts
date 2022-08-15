@@ -76,6 +76,7 @@ describe('Instant Results Test Suites', () => {
       );
       InstantResultsAssertions.assertHasResultCount(numOfInstantResults);
       CommonAssertions.assertAriaLiveMessage(
+        SearchBoxSelectors.searchBoxAriaLive,
         maxRecentQueriesWithoutQuery.toString()
       );
       InstantResultsAssertions.assertResultIsSelected(0);

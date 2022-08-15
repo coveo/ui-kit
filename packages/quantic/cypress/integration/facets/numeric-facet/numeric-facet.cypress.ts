@@ -130,6 +130,7 @@ describe('quantic-numeric-facet', () => {
       });
     });
   });
+
   describe('with custom withInput', () => {
     it('should work as expected', () => {
       visitNumericFacetPage(customWithInputSettings);
@@ -373,6 +374,19 @@ describe('quantic-numeric-facet', () => {
         Expect.displaySearchForm(true);
         Expect.displayValues(false);
       });
+    });
+  });
+
+  describe('with default numeric facet testing accessibility', () => {
+    beforeEach(() => {
+      visitNumericFacetPage(defaultSettings);
+    });
+
+    it('should be accessible through keyboard', () => {
+      Actions.selectFirstNumericFacetValueWithKeyboardTab();
+      Expect.numberOfSelectedCheckboxValues(1);
+      Actions.selectFirstNumericFacetValueWithKeyboardEnter();
+      Expect.numberOfSelectedCheckboxValues(0);
     });
   });
 });
