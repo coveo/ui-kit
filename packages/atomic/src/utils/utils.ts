@@ -170,3 +170,24 @@ export function isInDocument(element: Node) {
   }
   return false;
 }
+
+export function isPropValuesEqual<ObjectWithProperties extends object>(
+  subject: ObjectWithProperties,
+  target: ObjectWithProperties,
+  propNames: (keyof ObjectWithProperties)[]
+) {
+  return propNames.every((propName) => subject[propName] === target[propName]);
+}
+
+export function getUniqueItemsByProperties<Item extends object>(
+  items: Item[],
+  propNames: (keyof Item)[]
+) {
+  return items.filter(
+    (item, index, self) =>
+      index ===
+      self.findIndex((foundItem) =>
+        isPropValuesEqual(foundItem, item, propNames)
+      )
+  );
+}

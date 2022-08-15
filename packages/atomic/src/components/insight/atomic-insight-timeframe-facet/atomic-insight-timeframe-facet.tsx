@@ -34,28 +34,6 @@ import {
 } from '..';
 
 /**
- * A facet is a list of values for a certain field occurring in the results.
- * An `atomic-insight-timeframe-facet` displays a facet of the results for the current query as date intervals.
- *
- * @part facet - The wrapper for the entire facet.
- * @part placeholder - The placeholder shown before the first search is executed.
- *
- * @part label-button - The button that displays the label and allows to expand/collapse the facet.
- * @part label-button-icon - The label button icon.
- * @part clear-button - The button that resets the actively selected facet values.
- * @part clear-button-icon - The clear button icon.
- *
- * @part values - The facet values container.
- * @part value-label - The facet value label, common for all displays.
- * @part value-count - The facet value count, common for all displays.
- * @part value-link - The facet value when display is 'link'.
- * @part value-link-selected - The selected facet value when display is 'link'.
- *
- * @part input-start - The input for the starting value of the custom date range.
- * @part input-end - The input for the ending value of the custom date range.
- * @part input-label - The label for both the start and end input.
- * @part input-apply-button - The apply button for the custom range.
- *
  * @internal
  */
 @Component({

@@ -59,6 +59,14 @@ export default class QuanticFacetValue extends LightningElement {
     return new Intl.NumberFormat(LOCALE).format(this.item.numberOfResults);
   }
 
+  get divRole() {
+    return this.displayAsLink ? 'button' : 'checkbox';
+  }
+
+  get ariaLabelValue() {
+    return `Inclusion filter on ${this.formattedFacetValue}; ${this.numberOfResults} result`;
+  }
+
   /**
    * @param {InputEvent} evt
    */
@@ -71,5 +79,21 @@ export default class QuanticFacetValue extends LightningElement {
         },
       })
     );
+  }
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  onKeyDown(evt) {
+    if (evt.code === 'Enter' || evt.code === 'Space') {
+      evt.preventDefault();
+      this.dispatchEvent(
+        new CustomEvent('selectvalue', {
+          detail: {
+            value: this.formattedFacetValue,
+          },
+        })
+      );
+    }
   }
 }

@@ -860,4 +860,24 @@ describe('Facet Test Suite', () => {
       }
     });
   });
+
+  describe('with values testing accessibility', () => {
+    beforeEach(() => {
+      visitFacetPage(
+        {
+          field: defaultField,
+          label: defaultLabel,
+          numberOfValues: defaultNumberOfValues,
+        },
+        true
+      );
+    });
+
+    it('should be accessible through keyboard', () => {
+      Actions.selectFirstFacetValueWithKeyboardTab();
+      Expect.clearFilterContains('Clear filter');
+      Expect.numberOfSelectedCheckboxValues(1);
+      Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+    });
+  });
 });

@@ -1,5 +1,9 @@
 export const ariaLiveComponent = 'atomic-aria-live';
 
 export const AriaLiveSelectors = {
-  element: () => cy.get('atomic-search-interface').find(ariaLiveComponent),
+  region: (region: string) =>
+    cy
+      .get('atomic-search-interface')
+      .find(ariaLiveComponent)
+      .find(`[aria-live][id$="-${region}"]`),
 };
