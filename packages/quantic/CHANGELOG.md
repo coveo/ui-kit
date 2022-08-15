@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.34.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.33.0...@coveo/quantic@1.34.0) (2022-08-15)
+
+
+### Features
+
+* **quantic:** added accessibility functionality to quanticFacetValue ([#2237](https://github.com/coveo/ui-kit/issues/2237)) ([b062c18](https://github.com/coveo/ui-kit/commit/b062c186f26725b7a50cf84d5f2ca8c5993477d3))
+
+
+
+
+
 # [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.32.2...@coveo/quantic@1.33.0) (2022-08-08)
 
 
