@@ -560,6 +560,9 @@ export class AtomicSearchBox {
           this.focusPanel(this.leftPanelRef);
         }
         break;
+      case 'Tab':
+        this.clearSuggestions();
+        break;
     }
   }
 
@@ -737,28 +740,29 @@ export class AtomicSearchBox {
     this.updateBreakpoints();
     return [
       <SearchBoxWrapper disabled={this.disableSearch}>
-        <SearchInput
-          inputRef={this.inputRef}
-          loading={this.searchBoxState.isLoading}
-          ref={(el) => (this.inputRef = el as HTMLInputElement)}
-          bindings={this.bindings}
-          value={this.searchBoxState.value}
-          ariaLabel={this.getSearchInputLabel()}
-          onFocus={() => this.onFocus()}
-          onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-          onBlur={() => this.clearSuggestions()}
-          onKeyDown={(e) => this.onKeyDown(e)}
-          onClear={() => this.searchBox.clear()}
-          aria-controls={this.popupId}
-          role="combobox"
-          aria-activedescendant={this.activeDescendant}
-        />
-        {this.renderSuggestions()}
-        <SubmitButton
-          bindings={this.bindings}
-          disabled={this.disableSearch}
-          onClick={() => this.searchBox.submit()}
-        />
+        <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
+          <SearchInput
+            inputRef={this.inputRef}
+            loading={this.searchBoxState.isLoading}
+            ref={(el) => (this.inputRef = el as HTMLInputElement)}
+            bindings={this.bindings}
+            value={this.searchBoxState.value}
+            ariaLabel={this.getSearchInputLabel()}
+            onFocus={() => this.onFocus()}
+            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+            onKeyDown={(e) => this.onKeyDown(e)}
+            onClear={() => this.searchBox.clear()}
+            aria-controls={this.popupId}
+            role="combobox"
+            aria-activedescendant={this.activeDescendant}
+          />
+          {this.renderSuggestions()}
+          <SubmitButton
+            bindings={this.bindings}
+            disabled={this.disableSearch}
+            onClick={() => this.searchBox.submit()}
+          />
+        </atomic-focus-detector>
       </SearchBoxWrapper>,
       !this.suggestions.length && (
         <slot>
