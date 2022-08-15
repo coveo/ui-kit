@@ -106,6 +106,7 @@ export type {
   LogStaticFilterClearAllActionCreatorPayload,
   StaticFilterValueMetadata,
   SmartSnippetFeedback,
+  LogUndoTriggerQueryActionCreatorPayload,
 };
 
 /**
