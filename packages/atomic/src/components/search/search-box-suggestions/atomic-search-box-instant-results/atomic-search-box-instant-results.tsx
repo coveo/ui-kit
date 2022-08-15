@@ -24,6 +24,12 @@ import {
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
 import {Button} from '../../../common/button';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+
+export type AriaLabelGenerator = (
+  bindings: Bindings,
+  result: Result
+) => string | undefined;
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
@@ -73,6 +79,12 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
+  /**
+   * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
+   *
+   * By default, or if an empty string is returned, `result.title` is used.
+   */
+  @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
 
   componentWillLoad() {
     try {
@@ -131,7 +143,8 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
           ></atomic-result>
         ),
         ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
-          title: result.title,
+          title:
+            this.ariaLabelGenerator?.(this.bindings, result) || result.title,
           interpolation: {escapeValue: false},
         }),
         onSelect: (e: MouseEvent) => {
