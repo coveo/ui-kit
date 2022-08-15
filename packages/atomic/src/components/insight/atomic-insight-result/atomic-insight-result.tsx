@@ -13,7 +13,7 @@ import {
 import {InsightResult, InsightEngine} from '..';
 
 /**
- * The `atomic-insight-result` component is used internally by the `atomic-insight-result-list` component.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-result',

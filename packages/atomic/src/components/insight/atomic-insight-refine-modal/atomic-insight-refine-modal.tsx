@@ -24,21 +24,7 @@ import {
 import {Hidden} from '../../common/hidden';
 
 /**
- * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
- *
- * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
- *
- * @part container - The modal's outermost container.
- * @part header-wrapper - The wrapper around the header.
- * @part header - The header of the modal, containing the title.
- * @part section-title - The title for each section.
- * @part close-button - The button in the header that closes the modal.
- * @part header-ruler - The horizontal ruler underneath the header.
- * @part body-wrapper - The wrapper around the body.
- * @part body - The body of the modal, between the header and the footer.
- * @part select - The `<select>` element of the drop-down list.
- * @part select-icon - The select dropdown's sort icon.
- * @part filter-clear-all - The button that resets all actively selected facet values.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-refine-modal',

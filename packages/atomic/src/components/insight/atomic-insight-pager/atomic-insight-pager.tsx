@@ -21,14 +21,6 @@ import {PagerCommon} from '../../common/pager/pager-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * The `atomic-insight-pager` provides buttons that allow the end user to navigate through the different result pages.
- *
- * @part buttons - The list of the next/previous buttons and page-buttons.
- * @part page-buttons - The list of page buttons.
- * @part previous-button - The previous button.
- * @part next-button - The next button.
- * @part page-button - The page button.
- * @part active-page-button - The active page button.
  * @internal
  */
 @Component({
