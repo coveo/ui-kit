@@ -1,20 +1,30 @@
-import {Component, h, State} from '@stencil/core';
-import {DidYouMean, DidYouMeanState, buildDidYouMean} from '@coveo/headless';
+import {Component, Fragment, h, State} from '@stencil/core';
+import {
+  DidYouMean,
+  DidYouMeanState,
+  buildDidYouMean,
+  QueryTrigger,
+  buildQueryTrigger,
+  QueryTriggerState,
+} from '@coveo/headless';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import escape from 'escape-html';
 import {Hidden} from '../../common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {LocalizedString} from '../../../utils/jsx-utils';
 
 /**
  * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
  * @part no-results - The text displayed when there are no results.
  * @part auto-corrected - The text displayed for the automatically corrected query.
+ * @part showing-results-for - The first paragraph of the text displayed when a query trigger changes a query.
+ * @part search-instead-for - The second paragraph of the text displayed when a query trigger changes a query.
  * @part correction-btn - The button used to manually correct a query.
+ * @part undo-btn - The button used to undo a query changed by a query trigger.
  * @part highlight - The query highlights.
  */
 @Component({
@@ -25,78 +35,120 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 export class AtomicDidYouMean implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private didYouMean!: DidYouMean;
+  protected queryTrigger!: QueryTrigger;
 
   @BindStateToController('didYouMean')
   @State()
-  private didYouMeanState!: DidYouMeanState;
+  private didYouMeanState?: DidYouMeanState;
+  @BindStateToController('queryTrigger')
+  @State()
+  private queryTriggerState?: QueryTriggerState;
   @State() public error!: Error;
 
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine);
-  }
-
-  private applyCorrection() {
-    this.didYouMean.applyCorrection();
+    this.queryTrigger = buildQueryTrigger(this.bindings.engine);
   }
 
   private withQuery(
-    key: 'no-results-for' | 'query-auto-corrected-to' | 'did-you-mean',
+    key:
+      | 'no-results-for'
+      | 'query-auto-corrected-to'
+      | 'did-you-mean'
+      | 'showing-results-for',
     query: string
   ) {
-    return this.bindings.i18n.t(key, {
-      interpolation: {escapeValue: false},
-      query: `<b part="highlight">${escape(query)}</b>`,
-    });
+    return (
+      <LocalizedString
+        bindings={this.bindings}
+        key={key}
+        params={{query: <b part="highlight">{query}</b>}}
+      />
+    );
   }
 
-  private renderAutomaticallyCorrected() {
-    const noResults = this.withQuery(
-      'no-results-for',
-      this.didYouMeanState.originalQuery
+  private renderQueryTriggerAutomaticallyCorrected() {
+    return (
+      <Fragment>
+        <p
+          class="text-on-background leading-6 text-lg"
+          part="showing-results-for"
+        >
+          {this.withQuery(
+            'showing-results-for',
+            this.queryTriggerState!.newQuery
+          )}
+        </p>
+        <p
+          class="text-on-background leading-5 text-base"
+          part="search-instead-for"
+        >
+          <LocalizedString
+            bindings={this.bindings}
+            key="search-instead-for"
+            params={{
+              query: (
+                <button
+                  class="link py-1"
+                  part="undo-btn"
+                  onClick={() => this.queryTrigger.undo()}
+                >
+                  {this.queryTriggerState?.originalQuery}
+                </button>
+              ),
+            }}
+          />
+        </p>
+      </Fragment>
     );
-    const queryAutoCorrectedTo = this.withQuery(
-      'query-auto-corrected-to',
-      this.didYouMeanState.wasCorrectedTo
-    );
-    return [
-      // file deepcode ignore ReactSetInnerHtml: This is not React code
-      <p
-        class="text-on-background mb-1"
-        part="no-results"
-        innerHTML={noResults}
-      ></p>,
-      <p
-        class="text-on-background"
-        part="auto-corrected"
-        innerHTML={queryAutoCorrectedTo}
-      ></p>,
-    ];
   }
 
-  private renderCorrection() {
-    const didYouMean = this.withQuery(
-      'did-you-mean',
-      this.didYouMeanState.queryCorrection.correctedQuery
+  private renderDidYouMeanAutomaticallyCorrected() {
+    return (
+      <Fragment>
+        <p class="text-on-background mb-1" part="no-results">
+          {this.withQuery(
+            'no-results-for',
+            this.didYouMeanState!.originalQuery
+          )}
+        </p>
+        <p class="text-on-background" part="auto-corrected">
+          {this.withQuery(
+            'query-auto-corrected-to',
+            this.didYouMeanState!.wasCorrectedTo
+          )}
+        </p>
+      </Fragment>
     );
+  }
+
+  private renderDidYouMeanCorrection() {
     return (
       <button
         class="link py-1"
         part="correction-btn"
-        onClick={() => this.applyCorrection()}
-        innerHTML={didYouMean}
-      ></button>
+        onClick={() => this.didYouMean.applyCorrection()}
+      >
+        {this.withQuery(
+          'did-you-mean',
+          this.didYouMeanState!.queryCorrection.correctedQuery
+        )}
+      </button>
     );
   }
 
   public render() {
-    if (!this.didYouMeanState.hasQueryCorrection) {
-      return <Hidden></Hidden>;
+    if (this.didYouMeanState?.hasQueryCorrection) {
+      if (this.didYouMeanState.wasAutomaticallyCorrected) {
+        return this.renderDidYouMeanAutomaticallyCorrected();
+      }
+      return this.renderDidYouMeanCorrection();
     }
 
-    if (this.didYouMeanState.wasAutomaticallyCorrected) {
-      return this.renderAutomaticallyCorrected();
+    if (this.queryTriggerState?.wasQueryModified) {
+      return this.renderQueryTriggerAutomaticallyCorrected();
     }
 
-    return this.renderCorrection();
+    return <Hidden></Hidden>;
   }
 }
