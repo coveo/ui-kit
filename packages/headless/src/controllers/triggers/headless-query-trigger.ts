@@ -18,7 +18,7 @@ import {
  */
 export interface QueryTrigger extends Controller {
   /**
-   * the state of the `QueryTrigger` controller.
+   * The state of the `QueryTrigger` controller.
    */
   state: QueryTriggerState;
   /**
