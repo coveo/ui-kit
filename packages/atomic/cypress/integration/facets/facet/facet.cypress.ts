@@ -818,7 +818,8 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedAlphanumerically();
   });
 
-  describe('with custom #sortCriteria, occurrences', () => {
+  // TODO: enable when SEARCHAPI-7247 is released
+  describe.skip('with custom #sortCriteria, occurrences', () => {
     before(() => {
       new TestFixture()
         .with(addFacet({field, label, 'sort-criteria': 'occurrences'}))
