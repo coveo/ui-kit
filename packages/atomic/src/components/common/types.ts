@@ -1,3 +1,4 @@
+// TODO: revisit using Core Headless Interfaces when using other sub-packages
 export {
   SearchStatus,
   SearchStatusState,
