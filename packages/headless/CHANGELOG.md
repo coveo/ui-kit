@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.101.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.100.0...@coveo/headless@1.101.0) (2022-08-16)
+
+
+### Bug Fixes
+
+* **headless:** prevent undefined enableQuerySyntax value to be added to the params manager ([#2343](https://github.com/coveo/ui-kit/issues/2343)) ([1e1f265](https://github.com/coveo/ui-kit/commit/1e1f265fbf4c01fc56b3029eda12b2baaad510d4))
+
+
+### Features
+
+* **atomic,headless:** deselect facets with hasBreadcrumbs=false on new query ([#2342](https://github.com/coveo/ui-kit/issues/2342)) ([fb90264](https://github.com/coveo/ui-kit/commit/fb902644864daa271c8ddc70cb6260e6fba401f9))
+
+
+
+
+
 # [1.100.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.99.0...@coveo/headless@1.100.0) (2022-08-16)
 
 
