@@ -22,6 +22,7 @@ import { ClearPopoverEvent } from "./components/search/facets/atomic-popover/pop
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
+import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
@@ -1207,6 +1208,10 @@ export namespace Components {
         "suggestionTimeout": number;
     }
     interface AtomicSearchBoxInstantResults {
+        /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
@@ -3387,6 +3392,10 @@ declare namespace LocalJSX {
         "suggestionTimeout"?: number;
     }
     interface AtomicSearchBoxInstantResults {
+        /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
