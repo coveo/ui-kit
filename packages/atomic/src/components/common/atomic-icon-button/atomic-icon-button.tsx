@@ -31,7 +31,7 @@ export class AtomicIconButton {
   @Prop({mutable: true}) public tooltip = '';
 
   /**
-   * The i18next key for the button label (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
+   * The i18next key of the value to use as button label (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
    */
   @Prop({mutable: true}) public labelI18nKey!: string;
 
