@@ -1,4 +1,23 @@
+import {RecordValue} from '@coveo/bueno';
+import {
+  requiredEmptyAllowedString,
+  validatePayload,
+} from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+
+export interface LogUndoTriggerQueryActionCreatorPayload {
+  /**
+   * The query that was undone.
+   */
+  undoneQuery: string;
+}
+
+const logUndoTriggerQueryPayloadDefinition = new RecordValue({
+  values: {
+    undoneQuery: requiredEmptyAllowedString,
+  },
+  options: {required: true},
+});
 
 export const logTriggerQuery = makeAnalyticsAction(
   'analytics/trigger/query',
@@ -10,6 +29,18 @@ export const logTriggerQuery = makeAnalyticsAction(
     return;
   }
 );
+
+export const logUndoTriggerQuery = (
+  payload: LogUndoTriggerQueryActionCreatorPayload
+) =>
+  makeAnalyticsAction(
+    'analytics/trigger/query/undo',
+    AnalyticsType.Search,
+    (client) => {
+      validatePayload(payload, logUndoTriggerQueryPayloadDefinition);
+      client.logUndoTriggerQuery(payload);
+    }
+  )();
 
 export const logNotifyTrigger = makeAnalyticsAction(
   'analytics/trigger/notify',
