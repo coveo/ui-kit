@@ -103,9 +103,6 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   private togglePopover() {
-    if (!this.isOpen) {
-      this.childFacet!.element.focus();
-    }
     this.isOpen = !this.isOpen;
   }
 
