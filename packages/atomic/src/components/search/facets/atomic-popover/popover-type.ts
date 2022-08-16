@@ -6,10 +6,6 @@ export interface PopoverChildFacet extends FacetInfo {
   numberOfSelectedValues: () => number;
 }
 
-export interface ClearPopoverEvent {
-  popoverEmitterId?: string;
-}
-
 export const popoverClass = 'popover-nested';
 
 export function initializePopover(

@@ -4,15 +4,7 @@ import {
   SearchStatusState,
   FacetState,
 } from '@coveo/headless';
-import {
-  Component,
-  h,
-  Listen,
-  State,
-  Element,
-  Event,
-  EventEmitter,
-} from '@stencil/core';
+import {Component, h, Listen, State, Element, Host} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -22,11 +14,7 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import {
-  ClearPopoverEvent,
-  PopoverChildFacet,
-  popoverClass,
-} from './popover-type';
+import {PopoverChildFacet, popoverClass} from './popover-type';
 import {
   createPopperLite as createPopper,
   preventOverflow,
@@ -38,6 +26,7 @@ import {
  * The `atomic-popover` component displays any facet as a popover menu.
  *
  * @slot default - The required slotted facet.
+ * @part backdrop - The transparent backdrop hiding the content behind popover menu.
  * @part popover-button - The button to click to display or hide the popover menu.
  * @part label - The associated facet label.
  * @part value-count - Number of selected values for the facet
@@ -70,11 +59,6 @@ export class AtomicPopover implements InitializableComponent {
   @State() private isOpen = false;
   @State() private childFacet?: PopoverChildFacet;
 
-  @Event({
-    eventName: 'atomic/closePopovers',
-  })
-  private closePopovers!: EventEmitter<ClearPopoverEvent>;
-
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
 
@@ -93,13 +77,6 @@ export class AtomicPopover implements InitializableComponent {
     }
   }
 
-  @Listen('atomic/closePopovers', {target: 'document'})
-  public popOpened(event: CustomEvent<ClearPopoverEvent>) {
-    if (event.detail.popoverEmitterId !== this.childFacet?.facetId) {
-      this.isOpen = false;
-    }
-  }
-
   @Listen('atomic/initializePopover')
   public initializePopover(event: CustomEvent<PopoverChildFacet>) {
     if (this.childFacet || !event.detail) {
@@ -110,15 +87,25 @@ export class AtomicPopover implements InitializableComponent {
     this.childFacet.element.classList.add(popoverClass);
   }
 
+  @Listen('keydown')
+  public handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && this.isOpen) {
+      this.togglePopover();
+    }
+  }
+
   private get popoverId() {
     return `${this.childFacet?.facetId}-popover`;
   }
 
+  private get label() {
+    return this.bindings.i18n.t(this.childFacet!.label);
+  }
+
   private togglePopover() {
     if (!this.isOpen) {
-      this.closePopovers.emit({popoverEmitterId: this.childFacet?.facetId});
+      this.childFacet!.element.focus();
     }
-
     this.isOpen = !this.isOpen;
   }
 
@@ -138,7 +125,7 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   private renderDropdownButton() {
-    const label = this.bindings.i18n.t(this.childFacet!.label);
+    const label = this.label;
     const hasSelectedValues = !!this.childFacet!.numberOfSelectedValues();
     const count = this.childFacet!.numberOfSelectedValues().toLocaleString();
     const ariaLabel = this.bindings.i18n.t('popover', {label});
@@ -154,7 +141,7 @@ export class AtomicPopover implements InitializableComponent {
         ariaControls={this.popoverId}
         class={`rounded flex box-border h-full items-center min-w-[6rem] max-w-[15rem] p-2.5 group hover:border-primary-light focus-visible:border-primary-light ${
           this.isOpen
-            ? 'border-primary ring ring-ring-primary text-primary'
+            ? 'border-primary ring ring-ring-primary text-primary z-[9999]'
             : ''
         }`}
       >
@@ -191,6 +178,16 @@ export class AtomicPopover implements InitializableComponent {
     );
   }
 
+  private renderBackdrop() {
+    return (
+      <div
+        part="backdrop"
+        class="fixed left-0 top-0 right-0 bottom-0 z-[9998] bg-background opacity-50"
+        onClick={() => this.togglePopover()}
+      ></div>
+    );
+  }
+
   public render() {
     if (this.searchStatus.state.hasError) {
       return <Hidden></Hidden>;
@@ -211,17 +208,28 @@ export class AtomicPopover implements InitializableComponent {
     }
 
     return (
-      <div class="relative">
-        {this.renderDropdownButton()}
-        <div
-          id={this.popoverId}
-          ref={(el) => (this.popupRef = el!)}
-          part="facet"
-          class={`absolute pt-0.5 z-1 ${this.isOpen ? 'block' : 'hidden'}`}
-        >
-          <slot></slot>
+      <Host>
+        <div class="relative">
+          {this.renderDropdownButton()}
+          <atomic-focus-trap
+            source={this.buttonRef}
+            container={this.popupRef}
+            active={this.isOpen}
+          >
+            <div
+              id={this.popoverId}
+              ref={(el) => (this.popupRef = el!)}
+              part="facet"
+              class={`absolute pt-0.5 z-[9999] ${
+                this.isOpen ? 'block' : 'hidden'
+              }`}
+            >
+              <slot></slot>
+            </div>
+          </atomic-focus-trap>
         </div>
-      </div>
+        {this.isOpen && this.renderBackdrop()}
+      </Host>
     );
   }
 }

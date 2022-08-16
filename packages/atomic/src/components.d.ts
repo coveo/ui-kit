@@ -18,7 +18,6 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { ClearPopoverEvent } from "./components/search/facets/atomic-popover/popover-type";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
@@ -2956,7 +2955,6 @@ declare namespace LocalJSX {
         "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicPopover {
-        "onAtomic/closePopovers"?: (event: CustomEvent<ClearPopoverEvent>) => void;
     }
     interface AtomicQueryError {
     }
