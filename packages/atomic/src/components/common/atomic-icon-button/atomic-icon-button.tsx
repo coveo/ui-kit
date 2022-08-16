@@ -17,6 +17,7 @@ import {Button} from '../button';
 export class AtomicIconButton {
   @InitializeBindings() public bindings!: AnyBindings;
   @State() public error!: Error;
+
   @Prop({mutable: true}) public clickCallback: () => void = () => {};
   @Prop({mutable: true}) public tooltip = '';
   @Prop({mutable: true}) public labelI18nKey!: string;
