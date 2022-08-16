@@ -188,6 +188,22 @@ export class AtomicPopover implements InitializableComponent {
     );
   }
 
+  private renderPopover() {
+    return (
+      <div class="relative z-[9999]">
+        {this.renderDropdownButton()}
+        <div
+          id={this.popoverId}
+          ref={(el) => (this.popupRef = el!)}
+          part="facet"
+          class={`absolute pt-0.5 ${this.isOpen ? 'block' : 'hidden'}`}
+        >
+          <slot></slot>
+        </div>
+      </div>
+    );
+  }
+
   public render() {
     if (this.searchStatus.state.hasError) {
       return <Hidden></Hidden>;
@@ -209,25 +225,13 @@ export class AtomicPopover implements InitializableComponent {
 
     return (
       <Host>
-        <div class="relative">
-          {this.renderDropdownButton()}
-          <atomic-focus-trap
-            source={this.buttonRef}
-            container={this.popupRef}
-            active={this.isOpen}
-          >
-            <div
-              id={this.popoverId}
-              ref={(el) => (this.popupRef = el!)}
-              part="facet"
-              class={`absolute pt-0.5 z-[9999] ${
-                this.isOpen ? 'block' : 'hidden'
-              }`}
-            >
-              <slot></slot>
-            </div>
-          </atomic-focus-trap>
-        </div>
+        <atomic-focus-trap
+          source={this.buttonRef}
+          container={this.popupRef}
+          active={this.isOpen}
+        >
+          {this.renderPopover()}
+        </atomic-focus-trap>
         {this.isOpen && this.renderBackdrop()}
       </Host>
     );
