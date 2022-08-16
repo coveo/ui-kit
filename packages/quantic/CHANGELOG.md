@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.34.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.1...@coveo/quantic@1.34.2) (2022-08-16)
+
+
+### Bug Fixes
+
+* **quantic:** changed ... to expand from a A tag to a button ([#2234](https://github.com/coveo/ui-kit/issues/2234)) ([f554676](https://github.com/coveo/ui-kit/commit/f554676205d985ddfbe37c6910a5ca4d4c59225f))
+
+
+
+
+
 ## [1.34.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.0...@coveo/quantic@1.34.1) (2022-08-16)
 
 **Note:** Version bump only for package @coveo/quantic
