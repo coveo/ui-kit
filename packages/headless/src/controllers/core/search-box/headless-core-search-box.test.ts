@@ -31,7 +31,10 @@ import {
   querySuggest,
   search,
 } from '../../../app/reducers';
-import {deselectAllBreadcrumbs} from '../../../features/breadcrumb/breadcrumb-actions';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../../../features/breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
 
 describe('headless CoreSearchBox', () => {
@@ -242,6 +245,7 @@ describe('headless CoreSearchBox', () => {
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(deselectAllBreadcrumbs());
+      expect(engine.actions).toContainEqual(deselectAllNonBreadcrumbs());
     });
 
     it('when the #clearFilters option is false, it does not deselects all facets', () => {
@@ -252,6 +256,7 @@ describe('headless CoreSearchBox', () => {
       searchBox.submit();
 
       expect(engine.actions).not.toContainEqual(deselectAllBreadcrumbs());
+      expect(engine.actions).not.toContainEqual(deselectAllNonBreadcrumbs());
     });
 
     it('allows autoSelection', () => {
