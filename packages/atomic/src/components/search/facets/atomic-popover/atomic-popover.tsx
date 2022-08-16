@@ -190,7 +190,7 @@ export class AtomicPopover implements InitializableComponent {
 
   private renderPopover() {
     return (
-      <div class="relative z-[9999]">
+      <div class={`relative ${this.isOpen ? 'z-[9999]' : ''}`}>
         {this.renderDropdownButton()}
         <div
           id={this.popoverId}
