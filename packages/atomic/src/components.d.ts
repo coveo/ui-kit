@@ -345,26 +345,11 @@ export namespace Components {
         "icon": string;
     }
     interface AtomicIconButton {
-        /**
-          * The button badge.
-         */
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
-        /**
-          * The callback function to execute when the button is clicked.
-         */
         "clickCallback": () => void;
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
         "icon": string;
-        /**
-          * The i18next key of the value to use as button label (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
-         */
         "labelI18nKey": string;
-        /**
-          * The button title.
-         */
         "tooltip": string;
     }
     interface AtomicInsightEditToggle {
@@ -2574,26 +2559,11 @@ declare namespace LocalJSX {
         "icon": string;
     }
     interface AtomicIconButton {
-        /**
-          * The button badge.
-         */
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
-        /**
-          * The callback function to execute when the button is clicked.
-         */
         "clickCallback"?: () => void;
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
         "icon": string;
-        /**
-          * The i18next key of the value to use as button label (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
-         */
         "labelI18nKey": string;
-        /**
-          * The button title.
-         */
         "tooltip"?: string;
     }
     interface AtomicInsightEditToggle {
