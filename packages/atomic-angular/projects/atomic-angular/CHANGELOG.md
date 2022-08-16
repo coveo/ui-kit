@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.27.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.26.1...@coveo/atomic-angular@1.27.0) (2022-08-16)
+
+
+### Features
+
+* **atomic:** allowed customization of instant results aria-label ([#2340](https://github.com/coveo/ui-kit/issues/2340)) ([b0742fa](https://github.com/coveo/ui-kit/commit/b0742fafbe63ed88ba403a2ca8a77b8d7ffd683b))
+
+
+
+
+
 ## [1.26.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.26.0...@coveo/atomic-angular@1.26.1) (2022-08-15)
 
 **Note:** Version bump only for package @coveo/atomic-angular
