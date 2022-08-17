@@ -1,5 +1,7 @@
 import {api, LightningElement} from 'lwc';
+// @ts-ignore
 import searchTemplate from './templates/searchTemplate.html';
+// @ts-ignore
 import insightTemplate from './templates/insightTemplate.html';
 
 export default class ExampleUseCase extends LightningElement {
