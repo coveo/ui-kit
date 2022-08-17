@@ -9,7 +9,7 @@
             <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
         </c-configurator>
 
-        <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
+        <c-quantic-search-interface slot="preview" engine-id={engineId}>
             <c-quantic-result-quickview
                 engine-id={engineId}
                 result={config.result}
@@ -18,6 +18,6 @@
                 preview-button-label={config.previewButtonLabel}
                 preview-button-variant={config.previewButtonVariant}>
             </c-quantic-result-quickview>
-        </c-example-use-case>
+        </c-quantic-search-interface>
     </c-example-layout>
 </template>

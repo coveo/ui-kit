@@ -5,7 +5,11 @@ import {
   InterceptAliases,
   interceptSearch,
 } from '../../page-objects/search';
-import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 import {scope} from '../../reporters/detailed-collector';
 import {BreadcrumbManagerActions as Actions} from './breadcrumb-manager-actions';
 import {BreadcrumbManagerExpectations as Expect} from './breadcrumb-manager-expectations';
@@ -32,8 +36,8 @@ describe('quantic-breadcrumb-manager', () => {
     interceptSearch();
     cy.visit(breadcrumbManagertUrl);
     configure(options);
-    if (options.useCase !== useCaseEnum.search) {
-      cy.wait(1000);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
     if (waitForSearch) {

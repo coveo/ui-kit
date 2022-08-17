@@ -4,7 +4,11 @@ import {ResultsPerPageExpectations as Expect} from './results-per-page-expectati
 import {ResultsPerPageActions as Actions} from './results-per-page-actions';
 import {stubConsoleError} from '../console-selectors';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
-import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 
 interface ResultsPerPageOptions {
   initialChoice: number;
@@ -30,7 +34,7 @@ describe('quantic-result-per-page', () => {
     });
     configure(options);
     if (options.useCase === useCaseEnum.insight) {
-      cy.wait(1000);
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
     if (waitForSearch) {

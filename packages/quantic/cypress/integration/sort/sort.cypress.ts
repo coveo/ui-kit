@@ -7,7 +7,11 @@ import {
 import {SortExpectations as Expect} from './sort-expectations';
 import {SortActions as Actions} from './sort-actions';
 import {SearchExpectations} from '../search-expectations';
-import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 describe('quantic-sort', () => {
@@ -39,7 +43,7 @@ describe('quantic-sort', () => {
     cy.visit(sortUrl);
     configure(options);
     if (options.useCase === useCaseEnum.insight) {
-      cy.wait(1000);
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
     if (waitForSearch) {

@@ -11,7 +11,11 @@ import {
   setPageSizeValue,
   setResultsPerPage,
 } from '../../page-objects/actions/action-set-results-per-page';
-import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 describe('quantic-summary', () => {
@@ -22,8 +26,8 @@ describe('quantic-summary', () => {
     interceptSearch();
     cy.visit(summaryUrl);
     configure({useCase: useCase});
-    if (useCase !== useCaseEnum.search) {
-      cy.wait(1000);
+    if (useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
     if (waitForSearch) {

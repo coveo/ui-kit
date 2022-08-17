@@ -52,9 +52,17 @@ export default class QuanticInsightInterface extends LightningElement {
               this,
               CoveoHeadlessInsight
             );
+            this.input.setAttribute('is-initialized', 'true');
           }
         });
       }
     });
+  }
+
+  /**
+   * @returns {HTMLInputElement}
+   */
+   get input() {
+    return this.template.querySelector('input');
   }
 }

@@ -14,7 +14,11 @@ import {
 } from '../../../page-objects/search';
 import {FacetActions as Actions} from './facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
-import {useCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../../page-objects/use-case';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 
 interface FacetOptions {
@@ -45,8 +49,8 @@ describe('Facet Test Suite', () => {
 
     cy.visit(pageUrl);
     configure(options);
-    if (options.useCase !== useCaseEnum.search) {
-      cy.wait(1000);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
     if (waitForSearch) {

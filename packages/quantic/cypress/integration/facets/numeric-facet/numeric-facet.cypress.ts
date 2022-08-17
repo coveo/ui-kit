@@ -12,7 +12,11 @@ import {
 } from '../../../page-objects/search';
 import {NumericFacetActions as Actions} from './numeric-facet-actions';
 import {scope} from '../../../reporters/detailed-collector';
-import {useCaseParamTest, useCaseEnum} from '../../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../../page-objects/use-case';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 
 interface NumericFacetOptions {
@@ -52,8 +56,8 @@ describe('quantic-numeric-facet', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
-    if (options.useCase !== useCaseEnum.search) {
-      cy.wait(1000);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
     if (waitForSearch) {

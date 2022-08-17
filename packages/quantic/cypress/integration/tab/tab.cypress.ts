@@ -7,7 +7,11 @@ import {
 import {TabExpectations as Expect} from './tab-expectations';
 import {TabActions as Actions} from './tab-actions';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
-import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 
 interface TabOptions {
   label: string;
@@ -38,8 +42,8 @@ describe('quantic-tab', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
-    if (options.useCase !== useCaseEnum.search) {
-      cy.wait(1000);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
     if (waitForSearch) {

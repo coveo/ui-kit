@@ -13,3 +13,16 @@ export const useCaseParamTest = [
     label: 'with insight use case',
   },
 ];
+const insightInterfaceExpectations = () => {
+  return {
+    isInitialized: () => {
+      cy.get('input[type="hidden"]')
+        .invoke('attr', 'is-initialized')
+        .should('eq', 'true');
+    },
+  };
+};
+
+export const InsightInterfaceExpectations = {
+  ...insightInterfaceExpectations(),
+};

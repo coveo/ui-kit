@@ -1,5 +1,6 @@
 import {registerComponentForInit} from 'c/quanticHeadlessLoader';
 import {api, LightningElement, track} from 'lwc';
+import {result} from './result';
 
 export default class ExampleQuanticResultQuickview extends LightningElement {
   @api engineId = 'quantic-result-quickview-engine';
@@ -10,18 +11,6 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
     registerComponentForInit(this, this.engineId);
   }
 
-  result = {
-    title: 'Test',
-    hasHtmlVersion: true,
-    uniqueId: '5',
-    raw: {
-      date: 1591016242000,
-      urihash: '5',
-    },
-    uri: '/full-search-example',
-    clickUri: '/full-search-example',
-  };
-
   pageTitle = 'Quantic Result Quickview';
   pageDescription =
     'The Quantic Result Quickview component renders a button which the end user can click to open a modal box containing certain information about a result.';
@@ -30,7 +19,7 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
       attribute: 'result',
       label: 'Result',
       description: 'The result to retrieve a quickview for.',
-      defaultValue: JSON.stringify(this.result),
+      defaultValue: JSON.stringify(result),
     },
     {
       attribute: 'maximumPreviewSize',
@@ -56,13 +45,6 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
       label: 'Preview button variant',
       description: 'The variant of the preview button.',
       defaultValue: undefined,
-    },
-    {
-      attribute: 'useCase',
-      label: 'Use Case',
-      description:
-        'Define which use case to test. Possible values are: search, insight',
-      defaultValue: 'search',
     },
   ];
 

@@ -9,7 +9,11 @@ import {ResultListExpectations as Expect} from './result-list-expectations';
 import {getNextResults} from '../../page-objects/actions/action-get-next-results';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {scope} from '../../reporters/detailed-collector';
-import {useCaseParamTest, useCaseEnum} from '../../page-objects/use-case';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 
 interface ResultListOptions {
   useCase: string;
@@ -29,8 +33,8 @@ describe('quantic-resultlist', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
-    if (options.useCase !== useCaseEnum.search) {
-      cy.wait(1000);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
       performSearch();
     }
   }
