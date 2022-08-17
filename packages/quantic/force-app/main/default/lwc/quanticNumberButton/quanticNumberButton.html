@@ -1,8 +1,3 @@
 <template>
-  <template if:true={selected}>
-    <button class="slds-button slds-button_brand slds-m-left_xx-small" aria-pressed="true" key={pageNumber} onclick={select}>{number}</button>
-  </template>
-  <template if:false={selected}>
-    <button class="slds-button slds-button_outline-brand slds-m-left_xx-small" aria-pressed="false" key={pageNumber} onclick={select}>{number}</button>
-  </template>
+  <button class={buttonClasses} aria-pressed={isPressed} key={pageNumber} onclick={select}>{number}</button>
 </template>
