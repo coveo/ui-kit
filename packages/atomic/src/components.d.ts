@@ -19,7 +19,6 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { ClearPopoverEvent } from "./components/search/facets/atomic-popover/popover-type";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
@@ -248,6 +247,10 @@ export namespace Components {
           * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
          */
         "container"?: HTMLElement;
+        /**
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+         */
+        "shouldHideSelf": boolean;
         /**
           * The source to focus when the focus trap becomes inactive.
          */
@@ -2469,6 +2472,10 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         /**
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+         */
+        "shouldHideSelf"?: boolean;
+        /**
           * The source to focus when the focus trap becomes inactive.
          */
         "source"?: HTMLElement;
@@ -2957,7 +2964,6 @@ declare namespace LocalJSX {
         "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
     }
     interface AtomicPopover {
-        "onAtomic/closePopovers"?: (event: CustomEvent<ClearPopoverEvent>) => void;
     }
     interface AtomicQueryError {
     }
