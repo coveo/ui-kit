@@ -498,6 +498,13 @@
         <shortDescription>Apply</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_TimeframeInputApply</fullName>
+        <value>Apply custom timeframe values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Apply custom timeframe values for the [component label] facet</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_NumberInputApply</fullName>
         <value>Apply custom numerical values for the {{0}} facet</value>
         <language>en_US</language>

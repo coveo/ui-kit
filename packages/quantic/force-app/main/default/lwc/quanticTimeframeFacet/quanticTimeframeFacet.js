@@ -19,7 +19,7 @@ import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import startLabel from '@salesforce/label/c.quantic_StartLabel';
 import endLabel from '@salesforce/label/c.quantic_EndLabel';
-import apply from '@salesforce/label/c.quantic_Apply';
+import apply from '@salesforce/label/c.quantic_TimeframeInputApply';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
@@ -645,5 +645,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
         end: DateUtils.toLocalSearchApiDate(endDate),
       })
     );
+  }
+
+  get ariaLabelValue() {
+    return I18nUtils.format(this.labels.apply, this.field);
   }
 }
