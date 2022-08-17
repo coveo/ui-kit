@@ -247,7 +247,7 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         /**
-          * Whether the tab index should be -1 and the element should be hidden from screen readers.
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
         "shouldHideSelf": boolean;
         /**
@@ -2471,7 +2471,7 @@ declare namespace LocalJSX {
          */
         "container"?: HTMLElement;
         /**
-          * Whether the tab index should be -1 and the element should be hidden from screen readers.
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
          */
         "shouldHideSelf"?: boolean;
         /**
