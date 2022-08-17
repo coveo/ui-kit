@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.101.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.0...@coveo/headless@1.101.1) (2022-08-17)
+
+
+### Bug Fixes
+
+* **headless:** remove idle range when generateAutomaticRanges is true ([#2345](https://github.com/coveo/ui-kit/issues/2345)) ([b28f3bf](https://github.com/coveo/ui-kit/commit/b28f3bfe582ea8b7eee5f67c67fb7d70ce898c5b))
+
+
+
+
+
 # [1.101.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.100.0...@coveo/headless@1.101.0) (2022-08-16)
 
 
