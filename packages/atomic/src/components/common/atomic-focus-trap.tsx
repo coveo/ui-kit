@@ -27,7 +27,7 @@ export class AtomicFocusTrap {
   @Prop({mutable: true}) container?: HTMLElement;
 
   /**
-   * Whether the tab index should be -1 and the element should be hidden from screen readers.
+   * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
    */
   @Prop() shouldHideSelf = true;
 
