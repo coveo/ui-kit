@@ -226,6 +226,7 @@ export class AtomicPopover implements InitializableComponent {
           source={this.buttonRef}
           container={this.popupRef}
           active={this.isOpen}
+          shouldHideSelf={false}
         >
           {this.renderPopover()}
         </atomic-focus-trap>

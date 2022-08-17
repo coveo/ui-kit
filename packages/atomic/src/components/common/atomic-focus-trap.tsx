@@ -25,6 +25,12 @@ export class AtomicFocusTrap {
    * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
    */
   @Prop({mutable: true}) container?: HTMLElement;
+
+  /**
+   * Whether the tab index should be -1 and the element should be hidden from screen readers.
+   */
+  @Prop() shouldHideSelf = true;
+
   private readonly hiddenElements: Element[] = [];
 
   hide(element: Element) {
@@ -70,8 +76,10 @@ export class AtomicFocusTrap {
   }
 
   hideSelf() {
-    this.parentToHide.setAttribute('aria-hidden', 'true');
-    this.parentToHide.setAttribute('tabindex', '-1');
+    if (this.shouldHideSelf) {
+      this.parentToHide.setAttribute('aria-hidden', 'true');
+      this.parentToHide.setAttribute('tabindex', '-1');
+    }
   }
 
   async onDeactivated(isInitialLoad: boolean) {

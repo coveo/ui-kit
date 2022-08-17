@@ -247,6 +247,10 @@ export namespace Components {
          */
         "container"?: HTMLElement;
         /**
+          * Whether the tab index should be -1 and the element should be hidden from screen readers.
+         */
+        "shouldHideSelf": boolean;
+        /**
           * The source to focus when the focus trap becomes inactive.
          */
         "source"?: HTMLElement;
@@ -2466,6 +2470,10 @@ declare namespace LocalJSX {
           * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
          */
         "container"?: HTMLElement;
+        /**
+          * Whether the tab index should be -1 and the element should be hidden from screen readers.
+         */
+        "shouldHideSelf"?: boolean;
         /**
           * The source to focus when the focus trap becomes inactive.
          */
