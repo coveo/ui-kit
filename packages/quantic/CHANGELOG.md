@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.35.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.4...@coveo/quantic@1.35.0) (2022-08-17)
+
+
+### Features
+
+* **quantic:** added focus indicator for facet addMore addLess buttons. ([#2339](https://github.com/coveo/ui-kit/issues/2339)) ([8ad149f](https://github.com/coveo/ui-kit/commit/8ad149f204c402180574d6aa34d2eedfe34c2a93))
+
+
+
+
+
 ## [1.34.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.3...@coveo/quantic@1.34.4) (2022-08-17)
 
 **Note:** Version bump only for package @coveo/quantic

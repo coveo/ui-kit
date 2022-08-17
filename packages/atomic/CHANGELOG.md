@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.99.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.98.2...@coveo/atomic@1.99.0) (2022-08-17)
+
+
+### Features
+
+* **atomic:** improve atomic-popover interaction ([#2347](https://github.com/coveo/ui-kit/issues/2347)) ([fe9d82f](https://github.com/coveo/ui-kit/commit/fe9d82ff08bbe648e94e43c08f56dda224b04922))
+
+
+
+
+
 ## [1.98.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.98.1...@coveo/atomic@1.98.2) (2022-08-17)
 
 **Note:** Version bump only for package @coveo/atomic
