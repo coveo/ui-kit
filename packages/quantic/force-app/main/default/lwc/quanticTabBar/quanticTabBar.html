@@ -15,17 +15,17 @@
           <div class="slds-dropdown slds-dropdown_right">
             <ul class="slds-dropdown__list slds-dropdown_length-with-icon-10" role="menu">
               <template for:each={tabsInDropdown} for:item="tab">
-                <li class="slds-dropdown__item" role="presentation" key={tab.id}>
-                  <a
+                <li class="slds-grid" role="presentation" key={tab.id}>
+                  <button
                     role="menuitem"
+                    class="slds-button slds-tabs_default__item"
                     tabindex={optionTabIndex}
                     onclick={handleDropdownTabSelect}
-                    onkeydown={onKeyDown}
                     data-value={tab.value}
                     data-label={tab.label}
                   >
-                    <span class="slds-truncate" title={tab.label}>{tab.label}</span>
-                  </a>
+                    <span class="slds-tabs_default__link" title={tab.label}>{tab.label}</span>
+                </button>
                 </li>
               </template>
             </ul>

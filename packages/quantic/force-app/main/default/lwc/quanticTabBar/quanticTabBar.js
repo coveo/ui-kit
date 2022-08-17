@@ -370,14 +370,4 @@ export default class QuanticTabBar extends LightningElement {
     // @ts-ignore
     return Math.ceil(element.offsetWidth + padding);
   }
-
-  /**
-   * @param {KeyboardEvent} evt
-   */
-  onKeyDown(evt) {
-    if (evt.code === 'Enter' || evt.code === 'Space') {
-      evt.preventDefault();
-      this.handleDropdownTabSelect(evt);
-    }
-  }
 }
