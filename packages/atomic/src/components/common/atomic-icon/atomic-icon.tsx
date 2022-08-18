@@ -14,8 +14,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import {AnyBindings} from '../interface/bindings';
 
 /**
  * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
@@ -28,14 +27,10 @@ import {Bindings} from '../../search/atomic-search-interface/atomic-search-inter
   shadow: false,
   assetsDirs: ['assets'],
 })
-export class AtomicIcon
-  implements InitializableComponent<Bindings | InsightBindings>
-{
+export class AtomicIcon implements InitializableComponent<AnyBindings> {
   @Element() host!: HTMLElement;
 
-  @InitializeBindings({forceUpdate: true}) public bindings!:
-    | Bindings
-    | InsightBindings;
+  @InitializeBindings() public bindings!: AnyBindings;
 
   /**
    * The SVG icon to display.

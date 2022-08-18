@@ -1,28 +1,7 @@
 import {h, VNode} from '@stencil/core';
-import {
-  DateFacet,
-  DateFacetValue,
-  DateFilter,
-  DateRangeRequest,
-  FacetConditionsManager,
-  RelativeDate,
-  SearchStatusState,
-} from '@coveo/headless';
 import dayjs from 'dayjs';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
-import {
-  InsightDateFacet,
-  InsightDateFacetValue,
-  InsightDateFilter,
-  InsightDateRangeOptions,
-  InsightDateRangeRequest,
-  InsightFacetConditionsManager,
-  InsightRelativeDate,
-  InsightSearchStatusState,
-} from '../../insight';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../hidden';
 import {
   shouldDisplayInputForFacetRange,
@@ -34,38 +13,44 @@ import {FacetValueLink} from './facet-value-link/facet-value-link';
 import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 import {FacetHeader} from './facet-header/facet-header';
+import {AnyBindings} from '../interface/bindings';
+import {
+  DateFacet,
+  DateFacetValue,
+  DateFilter,
+  DateRangeOptions,
+  DateRangeRequest,
+  FacetConditionsManager,
+  RelativeDate,
+  RelativeDatePeriod,
+  RelativeDateUnit,
+  SearchStatusState,
+} from '../types';
 import {FacetInfo} from './facet-common-store';
 import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 
-export interface Timeframe extends RelativeDate {
-  label?: string;
-}
-
-export interface InsightTimeframe extends InsightRelativeDate {
+export interface Timeframe {
+  period: RelativeDatePeriod;
+  unit?: RelativeDateUnit;
+  amount?: number;
   label?: string;
 }
 
 interface TimeframeFacetCommonOptions {
   host: HTMLElement;
-  bindings: Bindings | InsightBindings;
+  bindings: AnyBindings;
   label: string;
   field: string;
   headingLevel: number;
   dependsOn: Record<string, string>;
   withDatePicker: boolean;
-  getSearchStatusState(): InsightSearchStatusState | SearchStatusState;
-  buildDependenciesManager():
-    | InsightFacetConditionsManager
-    | FacetConditionsManager;
-  deserializeRelativeDate(date: string): InsightRelativeDate | RelativeDate;
-  buildDateRange(
-    config: InsightDateRangeOptions | InsightDateRangeOptions
-  ): InsightDateRangeRequest | DateRangeRequest;
-  initializeFacetForDatePicker(): InsightDateFacet | DateFacet;
-  initializeFacetForDateRange(
-    values: InsightDateRangeRequest[] | DateRangeRequest[]
-  ): InsightDateFacet | DateFacet;
-  initializeFilter(): InsightDateFilter | DateFilter;
+  getSearchStatusState(): SearchStatusState;
+  buildDependenciesManager(): FacetConditionsManager;
+  deserializeRelativeDate(date: string): RelativeDate;
+  buildDateRange(config: DateRangeOptions): DateRangeRequest;
+  initializeFacetForDatePicker(): DateFacet;
+  initializeFacetForDateRange(values: DateRangeRequest[]): DateFacet;
+  initializeFilter(): DateFilter;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -78,30 +63,22 @@ interface TimeframeFacetCommonRenderProps {
 
 export class TimeframeFacetCommon {
   private host: HTMLElement;
-  private bindings: Bindings | InsightBindings;
+  private bindings: AnyBindings;
   private label: string;
   private field: string;
   private headingLevel: number;
   private dependsOn: Record<string, string>;
   private withDatePicker: boolean;
   private facetId?: string;
-  private facetForDatePicker?: InsightDateFacet | DateFacet;
-  private facetForDateRange?: InsightDateFacet | DateFacet;
-  private filter?: InsightDateFilter | DateFilter;
-  private manualTimeframes: Timeframe[] | InsightTimeframe[] = [];
-  private dependenciesManager?:
-    | InsightFacetConditionsManager
-    | FacetConditionsManager;
-  private deserializeRelativeDate: (
-    date: string
-  ) => InsightRelativeDate | RelativeDate;
-  private getSearchStatusState: () =>
-    | InsightSearchStatusState
-    | SearchStatusState;
+  private facetForDatePicker?: DateFacet;
+  private facetForDateRange?: DateFacet;
+  private filter?: DateFilter;
+  private manualTimeframes: Timeframe[] = [];
+  private dependenciesManager?: FacetConditionsManager;
+  private deserializeRelativeDate: (date: string) => RelativeDate;
+  private getSearchStatusState: () => SearchStatusState;
 
-  private buildDateRange: (
-    config: InsightDateRangeOptions | InsightDateRangeOptions
-  ) => InsightDateRangeRequest | DateRangeRequest;
+  private buildDateRange: (config: DateRangeOptions) => DateRangeRequest;
 
   constructor(props: TimeframeFacetCommonOptions) {
     this.host = props.host;
@@ -201,7 +178,7 @@ export class TimeframeFacetCommon {
     return !!this.filter?.state.range;
   }
 
-  public get currentValues(): InsightDateRangeRequest[] | DateRangeRequest[] {
+  public get currentValues(): DateRangeRequest[] {
     return this.manualTimeframes.map(({period, amount, unit}) =>
       period === 'past'
         ? this.buildDateRange({
@@ -265,7 +242,7 @@ export class TimeframeFacetCommon {
     );
   }
 
-  private formatFacetValue(facetValue: InsightDateFacetValue | DateFacetValue) {
+  private formatFacetValue(facetValue: DateFacetValue) {
     try {
       const startDate = this.deserializeRelativeDate(facetValue.start);
       const relativeDate =
@@ -304,7 +281,7 @@ export class TimeframeFacetCommon {
       this.valuesToRender.map((value) => this.renderValue(value))
     );
   }
-  private renderValue(facetValue: InsightDateFacetValue) {
+  private renderValue(facetValue: DateFacetValue) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
     return (

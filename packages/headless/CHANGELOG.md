@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.101.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.0...@coveo/headless@1.101.1) (2022-08-17)
+
+
+### Bug Fixes
+
+* **headless:** remove idle range when generateAutomaticRanges is true ([#2345](https://github.com/coveo/ui-kit/issues/2345)) ([b28f3bf](https://github.com/coveo/ui-kit/commit/b28f3bfe582ea8b7eee5f67c67fb7d70ce898c5b))
+
+
+
+
+
+# [1.101.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.100.0...@coveo/headless@1.101.0) (2022-08-16)
+
+
+### Bug Fixes
+
+* **headless:** prevent undefined enableQuerySyntax value to be added to the params manager ([#2343](https://github.com/coveo/ui-kit/issues/2343)) ([1e1f265](https://github.com/coveo/ui-kit/commit/1e1f265fbf4c01fc56b3029eda12b2baaad510d4))
+
+
+### Features
+
+* **atomic,headless:** deselect facets with hasBreadcrumbs=false on new query ([#2342](https://github.com/coveo/ui-kit/issues/2342)) ([fb90264](https://github.com/coveo/ui-kit/commit/fb902644864daa271c8ddc70cb6260e6fba401f9))
+
+
+
+
+
+# [1.100.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.99.0...@coveo/headless@1.100.0) (2022-08-16)
+
+
+### Features
+
+* **headless:** added undo method to query trigger ([#2332](https://github.com/coveo/ui-kit/issues/2332)) ([f3f8782](https://github.com/coveo/ui-kit/commit/f3f8782a1c2a2e2f99a3208c78e8daaeb46110a8))
+
+
+
+
+
 # [1.99.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.98.0...@coveo/headless@1.99.0) (2022-08-15)
 
 

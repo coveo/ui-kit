@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.99.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.98.2...@coveo/atomic@1.99.0) (2022-08-17)
+
+
+### Features
+
+* **atomic:** improve atomic-popover interaction ([#2347](https://github.com/coveo/ui-kit/issues/2347)) ([fe9d82f](https://github.com/coveo/ui-kit/commit/fe9d82ff08bbe648e94e43c08f56dda224b04922))
+
+
+
+
+
+## [1.98.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.98.1...@coveo/atomic@1.98.2) (2022-08-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.98.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.98.0...@coveo/atomic@1.98.1) (2022-08-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.98.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.97.1...@coveo/atomic@1.98.0) (2022-08-16)
+
+
+### Bug Fixes
+
+* **atomic:** update common types not to use headless ([#2325](https://github.com/coveo/ui-kit/issues/2325)) ([31b51d0](https://github.com/coveo/ui-kit/commit/31b51d009e0da138f089ddabda2ca337da3425de))
+
+
+### Features
+
+* **atomic:** allowed customization of instant results aria-label ([#2340](https://github.com/coveo/ui-kit/issues/2340)) ([b0742fa](https://github.com/coveo/ui-kit/commit/b0742fafbe63ed88ba403a2ca8a77b8d7ffd683b))
+
+
+
+
+
+## [1.97.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.97.0...@coveo/atomic@1.97.1) (2022-08-15)
+
+
+### Bug Fixes
+
+* **atomic:** made search box suggestions usable on iOS VoiceOver ([#2338](https://github.com/coveo/ui-kit/issues/2338)) ([d191a7a](https://github.com/coveo/ui-kit/commit/d191a7ad0e3204e00c1825d10672798339c6a17b))
+
+
+
+
+
 # [1.97.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.96.1...@coveo/atomic@1.97.0) (2022-08-15)
 
 

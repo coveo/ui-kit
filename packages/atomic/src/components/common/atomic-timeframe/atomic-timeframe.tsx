@@ -1,6 +1,6 @@
 import {Component, Prop} from '@stencil/core';
-import {RelativeDateUnit} from '@coveo/headless';
-import {InsightTimeframe, Timeframe} from '../facets/timeframe-facet-common';
+import {Timeframe} from '../facets/timeframe-facet-common';
+import {RelativeDateUnit} from '../types';
 
 /**
  * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
@@ -11,7 +11,7 @@ import {InsightTimeframe, Timeframe} from '../facets/timeframe-facet-common';
   tag: 'atomic-timeframe',
   shadow: false,
 })
-export class AtomicTimeframe implements Timeframe, InsightTimeframe {
+export class AtomicTimeframe implements Timeframe {
   /**
    * The relative period of time to now.
    */

@@ -6,6 +6,13 @@ import {
 import {triggers, query} from '../../app/reducers';
 import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {AnyAction} from 'redux';
+
+function empty<T>(arr: T[]) {
+  while (arr.length) {
+    arr.pop();
+  }
+}
 
 describe('QueryTrigger', () => {
   let engine: MockSearchEngine;
@@ -16,7 +23,12 @@ describe('QueryTrigger', () => {
   }
 
   function getUpdateQueryAction() {
-    return engine.actions.find((a) => a.type === updateQuery.type);
+    function isUpdateQueryAction(
+      action: AnyAction
+    ): action is ReturnType<typeof updateQuery> {
+      return action.type === updateQuery.type;
+    }
+    return engine.actions.find(isUpdateQueryAction);
   }
 
   function registeredListeners() {
@@ -143,6 +155,54 @@ describe('QueryTrigger', () => {
 
         it('#state.wasQueryModified should be false', () => {
           expect(queryTrigger.state.wasQueryModified).toEqual(false);
+        });
+      });
+
+      describe('then #undo is called', () => {
+        beforeEach(() => {
+          const [firstListener] = registeredListeners();
+          empty(engine.actions);
+          listener.mockReset();
+
+          queryTrigger.undo();
+          engine.state.query.q = originalQuery;
+          firstListener();
+        });
+
+        it('it dispatches #updateQuery', () => {
+          const updateQueryAction = getUpdateQueryAction();
+          expect(updateQueryAction).toBeTruthy();
+          expect(updateQueryAction?.payload.q).toEqual(originalQuery);
+        });
+
+        it('it dispatches #executeSearch', () => {
+          expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+        });
+
+        it('it calls the listener', () => {
+          expect(listener).toHaveBeenCalledTimes(1);
+        });
+
+        it('#state.wasQueryModified should be false', () => {
+          expect(queryTrigger.state.wasQueryModified).toEqual(false);
+        });
+
+        describe('when the search resolves', () => {
+          beforeEach(() => {
+            listener.mockReset();
+            const [firstListener] = registeredListeners();
+
+            engine.state.triggers.query = newQuery;
+            firstListener();
+          });
+
+          it("it doesn't call the listener", () => {
+            expect(listener).toHaveBeenCalledTimes(0);
+          });
+
+          it('#state.wasQueryModified should be false', () => {
+            expect(queryTrigger.state.wasQueryModified).toEqual(false);
+          });
         });
       });
     });
