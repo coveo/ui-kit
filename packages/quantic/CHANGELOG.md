@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.35.0...@coveo/quantic@1.36.0) (2022-08-18)
+
+
+### Features
+
+* **quantic:** added aria-pressed for pager ([#2333](https://github.com/coveo/ui-kit/issues/2333)) ([e266af9](https://github.com/coveo/ui-kit/commit/e266af98c39bee1a2f5ec88dac5ef60e6852f110)), closes [#2306](https://github.com/coveo/ui-kit/issues/2306)
+
+
+
+
+
+# [1.35.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.4...@coveo/quantic@1.35.0) (2022-08-17)
+
+
+### Features
+
+* **quantic:** added focus indicator for facet addMore addLess buttons. ([#2339](https://github.com/coveo/ui-kit/issues/2339)) ([8ad149f](https://github.com/coveo/ui-kit/commit/8ad149f204c402180574d6aa34d2eedfe34c2a93))
+
+
+
+
+
+## [1.34.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.3...@coveo/quantic@1.34.4) (2022-08-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.34.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.2...@coveo/quantic@1.34.3) (2022-08-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.34.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.1...@coveo/quantic@1.34.2) (2022-08-16)
+
+
+### Bug Fixes
+
+* **quantic:** changed ... to expand from a A tag to a button ([#2234](https://github.com/coveo/ui-kit/issues/2234)) ([f554676](https://github.com/coveo/ui-kit/commit/f554676205d985ddfbe37c6910a5ca4d4c59225f))
+
+
+
+
+
+## [1.34.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.0...@coveo/quantic@1.34.1) (2022-08-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.34.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.33.0...@coveo/quantic@1.34.0) (2022-08-15)
 
 
