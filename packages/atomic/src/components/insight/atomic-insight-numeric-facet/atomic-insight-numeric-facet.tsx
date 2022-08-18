@@ -25,7 +25,6 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
-import {randomID} from '../../../utils/utils';
 import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
@@ -182,9 +181,10 @@ export class AtomicInsightNumericFacet
           conditions: parseDependsOn(this.dependsOn),
         }),
       buildNumericRange: buildInsightNumericRange,
-      initializeFacetForInput: () => this.initializeFacetForInput(),
+      initializeFacetForInput: (facetId?: string) =>
+        this.initializeFacetForInput(facetId),
       initializeFacetForRange: () => this.initializeFacetForRange(),
-      initializeFilter: () => this.initializeFilter(),
+      initializeFilter: (facetId: string) => this.initializeFilter(facetId),
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
@@ -193,12 +193,12 @@ export class AtomicInsightNumericFacet
     this.numericFacetCommon.disconnectedCallback();
   }
 
-  private initializeFacetForInput() {
+  private initializeFacetForInput(facetId?: string) {
     this.facetForInput = buildInsightNumericFacet(this.bindings.engine, {
       options: {
         numberOfValues: 1,
         generateAutomaticRanges: true,
-        facetId: randomID(this.facetId || this.field),
+        facetId: facetId,
         field: this.field,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
@@ -228,10 +228,10 @@ export class AtomicInsightNumericFacet
     return this.facetForRange;
   }
 
-  private initializeFilter() {
+  private initializeFilter(facetId: string) {
     this.filter = buildInsightNumericFilter(this.bindings.engine, {
       options: {
-        facetId: this.facetId ? `${this.facetId}_input` : undefined,
+        facetId,
         field: this.field,
       },
     });

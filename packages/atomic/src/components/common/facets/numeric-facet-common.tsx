@@ -53,9 +53,9 @@ interface NumericFacetCommonOptions {
   getSearchStatusState(): SearchStatusState;
   buildDependenciesManager(): FacetConditionsManager;
   buildNumericRange(config: NumericRangeOptions): NumericRangeRequest;
-  initializeFacetForInput(): NumericFacet;
+  initializeFacetForInput(facetId?: string): NumericFacet;
   initializeFacetForRange(): NumericFacet;
-  initializeFilter(): NumericFilter;
+  initializeFilter(facetId: string): NumericFilter;
 }
 
 interface NumericFacetCommonRenderProps {
@@ -117,13 +117,17 @@ export class NumericFacetCommon {
       this.facetForRange = props.initializeFacetForRange();
       this.facetId = props.setFacetId(this.facetForRange.state.facetId);
     }
+
     if (this.withInput) {
-      this.facetForInput = props.initializeFacetForInput();
-      this.filter = props.initializeFilter();
+      this.facetForInput = props.initializeFacetForInput(
+        this.facetId ?? `${this.facetId}_input_range`
+      );
       if (!this.facetId) {
-        this.facetId = this.filter.state.facetId;
+        this.facetId = props.setFacetId(this.facetForInput.state.facetId);
       }
+      this.filter = props.initializeFilter(`${this.facetId}_input`);
     }
+
     this.dependenciesManager = props.buildDependenciesManager();
     this.registerFacetToStore();
   }
@@ -131,6 +135,7 @@ export class NumericFacetCommon {
   private get formatter() {
     return this.getFormatter();
   }
+
   private get enabled() {
     return (
       this.facetForRange?.state.enabled ?? this.filter?.state.enabled ?? true
