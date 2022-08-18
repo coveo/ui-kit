@@ -20,6 +20,12 @@ export default class QuanticNumberButton extends LightningElement {
    * @type {number}
    */
   @api selected;
+  /**
+   * The value for aria-label
+   * @api
+   * @type {string}
+   */
+  @api ariaLabelValue;
 
   get isPressed() {
     return `${this.selected}`;
