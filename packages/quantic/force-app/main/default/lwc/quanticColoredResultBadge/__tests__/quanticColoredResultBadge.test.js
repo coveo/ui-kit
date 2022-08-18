@@ -49,7 +49,7 @@ const invalidPropertiesError =
   '"QuanticColoredResultBadge" requires either specified value for label or a result object with a fieldname to display correctly.';
 
 function createTestComponent(color, label = defaultLabel, result, fieldname) {
-  const element = createElement('c-colored-result-badge', {
+  const element = createElement('c-quantic-colored-result-badge', {
     is: QuanticColoredResultBadge,
   });
   element.label = label;
