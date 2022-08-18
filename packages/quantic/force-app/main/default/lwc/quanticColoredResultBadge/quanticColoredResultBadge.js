@@ -9,7 +9,7 @@ const lightnessDegree = 48;
 
 /**
  * The `QuanticColoredResultBadge` component displays a colored badge showing a label.
- * If the `Label` property is set in this component, its value will be displayed in the badge, Otherwise the `Result` and 'Fieldname' properties are required and the value of the given field will lbe displayed.
+ * If the `Label` property is set in this component, its value will be displayed in the badge, Otherwise the `Result` and `Fieldname` properties are required and the value of the given field will lbe displayed.
  * @category Result Template
  * @example
  * <c-quantic-colored-result-badge label="Account"></c-quantic-colored-result-badge>
