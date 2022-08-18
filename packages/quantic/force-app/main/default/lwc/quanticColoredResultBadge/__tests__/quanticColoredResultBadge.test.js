@@ -92,7 +92,7 @@ describe('c-quantic-colored-result-badge', () => {
     expect(badge.textContent).toBe(label);
   });
 
-  it('should display the colored badge with the correct label and color the result and fieldname properties are given', async () => {
+  it('should display the colored badge with the correct label and color when the result and fieldname properties are given', async () => {
     const element = createTestComponent(
       '#FFF7BA',
       '',
