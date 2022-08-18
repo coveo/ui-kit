@@ -1,18 +1,43 @@
-import { LightningElement, api } from 'lwc';
-import { RGBToHSL, HEXToRGB, invalidRGBValues } from './colorsUtils';
+import {LightningElement, api} from 'lwc';
+import {RGBToHSL, HEXToRGB, invalidRGBValues} from './colorsUtils';
 
 const defaultPrimaryColor = '#FFF7BA';
 const defaultSecondaryColor = '#E2B104';
 const lightnessDegree = 48;
 
+/** @typedef {import("coveo").Result} Result */
+
+/**
+ * The `QuanticColoredResultBadge` component displays a colored badge showing a label.
+ * If the `Label` property is set in this component, its value will be displayed in the badge, Otherwise the `Result` and 'Fieldname' properties are required and the value of the given field will lbe displayed.
+ * @category Result Template
+ * @example
+ * <c-quantic-colored-result-badge label="Account"></c-quantic-colored-result-badge>
+ */
 export default class QuanticColoredResultBadge extends LightningElement {
-  /** @type {string} */
+  /**
+   * The label to display.
+   * @api
+   * @type {string}
+   */
   @api label;
-  /** @type {string} */
+  /**
+   * The name of the field whose value we want to display.
+   * @api
+   * @type {string}
+   */
   @api fieldname;
-  /** @type {object}*/
+  /**
+   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use to infer label and icon.
+   * @api
+   * @type {Result}
+   */
   @api result;
-  /** @type{string} */
+  /**
+   * The primary color of the badge.
+   * @api
+   * @type {string}
+   */
   @api color;
 
   /** @type{boolean} */
@@ -40,8 +65,14 @@ export default class QuanticColoredResultBadge extends LightningElement {
     // @ts-ignore
     const styles = this.template.querySelector('.result-badge')?.style;
     const secondaryColor = this.generateSecondaryColor(lightnessDegree);
-    styles.setProperty('--primaryColor', this.invalidColor ? defaultPrimaryColor : this.color);
-    styles.setProperty('--secondaryColor', this.invalidColor ? defaultSecondaryColor : secondaryColor);
+    styles.setProperty(
+      '--primaryColor',
+      this.invalidColor ? defaultPrimaryColor : this.color
+    );
+    styles.setProperty(
+      '--secondaryColor',
+      this.invalidColor ? defaultSecondaryColor : secondaryColor
+    );
   }
 
   /**
@@ -50,7 +81,7 @@ export default class QuanticColoredResultBadge extends LightningElement {
    * @returns {string}
    */
   generateSecondaryColor(lightnessAmount) {
-    const { r, g, b } = HEXToRGB(this.color);
+    const {r, g, b} = HEXToRGB(this.color);
 
     if (invalidRGBValues(r, g, b)) {
       this.invalidColor = true;
@@ -58,7 +89,7 @@ export default class QuanticColoredResultBadge extends LightningElement {
     }
 
     const HSLColor = RGBToHSL(r, g, b);
-    const { h, s } = HSLColor;
+    const {h, s} = HSLColor;
     let l = HSLColor.l;
 
     if (l >= 50) {
@@ -66,7 +97,7 @@ export default class QuanticColoredResultBadge extends LightningElement {
     } else {
       l += lightnessAmount;
     }
-    
+
     return `hsl(${h}, ${s}%, ${l.toFixed(1)}%)`;
   }
 
