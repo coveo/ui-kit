@@ -5,12 +5,6 @@ const defaultPrimaryColor = '#FFF7BA';
 const defaultSecondaryColor = '#E2B104';
 const defaultLabel = 'Case';
 
-const defaultResult = {
-  raw: {
-    fieldOne: 'valueOne',
-  },
-};
-
 const colorsToTest = [
   {
     primaryColor: '#DABFE9',
@@ -45,17 +39,12 @@ const invalidColors = [
   },
 ];
 
-const invalidPropertiesError =
-  '"QuanticColoredResultBadge" requires either specified value for label or a result object with a fieldname to display correctly.';
-
-function createTestComponent(color, label = defaultLabel, result, fieldname) {
+function createTestComponent(color, label = defaultLabel) {
   const element = createElement('c-quantic-colored-result-badge', {
     is: QuanticColoredResultBadge,
   });
   element.label = label;
   element.color = color;
-  element.result = result;
-  element.fieldname = fieldname;
 
   document.body.appendChild(element);
 
@@ -92,45 +81,13 @@ describe('c-quantic-colored-result-badge', () => {
     expect(badge.textContent).toBe(label);
   });
 
-  it('should display the colored badge with the correct label and color when the result and fieldname properties are given', async () => {
-    const element = createTestComponent(
-      '#FFF7BA',
-      '',
-      defaultResult,
-      'fieldOne'
-    );
-    await flushPromises();
-
-    const badge = element.shadowRoot.querySelector('.result-badge');
-
-    expect(badge).not.toBeNull();
-    expect(badge.textContent).toBe(defaultResult.raw.fieldOne);
-  });
-
-  it('should not display the colored badge when the label and the result properties are missing', async () => {
-    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    const element = createTestComponent('#FFF7BA', null, null);
+  it('should not display the colored badge when the label property is missing', async () => {
+    const element = createTestComponent('#FFF7BA', null);
     await flushPromises();
 
     const badge = element.shadowRoot.querySelector('.result-badge');
 
     expect(badge).toBeNull();
-    expect(error).toHaveBeenCalledTimes(1);
-    expect(error.mock.calls[0][0]).toBe(invalidPropertiesError);
-  });
-
-  it('should not display the colored badge when the result property is given but the fieldname property is missing', async () => {
-    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-
-    const element = createTestComponent('#FFF7BA', null, defaultResult, null);
-    await flushPromises();
-
-    const badge = element.shadowRoot.querySelector('.result-badge');
-
-    expect(badge).toBeNull();
-    expect(error).toHaveBeenCalledTimes(1);
-    expect(error.mock.calls[0][0]).toBe(invalidPropertiesError);
   });
 
   colorsToTest.forEach((color) => {

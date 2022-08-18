@@ -9,10 +9,9 @@ const lightnessDegree = 48;
 
 /**
  * The `QuanticColoredResultBadge` component displays a colored badge showing a label.
- * If the `Label` property is set in this component, its value will be displayed in the badge, Otherwise the `Result` and `Fieldname` properties are required and the value of the given field will lbe displayed.
  * @category Result Template
  * @example
- * <c-quantic-colored-result-badge label="Account"></c-quantic-colored-result-badge>
+ * <c-quantic-colored-result-badge label="Case"></c-quantic-colored-result-badge>
  */
 export default class QuanticColoredResultBadge extends LightningElement {
   /**
@@ -21,18 +20,6 @@ export default class QuanticColoredResultBadge extends LightningElement {
    * @type {string}
    */
   @api label;
-  /**
-   * The name of the field whose value we want to display.
-   * @api
-   * @type {string}
-   */
-  @api fieldname;
-  /**
-   * The [result item](https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#result) to use to infer label and icon.
-   * @api
-   * @type {Result}
-   */
-  @api result;
   /**
    * The primary color of the badge.
    * @api
@@ -43,16 +30,8 @@ export default class QuanticColoredResultBadge extends LightningElement {
   /** @type{boolean} */
   invalidColor = false;
 
-  connectedCallback() {
-    if ((!this.result || !this.fieldname) && !this.label) {
-      console.error(
-        `"QuanticColoredResultBadge" requires either specified value for label or a result object with a fieldname to display correctly.`
-      );
-    }
-  }
-
   renderedCallback() {
-    if (this.displayedLabel) {
+    if (this.label) {
       this.setBadgeColors();
     }
   }
@@ -99,15 +78,5 @@ export default class QuanticColoredResultBadge extends LightningElement {
     }
 
     return `hsl(${h}, ${s}%, ${l.toFixed(1)}%)`;
-  }
-
-  get displayedLabel() {
-    if (this.label) {
-      return this.label;
-    } else if (this.result) {
-      const value = this.result.raw?.[this.fieldname];
-      return value;
-    }
-    return null;
   }
 }
