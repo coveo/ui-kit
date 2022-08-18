@@ -21,8 +21,16 @@ export default class QuanticNumberButton extends LightningElement {
    */
   @api selected;
 
-  get variant() {
-    return this.selected ? 'brand' : 'brand-outline';
+  get isPressed() {
+    return `${this.selected}`;
+  }
+
+  get buttonClasses() {
+    const classes = ['slds-button', 'slds-m-left__xx-small'];
+    classes.push(
+      this.selected ? 'slds-button_brand' : 'slds-button_outline-brand'
+    );
+    return classes.join(' ');
   }
 
   select() {
