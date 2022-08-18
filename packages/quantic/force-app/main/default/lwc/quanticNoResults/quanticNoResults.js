@@ -1,5 +1,5 @@
 import {api, LightningElement, track} from 'lwc';
-import {initializeWithHeadless, registerComponentForInit} from 'c/quanticHeadlessLoader';
+import {initializeWithHeadless, registerComponentForInit, getHeadlessBundle,} from 'c/quanticHeadlessLoader';
 import {I18nUtils} from 'c/quanticUtils';
 
 import noResultsForTitle from '@salesforce/label/c.quantic_NoResultsForTitle';
@@ -81,14 +81,17 @@ export default class QuanticNoResults extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.searchStatus = CoveoHeadless.buildSearchStatus(engine);
-    this.historyManager = CoveoHeadless.buildHistoryManager(engine);
-    this.querySummary = CoveoHeadless.buildQuerySummary(engine);
-    this.breadcrumbManager = CoveoHeadless.buildBreadcrumbManager(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
+    this.querySummary = this.headless.buildQuerySummary(engine);
+    this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
-    this.unsubscribeHistoryManager = this.historyManager.subscribe(() => this.updateState());
     this.unsubscribeQuerySummary = this.querySummary.subscribe(() => this.updateState());
     this.unsubscribeBreadcrumbsManager = this.breadcrumbManager.subscribe(() => this.updateState());
+    if(!this.disableCancelLastAction){
+      this.historyManager = this.headless.buildHistoryManager(engine);
+      this.unsubscribeHistoryManager = this.historyManager.subscribe(() => this.updateState());
+    }
   }
 
   disconnectedCallback() {
