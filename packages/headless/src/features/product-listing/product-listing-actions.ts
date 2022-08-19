@@ -92,12 +92,9 @@ export const fetchProductListing = createAsyncThunk<
   AsyncThunkProductListingOptions<StateNeededByFetchProductListing>
 >(
   'productlisting/fetch',
-  async (_action, {getState, dispatch, rejectWithValue, extra}) => {
-    const state = getState();
+  async (_action, {dispatch, rejectWithValue, extra}) => {
     const {apiClient} = extra;
-    const fetched = await apiClient.getProducts(
-      await buildProductListingRequest(state)
-    );
+    const fetched = await apiClient.getGraphQlProducts();
 
     if (isErrorResponse(fetched)) {
       dispatch(logQueryError(fetched.error));

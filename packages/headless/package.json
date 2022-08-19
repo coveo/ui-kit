@@ -44,6 +44,7 @@
     "pino-pretty": "^6.0.0"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
     "@coveo/bueno": "0.42.1",
     "@reduxjs/toolkit": "1.8.1",
     "@types/pino": "6.3.11",

@@ -15,6 +15,28 @@ import {
   ProductListingRequest,
   ProductListingSuccessResponse,
 } from './product-listing-request';
+// eslint-disable-next-line node/no-extraneous-import
+import {ApolloClient, InMemoryCache, gql} from '@Apollo/client';
+
+const QUERY = gql`
+  {
+    placementContent(
+      mode: PREVIEW
+      previewOptions: {campaignId: "foo"}
+      placementId: "foo"
+      attributes: {visitor: {id: ""}}
+    ) {
+      content
+      visitorId
+      callbackData
+    }
+  }
+`;
+
+const apolloClient = new ApolloClient({
+  cache: new InMemoryCache(),
+  uri: 'https://api.qubit.com/placements/query',
+});
 
 export interface AsyncThunkProductListingOptions<
   T extends Partial<ProductListingAppState>
@@ -94,6 +116,15 @@ export class ProductListingAPIClient implements FacetSearchAPIClient {
     return response.ok
       ? {success: body as ProductListingSuccessResponse}
       : {error: body as ProductListingAPIErrorStatusResponse};
+  }
+
+  async getGraphQlProducts() {
+    const response = await apolloClient.query({
+      query: QUERY,
+    });
+
+    const body = await response.data;
+    return body;
   }
 
   async facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse> {
