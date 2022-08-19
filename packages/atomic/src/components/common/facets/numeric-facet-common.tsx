@@ -89,18 +89,7 @@ export class NumericFacetCommon {
     const isIdDefinedForRange = !!this.facetId && props.numberOfValues > 0;
 
     if (props.numberOfValues > 0) {
-      this.manualRanges = props.setManualRanges(
-        Array.from(props.host.querySelectorAll('atomic-numeric-range')).map(
-          ({start, end, endInclusive, label}) => ({
-            ...props.buildNumericRange({start, end, endInclusive}),
-            label,
-          })
-        )
-      );
-      this.facetForRange = props.initializeFacetForRange();
-      if (!this.facetId) {
-        this.facetId = props.setFacetId(this.facetForRange.state.facetId);
-      }
+      this.initializeRangeFacet();
     }
 
     if (props.withInput) {
@@ -110,14 +99,30 @@ export class NumericFacetCommon {
         : isIdDefinedForRange
         ? `${this.facetId}_input_range`
         : undefined;
-      this.initializeInput(facetIdForInput);
+
+      this.initializeInputFacets(facetIdForInput);
     }
 
     this.dependenciesManager = props.buildDependenciesManager();
     this.registerFacetToStore();
   }
 
-  private initializeInput(facetIdForInput?: string) {
+  private initializeRangeFacet() {
+    this.manualRanges = this.props.setManualRanges(
+      Array.from(this.props.host.querySelectorAll('atomic-numeric-range')).map(
+        ({start, end, endInclusive, label}) => ({
+          ...this.props.buildNumericRange({start, end, endInclusive}),
+          label,
+        })
+      )
+    );
+    this.facetForRange = this.props.initializeFacetForRange();
+    if (!this.facetId) {
+      this.facetId = this.props.setFacetId(this.facetForRange.state.facetId);
+    }
+  }
+
+  private initializeInputFacets(facetIdForInput?: string) {
     this.facetForInput = this.props.initializeFacetForInput(facetIdForInput);
 
     if (!this.facetId) {
