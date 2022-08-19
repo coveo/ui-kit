@@ -28,6 +28,7 @@ import {
 } from '../types';
 import {FacetInfo} from './facet-common-store';
 import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
+import {randomID} from '../../../utils/utils';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
@@ -50,12 +51,9 @@ interface TimeframeFacetCommonOptions {
   buildDependenciesManager(): FacetConditionsManager;
   deserializeRelativeDate(date: string): RelativeDate;
   buildDateRange(config: DateRangeOptions): DateRangeRequest;
-  initializeFacetForDatePicker(facetId?: string): DateFacet;
-  initializeFacetForDateRange(
-    values: DateRangeRequest[],
-    facetId?: string
-  ): DateFacet;
-  initializeFilter(facetId: string): DateFilter;
+  initializeFacetForDatePicker(): DateFacet;
+  initializeFacetForDateRange(values: DateRangeRequest[]): DateFacet;
+  initializeFilter(): DateFilter;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -75,9 +73,9 @@ export class TimeframeFacetCommon {
   private dependenciesManager?: FacetConditionsManager;
 
   constructor(private props: TimeframeFacetCommonOptions) {
-    this.facetId = props.facetId;
-
     this.validateProps();
+    this.facetId = this.determineFacetId;
+    this.props.setFacetId(this.facetId);
 
     this.manualTimeframes = this.getManualTimeframes();
 
@@ -86,23 +84,15 @@ export class TimeframeFacetCommon {
 
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges configured in the component
-    const isIdDefinedForInput = !!this.facetId && !this.manualTimeframes.length;
-    const isIdDefinedForRange =
-      !!this.facetId && this.manualTimeframes.length > 0;
-
     if (this.manualTimeframes.length > 0) {
-      this.initializeRangeFacet();
+      this.facetForDateRange = this.props.initializeFacetForDateRange(
+        this.currentValues
+      );
     }
 
     if (this.props.withDatePicker) {
-      // The facetId & its related facet needs to stay consistent when moving facets inside the refine modal
-      const facetIdForInput = isIdDefinedForInput
-        ? this.facetId
-        : isIdDefinedForRange
-        ? `${this.facetId}_input_range`
-        : undefined;
-
-      this.initializeInputFacets(facetIdForInput);
+      this.facetForDatePicker = this.props.initializeFacetForDatePicker();
+      this.filter = this.props.initializeFilter();
     }
 
     if (this.facetForDateRange || this.filter) {
@@ -111,27 +101,16 @@ export class TimeframeFacetCommon {
     this.registerFacetToStore();
   }
 
-  private initializeRangeFacet() {
-    this.facetForDateRange = this.props.initializeFacetForDateRange(
-      this.currentValues
-    );
-    if (!this.facetId) {
-      this.facetId = this.props.setFacetId(
-        this.facetForDateRange.state.facetId
-      );
-    }
-  }
-
-  private initializeInputFacets(facetIdForInput?: string) {
-    this.facetForDatePicker =
-      this.props.initializeFacetForDatePicker(facetIdForInput);
-    if (!this.facetId) {
-      this.facetId = this.props.setFacetId(
-        this.facetForDatePicker.state.facetId
-      );
+  private get determineFacetId() {
+    if (this.props.facetId) {
+      return this.props.facetId;
     }
 
-    this.filter = this.props.initializeFilter(`${this.facetId}_input`);
+    if (this.props.bindings.store.get('dateFacets')[this.props.field]) {
+      return randomID(`${this.props.field}_`);
+    }
+
+    return this.props.field;
   }
 
   private get enabled() {

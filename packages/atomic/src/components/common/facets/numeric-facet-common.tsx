@@ -2,6 +2,7 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {VNode, h} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
+import {randomID} from '../../../utils/utils';
 import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {NumberFormatter} from '../formats/format-common';
 import {Hidden} from '../hidden';
@@ -54,9 +55,9 @@ interface NumericFacetCommonOptions {
   getSearchStatusState(): SearchStatusState;
   buildDependenciesManager(): FacetConditionsManager;
   buildNumericRange(config: NumericRangeOptions): NumericRangeRequest;
-  initializeFacetForInput(facetId?: string): NumericFacet;
-  initializeFacetForRange(facetId?: string): NumericFacet;
-  initializeFilter(facetId: string): NumericFilter;
+  initializeFacetForInput(): NumericFacet;
+  initializeFacetForRange(): NumericFacet;
+  initializeFilter(): NumericFilter;
 }
 
 interface NumericFacetCommonRenderProps {
@@ -68,8 +69,8 @@ interface NumericFacetCommonRenderProps {
 }
 
 export class NumericFacetCommon {
+  private facetId: string;
   private filter?: NumericFilter;
-  private facetId?: string;
   private manualRanges: NumericRangeWithLabel[] = [];
   private facetForRange?: NumericFacet;
   private facetForInput?: NumericFacet;
@@ -77,59 +78,46 @@ export class NumericFacetCommon {
   private dependenciesManager: FacetConditionsManager;
 
   constructor(private props: NumericFacetCommonOptions) {
-    this.facetId = props.facetId;
     this.validateProps();
+    this.facetId = this.determineFacetId;
+    this.props.setFacetId(this.facetId);
 
     // Initialize two facets: One that is actually used to display values for end users, which only exists
     // if we need to display something to the end user (ie: numberOfValues > 0)
 
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges (manual or automatic) configured in the component
-    const isIdDefinedForInput = !!this.facetId && !this.props.numberOfValues;
-    const isIdDefinedForRange = !!this.facetId && this.props.numberOfValues > 0;
-
     if (this.props.numberOfValues > 0) {
-      this.initializeRangeFacet();
+      this.manualRanges = this.props.setManualRanges(
+        Array.from(
+          this.props.host.querySelectorAll('atomic-numeric-range')
+        ).map(({start, end, endInclusive, label}) => ({
+          ...this.props.buildNumericRange({start, end, endInclusive}),
+          label,
+        }))
+      );
+      this.facetForRange = this.props.initializeFacetForRange();
     }
 
     if (this.props.withInput) {
-      // The facetId & its related facet needs to stay consistent when moving facets inside the refine modal
-      const facetIdForInput = isIdDefinedForInput
-        ? this.facetId
-        : isIdDefinedForRange
-        ? `${this.facetId}_input_range`
-        : undefined;
-
-      this.initializeInputFacets(facetIdForInput);
+      this.facetForInput = this.props.initializeFacetForInput();
+      this.filter = this.props.initializeFilter();
     }
 
     this.dependenciesManager = this.props.buildDependenciesManager();
     this.registerFacetToStore();
   }
 
-  private initializeRangeFacet() {
-    this.manualRanges = this.props.setManualRanges(
-      Array.from(this.props.host.querySelectorAll('atomic-numeric-range')).map(
-        ({start, end, endInclusive, label}) => ({
-          ...this.props.buildNumericRange({start, end, endInclusive}),
-          label,
-        })
-      )
-    );
-    this.facetForRange = this.props.initializeFacetForRange();
-    if (!this.facetId) {
-      this.facetId = this.props.setFacetId(this.facetForRange.state.facetId);
+  private get determineFacetId() {
+    if (this.props.facetId) {
+      return this.props.facetId;
     }
-  }
 
-  private initializeInputFacets(facetIdForInput?: string) {
-    this.facetForInput = this.props.initializeFacetForInput(facetIdForInput);
-
-    if (!this.facetId) {
-      this.facetId = this.props.setFacetId(this.facetForInput.state.facetId);
+    if (this.props.bindings.store.get('numericFacets')[this.props.field]) {
+      return randomID(`${this.props.field}_`);
     }
-    const filterId = `${this.facetId}_input`;
-    this.filter = this.props.initializeFilter(filterId);
+
+    return this.props.field;
   }
 
   private get formatter() {

@@ -181,11 +181,9 @@ export class AtomicInsightNumericFacet
           conditions: parseDependsOn(this.dependsOn),
         }),
       buildNumericRange: buildInsightNumericRange,
-      initializeFacetForInput: (facetId?: string) =>
-        this.initializeFacetForInput(facetId),
-      initializeFacetForRange: (facetId?: string) =>
-        this.initializeFacetForRange(facetId),
-      initializeFilter: (facetId: string) => this.initializeFilter(facetId),
+      initializeFacetForInput: () => this.initializeFacetForInput(),
+      initializeFacetForRange: () => this.initializeFacetForRange(),
+      initializeFilter: () => this.initializeFilter(),
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
@@ -194,10 +192,10 @@ export class AtomicInsightNumericFacet
     this.numericFacetCommon.disconnectedCallback();
   }
 
-  private initializeFacetForInput(facetId?: string) {
+  private initializeFacetForInput() {
     this.facetForInput = buildInsightNumericFacet(this.bindings.engine, {
       options: {
-        facetId: facetId,
+        facetId: `${this.facetId}_input_range`,
         numberOfValues: 1,
         generateAutomaticRanges: true,
         field: this.field,
@@ -211,10 +209,10 @@ export class AtomicInsightNumericFacet
     return this.facetForInput;
   }
 
-  private initializeFacetForRange(facetId?: string) {
+  private initializeFacetForRange() {
     this.facetForRange = buildInsightNumericFacet(this.bindings.engine, {
       options: {
-        facetId,
+        facetId: this.facetId,
         field: this.field,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
@@ -229,10 +227,10 @@ export class AtomicInsightNumericFacet
     return this.facetForRange;
   }
 
-  private initializeFilter(facetId: string) {
+  private initializeFilter() {
     this.filter = buildInsightNumericFilter(this.bindings.engine, {
       options: {
-        facetId,
+        facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });

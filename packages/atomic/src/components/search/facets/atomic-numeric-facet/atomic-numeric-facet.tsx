@@ -206,11 +206,9 @@ export class AtomicNumericFacet
           conditions: parseDependsOn(this.dependsOn),
         }),
       buildNumericRange: buildNumericRange,
-      initializeFacetForInput: (facetId?: string) =>
-        this.initializeFacetForInput(facetId),
-      initializeFacetForRange: (facetId?: string) =>
-        this.initializeFacetForRange(facetId),
-      initializeFilter: (facetId: string) => this.initializeFilter(facetId),
+      initializeFacetForInput: () => this.initializeFacetForInput(),
+      initializeFacetForRange: () => this.initializeFacetForRange(),
+      initializeFilter: () => this.initializeFilter(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
@@ -219,12 +217,12 @@ export class AtomicNumericFacet
     this.numericFacetCommon.disconnectedCallback();
   }
 
-  private initializeFacetForInput(facetId?: string) {
+  private initializeFacetForInput() {
     this.facetForInput = buildNumericFacet(this.bindings.engine, {
       options: {
         numberOfValues: 1,
         generateAutomaticRanges: true,
-        facetId,
+        facetId: `${this.facetId}_input_range`,
         field: this.field,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
@@ -236,10 +234,10 @@ export class AtomicNumericFacet
     return this.facetForInput;
   }
 
-  private initializeFacetForRange(facetId?: string) {
+  private initializeFacetForRange() {
     this.facetForRange = buildNumericFacet(this.bindings.engine, {
       options: {
-        facetId,
+        facetId: this.facetId,
         field: this.field,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
@@ -254,10 +252,10 @@ export class AtomicNumericFacet
     return this.facetForRange;
   }
 
-  private initializeFilter(facetId: string) {
+  private initializeFilter() {
     this.filter = buildNumericFilter(this.bindings.engine, {
       options: {
-        facetId,
+        facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });

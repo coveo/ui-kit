@@ -5,7 +5,6 @@ import {
   buildFacetConditionsManager,
   buildSearchStatus,
   DateFacet,
-  DateFacetOptions,
   DateFacetState,
   DateFilter,
   DateFilterState,
@@ -165,13 +164,10 @@ export class AtomicTimeframeFacet
       buildDateRange,
       getSearchStatusState: () => this.searchStatusState,
       deserializeRelativeDate,
-      initializeFacetForDatePicker: (facetId?: string) =>
-        this.initializeFacetForDatePicker(facetId),
-      initializeFacetForDateRange: (
-        values: DateRangeRequest[],
-        facetId?: string
-      ) => this.initializeFacetForDateRange(values, facetId),
-      initializeFilter: (facetId: string) => this.initializeFilter(facetId),
+      initializeFacetForDatePicker: () => this.initializeFacetForDatePicker(),
+      initializeFacetForDateRange: (values: DateRangeRequest[]) =>
+        this.initializeFacetForDateRange(values),
+      initializeFilter: () => this.initializeFilter(),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
@@ -180,10 +176,10 @@ export class AtomicTimeframeFacet
     this.timeframeFacetCommon.disconnectedCallback();
   }
 
-  private initializeFacetForDatePicker(facetId?: string) {
+  private initializeFacetForDatePicker() {
     this.facetForDatePicker = buildDateFacet(this.bindings.engine, {
       options: {
-        facetId,
+        facetId: `${this.facetId}_input_range`,
         numberOfValues: 1,
         generateAutomaticRanges: true,
         field: this.field,
@@ -194,28 +190,25 @@ export class AtomicTimeframeFacet
     return this.facetForDatePicker;
   }
 
-  private initializeFacetForDateRange(
-    values: DateRangeRequest[],
-    facetId?: string
-  ) {
-    const options: DateFacetOptions = {
-      facetId,
-      field: this.field,
-      currentValues: values,
-      generateAutomaticRanges: false,
-      sortCriteria: 'descending',
-      filterFacetCount: this.filterFacetCount,
-      injectionDepth: this.injectionDepth,
-    };
-    this.facetForDateRange = buildDateFacet(this.bindings.engine, {options});
-    this.facetId = this.facetForDateRange.state.facetId;
+  private initializeFacetForDateRange(values: DateRangeRequest[]) {
+    this.facetForDateRange = buildDateFacet(this.bindings.engine, {
+      options: {
+        facetId: this.facetId,
+        field: this.field,
+        currentValues: values,
+        generateAutomaticRanges: false,
+        sortCriteria: 'descending',
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+      },
+    });
     return this.facetForDateRange;
   }
 
-  private initializeFilter(facetId: string) {
+  private initializeFilter() {
     this.filter = buildDateFilter(this.bindings.engine, {
       options: {
-        facetId,
+        facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });
