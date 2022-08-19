@@ -183,7 +183,8 @@ export class AtomicInsightNumericFacet
       buildNumericRange: buildInsightNumericRange,
       initializeFacetForInput: (facetId?: string) =>
         this.initializeFacetForInput(facetId),
-      initializeFacetForRange: () => this.initializeFacetForRange(),
+      initializeFacetForRange: (facetId?: string) =>
+        this.initializeFacetForRange(facetId),
       initializeFilter: (facetId: string) => this.initializeFilter(facetId),
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
@@ -196,9 +197,9 @@ export class AtomicInsightNumericFacet
   private initializeFacetForInput(facetId?: string) {
     this.facetForInput = buildInsightNumericFacet(this.bindings.engine, {
       options: {
+        facetId: facetId,
         numberOfValues: 1,
         generateAutomaticRanges: true,
-        facetId: facetId,
         field: this.field,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
@@ -210,10 +211,10 @@ export class AtomicInsightNumericFacet
     return this.facetForInput;
   }
 
-  private initializeFacetForRange() {
+  private initializeFacetForRange(facetId?: string) {
     this.facetForRange = buildInsightNumericFacet(this.bindings.engine, {
       options: {
-        facetId: this.facetId,
+        facetId,
         field: this.field,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
