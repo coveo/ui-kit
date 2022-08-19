@@ -10,8 +10,8 @@ import {makeMatchConditions} from '../../../common/result-template/result-templa
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
- * @MapProp name: mustMatch;attr: must-match;docs: Creates a condition which verifies that a field's value contains any of the specified values.;type: Record<string, string[]> ;default: {}
- * @MapProp name: mustNotMatch;attr: must-not-match;docs: Creates a condition which verifies that a field's value doesn't contain any of the specified values.;type: Record<string, string[]> ;default: {}
+ * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+ * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
  */
 @Component({
   tag: 'atomic-field-condition',
@@ -37,18 +37,8 @@ export class AtomicFieldCondition {
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
 
-  /**
-   * The field and values that define which result items the condition must be applied to.
-   *
-   * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
-   */
   @MapProp({splitValues: true}) mustMatch: Record<string, string[]> = {};
 
-  /**
-   * The field and values that define which result items the condition must not be applied to.
-   *
-   * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
-   */
   @MapProp({splitValues: true}) mustNotMatch: Record<string, string[]> = {};
 
   private shouldBeRemoved = false;
