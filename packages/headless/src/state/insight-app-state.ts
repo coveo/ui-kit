@@ -21,6 +21,7 @@ import {
   StaticFilterSection,
   DidYouMeanSection,
   TabSection,
+  FieldsSection,
 } from './state-sections';
 
 export type InsightSearchParametersState = FacetSection &
@@ -29,6 +30,7 @@ export type InsightSearchParametersState = FacetSection &
   CategoryFacetSection &
   QuerySection &
   TabSection &
+  FieldsSection &
   SortSection;
 
 export type InsightAppState = InsightSearchParametersState &

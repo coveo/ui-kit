@@ -1,6 +1,6 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
-import {createAtomicInsightStore} from '../atomic-insight-interface/store';
+import {AtomicInsightStore} from '../atomic-insight-interface/store';
 import {
   DisplayConfig,
   ResultContextEvent,
@@ -13,7 +13,7 @@ import {
 import {InsightResult, InsightEngine} from '..';
 
 /**
- * The `atomic-insight-result` component is used internally by the `atomic-insight-result-list` component.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-result',
@@ -43,7 +43,7 @@ export class AtomicInsightResult {
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: ReturnType<typeof createAtomicInsightStore>;
+  @Prop() store?: AtomicInsightStore;
 
   /**
    * The result content to display.

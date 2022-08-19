@@ -32,7 +32,7 @@ export default class QuanticDateFacet extends LightningElement {
    * @type {string}
    */
   @api engineId;
-  /** 
+  /**
    * A unique identifier for the facet.
    * @api
    * @type {string}
@@ -66,12 +66,13 @@ export default class QuanticDateFacet extends LightningElement {
    * @param {DateFacetValue} item
    * @returns {string}
    */
-  @api formattingFunction = (item) => `${new Intl.DateTimeFormat(LOCALE).format(
-    new Date(fromSearchApiDate(item.start))
-  )} - ${new Intl.DateTimeFormat(LOCALE).format(
-    new Date(fromSearchApiDate(item.end))
-  )}`;
-  /** 
+  @api formattingFunction = (item) =>
+    `${new Intl.DateTimeFormat(LOCALE).format(
+      new Date(fromSearchApiDate(item.start))
+    )} - ${new Intl.DateTimeFormat(LOCALE).format(
+      new Date(fromSearchApiDate(item.end))
+    )}`;
+  /**
    * Whether the facet is collapsed.
    * @api
    * @type {boolean}
@@ -86,12 +87,7 @@ export default class QuanticDateFacet extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
-  static attributes = [
-    'facetId',
-    'field',
-    'label',
-    'numberOfValues',
-  ]
+  static attributes = ['facetId', 'field', 'label', 'numberOfValues'];
 
   /** @type {DateFacetState} */
   @track state;
@@ -149,7 +145,7 @@ export default class QuanticDateFacet extends LightningElement {
       format: this.formattingFunction,
       element: this.template.host,
     });
-  }
+  };
 
   disconnectedCallback() {
     this.unsubscribe?.();
@@ -158,7 +154,10 @@ export default class QuanticDateFacet extends LightningElement {
 
   updateState() {
     this.state = this.facet?.state;
-    this.showPlaceholder = this.searchStatus?.state?.isLoading && !this.searchStatus?.state?.hasError && !this.searchStatus?.state?.firstSearchExecuted;
+    this.showPlaceholder =
+      this.searchStatus?.state?.isLoading &&
+      !this.searchStatus?.state?.hasError &&
+      !this.searchStatus?.state?.firstSearchExecuted;
   }
 
   get values() {
@@ -191,7 +190,9 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get actionButtonLabel() {
-    const label = this.isCollapsed ? this.labels.expandFacet : this.labels.collapseFacet;
+    const label = this.isCollapsed
+      ? this.labels.expandFacet
+      : this.labels.collapseFacet;
     return I18nUtils.format(label, this.label);
   }
 
@@ -201,17 +202,25 @@ export default class QuanticDateFacet extends LightningElement {
 
   get clearFilterLabel() {
     if (this.hasActiveValues) {
-      const labelName = I18nUtils.getLabelNameWithCount('clearFilter', this.numberOfSelectedValues);
-      return `${I18nUtils.format(this.labels[labelName], this.numberOfSelectedValues)}`;
+      const labelName = I18nUtils.getLabelNameWithCount(
+        'clearFilter',
+        this.numberOfSelectedValues
+      );
+      return `${I18nUtils.format(
+        this.labels[labelName],
+        this.numberOfSelectedValues
+      )}`;
     }
     return '';
   }
 
-  /** 
+  /**
    * @param {CustomEvent<{value: string}>} evt
    */
-   onSelectValue(evt) {
-    const item = this.values.find((value) => this.formattingFunction(value) === evt.detail.value);
+  onSelectValue(evt) {
+    const item = this.values.find(
+      (value) => this.formattingFunction(value) === evt.detail.value
+    );
     this.facet.toggleSelect(item);
   }
 

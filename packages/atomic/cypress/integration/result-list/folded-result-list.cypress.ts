@@ -5,6 +5,7 @@ import {
   buildTemplateWithSections,
 } from './result-list-actions';
 import {
+  buildLoadMoreChildren,
   buildResultChildren,
   buildResultTopChild,
 } from './folded-result-list-actions';
@@ -15,8 +16,12 @@ import {
   resultChildrenComponent,
 } from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
-import {assertRendersGrandchildren} from './folded-result-list-assertions';
+import {
+  assertRendersGrandchildren,
+  assertRendersWholeCollection,
+} from './folded-result-list-assertions';
 import * as CommonAssertions from '../common-assertions';
+import {RouteAlias} from '../../utils/setupComponent';
 
 const setSourceAndSortCriteria = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
@@ -129,6 +134,40 @@ describe('Folded Result List Component', () => {
     });
 
     assertRendersGrandchildren();
+  });
+
+  describe('should allow to load a folding collection', () => {
+    function setupCollection() {
+      const resultChildren = generateComponentHTML(resultChildrenComponent);
+      resultChildren.setAttribute('inherit-templates', 'true');
+      new TestFixture()
+        .with(setSourceAndSortCriteria)
+        .with(
+          addFoldedResultList(
+            buildTemplateWithoutSections(buildLoadMoreChildren())
+          )
+        )
+        .init();
+
+      FoldedResultListSelectors.loadMoreChildren().click();
+      cy.wait(RouteAlias.analytics);
+    }
+
+    before(() => {
+      setupCollection();
+    });
+
+    assertRendersWholeCollection();
+
+    describe('should restore initial results when collapsing collection', () => {
+      before(() => {
+        setupCollection();
+        FoldedResultListSelectors.collapseButton().click();
+        cy.wait(200);
+      });
+
+      assertRendersGrandchildren();
+    });
   });
 
   describe('with an invalid configuration', () => {

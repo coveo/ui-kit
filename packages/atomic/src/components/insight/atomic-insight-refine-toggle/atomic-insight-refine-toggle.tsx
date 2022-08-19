@@ -1,9 +1,18 @@
 import {Component, h, State, Element} from '@stencil/core';
+import {
+  buildInsightBreadcrumbManager,
+  InsightBreadcrumbManager,
+  InsightBreadcrumbManagerState,
+} from '..';
 import FilterIcon from '../../../images/filter.svg';
-import {InitializeBindings} from '../../../utils/initialization-utils';
+import {
+  InitializeBindings,
+  BindStateToController,
+} from '../../../utils/initialization-utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-refine-toggle',
@@ -15,8 +24,29 @@ export class AtomicInsightRefineToggle {
 
   @State() public error!: Error;
 
+  @BindStateToController('breadcrumbManager')
+  @State()
+  private breadcrumbManagerState!: InsightBreadcrumbManagerState;
+
+  public breadcrumbManager!: InsightBreadcrumbManager;
   private modalRef?: HTMLAtomicInsightRefineModalElement;
   private buttonRef?: HTMLButtonElement;
+
+  private get numberOfBreadcrumbs(): number {
+    return [
+      ...this.breadcrumbManagerState.facetBreadcrumbs,
+      ...this.breadcrumbManagerState.categoryFacetBreadcrumbs,
+      ...this.breadcrumbManagerState.numericFacetBreadcrumbs,
+      ...this.breadcrumbManagerState.dateFacetBreadcrumbs,
+      ...this.breadcrumbManagerState.staticFilterBreadcrumbs,
+    ].length;
+  }
+
+  public initialize() {
+    this.breadcrumbManager = buildInsightBreadcrumbManager(
+      this.bindings.engine
+    );
+  }
 
   private enableModal() {
     this.modalRef && (this.modalRef.isOpen = true);
@@ -52,6 +82,11 @@ export class AtomicInsightRefineToggle {
           this.buttonRef = button;
           this.loadModal();
         }}
+        badge={
+          this.breadcrumbManagerState.hasBreadcrumbs ? (
+            <slot>{this.numberOfBreadcrumbs.toString()}</slot>
+          ) : undefined
+        }
       />
     );
   }

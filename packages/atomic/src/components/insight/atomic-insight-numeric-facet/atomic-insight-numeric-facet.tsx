@@ -30,9 +30,9 @@ import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {
-  InsightNumericRangeWithLabel,
   NumericFacetCommon,
   NumericFacetDisplayValues,
+  NumericRangeWithLabel,
 } from '../../common/facets/numeric-facet-common';
 import {
   defaultNumberFormatter,
@@ -41,33 +41,7 @@ import {
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-insight-numeric-facet` displays a facet of the results for the current query as numeric ranges.
- *
- * @part facet - The wrapper for the entire facet.
- * @part placeholder - The placeholder shown before the first search is executed.
- *
- * @part label-button - The button that displays the label and allows to expand/collapse the facet.
- * @part label-button-icon - The label button icon.
- * @part clear-button - The button that resets the actively selected facet values.
- * @part clear-button-icon - The clear button icon.
- *
- * @part values - The facet values container.
- * @part value-label - The facet value label, common for all displays.
- * @part value-count - The facet value count, common for all displays.
- *
- * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
- * @part value-checkbox-checked - The checked facet value checkbox, available when display is 'checkbox'.
- * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
- * @part value-link - The facet value when display is 'link'.
- * @part value-link-selected - The selected facet value when display is 'link'.
-
- * @part input-form - The form that comprises the labels, inputs, and 'apply' button for the custom numeric range.
- * @part label-start - The label for the starting value of the custom numeric range.
- * @part label-end - The label for the ending value of the custom numeric range.
- * @part input-start - The input for the starting value of the custom numeric range.
- * @part input-end - The input for the ending value of the custom numeric range.
- * @part input-apply-button - The apply button for the custom range.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-numeric-facet',
@@ -84,7 +58,7 @@ export class AtomicInsightNumericFacet
   public facetForInput?: InsightNumericFacet;
   public filter?: InsightNumericFilter;
   public searchStatus!: InsightSearchStatus;
-  private manualRanges: InsightNumericRangeWithLabel[] = [];
+  private manualRanges: NumericRangeWithLabel[] = [];
   @Element() private host!: HTMLElement;
   private formatter: NumberFormatter = defaultNumberFormatter;
   private numericFacetCommon!: NumericFacetCommon;

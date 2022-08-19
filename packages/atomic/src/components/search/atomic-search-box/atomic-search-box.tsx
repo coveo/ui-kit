@@ -14,7 +14,7 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {once, randomID} from '../../../utils/utils';
+import {getUniqueItemsByProperties, once, randomID} from '../../../utils/utils';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
@@ -419,9 +419,8 @@ export class AtomicSearchBox {
         .sort(this.sortSuggestions);
 
     this.leftSuggestions = splitSuggestions('left', true);
-    this.leftSuggestionElements = this.getSuggestionElements(
-      this.leftSuggestions
-    );
+    this.leftSuggestionElements = this.getAndFilterLeftSuggestionElements();
+
     this.rightSuggestions = splitSuggestions('right');
     this.rightSuggestionElements = this.getSuggestionElements(
       this.rightSuggestions
@@ -510,9 +509,7 @@ export class AtomicSearchBox {
 
   private updateSuggestionElements(query: string) {
     if (!this.isPanelInFocus(this.leftPanelRef, query)) {
-      this.leftSuggestionElements = this.getSuggestionElements(
-        this.leftSuggestions
-      );
+      this.leftSuggestionElements = this.getAndFilterLeftSuggestionElements();
     }
 
     if (!this.isPanelInFocus(this.rightPanelRef, query)) {
@@ -520,6 +517,11 @@ export class AtomicSearchBox {
         this.rightSuggestions
       );
     }
+  }
+
+  private getAndFilterLeftSuggestionElements() {
+    const suggestionElements = this.getSuggestionElements(this.leftSuggestions);
+    return getUniqueItemsByProperties(suggestionElements, ['query']);
   }
 
   private onKeyDown(e: KeyboardEvent) {
@@ -557,6 +559,9 @@ export class AtomicSearchBox {
           e.preventDefault();
           this.focusPanel(this.leftPanelRef);
         }
+        break;
+      case 'Tab':
+        this.clearSuggestions();
         break;
     }
   }
@@ -735,28 +740,29 @@ export class AtomicSearchBox {
     this.updateBreakpoints();
     return [
       <SearchBoxWrapper disabled={this.disableSearch}>
-        <SearchInput
-          inputRef={this.inputRef}
-          loading={this.searchBoxState.isLoading}
-          ref={(el) => (this.inputRef = el as HTMLInputElement)}
-          bindings={this.bindings}
-          value={this.searchBoxState.value}
-          ariaLabel={this.getSearchInputLabel()}
-          onFocus={() => this.onFocus()}
-          onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-          onBlur={() => this.clearSuggestions()}
-          onKeyDown={(e) => this.onKeyDown(e)}
-          onClear={() => this.searchBox.clear()}
-          aria-controls={this.popupId}
-          role="combobox"
-          aria-activedescendant={this.activeDescendant}
-        />
-        {this.renderSuggestions()}
-        <SubmitButton
-          bindings={this.bindings}
-          disabled={this.disableSearch}
-          onClick={() => this.searchBox.submit()}
-        />
+        <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
+          <SearchInput
+            inputRef={this.inputRef}
+            loading={this.searchBoxState.isLoading}
+            ref={(el) => (this.inputRef = el as HTMLInputElement)}
+            bindings={this.bindings}
+            value={this.searchBoxState.value}
+            ariaLabel={this.getSearchInputLabel()}
+            onFocus={() => this.onFocus()}
+            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+            onKeyDown={(e) => this.onKeyDown(e)}
+            onClear={() => this.searchBox.clear()}
+            aria-controls={this.popupId}
+            role="combobox"
+            aria-activedescendant={this.activeDescendant}
+          />
+          {this.renderSuggestions()}
+          <SubmitButton
+            bindings={this.bindings}
+            disabled={this.disableSearch}
+            onClick={() => this.searchBox.submit()}
+          />
+        </atomic-focus-detector>
       </SearchBoxWrapper>,
       !this.suggestions.length && (
         <slot>

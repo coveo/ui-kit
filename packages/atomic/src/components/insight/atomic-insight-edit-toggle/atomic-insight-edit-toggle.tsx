@@ -1,8 +1,8 @@
 import {Component, h, Prop} from '@stencil/core';
 import EditIcon from '../../../images/edit.svg';
+
 /**
- *
- * @part button - The insight edit toggle button.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-edit-toggle',

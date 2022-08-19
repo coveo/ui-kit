@@ -1,5 +1,5 @@
 # Default owners for everything in the repo. Later matches take precedence.
-* @coveo/search @mbenkirane-coveo
+* @coveo/search
  
 
 # Owners of the Quantic package

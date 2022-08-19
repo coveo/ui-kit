@@ -57,7 +57,10 @@ import {
 } from '../../utils/validate-payload';
 import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {buildSearchRequest} from './search-request';
-import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
@@ -144,6 +147,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
 
   if (payload.clearFilters) {
     dispatch(deselectAllBreadcrumbs());
+    dispatch(deselectAllNonBreadcrumbs());
   }
 
   dispatch(updateFacetAutoSelection({allow: true}));

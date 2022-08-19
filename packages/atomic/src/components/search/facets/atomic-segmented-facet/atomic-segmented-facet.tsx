@@ -31,6 +31,7 @@ import {BaseFacet} from '../../../common/facets/facet-common';
  * @part values - The facet values container.
  * @part value-box - The facet value.
  * @part value-box-selected - The selected facet value.
+ * @part placeholder - The placeholder displayed when the facet is loading.
  */
 @Component({
   tag: 'atomic-segmented-facet',
@@ -151,7 +152,7 @@ export class AtomicSegmentedFacet
       return;
     }
     return (
-      <b class="inline-block my-3 mx-2" part="label">
+      <b class="mr-2" part="label">
         {this.label}:
       </b>
     );
@@ -167,7 +168,7 @@ export class AtomicSegmentedFacet
         <div
           part="placeholder"
           aria-hidden
-          class="h-8 w-screen my-2 bg-neutral animate-pulse"
+          class="h-8 w-48 bg-neutral animate-pulse rounded"
         ></div>
       );
     }
@@ -179,7 +180,7 @@ export class AtomicSegmentedFacet
     return (
       <div
         part="segmented-container"
-        class="flex whitespace-nowrap h-10 mb-2.5 items-center"
+        class="flex whitespace-nowrap h-10 items-center"
       >
         {this.renderLabel()}
         {this.renderValues()}
