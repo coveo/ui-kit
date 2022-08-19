@@ -26,7 +26,6 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {randomID} from '../../../../utils/utils';
 import {BaseFacet, parseDependsOn} from '../../../common/facets/facet-common';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
@@ -149,6 +148,7 @@ export class AtomicTimeframeFacet
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,
@@ -156,19 +156,22 @@ export class AtomicTimeframeFacet
       headingLevel: this.headingLevel,
       dependsOn: this.dependsOn,
       withDatePicker: this.withDatePicker,
+      setFacetId: (id: string) => (this.facetId = id),
       buildDependenciesManager: () =>
         buildFacetConditionsManager(this.bindings.engine, {
-          facetId:
-            this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
+          facetId: this.facetId!,
           conditions: parseDependsOn(this.dependsOn),
         }),
       buildDateRange,
       getSearchStatusState: () => this.searchStatusState,
       deserializeRelativeDate,
-      initializeFacetForDatePicker: () => this.initializeFacetForDatePicker(),
-      initializeFacetForDateRange: (values: DateRangeRequest[]) =>
-        this.initializeFacetForDateRange(values),
-      initializeFilter: () => this.initializeFilter(),
+      initializeFacetForDatePicker: (facetId?: string) =>
+        this.initializeFacetForDatePicker(facetId),
+      initializeFacetForDateRange: (
+        values: DateRangeRequest[],
+        facetId?: string
+      ) => this.initializeFacetForDateRange(values, facetId),
+      initializeFilter: (facetId: string) => this.initializeFilter(facetId),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
@@ -177,12 +180,12 @@ export class AtomicTimeframeFacet
     this.timeframeFacetCommon.disconnectedCallback();
   }
 
-  private initializeFacetForDatePicker() {
+  private initializeFacetForDatePicker(facetId?: string) {
     this.facetForDatePicker = buildDateFacet(this.bindings.engine, {
       options: {
+        facetId,
         numberOfValues: 1,
         generateAutomaticRanges: true,
-        facetId: randomID(this.facetId || this.field),
         field: this.field,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
@@ -191,9 +194,12 @@ export class AtomicTimeframeFacet
     return this.facetForDatePicker;
   }
 
-  private initializeFacetForDateRange(values: DateRangeRequest[]) {
+  private initializeFacetForDateRange(
+    values: DateRangeRequest[],
+    facetId?: string
+  ) {
     const options: DateFacetOptions = {
-      facetId: this.facetId,
+      facetId,
       field: this.field,
       currentValues: values,
       generateAutomaticRanges: false,
@@ -206,17 +212,14 @@ export class AtomicTimeframeFacet
     return this.facetForDateRange;
   }
 
-  private initializeFilter() {
+  private initializeFilter(facetId: string) {
     this.filter = buildDateFilter(this.bindings.engine, {
       options: {
-        facetId: this.facetId ? `${this.facetId}_input` : undefined,
+        facetId,
         field: this.field,
       },
     });
 
-    if (!this.facetId) {
-      this.facetId = this.filter.state.facetId;
-    }
     return this.filter;
   }
 

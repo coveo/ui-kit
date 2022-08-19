@@ -37,6 +37,7 @@ export interface Timeframe {
 }
 
 interface TimeframeFacetCommonOptions {
+  facetId?: string;
   host: HTMLElement;
   bindings: AnyBindings;
   label: string;
@@ -44,13 +45,17 @@ interface TimeframeFacetCommonOptions {
   headingLevel: number;
   dependsOn: Record<string, string>;
   withDatePicker: boolean;
+  setFacetId(id: string): string;
   getSearchStatusState(): SearchStatusState;
   buildDependenciesManager(): FacetConditionsManager;
   deserializeRelativeDate(date: string): RelativeDate;
   buildDateRange(config: DateRangeOptions): DateRangeRequest;
-  initializeFacetForDatePicker(): DateFacet;
-  initializeFacetForDateRange(values: DateRangeRequest[]): DateFacet;
-  initializeFilter(): DateFilter;
+  initializeFacetForDatePicker(facetId?: string): DateFacet;
+  initializeFacetForDateRange(
+    values: DateRangeRequest[],
+    facetId?: string
+  ): DateFacet;
+  initializeFilter(facetId: string): DateFilter;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -62,35 +67,15 @@ interface TimeframeFacetCommonRenderProps {
 }
 
 export class TimeframeFacetCommon {
-  private host: HTMLElement;
-  private bindings: AnyBindings;
-  private label: string;
-  private field: string;
-  private headingLevel: number;
-  private dependsOn: Record<string, string>;
-  private withDatePicker: boolean;
   private facetId?: string;
   private facetForDatePicker?: DateFacet;
   private facetForDateRange?: DateFacet;
   private filter?: DateFilter;
   private manualTimeframes: Timeframe[] = [];
   private dependenciesManager?: FacetConditionsManager;
-  private deserializeRelativeDate: (date: string) => RelativeDate;
-  private getSearchStatusState: () => SearchStatusState;
 
-  private buildDateRange: (config: DateRangeOptions) => DateRangeRequest;
-
-  constructor(props: TimeframeFacetCommonOptions) {
-    this.host = props.host;
-    this.bindings = props.bindings;
-    this.label = props.label;
-    this.field = props.field;
-    this.headingLevel = props.headingLevel;
-    this.dependsOn = props.dependsOn;
-    this.withDatePicker = props.withDatePicker;
-    this.deserializeRelativeDate = props.deserializeRelativeDate;
-    this.getSearchStatusState = props.getSearchStatusState;
-    this.buildDateRange = props.buildDateRange;
+  constructor(private props: TimeframeFacetCommonOptions) {
+    this.facetId = props.facetId;
 
     this.validateProps();
 
@@ -102,19 +87,27 @@ export class TimeframeFacetCommon {
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges configured in the component
     if (this.manualTimeframes.length > 0) {
-      this.facetForDateRange = props.initializeFacetForDateRange(
+      this.facetForDateRange = this.props.initializeFacetForDateRange(
         this.currentValues
       );
-      this.facetId = this.facetForDateRange.state.facetId;
-    }
-    if (this.withDatePicker) {
-      this.facetForDatePicker = props.initializeFacetForDatePicker();
-      this.filter = props.initializeFilter();
-
       if (!this.facetId) {
-        this.facetId = this.filter.state.facetId;
+        this.facetId = this.props.setFacetId(
+          this.facetForDateRange.state.facetId
+        );
       }
     }
+
+    if (this.props.withDatePicker) {
+      this.facetForDatePicker = props.initializeFacetForDatePicker(
+        this.facetId ? `${this.facetId}_input_range` : undefined
+      );
+      if (!this.facetId) {
+        this.facetId = props.setFacetId(this.facetForDatePicker.state.facetId);
+      }
+
+      this.filter = props.initializeFilter(`${this.facetId}_input`);
+    }
+
     if (this.facetForDateRange || this.filter) {
       this.dependenciesManager = props.buildDependenciesManager();
     }
@@ -147,9 +140,9 @@ export class TimeframeFacetCommon {
 
   private get shouldRenderInput() {
     return shouldDisplayInputForFacetRange({
-      hasInput: this.withDatePicker,
+      hasInput: this.props.withDatePicker,
       hasInputRange: this.hasInputRange,
-      searchStatusState: this.getSearchStatusState(),
+      searchStatusState: this.props.getSearchStatusState(),
       facetValues: this.facetForDatePicker?.state?.values || [],
     });
   }
@@ -181,11 +174,11 @@ export class TimeframeFacetCommon {
   public get currentValues(): DateRangeRequest[] {
     return this.manualTimeframes.map(({period, amount, unit}) =>
       period === 'past'
-        ? this.buildDateRange({
+        ? this.props.buildDateRange({
             start: {period, unit, amount},
             end: {period: 'now'},
           })
-        : this.buildDateRange({
+        : this.props.buildDateRange({
             start: {period: 'now'},
             end: {period, unit, amount},
           })
@@ -193,46 +186,42 @@ export class TimeframeFacetCommon {
   }
 
   public disconnectedCallback() {
-    if (this.host.isConnected) {
+    if (this.props.host.isConnected) {
       return;
     }
     this.dependenciesManager?.stopWatching();
   }
 
   private validateProps() {
-    validateDependsOn(this.dependsOn);
+    validateDependsOn(this.props.dependsOn);
   }
 
   private registerFacetToStore() {
-    if (!this.facetForDateRange) {
-      return;
-    }
-
     const facetInfo: FacetInfo = {
-      label: this.label,
+      label: this.props.label,
       facetId: this.facetId!,
-      element: this.host,
+      element: this.props.host,
     };
 
-    this.bindings.store.registerFacet('dateFacets', {
+    this.props.bindings.store.registerFacet('dateFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
     });
 
-    initializePopover(this.host, {
+    initializePopover(this.props.host, {
       ...facetInfo,
       hasValues: () => this.hasValues,
       numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
 
     if (this.filter) {
-      this.bindings.store.state.dateFacets[this.filter.state.facetId] =
-        this.bindings.store.state.dateFacets[this.facetId!];
+      this.props.bindings.store.state.dateFacets[this.filter.state.facetId] =
+        this.props.bindings.store.state.dateFacets[this.facetId!];
     }
   }
 
   private getManualTimeframes(): Timeframe[] {
-    return Array.from(this.host.querySelectorAll('atomic-timeframe')).map(
+    return Array.from(this.props.host.querySelectorAll('atomic-timeframe')).map(
       ({label, amount, unit, period}) => ({
         label,
         amount,
@@ -244,11 +233,11 @@ export class TimeframeFacetCommon {
 
   private formatFacetValue(facetValue: DateFacetValue) {
     try {
-      const startDate = this.deserializeRelativeDate(facetValue.start);
+      const startDate = this.props.deserializeRelativeDate(facetValue.start);
       const relativeDate =
         startDate.period === 'past'
           ? startDate
-          : this.deserializeRelativeDate(facetValue.end);
+          : this.props.deserializeRelativeDate(facetValue.end);
       const timeframe = this.getManualTimeframes().find(
         (timeframe) =>
           timeframe.period === relativeDate.period &&
@@ -258,19 +247,19 @@ export class TimeframeFacetCommon {
 
       if (timeframe?.label) {
         return getFieldValueCaption(
-          this.field,
+          this.props.field,
           timeframe.label,
-          this.bindings.i18n
+          this.props.bindings.i18n
         );
       }
-      return this.bindings.i18n.t(
+      return this.props.bindings.i18n.t(
         `${relativeDate.period}-${relativeDate.unit}`,
         {
           count: relativeDate.amount,
         }
       );
     } catch (error) {
-      return this.bindings.i18n.t('to', {
+      return this.props.bindings.i18n.t('to', {
         start: dayjs(facetValue.start).format('YYYY-MM-DD'),
         end: dayjs(facetValue.end).format('YYYY-MM-DD'),
       });
@@ -289,7 +278,7 @@ export class TimeframeFacetCommon {
         displayValue={displayValue}
         isSelected={isSelected}
         numberOfResults={facetValue.numberOfResults}
-        i18n={this.bindings.i18n}
+        i18n={this.props.bindings.i18n}
         onClick={() => this.facetForDateRange!.toggleSingleSelect(facetValue)}
       >
         <FacetValueLabelHighlight
@@ -302,7 +291,10 @@ export class TimeframeFacetCommon {
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+      <FacetValuesGroup
+        i18n={this.props.bindings.i18n}
+        label={this.props.label}
+      >
         <ul class="mt-3" part="values">
           {children}
         </ul>
@@ -317,8 +309,8 @@ export class TimeframeFacetCommon {
   ) {
     return (
       <FacetHeader
-        i18n={this.bindings.i18n}
-        label={this.label}
+        i18n={this.props.bindings.i18n}
+        label={this.props.label}
         onClearFilters={() => {
           headerFocus.focusAfterSearch();
           if (this.filter?.state.range) {
@@ -329,7 +321,7 @@ export class TimeframeFacetCommon {
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={isCollapsed}
-        headingLevel={this.headingLevel}
+        headingLevel={this.props.headingLevel}
         onToggleCollapse={onToggleCollapse}
         headerRef={headerFocus.setTarget}
       ></FacetHeader>
@@ -339,8 +331,8 @@ export class TimeframeFacetCommon {
   private renderDateInput() {
     return (
       <atomic-facet-date-input
-        bindings={this.bindings}
-        label={this.label}
+        bindings={this.props.bindings}
+        label={this.props.label}
         filter={this.filter!}
         filterState={this.filter!.state!}
       ></atomic-facet-date-input>
