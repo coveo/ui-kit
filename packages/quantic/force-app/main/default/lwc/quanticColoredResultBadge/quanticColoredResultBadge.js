@@ -31,8 +31,10 @@ export default class QuanticColoredResultBadge extends LightningElement {
   invalidColor = false;
 
   renderedCallback() {
-    if (this.label) {
+    if (this.label && this.color) {
       this.setBadgeColors();
+    } else if (this.label) {
+      this.setBadgeDefaultColors();
     }
   }
 
@@ -52,6 +54,17 @@ export default class QuanticColoredResultBadge extends LightningElement {
       '--secondaryColor',
       this.invalidColor ? defaultSecondaryColor : secondaryColor
     );
+  }
+
+  /**
+   * Sets the primary and scondary colors of the badge to the default colors.
+   * @returns {void}
+   */
+  setBadgeDefaultColors() {
+    const styles = this.template.querySelector('.result-badge')?.style;
+
+    styles.setProperty('--primaryColor', defaultPrimaryColor);
+    styles.setProperty('--secondaryColor', defaultSecondaryColor);
   }
 
   /**

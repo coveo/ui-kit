@@ -123,6 +123,19 @@ describe('c-quantic-colored-result-badge', () => {
     });
   });
 
+  it(`should display the colored badge with the correct label and the default colors when the given the color value is an invalid HEX color value`, async () => {
+    const invalidColor = '#AAAAAAB';
+    const element = createTestComponent(invalidColor);
+    await flushPromises();
+
+    const badge = element.shadowRoot.querySelector('.result-badge');
+
+    expect(badge).not.toBeNull();
+    expect(badge.textContent).toBe(defaultLabel);
+    expect(badge.style._values['--primaryColor']).toBe(defaultPrimaryColor);
+    expect(badge.style._values['--secondaryColor']).toBe(defaultSecondaryColor);
+  });
+
   it('should display the colored badge with the correct label and the default colors when the color is not given', async () => {
     const element = createTestComponent('');
     await flushPromises();
