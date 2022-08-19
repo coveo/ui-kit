@@ -36,6 +36,7 @@ export interface NumericRangeWithLabel extends NumericRangeRequest {
 export type NumericFacetDisplayValues = 'checkbox' | 'link';
 
 interface NumericFacetCommonOptions {
+  facetId?: string;
   host: HTMLElement;
   bindings: AnyBindings;
   label: string;
@@ -54,7 +55,7 @@ interface NumericFacetCommonOptions {
   buildDependenciesManager(): FacetConditionsManager;
   buildNumericRange(config: NumericRangeOptions): NumericRangeRequest;
   initializeFacetForInput(facetId?: string): NumericFacet;
-  initializeFacetForRange(): NumericFacet;
+  initializeFacetForRange(facetId?: string): NumericFacet;
   initializeFilter(facetId: string): NumericFilter;
 }
 
@@ -67,37 +68,16 @@ interface NumericFacetCommonRenderProps {
 }
 
 export class NumericFacetCommon {
-  private host: HTMLElement;
-  private bindings: AnyBindings;
-  private label: string;
-  private field: string;
-  private headingLevel: number;
   private filter?: NumericFilter;
-  private dependsOn: Record<string, string>;
-  private displayValuesAs: NumericFacetDisplayValues;
-  private withInput?: NumberInputType;
-  private numberOfValues: number;
   private facetId?: string;
   private manualRanges: NumericRangeWithLabel[] = [];
   private facetForRange?: NumericFacet;
   private facetForInput?: NumericFacet;
-  private getFormatter: () => NumberFormatter;
-  private getSearchStatusState: () => SearchStatusState;
 
   private dependenciesManager: FacetConditionsManager;
 
-  constructor(props: NumericFacetCommonOptions) {
-    this.host = props.host;
-    this.bindings = props.bindings;
-    this.label = props.label;
-    this.field = props.field;
-    this.headingLevel = props.headingLevel;
-    this.dependsOn = props.dependsOn;
-    this.displayValuesAs = props.displayValuesAs;
-    this.withInput = props.withInput;
-    this.numberOfValues = props.numberOfValues;
-    this.getFormatter = props.getFormatter;
-    this.getSearchStatusState = props.getSearchStatusState;
+  constructor(private props: NumericFacetCommonOptions) {
+    this.facetId = props.facetId;
     this.validateProps();
 
     // Initialize two facets: One that is actually used to display values for end users, which only exists
@@ -105,9 +85,12 @@ export class NumericFacetCommon {
 
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges (manual or automatic) configured in the component
-    if (this.numberOfValues > 0) {
+    const isIdDefinedForInput = !!this.facetId && !props.numberOfValues;
+    const isIdDefinedForRange = !!this.facetId && props.numberOfValues > 0;
+
+    if (props.numberOfValues > 0) {
       this.manualRanges = props.setManualRanges(
-        Array.from(this.host.querySelectorAll('atomic-numeric-range')).map(
+        Array.from(props.host.querySelectorAll('atomic-numeric-range')).map(
           ({start, end, endInclusive, label}) => ({
             ...props.buildNumericRange({start, end, endInclusive}),
             label,
@@ -115,25 +98,37 @@ export class NumericFacetCommon {
         )
       );
       this.facetForRange = props.initializeFacetForRange();
-      this.facetId = props.setFacetId(this.facetForRange.state.facetId);
+      if (!this.facetId) {
+        this.facetId = props.setFacetId(this.facetForRange.state.facetId);
+      }
     }
 
-    if (this.withInput) {
-      this.facetForInput = props.initializeFacetForInput(
-        this.facetId ?? `${this.facetId}_input_range`
-      );
-      if (!this.facetId) {
-        this.facetId = props.setFacetId(this.facetForInput.state.facetId);
-      }
-      this.filter = props.initializeFilter(`${this.facetId}_input`);
+    if (props.withInput) {
+      // The facetId & its related facet needs to stay consistent when moving facets inside the refine modal
+      const facetIdForInput = isIdDefinedForInput
+        ? this.facetId
+        : isIdDefinedForRange
+        ? `${this.facetId}_input_range`
+        : undefined;
+      this.initializeInput(facetIdForInput);
     }
 
     this.dependenciesManager = props.buildDependenciesManager();
     this.registerFacetToStore();
   }
 
+  private initializeInput(facetIdForInput?: string) {
+    this.facetForInput = this.props.initializeFacetForInput(facetIdForInput);
+
+    if (!this.facetId) {
+      this.facetId = this.props.setFacetId(this.facetForInput.state.facetId);
+    }
+    const filterId = `${this.facetId}_input`;
+    this.filter = this.props.initializeFilter(filterId);
+  }
+
   private get formatter() {
-    return this.getFormatter();
+    return this.props.getFormatter();
   }
 
   private get enabled() {
@@ -170,7 +165,7 @@ export class NumericFacetCommon {
   }
 
   private get searchStatusState() {
-    return this.getSearchStatusState();
+    return this.props.getSearchStatusState();
   }
 
   private get shouldRenderInput() {
@@ -178,14 +173,14 @@ export class NumericFacetCommon {
       hasInputRange: this.hasInputRange,
       searchStatusState: this.searchStatusState,
       facetValues: this.facetForInput?.state.values || [],
-      hasInput: !!this.withInput,
+      hasInput: !!this.props.withInput,
     });
   }
 
   private get shouldRenderValues() {
     return (
       !this.hasInputRange &&
-      this.numberOfValues > 0 &&
+      this.props.numberOfValues > 0 &&
       !!this.valuesToRender.length
     );
   }
@@ -194,14 +189,14 @@ export class NumericFacetCommon {
       displayValuesAs: new StringValue({constrainTo: ['checkbox', 'link']}),
       withInput: new StringValue({constrainTo: ['integer', 'decimal']}),
     }).validate({
-      displayValuesAs: this.displayValuesAs,
-      withInput: this.withInput,
+      displayValuesAs: this.props.displayValuesAs,
+      withInput: this.props.withInput,
     });
-    validateDependsOn(this.dependsOn);
+    validateDependsOn(this.props.dependsOn);
   }
 
   public disconnectedCallback() {
-    if (this.host.isConnected) {
+    if (this.props.host.isConnected) {
       return;
     }
     this.dependenciesManager?.stopWatching();
@@ -209,25 +204,25 @@ export class NumericFacetCommon {
 
   private registerFacetToStore() {
     const facetInfo: FacetInfo = {
-      label: this.label,
+      label: this.props.label,
       facetId: this.facetId!,
-      element: this.host,
+      element: this.props.host,
     };
 
-    this.bindings.store.registerFacet('numericFacets', {
+    this.props.bindings.store.registerFacet('numericFacets', {
       ...facetInfo,
       format: (value) => this.formatFacetValue(value),
     });
 
-    initializePopover(this.host, {
+    initializePopover(this.props.host, {
       ...facetInfo,
       hasValues: () => this.hasValues,
       numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
 
     if (this.filter) {
-      this.bindings.store.state.numericFacets[this.filter.state.facetId] =
-        this.bindings.store.state.numericFacets[this.facetId!];
+      this.props.bindings.store.state.numericFacets[this.filter.state.facetId] =
+        this.props.bindings.store.state.numericFacets[this.facetId!];
     }
   }
 
@@ -236,8 +231,12 @@ export class NumericFacetCommon {
       this.areRangesEqual(range, facetValue)
     )?.label;
     return manualRangeLabel
-      ? getFieldValueCaption(this.field, manualRangeLabel, this.bindings.i18n)
-      : this.bindings.i18n.t('to', {
+      ? getFieldValueCaption(
+          this.props.field,
+          manualRangeLabel,
+          this.props.bindings.i18n
+        )
+      : this.props.bindings.i18n.t('to', {
           start: this.formatValue(facetValue.start),
           end: this.formatValue(facetValue.end),
         });
@@ -245,9 +244,12 @@ export class NumericFacetCommon {
 
   private formatValue(value: number) {
     try {
-      return this.formatter(value, this.bindings.i18n.languages as string[]);
+      return this.formatter(
+        value,
+        this.props.bindings.i18n.languages as string[]
+      );
     } catch (error) {
-      this.bindings.engine.logger.error(
+      this.props.bindings.engine.logger.error(
         `atomic-numeric-facet facet value "${value}" could not be formatted correctly.`,
         error
       );
@@ -269,14 +271,14 @@ export class NumericFacetCommon {
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const displayValue = this.formatFacetValue(facetValue);
     const isSelected = facetValue.state === 'selected';
-    switch (this.displayValuesAs) {
+    switch (this.props.displayValuesAs) {
       case 'checkbox':
         return (
           <FacetValueCheckbox
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
-            i18n={this.bindings.i18n}
+            i18n={this.props.bindings.i18n}
             onClick={onClick}
           >
             <FacetValueLabelHighlight
@@ -291,7 +293,7 @@ export class NumericFacetCommon {
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
-            i18n={this.bindings.i18n}
+            i18n={this.props.bindings.i18n}
             onClick={onClick}
           >
             <FacetValueLabelHighlight
@@ -305,7 +307,10 @@ export class NumericFacetCommon {
 
   private renderValuesContainer(children: VNode[]) {
     return (
-      <FacetValuesGroup i18n={this.bindings.i18n} label={this.label}>
+      <FacetValuesGroup
+        i18n={this.props.bindings.i18n}
+        label={this.props.label}
+      >
         <ul class="mt-3" part="values">
           {children}
         </ul>
@@ -324,7 +329,7 @@ export class NumericFacetCommon {
     return this.renderValuesContainer(
       this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
-          this.displayValuesAs === 'link'
+          this.props.displayValuesAs === 'link'
             ? this.facetForRange!.toggleSingleSelect(value)
             : this.facetForRange!.toggleSelect(value)
         )
@@ -335,9 +340,9 @@ export class NumericFacetCommon {
   private renderNumberInput() {
     return (
       <atomic-facet-number-input
-        type={this.withInput!}
-        bindings={this.bindings}
-        label={this.label}
+        type={this.props.withInput!}
+        bindings={this.props.bindings}
+        label={this.props.label}
         filter={this.filter!}
         filterState={this.filter!.state}
       ></atomic-facet-number-input>
@@ -351,8 +356,8 @@ export class NumericFacetCommon {
   ) {
     return (
       <FacetHeader
-        i18n={this.bindings.i18n}
-        label={this.label}
+        i18n={this.props.bindings.i18n}
+        label={this.props.label}
         onClearFilters={() => {
           headerFocus.focusAfterSearch();
           if (this.filter?.state.range) {
@@ -363,7 +368,7 @@ export class NumericFacetCommon {
         }}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={isCollapsed}
-        headingLevel={this.headingLevel}
+        headingLevel={this.props.headingLevel}
         onToggleCollapse={onToggleCollapse}
         headerRef={headerFocus.setTarget}
       ></FacetHeader>
@@ -384,7 +389,7 @@ export class NumericFacetCommon {
     if (!firstSearchExecuted) {
       return (
         <FacetPlaceholder
-          numberOfValues={this.numberOfValues}
+          numberOfValues={this.props.numberOfValues}
           isCollapsed={isCollapsed}
         ></FacetPlaceholder>
       );

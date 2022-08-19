@@ -185,6 +185,7 @@ export class AtomicNumericFacet
 
   public initialize() {
     this.numericFacetCommon = new NumericFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,
@@ -207,7 +208,8 @@ export class AtomicNumericFacet
       buildNumericRange: buildNumericRange,
       initializeFacetForInput: (facetId?: string) =>
         this.initializeFacetForInput(facetId),
-      initializeFacetForRange: () => this.initializeFacetForRange(),
+      initializeFacetForRange: (facetId?: string) =>
+        this.initializeFacetForRange(facetId),
       initializeFilter: (facetId: string) => this.initializeFilter(facetId),
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -234,10 +236,10 @@ export class AtomicNumericFacet
     return this.facetForInput;
   }
 
-  private initializeFacetForRange() {
+  private initializeFacetForRange(facetId?: string) {
     this.facetForRange = buildNumericFacet(this.bindings.engine, {
       options: {
-        facetId: this.facetId,
+        facetId,
         field: this.field,
         numberOfValues: this.numberOfValues,
         sortCriteria: this.sortCriteria,
@@ -260,9 +262,6 @@ export class AtomicNumericFacet
       },
     });
 
-    if (!this.facetId) {
-      this.facetId = this.filter.state.facetId;
-    }
     return this.filter;
   }
 
