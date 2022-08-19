@@ -85,14 +85,14 @@ export class NumericFacetCommon {
 
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges (manual or automatic) configured in the component
-    const isIdDefinedForInput = !!this.facetId && !props.numberOfValues;
-    const isIdDefinedForRange = !!this.facetId && props.numberOfValues > 0;
+    const isIdDefinedForInput = !!this.facetId && !this.props.numberOfValues;
+    const isIdDefinedForRange = !!this.facetId && this.props.numberOfValues > 0;
 
-    if (props.numberOfValues > 0) {
+    if (this.props.numberOfValues > 0) {
       this.initializeRangeFacet();
     }
 
-    if (props.withInput) {
+    if (this.props.withInput) {
       // The facetId & its related facet needs to stay consistent when moving facets inside the refine modal
       const facetIdForInput = isIdDefinedForInput
         ? this.facetId
@@ -103,7 +103,7 @@ export class NumericFacetCommon {
       this.initializeInputFacets(facetIdForInput);
     }
 
-    this.dependenciesManager = props.buildDependenciesManager();
+    this.dependenciesManager = this.props.buildDependenciesManager();
     this.registerFacetToStore();
   }
 

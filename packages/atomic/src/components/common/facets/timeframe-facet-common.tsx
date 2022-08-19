@@ -86,32 +86,52 @@ export class TimeframeFacetCommon {
 
     // A second facet is initialized only to verify the results count. It is never used to display results to end user.
     // It serves as a way to determine if the input should be rendered or not, independent of the ranges configured in the component
+    const isIdDefinedForInput = !!this.facetId && !this.manualTimeframes.length;
+    const isIdDefinedForRange =
+      !!this.facetId && this.manualTimeframes.length > 0;
+
     if (this.manualTimeframes.length > 0) {
-      this.facetForDateRange = this.props.initializeFacetForDateRange(
-        this.currentValues
-      );
-      if (!this.facetId) {
-        this.facetId = this.props.setFacetId(
-          this.facetForDateRange.state.facetId
-        );
-      }
+      this.initializeRangeFacet();
     }
 
     if (this.props.withDatePicker) {
-      this.facetForDatePicker = props.initializeFacetForDatePicker(
-        this.facetId ? `${this.facetId}_input_range` : undefined
-      );
-      if (!this.facetId) {
-        this.facetId = props.setFacetId(this.facetForDatePicker.state.facetId);
-      }
+      // The facetId & its related facet needs to stay consistent when moving facets inside the refine modal
+      const facetIdForInput = isIdDefinedForInput
+        ? this.facetId
+        : isIdDefinedForRange
+        ? `${this.facetId}_input_range`
+        : undefined;
 
-      this.filter = props.initializeFilter(`${this.facetId}_input`);
+      this.initializeInputFacets(facetIdForInput);
     }
 
     if (this.facetForDateRange || this.filter) {
-      this.dependenciesManager = props.buildDependenciesManager();
+      this.dependenciesManager = this.props.buildDependenciesManager();
     }
     this.registerFacetToStore();
+  }
+
+  private initializeRangeFacet() {
+    this.facetForDateRange = this.props.initializeFacetForDateRange(
+      this.currentValues
+    );
+    if (!this.facetId) {
+      this.facetId = this.props.setFacetId(
+        this.facetForDateRange.state.facetId
+      );
+    }
+  }
+
+  private initializeInputFacets(facetIdForInput?: string) {
+    this.facetForDatePicker =
+      this.props.initializeFacetForDatePicker(facetIdForInput);
+    if (!this.facetId) {
+      this.facetId = this.props.setFacetId(
+        this.facetForDatePicker.state.facetId
+      );
+    }
+
+    this.filter = this.props.initializeFilter(`${this.facetId}_input`);
   }
 
   private get enabled() {
