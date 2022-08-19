@@ -61,6 +61,7 @@ export default class QuanticColoredResultBadge extends LightningElement {
    * @returns {void}
    */
   setBadgeDefaultColors() {
+    // @ts-ignore
     const styles = this.template.querySelector('.result-badge')?.style;
 
     styles.setProperty('--primaryColor', defaultPrimaryColor);
