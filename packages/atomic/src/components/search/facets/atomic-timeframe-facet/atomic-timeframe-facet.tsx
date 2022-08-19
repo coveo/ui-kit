@@ -158,7 +158,8 @@ export class AtomicTimeframeFacet
       setFacetId: (id: string) => (this.facetId = id),
       buildDependenciesManager: () =>
         buildFacetConditionsManager(this.bindings.engine, {
-          facetId: this.facetId!,
+          facetId:
+            this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
           conditions: parseDependsOn(this.dependsOn),
         }),
       buildDateRange,
