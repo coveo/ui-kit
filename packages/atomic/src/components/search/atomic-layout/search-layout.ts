@@ -1,4 +1,7 @@
-import {findSection, sectionSelector} from '../atomic-layout-section/sections';
+import {
+  findSection,
+  sectionSelector,
+} from '../../common/atomic-layout-section/sections';
 
 export function makeDesktopQuery(mobileBreakpoint: string) {
   return `only screen and (min-width: ${mobileBreakpoint})`;

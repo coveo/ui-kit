@@ -10,7 +10,6 @@ import {Button} from '../../common/button';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
- *
  * @internal
  */
 @Component({

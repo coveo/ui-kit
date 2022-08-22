@@ -4,15 +4,7 @@ import {
   SearchStatusState,
   FacetState,
 } from '@coveo/headless';
-import {
-  Component,
-  h,
-  Listen,
-  State,
-  Element,
-  Event,
-  EventEmitter,
-} from '@stencil/core';
+import {Component, h, Listen, State, Element, Host} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -22,17 +14,19 @@ import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
+import {PopoverChildFacet, popoverClass} from './popover-type';
 import {
-  ClearPopoverEvent,
-  PopoverChildFacet,
-  popoverClass,
-} from './popover-type';
+  createPopperLite as createPopper,
+  preventOverflow,
+  Instance as PopperInstance,
+} from '@popperjs/core';
 
 /**
  * @internal
  * The `atomic-popover` component displays any facet as a popover menu.
  *
  * @slot default - The required slotted facet.
+ * @part backdrop - The transparent backdrop hiding the content behind popover menu.
  * @part popover-button - The button to click to display or hide the popover menu.
  * @part label - The associated facet label.
  * @part value-count - Number of selected values for the facet
@@ -46,7 +40,10 @@ import {
   shadow: true,
 })
 export class AtomicPopover implements InitializableComponent {
-  @Element() host!: HTMLElement;
+  @Element() private host!: HTMLElement;
+  private buttonRef!: HTMLElement;
+  private popupRef!: HTMLElement;
+  private popperInstance?: PopperInstance;
   @InitializeBindings()
   public bindings!: Bindings;
   private searchStatus!: SearchStatus;
@@ -61,11 +58,6 @@ export class AtomicPopover implements InitializableComponent {
   public error!: Error;
   @State() private isOpen = false;
   @State() private childFacet?: PopoverChildFacet;
-
-  @Event({
-    eventName: 'atomic/closePopovers',
-  })
-  private closePopovers!: EventEmitter<ClearPopoverEvent>;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -85,13 +77,6 @@ export class AtomicPopover implements InitializableComponent {
     }
   }
 
-  @Listen('atomic/closePopovers', {target: 'document'})
-  public popOpened(event: CustomEvent<ClearPopoverEvent>) {
-    if (event.detail.popoverEmitterId !== this.childFacet?.facetId) {
-      this.isOpen = false;
-    }
-  }
-
   @Listen('atomic/initializePopover')
   public initializePopover(event: CustomEvent<PopoverChildFacet>) {
     if (this.childFacet || !event.detail) {
@@ -102,26 +87,49 @@ export class AtomicPopover implements InitializableComponent {
     this.childFacet.element.classList.add(popoverClass);
   }
 
+  @Listen('keydown')
+  public handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && this.isOpen) {
+      this.togglePopover();
+    }
+  }
+
   private get popoverId() {
     return `${this.childFacet?.facetId}-popover`;
   }
 
-  private togglePopover() {
-    if (!this.isOpen) {
-      this.closePopovers.emit({popoverEmitterId: this.childFacet?.facetId});
-    }
+  private get label() {
+    return this.bindings.i18n.t(this.childFacet!.label);
+  }
 
+  private togglePopover() {
     this.isOpen = !this.isOpen;
   }
 
+  public componentDidRender() {
+    if (this.popperInstance || !this.buttonRef || !this.popupRef) {
+      return;
+    }
+
+    this.popperInstance = createPopper(this.buttonRef, this.popupRef, {
+      placement: 'bottom-start',
+      modifiers: [preventOverflow],
+    });
+  }
+
+  public componentDidUpdate() {
+    this.popperInstance?.forceUpdate();
+  }
+
   private renderDropdownButton() {
-    const label = this.bindings.i18n.t(this.childFacet!.label);
+    const label = this.label;
     const hasSelectedValues = !!this.childFacet!.numberOfSelectedValues();
     const count = this.childFacet!.numberOfSelectedValues().toLocaleString();
     const ariaLabel = this.bindings.i18n.t('popover', {label});
 
     return (
       <Button
+        ref={(el) => (this.buttonRef = el!)}
         style="square-neutral"
         onClick={() => this.togglePopover()}
         part="popover-button"
@@ -130,7 +138,7 @@ export class AtomicPopover implements InitializableComponent {
         ariaControls={this.popoverId}
         class={`rounded flex box-border h-full items-center min-w-[6rem] max-w-[15rem] p-2.5 group hover:border-primary-light focus-visible:border-primary-light ${
           this.isOpen
-            ? 'border-primary ring ring-ring-primary text-primary'
+            ? 'border-primary ring ring-ring-primary text-primary z-[9999]'
             : ''
         }`}
       >
@@ -167,6 +175,32 @@ export class AtomicPopover implements InitializableComponent {
     );
   }
 
+  private renderBackdrop() {
+    return (
+      <div
+        part="backdrop"
+        class="fixed left-0 top-0 right-0 bottom-0 z-[9998] bg-transparent cursor-pointer"
+        onClick={() => this.togglePopover()}
+      ></div>
+    );
+  }
+
+  private renderPopover() {
+    return (
+      <div class={`relative ${this.isOpen ? 'z-[9999]' : ''}`}>
+        {this.renderDropdownButton()}
+        <div
+          id={this.popoverId}
+          ref={(el) => (this.popupRef = el!)}
+          part="facet"
+          class={`absolute pt-0.5 ${this.isOpen ? 'block' : 'hidden'}`}
+        >
+          <slot></slot>
+        </div>
+      </div>
+    );
+  }
+
   public render() {
     if (this.searchStatus.state.hasError) {
       return <Hidden></Hidden>;
@@ -187,16 +221,17 @@ export class AtomicPopover implements InitializableComponent {
     }
 
     return (
-      <div class="relative">
-        {this.renderDropdownButton()}
-        <div
-          id={this.popoverId}
-          part="facet"
-          class={`absolute pt-0.5 z-1 ${this.isOpen ? 'block' : 'hidden'}`}
+      <Host>
+        <atomic-focus-trap
+          source={this.buttonRef}
+          container={this.popupRef}
+          active={this.isOpen}
+          shouldHideSelf={false}
         >
-          <slot></slot>
-        </div>
-      </div>
+          {this.renderPopover()}
+        </atomic-focus-trap>
+        {this.isOpen && this.renderBackdrop()}
+      </Host>
     );
   }
 }

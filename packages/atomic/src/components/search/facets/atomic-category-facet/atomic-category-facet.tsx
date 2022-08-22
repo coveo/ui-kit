@@ -62,6 +62,7 @@ import {initializePopover} from '../atomic-popover/popover-type';
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.
  * @part label-button-icon - The label button icon.
  *
+ * @part search-wrapper - The search box wrapper.
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
  * @part search-clear-button - The button to clear the search box of input.

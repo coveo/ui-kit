@@ -34,6 +34,9 @@ import {
   AtomicResultSectionTitleMetadata,
   AtomicResultRating,
   AtomicResultNumber,
+  Result,
+  Bindings,
+  AtomicSearchBoxQuerySuggestions,
 } from '@coveo/atomic-react';
 
 type Options = {
@@ -65,14 +68,22 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
       pipeline="Search"
       searchHub="MainSearch"
       fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+      localization={(i18n) => {
+        i18n.addResourceBundle('en', 'translation', {
+          'no-ratings-available': 'No ratings available',
+        });
+      }}
     >
       <AtomicSearchLayout>
         <AtomicLayoutSection section="search">
           <AtomicSearchBox>
+            <AtomicSearchBoxQuerySuggestions />
             {options.recentQueries && <AtomicSearchBoxRecentQueries />}
             {options.instantResults && (
               <AtomicSearchBoxInstantResults
                 template={InstantResultsTemplate}
+                imageSize="small"
+                ariaLabelGenerator={InstantResultsAriaLabelTemplate}
               />
             )}
           </AtomicSearchBox>
@@ -161,6 +172,35 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
     </AtomicSearchInterface>
   );
 };
+
+function InstantResultsAriaLabelTemplate({i18n}: Bindings, result: Result) {
+  const information = [result.title];
+
+  if ('ec_rating' in result.raw) {
+    information.push(
+      i18n.t('stars', {
+        count: result.raw.ec_rating as number,
+        max: 5,
+      })
+    );
+  } else {
+    information.push(i18n.t('no-ratings-available'));
+  }
+
+  if ('ec_price' in result.raw) {
+    information.push(
+      (result.raw.ec_price as number).toLocaleString(
+        i18n.languages as string[],
+        {
+          style: 'currency',
+          currency: 'USD',
+        }
+      )
+    );
+  }
+
+  return information.join(', ');
+}
 
 function InstantResultsTemplate() {
   return (

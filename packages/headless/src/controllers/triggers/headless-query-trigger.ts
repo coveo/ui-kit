@@ -8,16 +8,23 @@ import {
   updateQuery,
   UpdateQueryActionCreatorPayload,
 } from '../../features/query/query-actions';
-import {logTriggerQuery} from '../../features/triggers/trigger-analytics-actions';
+import {
+  logTriggerQuery,
+  logUndoTriggerQuery,
+} from '../../features/triggers/trigger-analytics-actions';
 
 /**
  * The `QueryTrigger` controller handles query triggers.
  */
 export interface QueryTrigger extends Controller {
   /**
-   * the state of the `QueryTrigger` controller.
+   * The state of the `QueryTrigger` controller.
    */
   state: QueryTriggerState;
+  /**
+   * Undoes a query trigger's correction.
+   */
+  undo(): void;
 }
 
 /**
@@ -56,8 +63,8 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
   const getState = () => engine.state;
 
-  let originalQuery = '';
-  let newQuery = '';
+  let correction: {originalQuery: string; newQuery: string} | null = null;
+  let queryToIgnore: string | null = null;
 
   return {
     ...controller,
@@ -67,14 +74,29 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
         const currentTrigger = getState().triggers.query;
         const currentQuery = getState().query.q;
 
-        if (currentQuery === currentTrigger) {
+        if (currentQuery === queryToIgnore) {
+          return;
+        }
+        queryToIgnore = null;
+
+        if (correction) {
+          const wasQueryUndone = currentQuery === correction.originalQuery;
+          if (wasQueryUndone) {
+            // We don't want a query trigger to immediately redo what the user intends to undo.
+            queryToIgnore = currentQuery;
+          }
+
+          correction = null;
+          listener();
           return;
         }
 
-        const hasQueryBeenTriggered = !!currentTrigger;
-        if (hasQueryBeenTriggered) {
-          originalQuery = currentQuery;
-          newQuery = currentTrigger;
+        if (currentTrigger) {
+          correction = {
+            originalQuery: currentQuery,
+            newQuery: currentTrigger,
+          };
+          queryToIgnore = currentTrigger;
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
             q: currentTrigger,
           };
@@ -83,13 +105,6 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           dispatch(executeSearch(logTriggerQuery()));
           return;
         }
-
-        const hasNewQueryWhichOverridesCorrectedQuery =
-          this.state.wasQueryModified && currentQuery !== newQuery;
-        if (hasNewQueryWhichOverridesCorrectedQuery) {
-          originalQuery = newQuery = '';
-          listener();
-        }
       };
       strictListener();
       return engine.subscribe(strictListener);
@@ -97,10 +112,23 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
     get state() {
       return {
-        newQuery,
-        originalQuery,
-        wasQueryModified: originalQuery !== newQuery,
+        newQuery: correction?.newQuery ?? '',
+        originalQuery: correction?.originalQuery ?? '',
+        wasQueryModified: !!correction,
       };
+    },
+
+    undo() {
+      if (!correction) {
+        return;
+      }
+
+      const undoneQuery = correction.newQuery;
+      const updateQueryPayload: UpdateQueryActionCreatorPayload = {
+        q: correction.originalQuery,
+      };
+      dispatch(updateQuery(updateQueryPayload));
+      dispatch(executeSearch(logUndoTriggerQuery({undoneQuery})));
     },
   };
 }

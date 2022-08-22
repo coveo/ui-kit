@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.95.0",
+  "version": "1.99.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -51,11 +51,12 @@
     "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx",
     "doc:list-assets": "node scripts/list-assets.js",
-    "validate:definitions": "! tsc --allowSyntheticDefaultImports dist/types/index.d.ts | grep -q 'components.d.ts'"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
     "@coveo/bueno": "0.42.1",
-    "@coveo/headless": "1.98.0",
+    "@coveo/headless": "1.101.1",
+    "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/core": "2.15.2",
     "@stencil/store": "1.5.0",
