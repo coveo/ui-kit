@@ -8,7 +8,7 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
-import dayjs from 'dayjs';
+import {parseDate} from '../date-facet/date-utils';
 
 interface DateFilterProps extends DateFilterOptions {
   facetId: string;
@@ -47,7 +47,7 @@ export class DateFilter extends Component<DateFilterProps, DateFilterState> {
     if (!date) {
       return '';
     }
-    return dayjs(date).format('YYYY-MM-DD');
+    return parseDate(date).format('YYYY-MM-DD');
   }
 
   private apply() {

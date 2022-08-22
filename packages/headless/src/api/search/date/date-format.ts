@@ -1,22 +1,33 @@
-import dayjs from 'dayjs';
+import dayjs, {ConfigType} from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
+/**
+ * The date format supported by the Search API.
+ */
 export const API_DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
 const API_DATE_MINIMUM = '1401-01-01';
 
 export type AbsoluteDate = string | number | Date;
+
+export function parseDate(date: ConfigType, format?: string) {
+  const parsedDate = dayjs(date, format);
+  if (!parsedDate.isValid() && !format) {
+    return dayjs(date, API_DATE_FORMAT);
+  }
+  return parsedDate;
+}
 
 export function formatDateForSearchApi(date: dayjs.Dayjs) {
   return date.format(API_DATE_FORMAT);
 }
 
 export function isSearchApiDate(date: string) {
-  return formatDateForSearchApi(dayjs(date)) === date;
+  return formatDateForSearchApi(parseDate(date)) === date;
 }
 
 export function validateAbsoluteDate(date: AbsoluteDate, dateFormat?: string) {
-  const dayJSDate = dayjs(date, dateFormat);
+  const dayJSDate = parseDate(date, dateFormat);
 
   if (!dayJSDate.isValid()) {
     const provideFormat =

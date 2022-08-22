@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {createAction} from '@reduxjs/toolkit';
 import {DateFacetValue} from './interfaces/response';
 import {
@@ -28,6 +27,7 @@ import {
   isRelativeDateFormat,
 } from '../../../../api/search/date/relative-date';
 import {buildDateRange} from '../../../../controllers/core/facets/range-facet/date-facet/date-range';
+import {parseDate} from '../../../../api/search/date/date-format';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**
@@ -137,7 +137,9 @@ export function validateManualDateRanges(
 
   options.currentValues.forEach((value) => {
     const {start, end} = buildDateRange(value);
-    if (dayjs(getAbsoluteDate(start)).isAfter(dayjs(getAbsoluteDate(end)))) {
+    if (
+      parseDate(getAbsoluteDate(start)).isAfter(parseDate(getAbsoluteDate(end)))
+    ) {
       throw new Error(
         `The start value is greater than the end value for the date range ${value.start} to ${value.end}`
       );
