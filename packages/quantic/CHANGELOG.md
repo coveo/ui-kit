@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.38.0...@coveo/quantic@1.39.0) (2022-08-22)
+
+
+### Features
+
+* **quantic:** added ariaLabel for quanticNumberButton ([#2352](https://github.com/coveo/ui-kit/issues/2352)) ([83eebbf](https://github.com/coveo/ui-kit/commit/83eebbf87fecf4685eee187b7fede4ba4758d549))
+* **quantic:** added ariaLabel for timeframeFacet. ([#2348](https://github.com/coveo/ui-kit/issues/2348)) ([1a74d67](https://github.com/coveo/ui-kit/commit/1a74d67cf61b8b12e214636a49a56cd30def4a89))
+
+
+
+
+
 # [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.37.0...@coveo/quantic@1.38.0) (2022-08-22)
 
 
