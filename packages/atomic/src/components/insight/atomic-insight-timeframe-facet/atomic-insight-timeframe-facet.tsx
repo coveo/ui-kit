@@ -220,8 +220,6 @@ export class AtomicInsightTimeframeFacet
         ></FacetPlaceholder>
       );
     }
-    console.log(this.facetForDatePicker?.state);
-    console.log(this.facetForDateRange?.state);
     return this.timeframeFacetCommon.render({
       hasError: this.searchStatusState.hasError,
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
