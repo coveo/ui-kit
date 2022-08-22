@@ -52,6 +52,15 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     return this.item.value;
   }
 
+  get ariaLabelValue() {
+    return `Inclusion filter on ${this.facetValue}`;
+  }
+
+  get isPressed() {
+    // convert type boolean to type string for attribute aria-pressed
+    return this.item?.state === 'selected' ? 'true' : 'false';
+  }
+
   /**
    * @param {Event} evt
    */
@@ -64,5 +73,21 @@ export default class QuanticCategoryFacetValue extends LightningElement {
         },
       })
     );
+  }
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  onKeyDown(evt) {
+    if (evt.code === 'Enter' || evt.code === 'Space') {
+      evt.preventDefault();
+      this.dispatchEvent(
+        new CustomEvent('selectvalue', {
+          detail: {
+            value: this.facetValue,
+          },
+        })
+      );
+    }
   }
 }

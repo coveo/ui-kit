@@ -80,7 +80,10 @@ describe('Search Box Test Suites', () => {
       });
 
       SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-      CommonAssertions.assertAriaLiveMessage(expectedSum.toString());
+      CommonAssertions.assertAriaLiveMessage(
+        SearchBoxSelectors.searchBoxAriaLive,
+        expectedSum.toString()
+      );
     });
 
     describe('with input', () => {
@@ -97,7 +100,10 @@ describe('Search Box Test Suites', () => {
         });
 
         SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
-        CommonAssertions.assertAriaLiveMessage(expectedSum.toString());
+        CommonAssertions.assertAriaLiveMessage(
+          SearchBoxSelectors.searchBoxAriaLive,
+          expectedSum.toString()
+        );
       });
 
       describe('after selecting a suggestion with the mouse', () => {
@@ -133,6 +139,65 @@ describe('Search Box Test Suites', () => {
           SearchBoxAssertions.assertHasText('Recent query 1');
         });
       });
+
+      describe('with duplicate recent queries and suggestions', () => {
+        function setupDuplicateRecentQueriesAndSuggestions() {
+          new SafeStorage().setJSON(StorageItems.RECENT_QUERIES, [
+            'duplicate',
+            'unique',
+          ]);
+
+          new TestFixture()
+            .with(() => {
+              cy.intercept(
+                {method: 'POST', path: '**/rest/search/v2/querySuggest?*'},
+                (request) => {
+                  request.reply((response) => {
+                    const newResponse = response.body;
+                    newResponse.completions = [
+                      {
+                        expression: 'duplicate',
+                        executableConfidence: 0,
+                        highlighted: 'duplicate',
+                        score: 0,
+                      },
+                    ];
+                    response.send(200, newResponse);
+                  });
+                }
+              ).as(TestFixture.interceptAliases.QuerySuggestions.substring(1));
+            })
+            .with(
+              addSearchBox({
+                suggestions: {
+                  maxWithoutQuery: maxSuggestionsWithoutQuery,
+                  maxWithQuery: numOfSuggestions,
+                },
+                recentQueries: {
+                  maxWithoutQuery: maxRecentQueriesWithoutQuery,
+                  maxWithQuery: numOfRecentQueries,
+                },
+                props: {
+                  'number-of-queries': numOfSuggestions + numOfRecentQueries,
+                  'suggestion-timeout': 2000,
+                },
+              })
+            )
+            .init();
+        }
+
+        it('correctly shows recent queries when there is a match and no duplicate', () => {
+          setupDuplicateRecentQueriesAndSuggestions();
+          SearchBoxSelectors.inputBox().type('uniq');
+          SearchBoxSelectors.recentQueriesItem().should('have.length', 1);
+        });
+
+        it('correctly hides recent queries when there is a match and there is a duplicate', () => {
+          setupDuplicateRecentQueriesAndSuggestions();
+          SearchBoxSelectors.inputBox().type('dupl');
+          SearchBoxSelectors.recentQueriesItem().should('have.length', 0);
+        });
+      });
     });
   });
 
@@ -146,7 +211,10 @@ describe('Search Box Test Suites', () => {
       SearchBoxSelectors.inputBox().click();
     });
 
-    CommonAssertions.assertAriaLiveMessage(' no ');
+    CommonAssertions.assertAriaLiveMessage(
+      SearchBoxSelectors.searchBoxAriaLive,
+      ' no '
+    );
   });
 
   describe('with a basic search box', () => {

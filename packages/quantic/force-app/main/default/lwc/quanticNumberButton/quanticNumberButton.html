@@ -1,11 +1,3 @@
 <template>
-  <lightning-button
-    key={pageNumber}
-    variant={variant}
-    label={number}
-    title={number}
-    class="slds-m-left_xx-small"
-    value={number}
-    onclick={select}
-  ></lightning-button>
+  <button class={buttonClasses} aria-pressed={isPressed} key={pageNumber} onclick={select}>{number}</button>
 </template>

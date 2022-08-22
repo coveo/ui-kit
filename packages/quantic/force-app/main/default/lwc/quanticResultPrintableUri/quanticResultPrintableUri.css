@@ -10,3 +10,7 @@
 .result-parenturi__container:last-child .result-parenturi__separator {
   display: none;
 }
+
+.expand-parenturi__container {
+  line-height: var(--lwc-lineHeightText, 1.5);
+}

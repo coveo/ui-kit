@@ -11,22 +11,34 @@ export interface FindAriaLiveEventArgs {
 }
 
 export function AriaLiveRegion(regionName: string, assertive = false) {
-  function dispatchMessage(message: string) {
+  function getAriaLiveElement() {
     const event = buildCustomEvent<FindAriaLiveEventArgs>(
       findAriaLiveEventName,
       {}
     );
     document.dispatchEvent(event);
     const {element} = event.detail;
-    if (element) {
-      element.updateMessage(regionName, message, assertive);
-    }
+    return element;
+  }
+
+  function dispatchMessage(message: string) {
+    getAriaLiveElement()?.updateMessage(regionName, message, assertive);
+  }
+
+  function registerRegion() {
+    getAriaLiveElement()?.registerRegion(regionName, assertive);
   }
 
   return (component: InitializableComponent, setterName: string) => {
+    const {componentWillRender} = component;
     Object.defineProperty(component, setterName, {
       set: (message: string) => dispatchMessage(message),
     });
+
+    component.componentWillRender = function () {
+      componentWillRender && componentWillRender.call(this);
+      registerRegion();
+    };
   };
 }
 

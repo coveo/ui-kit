@@ -4,6 +4,7 @@ import {AnyBindings} from '../interface/bindings';
 import {Button} from '../button';
 
 /**
+ * @internal
  *
  * @part button - The button element.
  * @part badge - The span element that wraps the badge.

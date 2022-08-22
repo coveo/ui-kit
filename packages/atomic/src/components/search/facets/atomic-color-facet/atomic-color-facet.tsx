@@ -60,6 +60,7 @@ import {
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
  *
+ * @part search-wrapper - The search box wrapper.
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
  * @part search-clear-button - The button to clear the search box of input.

@@ -170,3 +170,52 @@ export function isInDocument(element: Node) {
   }
   return false;
 }
+
+export function isPropValuesEqual<ObjectWithProperties extends object>(
+  subject: ObjectWithProperties,
+  target: ObjectWithProperties,
+  propNames: (keyof ObjectWithProperties)[]
+) {
+  return propNames.every((propName) => subject[propName] === target[propName]);
+}
+
+export function getUniqueItemsByProperties<Item extends object>(
+  items: Item[],
+  propNames: (keyof Item)[]
+) {
+  return items.filter(
+    (item, index, self) =>
+      index ===
+      self.findIndex((foundItem) =>
+        isPropValuesEqual(foundItem, item, propNames)
+      )
+  );
+}
+
+export function getParent(element: Element | ShadowRoot) {
+  if (element.parentNode) {
+    return element.parentNode as Element | ShadowRoot;
+  }
+  if (element instanceof ShadowRoot) {
+    return element.host;
+  }
+  return null;
+}
+
+export function isAncestorOf(
+  ancestor: Element | ShadowRoot,
+  element: Element | ShadowRoot
+): boolean {
+  if (element === ancestor) {
+    return true;
+  }
+  if (
+    element instanceof HTMLElement &&
+    element.assignedSlot &&
+    isAncestorOf(ancestor, element.assignedSlot)
+  ) {
+    return true;
+  }
+  const parent = getParent(element);
+  return parent === null ? false : isAncestorOf(ancestor, parent);
+}

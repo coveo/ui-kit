@@ -1,5 +1,8 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import {addRefineToggle} from './refine-toggle-actions';
+import {
+  addRefineToggle,
+  addRefineToggleRangeVariations,
+} from './refine-toggle-actions';
 import * as CommonAssertions from './common-assertions';
 import {
   refineModalComponent,
@@ -84,6 +87,29 @@ describe('Refine Toggle Test Suites', () => {
       RefineModalSelectors.focusTrap().should('exist');
 
       cy.get(`${facetManagerComponent}[aria-hidden="true"]`).should('exist');
+    });
+  });
+
+  describe('when the modal is opened with range facet variations', () => {
+    beforeEach(() => {
+      new TestFixture()
+        .with(addRefineToggleRangeVariations())
+        .withMobileViewport()
+        .init();
+      RefineToggleSelectors.buttonOpen().click();
+    });
+
+    CommonAssertions.assertContainsComponentError(RefineModalSelectors, false);
+    CommonAssertions.assertConsoleError(false);
+
+    it('should display the modal with the proper range facets', () => {
+      RefineModalSelectors.facets()
+        .find(timeframeFacetComponent)
+        .should('have.length', 3);
+
+      RefineModalSelectors.facets()
+        .find(numericFacetComponent)
+        .should('have.length', 3);
     });
   });
 });

@@ -1,7 +1,10 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {deselectAllFacets} from '../facets/generic/facet-actions';
-import {deselectAllBreadcrumbs} from './breadcrumb-actions';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from './breadcrumb-actions';
 
 /**
  * The breadcrumb action creators.
@@ -22,6 +25,13 @@ export interface BreadcrumbActionCreators {
    * @returns A dispatchable action.
    */
   deselectAllBreadcrumbs(): PayloadAction;
+
+  /**
+   * Deselects active filters that are not listed in breadcrumbs across facets and static filters which have the option `hasBreadcrumbs` set to false.
+   *
+   * @returns A dispatchable action.
+   */
+  deselectAllNonBreadcrumbs(): PayloadAction;
 }
 
 /**
@@ -38,5 +48,6 @@ export function loadBreadcrumbActions(
   return {
     deselectAllFacets,
     deselectAllBreadcrumbs,
+    deselectAllNonBreadcrumbs,
   };
 }

@@ -50,6 +50,11 @@ describe('search parameter manager', () => {
     it('when the parameter is equal to the default value, it is not included', () => {
       expect('enableQuerySyntax' in manager.state.parameters).toBe(false);
     });
+
+    it('when the parameter is undefined, it is not included', () => {
+      engine.state.query.enableQuerySyntax = undefined as unknown as boolean;
+      expect('enableQuerySyntax' in manager.state.parameters).toBe(false);
+    });
   });
 
   describe('#state.parameters.aq', () => {

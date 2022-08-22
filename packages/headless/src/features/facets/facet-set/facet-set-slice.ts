@@ -29,7 +29,10 @@ import {restoreSearchParameters} from '../../search-parameters/search-parameter-
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {WritableDraft} from 'immer/dist/internal';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../../breadcrumb/breadcrumb-actions';
 import {disableFacet} from '../../facet-options/facet-options-actions';
 
 export const facetSetReducer = createReducer(
@@ -123,6 +126,14 @@ export const facetSetReducer = createReducer(
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.values(state)
           .filter((req) => req.hasBreadcrumbs)
+          .forEach((req) => {
+            const request = state[req.facetId];
+            handleFacetDeselectAll(request);
+          });
+      })
+      .addCase(deselectAllNonBreadcrumbs, (state) => {
+        Object.values(state)
+          .filter((req) => !req.hasBreadcrumbs)
           .forEach((req) => {
             const request = state[req.facetId];
             handleFacetDeselectAll(request);

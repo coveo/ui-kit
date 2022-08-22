@@ -12,8 +12,13 @@ export interface AtomicRecsStore
 export function createAtomicRecsStore(): AtomicRecsStore {
   const commonStore = createAtomicCommonStore<AtomicRecsStoreData>({
     loadingFlags: [],
+    facets: {},
+    numericFacets: {},
+    dateFacets: {},
+    categoryFacets: {},
     iconAssetsPath: '',
     facetElements: [],
+    fieldsToInclude: [],
   });
   return {
     ...commonStore,

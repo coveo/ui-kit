@@ -51,12 +51,15 @@ atomic-search-layout {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: var(--atomic-layout-spacing-y);
-    gap: 0.5rem;
+    row-gap: 0.5rem;
 
-    & > atomic-segmented-facet-scrollable,
+    & > * {
+      max-width: 100%;
+    }
+
     & > atomic-segmented-facet,
     & > atomic-popover {
-      max-width: 100%;
+      margin-right: 0.5rem;
     }
 
     & > atomic-popover {

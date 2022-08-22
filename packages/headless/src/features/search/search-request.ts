@@ -3,6 +3,8 @@ import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
+import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
+import {RangeFacetRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {mapSearchRequest} from './search-mappings';
@@ -70,8 +72,8 @@ function getAllEnabledFacets(state: StateNeededBySearchRequest) {
 function getAllFacets(state: StateNeededBySearchRequest) {
   return [
     ...getFacetRequests(state.facetSet),
-    ...getFacetRequests(state.numericFacetSet),
-    ...getFacetRequests(state.dateFacetSet),
+    ...getRangeFacetRequests(state.numericFacetSet),
+    ...getRangeFacetRequests(state.dateFacetSet),
     ...getCategoryFacetRequests(state.categoryFacetSet),
   ];
 }
@@ -84,6 +86,24 @@ function getFacetRequests<T extends AnyFacetRequest>(
   requests: Record<string, T> = {}
 ) {
   return Object.keys(requests).map((id) => requests[id]);
+}
+
+function getRangeFacetRequests<T extends RangeFacetRequest>(
+  requests: Record<string, T> = {}
+) {
+  return Object.keys(requests).map((id) => {
+    const request = requests[id];
+    const currentValues = request.currentValues as AnyFacetValue[];
+    const hasSelectedValues = currentValues.find(
+      ({state}) => state === 'selected'
+    );
+
+    if (request.generateAutomaticRanges && !hasSelectedValues) {
+      return {...request, currentValues: []};
+    }
+
+    return request;
+  });
 }
 
 function buildConstantQuery(state: StateNeededBySearchRequest) {

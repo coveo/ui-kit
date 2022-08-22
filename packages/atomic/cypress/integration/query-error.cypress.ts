@@ -9,7 +9,10 @@ describe('Query Error Test Suites', () => {
       new TestFixture().with(addQueryError()).withError().init();
     });
 
-    CommonAssertions.assertAriaLiveMessage('wrong');
+    CommonAssertions.assertAriaLiveMessage(
+      QueryErrorSelectors.ariaLive,
+      'wrong'
+    );
 
     it('should display an error title', () => {
       QueryErrorSelectors.errorTitle()

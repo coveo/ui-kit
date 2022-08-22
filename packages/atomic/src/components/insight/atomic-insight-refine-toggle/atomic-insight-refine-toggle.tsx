@@ -12,6 +12,7 @@ import {
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-refine-toggle',

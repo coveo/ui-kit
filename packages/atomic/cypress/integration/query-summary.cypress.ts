@@ -50,7 +50,10 @@ describe('Query Summary Test Suites', () => {
         .init();
     });
 
-    CommonAssertions.assertAriaLiveMessage('27');
+    CommonAssertions.assertAriaLiveMessage(
+      QuerySummarySelectors.ariaLive,
+      '27'
+    );
   });
 
   describe('should match text content', () => {

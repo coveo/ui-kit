@@ -91,7 +91,7 @@
       "eslint --fix"
     ],
     "**/*.{scss,css,pcss,html,mdx}": [
-      "prettier --print-width 120 --write"
+      "prettier --write"
     ]
   },
   "engines": {

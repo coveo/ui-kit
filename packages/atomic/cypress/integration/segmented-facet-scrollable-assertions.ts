@@ -16,11 +16,11 @@ export function assertDisplayArrows(
   it(`${should(displayLeftArrow)} display the left arrow and ${should(
     displayRightArrow
   )} display the right arrow`, () => {
-    ScrollableSelectors.leftArrow().should(
+    ScrollableSelectors.leftArrowWrapper().should(
       displayLeftArrow ? 'not.have.class' : 'have.class',
       'invisible'
     );
-    ScrollableSelectors.rightArrow().should(
+    ScrollableSelectors.rightArrowWrapper().should(
       displayRightArrow ? 'not.have.class' : 'have.class',
       'invisible'
     );

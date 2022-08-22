@@ -1,6 +1,6 @@
-import {FacetSearchState} from '@coveo/headless';
 import escape from 'escape-html';
 import {regexEncode} from '../../../../utils/string-utils';
+import {FacetSearchState} from '../../types';
 
 /**
  * Meant to be used inside the `componentShouldUpdate` lifecycle method.

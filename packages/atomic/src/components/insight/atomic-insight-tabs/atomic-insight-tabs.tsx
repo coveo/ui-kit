@@ -1,9 +1,7 @@
 import {Component, Element, h} from '@stencil/core';
 
 /**
- *
  * @internal
- * @part tab - The button element for each tab.
  */
 @Component({
   tag: 'atomic-insight-tabs',

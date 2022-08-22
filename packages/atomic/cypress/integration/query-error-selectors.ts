@@ -1,3 +1,5 @@
+import {AriaLiveSelectors} from './aria-live-selectors';
+
 export const queryErrorComponent = 'atomic-query-error';
 export const QueryErrorSelectors = {
   shadow: () => cy.get(queryErrorComponent).shadow(),
@@ -9,4 +11,5 @@ export const QueryErrorSelectors = {
   errorTitle: () => QueryErrorSelectors.shadow().find('[part="title"]'),
   errorDescription: () =>
     QueryErrorSelectors.shadow().find('[part="description"]'),
+  ariaLive: () => AriaLiveSelectors.region('query-error'),
 };

@@ -37,7 +37,10 @@ import {
   fetchProductListing,
   FetchProductListingThunkReturn,
 } from '../../product-listing/product-listing-actions';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../../breadcrumb/breadcrumb-actions';
 import {PayloadAction} from '@reduxjs/toolkit';
 
 describe('facet-set slice', () => {
@@ -350,6 +353,17 @@ describe('facet-set slice', () => {
     facetSetReducer(state, deselectAllBreadcrumbs());
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(0);
+  });
+
+  it('dispatching #deselectAllBreadcrumbs does not call #handleFacetDeselectAll for a facet where hasBreadcrumbs is false', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
+
+    state['1'] = buildMockFacetRequest({hasBreadcrumbs: false});
+    state['2'] = buildMockFacetRequest({hasBreadcrumbs: true});
+    state['3'] = buildMockFacetRequest({hasBreadcrumbs: true});
+    facetSetReducer(state, deselectAllNonBreadcrumbs());
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
   it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

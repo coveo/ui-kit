@@ -1,4 +1,5 @@
 <atomic-search-interface
+  #searchInterface
   searchHub="MainSearch"
   pipeline="Search"
   fields-to-include="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
@@ -6,7 +7,8 @@
   <div class="search">
     <atomic-search-box>
       <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
-      <atomic-search-box-instant-results>
+      <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+      <atomic-search-box-instant-results [imageSize]="'small'" [ariaLabelGenerator]="generateInstantResultsAriaLabel">
         <atomic-result-template>
           <template>
             <style>

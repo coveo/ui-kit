@@ -143,6 +143,7 @@ export class AtomicSearchInterface
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
   public constructor() {
+    this.initAriaLive();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomic'
@@ -381,6 +382,13 @@ export class AtomicSearchInterface
   }
 
   private initAriaLive() {
+    if (
+      Array.from(this.host.children).some(
+        (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
+      )
+    ) {
+      return;
+    }
     this.host.prepend(document.createElement('atomic-aria-live'));
   }
 
@@ -427,7 +435,6 @@ export class AtomicSearchInterface
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.initSearchStatus();
     this.initUrlManager();
-    this.initAriaLive();
     this.initialized = true;
   }
 }

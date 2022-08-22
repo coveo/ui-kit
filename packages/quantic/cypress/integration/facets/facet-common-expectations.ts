@@ -116,6 +116,7 @@ export function baseFacetExpectations(selector: BaseFacetSelector) {
         })
         .logDetail('should log the "facetClearAll" UA event');
     },
+
     logFacetLoad: () => {
       cy.wait(InterceptAliases.UA.Load)
         .then((interception) => {

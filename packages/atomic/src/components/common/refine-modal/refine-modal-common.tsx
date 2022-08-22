@@ -1,11 +1,9 @@
 import {h, VNode} from '@stencil/core';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
-import {FacetManager, QuerySummary} from '@coveo/headless';
-import {InsightFacetManager, InsightQuerySummary} from '../../insight';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
+import {AnyBindings} from '../interface/bindings';
+import {FacetManager, QuerySummary} from '../types';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 
 interface RefineModalCommonRenderProps {
@@ -15,15 +13,15 @@ interface RefineModalCommonRenderProps {
 
 interface RefineModalCommonOptions {
   host: HTMLElement;
-  bindings: Bindings | InsightBindings;
-  initializeQuerySummary(): QuerySummary | InsightQuerySummary;
+  bindings: AnyBindings;
+  initializeQuerySummary(): QuerySummary;
   onClose(): void;
 }
 
 export class RefineModalCommon {
   private host: HTMLElement;
-  private bindings: Bindings | InsightBindings;
-  private querySummary: QuerySummary | InsightQuerySummary;
+  private bindings: AnyBindings;
+  private querySummary: QuerySummary;
   private onClose: () => void;
 
   public exportparts =
@@ -113,7 +111,7 @@ export class RefineModalCommon {
 
 export function getClonedFacetElements(
   facetElements: HTMLElement[],
-  facetManager: FacetManager | InsightFacetManager
+  facetManager: FacetManager
 ): HTMLDivElement {
   const divSlot = document.createElement('div');
   divSlot.setAttribute('slot', 'facets');

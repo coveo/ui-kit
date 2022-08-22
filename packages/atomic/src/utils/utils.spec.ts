@@ -4,6 +4,7 @@ import {
   randomID,
   kebabToCamel,
   parseAssetURL,
+  getUniqueItemsByProperties,
 } from './utils';
 
 describe('once', () => {
@@ -80,6 +81,49 @@ describe('parseAssetURL', () => {
   it('works with Atomic assets (with .svg)', () => {
     expect(parseAssetURL('assets://attachment.svg')).toBe(
       '/assets/attachment.svg'
+    );
+  });
+});
+
+describe('getUniqueItemsByProperties', () => {
+  it('works as expected', () => {
+    const testCases = [
+      {
+        in: [
+          {foo: 'bar', bazz: 'buzz'},
+          {foo: 'bar', bazz: 'something else'},
+        ],
+        props: ['foo'],
+        expected: [{foo: 'bar', bazz: 'buzz'}],
+      },
+      {
+        in: [
+          {foo: 'bar', bazz: 'buzz'},
+          {foo: 'bar', bazz: 'something else'},
+        ],
+        props: ['bazz'],
+        expected: [
+          {foo: 'bar', bazz: 'buzz'},
+          {foo: 'bar', bazz: 'something else'},
+        ],
+      },
+      {
+        in: [
+          {foo: 'bar', bazz: 'buzz'},
+          {foo: 'bar', bazz: 'something else'},
+        ],
+        props: ['bar', 'bazz'],
+        expected: [
+          {foo: 'bar', bazz: 'buzz'},
+          {foo: 'bar', bazz: 'something else'},
+        ],
+      },
+    ];
+
+    testCases.forEach((testCase) =>
+      expect(
+        getUniqueItemsByProperties(testCase.in, testCase.props as never)
+      ).toEqual(testCase.expected)
     );
   });
 });

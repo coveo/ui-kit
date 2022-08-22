@@ -49,6 +49,8 @@ import {MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {BaseFacet} from '../../../common/facets/facet-common';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
+import {initializePopover} from '../atomic-popover/popover-type';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -60,6 +62,7 @@ import {BaseFacet} from '../../../common/facets/facet-common';
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.
  * @part label-button-icon - The label button icon.
  *
+ * @part search-wrapper - The search box wrapper.
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
  * @part search-clear-button - The button to clear the search box of input.
@@ -230,10 +233,16 @@ export class AtomicCategoryFacet
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.registerFacet('categoryFacets', {
+    const facetInfo: FacetInfo = {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+    };
+    this.bindings.store.registerFacet('categoryFacets', facetInfo);
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => !!this.facet.state.values.length,
+      numberOfSelectedValues: () => (this.facetState.hasActiveValues ? 1 : 0),
     });
     this.inititalizeDependenciesManager();
   }

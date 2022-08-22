@@ -15,6 +15,7 @@ import {omit} from '../../utils/utils';
 import {FacetRequest} from '../facets/facet-set/interfaces/request';
 import {FacetSetState} from '../facets/facet-set/facet-set-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -85,7 +86,43 @@ describe('search request', () => {
   });
 
   it('#searchRequest returns the facets in the state #numericFacetSet', async () => {
-    const request = buildMockNumericFacetRequest({field: 'objecttype'});
+    const request = buildMockNumericFacetRequest({
+      field: 'objecttype',
+      currentValues: [{start: 0, end: 10, endInclusive: true, state: 'idle'}],
+    });
+    state.numericFacetSet[1] = request;
+
+    const {facets} = (await buildSearchRequest(state)).request;
+    expect(facets).toContainEqual(request);
+  });
+
+  it('#searchRequest strips facet values in #numericFacetSet for facets with generateAutomaticRanges & no selected values', async () => {
+    const request = buildMockNumericFacetRequest({
+      field: 'objecttype',
+      currentValues: [{start: 0, end: 10, endInclusive: true, state: 'idle'}],
+      generateAutomaticRanges: true,
+    });
+    state.numericFacetSet[1] = request;
+
+    const {facets} = (await buildSearchRequest(state)).request;
+    expect(facets).toContainEqual(
+      buildMockNumericFacetRequest({
+        field: 'objecttype',
+        currentValues: [],
+        generateAutomaticRanges: true,
+      })
+    );
+  });
+
+  it('#searchRequest does not strips facet values in #numericFacetSet for facets with generateAutomaticRanges & selected values', async () => {
+    const request = buildMockNumericFacetRequest({
+      field: 'objecttype',
+      currentValues: [
+        {start: 0, end: 10, endInclusive: true, state: 'idle'},
+        {start: 0, end: 10, endInclusive: true, state: 'selected'},
+      ],
+      generateAutomaticRanges: true,
+    });
     state.numericFacetSet[1] = request;
 
     const {facets} = (await buildSearchRequest(state)).request;
@@ -93,7 +130,43 @@ describe('search request', () => {
   });
 
   it('#searchRequest returns the facets in the state #dateFacetSet', async () => {
-    const request = buildMockDateFacetRequest({field: 'objecttype'});
+    const request = buildMockDateFacetRequest({
+      field: 'date',
+      currentValues: [buildMockDateFacetValue({state: 'idle'})],
+    });
+    state.dateFacetSet[1] = request;
+
+    const {facets} = (await buildSearchRequest(state)).request;
+    expect(facets).toContainEqual(request);
+  });
+
+  it('#searchRequest strips facet values in #dateFacetSet for facets with generateAutomaticRanges & no selected values', async () => {
+    const request = buildMockDateFacetRequest({
+      field: 'date',
+      currentValues: [buildMockDateFacetValue({state: 'idle'})],
+      generateAutomaticRanges: true,
+    });
+    state.dateFacetSet[1] = request;
+
+    const {facets} = (await buildSearchRequest(state)).request;
+    expect(facets).toContainEqual(
+      buildMockDateFacetRequest({
+        field: 'date',
+        currentValues: [],
+        generateAutomaticRanges: true,
+      })
+    );
+  });
+
+  it('#searchRequest does not strips facet values in #dateFacetSet for facets with generateAutomaticRanges & selected values', async () => {
+    const request = buildMockDateFacetRequest({
+      field: 'date',
+      currentValues: [
+        buildMockDateFacetValue({state: 'idle'}),
+        buildMockDateFacetValue({state: 'selected'}),
+      ],
+      generateAutomaticRanges: true,
+    });
     state.dateFacetSet[1] = request;
 
     const {facets} = (await buildSearchRequest(state)).request;

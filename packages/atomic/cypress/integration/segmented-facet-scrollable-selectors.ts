@@ -7,6 +7,10 @@ export const ScrollableSelectors = {
     ScrollableSelectors.shadow().find('[part="left-arrow-button"]'),
   rightArrow: () =>
     ScrollableSelectors.shadow().find('[part="right-arrow-button"]'),
+  leftArrowWrapper: () =>
+    ScrollableSelectors.shadow().find('[part="left-arrow-wrapper"]'),
+  rightArrowWrapper: () =>
+    ScrollableSelectors.shadow().find('[part="right-arrow-wrapper"]'),
   horizontalScroll: () =>
     ScrollableSelectors.shadow().find('[part="horizontal-scroll"]'),
 };

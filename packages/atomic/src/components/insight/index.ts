@@ -68,4 +68,7 @@ export {
   BreadcrumbManagerState as InsightBreadcrumbManagerState,
   BreadcrumbManager as InsightBreadcrumbManager,
   buildBreadcrumbManager as buildInsightBreadcrumbManager,
+  Pager as InsightPager,
+  PagerState as InsightPagerState,
+  buildPager as buildInsightPager,
 } from '@coveo/headless/insight';

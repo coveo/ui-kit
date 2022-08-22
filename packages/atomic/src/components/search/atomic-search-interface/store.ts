@@ -14,7 +14,6 @@ import {
 import {
   FacetInfo,
   FacetStore,
-  FacetType,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 
@@ -35,16 +34,10 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   categoryFacets: FacetStore<FacetInfo>;
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
-  fieldsToInclude: string[];
   resultList?: ResultListInfo;
 }
 
 export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
-  registerFacet<T extends FacetType, U extends string>(
-    facetType: T,
-    data: AtomicStoreData[T][U] & {facetId: U; element: HTMLElement}
-  ): void;
-
   registerResultList(data: ResultListInfo): void;
 
   getAllFacets(): {
@@ -73,17 +66,6 @@ export function createAtomicStore(): AtomicStore {
 
   return {
     ...commonStore,
-    registerFacet<T extends FacetType, U extends string>(
-      facetType: T,
-      data: AtomicStoreData[T][U] & {facetId: U; element: HTMLElement}
-    ) {
-      if (commonStore.state[facetType][data.facetId]) {
-        return;
-      }
-
-      commonStore.state[facetType][data.facetId] = data;
-      commonStore.state.facetElements.push(data.element);
-    },
 
     registerResultList(data: ResultListInfo) {
       commonStore.set('resultList', data);
