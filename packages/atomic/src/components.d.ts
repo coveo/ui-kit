@@ -460,6 +460,8 @@ export namespace Components {
          */
         "widget": boolean;
     }
+    interface AtomicInsightNoResults {
+    }
     interface AtomicInsightNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
@@ -1678,6 +1680,12 @@ declare global {
         prototype: HTMLAtomicInsightLayoutElement;
         new (): HTMLAtomicInsightLayoutElement;
     };
+    interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightNoResultsElement: {
+        prototype: HTMLAtomicInsightNoResultsElement;
+        new (): HTMLAtomicInsightNoResultsElement;
+    };
     interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightNumericFacetElement: {
@@ -2168,6 +2176,7 @@ declare global {
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
         "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
+        "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
         "atomic-insight-pager": HTMLAtomicInsightPagerElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
@@ -2665,6 +2674,8 @@ declare namespace LocalJSX {
           * Whether the interface should be shown in widget format.
          */
         "widget"?: boolean;
+    }
+    interface AtomicInsightNoResults {
     }
     interface AtomicInsightNumericFacet {
         /**
@@ -3719,6 +3730,7 @@ declare namespace LocalJSX {
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
         "atomic-insight-layout": AtomicInsightLayout;
+        "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
         "atomic-insight-pager": AtomicInsightPager;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
@@ -3829,6 +3841,7 @@ declare module "@stencil/core" {
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
             "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
+            "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
             "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
