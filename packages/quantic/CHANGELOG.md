@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.36.0...@coveo/quantic@1.37.0) (2022-08-19)
+
+
+### Bug Fixes
+
+* **quantic:** making the QuanticNoResult use the correct headless bundle ([#2351](https://github.com/coveo/ui-kit/issues/2351)) ([a0448cc](https://github.com/coveo/ui-kit/commit/a0448cc2ce7dd150857f55aa545d1661cf0db8b6))
+
+
+### Features
+
+* **quantic:** new QuanticColoredResultBadge component created ([#2350](https://github.com/coveo/ui-kit/issues/2350)) ([d7aa619](https://github.com/coveo/ui-kit/commit/d7aa619a4f054aa6077e41b7267917295384651f))
+
+
+
+
+
 # [1.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.35.0...@coveo/quantic@1.36.0) (2022-08-18)
 
 
