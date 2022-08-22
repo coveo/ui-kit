@@ -440,4 +440,20 @@
       <label>Voir les résultats</label>
       <name>quantic_ViewResults</name>
     </customLabels>
+    <customLabels>
+      <label>Page suivante</label>
+      <name>quantic_NextPage</name>
+    </customLabels>
+    <customLabels>
+      <label>Page précédente</label>
+      <name>quantic_PreviousPage</name>
+    </customLabels>
+    <customLabels>
+      <label>Aller à la page {{0}}.</label>
+      <name>quantic_GoToPage</name>
+    </customLabels>
+    <customLabels>
+      <label>Afficher {{0}} résultats par page.</label>
+      <name>quantic_ShowNResultsPerPage</name>
+    </customLabels>
 </Translations>
