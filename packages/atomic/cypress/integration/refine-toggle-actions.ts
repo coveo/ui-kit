@@ -53,3 +53,59 @@ export const addRefineToggle =
 
     env.withElement(manager).withElement(refineToggle);
   };
+
+export const addRefineToggleRangeVariations =
+  (props: TagProps = {}) =>
+  (env: TestFixture) => {
+    const manager = generateComponentHTML(facetManagerComponent);
+    const refineToggle = generateComponentHTML(refineToggleComponent, props);
+
+    // Timeframe variations
+    const timeframeFacetRanges = generateComponentHTML(
+      timeframeFacetComponent,
+      {}
+    );
+    timeframeFacetRanges.append(...createTimeframeElements());
+
+    const timeframeFacetRangesWithDatePicker = generateComponentHTML(
+      timeframeFacetComponent,
+      {'with-date-picker': 'true'}
+    );
+    timeframeFacetRangesWithDatePicker.append(...createTimeframeElements());
+
+    const timeframeFacetDatePickerOnly = generateComponentHTML(
+      timeframeFacetComponent,
+      {'with-date-picker': 'true'}
+    );
+
+    manager.append(timeframeFacetRanges);
+    manager.append(timeframeFacetRangesWithDatePicker);
+    manager.append(timeframeFacetDatePickerOnly);
+
+    // Numeric variations
+    const baseNumericOptions = {
+      field: numericFacetField,
+    };
+
+    const numericFacetRangesOnly = generateComponentHTML(
+      numericFacetComponent,
+      baseNumericOptions
+    );
+
+    const numericFacetRangesWithInput = generateComponentHTML(
+      numericFacetComponent,
+      {...baseNumericOptions, 'with-input': 'integer'}
+    );
+
+    const numericFacetInputOnly = generateComponentHTML(numericFacetComponent, {
+      ...baseNumericOptions,
+      'with-input': 'integer',
+      'number-of-values': '0',
+    });
+
+    manager.append(numericFacetRangesOnly);
+    manager.append(numericFacetRangesWithInput);
+    manager.append(numericFacetInputOnly);
+
+    env.withElement(manager).withElement(refineToggle);
+  };
