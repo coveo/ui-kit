@@ -84,6 +84,7 @@ function getEnableQuerySyntax(state: Partial<SearchParametersState>) {
 
   const enableQuerySyntax = state.query.enableQuerySyntax;
   const shouldInclude =
+    enableQuerySyntax !== undefined &&
     enableQuerySyntax !== getQueryInitialState().enableQuerySyntax;
   return shouldInclude ? {enableQuerySyntax} : {};
 }

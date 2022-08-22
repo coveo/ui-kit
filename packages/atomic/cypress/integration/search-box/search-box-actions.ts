@@ -1,3 +1,4 @@
+import {AriaLabelGenerator} from '../../../src/components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results';
 import {
   TagProps,
   TestFixture,
@@ -8,7 +9,7 @@ import {searchBoxComponent} from './search-box-selectors';
 export interface AddSearchBoxOptions {
   suggestions?: {maxWithoutQuery: number; maxWithQuery: number};
   recentQueries?: {maxWithoutQuery: number; maxWithQuery: number};
-  instantResults?: boolean;
+  instantResults?: {ariaLabelGenerator?: AriaLabelGenerator};
   props?: TagProps;
 }
 
@@ -36,9 +37,14 @@ export const addSearchBox =
       );
     }
     if (options?.instantResults !== undefined) {
-      searchBox.appendChild(
-        generateComponentHTML('atomic-search-box-instant-results')
+      const instantResultsElement = document.createElement(
+        'atomic-search-box-instant-results'
       );
+      if (options.instantResults.ariaLabelGenerator) {
+        instantResultsElement.ariaLabelGenerator =
+          options.instantResults.ariaLabelGenerator;
+      }
+      searchBox.appendChild(instantResultsElement);
     }
     env.withElement(searchBox);
   };

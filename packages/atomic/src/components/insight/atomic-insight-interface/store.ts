@@ -11,7 +11,6 @@ import {
 import {
   FacetInfo,
   FacetStore,
-  FacetType,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 
@@ -26,12 +25,7 @@ export interface AtomicInsightStoreData extends AtomicCommonStoreData {
 }
 
 export interface AtomicInsightStore
-  extends AtomicCommonStore<AtomicInsightStoreData> {
-  registerFacet<T extends FacetType, U extends string>(
-    facetType: T,
-    data: AtomicInsightStoreData[T][U] & {facetId: U; element: HTMLElement}
-  ): void;
-}
+  extends AtomicCommonStore<AtomicInsightStoreData> {}
 
 export function createAtomicInsightStore(): AtomicInsightStore {
   const commonStore = createAtomicCommonStore<AtomicInsightStoreData>({
@@ -46,18 +40,6 @@ export function createAtomicInsightStore(): AtomicInsightStore {
   });
   return {
     ...commonStore,
-
-    registerFacet<T extends FacetType, U extends string>(
-      facetType: T,
-      data: AtomicInsightStoreData[T][U] & {facetId: U; element: HTMLElement}
-    ) {
-      if (commonStore.state[facetType][data.facetId]) {
-        return;
-      }
-
-      commonStore.state[facetType][data.facetId] = data;
-      commonStore.state.facetElements.push(data.element);
-    },
 
     getUniqueIDFromEngine(engine: InsightEngine): string {
       return engine.state.search.searchResponseId;
