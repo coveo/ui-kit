@@ -130,6 +130,7 @@ export class AtomicInsightTimeframeFacet
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,
@@ -219,6 +220,8 @@ export class AtomicInsightTimeframeFacet
         ></FacetPlaceholder>
       );
     }
+    console.log(this.facetForDatePicker?.state);
+    console.log(this.facetForDateRange?.state);
     return this.timeframeFacetCommon.render({
       hasError: this.searchStatusState.hasError,
       firstSearchExecuted: this.searchStatusState.firstSearchExecuted,
