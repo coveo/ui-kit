@@ -2,7 +2,7 @@ import {Component, h, Prop} from '@stencil/core';
 import Clockicon from '../../../images/clock.svg';
 
 /**
- * @part button - The refine toggle button.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-history-toggle',

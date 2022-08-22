@@ -24,55 +24,20 @@
       main();
     </script>
     <style>
-      #wrapper {
+      atomic-insight-layout:not([widget='false']) {
         width: 400px;
         height: 720px;
         margin-left: auto;
         margin-right: auto;
-      }
-
-      .header-wrapper {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr auto auto auto;
-
-        grid-gap: 0.5rem;
-
-        background: var(--atomic-neutral-light);
-
-        padding-top: 1.5rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        box-sizing: border-box;
-      }
-
-      .footer-wrapper {
-        background: var(--atomic-neutral-light);
-        padding: 1rem 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: stretch;
-      }
-
-      atomic-insight-tabs {
-        grid-column: 1 / 5;
-      }
-
-      atomic-insight-refine-modal {
-        grid-row-start: 5;
-      }
-
-      atomic-layout-section[section='results'] {
-        overflow-y: auto;
-        overflow-x: hidden;
+        box-shadow: 0px 3px 24px 0px #0000001a;
       }
     </style>
   </head>
   <body>
     <button id="widget-view">Toggle widget view</button>
-    <div id="wrapper">
-      <atomic-insight-interface>
-        <div class="header-wrapper">
+    <atomic-insight-interface>
+      <atomic-insight-layout>
+        <atomic-layout-section section="search">
           <atomic-insight-search-box></atomic-insight-search-box>
           <atomic-insight-refine-toggle>
             <atomic-insight-facet field="source" label="Source" display-values-as="checkbox"></atomic-insight-facet>
@@ -106,7 +71,7 @@
             <atomic-insight-tab label="HTML" expression="@filetype==html"></atomic-insight-tab>
             <atomic-insight-tab label="Txt" expression="@filetype==txt"></atomic-insight-tab>
           </atomic-insight-tabs>
-        </div>
+        </atomic-layout-section>
         <atomic-layout-section section="results">
           <atomic-insight-result-list image-size="none">
             <atomic-insight-result-template>
@@ -244,11 +209,11 @@
             </atomic-insight-result-template>
           </atomic-insight-result-list>
         </atomic-layout-section>
-        <div class="footer-wrapper">
+        <atomic-layout-section section="pagination">
           <atomic-insight-pager></atomic-insight-pager>
-        </div>
-      </atomic-insight-interface>
-    </div>
+        </atomic-layout-section>
+      </atomic-insight-layout>
+    </atomic-insight-interface>
     <script src="../header.js" type="text/javascript"></script>
     <script type="text/javascript">
       let widgetView = true;
@@ -261,17 +226,11 @@
       updateWrapper(widgetView);
 
       async function updateWrapper(widgetView) {
-        await customElements.whenDefined('atomic-insight-interface');
-        const insightInterface = document.querySelector('atomic-insight-interface');
+        await customElements.whenDefined('atomic-insight-layout');
+        const insightInterface = document.querySelector('atomic-insight-layout');
         if (widgetView) {
-          wrapper.style.width = '400px';
-          wrapper.style.height = '720px';
-          wrapper.style['box-shadow'] = '0px 3px 24px 0px #0000001A';
           insightInterface.setAttribute('widget', true);
         } else {
-          wrapper.style.width = '100%';
-          wrapper.style.height = 'auto';
-          wrapper.style['box-shadow'] = '';
           insightInterface.setAttribute('widget', false);
         }
       }

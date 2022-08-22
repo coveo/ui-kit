@@ -9,19 +9,23 @@ import * as CommonAssertions from '../../common-assertions';
 import * as SearchBoxAssertions from '../search-box-assertions';
 import * as InstantResultsAssertions from './search-box-instant-results-assertions';
 import {InstantResultsSelectors} from './search-box-instant-results-selectors';
+import {AriaLabelGenerator} from '../../../../src/components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results';
+import {initializeBindings} from '../../../../src/utils/initialization-utils';
+import {buildMockResult} from '../../../utils/mock-result';
 
 const delay = (force = false) => ({delay: 200, force});
 const downKeys = (count: number) => Array(count).fill('{downarrow}').join('');
 
 const setInstantResults = (count: number) => (fixture: TestFixture) => {
   fixture.withCustomResponse((response) => {
-    for (let i = 0; i < count; i++) {
-      response.results[i].title = `Instant Result ${i}`;
-      response.results[i].uniqueId = `instant_result_${i}`;
-      response.results[i].uri = `/${i}`;
-      response.results[i].clickUri = `/${i}`;
-    }
-    response.results = response.results.splice(0, count);
+    response.results = Array.from({length: count}, (_, i) =>
+      buildMockResult({
+        title: `Instant Result ${i}`,
+        uniqueId: `instant_result_${i}`,
+        uri: `/${i}`,
+        clickUri: `/${i}`,
+      })
+    );
   });
 };
 
@@ -49,7 +53,7 @@ describe('Instant Results Test Suites', () => {
             maxWithoutQuery: maxRecentQueriesWithoutQuery,
             maxWithQuery: numOfRecentQueries,
           },
-          instantResults: true,
+          instantResults: {},
           props: {
             'number-of-queries': numOfRecentQueries,
             'suggestion-timeout': 2000,
@@ -58,6 +62,66 @@ describe('Instant Results Test Suites', () => {
       )
       .init();
   }
+
+  describe('with a custom aria label', () => {
+    const customFieldName = 'custom';
+    const customFieldValueForResult = (index: number) => `${index}!`;
+    const ariaLabelGeneratorAlias = 'ariaLabelGenerator';
+    beforeEach(() => {
+      new TestFixture()
+        .with(setInstantResults(numOfInstantResults))
+        .with(setRecentQueries(numOfRecentQueries))
+        .withCustomResponse((response) => {
+          response.results.forEach(
+            (result, i) =>
+              (result.raw[customFieldName] = customFieldValueForResult(i))
+          );
+        })
+        .with(
+          addSearchBox({
+            suggestions: {maxWithoutQuery: 8, maxWithQuery: 8},
+            instantResults: {
+              ariaLabelGenerator: cy
+                .stub()
+                .as(ariaLabelGeneratorAlias)
+                .callsFake(
+                  <AriaLabelGenerator>(
+                    ((_, result) => result.raw[customFieldName] as string)
+                  )
+                ),
+            },
+          })
+        )
+        .init();
+      SearchBoxSelectors.inputBox().type(`${downKeys(2)}`, delay());
+    });
+
+    it('uses the generated labels', () => {
+      InstantResultsSelectors.results().should(([...results]) =>
+        results.forEach((result, i) =>
+          expect(result.ariaLabel).to.contain(customFieldValueForResult(i))
+        )
+      );
+    });
+
+    it('passes the bindings to the generator', () => {
+      cy.get<
+        sinon.SinonStub<
+          Parameters<AriaLabelGenerator>,
+          ReturnType<AriaLabelGenerator>
+        >
+      >(`@${ariaLabelGeneratorAlias}`).then((stub) =>
+        cy
+          .get('atomic-search-interface')
+          .then(([searchInterface]) => initializeBindings(searchInterface))
+          .then((expectedBindings) => {
+            expect(Object.keys(stub.firstCall.args[0])).to.contain.all.members(
+              Object.keys(expectedBindings)
+            );
+          })
+      );
+    });
+  });
 
   describe('with keyboard navigation', () => {
     describe('when navigating from query to results', () => {
