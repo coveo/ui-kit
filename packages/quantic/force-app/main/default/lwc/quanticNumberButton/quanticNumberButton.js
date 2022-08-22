@@ -21,7 +21,7 @@ export default class QuanticNumberButton extends LightningElement {
    */
   @api selected;
   /**
-   * The value for aria-label
+   * The value for aria-label.
    * @api
    * @type {string}
    */
