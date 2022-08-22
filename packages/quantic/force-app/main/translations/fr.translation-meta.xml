@@ -257,6 +257,10 @@
         <name>quantic_Apply</name>
     </customLabels>
     <customLabels>
+        <label>Appliquer les filtres périodiques manuels pour la facette {{0}}</label>
+        <name>quantic_TimeframeInputApply</name>
+    </customLabels>
+    <customLabels>
         <label>Appliquer les filtres numériques manuels pour la facette {{0}}</label>
         <name>quantic_NumberInputApply</name>
     </customLabels>
