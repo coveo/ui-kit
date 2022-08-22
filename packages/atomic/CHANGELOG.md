@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.100.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.99.2...@coveo/atomic@1.100.0) (2022-08-22)
+
+
+### Bug Fixes
+
+* **atomic:** make range inputs (numeric/timeframe) appear on mobile ([#2356](https://github.com/coveo/ui-kit/issues/2356)) ([fe9da42](https://github.com/coveo/ui-kit/commit/fe9da42b155151cec2bef152d2da06ba9fd5a85f))
+
+
+### Features
+
+* **atomic:** make atomic-popover backdrop transparent & make it clickable ([#2353](https://github.com/coveo/ui-kit/issues/2353)) ([c9b931b](https://github.com/coveo/ui-kit/commit/c9b931b2f33a64fc504780586b8dc5b9a3d92b96))
+
+
+
+
+
 ## [1.99.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.99.1...@coveo/atomic@1.99.2) (2022-08-19)
 
 **Note:** Version bump only for package @coveo/atomic
