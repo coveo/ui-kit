@@ -179,7 +179,7 @@ export class AtomicPopover implements InitializableComponent {
     return (
       <div
         part="backdrop"
-        class="fixed left-0 top-0 right-0 bottom-0 z-[9998] bg-background opacity-50"
+        class="fixed left-0 top-0 right-0 bottom-0 z-[9998] bg-transparent cursor-pointer"
         onClick={() => this.togglePopover()}
       ></div>
     );
