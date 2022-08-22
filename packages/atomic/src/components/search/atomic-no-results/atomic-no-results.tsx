@@ -53,8 +53,6 @@ export class AtomicNoResults {
   @AriaLiveRegion('no-results')
   protected ariaMessage!: string;
 
-  private noResultsCommon!: NoResultsCommon;
-
   /**
    * Whether to display a button which cancels the last available action.
    */
@@ -64,12 +62,6 @@ export class AtomicNoResults {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.history = buildHistoryManager(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
-    this.noResultsCommon = new NoResultsCommon({
-      querySummaryState: () => this.querySummaryState,
-      searchStatusState: () => this.searchStatusState,
-      bindings: this.bindings,
-      setAriaLive: (msg: string) => (this.ariaMessage = msg),
-    });
   }
 
   private renderCancel() {
@@ -89,15 +81,15 @@ export class AtomicNoResults {
   }
 
   public render() {
-    if (!this.noResultsCommon) {
-      return;
-    }
     return (
-      <div>
-        {this.noResultsCommon.render(
-          this.enableCancelLastAction && this.renderCancel()
-        )}
-      </div>
+      <NoResultsCommon
+        bindings={this.bindings}
+        querySummaryState={this.querySummaryState}
+        searchStatusState={this.searchStatusState}
+        setAriaLive={(msg) => (this.ariaMessage = msg)}
+      >
+        {this.enableCancelLastAction && this.renderCancel()}
+      </NoResultsCommon>
     );
   }
 }

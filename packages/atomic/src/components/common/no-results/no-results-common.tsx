@@ -1,31 +1,32 @@
-import {h, VNode} from '@stencil/core';
+import {h, VNode, FunctionalComponent} from '@stencil/core';
 import MagnifyingGlass from '../../../images/magnifying-glass.svg';
 import {AnyBindings} from '../interface/bindings';
 
 interface NoResultsProps {
   bindings: AnyBindings;
-  searchStatusState: () => {
+  searchStatusState: {
     firstSearchExecuted: boolean;
     isLoading: boolean;
     hasResults: boolean;
   };
-  querySummaryState: () => {
+  querySummaryState: {
     hasQuery: boolean;
     query: string;
   };
   setAriaLive: (message: string) => void;
 }
-export class NoResultsCommon {
-  constructor(public props: NoResultsProps) {}
-
-  private wrapHighlight(content: string) {
-    return `<span class="font-bold" part="highlight">${this.props.bindings.i18n.t(
+export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
+  props,
+  children
+) => {
+  const wrapHighlight = (content: string) => {
+    return `<span class="font-bold" part="highlight">${props.bindings.i18n.t(
       'between-quotations',
       {text: escape(content), interpolation: {escapeValue: false}}
     )}</span>`;
-  }
+  };
 
-  private renderMagnifyingGlass() {
+  const renderMagnifyingGlass = (): VNode => {
     return (
       <atomic-icon
         part="icon"
@@ -33,25 +34,25 @@ export class NoResultsCommon {
         class="my-6 flex flex-col items-center w-1/2 max-w-lg"
       ></atomic-icon>
     );
-  }
+  };
 
-  private get summary() {
-    return this.props.querySummaryState().hasQuery
-      ? this.props.bindings.i18n.t('no-results-for', {
+  const summary = () => {
+    return props.querySummaryState.hasQuery
+      ? props.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
-          query: this.props.querySummaryState().query,
+          query: props.querySummaryState.query,
         })
-      : this.props.bindings.i18n.t('no-results');
-  }
+      : props.bindings.i18n.t('no-results');
+  };
 
-  private renderNoResults() {
-    const {hasQuery, query} = this.props.querySummaryState();
+  const renderNoResults = (): VNode => {
+    const {hasQuery, query} = props.querySummaryState;
     const content = hasQuery
-      ? this.props.bindings.i18n.t('no-results-for', {
+      ? props.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
-          query: this.wrapHighlight(query),
+          query: wrapHighlight(query),
         })
-      : this.props.bindings.i18n.t('no-results');
+      : props.bindings.i18n.t('no-results');
     return (
       // file deepcode ignore ReactSetInnerHtml: This is not React code.
       <div
@@ -60,33 +61,30 @@ export class NoResultsCommon {
         innerHTML={content}
       ></div>
     );
-  }
+  };
 
-  private renderSearchTips() {
+  const renderSearchTips = (): VNode => {
     return (
       <div class="my-2 text-lg text-neutral-dark" part="search-tips">
-        {this.props.bindings.i18n.t('search-tips')}
+        {props.bindings.i18n.t('search-tips')}
       </div>
     );
+  };
+
+  const {firstSearchExecuted, isLoading, hasResults} = props.searchStatusState;
+  if (!firstSearchExecuted || isLoading || hasResults) {
+    return <span></span>;
   }
 
-  public render(child?: VNode[]) {
-    const {firstSearchExecuted, isLoading, hasResults} =
-      this.props.searchStatusState();
-    if (!firstSearchExecuted || isLoading || hasResults) {
-      return;
-    }
+  props.setAriaLive(summary());
 
-    this.props.setAriaLive(this.summary);
-
-    return [
-      <div class="flex flex-col items-center h-full w-full text-on-background">
-        {this.renderMagnifyingGlass()}
-        {this.renderNoResults()}
-        {this.renderSearchTips()}
-        {child && child}
-      </div>,
-      <slot></slot>,
-    ];
-  }
-}
+  return [
+    <div class="flex flex-col items-center h-full w-full text-on-background">
+      {renderMagnifyingGlass()}
+      {renderNoResults()}
+      {renderSearchTips()}
+      {...children}
+    </div>,
+    <slot></slot>,
+  ] as VNode[];
+};

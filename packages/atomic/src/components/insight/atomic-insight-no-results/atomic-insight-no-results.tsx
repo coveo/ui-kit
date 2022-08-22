@@ -43,23 +43,23 @@ export class AtomicInsightNoResults
   @AriaLiveRegion('no-results')
   protected ariaMessage!: string;
 
-  private noResultsCommon!: NoResultsCommon;
-
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.querySummary = buildQuerySummary(this.bindings.engine);
-    this.noResultsCommon = new NoResultsCommon({
-      querySummaryState: () => this.querySummaryState,
-      searchStatusState: () => this.searchStatusState,
-      bindings: this.bindings,
-      setAriaLive: (message) => (this.ariaMessage = message),
-    });
   }
 
   public render() {
-    if (!this.noResultsCommon) {
-      return;
-    }
-    return <div class="p-3 text-center">{this.noResultsCommon.render()}</div>;
+    return (
+      <div class="p-3 text-center">
+        {
+          <NoResultsCommon
+            bindings={this.bindings}
+            searchStatusState={this.searchStatusState}
+            querySummaryState={this.querySummaryState}
+            setAriaLive={(msg) => (this.ariaMessage = msg)}
+          />
+        }
+      </div>
+    );
   }
 }
