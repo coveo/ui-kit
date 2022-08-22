@@ -502,7 +502,7 @@
         <value>Apply custom timeframe values for the {{0}} facet</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Apply custom timeframe values for the [component label] facet</shortDescription>
+        <shortDescription>Apply custom time frame values for the [component label] facet.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_NumberInputApply</fullName>
