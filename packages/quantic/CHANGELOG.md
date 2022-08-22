@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.37.0...@coveo/quantic@1.38.0) (2022-08-22)
+
+
+### Features
+
+* **quantic:** remove lightning-tile from QuanticResult ([#2319](https://github.com/coveo/ui-kit/issues/2319)) ([c711ba7](https://github.com/coveo/ui-kit/commit/c711ba76885f34ecb1f1e76ca89bfd87b77f527b))
+
+
+
+
+
 # [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.36.0...@coveo/quantic@1.37.0) (2022-08-19)
 
 
