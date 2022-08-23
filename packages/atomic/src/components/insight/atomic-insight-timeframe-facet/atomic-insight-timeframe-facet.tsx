@@ -130,6 +130,7 @@ export class AtomicInsightTimeframeFacet
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,

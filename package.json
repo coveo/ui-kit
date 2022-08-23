@@ -27,7 +27,7 @@
     "patch-package": "6.4.7"
   },
   "devDependencies": {
-    "@actions/core": "1.8.2",
+    "@actions/core": "1.9.1",
     "@actions/github": "4.0.0",
     "@commitlint/config-conventional": "17.0.3",
     "@commitlint/config-lerna-scopes": "17.0.0",

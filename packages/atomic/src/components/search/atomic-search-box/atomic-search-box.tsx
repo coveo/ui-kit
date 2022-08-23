@@ -74,8 +74,8 @@ import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
  * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-search-box-recent-queries` component.
  *
  * @part instant-results-item - An instant result rendered by an `atomic-search-box-instant-results` component.
- * @part instant-result-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
- * @part instant-result-show-all-button - The button inside the clickable suggestion from the `atomic-search-box-instant-results` component.
+ * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-search-box-instant-results` component.
+ * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-search-box-instant-results` component.
  */
 @Component({
   tag: 'atomic-search-box',
