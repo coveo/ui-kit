@@ -17,6 +17,7 @@ import {api, LightningElement, track} from 'lwc';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
 import startLabel from '@salesforce/label/c.quantic_StartLabel';
 import endLabel from '@salesforce/label/c.quantic_EndLabel';
 import apply from '@salesforce/label/c.quantic_Apply';
@@ -169,6 +170,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     collapseFacet,
     expandFacet,
     clearFilter,
+    clearFilterFacet,
     startLabel,
     endLabel,
     apply,
@@ -309,6 +311,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
   get clearFilterLabel() {
     return I18nUtils.format(this.labels.clearFilter);
+  }
+
+  get clearFilterAriaLabelValue() {
+    return I18nUtils.format(this.labels.clearFilterFacet, this.field);
   }
 
   get datepickerFormat() {
