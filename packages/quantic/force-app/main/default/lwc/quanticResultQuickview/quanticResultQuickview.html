@@ -1,5 +1,5 @@
 <template>
-  <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} title={buttonLabel} disabled={hasNoPreview}>
+  <button class={buttonClass} onclick={openQuickview} tooltip={buttonLabel} title={buttonLabel} disabled={hasNoPreview} aria-label={buttonAriaLabelValue}>
     <template if:true={hasButtonLabel}>
       {previewButtonLabel}
     </template>  
