@@ -63,13 +63,7 @@ function MyTemplate(result: FoldedResult) {
         <AtomicResultText field="ec_shortdesc" />
       </AtomicResultSectionExcerpt>
       <AtomicResultSectionChildren>
-        <AtomicResultChildren>
-          <AtomicResultChildrenTemplate>
-            <template>
-              <AtomicResultLink />
-            </template>
-          </AtomicResultChildrenTemplate>
-        </AtomicResultChildren>
+        <AtomicResultChildren template={() => <AtomicResultLink />} />
       </AtomicResultSectionChildren>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>

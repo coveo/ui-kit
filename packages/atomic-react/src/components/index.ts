@@ -6,5 +6,8 @@ export {Bindings, i18n} from '@coveo/atomic';
 // and should wrap it nicely for users of the library
 export {SearchInterfaceWrapper as AtomicSearchInterface} from './SearchInterfaceWrapper';
 export {ResultListWrapper as AtomicResultList} from './ResultListWrapper';
-export {FoldedResultListWrapper as AtomicFoldedResultList} from './FoldedResultListWrapper';
+export {
+  FoldedResultListWrapper as AtomicFoldedResultList,
+  ResultChildrenWrapper as AtomicResultChildren,
+} from './FoldedResultListWrapper';
 export {SearchBoxInstantResultsWrapper as AtomicSearchBoxInstantResults} from './SearchBoxInstantResultsWrapper';

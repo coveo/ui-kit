@@ -720,7 +720,8 @@ export declare interface AtomicResultChildren extends Components.AtomicResultChi
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['imageSize', 'inheritTemplates', 'noResultText']
+  inputs: ['imageSize', 'inheritTemplates', 'noResultText'],
+  methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-result-children',

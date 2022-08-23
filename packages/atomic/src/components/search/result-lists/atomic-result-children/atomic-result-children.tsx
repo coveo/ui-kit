@@ -6,7 +6,16 @@ import {
   Result,
   ResultTemplatesManager,
 } from '@coveo/headless';
-import {Component, Element, State, h, Listen, Prop, Host} from '@stencil/core';
+import {
+  Component,
+  Element,
+  State,
+  h,
+  Listen,
+  Prop,
+  Host,
+  Method,
+} from '@stencil/core';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
 import {
@@ -16,7 +25,11 @@ import {
   ResultDisplayConfigContext,
   DisplayConfig,
 } from '../../result-template-components/result-template-decorators';
-import {BaseResultList, ResultListCommon} from '../result-list-common';
+import {
+  BaseResultList,
+  ResultListCommon,
+  ResultRenderingFunction,
+} from '../result-list-common';
 import {TemplateContent} from '../../result-templates/result-template-common';
 import {
   FoldedResultListContext,
@@ -52,6 +65,7 @@ export class AtomicResultChildren implements BaseResultList {
   private displayConfig!: DisplayConfig;
 
   public resultListCommon!: ResultListCommon;
+  private renderingFunction: ResultRenderingFunction | null = null;
 
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
@@ -88,6 +102,19 @@ export class AtomicResultChildren implements BaseResultList {
 
   private initialChildren!: FoldedResult[];
 
+  /**
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   *
+   * Do not use this method if you integrate Atomic in a plain HTML deployment.
+   *
+   * @param render
+   */
+  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
+    this.renderingFunction = render;
+    this.assignRenderingFunctionIfPossible();
+  }
+
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
     event.preventDefault();
@@ -114,6 +141,7 @@ export class AtomicResultChildren implements BaseResultList {
       includeDefaultTemplate: false,
       onReady: () => {
         this.ready = true;
+        this.assignRenderingFunctionIfPossible();
       },
       onError: () => {
         this.templateHasError = true;
@@ -284,5 +312,12 @@ export class AtomicResultChildren implements BaseResultList {
         )}
       </Host>
     );
+  }
+
+  private assignRenderingFunctionIfPossible() {
+    if (this.resultListCommon && this.renderingFunction) {
+      this.resultListCommon.renderingFunction = this
+        .renderingFunction as ResultRenderingFunction;
+    }
   }
 }
