@@ -36,7 +36,7 @@ export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
     );
   };
 
-  const summary = () => {
+  const getSummary = () => {
     return props.querySummaryState.hasQuery
       ? props.bindings.i18n.t('no-results-for', {
           interpolation: {escapeValue: false},
@@ -76,7 +76,7 @@ export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
     return <span></span>;
   }
 
-  props.setAriaLive(summary());
+  props.setAriaLive(getSummary());
 
   return [
     <div class="flex flex-col items-center h-full w-full text-on-background">
