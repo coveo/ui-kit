@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.101.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.100.2...@coveo/atomic@1.101.0) (2022-08-23)
+
+
+### Features
+
+* **atomic:** add insight panel no results component ([#2362](https://github.com/coveo/ui-kit/issues/2362)) ([f6209d7](https://github.com/coveo/ui-kit/commit/f6209d7f4fb4e6ecb1c08161b44730aadc1f9072))
+
+
+
+
+
 ## [1.100.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.100.1...@coveo/atomic@1.100.2) (2022-08-23)
 
 **Note:** Version bump only for package @coveo/atomic
