@@ -440,6 +440,27 @@ export class AtomicNoResults {
 }
 
 
+export declare interface AtomicNotifications extends Components.AtomicNotifications {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['headingLevel', 'icon']
+})
+@Component({
+  selector: 'atomic-notifications',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['headingLevel', 'icon']
+})
+export class AtomicNotifications {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicNumericFacet extends Components.AtomicNumericFacet {}
 
 @ProxyCmp({

@@ -71,9 +71,10 @@ atomic-search-layout {
     display: grid;
     justify-content: space-between;
     grid-template-areas:
-      'atomic-breadbox      atomic-breadbox'
-      'atomic-query-summary atomic-sort'
-      'atomic-did-you-mean  atomic-did-you-mean';
+      'atomic-breadbox       atomic-breadbox'
+      'atomic-query-summary  atomic-sort'
+      'atomic-did-you-mean   atomic-did-you-mean'
+      'atomic-notifications  atomic-notifications';
 
     & > * {
       margin-bottom: var(--atomic-layout-spacing-y);
@@ -100,6 +101,10 @@ atomic-search-layout {
 
     atomic-did-you-mean {
       grid-area: atomic-did-you-mean;
+    }
+
+    atomic-notifications {
+      grid-area: atomic-notifications;
     }
   }
 
