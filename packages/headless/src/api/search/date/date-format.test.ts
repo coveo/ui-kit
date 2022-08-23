@@ -5,6 +5,21 @@ import {
   parseDate,
 } from './date-format';
 
+describe('#parseDate', () => {
+  it('can parse the search API format', () => {
+    expect(parseDate('2022/08/23@17:42:55').toDate().toUTCString()).toEqual(
+      new Date('2022-08-23T17:42:55').toUTCString()
+    );
+  });
+
+  it('parses the date in the current timezone by default', () => {
+    expect(parseDate('2022-08-23T17:42:55').toDate().toUTCString()).toEqual(
+      new Date('2022-08-23T17:42:55+08:45').toUTCString()
+    );
+    jest.resetAllMocks();
+  });
+});
+
 describe('#isSearchApiDate', () => {
   it('when the string matches the search api format, it returns true', () => {
     expect(isSearchApiDate('2010/01/01@05:00:00')).toBe(true);
