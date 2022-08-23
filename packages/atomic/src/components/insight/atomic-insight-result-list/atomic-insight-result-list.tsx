@@ -38,7 +38,6 @@ interface TemplateElement extends HTMLElement {
  */
 @Component({
   tag: 'atomic-insight-result-list',
-  // TODO:
   styleUrl: 'atomic-insight-result-list.pcss',
   shadow: true,
 })
@@ -62,9 +61,6 @@ export class AtomicInsightResultList {
 
   @State() public error!: Error;
 
-  // TODO:
-  // @FocusTarget() nextNewResultTarget!: FocusTargetController;
-
   private loadingFlag = randomID('firstInsightResultLoaded-');
 
   /**
@@ -75,14 +71,6 @@ export class AtomicInsightResultList {
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
-
-  // TODO:
-  // /**
-  //  * @internal
-  //  */
-  // @Method() public async focusOnNextNewResult() {
-  //   this.resultListCommon.focusOnNextNewResult(this.resultListState);
-  // }
 
   public async initialize() {
     this.resultList = buildInsightResultList(this.bindings.engine, {
@@ -165,6 +153,9 @@ export class AtomicInsightResultList {
     if (!this.ready) {
       return null;
     }
+    if (this.resultListState.hasError) {
+      return null;
+    }
     return (
       <Host>
         {this.templateHasError && <slot></slot>}
@@ -191,16 +182,6 @@ export class AtomicInsightResultList {
                   content={this.getContentOfResultTemplate(result)}
                   classes={this.getClasses()}
                   loadingFlag={this.loadingFlag}
-                  // TODO:
-                  // indexOfResultToFocus={this.indexOfResultToFocus}
-                  // newResultRef={(element) =>
-                  //   this.onFirstNewResultRendered(element)
-                  // }
-                  // ref={(element) =>
-                  //   element &&
-                  //   props.indexOfResultToFocus === index &&
-                  //   props.newResultRef?.(element)
-                  // }
                 />
               ))}
           </div>
