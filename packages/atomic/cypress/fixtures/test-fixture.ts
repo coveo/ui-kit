@@ -186,25 +186,13 @@ export class TestFixture {
       }
 
       if (this.responseModifiers.length) {
-        cy.intercept(
-          {
-            method: 'POST',
-            url: '**/rest/search/v2?*',
-            times: 9999,
-          },
-          (request) => {
-            request.reply((response) => {
-              let newResponse = response.body;
-              this.responseModifiers.forEach((modifier) => {
-                const returnedResponse = modifier(newResponse);
-                if (returnedResponse) {
-                  newResponse = returnedResponse;
-                }
-              });
-              response.send(200, newResponse);
-            });
-          }
-        ).as(TestFixture.interceptAliases.Search.substring(1));
+        interceptSearchResponse((response) =>
+          this.responseModifiers.reduce(
+            (combinedResponse, modifier) =>
+              modifier(combinedResponse) || combinedResponse,
+            response
+          )
+        );
       }
 
       if (this.returnError) {
@@ -363,3 +351,26 @@ export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
   }
   return e;
 };
+
+export function interceptSearchResponse(
+  modifier: SearchResponseModifierPredicate,
+  times = 9999
+) {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: '**/rest/search/v2?*',
+      times,
+    },
+    (request) => {
+      request.reply((response) => {
+        let newResponse = response.body;
+        const returnedResponse = modifier(newResponse);
+        if (returnedResponse) {
+          newResponse = returnedResponse;
+        }
+        response.send(200, newResponse);
+      });
+    }
+  ).as(TestFixture.interceptAliases.Search.substring(1));
+}

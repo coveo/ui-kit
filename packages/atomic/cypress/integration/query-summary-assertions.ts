@@ -17,3 +17,11 @@ export function assertHasPlaceholder() {
     QuerySummarySelectors.placeholder().should('be.visible');
   });
 }
+
+export function assertHasQuery(text: string) {
+  it(`the query should be "${text}"`, () => {
+    QuerySummarySelectors.query().should(($el) =>
+      expect($el.text()).to.equal(text)
+    );
+  });
+}
