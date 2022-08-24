@@ -105,11 +105,9 @@ export default class QuanticResultQuickview extends LightningElement {
       // eslint-disable-next-line @lwc/lwc/no-inner-html
       this.contentContainer.innerHTML = this.state.content;
       // eslint-disable-next-line @lwc/lwc/no-async-operation
-      setTimeout(() => {
-        this.template
-          .querySelector('c-quantic-result-link')
-          .shadowRoot.firstChild.focus();
-      }, 0);
+      this.template
+        .querySelector('c-quantic-result-link')
+        .shadowRoot.firstChild.focus();
     }
     this.injectIdToSlots();
   }
