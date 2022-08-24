@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.104.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.103.0...@coveo/atomic@1.104.0) (2022-08-24)
+
+
+### Features
+
+* **atomic,headless:** add query error support for insight panel ([#2368](https://github.com/coveo/ui-kit/issues/2368)) ([cb808cb](https://github.com/coveo/ui-kit/commit/cb808cb6464b5f07a544192c49bde7a2f13f5abf))
+
+
+
+
+
+# [1.103.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.102.0...@coveo/atomic@1.103.0) (2022-08-24)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fixed setRange on Firefox and Safari ([#2360](https://github.com/coveo/ui-kit/issues/2360)) ([d1c69db](https://github.com/coveo/ui-kit/commit/d1c69db216b392cb8874a49b463ea928eea58e27))
+
+
+### Features
+
+* **atomic:** release horizontal facets publicly ([#2365](https://github.com/coveo/ui-kit/issues/2365)) ([aa19cfa](https://github.com/coveo/ui-kit/commit/aa19cfad76f057750434ddced087fbe0e8d8e3a4))
+
+
+
+
+
 # [1.102.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.101.0...@coveo/atomic@1.102.0) (2022-08-23)
 
 

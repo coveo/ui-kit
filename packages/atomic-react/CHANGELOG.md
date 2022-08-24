@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.23.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.23.0...@coveo/atomic-react@1.23.1) (2022-08-24)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+# [1.23.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.22.0...@coveo/atomic-react@1.23.0) (2022-08-24)
+
+
+### Features
+
+* **atomic:** release horizontal facets publicly ([#2365](https://github.com/coveo/ui-kit/issues/2365)) ([aa19cfa](https://github.com/coveo/ui-kit/commit/aa19cfad76f057750434ddced087fbe0e8d8e3a4))
+
+
+
+
+
 # [1.22.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.21.9...@coveo/atomic-react@1.22.0) (2022-08-23)
 
 

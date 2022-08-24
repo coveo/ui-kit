@@ -1,31 +1,30 @@
 import {Component, h, State} from '@stencil/core';
-import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
+import {
+  QueryError,
+  QueryErrorState,
+  buildQueryError,
+} from '@coveo/headless/insight';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {QueryErrorCommon} from '../../common/query-error/query-error-common';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
- * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
- *
- * @part icon - The svg related to the error.
- * @part title - The title of the error.
- * @part description - A description of the error.
- * @part doc-link - A link to the relevant documentation.
- * @part more-info-btn - A button to request additional error information.
- * @part error-info - Additional error information.
+ * @internal
  */
 @Component({
-  tag: 'atomic-query-error',
-  styleUrl: 'atomic-query-error.pcss',
+  tag: 'atomic-insight-query-error',
+  styleUrl: 'atomic-insight-query-error.pcss',
   shadow: true,
 })
-export class AtomicQueryError implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicQueryError
+  implements InitializableComponent<InsightBindings>
+{
+  @InitializeBindings() public bindings!: InsightBindings;
   public queryError!: QueryError;
 
   @BindStateToController('queryError')
