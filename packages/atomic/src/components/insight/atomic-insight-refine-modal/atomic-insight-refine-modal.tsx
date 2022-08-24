@@ -11,12 +11,12 @@ import {
   InsightInterfaceDimensions,
 } from '../atomic-insight-interface/atomic-insight-interface';
 import {
-  buildFacetManager,
-  FacetManager,
-  QuerySummary,
-  QuerySummaryState,
-  buildQuerySummary,
-} from '@coveo/headless/insight';
+  buildInsightFacetManager,
+  InsightFacetManager,
+  InsightQuerySummary,
+  InsightQuerySummaryState,
+  buildInsightQuerySummary,
+} from '..';
 import {
   getClonedFacetElements,
   RefineModalCommon,
@@ -39,7 +39,7 @@ export class AtomicInsightRefineModal
 
   @BindStateToController('querySummary')
   @State()
-  public querySummaryState!: QuerySummaryState;
+  public querySummaryState!: InsightQuerySummaryState;
 
   @State()
   public error!: Error;
@@ -52,11 +52,11 @@ export class AtomicInsightRefineModal
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
   private interfaceDimensions?: InsightInterfaceDimensions;
-  private facetManager!: FacetManager;
+  private facetManager!: InsightFacetManager;
   private resizeObserver?: ResizeObserver;
   private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
   private scrollCallback = () => this.debouncedUpdateDimensions();
-  public querySummary!: QuerySummary;
+  public querySummary!: InsightQuerySummary;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -106,8 +106,8 @@ export class AtomicInsightRefineModal
   }
 
   public initialize() {
-    this.facetManager = buildFacetManager(this.bindings.engine);
-    this.querySummary = buildQuerySummary(this.bindings.engine);
+    this.facetManager = buildInsightFacetManager(this.bindings.engine);
+    this.querySummary = buildInsightQuerySummary(this.bindings.engine);
   }
 
   private renderBody() {
