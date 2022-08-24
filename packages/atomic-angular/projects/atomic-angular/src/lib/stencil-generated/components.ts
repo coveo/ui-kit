@@ -440,6 +440,27 @@ export class AtomicNoResults {
 }
 
 
+export declare interface AtomicNotifications extends Components.AtomicNotifications {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['headingLevel', 'icon']
+})
+@Component({
+  selector: 'atomic-notifications',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['headingLevel', 'icon']
+})
+export class AtomicNotifications {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicNumericFacet extends Components.AtomicNumericFacet {}
 
 @ProxyCmp({
@@ -506,6 +527,25 @@ export class AtomicPager {
     c.detach();
     this.el = r.nativeElement;
     proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+
+export declare interface AtomicPopover extends Components.AtomicPopover {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-popover',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicPopover {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
   }
 }
 
@@ -1323,6 +1363,46 @@ export declare interface AtomicSearchLayout extends Components.AtomicSearchLayou
   inputs: ['mobileBreakpoint']
 })
 export class AtomicSearchLayout {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSegmentedFacet extends Components.AtomicSegmentedFacet {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+})
+@Component({
+  selector: 'atomic-segmented-facet',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'withSearch']
+})
+export class AtomicSegmentedFacet {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSegmentedFacetScrollable extends Components.AtomicSegmentedFacetScrollable {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined
+})
+@Component({
+  selector: 'atomic-segmented-facet-scrollable',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>'
+})
+export class AtomicSegmentedFacetScrollable {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();

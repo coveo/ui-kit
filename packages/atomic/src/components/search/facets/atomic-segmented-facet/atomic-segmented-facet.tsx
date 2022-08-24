@@ -24,7 +24,6 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {BaseFacet} from '../../../common/facets/facet-common';
 
 /**
- * @internal
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.
  * @part segmented-container - The container that holds the segmented facets.
  * @part label - The facet value label.

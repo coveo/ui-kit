@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.102.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.101.0...@coveo/atomic@1.102.0) (2022-08-23)
+
+
+### Features
+
+* **atomic:** added atomic-notifications ([#2306](https://github.com/coveo/ui-kit/issues/2306)) ([98542cf](https://github.com/coveo/ui-kit/commit/98542cf8fee22a47a6d1a75d723e724ffe1bd49c))
+* **atomic:** added query trigger to `atomic-did-you-mean` component ([#2336](https://github.com/coveo/ui-kit/issues/2336)) ([32f353c](https://github.com/coveo/ui-kit/commit/32f353cdec221ec7ad42a1bd5ddc234da796fc00))
+
+
+
+
+
 # [1.101.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.100.2...@coveo/atomic@1.101.0) (2022-08-23)
 
 
