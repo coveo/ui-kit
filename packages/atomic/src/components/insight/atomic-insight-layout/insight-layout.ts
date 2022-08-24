@@ -19,7 +19,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     ? `
   ${layoutSelector} {
     display: grid;
-    grid-template-rows: auto 8fr 1fr;
+    grid-template-rows: auto auto 8fr 1fr;
     max-height: 100%;
     box-sizing: border-box;
   }
