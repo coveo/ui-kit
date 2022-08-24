@@ -108,6 +108,7 @@ export class AtomicInsightRefineModal
 
   public initialize() {
     this.refineModalCommon = new RefineModalCommon({
+      title: this.bindings.i18n.t('sort'),
       host: this.host,
       bindings: this.bindings,
       initializeQuerySummary: () =>

@@ -96,6 +96,7 @@ export class AtomicRefineModal implements InitializableComponent {
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.refineModalCommon = new RefineModalCommon({
+      title: this.bindings.i18n.t('sort-and-filter'),
       host: this.host,
       bindings: this.bindings,
       initializeQuerySummary: () =>

@@ -16,6 +16,7 @@ interface RefineModalCommonOptions {
   bindings: AnyBindings;
   initializeQuerySummary(): QuerySummary;
   onClose(): void;
+  title: string;
 }
 
 export class RefineModalCommon {
@@ -23,6 +24,7 @@ export class RefineModalCommon {
   private bindings: AnyBindings;
   private querySummary: QuerySummary;
   private onClose: () => void;
+  private title: string;
 
   public exportparts =
     'container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper';
@@ -32,6 +34,7 @@ export class RefineModalCommon {
     this.bindings = props.bindings;
     this.querySummary = props.initializeQuerySummary();
     this.onClose = props.onClose;
+    this.title = props.title;
   }
 
   public showModal() {
@@ -45,7 +48,7 @@ export class RefineModalCommon {
   public renderHeader() {
     return (
       <div slot="header" class="contents">
-        <h1 class="truncate">{this.bindings.i18n.t('sort-and-filter')}</h1>
+        <h1 class="truncate">{this.title}</h1>
         <Button
           style="text-transparent"
           class="grid place-items-center"
