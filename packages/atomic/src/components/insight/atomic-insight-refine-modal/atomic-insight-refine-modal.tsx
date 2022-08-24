@@ -11,12 +11,12 @@ import {
   InsightInterfaceDimensions,
 } from '../atomic-insight-interface/atomic-insight-interface';
 import {
-  buildInsightFacetManager,
-  buildInsightQuerySummary,
-  InsightFacetManager,
-  InsightQuerySummary,
-  InsightQuerySummaryState,
-} from '..';
+  buildFacetManager,
+  FacetManager,
+  QuerySummary,
+  QuerySummaryState,
+  buildQuerySummary,
+} from '@coveo/headless/insight';
 import {
   getClonedFacetElements,
   RefineModalCommon,
@@ -34,13 +34,12 @@ import {Hidden} from '../../common/hidden';
 export class AtomicInsightRefineModal
   implements InitializableComponent<InsightBindings>
 {
-  private refineModalCommon!: RefineModalCommon;
   @InitializeBindings() public bindings!: InsightBindings;
   @Element() public host!: HTMLElement;
 
   @BindStateToController('querySummary')
   @State()
-  public querySummaryState!: InsightQuerySummaryState;
+  public querySummaryState!: QuerySummaryState;
 
   @State()
   public error!: Error;
@@ -53,11 +52,11 @@ export class AtomicInsightRefineModal
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
   private interfaceDimensions?: InsightInterfaceDimensions;
-  private facetManager!: InsightFacetManager;
+  private facetManager!: FacetManager;
   private resizeObserver?: ResizeObserver;
   private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
   private scrollCallback = () => this.debouncedUpdateDimensions();
-  public querySummary!: InsightQuerySummary;
+  public querySummary!: QuerySummary;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -107,17 +106,8 @@ export class AtomicInsightRefineModal
   }
 
   public initialize() {
-    this.refineModalCommon = new RefineModalCommon({
-      title: this.bindings.i18n.t('sort'),
-      host: this.host,
-      bindings: this.bindings,
-      initializeQuerySummary: () =>
-        (this.querySummary = buildInsightQuerySummary(this.bindings.engine)),
-      onClose: () => {
-        this.isOpen = false;
-      },
-    });
-    this.facetManager = buildInsightFacetManager(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
+    this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
   private renderBody() {
@@ -133,9 +123,6 @@ export class AtomicInsightRefineModal
   }
 
   public render() {
-    if (!this.refineModalCommon) {
-      return <Hidden></Hidden>;
-    }
     return (
       <Host>
         {this.interfaceDimensions && (
@@ -148,15 +135,22 @@ export class AtomicInsightRefineModal
             }`}
           </style>
         )}
-        {this.refineModalCommon.render(this.renderBody(), {
-          isOpen: this.isOpen && !this.loadingDimensions,
-          openButton: this.openButton,
-        })}
+        <RefineModalCommon
+          bindings={this.bindings}
+          host={this.host}
+          isOpen={this.isOpen}
+          onClose={() => (this.isOpen = false)}
+          querySummaryState={this.querySummaryState}
+          title={this.bindings.i18n.t('sort')}
+          openButton={this.openButton}
+        >
+          {this.renderBody()}
+        </RefineModalCommon>
       </Host>
     );
   }
 
   public componentDidLoad() {
-    this.refineModalCommon.showModal();
+    this.host.style.display = '';
   }
 }
