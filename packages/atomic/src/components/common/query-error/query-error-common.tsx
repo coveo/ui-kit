@@ -57,7 +57,7 @@ export const QueryErrorCommon: FunctionalComponent<QueryErrorCommonProps> = (
           part="more-info-btn"
           style="primary"
           class="p-3 mt-8"
-          onClick={() => (props.showMoreInfo = true)}
+          onClick={props.onShowMoreInfo}
           text={props.bindings.i18n.t('more-info')}
         ></Button>
       );
@@ -145,9 +145,9 @@ export const QueryErrorCommon: FunctionalComponent<QueryErrorCommonProps> = (
         icon={details.icon}
         class="w-1/2 mt-8 max-w-lg"
       ></atomic-icon>
-      <h3 part="title" class="text-2xl text-on-background mt-8">
+      <p part="title" class="text-2xl text-on-background mt-8">
         {details.title}
-      </h3>
+      </p>
       <p part="description" class="text-lg text-neutral-dark mt-2.5">
         {details.description}
       </p>
