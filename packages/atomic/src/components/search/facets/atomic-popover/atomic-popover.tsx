@@ -22,7 +22,6 @@ import {
 } from '@popperjs/core';
 
 /**
- * @internal
  * The `atomic-popover` component displays any facet as a popover menu.
  *
  * @slot default - The required slotted facet.
