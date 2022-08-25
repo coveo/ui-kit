@@ -5,7 +5,6 @@ import {
 
 const tabsSelector = 'atomic-insight-tabs';
 const refineModalSelector = 'atomic-insight-refine-modal';
-const pagerSelector = 'atomic-insight-pager';
 
 export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const id = element.id;
