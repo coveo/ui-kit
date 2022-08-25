@@ -467,3 +467,38 @@ export class Store {
     return store.state[facetType];
   }
 }
+
+export function AriaLiveRegion(regionName, elem, assertive = false) {
+
+  function dispatchMessage(message) {
+    // Creates the event to dispatch an event to an aria-live region
+    const registerRegionEvent = new CustomEvent('arialivemessage', {
+      bubbles: true,
+      detail: {
+        regionName,
+        assertive,
+        message
+      }
+    });
+    elem.dispatchEvent(registerRegionEvent);
+  }
+
+  function registerRegion() {
+    // Creates the event to register an aria-live region
+    const registerRegionEvent = new CustomEvent('registerregion', {
+      bubbles: true,
+        detail: {
+        regionName,
+        assertive
+      }
+    });
+    elem.dispatchEvent(registerRegionEvent);
+  }
+
+  registerRegion();
+
+  return {
+    dispatchMessage,
+    registerRegion,
+  };
+}
