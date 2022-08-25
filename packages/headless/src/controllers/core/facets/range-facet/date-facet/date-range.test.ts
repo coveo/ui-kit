@@ -1,5 +1,7 @@
-import dayjs from 'dayjs';
-import {formatDateForSearchApi} from '../../../../../api/search/date/date-format';
+import {
+  formatDateForSearchApi,
+  parseDate,
+} from '../../../../../api/search/date/date-format';
 import {
   RelativeDate,
   serializeRelativeDate,
@@ -19,8 +21,8 @@ describe('date range', () => {
       });
 
       const expectedValues: DateRangeRequest = {
-        start: formatDateForSearchApi(dayjs(start)),
-        end: formatDateForSearchApi(dayjs(end)),
+        start: formatDateForSearchApi(parseDate(start)),
+        end: formatDateForSearchApi(parseDate(end)),
         endInclusive: false,
         state: 'idle',
       };

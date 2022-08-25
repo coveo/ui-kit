@@ -4,6 +4,8 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {I18nUtils} from 'c/quanticUtils';
+import showNResultsPerPage from '@salesforce/label/c.quantic_ShowNResultsPerPage';
 
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -55,6 +57,10 @@ export default class QuanticResultsPerPage extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+
+  labels = {
+    showNResultsPerPage,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -117,6 +123,7 @@ export default class QuanticResultsPerPage extends LightningElement {
     return this.choices.map((choice) => ({
       value: choice,
       selected: choice === this.currentResultsPerPageValue,
+      ariaLabelValue: I18nUtils.format(this.labels.showNResultsPerPage, choice),
     }));
   }
 

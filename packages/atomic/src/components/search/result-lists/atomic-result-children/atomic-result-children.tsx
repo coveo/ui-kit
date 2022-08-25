@@ -23,7 +23,7 @@ import {
   FoldedResultListStateContext,
 } from '../result-list-decorators';
 import {ResultDisplayImageSize} from '../../../common/layout/display-options';
-import {ListDisplayResultsPlaceholder} from '../list-display-results-placeholder';
+import {ListDisplayResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
