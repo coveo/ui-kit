@@ -51,28 +51,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     }
     `;
 
-  const pagination = `
-    ${sectionSelector('pagination')} {
-      background: var(--atomic-neutral-light);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: stretch;
-    }
-    ${
-      widget
-        ? `
-        ${sectionSelector('pagination')} ${pagerSelector} {
-          width: 100%;
-        }
-        ${sectionSelector('pagination')} ${pagerSelector}::part(buttons) {
-          justify-content: space-between;
-        }
-    `
-        : ''
-    }
-    `;
-  return [interfaceStyle, search, results, pagination]
+  return [interfaceStyle, search, results]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
 }

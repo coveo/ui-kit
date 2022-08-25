@@ -24,9 +24,10 @@
       main();
     </script>
     <style>
+      atomic-insight-interface:not([widget='false']),
       atomic-insight-layout:not([widget='false']) {
-        width: 400px;
-        height: 720px;
+        width: 500px;
+        height: 1000px;
         margin-left: auto;
         margin-right: auto;
         box-shadow: 0px 3px 24px 0px #0000001a;
@@ -228,12 +229,14 @@
       updateWrapper(widgetView);
 
       async function updateWrapper(widgetView) {
-        await customElements.whenDefined('atomic-insight-layout');
-        const insightInterface = document.querySelector('atomic-insight-layout');
+        const interface = 'atomic-insight-interface';
+        const layout = 'atomic-insight-layout';
+        await Promise.all([customElements.whenDefined(interface), customElements.whenDefined(layout)]);
+        const insightElements = [document.querySelector(interface), document.querySelector(layout)];
         if (widgetView) {
-          insightInterface.setAttribute('widget', true);
+          insightElements.forEach((el) => el.setAttribute('widget', true));
         } else {
-          insightInterface.setAttribute('widget', false);
+          insightElements.forEach((el) => el.setAttribute('widget', false));
         }
       }
     </script>
