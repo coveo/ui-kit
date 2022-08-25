@@ -221,6 +221,13 @@ export default class QuanticFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+    
+    const facetRenderingEvent = new CustomEvent('facetRendering', {
+      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.hasValues},
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(facetRenderingEvent);
   }
 
   get values() {

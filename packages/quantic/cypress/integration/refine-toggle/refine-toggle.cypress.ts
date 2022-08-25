@@ -3,11 +3,19 @@ import {configure} from '../../page-objects/configurator';
 import {RefineToggleExpectations as Expect} from './refine-toggle-expectations';
 import {RefineToggleActions as Actions} from './refine-toggle-actions';
 import {scope} from '../../reporters/detailed-collector';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {
+  InterceptAliases,
+  interceptSearch,
+  mockSearchNoResults,
+  mockSearchWithoutAnyFacetValues,
+  mockSearchWithResults,
+} from '../../page-objects/search';
 
 interface RefineToggleOptions {
   fullScreen: boolean;
   hideSort: boolean;
+  withoutFacets: boolean;
+  facetWithoutInputs: boolean;
 }
 
 const viewResultsLabel = (value: number) => {
@@ -20,8 +28,21 @@ const customRefineToggleLabel = 'Custom Label';
 describe('quantic-refine-toggle', () => {
   const pageUrl = 's/quantic-refine-toggle';
 
-  function visitPage(options: Partial<RefineToggleOptions> = {}) {
+  function visitPage(
+    options: Partial<RefineToggleOptions> = {},
+    returnResults = true,
+    returnFacetValues = true
+  ) {
     interceptSearch();
+    if (returnResults) {
+      if (returnFacetValues) {
+        mockSearchWithResults();
+      } else {
+        mockSearchWithoutAnyFacetValues();
+      }
+    } else {
+      mockSearchNoResults();
+    }
     cy.visit(pageUrl);
     configure(options);
   }
@@ -36,6 +57,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayModal(false);
         Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
+        Expect.refineToggleDisabled(false);
       });
 
       scope('when opening the refine modal', () => {
@@ -67,6 +89,40 @@ describe('quantic-refine-toggle', () => {
         Expect.displayModal(false);
       });
     });
+
+    describe('when no facet is registered', () => {
+      it('should enable the refine toggle component', () => {
+        visitPage({withoutFacets: false});
+
+        scope('when loading the page', () => {
+          Expect.displayRefineToggle(true);
+          Expect.displayRefineToggleIcon(true);
+          Expect.displayModal(false);
+          Expect.refineToggleContains(customRefineToggleLabel);
+          Expect.displayFiltersCountBadge(false);
+          cy.wait(InterceptAliases.Search).then(() => {
+            Expect.refineToggleDisabled(false);
+          });
+        });
+      });
+    });
+  });
+
+  describe('when there is no results', () => {
+    it('should disable the refine toggle component', () => {
+      visitPage({}, false);
+
+      scope('when loading the page', () => {
+        Expect.displayRefineToggle(true);
+        Expect.displayRefineToggleIcon(true);
+        Expect.displayModal(false);
+        Expect.refineToggleContains(customRefineToggleLabel);
+        Expect.displayFiltersCountBadge(false);
+        cy.wait(InterceptAliases.Search).then(() => {
+          Expect.refineToggleDisabled(true);
+        });
+      });
+    });
   });
 
   describe('when the fullScreen property is set to true', () => {
@@ -81,6 +137,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayModal(false);
         Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
+        Expect.refineToggleDisabled(false);
       });
 
       scope('when opening the refine modal', () => {
@@ -114,6 +171,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayModal(false);
         Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
+        Expect.refineToggleDisabled(false);
       });
 
       scope('when opening the refine modal', () => {
@@ -133,6 +191,58 @@ describe('quantic-refine-toggle', () => {
         });
       });
     });
+
+    describe('when no facet is registered', () => {
+      it('should disable the refine toggle button', () => {
+        visitPage({withoutFacets: true, hideSort: true});
+
+        scope('when loading the page', () => {
+          Expect.displayRefineToggle(true);
+          Expect.displayRefineToggleIcon(true);
+          Expect.displayModal(false);
+          Expect.refineToggleContains(customRefineToggleLabel);
+          Expect.displayFiltersCountBadge(false);
+          cy.wait(InterceptAliases.Search).then(() => {
+            Expect.refineToggleDisabled(true);
+          });
+        });
+      });
+    });
+
+    describe('when the search query does not return any facet values', () => {
+      describe('when using facet with inputs', () => {
+        it('should enable the refine toggle button', () => {
+          visitPage({hideSort: true}, true, false);
+
+          scope('when loading the page', () => {
+            Expect.displayRefineToggle(true);
+            Expect.displayRefineToggleIcon(true);
+            Expect.displayModal(false);
+            Expect.refineToggleContains(customRefineToggleLabel);
+            Expect.displayFiltersCountBadge(false);
+            cy.wait(InterceptAliases.Search).then(() => {
+              Expect.refineToggleDisabled(false);
+            });
+          });
+        });
+      });
+
+      describe('when using facet without inputs', () => {
+        it('should disable the refine toggle button whe the sort is hidden', () => {
+          visitPage({facetWithoutInputs: true, hideSort: true}, true, false);
+          scope('when loading the page', () => {
+            Expect.displayRefineToggle(true);
+            Expect.displayRefineToggleIcon(true);
+            Expect.displayModal(false);
+            Expect.refineToggleContains(customRefineToggleLabel);
+            Expect.displayFiltersCountBadge(false);
+            cy.wait(InterceptAliases.Search).then(() => {
+              Expect.refineToggleDisabled(true);
+            });
+          });
+        });
+      });
+    });
   });
 
   const facetTypes = ['Category', 'Timeframe', 'Numeric', 'Default'];
@@ -148,6 +258,7 @@ describe('quantic-refine-toggle', () => {
           Expect.displayModal(false);
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
+          Expect.refineToggleDisabled(false);
         });
 
         scope('when opening the refine modal', () => {
@@ -198,6 +309,7 @@ describe('quantic-refine-toggle', () => {
         Expect.displayModal(false);
         Expect.refineToggleContains(customRefineToggleLabel);
         Expect.displayFiltersCountBadge(false);
+        Expect.refineToggleDisabled(false);
       });
 
       scope('when opening the refine modal', () => {

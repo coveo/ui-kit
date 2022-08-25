@@ -22,6 +22,20 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
         'Indicates whether the refine modal should be opened in full screen.',
       defaultValue: false,
     },
+    {
+      attribute: 'withoutFacets',
+      label: 'Without Facets',
+      description:
+        'Indicates whether the facets should be added to the search interface.',
+      defaultValue: false,
+    },
+    {
+      attribute: 'facetWithoutInputs',
+      label: 'Facets Without Inputs',
+      description:
+        'Indicates whether the facets with inputs should be used.',
+      defaultValue: false,
+    },
   ];
 
   formattingFunction = (item) => `${item.start} - ${item.end}`;
