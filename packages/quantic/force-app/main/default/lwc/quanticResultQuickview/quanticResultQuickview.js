@@ -83,6 +83,8 @@ export default class QuanticResultQuickview extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  previewRendered;
 
   labels = {
     close,
@@ -104,10 +106,10 @@ export default class QuanticResultQuickview extends LightningElement {
     if (this.contentContainer && this.state?.resultHasPreview) {
       // eslint-disable-next-line @lwc/lwc/no-inner-html
       this.contentContainer.innerHTML = this.state.content;
-      // eslint-disable-next-line @lwc/lwc/no-async-operation
-      this.template
-        .querySelector('c-quantic-result-link')
-        .shadowRoot.firstChild.focus();
+      if (!this.previewRendered) {
+        this.previewRendered = true;
+        this.getHTMLHeader()?.focus();
+      }
     }
     this.injectIdToSlots();
   }
@@ -154,6 +156,7 @@ export default class QuanticResultQuickview extends LightningElement {
 
   closeQuickview() {
     this.isQuickviewOpen = false;
+    this.previewRendered = false;
   }
 
   stopPropagation(evt) {
@@ -184,6 +187,19 @@ export default class QuanticResultQuickview extends LightningElement {
         slotContent.dataset.id = this.result.uniqueId;
       }
     });
+  }
+
+  getHTMLHeader() {
+    return this.template.querySelector('c-quantic-result-link').shadowRoot
+      .firstChild;
+  }
+
+  getCloseButton() {
+    return this.template.querySelector(`.slds-button.slds-button_icon`);
+  }
+
+  lastElementOnFocus() {
+    this.getCloseButton()?.focus();
   }
 
   get isLoading() {
