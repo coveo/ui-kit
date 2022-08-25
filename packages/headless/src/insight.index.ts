@@ -257,6 +257,12 @@ export type {InsightInterface} from './controllers/insight-interface/insight-int
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 
 export type {
+  QueryError,
+  QueryErrorState,
+} from './controllers/insight/query-error/headless-insight-query-error';
+export {buildQueryError} from './controllers/insight/query-error/headless-insight-query-error';
+
+export type {
   FacetValueRequest,
   FacetSortCriterion,
 } from './features/facets/facet-set/interfaces/request';

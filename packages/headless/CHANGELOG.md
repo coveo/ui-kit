@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.102.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.2...@coveo/headless@1.102.0) (2022-08-24)
+
+
+### Features
+
+* **atomic,headless:** add query error support for insight panel ([#2368](https://github.com/coveo/ui-kit/issues/2368)) ([cb808cb](https://github.com/coveo/ui-kit/commit/cb808cb6464b5f07a544192c49bde7a2f13f5abf))
+
+
+
+
+
+## [1.101.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.1...@coveo/headless@1.101.2) (2022-08-24)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fixed setRange on Firefox and Safari ([#2360](https://github.com/coveo/ui-kit/issues/2360)) ([d1c69db](https://github.com/coveo/ui-kit/commit/d1c69db216b392cb8874a49b463ea928eea58e27))
+
+
+
+
+
 ## [1.101.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.0...@coveo/headless@1.101.1) (2022-08-17)
 
 

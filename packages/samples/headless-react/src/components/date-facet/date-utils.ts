@@ -1,4 +1,4 @@
-import {buildDateRange} from '@coveo/headless';
+import {API_DATE_FORMAT, buildDateRange} from '@coveo/headless';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
@@ -35,6 +35,6 @@ export const dateRanges = [
   }),
 ];
 
-export function parseDate(date: string) {
-  return dayjs(date, 'YYYY/MM/DD@HH:mm:ss');
+export function parseDate(date: string | Date) {
+  return dayjs(date, API_DATE_FORMAT);
 }

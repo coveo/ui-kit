@@ -17,7 +17,7 @@ import {InsightResult, InsightEngine} from '..';
  */
 @Component({
   tag: 'atomic-insight-result',
-  styleUrl: '../../search/atomic-result/atomic-result.pcss',
+  styleUrl: '../../common/result-styles/result.pcss',
   shadow: true,
 })
 export class AtomicInsightResult {

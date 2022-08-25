@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.104.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.103.0...@coveo/atomic@1.104.0) (2022-08-24)
+
+
+### Features
+
+* **atomic,headless:** add query error support for insight panel ([#2368](https://github.com/coveo/ui-kit/issues/2368)) ([cb808cb](https://github.com/coveo/ui-kit/commit/cb808cb6464b5f07a544192c49bde7a2f13f5abf))
+
+
+
+
+
+# [1.103.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.102.0...@coveo/atomic@1.103.0) (2022-08-24)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fixed setRange on Firefox and Safari ([#2360](https://github.com/coveo/ui-kit/issues/2360)) ([d1c69db](https://github.com/coveo/ui-kit/commit/d1c69db216b392cb8874a49b463ea928eea58e27))
+
+
+### Features
+
+* **atomic:** release horizontal facets publicly ([#2365](https://github.com/coveo/ui-kit/issues/2365)) ([aa19cfa](https://github.com/coveo/ui-kit/commit/aa19cfad76f057750434ddced087fbe0e8d8e3a4))
+
+
+
+
+
+# [1.102.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.101.0...@coveo/atomic@1.102.0) (2022-08-23)
+
+
+### Features
+
+* **atomic:** added atomic-notifications ([#2306](https://github.com/coveo/ui-kit/issues/2306)) ([98542cf](https://github.com/coveo/ui-kit/commit/98542cf8fee22a47a6d1a75d723e724ffe1bd49c))
+* **atomic:** added query trigger to `atomic-did-you-mean` component ([#2336](https://github.com/coveo/ui-kit/issues/2336)) ([32f353c](https://github.com/coveo/ui-kit/commit/32f353cdec221ec7ad42a1bd5ddc234da796fc00))
+
+
+
+
+
+# [1.101.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.100.2...@coveo/atomic@1.101.0) (2022-08-23)
+
+
+### Features
+
+* **atomic:** add insight panel no results component ([#2362](https://github.com/coveo/ui-kit/issues/2362)) ([f6209d7](https://github.com/coveo/ui-kit/commit/f6209d7f4fb4e6ecb1c08161b44730aadc1f9072))
+
+
+
+
+
+## [1.100.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.100.1...@coveo/atomic@1.100.2) (2022-08-23)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.100.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.100.0...@coveo/atomic@1.100.1) (2022-08-22)
+
+
+### Bug Fixes
+
+* **atomic:** add loading placeholder for insight panel result list ([#2358](https://github.com/coveo/ui-kit/issues/2358)) ([401e580](https://github.com/coveo/ui-kit/commit/401e5806272f3e72817d866782ea7385ade1981a))
+* **atomic:** pass insight-timeframe-facet id ([#2359](https://github.com/coveo/ui-kit/issues/2359)) ([908fbde](https://github.com/coveo/ui-kit/commit/908fbde24e8e8c47b23057f4fd264e564d830bb6))
+
+
+
+
+
 # [1.100.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.99.2...@coveo/atomic@1.100.0) (2022-08-22)
 
 
