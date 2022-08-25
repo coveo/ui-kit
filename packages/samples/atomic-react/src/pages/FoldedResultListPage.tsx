@@ -22,8 +22,6 @@ import {
   FoldedResult,
   AtomicResultSectionChildren,
   AtomicFoldedResultList,
-  AtomicResultChildren,
-  AtomicResultChildrenTemplate,
 } from '@coveo/atomic-react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
