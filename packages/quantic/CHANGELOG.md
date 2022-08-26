@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.2...@coveo/quantic@1.40.0) (2022-08-25)
+
+
+### Features
+
+* **quantic:** added keydown listener for tab dropdown menu items ([#2324](https://github.com/coveo/ui-kit/issues/2324)) ([0f0d94c](https://github.com/coveo/ui-kit/commit/0f0d94cb7c29dc2f2d311fd583e9d4aae1d530de))
+
+
+
+
+
 ## [1.39.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.1...@coveo/quantic@1.39.2) (2022-08-24)
 
 **Note:** Version bump only for package @coveo/quantic
