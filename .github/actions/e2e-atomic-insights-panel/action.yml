@@ -1,0 +1,19 @@
+name: 'Atomic Insights Panel E2E tests'
+description: 'Runs Cypress tests for Atomic Insights Panel'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - uses: cypress-io/github-action@v4
+      name: Run Cypress
+      with:
+        working-directory: ./packages/atomic
+        config-file: cypress-insights-panel.json
+        start: npm run start:prod
+        wait-on: 'http://localhost:3333'
+        install: false
+        record: false
