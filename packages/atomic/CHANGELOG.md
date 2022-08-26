@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.104.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.104.0...@coveo/atomic@1.104.1) (2022-08-25)
+
+
+### Bug Fixes
+
+* **atomic:** fix insight-refine-toggle title and tooltip  ([#2373](https://github.com/coveo/ui-kit/issues/2373)) ([c737b51](https://github.com/coveo/ui-kit/commit/c737b51e22302e3b33abcde5ab712f41931a38ad))
+
+
+
+
+
 # [1.104.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.103.0...@coveo/atomic@1.104.0) (2022-08-24)
 
 
