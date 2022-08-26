@@ -1423,5 +1423,8 @@
   },
   "insight-history": {
     "en": "Insight action history"
+  },
+  "insight-related-cases": {
+    "en": "Insights related to this case"
   }
 }
