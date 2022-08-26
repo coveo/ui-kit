@@ -12,10 +12,10 @@ import {
 } from '../atomic-insight-interface/atomic-insight-interface';
 import {
   buildInsightFacetManager,
-  buildInsightQuerySummary,
   InsightFacetManager,
   InsightQuerySummary,
   InsightQuerySummaryState,
+  buildInsightQuerySummary,
 } from '..';
 import {
   getClonedFacetElements,
@@ -34,7 +34,6 @@ import {Hidden} from '../../common/hidden';
 export class AtomicInsightRefineModal
   implements InitializableComponent<InsightBindings>
 {
-  private refineModalCommon!: RefineModalCommon;
   @InitializeBindings() public bindings!: InsightBindings;
   @Element() public host!: HTMLElement;
 
@@ -107,16 +106,8 @@ export class AtomicInsightRefineModal
   }
 
   public initialize() {
-    this.refineModalCommon = new RefineModalCommon({
-      host: this.host,
-      bindings: this.bindings,
-      initializeQuerySummary: () =>
-        (this.querySummary = buildInsightQuerySummary(this.bindings.engine)),
-      onClose: () => {
-        this.isOpen = false;
-      },
-    });
     this.facetManager = buildInsightFacetManager(this.bindings.engine);
+    this.querySummary = buildInsightQuerySummary(this.bindings.engine);
   }
 
   private renderBody() {
@@ -132,9 +123,6 @@ export class AtomicInsightRefineModal
   }
 
   public render() {
-    if (!this.refineModalCommon) {
-      return <Hidden></Hidden>;
-    }
     return (
       <Host>
         {this.interfaceDimensions && (
@@ -147,15 +135,22 @@ export class AtomicInsightRefineModal
             }`}
           </style>
         )}
-        {this.refineModalCommon.render(this.renderBody(), {
-          isOpen: this.isOpen && !this.loadingDimensions,
-          openButton: this.openButton,
-        })}
+        <RefineModalCommon
+          bindings={this.bindings}
+          host={this.host}
+          isOpen={this.isOpen}
+          onClose={() => (this.isOpen = false)}
+          querySummaryState={this.querySummaryState}
+          title={this.bindings.i18n.t('filters')}
+          openButton={this.openButton}
+        >
+          {this.renderBody()}
+        </RefineModalCommon>
       </Host>
     );
   }
 
   public componentDidLoad() {
-    this.refineModalCommon.showModal();
+    this.host.style.display = '';
   }
 }
