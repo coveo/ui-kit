@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {Fragment, FunctionalComponent, h} from '@stencil/core';
 import {LocalizedString} from '../../../utils/jsx-utils';
 import {AnyBindings} from '../interface/bindings';
 
@@ -81,12 +81,31 @@ export const QuerySummaryCommon: FunctionalComponent<
   return (
     <div class="text-on-background" part="container">
       {props.querySummaryState.hasResults && (
-        <LocalizedString
-          key={key}
-          bindings={props.bindings}
-          params={paramsWithHighlights}
-          i18nCount={params.count}
-        />
+        <Fragment>
+          <LocalizedString
+            key={key}
+            bindings={props.bindings}
+            params={paramsWithHighlights}
+            count={params.count}
+          />
+          <span
+            part="duration"
+            class={
+              props.enableDuration && props.querySummaryState.hasDuration
+                ? ''
+                : 'hidden'
+            }
+          >
+            <LocalizedString
+              key="in-seconds"
+              bindings={props.bindings}
+              params={{
+                count:
+                  props.querySummaryState.durationInSeconds.toLocaleString(),
+              }}
+            />
+          </span>
+        </Fragment>
       )}
     </div>
   );
