@@ -5,12 +5,14 @@ export interface LocalizedStringProps {
   bindings: AnyBindings;
   key: string;
   params: Record<string, VNode | string>;
+  count?: number;
 }
 
 export const LocalizedString: FunctionalComponent<LocalizedStringProps> = ({
   bindings,
   key,
   params,
+  count,
 }) => {
   const delimitingCharacter = '\u001d'; // Unicode group separator
   const placeholderPrefixCharacter = '\u001a'; // Unicode substitute character
@@ -27,6 +29,7 @@ export const LocalizedString: FunctionalComponent<LocalizedStringProps> = ({
   );
   const localizedStringWithPlaceholders = bindings.i18n.t(key, {
     interpolation: {escapeValue: false},
+    count,
     ...placeholdersMap,
   });
 
