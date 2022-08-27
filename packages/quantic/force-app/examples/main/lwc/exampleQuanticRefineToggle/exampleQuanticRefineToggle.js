@@ -29,12 +29,11 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
   }
 
   handleAddFacets = () => {
-    console.log('"addFacets" event recieved');
     this.withoutFacets = false;
   };
 
   handleAddFacetsWithoutInputs = () => {
-    console.log('"addFacetsWithoutInputs" event recieved');
+    this.withoutFacets = false;
     this.facetWithoutInputs = true;
   };
 
