@@ -1,0 +1,52 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <c-configurator
+      slot="configuration"
+      options={options}
+      ontryitnow={handleTryItNow}
+    >
+      <c-action-add-facets
+        slot="actions"
+        disabled={notConfigured}
+        engine-id={engineId}
+      >
+      </c-action-add-facets>
+      <c-action-add-facets-without-inputs
+        slot="actions"
+        disabled={notConfigured}
+        engine-id={engineId}
+      >
+      </c-action-add-facets-without-inputs>
+    </c-configurator>
+
+    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <div class="container slds-is-relative">
+        <div>
+          <c-quantic-refine-toggle
+            engine-id={engineId}
+            full-screen={config.fullScreen}
+            hide-sort={config.hideSort}
+          >
+            <div slot="refine-title" class="refine-modal__title">
+              Custom Title
+            </div>
+            <div slot="button-content">
+              Custom Label
+              <lightning-icon
+                size="x-small"
+                icon-name="utility:filterList"
+                alternative-text={buttonLabel}
+                class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right"
+              >
+              </lightning-icon>
+            </div>
+          </c-quantic-refine-toggle>
+        </div>
+      </div>
+    </c-quantic-search-interface>
+  </c-example-layout>
+</template>

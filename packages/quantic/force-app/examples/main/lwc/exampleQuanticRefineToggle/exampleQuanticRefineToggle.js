@@ -1,9 +1,42 @@
+// @ts-nocheck
 import {api, LightningElement, track} from 'lwc';
+import templateWithoutFacets from './templateWithoutFacets.html';
+import templateWithFacetsWithoutInputs from './templateWithFacetsWithoutInputs.html';
+import templateWithFacets from './templateWithFacets.html';
 
 export default class ExampleQuanticRefineToggle extends LightningElement {
   @api engineId = 'quantic-refine-toggle';
   @track config = {};
   isConfigured = false;
+
+  withoutFacets = true;
+  facetWithoutInputs = false;
+
+  connectedCallback() {
+    this.addEventListener('addFacets', this.handleAddFacets);
+    this.addEventListener(
+      'addFacetsWithoutInputs',
+      this.handleAddFacetsWithoutInputs
+    );
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('addFacets', this.handleAddFacets);
+    this.removeEventListener(
+      'addFacetsWithoutInputs',
+      this.handleAddFacetsWithoutInputs
+    );
+  }
+
+  handleAddFacets = () => {
+    console.log('"addFacets" event recieved');
+    this.withoutFacets = false;
+  };
+
+  handleAddFacetsWithoutInputs = () => {
+    console.log('"addFacetsWithoutInputs" event recieved');
+    this.facetWithoutInputs = true;
+  };
 
   pageTitle = 'Quantic Refine Toggle';
   pageDescription =
@@ -22,20 +55,6 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
         'Indicates whether the refine modal should be opened in full screen.',
       defaultValue: false,
     },
-    {
-      attribute: 'withoutFacets',
-      label: 'Without Facets',
-      description:
-        'Indicates whether the facets should be added to the search interface.',
-      defaultValue: false,
-    },
-    {
-      attribute: 'facetWithoutInputs',
-      label: 'Facets Without Inputs',
-      description:
-        'Indicates whether the facets with inputs should be used.',
-      defaultValue: false,
-    },
   ];
 
   formattingFunction = (item) => `${item.start} - ${item.end}`;
@@ -43,5 +62,17 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
   handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
+  }
+
+  render() {
+    if (this.withoutFacets) {
+      return templateWithoutFacets;
+    } else {
+      if (this.facetWithoutInputs) {
+        return templateWithFacetsWithoutInputs;
+      } else {
+        return templateWithFacets;
+      }
+    }
   }
 }
