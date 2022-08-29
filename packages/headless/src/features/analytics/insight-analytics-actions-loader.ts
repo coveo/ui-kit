@@ -32,6 +32,7 @@ import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-a
 import {
   logInsightStaticFilterDeselect,
   LogStaticFilterToggleValueActionCreatorPayload,
+  StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions';
 import {
   logInsightInterfaceChange,
@@ -41,6 +42,18 @@ import {
   AnalyticsType,
   AsyncThunkInsightAnalyticsOptions,
 } from './analytics-utils';
+
+export type {
+  LogStaticFilterToggleValueActionCreatorPayload,
+  LogCategoryFacetBreadcrumbActionCreatorPayload,
+  LogNumericFacetBreadcrumbActionCreatorPayload,
+  LogDateFacetBreadcrumbActionCreatorPayload,
+  LogFacetBreadcrumbActionCreatorPayload,
+  LogFacetUpdateSortActionCreatorPayload,
+  LogFacetDeselectActionCreatorPayload,
+  LogFacetSelectActionCreatorPayload,
+  StaticFilterValueMetadata,
+};
 
 /**
  * The insight analytics action creators.
