@@ -10,7 +10,6 @@
   },
   "scripts": {
     "build": "npm run clean && npm run compile && npm run copy:assets",
-    "link:packages": "npm link ../atomic ../samples/atomic-react/node_modules/react/",
     "clean": "rimraf -rf dist",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "compile:cjs": "tsc -p tsconfig.cjs.json",
