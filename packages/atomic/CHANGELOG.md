@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.105.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.105.0...@coveo/atomic@1.105.1) (2022-08-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix no results message when it contains special characters ([#2381](https://github.com/coveo/ui-kit/issues/2381)) ([19bf75f](https://github.com/coveo/ui-kit/commit/19bf75f6dca1cd0dfdb03287785ee61fc1150d90))
+* **atomic:** text-align left for recent queries content ([#2382](https://github.com/coveo/ui-kit/issues/2382)) ([465278c](https://github.com/coveo/ui-kit/commit/465278c4704ad6ca18bcf46168f6b9900cceb2eb))
+
+
+
+
+
 # [1.105.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.104.1...@coveo/atomic@1.105.0) (2022-08-26)
 
 
