@@ -3,10 +3,8 @@ import {api, LightningElement} from 'lwc';
 export default class ActionAddFacets extends LightningElement {
   @api engineId;
   @api disabled;
-  @api withInput = false;
 
   searchBox;
-  input;
 
   handlePerformSearch() {
     const addFacetsEvent = new CustomEvent('addFacets', {
@@ -15,9 +13,6 @@ export default class ActionAddFacets extends LightningElement {
     });
     this.dispatchEvent(addFacetsEvent);
 
-    if (!this.input && this.withInput) {
-      this.input = this.template.querySelector('lightning-input');
-    }
     if (this.searchBox) {
       this.triggerSearch(this.searchBox);
     } else {
@@ -29,7 +24,7 @@ export default class ActionAddFacets extends LightningElement {
   }
 
   triggerSearch(controller) {
-    const query = this.input ? this.input.value : '';
+    const query = '';
     controller.updateText(query);
     controller.submit();
   }

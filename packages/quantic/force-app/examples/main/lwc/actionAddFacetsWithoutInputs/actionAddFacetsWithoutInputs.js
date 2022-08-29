@@ -3,10 +3,8 @@ import {api, LightningElement} from 'lwc';
 export default class ActionAddFacetsWithoutInputs extends LightningElement {
   @api engineId;
   @api disabled;
-  @api withInput = false;
 
   searchBox;
-  input;
 
   handlePerformSearch() {
     const event = new CustomEvent('addFacetsWithoutInputs', {
@@ -14,9 +12,6 @@ export default class ActionAddFacetsWithoutInputs extends LightningElement {
       composed: true,
     });
     this.dispatchEvent(event);
-    if (!this.input && this.withInput) {
-      this.input = this.template.querySelector('lightning-input');
-    }
     if (this.searchBox) {
       this.triggerSearch(this.searchBox);
     } else {
@@ -28,7 +23,7 @@ export default class ActionAddFacetsWithoutInputs extends LightningElement {
   }
 
   triggerSearch(controller) {
-    const query = this.input ? this.input.value : '';
+    const query = '';
     controller.updateText(query);
     controller.submit();
   }
