@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "^1.69.0",
-    "@coveo/atomic-react": "^1.12.5",
+    "@coveo/atomic": "^1.104.1",
+    "@coveo/atomic-react": "^1.23.2",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0"
@@ -14,7 +14,7 @@
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
     "ncp": "2.0.0",
-    "typescript": "4.7.4"
+    "typescript": "4.6.4"
   },
   "scripts": {
     "build": "tsc --noEmit && tsc --module commonjs --noEmit",

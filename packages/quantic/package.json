@@ -37,7 +37,7 @@
     "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
-    "@coveo/headless": "1.102.0",
+    "@coveo/headless": "^1.102.0",
     "fs-extra": "10.1.0"
   },
   "engines": {
