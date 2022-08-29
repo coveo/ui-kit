@@ -1,36 +1,5 @@
 import {VNode, h} from '@stencil/core';
-import {
-  SearchStatus,
-  SearchStatusState,
-  Facet,
-  NumericFacet,
-  CategoryFacet,
-  DateFacet,
-  FacetState,
-  NumericFacetState,
-  CategoryFacetState,
-  DateFacetState,
-  FacetSortCriterion,
-  CategoryFacetSortCriterion,
-  RangeFacetSortCriterion,
-  FacetValue,
-  AnyFacetValuesCondition,
-  AnyFacetValueRequest,
-  CategoryFacetValueRequest,
-  FacetValueRequest,
-  FacetConditionsManager,
-  FacetSearchState,
-} from '@coveo/headless';
-import {
-  InsightCategoryFacetValueRequest,
-  InsightFacet,
-  InsightFacetConditionsManager,
-  InsightFacetSearchState,
-  InsightFacetSortCriterion,
-  InsightFacetValue,
-  InsightFacetValueRequest,
-  InsightSearchStatusState,
-} from '../../insight';
+import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
 import {i18n} from 'i18next';
 import {Schema, StringValue} from '@coveo/bueno';
 import {
@@ -54,27 +23,31 @@ import {FacetSearchMatches} from './facet-search/facet-search-matches';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {Hidden} from '../hidden';
 import {FacetContainer} from './facet-container/facet-container';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
+import {
+  CategoryFacet,
+  CategoryFacetSortCriterion,
+  CategoryFacetState,
+  CategoryFacetValueRequest,
+  DateFacet,
+  DateFacetState,
+  Facet,
+  FacetConditionsManager,
+  FacetSearchState,
+  FacetSortCriterion,
+  FacetState,
+  FacetValue,
+  FacetValueRequest,
+  NumericFacet,
+  NumericFacetState,
+  RangeFacetSortCriterion,
+  SearchStatus,
+  SearchStatusState,
+} from '../types';
+import {AnyBindings} from '../interface/bindings';
+import {FacetInfo} from './facet-common-store';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
-
-export interface FacetInfo {
-  label: string;
-}
-
-export type FacetType =
-  | 'facets'
-  | 'numericFacets'
-  | 'dateFacets'
-  | 'categoryFacets';
-
-export interface FacetValueFormat<ValueType> {
-  format(facetValue: ValueType): string;
-  content?(facetValue: ValueType): VNode;
-}
-
-export type FacetStore<F extends FacetInfo> = Record<string, F>;
 
 export type PropsOnAllFacets = {
   facetId?: string;
@@ -173,13 +146,13 @@ export interface FacetValueProps {
 
 function isCategoryFacetValueRequest(
   value: AnyFacetValueRequest
-): value is CategoryFacetValueRequest | InsightCategoryFacetValueRequest {
+): value is CategoryFacetValueRequest {
   return 'children' in value && Array.isArray(value.children);
 }
 
 function isFacetValueRequest(
   value: AnyFacetValueRequest
-): value is FacetValueRequest | InsightFacetValueRequest {
+): value is FacetValueRequest {
   return (
     'value' in value &&
     typeof value.value === 'string' &&
@@ -245,11 +218,8 @@ export function validateDependsOn(dependsOn: Record<string, string>) {
 export function shouldDisplayInputForFacetRange(facetRange: {
   hasInput: boolean;
   hasInputRange: boolean;
-  searchStatusState: SearchStatusState | InsightSearchStatusState;
-  facetValues: Pick<
-    FacetValue | InsightFacetValue,
-    'numberOfResults' | 'state'
-  >[];
+  searchStatusState: SearchStatusState;
+  facetValues: Pick<FacetValue, 'numberOfResults' | 'state'>[];
 }) {
   const {hasInput, hasInputRange, searchStatusState, facetValues} = facetRange;
   if (!hasInput) {
@@ -278,16 +248,16 @@ export function shouldDisplayInputForFacetRange(facetRange: {
 
 interface FacetCommonOptions {
   host: HTMLElement;
-  bindings: Bindings | InsightBindings;
+  bindings: AnyBindings;
   label: string;
   field: string;
   headingLevel: number;
   displayValuesAs: FacetDisplayValues;
   dependsOn: Record<string, string>;
-  dependenciesManager: FacetConditionsManager | InsightFacetConditionsManager;
-  facet: Facet | InsightFacet;
+  dependenciesManager: FacetConditionsManager;
+  facet: Facet;
   facetId: string;
-  sortCriteria: FacetSortCriterion | InsightFacetSortCriterion;
+  sortCriteria: FacetSortCriterion;
   withSearch: boolean;
 }
 
@@ -304,18 +274,16 @@ interface FacetCommonRenderProps {
 
 export class FacetCommon {
   private host: HTMLElement;
-  private bindings: Bindings | InsightBindings;
+  private bindings: AnyBindings;
   private label: string;
   private field: string;
   private headingLevel: number;
   private displayValuesAs: FacetDisplayValues;
   private dependsOn: Record<string, string>;
-  public dependenciesManager:
-    | FacetConditionsManager
-    | InsightFacetConditionsManager;
-  private facet: Facet | InsightFacet;
+  public dependenciesManager: FacetConditionsManager;
+  private facet: Facet;
   private facetId: string;
-  private sortCriteria: FacetSortCriterion | InsightFacetSortCriterion;
+  private sortCriteria: FacetSortCriterion;
   private withSearch: boolean;
 
   private resultIndexToFocusOnShowMore = 0;
@@ -336,10 +304,16 @@ export class FacetCommon {
 
     this.validateProps();
 
-    this.bindings.store.registerFacet('facets', {
+    const facetInfo: FacetInfo = {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+    };
+    this.bindings.store.registerFacet('facets', facetInfo);
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => !!this.facet.state.values.length,
+      numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
   }
 
@@ -362,8 +336,8 @@ export class FacetCommon {
   }
 
   public componentShouldUpdate(
-    next: FacetSearchState | InsightFacetSearchState,
-    prev: FacetSearchState | InsightFacetSearchState,
+    next: FacetSearchState,
+    prev: FacetSearchState,
     propName: string
   ) {
     if (propName === 'facetState' && prev && this.withSearch) {
@@ -386,16 +360,18 @@ export class FacetCommon {
           headerFocus.focusAfterSearch();
           this.facet.deselectAll();
         }}
-        numberOfSelectedValues={
-          this.facet.state.values.filter(({state}) => state === 'selected')
-            .length
-        }
+        numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={isCollapsed}
         headingLevel={this.headingLevel}
         onToggleCollapse={onToggleCollapse}
         headerRef={headerFocus.setTarget}
       ></FacetHeader>
     );
+  }
+
+  private get numberOfSelectedValues() {
+    return this.facet.state.values.filter(({state}) => state === 'selected')
+      .length;
   }
 
   private renderSearchInput() {
@@ -505,7 +481,7 @@ export class FacetCommon {
   }
 
   private renderValue(
-    facetValue: InsightFacetValue,
+    facetValue: FacetValue,
     onClick: () => void,
     isShowLessFocusTarget: boolean,
     isShowMoreFocusTarget: boolean,

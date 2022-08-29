@@ -277,6 +277,12 @@ export type {NumericFacetValue} from './features/facets/range-facets/numeric-fac
 export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 
 export type {
+  QueryError,
+  QueryErrorState,
+} from './controllers/insight/query-error/headless-insight-query-error';
+export {buildQueryError} from './controllers/insight/query-error/headless-insight-query-error';
+
+export type {
   FacetValueRequest,
   FacetSortCriterion,
 } from './features/facets/facet-set/interfaces/request';

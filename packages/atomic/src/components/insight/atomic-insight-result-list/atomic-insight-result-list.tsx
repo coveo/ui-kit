@@ -20,6 +20,12 @@ import {
   buildInsightResultList,
 } from '..';
 import {randomID} from '../../../utils/utils';
+import {ListDisplayResultsPlaceholder} from '../../common/atomic-result-placeholder/placeholders';
+import {
+  buildResultsPerPage,
+  ResultsPerPage,
+  ResultsPerPageState,
+} from '@coveo/headless/insight';
 
 export type TemplateContent = DocumentFragment;
 
@@ -28,37 +34,24 @@ interface TemplateElement extends HTMLElement {
 }
 
 /**
- * The `atomic-insight-result-list` component is responsible for displaying query results by applying one or more insight result templates.
- *
- * @part result-list - The element containing every result of a result list
- * @part outline - The element displaying an outline or a divider around a result
- * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
- * @part result-list-grid-clickable - The clickable link encompassing the result when results are displayed as a grid
- * @part result-table - The element of the result table containing a heading and a body
- * @part result-table-heading - The element containing the row of cells in the result table's heading
- * @part result-table-heading-row - The element containing cells of the result table's heading
- * @part result-table-heading-cell - The element representing a cell of the result table's heading
- * @part result-table-body - The element containing the rows of the result table's body
- * @part result-table-row - The element containing the cells of a row in the result table's body
- * @part result-table-row-odd - The element containing the cells of an odd row in the result table's body
- * @part result-table-row-even - The element containing the cells of an even row in the result table's body
- * @part result-table-cell - The element representing a cell of the result table's body
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-result-list',
-  // TODO:
   styleUrl: 'atomic-insight-result-list.pcss',
   shadow: true,
 })
 export class AtomicInsightResultList {
   @InitializeBindings() public bindings!: InsightBindings;
   public resultList!: InsightResultList;
+  public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: InsightResultTemplatesManager<TemplateContent>;
   @State() public ready = false;
   @Element() public host!: HTMLDivElement;
-  // TODO:
-  // public resultsPerPage!: ResultsPerPage;
-  // public listWrapperRef?: HTMLDivElement;
+
+  @BindStateToController('resultsPerPage')
+  @State()
+  public resultPerPageState!: ResultsPerPageState;
 
   @State() public templateHasError = false;
 
@@ -66,15 +59,7 @@ export class AtomicInsightResultList {
   @State()
   public resultListState!: InsightResultListState;
 
-  // TODO:
-  // @BindStateToController('resultsPerPage')
-  // @State()
-  // public resultsPerPageState!: ResultsPerPageState;
-
   @State() public error!: Error;
-
-  // TODO:
-  // @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   private loadingFlag = randomID('firstInsightResultLoaded-');
 
@@ -87,14 +72,6 @@ export class AtomicInsightResultList {
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
 
-  // TODO:
-  // /**
-  //  * @internal
-  //  */
-  // @Method() public async focusOnNextNewResult() {
-  //   this.resultListCommon.focusOnNextNewResult(this.resultListState);
-  // }
-
   public async initialize() {
     this.resultList = buildInsightResultList(this.bindings.engine, {
       options: {
@@ -103,8 +80,8 @@ export class AtomicInsightResultList {
     });
     this.registerResultTemplates();
     this.bindings.store.setLoadingFlag(this.loadingFlag);
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     // TODO:
-    // this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     // this.bindings.store.registerResultList(this);
   }
 
@@ -176,20 +153,22 @@ export class AtomicInsightResultList {
     if (!this.ready) {
       return null;
     }
+    if (this.resultListState.hasError) {
+      return null;
+    }
     return (
       <Host>
         {this.templateHasError && <slot></slot>}
         <div class={`list-wrapper ${this.getClasses()}`}>
           <div class={`list-root  ${this.getClasses()}`} part="result-list">
-            {/* TODO: when results per page state is ready in headless*/}
-            {/* {this.bindings.store.isAppLoaded() && (
+            {!this.bindings.store.isAppLoaded() && (
               <ListDisplayResultsPlaceholder
+                resultsPerPageState={this.resultPerPageState}
                 display="list"
                 density={this.density}
                 imageSize={this.imageSize}
-                // resultsPerPageState={this.resultsPerPageState}
               />
-            )} */}
+            )}
             {this.resultListState.firstSearchExecuted &&
               this.resultListState.results.map((result) => (
                 <atomic-insight-result
@@ -203,16 +182,6 @@ export class AtomicInsightResultList {
                   content={this.getContentOfResultTemplate(result)}
                   classes={this.getClasses()}
                   loadingFlag={this.loadingFlag}
-                  // TODO:
-                  // indexOfResultToFocus={this.indexOfResultToFocus}
-                  // newResultRef={(element) =>
-                  //   this.onFirstNewResultRendered(element)
-                  // }
-                  // ref={(element) =>
-                  //   element &&
-                  //   props.indexOfResultToFocus === index &&
-                  //   props.newResultRef?.(element)
-                  // }
                 />
               ))}
           </div>

@@ -1,42 +1,30 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {debounce} from 'ts-debounce';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
 import {
   InsightBindings,
   InsightInterfaceDimensions,
 } from '../atomic-insight-interface/atomic-insight-interface';
 import {
   buildInsightFacetManager,
-  buildInsightQuerySummary,
   InsightFacetManager,
   InsightQuerySummary,
   InsightQuerySummaryState,
+  buildInsightQuerySummary,
 } from '..';
-import {BaseFacetElement} from '../../common/facets/facet-common';
+import {
+  getClonedFacetElements,
+  RefineModalCommon,
+} from '../../common/refine-modal/refine-modal-common';
+import {Hidden} from '../../common/hidden';
 
 /**
- * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
- *
- * When the modal is opened, the class `atomic-modal-opened` is added to the body, allowing further customization.
- *
- * @part container - The modal's outermost container.
- * @part header-wrapper - The wrapper around the header.
- * @part header - The header of the modal, containing the title.
- * @part section-title - The title for each section.
- * @part close-button - The button in the header that closes the modal.
- * @part header-ruler - The horizontal ruler underneath the header.
- * @part body-wrapper - The wrapper around the body.
- * @part body - The body of the modal, between the header and the footer.
- * @part select - The `<select>` element of the drop-down list.
- * @part select-icon - The select dropdown's sort icon.
- * @part filter-clear-all - The button that resets all actively selected facet values.
+ * @internal
  */
 @Component({
   tag: 'atomic-insight-refine-modal',
@@ -51,7 +39,7 @@ export class AtomicInsightRefineModal
 
   @BindStateToController('querySummary')
   @State()
-  private querySummaryState!: InsightQuerySummaryState;
+  public querySummaryState!: InsightQuerySummaryState;
 
   @State()
   public error!: Error;
@@ -73,6 +61,14 @@ export class AtomicInsightRefineModal
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
     if (isOpen) {
+      if (!this.host.querySelector('div[slot="facets"]')) {
+        this.host.append(
+          getClonedFacetElements(
+            this.bindings.store.getFacetElements(),
+            this.facetManager
+          )
+        );
+      }
       this.debouncedUpdateDimensions();
       if (window.ResizeObserver) {
         if (!this.resizeObserver) {
@@ -114,56 +110,15 @@ export class AtomicInsightRefineModal
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
   }
 
-  private renderHeader() {
-    return (
-      <div slot="header" class="contents">
-        <h1 class="truncate">{this.bindings.i18n.t('filters')}</h1>
-        <Button
-          style="text-transparent"
-          class="grid place-items-center"
-          part="close-button"
-          onClick={() => (this.isOpen = false)}
-          ariaLabel={this.bindings.i18n.t('close')}
-        >
-          <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
-        </Button>
-      </div>
-    );
-  }
-
   private renderBody() {
     if (!this.bindings.store.getFacetElements().length) {
-      return;
+      return <Hidden></Hidden>;
     }
 
-    return [
+    return (
       <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
         <slot name="facets"></slot>
-      </aside>,
-    ];
-  }
-
-  private renderFooter() {
-    return (
-      <div slot="footer">
-        <Button
-          style="primary"
-          part="footer-button"
-          class="w-full p-3 flex text-lg justify-center"
-          onClick={() => (this.isOpen = false)}
-        >
-          <span class="truncate mr-1">
-            {this.bindings.i18n.t('view-results')}
-          </span>
-          <span>
-            {this.bindings.i18n.t('between-parentheses', {
-              text: this.querySummaryState.total.toLocaleString(
-                this.bindings.i18n.language
-              ),
-            })}
-          </span>
-        </Button>
-      </div>
+      </aside>
     );
   }
 
@@ -180,43 +135,22 @@ export class AtomicInsightRefineModal
             }`}
           </style>
         )}
-        <atomic-modal
-          fullscreen
-          isOpen={this.isOpen && !this.loadingDimensions}
-          source={this.openButton}
-          container={this.host}
-          close={() => (this.isOpen = false)}
-          exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
+        <RefineModalCommon
+          bindings={this.bindings}
+          host={this.host}
+          isOpen={this.isOpen}
+          onClose={() => (this.isOpen = false)}
+          querySummaryState={this.querySummaryState}
+          title={this.bindings.i18n.t('filters')}
+          openButton={this.openButton}
         >
-          {this.renderHeader()}
           {this.renderBody()}
-          {this.renderFooter()}
-        </atomic-modal>
+        </RefineModalCommon>
       </Host>
     );
   }
 
   public componentDidLoad() {
     this.host.style.display = '';
-    const divSlot = document.createElement('div');
-    divSlot.setAttribute('slot', 'facets');
-    divSlot.style.display = 'flex';
-    divSlot.style.flexDirection = 'column';
-    divSlot.style.gap = 'var(--atomic-refine-modal-facet-margin, 20px)';
-
-    const facetElementsPayload = this.bindings.store
-      .getFacetElements()
-      .map((f) => ({facetId: f.getAttribute('facet-id')!, payload: f}));
-    const sortedFacetsElements = this.facetManager
-      .sort(facetElementsPayload)
-      .map((f) => f.payload);
-
-    sortedFacetsElements.forEach((facetElement) => {
-      const clone = facetElement.cloneNode(true) as BaseFacetElement;
-      clone.isCollapsed = true;
-      divSlot.append(clone);
-    });
-
-    this.host.append(divSlot);
   }
 }

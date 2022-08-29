@@ -612,6 +612,14 @@
     "zh-CN": "没有找到与 {{query}} 相关的结果",
     "zh-TW": "沒有找到與 {{query}} 相關的結果"
   },
+  "showing-results-for": {
+    "en": "Showing results for {{query}}",
+    "fr": "Résultats affichés pour {{query}}"
+  },
+  "search-instead-for": {
+    "en": "Search instead for {{query}}",
+    "fr": "Rechercher à la place {{query}}"
+  },
   "search-tips": {
     "en": "You may want to try using different keywords, deselecting filters, or checking for spelling mistakes.",
     "fr": "Essayez différents mots-clés, déselectionnez des filtres ou vérifiez l'orthographe de vos mots-clés."
@@ -1129,6 +1137,10 @@
     "en": "No",
     "fr": "Non"
   },
+  "popover": {
+    "en": "Popover menu for the {{label}} facet",
+    "fr": "Menu contextuel de la facette {{label}}"
+  },
   "number-input-minimum": {
     "en": "Enter a minimum numerical value for the {{label}} facet",
     "fr": "Entrez une valeur numérique minimale pour la facette {{label}}"
@@ -1350,6 +1362,10 @@
     "zh": "（{{text}}）",
     "zh-TW": "（{{text}}）"
   },
+  "notifications": {
+    "en": "Notifications",
+    "fr": "Notifications"
+  },
   "smart-snippet": {
     "en": "Potential answer to your question",
     "fr": "Réponse potentielle à votre question"
@@ -1407,5 +1423,8 @@
   },
   "insight-history": {
     "en": "Insight action history"
+  },
+  "insight-related-cases": {
+    "en": "Insights related to this case"
   }
 }

@@ -22,7 +22,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
   let inputRef: HTMLInputElement | undefined;
 
   return (
-    <div class="px-2 mt-3">
+    <div class="px-2 mt-3" part="search-wrapper">
       <div class="relative h-10">
         <input
           part="search-input"

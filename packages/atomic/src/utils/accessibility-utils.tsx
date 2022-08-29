@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {AnyBindings} from '../components/common/interface/bindings';
 import {InsightBindings} from '../components/insight/atomic-insight-interface/atomic-insight-interface';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
@@ -11,22 +12,37 @@ export interface FindAriaLiveEventArgs {
 }
 
 export function AriaLiveRegion(regionName: string, assertive = false) {
-  function dispatchMessage(message: string) {
+  function getAriaLiveElement() {
     const event = buildCustomEvent<FindAriaLiveEventArgs>(
       findAriaLiveEventName,
       {}
     );
     document.dispatchEvent(event);
     const {element} = event.detail;
-    if (element) {
-      element.updateMessage(regionName, message, assertive);
-    }
+    return element;
   }
 
-  return (component: InitializableComponent, setterName: string) => {
+  function dispatchMessage(message: string) {
+    getAriaLiveElement()?.updateMessage(regionName, message, assertive);
+  }
+
+  function registerRegion() {
+    getAriaLiveElement()?.registerRegion(regionName, assertive);
+  }
+
+  return (
+    component: InitializableComponent<AnyBindings>,
+    setterName: string
+  ) => {
+    const {componentWillRender} = component;
     Object.defineProperty(component, setterName, {
       set: (message: string) => dispatchMessage(message),
     });
+
+    component.componentWillRender = function () {
+      componentWillRender && componentWillRender.call(this);
+      registerRegion();
+    };
   };
 }
 

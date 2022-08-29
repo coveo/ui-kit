@@ -5,8 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, DateFilter, DateFilterState, FacetSortCriterion, FoldedResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
+import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/search/result-lists/result-list-common";
@@ -16,14 +17,17 @@ import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
-import { Section } from "./components/search/atomic-layout-section/sections";
+import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+import { Section } from "./components/common/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
+import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
     interface AtomicAriaLive {
+        "registerRegion": (region: string, assertive: boolean) => Promise<void>;
         "updateMessage": (region: string, message: string, assertive: boolean) => Promise<void>;
     }
     interface AtomicBreadbox {
@@ -235,12 +239,18 @@ export namespace Components {
          */
         "ifNotDefined"?: string;
     }
+    interface AtomicFocusDetector {
+    }
     interface AtomicFocusTrap {
         "active": boolean;
         /**
           * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
          */
         "container"?: HTMLElement;
+        /**
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+         */
+        "shouldHideSelf": boolean;
         /**
           * The source to focus when the focus trap becomes inactive.
          */
@@ -443,10 +453,14 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+    }
+    interface AtomicInsightLayout {
         /**
           * Whether the interface should be shown in widget format.
          */
         "widget": boolean;
+    }
+    interface AtomicInsightNoResults {
     }
     interface AtomicInsightNumericFacet {
         /**
@@ -502,6 +516,16 @@ export namespace Components {
          */
         "withInput"?: NumberInputType;
     }
+    interface AtomicInsightPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+    }
+    interface AtomicInsightQueryError {
+    }
+    interface AtomicInsightQuerySummary {
+    }
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
@@ -541,7 +565,7 @@ export namespace Components {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicInsightStore>;
+        "store"?: AtomicInsightStore;
     }
     interface AtomicInsightResultList {
         /**
@@ -662,6 +686,16 @@ export namespace Components {
          */
         "enableCancelLastAction": boolean;
     }
+    interface AtomicNotifications {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notifications, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * Specifies an icon to display at the left-end of a notification.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+    }
     interface AtomicNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
@@ -739,6 +773,8 @@ export namespace Components {
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages": number;
+    }
+    interface AtomicPopover {
     }
     interface AtomicQueryError {
     }
@@ -1193,6 +1229,10 @@ export namespace Components {
     }
     interface AtomicSearchBoxInstantResults {
         /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
+        /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density": ResultDisplayDensity;
@@ -1564,6 +1604,12 @@ declare global {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
     };
+    interface HTMLAtomicFocusDetectorElement extends Components.AtomicFocusDetector, HTMLStencilElement {
+    }
+    var HTMLAtomicFocusDetectorElement: {
+        prototype: HTMLAtomicFocusDetectorElement;
+        new (): HTMLAtomicFocusDetectorElement;
+    };
     interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
     }
     var HTMLAtomicFocusTrapElement: {
@@ -1642,11 +1688,41 @@ declare global {
         prototype: HTMLAtomicInsightInterfaceElement;
         new (): HTMLAtomicInsightInterfaceElement;
     };
+    interface HTMLAtomicInsightLayoutElement extends Components.AtomicInsightLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightLayoutElement: {
+        prototype: HTMLAtomicInsightLayoutElement;
+        new (): HTMLAtomicInsightLayoutElement;
+    };
+    interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightNoResultsElement: {
+        prototype: HTMLAtomicInsightNoResultsElement;
+        new (): HTMLAtomicInsightNoResultsElement;
+    };
     interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicInsightNumericFacetElement: {
         prototype: HTMLAtomicInsightNumericFacetElement;
         new (): HTMLAtomicInsightNumericFacetElement;
+    };
+    interface HTMLAtomicInsightPagerElement extends Components.AtomicInsightPager, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightPagerElement: {
+        prototype: HTMLAtomicInsightPagerElement;
+        new (): HTMLAtomicInsightPagerElement;
+    };
+    interface HTMLAtomicInsightQueryErrorElement extends Components.AtomicInsightQueryError, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightQueryErrorElement: {
+        prototype: HTMLAtomicInsightQueryErrorElement;
+        new (): HTMLAtomicInsightQueryErrorElement;
+    };
+    interface HTMLAtomicInsightQuerySummaryElement extends Components.AtomicInsightQuerySummary, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightQuerySummaryElement: {
+        prototype: HTMLAtomicInsightQuerySummaryElement;
+        new (): HTMLAtomicInsightQuerySummaryElement;
     };
     interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
     }
@@ -1732,6 +1808,12 @@ declare global {
         prototype: HTMLAtomicNoResultsElement;
         new (): HTMLAtomicNoResultsElement;
     };
+    interface HTMLAtomicNotificationsElement extends Components.AtomicNotifications, HTMLStencilElement {
+    }
+    var HTMLAtomicNotificationsElement: {
+        prototype: HTMLAtomicNotificationsElement;
+        new (): HTMLAtomicNotificationsElement;
+    };
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicNumericFacetElement: {
@@ -1749,6 +1831,12 @@ declare global {
     var HTMLAtomicPagerElement: {
         prototype: HTMLAtomicPagerElement;
         new (): HTMLAtomicPagerElement;
+    };
+    interface HTMLAtomicPopoverElement extends Components.AtomicPopover, HTMLStencilElement {
+    }
+    var HTMLAtomicPopoverElement: {
+        prototype: HTMLAtomicPopoverElement;
+        new (): HTMLAtomicPopoverElement;
     };
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
     }
@@ -2105,6 +2193,7 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
+        "atomic-focus-detector": HTMLAtomicFocusDetectorElement;
         "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
@@ -2118,7 +2207,12 @@ declare global {
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
         "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
+        "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
+        "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
+        "atomic-insight-pager": HTMLAtomicInsightPagerElement;
+        "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
+        "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
@@ -2133,9 +2227,11 @@ declare global {
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
         "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
+        "atomic-notifications": HTMLAtomicNotificationsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
+        "atomic-popover": HTMLAtomicPopoverElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-rating-facet": HTMLAtomicRatingFacetElement;
@@ -2409,12 +2505,20 @@ declare namespace LocalJSX {
          */
         "ifNotDefined"?: string;
     }
+    interface AtomicFocusDetector {
+        "onFocusEnter"?: (event: CustomEvent<any>) => void;
+        "onFocusExit"?: (event: CustomEvent<any>) => void;
+    }
     interface AtomicFocusTrap {
         "active"?: boolean;
         /**
           * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
          */
         "container"?: HTMLElement;
+        /**
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+         */
+        "shouldHideSelf"?: boolean;
         /**
           * The source to focus when the focus trap becomes inactive.
          */
@@ -2599,10 +2703,14 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+    }
+    interface AtomicInsightLayout {
         /**
           * Whether the interface should be shown in widget format.
          */
         "widget"?: boolean;
+    }
+    interface AtomicInsightNoResults {
     }
     interface AtomicInsightNumericFacet {
         /**
@@ -2658,6 +2766,17 @@ declare namespace LocalJSX {
          */
         "withInput"?: NumberInputType;
     }
+    interface AtomicInsightPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
+    }
+    interface AtomicInsightQueryError {
+    }
+    interface AtomicInsightQuerySummary {
+    }
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
@@ -2697,7 +2816,7 @@ declare namespace LocalJSX {
         /**
           * Global state for Atomic.
          */
-        "store"?: ReturnType<typeof createAtomicInsightStore>;
+        "store"?: AtomicInsightStore;
     }
     interface AtomicInsightResultList {
         /**
@@ -2815,6 +2934,16 @@ declare namespace LocalJSX {
          */
         "enableCancelLastAction"?: boolean;
     }
+    interface AtomicNotifications {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notifications, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * Specifies an icon to display at the left-end of a notification.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+    }
     interface AtomicNumericFacet {
         /**
           * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
@@ -2893,6 +3022,8 @@ declare namespace LocalJSX {
          */
         "numberOfPages"?: number;
         "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
+    }
+    interface AtomicPopover {
     }
     interface AtomicQueryError {
     }
@@ -3329,6 +3460,10 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBoxInstantResults {
         /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
+        /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density"?: ResultDisplayDensity;
@@ -3629,6 +3764,7 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-facet-number-input": AtomicFacetNumberInput;
         "atomic-field-condition": AtomicFieldCondition;
+        "atomic-focus-detector": AtomicFocusDetector;
         "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
         "atomic-format-currency": AtomicFormatCurrency;
@@ -3642,7 +3778,12 @@ declare namespace LocalJSX {
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
         "atomic-insight-interface": AtomicInsightInterface;
+        "atomic-insight-layout": AtomicInsightLayout;
+        "atomic-insight-no-results": AtomicInsightNoResults;
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
+        "atomic-insight-pager": AtomicInsightPager;
+        "atomic-insight-query-error": AtomicInsightQueryError;
+        "atomic-insight-query-summary": AtomicInsightQuerySummary;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
@@ -3657,9 +3798,11 @@ declare namespace LocalJSX {
         "atomic-load-more-results": AtomicLoadMoreResults;
         "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
+        "atomic-notifications": AtomicNotifications;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
+        "atomic-popover": AtomicPopover;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-rating-facet": AtomicRatingFacet;
@@ -3735,6 +3878,7 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
+            "atomic-focus-detector": LocalJSX.AtomicFocusDetector & JSXBase.HTMLAttributes<HTMLAtomicFocusDetectorElement>;
             "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
             "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
             "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
@@ -3748,7 +3892,12 @@ declare module "@stencil/core" {
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
             "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
+            "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
+            "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
+            "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
+            "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
+            "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
@@ -3763,9 +3912,11 @@ declare module "@stencil/core" {
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
+            "atomic-notifications": LocalJSX.AtomicNotifications & JSXBase.HTMLAttributes<HTMLAtomicNotificationsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
+            "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;

@@ -1,8 +1,9 @@
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
-import {DateFilter, DateFilterState, buildDateRange} from '@coveo/headless';
-import dayjs from 'dayjs';
+import {buildDateRange} from '@coveo/headless';
 import {Button} from '../../button';
 import {AnyBindings} from '../../interface/bindings';
+import {DateFilter, DateFilterState} from '../../types';
+import {parseDate} from '../../../../utils/date-utils';
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.
@@ -30,10 +31,10 @@ export class FacetDateInput {
 
   public connectedCallback() {
     this.start = this.filterState.range
-      ? dayjs(this.filterState.range.start).toDate()
+      ? parseDate(this.filterState.range.start).toDate()
       : undefined;
     this.end = this.filterState.range
-      ? dayjs(this.filterState.range.end).toDate()
+      ? parseDate(this.filterState.range.end).toDate()
       : undefined;
   }
 
@@ -55,7 +56,7 @@ export class FacetDateInput {
     if (!date) {
       return '';
     }
-    return dayjs(date).format('YYYY-MM-DD');
+    return parseDate(date).format('YYYY-MM-DD');
   }
 
   render() {

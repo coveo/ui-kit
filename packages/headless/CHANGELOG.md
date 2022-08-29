@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.102.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.2...@coveo/headless@1.102.0) (2022-08-24)
+
+
+### Features
+
+* **atomic,headless:** add query error support for insight panel ([#2368](https://github.com/coveo/ui-kit/issues/2368)) ([cb808cb](https://github.com/coveo/ui-kit/commit/cb808cb6464b5f07a544192c49bde7a2f13f5abf))
+
+
+
+
+
+## [1.101.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.1...@coveo/headless@1.101.2) (2022-08-24)
+
+
+### Bug Fixes
+
+* **atomic,headless:** fixed setRange on Firefox and Safari ([#2360](https://github.com/coveo/ui-kit/issues/2360)) ([d1c69db](https://github.com/coveo/ui-kit/commit/d1c69db216b392cb8874a49b463ea928eea58e27))
+
+
+
+
+
+## [1.101.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.0...@coveo/headless@1.101.1) (2022-08-17)
+
+
+### Bug Fixes
+
+* **headless:** remove idle range when generateAutomaticRanges is true ([#2345](https://github.com/coveo/ui-kit/issues/2345)) ([b28f3bf](https://github.com/coveo/ui-kit/commit/b28f3bfe582ea8b7eee5f67c67fb7d70ce898c5b))
+
+
+
+
+
+# [1.101.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.100.0...@coveo/headless@1.101.0) (2022-08-16)
+
+
+### Bug Fixes
+
+* **headless:** prevent undefined enableQuerySyntax value to be added to the params manager ([#2343](https://github.com/coveo/ui-kit/issues/2343)) ([1e1f265](https://github.com/coveo/ui-kit/commit/1e1f265fbf4c01fc56b3029eda12b2baaad510d4))
+
+
+### Features
+
+* **atomic,headless:** deselect facets with hasBreadcrumbs=false on new query ([#2342](https://github.com/coveo/ui-kit/issues/2342)) ([fb90264](https://github.com/coveo/ui-kit/commit/fb902644864daa271c8ddc70cb6260e6fba401f9))
+
+
+
+
+
+# [1.100.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.99.0...@coveo/headless@1.100.0) (2022-08-16)
+
+
+### Features
+
+* **headless:** added undo method to query trigger ([#2332](https://github.com/coveo/ui-kit/issues/2332)) ([f3f8782](https://github.com/coveo/ui-kit/commit/f3f8782a1c2a2e2f99a3208c78e8daaeb46110a8))
+
+
+
+
+
+# [1.99.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.98.0...@coveo/headless@1.99.0) (2022-08-15)
+
+
+### Bug Fixes
+
+* **headless:** allow for negative score for QRE weights ([#2297](https://github.com/coveo/ui-kit/issues/2297)) ([22e496c](https://github.com/coveo/ui-kit/commit/22e496c58bdf711d0388fed24b10cbdc49b1d545))
+* **headless:** fixed query trigger `wasQueryModified` and `listener` ([#2313](https://github.com/coveo/ui-kit/issues/2313)) ([36ab335](https://github.com/coveo/ui-kit/commit/36ab3355dfe79da6b4eb56114603e854c233ca75))
+
+
+### Features
+
+* **atomic,headless:** add atomic-insight-timeframe-facet ([#2292](https://github.com/coveo/ui-kit/issues/2292)) ([e3710f5](https://github.com/coveo/ui-kit/commit/e3710f541e51533687b6de7809ba9b6e187bba75)), closes [#2278](https://github.com/coveo/ui-kit/issues/2278)
+* **headless:** add fieldsToInclude to insight search request ([#2294](https://github.com/coveo/ui-kit/issues/2294)) ([a713cb1](https://github.com/coveo/ui-kit/commit/a713cb155e7160e65520e0d9195f2bbf76cc9325))
+
+
+
+
+
 # [1.98.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.97.0...@coveo/headless@1.98.0) (2022-08-08)
 
 

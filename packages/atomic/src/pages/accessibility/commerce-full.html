@@ -69,6 +69,36 @@
         paginationSelect.addEventListener('change', (e) =>
           pagination.classList.toggle(useLoadMoreResultsClass, e.target.value === 'load-more')
         );
+
+        searchInterface.i18n.addResourceBundle('en', 'translation', {
+          'no-ratings-available': 'No ratings available',
+        });
+
+        document.querySelector('atomic-search-box-instant-results').ariaLabelGenerator = ({i18n}, result) => {
+          const information = [result.title];
+
+          if ('ec_rating' in result.raw) {
+            information.push(
+              i18n.t('stars', {
+                count: result.raw.ec_rating,
+                max: 5,
+              })
+            );
+          } else {
+            information.push(i18n.t('no-ratings-available'));
+          }
+
+          if ('ec_price' in result.raw) {
+            information.push(
+              result.raw.ec_price.toLocaleString(i18n.languages, {
+                style: 'currency',
+                currency: 'USD',
+              })
+            );
+          }
+
+          return information.join(', ');
+        };
       })();
     </script>
     <style>
@@ -142,7 +172,6 @@
   </head>
 
   <body>
-    <atomic-aria-live></atomic-aria-live>
     <atomic-search-interface
       pipeline="Search"
       search-hub="MainSearch"
@@ -168,6 +197,7 @@
           <h1 class="accessibility-header">Search</h1>
           <atomic-search-box>
             <atomic-search-box-recent-queries> </atomic-search-box-recent-queries>
+            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
             <atomic-search-box-instant-results image-size="small">
               <atomic-result-template>
                 <template>
@@ -205,7 +235,6 @@
                 </template>
               </atomic-result-template>
             </atomic-search-box-instant-results>
-            <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
           </atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">

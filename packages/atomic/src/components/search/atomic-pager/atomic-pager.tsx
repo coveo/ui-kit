@@ -1,25 +1,22 @@
-import {Component, h, Prop, State, Event, EventEmitter} from '@stencil/core';
 import {
-  Pager,
-  PagerState,
   buildPager,
   buildSearchStatus,
+  Pager,
+  PagerState,
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import ArrowRight from '../../../images/arrow-right.svg';
-import {Button} from '../../common/button';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
-import {randomID} from '../../../utils/utils';
-import {RadioButton} from '../../common/radio-button';
+import {PagerCommon} from '../../common/pager/pager-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -39,16 +36,15 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 })
 export class AtomicPager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  private pager!: Pager;
+  public pager!: Pager;
   public searchStatus!: SearchStatus;
-  private readonly radioGroupName = randomID('atomic-pager-');
 
   @BindStateToController('pager')
   @State()
-  private pagerState!: PagerState;
+  public pagerState!: PagerState;
   @BindStateToController('searchStatus')
   @State()
-  private searchStatusState!: SearchStatusState;
+  public searchStatusState!: SearchStatusState;
   @State() error!: Error;
 
   @Event({
@@ -71,102 +67,16 @@ export class AtomicPager implements InitializableComponent {
     });
   }
 
-  private scrollToTop() {
-    this.scrollToTopEvent.emit();
-  }
-
-  private selectPage(page: number) {
-    this.pager.selectPage(page);
-    this.activePage.focusAfterSearch().then(() => this.scrollToTop());
-  }
-
-  private get previousButton() {
-    return (
-      <Button
-        style="outline-primary"
-        ariaLabel={this.bindings.i18n.t('previous')}
-        onClick={() => {
-          this.pager.previousPage();
-          this.scrollToTop();
-        }}
-        part="previous-button"
-        disabled={!this.pagerState.hasPreviousPage}
-        class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
-      >
-        <atomic-icon
-          icon={ArrowRight}
-          class="w-5 align-middle rotate-180"
-        ></atomic-icon>
-      </Button>
-    );
-  }
-
-  private get nextButton() {
-    return (
-      <Button
-        style="outline-primary"
-        ariaLabel={this.bindings.i18n.t('next')}
-        onClick={() => {
-          this.pager.nextPage();
-          this.scrollToTop();
-        }}
-        part="next-button"
-        disabled={!this.pagerState.hasNextPage}
-        class="p-1 min-w-[2.5rem] min-h-[2.5rem]"
-      >
-        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
-      </Button>
-    );
-  }
-
-  private get pages() {
-    const pages = this.pager.state.currentPages;
-    return (
-      <div part="page-buttons" role="radiogroup" class="contents">
-        {pages.map((page) => this.buildPage(page))}
-      </div>
-    );
-  }
-
-  private buildPage(page: number) {
-    const isSelected = this.pager.isCurrentPage(page);
-    const parts = ['page-button'];
-    if (isSelected) {
-      parts.push('active-page-button');
-    }
-    return (
-      <RadioButton
-        key={page}
-        groupName={this.radioGroupName}
-        style="outline-neutral"
-        checked={isSelected}
-        ariaCurrent={isSelected ? 'page' : 'false'}
-        ariaLabel={this.bindings.i18n.t('page-number', {page})}
-        onChecked={() => this.selectPage(page)}
-        class="btn-page focus-visible:bg-neutral-light p-1 min-w-[2.5rem] min-h-[2.5rem]"
-        part={parts.join(' ')}
-        text={page.toLocaleString(this.bindings.i18n.language)}
-        ref={isSelected ? this.activePage.setTarget : undefined}
-      ></RadioButton>
-    );
-  }
-
   public render() {
-    if (
-      !this.bindings.store.isAppLoaded() ||
-      !this.searchStatusState.hasResults
-    ) {
-      return;
-    }
-
     return (
-      <nav aria-label={this.bindings.i18n.t('pagination')}>
-        <div part="buttons" class="flex gap-2 flex-wrap">
-          {this.previousButton}
-          {this.pages}
-          {this.nextButton}
-        </div>
-      </nav>
+      <PagerCommon
+        activePage={this.activePage}
+        bindings={this.bindings}
+        eventEmitter={this.scrollToTopEvent}
+        pager={this.pager}
+        pagerState={this.pagerState}
+        searchStatusState={this.searchStatusState}
+      />
     );
   }
 }

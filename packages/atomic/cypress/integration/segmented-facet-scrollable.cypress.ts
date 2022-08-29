@@ -1,12 +1,6 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import {segmentedFacetComponent} from './facets/segmented-facet/segmented-facet-selectors';
-import {
-  addScrollable,
-  clickArrow,
-  scroll,
-} from './segmented-facet-scrollable-actions';
+import {addScrollable, clickArrow} from './segmented-facet-scrollable-actions';
 import * as ScrollableAssertions from './segmented-facet-scrollable-assertions';
-import {scrollableComponent} from './segmented-facet-scrollable-selectors';
 
 describe('Segmented Facet Scrollable Test Suites', () => {
   function setupScrollable() {
@@ -37,28 +31,6 @@ describe('Segmented Facet Scrollable Test Suites', () => {
         clickArrow('right');
       }
       before(setupClickArrowScrollable);
-      ScrollableAssertions.assertDisplayArrows(true, true);
-    });
-
-    describe.skip('with right scroll', () => {
-      function setupScrollScrollable() {
-        setupWithOverflowFacets();
-        scroll('right', 2000);
-      }
-      before(setupScrollScrollable);
-      ScrollableAssertions.assertDisplayArrows(true, true);
-    });
-
-    describe.skip('with right scroll using keyboard', () => {
-      function setupKeyboardScrollable() {
-        setupWithOverflowFacets();
-        cy.get(scrollableComponent).click('center');
-        cy.get(segmentedFacetComponent)
-          .shadow()
-          .find('[part="value-box"][aria-pressed="true"]')
-          .type('{rightarrow}');
-      }
-      before(setupKeyboardScrollable);
       ScrollableAssertions.assertDisplayArrows(true, true);
     });
 

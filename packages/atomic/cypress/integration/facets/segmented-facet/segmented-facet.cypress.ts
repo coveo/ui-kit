@@ -147,7 +147,8 @@ describe('Segmented Facet Test Suites', () => {
     );
   });
 
-  describe('with custom #sortCriteria, occurrences', () => {
+  // TODO: enable when SEARCHAPI-7247 is released
+  describe.skip('with custom #sortCriteria, occurrences', () => {
     before(() => {
       new TestFixture()
         .with(addSegmentedFacet({field, label, 'sort-criteria': 'occurrences'}))

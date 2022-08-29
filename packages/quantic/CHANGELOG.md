@@ -3,6 +3,151 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.40.0...@coveo/quantic@1.40.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* **quantic:** destroy Engine performed when the QuanticInsightInterface is disconnected ([#2372](https://github.com/coveo/ui-kit/issues/2372)) ([5e5c9c5](https://github.com/coveo/ui-kit/commit/5e5c9c59e0286ef0996c2065a3a16b76ac49210e))
+
+
+
+
+
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.2...@coveo/quantic@1.40.0) (2022-08-25)
+
+
+### Features
+
+* **quantic:** added keydown listener for tab dropdown menu items ([#2324](https://github.com/coveo/ui-kit/issues/2324)) ([0f0d94c](https://github.com/coveo/ui-kit/commit/0f0d94cb7c29dc2f2d311fd583e9d4aae1d530de))
+
+
+
+
+
+## [1.39.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.1...@coveo/quantic@1.39.2) (2022-08-24)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.39.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.0...@coveo/quantic@1.39.1) (2022-08-24)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.38.0...@coveo/quantic@1.39.0) (2022-08-22)
+
+
+### Features
+
+* **quantic:** added ariaLabel for quanticNumberButton ([#2352](https://github.com/coveo/ui-kit/issues/2352)) ([83eebbf](https://github.com/coveo/ui-kit/commit/83eebbf87fecf4685eee187b7fede4ba4758d549))
+* **quantic:** added ariaLabel for timeframeFacet. ([#2348](https://github.com/coveo/ui-kit/issues/2348)) ([1a74d67](https://github.com/coveo/ui-kit/commit/1a74d67cf61b8b12e214636a49a56cd30def4a89))
+
+
+
+
+
+# [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.37.0...@coveo/quantic@1.38.0) (2022-08-22)
+
+
+### Features
+
+* **quantic:** remove lightning-tile from QuanticResult ([#2319](https://github.com/coveo/ui-kit/issues/2319)) ([c711ba7](https://github.com/coveo/ui-kit/commit/c711ba76885f34ecb1f1e76ca89bfd87b77f527b))
+
+
+
+
+
+# [1.37.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.36.0...@coveo/quantic@1.37.0) (2022-08-19)
+
+
+### Bug Fixes
+
+* **quantic:** making the QuanticNoResult use the correct headless bundle ([#2351](https://github.com/coveo/ui-kit/issues/2351)) ([a0448cc](https://github.com/coveo/ui-kit/commit/a0448cc2ce7dd150857f55aa545d1661cf0db8b6))
+
+
+### Features
+
+* **quantic:** new QuanticColoredResultBadge component created ([#2350](https://github.com/coveo/ui-kit/issues/2350)) ([d7aa619](https://github.com/coveo/ui-kit/commit/d7aa619a4f054aa6077e41b7267917295384651f))
+
+
+
+
+
+# [1.36.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.35.0...@coveo/quantic@1.36.0) (2022-08-18)
+
+
+### Features
+
+* **quantic:** added aria-pressed for pager ([#2333](https://github.com/coveo/ui-kit/issues/2333)) ([e266af9](https://github.com/coveo/ui-kit/commit/e266af98c39bee1a2f5ec88dac5ef60e6852f110)), closes [#2306](https://github.com/coveo/ui-kit/issues/2306)
+
+
+
+
+
+# [1.35.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.4...@coveo/quantic@1.35.0) (2022-08-17)
+
+
+### Features
+
+* **quantic:** added focus indicator for facet addMore addLess buttons. ([#2339](https://github.com/coveo/ui-kit/issues/2339)) ([8ad149f](https://github.com/coveo/ui-kit/commit/8ad149f204c402180574d6aa34d2eedfe34c2a93))
+
+
+
+
+
+## [1.34.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.3...@coveo/quantic@1.34.4) (2022-08-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.34.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.2...@coveo/quantic@1.34.3) (2022-08-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.34.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.1...@coveo/quantic@1.34.2) (2022-08-16)
+
+
+### Bug Fixes
+
+* **quantic:** changed ... to expand from a A tag to a button ([#2234](https://github.com/coveo/ui-kit/issues/2234)) ([f554676](https://github.com/coveo/ui-kit/commit/f554676205d985ddfbe37c6910a5ca4d4c59225f))
+
+
+
+
+
+## [1.34.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.34.0...@coveo/quantic@1.34.1) (2022-08-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.34.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.33.0...@coveo/quantic@1.34.0) (2022-08-15)
+
+
+### Features
+
+* **quantic:** added accessibility functionality to quanticFacetValue ([#2237](https://github.com/coveo/ui-kit/issues/2237)) ([b062c18](https://github.com/coveo/ui-kit/commit/b062c186f26725b7a50cf84d5f2ca8c5993477d3))
+
+
+
+
+
 # [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.32.2...@coveo/quantic@1.33.0) (2022-08-08)
 
 

@@ -148,6 +148,34 @@
         <shortDescription>Next</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_PreviousPage</fullName>
+        <value>Previous Page</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Previous page</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_NextPage</fullName>
+        <value>Next Page</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Next page</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_GoToPage</fullName>
+        <value>Go to page {{0}}</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Go to page ...</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_ShowNResultsPerPage</fullName>
+        <value>Show {{0}} number of results per page</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Show N results per page.</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_Search</fullName>
         <value>Search...</value>
         <language>en_US</language>
@@ -496,6 +524,13 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Apply</shortDescription>
+    </labels>
+    <labels>
+        <fullName>quantic_TimeframeInputApply</fullName>
+        <value>Apply custom timeframe values for the {{0}} facet</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Apply custom time frame values for the [component label] facet.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_NumberInputApply</fullName>
