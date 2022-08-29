@@ -49,14 +49,14 @@ describe('No Results Test Suites', () => {
 
   describe('when the query contains HTML characters', () => {
     beforeEach(() => {
-      env.withHash('q=<div>gahaiusdhgaiuewjfsf</div>').init();
+      env.withHash('q=<div>$@#()-&^!</div>').init();
     });
 
     it('text content should match', () => {
       cy.get(noResultsComponent)
         .shadow()
         .find('[part="no-results"] [part="highlight"]')
-        .should('contain.text', '<div>gahaiusdhgaiuewjfsf</div>');
+        .should('contain.text', '<div>$@#()-&^!</div>');
     });
   });
 
