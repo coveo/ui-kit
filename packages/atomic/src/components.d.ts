@@ -524,6 +524,8 @@ export namespace Components {
     }
     interface AtomicInsightQueryError {
     }
+    interface AtomicInsightQuerySummary {
+    }
     interface AtomicInsightRefineModal {
         "isOpen": boolean;
         "openButton"?: HTMLElement;
@@ -1756,6 +1758,12 @@ declare global {
         prototype: HTMLAtomicInsightQueryErrorElement;
         new (): HTMLAtomicInsightQueryErrorElement;
     };
+    interface HTMLAtomicInsightQuerySummaryElement extends Components.AtomicInsightQuerySummary, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightQuerySummaryElement: {
+        prototype: HTMLAtomicInsightQuerySummaryElement;
+        new (): HTMLAtomicInsightQuerySummaryElement;
+    };
     interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicInsightRefineModalElement: {
@@ -2244,6 +2252,7 @@ declare global {
         "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
         "atomic-insight-pager": HTMLAtomicInsightPagerElement;
         "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
+        "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
         "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
         "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
         "atomic-insight-result": HTMLAtomicInsightResultElement;
@@ -2805,6 +2814,8 @@ declare namespace LocalJSX {
         "onAtomic/scrollToTop"?: (event: AtomicInsightPagerCustomEvent<any>) => void;
     }
     interface AtomicInsightQueryError {
+    }
+    interface AtomicInsightQuerySummary {
     }
     interface AtomicInsightRefineModal {
         "isOpen"?: boolean;
@@ -3812,6 +3823,7 @@ declare namespace LocalJSX {
         "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
         "atomic-insight-pager": AtomicInsightPager;
         "atomic-insight-query-error": AtomicInsightQueryError;
+        "atomic-insight-query-summary": AtomicInsightQuerySummary;
         "atomic-insight-refine-modal": AtomicInsightRefineModal;
         "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
         "atomic-insight-result": AtomicInsightResult;
@@ -3925,6 +3937,7 @@ declare module "@stencil/core" {
             "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
             "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
             "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
+            "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
             "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
             "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;

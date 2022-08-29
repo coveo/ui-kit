@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.40.0...@coveo/quantic@1.40.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* **quantic:** destroy Engine performed when the QuanticInsightInterface is disconnected ([#2372](https://github.com/coveo/ui-kit/issues/2372)) ([5e5c9c5](https://github.com/coveo/ui-kit/commit/5e5c9c59e0286ef0996c2065a3a16b76ac49210e))
+
+
+
+
+
 # [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.2...@coveo/quantic@1.40.0) (2022-08-25)
 
 
