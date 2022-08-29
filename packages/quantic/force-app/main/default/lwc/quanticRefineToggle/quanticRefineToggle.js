@@ -120,7 +120,7 @@ export default class QuanticRefineToggle extends LightningElement {
 
   get refineButtonDisabled() {
     const areFacetsRendered = Object.values(this.renderedFacets).reduce(
-      (result, facetRendred) => result || facetRendred,
+      (result, facetRendered) => result || facetRendered,
       false
     );
     return !this.hasResults || (this.hideSort && !areFacetsRendered);
