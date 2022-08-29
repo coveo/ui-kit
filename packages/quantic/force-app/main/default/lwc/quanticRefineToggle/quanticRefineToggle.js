@@ -79,13 +79,13 @@ export default class QuanticRefineToggle extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.addEventListener('facetRendering', this.handleFacetRenderingEvent);
+    this.addEventListener('renderFacet', this.handlerenderFacetEvent);
   }
 
   /**
    * @param {CustomEvent} event
    */
-  handleFacetRenderingEvent = (event) => {
+  handlerenderFacetEvent = (event) => {
     this.renderedFacets[event.detail.id] = event.detail.shouldRenderFacet;
   };
 
@@ -130,7 +130,7 @@ export default class QuanticRefineToggle extends LightningElement {
     this.unsubscribeQuerySummary?.();
     this.unsubscribeBreadcrumbManager?.();
     this.unsubscribeSearchStatus?.();
-    this.removeEventListener('facetRendering', this.handleFacetRenderingEvent);
+    this.removeEventListener('renderFacet', this.handlerenderFacetEvent);
   }
 
   /**

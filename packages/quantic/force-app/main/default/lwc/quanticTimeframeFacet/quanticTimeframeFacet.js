@@ -412,12 +412,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
     this.hasResults = this.searchStatus.state.hasResults;
     
-    const facetRenderingEvent = new CustomEvent('facetRendering', {
+    const renderFacetEvent = new CustomEvent('renderFacet', {
       detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.showFacet},
       bubbles: true,
       composed: true,
     })
-    this.dispatchEvent(facetRenderingEvent);
+    this.dispatchEvent(renderFacetEvent);
   }
 
   updateFacetState() {

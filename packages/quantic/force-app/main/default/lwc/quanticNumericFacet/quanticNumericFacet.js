@@ -267,12 +267,12 @@ export default class QuanticNumericFacet extends LightningElement {
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
 
-    const facetRenderingEvent = new CustomEvent('facetRendering', {
+    const renderFacetEvent = new CustomEvent('renderFacet', {
       detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.shouldRenderFacet},
       bubbles: true,
       composed: true,
     })
-    this.dispatchEvent(facetRenderingEvent);
+    this.dispatchEvent(renderFacetEvent);
   }
 
   updateFilterState() {
