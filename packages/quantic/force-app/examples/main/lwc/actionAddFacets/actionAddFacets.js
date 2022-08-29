@@ -3,11 +3,14 @@ import {api, LightningElement} from 'lwc';
 export default class ActionAddFacets extends LightningElement {
   @api engineId;
   @api disabled;
+  @api withoutInputs = false;
+  @api label;
 
   searchBox;
 
-  handlePerformSearch() {
-    const addFacetsEvent = new CustomEvent('addFacets', {
+  handleAddFacets() {
+    const eventName = this.withoutInputs? 'addFacetsWithoutInputs' : 'addFacets';
+    const addFacetsEvent = new CustomEvent(eventName, {
       bubbles: true,
       composed: true,
     });

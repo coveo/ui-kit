@@ -66,12 +66,10 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
   render() {
     if (this.withoutFacets) {
       return templateWithoutFacets;
-    } else {
-      if (this.facetWithoutInputs) {
-        return templateWithFacetsWithoutInputs;
-      } else {
-        return templateWithFacets;
-      }
     }
+    if (this.facetWithoutInputs) {
+      return templateWithFacetsWithoutInputs;
+    }
+    return templateWithFacets;
   }
 }

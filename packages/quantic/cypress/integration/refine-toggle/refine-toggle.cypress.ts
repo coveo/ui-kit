@@ -10,8 +10,10 @@ import {
   mockSearchWithoutAnyFacetValues,
   mockSearchWithResults,
 } from '../../page-objects/search';
-import {addFacets} from '../../page-objects/actions/action-add-facets';
-import {addFacetsWithoutInputs} from '../../page-objects/actions/action-add-facets-without-inputs';
+import {
+  addFacets,
+  addFacetsWithoutInputs,
+} from '../../page-objects/actions/action-add-facets';
 
 interface RefineToggleOptions {
   fullScreen: boolean;
