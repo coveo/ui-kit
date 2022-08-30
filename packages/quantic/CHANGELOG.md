@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.40.0...@coveo/quantic@1.40.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* **quantic:** destroy Engine performed when the QuanticInsightInterface is disconnected ([#2372](https://github.com/coveo/ui-kit/issues/2372)) ([5e5c9c5](https://github.com/coveo/ui-kit/commit/5e5c9c59e0286ef0996c2065a3a16b76ac49210e))
+
+
+
+
+
+# [1.40.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.2...@coveo/quantic@1.40.0) (2022-08-25)
+
+
+### Features
+
+* **quantic:** added keydown listener for tab dropdown menu items ([#2324](https://github.com/coveo/ui-kit/issues/2324)) ([0f0d94c](https://github.com/coveo/ui-kit/commit/0f0d94cb7c29dc2f2d311fd583e9d4aae1d530de))
+
+
+
+
+
+## [1.39.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.1...@coveo/quantic@1.39.2) (2022-08-24)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.39.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.39.0...@coveo/quantic@1.39.1) (2022-08-24)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.39.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.38.0...@coveo/quantic@1.39.0) (2022-08-22)
+
+
+### Features
+
+* **quantic:** added ariaLabel for quanticNumberButton ([#2352](https://github.com/coveo/ui-kit/issues/2352)) ([83eebbf](https://github.com/coveo/ui-kit/commit/83eebbf87fecf4685eee187b7fede4ba4758d549))
+* **quantic:** added ariaLabel for timeframeFacet. ([#2348](https://github.com/coveo/ui-kit/issues/2348)) ([1a74d67](https://github.com/coveo/ui-kit/commit/1a74d67cf61b8b12e214636a49a56cd30def4a89))
+
+
+
+
+
 # [1.38.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.37.0...@coveo/quantic@1.38.0) (2022-08-22)
 
 

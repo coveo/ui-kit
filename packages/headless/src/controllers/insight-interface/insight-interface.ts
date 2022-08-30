@@ -31,6 +31,11 @@ export interface InsightInterface extends Controller {
   state: InsightInterfaceState;
 }
 
+/**
+ * Creates an `InsightInterface` controller instance.
+ * @param engine  - The insight engine.
+ * @returns An `InsightInterface controller instance.
+ */
 export function buildInsightInterface(engine: InsightEngine): InsightInterface {
   if (!loadInsightInterfaceReducers(engine)) {
     throw loadReducerError;

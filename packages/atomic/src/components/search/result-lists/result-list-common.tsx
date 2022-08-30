@@ -13,12 +13,14 @@ import {
 } from '@coveo/headless';
 import {InitializableComponent} from '../../../utils/initialization-utils';
 import {TemplateContent} from '../result-templates/result-template-common';
-import {TableDisplayResultsPlaceholder} from './table-display-results-placeholder';
 import {TableDisplayResults} from './table-display-results';
 import {ListDisplayResults} from './list-display-results';
 import {GridDisplayResults} from './grid-display-results';
-import {GridDisplayResultsPlaceholder} from './grid-display-results-placeholder';
-import {ListDisplayResultsPlaceholder} from '../../insight/atomic-insight-result-list/list-display-results-placeholder';
+import {
+  ListDisplayResultsPlaceholder,
+  GridDisplayResultsPlaceholder,
+  TableDisplayResultsPlaceholder,
+} from '../../common/atomic-result-placeholder/placeholders';
 import {once} from '../../../utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {

@@ -3,7 +3,7 @@ import {
   buildDateRange,
   DateFilter as HeadlessDateFilter,
 } from '@coveo/headless';
-import dayjs from 'dayjs';
+import {parseDate} from '../date-facet/date-utils';
 
 interface DateFilterProps {
   controller: HeadlessDateFilter;
@@ -13,7 +13,7 @@ function formattedDateValue(date?: string | Date) {
   if (!date) {
     return '';
   }
-  return dayjs(date).format('YYYY-MM-DD');
+  return parseDate(date).format('YYYY-MM-DD');
 }
 
 export const DateFilter: FunctionComponent<DateFilterProps> = (props) => {

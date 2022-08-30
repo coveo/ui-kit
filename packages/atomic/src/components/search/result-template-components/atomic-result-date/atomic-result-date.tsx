@@ -1,12 +1,12 @@
 import {Component, Prop, Element, State} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import dayjs from 'dayjs';
 import {ResultContext} from '../result-template-decorators';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {parseDate} from '../../../../utils/date-utils';
 
 /**
  * The `atomic-result-date` component renders the value of a date result field.
@@ -49,7 +49,7 @@ export class AtomicResultDate implements InitializableComponent {
       return;
     }
 
-    const parsedValue = dayjs(value as never);
+    const parsedValue = parseDate(value as never);
     if (!parsedValue.isValid()) {
       this.error = new Error(
         `Field "${this.field}" does not contain a valid date.`

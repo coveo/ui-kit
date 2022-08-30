@@ -20,6 +20,12 @@ import {
   buildInsightResultList,
 } from '..';
 import {randomID} from '../../../utils/utils';
+import {ListDisplayResultsPlaceholder} from '../../common/atomic-result-placeholder/placeholders';
+import {
+  buildResultsPerPage,
+  ResultsPerPage,
+  ResultsPerPageState,
+} from '@coveo/headless/insight';
 
 export type TemplateContent = DocumentFragment;
 
@@ -32,19 +38,20 @@ interface TemplateElement extends HTMLElement {
  */
 @Component({
   tag: 'atomic-insight-result-list',
-  // TODO:
   styleUrl: 'atomic-insight-result-list.pcss',
   shadow: true,
 })
 export class AtomicInsightResultList {
   @InitializeBindings() public bindings!: InsightBindings;
   public resultList!: InsightResultList;
+  public resultsPerPage!: ResultsPerPage;
   private resultTemplatesManager!: InsightResultTemplatesManager<TemplateContent>;
   @State() public ready = false;
   @Element() public host!: HTMLDivElement;
-  // TODO:
-  // public resultsPerPage!: ResultsPerPage;
-  // public listWrapperRef?: HTMLDivElement;
+
+  @BindStateToController('resultsPerPage')
+  @State()
+  public resultPerPageState!: ResultsPerPageState;
 
   @State() public templateHasError = false;
 
@@ -52,15 +59,7 @@ export class AtomicInsightResultList {
   @State()
   public resultListState!: InsightResultListState;
 
-  // TODO:
-  // @BindStateToController('resultsPerPage')
-  // @State()
-  // public resultsPerPageState!: ResultsPerPageState;
-
   @State() public error!: Error;
-
-  // TODO:
-  // @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   private loadingFlag = randomID('firstInsightResultLoaded-');
 
@@ -73,14 +72,6 @@ export class AtomicInsightResultList {
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
 
-  // TODO:
-  // /**
-  //  * @internal
-  //  */
-  // @Method() public async focusOnNextNewResult() {
-  //   this.resultListCommon.focusOnNextNewResult(this.resultListState);
-  // }
-
   public async initialize() {
     this.resultList = buildInsightResultList(this.bindings.engine, {
       options: {
@@ -89,8 +80,8 @@ export class AtomicInsightResultList {
     });
     this.registerResultTemplates();
     this.bindings.store.setLoadingFlag(this.loadingFlag);
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     // TODO:
-    // this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     // this.bindings.store.registerResultList(this);
   }
 
@@ -162,20 +153,22 @@ export class AtomicInsightResultList {
     if (!this.ready) {
       return null;
     }
+    if (this.resultListState.hasError) {
+      return null;
+    }
     return (
       <Host>
         {this.templateHasError && <slot></slot>}
         <div class={`list-wrapper ${this.getClasses()}`}>
           <div class={`list-root  ${this.getClasses()}`} part="result-list">
-            {/* TODO: when results per page state is ready in headless*/}
-            {/* {this.bindings.store.isAppLoaded() && (
+            {!this.bindings.store.isAppLoaded() && (
               <ListDisplayResultsPlaceholder
+                resultsPerPageState={this.resultPerPageState}
                 display="list"
                 density={this.density}
                 imageSize={this.imageSize}
-                // resultsPerPageState={this.resultsPerPageState}
               />
-            )} */}
+            )}
             {this.resultListState.firstSearchExecuted &&
               this.resultListState.results.map((result) => (
                 <atomic-insight-result
@@ -189,16 +182,6 @@ export class AtomicInsightResultList {
                   content={this.getContentOfResultTemplate(result)}
                   classes={this.getClasses()}
                   loadingFlag={this.loadingFlag}
-                  // TODO:
-                  // indexOfResultToFocus={this.indexOfResultToFocus}
-                  // newResultRef={(element) =>
-                  //   this.onFirstNewResultRendered(element)
-                  // }
-                  // ref={(element) =>
-                  //   element &&
-                  //   props.indexOfResultToFocus === index &&
-                  //   props.newResultRef?.(element)
-                  // }
                 />
               ))}
           </div>

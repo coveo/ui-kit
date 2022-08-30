@@ -1,5 +1,4 @@
 import {h, VNode} from '@stencil/core';
-import dayjs from 'dayjs';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {Hidden} from '../hidden';
@@ -29,6 +28,7 @@ import {
 import {FacetInfo} from './facet-common-store';
 import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {randomID} from '../../../utils/utils';
+import {parseDate} from '../../../utils/date-utils';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
@@ -259,8 +259,8 @@ export class TimeframeFacetCommon {
       );
     } catch (error) {
       return this.props.bindings.i18n.t('to', {
-        start: dayjs(facetValue.start).format('YYYY-MM-DD'),
-        end: dayjs(facetValue.end).format('YYYY-MM-DD'),
+        start: parseDate(facetValue.start).format('YYYY-MM-DD'),
+        end: parseDate(facetValue.end).format('YYYY-MM-DD'),
       });
     }
   }

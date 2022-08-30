@@ -8,5 +8,6 @@ export const QuerySummarySelectors = {
     QuerySummarySelectors.shadow().find('[part="placeholder"]'),
   container: () => QuerySummarySelectors.shadow().find('[part="container"]'),
   duration: () => QuerySummarySelectors.shadow().find('[part="duration"]'),
+  query: () => QuerySummarySelectors.shadow().find('[part~="query"]'),
   ariaLive: () => AriaLiveSelectors.region('query-summary'),
 };
