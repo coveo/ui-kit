@@ -1,6 +1,6 @@
 <template>
   <button class="slds-button slds-button_neutral refine-button slds-is-relative" onclick={openModal}
-    title={buttonLabel}>
+    title={buttonLabel} disabled={refineButtonDisabled}>
     <slot name="button-content">
       {labels.sortAndFilters}
       <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonLabel}
