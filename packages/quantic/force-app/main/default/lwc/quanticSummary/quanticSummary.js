@@ -6,7 +6,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 
 import noResults from '@salesforce/label/c.quantic_NoResults';
 import noResultsFor from '@salesforce/label/c.quantic_NoResultsFor';
@@ -43,6 +43,8 @@ export default class QuanticSummary extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {Object} */
+  summaryAriaMessage;
 
   labels = {
     noResults,
@@ -68,6 +70,7 @@ export default class QuanticSummary extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.querySummary = this.headless.buildQuerySummary(engine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
+    this.summaryAriaMessage = AriaLiveRegion('summary', this);
   };
 
   disconnectedCallback() {
@@ -76,6 +79,16 @@ export default class QuanticSummary extends LightningElement {
 
   updateState() {
     this.state = this.querySummary.state;
+    if(this.state?.hasResults) {
+      this.updateAriaMessage();
+    }
+  }
+
+  updateAriaMessage() {
+    const docElement = document.createElement('div');
+    // eslint-disable-next-line @lwc/lwc/no-inner-html
+    docElement.innerHTML = this.summaryLabel;
+    this.summaryAriaMessage.dispatchMessage(docElement.innerText)
   }
 
   get hasResults() {

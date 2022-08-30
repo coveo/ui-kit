@@ -107,11 +107,15 @@ export default class QuanticNoResults extends LightningElement {
   updateState() {
     this.showNoResultsPanel = this.searchStatus.state.firstSearchExecuted && !this.searchStatus.state.isLoading && !this.searchStatus.state.hasResults && !this.searchStatus.state.hasError;
     if(this.showNoResultsPanel) {
-      this.noResultAriaMessage.dispatchMessage(this.query ? I18nUtils.format(this.query) : this.labels.noResultsTitle);
+      this.updateAriaMessage();
     }
     this.showUndoButton = !this.disableCancelLastAction && this.historyManager?.state.past.length;
     this.query = this.querySummary.state.hasQuery ? this.querySummary.state.query : "";
     this.hasBreadcrumbs = this.breadcrumbManager.state.hasBreadcrumbs;
+  }
+
+  updateAriaMessage() {
+    this.noResultAriaMessage.dispatchMessage(this.query ? I18nUtils.format(this.labels.noResultsForTitle, this.query) : this.labels.noResultsTitle);
   }
 
   onUndoLastActionClick() {

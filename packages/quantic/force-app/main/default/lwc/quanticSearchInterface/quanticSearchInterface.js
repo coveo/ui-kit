@@ -184,7 +184,7 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   handleAriaLiveMessage(event) {
-    console.log(event);
+    /** @type {Object} */
     const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
     if(ariaLiveRegion) {
       ariaLiveRegion.updateMessage(event.detail.regionName, event.detail.message, event.detail.assertive);
@@ -192,7 +192,7 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   handleRegisterAriaLiveRegion(event) {
-    console.log(event);
+    /** @type {Object} */
     const ariaLiveRegion = this.querySelector('c-quantic-aria-live');
     if(ariaLiveRegion) {
       ariaLiveRegion.registerRegion(event.detail.regionName, event.detail.assertive);
