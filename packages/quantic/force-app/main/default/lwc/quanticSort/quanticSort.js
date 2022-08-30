@@ -4,7 +4,6 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import { AriaLiveRegion } from 'c/quanticUtils';
 
 import sortBy from '@salesforce/label/c.quantic_SortBy';
 import relevancy from '@salesforce/label/c.quantic_Relevancy';
@@ -56,8 +55,6 @@ export default class QuanticSort extends LightningElement {
   /** @type {AnyHeadless} */
   headless;
 
-  sortAriaMessage;
-
   labels = {
     sortBy,
     relevancy,
@@ -67,7 +64,6 @@ export default class QuanticSort extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.sortAriaMessage = AriaLiveRegion('sort', this);
   }
 
   renderedCallback() {
@@ -125,7 +121,6 @@ export default class QuanticSort extends LightningElement {
     this.sort.sortBy(
       this.options.find((option) => option.value === e.detail.value).criterion
     );
-    this.sortAriaMessage.dispatchMessage('The UI has changed sort option to ' + e.detail.value);
   }
 
   get relevancy() {

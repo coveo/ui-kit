@@ -166,7 +166,7 @@
         <value>Query was automatically corrected to {{0}}</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Query was automatically corrected to potato</shortDescription>
+        <shortDescription>Query was automatically corrected to example</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_SortBy</fullName>
