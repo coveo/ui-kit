@@ -48,6 +48,11 @@ export interface TriggerState {
    * The notifications to display to the user after receiving notification triggers.
    */
   notifications: string[];
+
+  /**
+   * Query trigger that should be ignored as requested by the end user with the undo feature.
+   */
+  queryTriggerToIgnore: string;
 }
 
 export const getTriggerInitialState: () => TriggerState = () => ({
@@ -57,4 +62,5 @@ export const getTriggerInitialState: () => TriggerState = () => ({
   executions: [],
   notification: '',
   notifications: [],
+  queryTriggerToIgnore: '',
 });

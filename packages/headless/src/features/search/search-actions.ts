@@ -34,6 +34,7 @@ import {
   SearchHubSection,
   SearchSection,
   SortSection,
+  TriggerSection,
 } from '../../state/state-sections';
 import {
   historyStore,
@@ -91,7 +92,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       FacetOrderSection &
       DebugSection &
       SearchSection &
-      FoldingSection
+      FoldingSection &
+      TriggerSection
   >;
 
 export interface ExecuteSearchThunkReturn {

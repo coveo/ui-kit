@@ -12,6 +12,7 @@ import {
   logTriggerQuery,
   logUndoTriggerQuery,
 } from '../../features/triggers/trigger-analytics-actions';
+import {undoQueryTrigger} from '../../features/triggers/triggers-actions';
 
 /**
  * The `QueryTrigger` controller handles query triggers.
@@ -85,7 +86,6 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
             // We don't want a query trigger to immediately redo what the user intends to undo.
             queryToIgnore = currentQuery;
           }
-
           correction = null;
           listener();
           return;
@@ -100,6 +100,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           const updateQueryPayload: UpdateQueryActionCreatorPayload = {
             q: currentTrigger,
           };
+
           dispatch(updateQuery(updateQueryPayload));
           listener();
           dispatch(executeSearch(logTriggerQuery()));
@@ -127,6 +128,7 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
       const updateQueryPayload: UpdateQueryActionCreatorPayload = {
         q: correction.originalQuery,
       };
+      dispatch(undoQueryTrigger(undoneQuery));
       dispatch(updateQuery(updateQueryPayload));
       dispatch(executeSearch(logUndoTriggerQuery({undoneQuery})));
     },
