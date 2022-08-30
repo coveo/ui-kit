@@ -49,7 +49,7 @@ describe('quantic-refine-toggle', () => {
     configure(options);
   }
 
-  describe('when no facets are registred', () => {
+  describe('when no facets are registered', () => {
     describe('when using default options', () => {
       it('should render the refine toggle component', () => {
         visitPage();
