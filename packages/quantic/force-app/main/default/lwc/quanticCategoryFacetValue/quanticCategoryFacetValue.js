@@ -45,7 +45,6 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @type {VoidFunction}
    */
   @api setFocus() {
-    console.log(`this is ${this.item.value}`);
     // @ts-ignore
     this.htlmElement.focus();
   }
