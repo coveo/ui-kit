@@ -1,5 +1,8 @@
 import {LightningElement, api} from 'lwc';
-import {getHeadlessBundle, getHeadlessEnginePromise} from 'c/quanticHeadlessLoader';
+import {
+  getHeadlessBundle,
+  getHeadlessEnginePromise,
+} from 'c/quanticHeadlessLoader';
 import {ResultUtils} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
@@ -45,17 +48,28 @@ export default class QuanticResultLink extends LightningElement {
    */
   @api useCase = 'search';
 
+  /**
+   * A function used to set focus to the link.
+   * @api
+   * @type {()=>void}
+   */
+  @api setFocus() {
+    this.template.querySelector('a').focus();
+  }
+
   /** @type {SearchEngine} */
   engine;
   /** @type {AnyHeadless} */
   headless;
 
   connectedCallback() {
-    getHeadlessEnginePromise(this.engineId).then((engine) => {
-      this.initialize(engine);
-    }).catch((error) => {
-      console.error(error.message);
-    });
+    getHeadlessEnginePromise(this.engineId)
+      .then((engine) => {
+        this.initialize(engine);
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   }
 
   /**
