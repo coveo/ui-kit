@@ -181,7 +181,7 @@ export default class QuanticFacet extends LightningElement {
     if (this.facetContentChanged) {
       this.facetContentChanged = false;
       // @ts-ignore
-      this.template.querySelector('c-quantic-facet-value')?.setFocus();
+      this.firstFacetValueHTMLElement?.setFocus();
     }
   }
 
@@ -228,6 +228,10 @@ export default class QuanticFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+  }
+
+  get firstFacetValueHTMLElement() {
+    return this.template.querySelector('c-quantic-facet-value');
   }
 
   get values() {

@@ -158,6 +158,9 @@ export default class QuanticCategoryFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  facetContentChanged;
+
   labels = {
     clear,
     showMore,
@@ -171,12 +174,19 @@ export default class QuanticCategoryFacet extends LightningElement {
     collapseFacet,
     expandFacet,
   };
+
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
   }
+
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
+    if (this.facetContentChanged) {
+      this.facetContentChanged = false;
+      // @ts-ignore
+      this.firstFacetValueHTMLElement?.setFocus();
+    }
   }
 
   disconnectedCallback() {
@@ -225,6 +235,10 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
+  }
+
+  get firstFacetValueHTMLElement() {
+    return this.template.querySelector('c-quantic-category-facet-value');
   }
 
   get values() {
@@ -364,10 +378,12 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   showMore() {
     this.facet.showMoreValues();
+    this.facetContentChanged = true;
   }
 
   showLess() {
     this.facet.showLessValues();
+    this.facetContentChanged = true;
   }
 
   reset() {

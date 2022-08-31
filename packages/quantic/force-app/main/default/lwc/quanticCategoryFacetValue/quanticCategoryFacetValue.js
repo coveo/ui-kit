@@ -39,10 +39,24 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @defaultValue `false`
    */
   @api nonActiveParent = false;
+  /**
+   * A function used to set focus to the value.
+   * @api
+   * @type {VoidFunction}
+   */
+  @api setFocus() {
+    console.log(`this is ${this.item.value}`);
+    // @ts-ignore
+    this.htlmElement.focus();
+  }
 
   labels = {
     inLabel,
   };
+
+  get htlmElement() {
+    return this.template.querySelector('div [role="button"]');
+  }
 
   get categoryFacetLiClass() {
     return this.activeParent ? 'slds-var-m-left_large slds-grid' : 'slds-grid';

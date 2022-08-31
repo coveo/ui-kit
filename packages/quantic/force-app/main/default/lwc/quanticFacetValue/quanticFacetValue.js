@@ -47,7 +47,7 @@ export default class QuanticFacetValue extends LightningElement {
   /**
    * A function used to set focus to the value.
    * @api
-   * @type {()=>void}
+   * @type {VoidFunction}
    * @defaultValue `undefined`
    */
   @api setFocus() {
