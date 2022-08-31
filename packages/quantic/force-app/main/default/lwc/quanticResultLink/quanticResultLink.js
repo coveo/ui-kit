@@ -54,7 +54,11 @@ export default class QuanticResultLink extends LightningElement {
    * @type {VoidFunction}
    */
   @api setFocus() {
-    this.anchorHTMLElement.focus();
+    const focusTarget = this.template.querySelector('a');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
   }
 
   /** @type {SearchEngine} */
@@ -85,8 +89,4 @@ export default class QuanticResultLink extends LightningElement {
       this.headless.buildInteractiveResult
     );
   };
-
-  get anchorHTMLElement() {
-    return this.template.querySelector('a');
-  }
 }
