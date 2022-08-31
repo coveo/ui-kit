@@ -14,11 +14,10 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import MagnifyingGlass from '../../../images/magnifying-glass.svg';
-import escape from 'escape-html';
-import {Button} from '../../common/button';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {NoResultsCommon} from '../../common/no-results/no-results-common';
+import {Button} from '../../common/button';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
@@ -65,57 +64,6 @@ export class AtomicNoResults {
     this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
-  private wrapHighlight(content: string) {
-    return `<span class="font-bold" part="highlight">${this.bindings.i18n.t(
-      'between-quotations',
-      {text: escape(content), interpolation: {escapeValue: false}}
-    )}</span>`;
-  }
-
-  private renderMagnifyingGlass() {
-    return (
-      <atomic-icon
-        part="icon"
-        icon={MagnifyingGlass}
-        class="my-6 flex flex-col items-center w-1/2 max-w-lg"
-      ></atomic-icon>
-    );
-  }
-
-  private get summary() {
-    return this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('no-results-for', {
-          interpolation: {escapeValue: false},
-          query: this.querySummaryState.query,
-        })
-      : this.bindings.i18n.t('no-results');
-  }
-
-  private renderNoResults() {
-    const content = this.querySummaryState.hasQuery
-      ? this.bindings.i18n.t('no-results-for', {
-          interpolation: {escapeValue: false},
-          query: this.wrapHighlight(this.querySummaryState.query),
-        })
-      : this.bindings.i18n.t('no-results');
-    return (
-      // file deepcode ignore ReactSetInnerHtml: This is not React code.
-      <div
-        class="my-2 text-2xl font-medium"
-        part="no-results"
-        innerHTML={content}
-      ></div>
-    );
-  }
-
-  private renderSearchTips() {
-    return (
-      <div class="my-2 text-lg text-neutral-dark" part="search-tips">
-        {this.bindings.i18n.t('search-tips')}
-      </div>
-    );
-  }
-
   private renderCancel() {
     if (!this.historyState.past.length) {
       return;
@@ -133,24 +81,15 @@ export class AtomicNoResults {
   }
 
   public render() {
-    if (
-      !this.searchStatusState.firstSearchExecuted ||
-      this.searchStatusState.isLoading ||
-      this.searchStatusState.hasResults
-    ) {
-      return;
-    }
-
-    this.ariaMessage = this.summary;
-
-    return [
-      <div class="flex flex-col items-center h-full w-full text-on-background">
-        {this.renderMagnifyingGlass()}
-        {this.renderNoResults()}
-        {this.renderSearchTips()}
+    return (
+      <NoResultsCommon
+        bindings={this.bindings}
+        querySummaryState={this.querySummaryState}
+        searchStatusState={this.searchStatusState}
+        setAriaLive={(msg) => (this.ariaMessage = msg)}
+      >
         {this.enableCancelLastAction && this.renderCancel()}
-      </div>,
-      <slot></slot>,
-    ];
+      </NoResultsCommon>
+    );
   }
 }

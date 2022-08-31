@@ -116,6 +116,14 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .contains(`${count}`)
         .logDetail(`The filters count badge should contain "${count}"`);
     },
+
+    refineToggleDisabled: (disabled: boolean) => {
+      selector
+        .refineToggle()
+        .invoke('attr', 'disabled')
+        .should(disabled ? 'exist' : 'not.exist')
+        .logDetail(`The refine button ${should(disabled)} be disabled`);
+    },
   };
 }
 

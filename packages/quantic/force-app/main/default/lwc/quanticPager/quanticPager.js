@@ -4,9 +4,11 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {I18nUtils} from 'c/quanticUtils';
 
-import next from '@salesforce/label/c.quantic_Next';
-import previous from '@salesforce/label/c.quantic_Previous';
+import nextPage from '@salesforce/label/c.quantic_NextPage';
+import previousPage from '@salesforce/label/c.quantic_PreviousPage';
+import goToPage from '@salesforce/label/c.quantic_GoToPage';
 
 /** @typedef {import("coveo").Pager} Pager */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
@@ -54,8 +56,9 @@ export default class QuanticPager extends LightningElement {
   headless;
 
   labels = {
-    next,
-    previous,
+    nextPage,
+    previousPage,
+    goToPage,
   };
 
   connectedCallback() {
@@ -123,6 +126,7 @@ export default class QuanticPager extends LightningElement {
     return this.currentPages.map((page) => ({
       number: page,
       selected: page === this.currentPage,
+      ariaLabelValue: I18nUtils.format(this.labels.goToPage, page),
     }));
   }
 }

@@ -1,113 +1,95 @@
-import {h, VNode} from '@stencil/core';
+import {FunctionalComponent, h} from '@stencil/core';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
-import {FacetManager, QuerySummary} from '../types';
+import {FacetManager} from '../types';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 
-interface RefineModalCommonRenderProps {
+interface RefineModalCommonProps {
+  host: HTMLElement;
+  bindings: AnyBindings;
+  onClose(): void;
+  title: string;
+  querySummaryState: {
+    total: number;
+  };
   isOpen: boolean;
   openButton?: HTMLElement;
 }
 
-interface RefineModalCommonOptions {
-  host: HTMLElement;
-  bindings: AnyBindings;
-  initializeQuerySummary(): QuerySummary;
-  onClose(): void;
-}
-
-export class RefineModalCommon {
-  private host: HTMLElement;
-  private bindings: AnyBindings;
-  private querySummary: QuerySummary;
-  private onClose: () => void;
-
-  public exportparts =
+export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
+  props,
+  children
+) => {
+  const exportparts =
     'container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper';
 
-  constructor(props: RefineModalCommonOptions) {
-    this.host = props.host;
-    this.bindings = props.bindings;
-    this.querySummary = props.initializeQuerySummary();
-    this.onClose = props.onClose;
-  }
+  const flushFacetElements = () => {
+    props.host.querySelector('div[slot="facets"]')?.remove();
+  };
 
-  public showModal() {
-    this.host.style.display = '';
-  }
-
-  public flushFacetElements() {
-    this.host.querySelector('div[slot="facets"]')?.remove();
-  }
-
-  public renderHeader() {
+  const renderHeader = () => {
     return (
       <div slot="header" class="contents">
-        <h1 class="truncate">{this.bindings.i18n.t('sort-and-filter')}</h1>
+        <h1 class="truncate">{props.title}</h1>
         <Button
           style="text-transparent"
           class="grid place-items-center"
           part="close-button"
-          onClick={this.onClose}
-          ariaLabel={this.bindings.i18n.t('close')}
+          onClick={props.onClose}
+          ariaLabel={props.bindings.i18n.t('close')}
         >
           <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
         </Button>
       </div>
     );
-  }
+  };
 
-  public renderFooter() {
+  const renderFooter = () => {
     return (
       <div slot="footer">
         <Button
           style="primary"
           part="footer-button"
           class="w-full p-3 flex text-lg justify-center"
-          onClick={this.onClose}
+          onClick={props.onClose}
         >
           <span class="truncate mr-1">
-            {this.bindings.i18n.t('view-results')}
+            {props.bindings.i18n.t('view-results')}
           </span>
           <span>
-            {this.bindings.i18n.t('between-parentheses', {
-              text: this.querySummary.state.total.toLocaleString(
-                this.bindings.i18n.language
+            {props.bindings.i18n.t('between-parentheses', {
+              text: props.querySummaryState.total.toLocaleString(
+                props.bindings.i18n.language
               ),
             })}
           </span>
         </Button>
       </div>
     );
-  }
+  };
 
-  public render(
-    children: VNode,
-    {isOpen, openButton}: RefineModalCommonRenderProps
-  ) {
-    return (
-      <atomic-modal
-        fullscreen
-        isOpen={isOpen}
-        source={openButton}
-        container={this.host}
-        close={this.onClose}
-        onAnimationEnded={() => {
-          if (!isOpen) {
-            this.flushFacetElements();
-          }
-        }}
-        exportparts="container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
-      >
-        {this.renderHeader()}
-        {children}
-        {this.renderFooter()}
-      </atomic-modal>
-    );
-  }
-}
+  return (
+    <atomic-modal
+      fullscreen
+      isOpen={props.isOpen}
+      source={props.openButton}
+      container={props.host}
+      close={props.onClose}
+      onAnimationEnded={() => {
+        if (!props.isOpen) {
+          flushFacetElements();
+        }
+      }}
+      exportparts={exportparts}
+    >
+      {renderHeader()}
+      {...children}
+      {renderFooter()}
+    </atomic-modal>
+  );
+};
 
 export function getClonedFacetElements(
   facetElements: HTMLElement[],

@@ -22,8 +22,6 @@ import {
   FoldedResult,
   AtomicResultSectionChildren,
   AtomicFoldedResultList,
-  AtomicResultChildren,
-  AtomicResultChildrenTemplate,
 } from '@coveo/atomic-react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
@@ -63,13 +61,11 @@ function MyTemplate(result: FoldedResult) {
         <AtomicResultText field="ec_shortdesc" />
       </AtomicResultSectionExcerpt>
       <AtomicResultSectionChildren>
-        <AtomicResultChildren>
-          <AtomicResultChildrenTemplate>
-            <template>
-              <AtomicResultLink />
-            </template>
-          </AtomicResultChildrenTemplate>
-        </AtomicResultChildren>
+        {result.children.map((child) => (
+          <p>
+            <a href={child.result.clickUri}>{child.result.title}</a>
+          </p>
+        ))}
       </AtomicResultSectionChildren>
       <AtomicResultSectionBottomMetadata>
         <AtomicResultFieldsList>

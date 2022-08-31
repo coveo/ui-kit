@@ -18,7 +18,6 @@ import {Bindings} from '../../../..';
 type ArrowDirection = 'right' | 'left';
 
 /**
- * @internal
  * The 'atomic-segmented-facet-scrollable' component wraps around one or several 'atomic-segmented-facet' to provide horizontal scrolling capabilities.
  *
  * @slot default - One or multiple atomic-segmented-facet components
