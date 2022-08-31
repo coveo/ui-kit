@@ -43,7 +43,7 @@ export default class QuanticSummary extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {Object} */
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
   summaryAriaMessage;
 
   labels = {

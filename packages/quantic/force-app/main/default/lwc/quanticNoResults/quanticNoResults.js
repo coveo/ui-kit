@@ -60,7 +60,7 @@ export default class QuanticNoResults extends LightningElement {
   unsubscribeQuerySummary;
   /** @type {Function} */
   unsubscribeBreadcrumbsManager;
-  /** @type {Object} */
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
   noResultAriaMessage;
 
   labels = {

@@ -468,11 +468,24 @@ export class Store {
   }
 }
 
+/** 
+ * AriaLiveUtils
+ * @typedef {Object} AriaLiveUtils
+ * @property {Function} dispatchMessage
+ * @property {Function} registerRegion
+ */
+
+/**
+ * AriaLiveRegion Create an AriaLiveRegion to be able to send events to dispatch messages for assistive technologies.
+ * @param {string} regionName 
+ * @param {Object} elem 
+ * @param {boolean} assertive 
+ * @returns {AriaLiveUtils}
+ */
 export function AriaLiveRegion(regionName, elem, assertive = false) {
 
   function dispatchMessage(message) {
-    // Creates the event to dispatch an event to an aria-live region
-    const registerRegionEvent = new CustomEvent('arialivemessage', {
+    const ariaLiveMessageEvent = new CustomEvent('arialivemessage', {
       bubbles: true,
       detail: {
         regionName,
@@ -480,11 +493,10 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
         message
       }
     });
-    elem.dispatchEvent(registerRegionEvent);
+    elem.dispatchEvent(ariaLiveMessageEvent);
   }
 
   function registerRegion() {
-    // Creates the event to register an aria-live region
     const registerRegionEvent = new CustomEvent('registerregion', {
       bubbles: true,
         detail: {
