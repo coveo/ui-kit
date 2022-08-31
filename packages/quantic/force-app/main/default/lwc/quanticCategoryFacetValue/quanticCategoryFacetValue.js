@@ -45,17 +45,16 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @type {VoidFunction}
    */
   @api setFocus() {
-    // @ts-ignore
-    this.htlmElement.focus();
+    const focusTarget = this.template.querySelector('div [role="button"]');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
   }
 
   labels = {
     inLabel,
   };
-
-  get htlmElement() {
-    return this.template.querySelector('div [role="button"]');
-  }
 
   get categoryFacetLiClass() {
     return this.activeParent ? 'slds-var-m-left_large slds-grid' : 'slds-grid';
