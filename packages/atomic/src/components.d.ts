@@ -453,6 +453,10 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage": number;
     }
     interface AtomicInsightLayout {
         /**
@@ -2703,6 +2707,10 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage"?: number;
     }
     interface AtomicInsightLayout {
         /**
