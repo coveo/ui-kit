@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.105.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.105.0...@coveo/atomic@1.105.1) (2022-08-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix no results message when it contains special characters ([#2381](https://github.com/coveo/ui-kit/issues/2381)) ([19bf75f](https://github.com/coveo/ui-kit/commit/19bf75f6dca1cd0dfdb03287785ee61fc1150d90))
+* **atomic:** text-align left for recent queries content ([#2382](https://github.com/coveo/ui-kit/issues/2382)) ([465278c](https://github.com/coveo/ui-kit/commit/465278c4704ad6ca18bcf46168f6b9900cceb2eb))
+
+
+
+
+
+# [1.105.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.104.1...@coveo/atomic@1.105.0) (2022-08-26)
+
+
+### Bug Fixes
+
+* **atomic:** fix insight panel widget mode + refactor pager ([#2377](https://github.com/coveo/ui-kit/issues/2377)) ([c0c1255](https://github.com/coveo/ui-kit/commit/c0c1255f022281321416d998fbc4eda4a2040514))
+
+
+### Features
+
+* **atomic:** add insight panel query summary component ([#2371](https://github.com/coveo/ui-kit/issues/2371)) ([6ad7467](https://github.com/coveo/ui-kit/commit/6ad74676f13877afb688cac5d53069632799d768))
+
+
+
+
+
+## [1.104.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.104.0...@coveo/atomic@1.104.1) (2022-08-25)
+
+
+### Bug Fixes
+
+* **atomic:** fix insight-refine-toggle title and tooltip  ([#2373](https://github.com/coveo/ui-kit/issues/2373)) ([c737b51](https://github.com/coveo/ui-kit/commit/c737b51e22302e3b33abcde5ab712f41931a38ad))
+
+
+
+
+
 # [1.104.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.103.0...@coveo/atomic@1.104.0) (2022-08-24)
 
 

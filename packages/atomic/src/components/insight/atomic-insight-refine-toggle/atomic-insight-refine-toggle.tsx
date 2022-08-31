@@ -68,8 +68,9 @@ export class AtomicInsightRefineToggle {
   public render() {
     return (
       <atomic-icon-button
+        tooltip={this.bindings.i18n.t('filters')}
         icon={FilterIcon}
-        labelI18nKey="insight-history"
+        labelI18nKey="sort"
         clickCallback={() => {
           this.bindings.store.waitUntilAppLoaded(() => {
             this.enableModal();

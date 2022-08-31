@@ -21,7 +21,7 @@ export const TabBarSelectors: TabBarSelector = {
     TabBarSelectors.get().find('button.slds-tabs_default__item.slds-is-active'),
   moreButton: () => TabBarSelectors.get().find('.tab-bar_more-button'),
   moreButtonLabel: () =>
-    TabBarSelectors.moreButton().find('button').invoke('text'),
+    TabBarSelectors.moreButton().find('button').first().invoke('text'),
   moreButtonIcon: () => TabBarSelectors.moreButton().find('lightning-icon'),
   dropdown: () => TabBarSelectors.get().find('.slds-dropdown-trigger'),
   allDropdownOptions: () =>

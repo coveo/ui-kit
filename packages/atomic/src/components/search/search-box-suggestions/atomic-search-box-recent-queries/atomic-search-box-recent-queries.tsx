@@ -166,7 +166,10 @@ export class AtomicSearchBoxRecentQueries {
       query: value,
       part: 'recent-query-item',
       content: (
-        <div part="recent-query-content" class="flex items-center break-all">
+        <div
+          part="recent-query-content"
+          class="flex items-center break-all text-left"
+        >
           <atomic-icon
             part="recent-query-icon"
             icon={this.renderIcon()}

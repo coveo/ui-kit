@@ -5,7 +5,6 @@ import {
 
 const tabsSelector = 'atomic-insight-tabs';
 const refineModalSelector = 'atomic-insight-refine-modal';
-const pagerSelector = 'atomic-insight-pager';
 
 export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const id = element.id;
@@ -19,7 +18,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     ? `
   ${layoutSelector} {
     display: grid;
-    grid-template-rows: auto 8fr 1fr;
+    grid-template-rows: auto auto 8fr 1fr;
     max-height: 100%;
     box-sizing: border-box;
   }
@@ -51,28 +50,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     }
     `;
 
-  const pagination = `
-    ${sectionSelector('pagination')} {
-      background: var(--atomic-neutral-light);
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: stretch;
-    }
-    ${
-      widget
-        ? `
-        ${sectionSelector('pagination')} ${pagerSelector} {
-          width: 100%;
-        }
-        ${sectionSelector('pagination')} ${pagerSelector}::part(buttons) {
-          justify-content: space-between;
-        }
-    `
-        : ''
-    }
-    `;
-  return [interfaceStyle, search, results, pagination]
+  return [interfaceStyle, search, results]
     .filter((declaration) => declaration !== '')
     .join('\n\n');
 }

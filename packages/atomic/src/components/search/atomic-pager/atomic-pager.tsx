@@ -16,7 +16,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Hidden} from '../../common/hidden';
 import {PagerCommon} from '../../common/pager/pager-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
@@ -36,7 +35,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   shadow: true,
 })
 export class AtomicPager implements InitializableComponent {
-  private pagerCommon!: PagerCommon;
   @InitializeBindings() public bindings!: Bindings;
   public pager!: Pager;
   public searchStatus!: SearchStatus;
@@ -63,24 +61,22 @@ export class AtomicPager implements InitializableComponent {
   private activePage!: FocusTargetController;
 
   public initialize() {
-    this.pagerCommon = new PagerCommon({
-      bindings: this.bindings,
-      initializeSearchStatus: () =>
-        (this.searchStatus = buildSearchStatus(this.bindings.engine)),
-      initializePager: () =>
-        (this.pager = buildPager(this.bindings.engine, {
-          options: {numberOfPages: this.numberOfPages},
-        })),
-      getEventEmitter: () => this.scrollToTopEvent,
-      getActivePage: () => this.activePage,
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.pager = buildPager(this.bindings.engine, {
+      options: {numberOfPages: this.numberOfPages},
     });
   }
 
   public render() {
-    if (!this.pagerCommon) {
-      return <Hidden></Hidden>;
-    }
-
-    return this.pagerCommon.render();
+    return (
+      <PagerCommon
+        activePage={this.activePage}
+        bindings={this.bindings}
+        eventEmitter={this.scrollToTopEvent}
+        pager={this.pager}
+        pagerState={this.pagerState}
+        searchStatusState={this.searchStatusState}
+      />
+    );
   }
 }
