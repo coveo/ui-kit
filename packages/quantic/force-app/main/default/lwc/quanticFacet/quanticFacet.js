@@ -181,9 +181,7 @@ export default class QuanticFacet extends LightningElement {
     if (this.facetContentChanged) {
       this.facetContentChanged = false;
       // @ts-ignore
-      this.getFirstFacetValue()?.focus();
-      // eslint-disable-next-line @lwc/lwc/no-inner-html
-      this.getAriaLiveAsserter().innerHTML = `<p>Content changed ${this.values.length} listed</p>`;
+      this.template.querySelector('c-quantic-facet-value')?.setFocus();
     }
   }
 
@@ -230,15 +228,6 @@ export default class QuanticFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
-  }
-
-  getFirstFacetValue() {
-    return this.template.querySelector('c-quantic-facet-value').shadowRoot
-      .firstChild;
-  }
-
-  getAriaLiveAsserter() {
-    return this.template.querySelector('.aria-live-msg');
   }
 
   get values() {

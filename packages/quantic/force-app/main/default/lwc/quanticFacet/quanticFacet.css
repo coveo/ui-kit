@@ -11,9 +11,3 @@
   color: #8e959d;
   font-size: 12px;
 }
-
-.aria-live-msg{
-  width: 0;
-  height:0; 
-  overflow:hidden
-}

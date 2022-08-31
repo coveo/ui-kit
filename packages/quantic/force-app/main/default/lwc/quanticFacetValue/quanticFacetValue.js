@@ -44,6 +44,17 @@ export default class QuanticFacetValue extends LightningElement {
    */
   @api formattingFunction;
 
+  /**
+   * A function used to set focus to the value.
+   * @api
+   * @type {()=>void}
+   * @defaultValue `undefined`
+   */
+  @api setFocus() {
+    // @ts-ignore
+    this.htlmElement?.focus();
+  }
+
   get isStandardFacet() {
     return !this.formattingFunction;
   }
@@ -65,6 +76,10 @@ export default class QuanticFacetValue extends LightningElement {
 
   get ariaLabelValue() {
     return `Inclusion filter on ${this.formattedFacetValue}; ${this.numberOfResults} result`;
+  }
+
+  get htlmElement() {
+    return this.template.querySelector('.facet__value-container');
   }
 
   /**
