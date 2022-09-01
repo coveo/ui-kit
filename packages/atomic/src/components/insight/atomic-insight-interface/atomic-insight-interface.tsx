@@ -139,7 +139,7 @@ export class AtomicInsightInterface
       return;
     }
     buildInsightResultsPerPage(this.bindings.engine, {
-      initialState: {numberOfResults: 5},
+      initialState: {numberOfResults: this.resultsPerPage},
     });
   }
 
