@@ -83,6 +83,8 @@ export default class QuanticResultQuickview extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  isFirstPreviewRender = true;
 
   labels = {
     close,
@@ -104,6 +106,10 @@ export default class QuanticResultQuickview extends LightningElement {
     if (this.contentContainer && this.state?.resultHasPreview) {
       // eslint-disable-next-line @lwc/lwc/no-inner-html
       this.contentContainer.innerHTML = this.state.content;
+      if (this.isQuickviewOpen && this.isFirstPreviewRender) {
+        this.isFirstPreviewRender = false;
+        this.setFocusToHeader();
+      }
     }
     this.injectIdToSlots();
   }
@@ -150,6 +156,7 @@ export default class QuanticResultQuickview extends LightningElement {
 
   closeQuickview() {
     this.isQuickviewOpen = false;
+    this.isFirstPreviewRender = true;
   }
 
   stopPropagation(evt) {
@@ -224,5 +231,25 @@ export default class QuanticResultQuickview extends LightningElement {
 
   get hasButtonLabel() {
     return !!this.previewButtonLabel;
+  }
+
+  setFocusToHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-result-link');
+
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  setFocusToTop() {
+    const focusTarget = this.template.querySelector(
+      `.slds-button.slds-button_icon`
+    );
+
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
   }
 }
