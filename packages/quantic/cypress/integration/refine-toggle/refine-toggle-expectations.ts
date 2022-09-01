@@ -14,6 +14,14 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .logDetail(`${should(display)} display the refine toggle`);
     },
 
+    refineToggleTitleContains: (title: string) => {
+      selector
+        .refineToggle()
+        .invoke('attr', 'title')
+        .should('eq', title)
+        .logDetail(`The refine toggle title should contain ${title}`);
+    },
+
     displayRefineToggleIcon: (display: boolean) => {
       selector
         .refineToggleIcon()
