@@ -77,7 +77,7 @@ export default class QuanticFacet extends LightningElement {
    *   - `automatic`
    * @api
    * @type  {'score' | 'alphanumeric' | 'occurrences'}
-   * @defaultValue `'automatic'`
+   * @defaultValue `'alphanumeric'`
    */
   @api sortCriteria = 'alphanumeric';
   /**
