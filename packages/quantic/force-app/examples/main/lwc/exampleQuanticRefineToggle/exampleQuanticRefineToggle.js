@@ -54,6 +54,13 @@ export default class ExampleQuanticRefineToggle extends LightningElement {
         'Indicates whether the refine modal should be opened in full screen.',
       defaultValue: false,
     },
+    {
+      attribute: 'title',
+      label: 'Title',
+      description:
+        'The title of the toggle button.',
+      defaultValue: 'Sort & Filters',
+    },
   ];
 
   formattingFunction = (item) => `${item.start} - ${item.end}`;
