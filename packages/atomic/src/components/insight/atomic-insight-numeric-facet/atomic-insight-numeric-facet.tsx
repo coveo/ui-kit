@@ -25,7 +25,6 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
-import {randomID} from '../../../utils/utils';
 import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
@@ -196,9 +195,9 @@ export class AtomicInsightNumericFacet
   private initializeFacetForInput() {
     this.facetForInput = buildInsightNumericFacet(this.bindings.engine, {
       options: {
+        facetId: `${this.facetId}_input_range`,
         numberOfValues: 1,
         generateAutomaticRanges: true,
-        facetId: randomID(this.facetId || this.field),
         field: this.field,
         sortCriteria: this.sortCriteria,
         rangeAlgorithm: this.rangeAlgorithm,
@@ -231,7 +230,7 @@ export class AtomicInsightNumericFacet
   private initializeFilter() {
     this.filter = buildInsightNumericFilter(this.bindings.engine, {
       options: {
-        facetId: this.facetId ? `${this.facetId}_input` : undefined,
+        facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });

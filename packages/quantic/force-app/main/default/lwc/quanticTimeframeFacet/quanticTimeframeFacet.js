@@ -20,6 +20,7 @@ import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import startLabel from '@salesforce/label/c.quantic_StartLabel';
 import endLabel from '@salesforce/label/c.quantic_EndLabel';
 import apply from '@salesforce/label/c.quantic_Apply';
+import timeframeInputApply from '@salesforce/label/c.quantic_TimeframeInputApply';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
@@ -171,6 +172,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     startLabel,
     endLabel,
     apply,
+    timeframeInputApply,
   };
 
   connectedCallback() {
@@ -192,7 +194,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   get showFacet() {
     const facetIsActivated =
-      this.hasActiveValues || !!this.dateFilterState.range;
+      this.hasActiveValues || !!this.dateFilterState?.range;
     const canRefineWithCustomRange = this.hasResults && this.withDatePicker;
     const canRefineWithTimeframes =
       this.hasResults && this.formattedValues.length > 0;
@@ -301,7 +303,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
   get hasActiveValues() {
     return (
-      this.formattedValues.some((v) => v.selected) || this.dateFilterState.range
+      this.formattedValues.some((v) => v.selected) || this.dateFilterState?.range
     );
   }
 
@@ -409,6 +411,13 @@ export default class QuanticTimeframeFacet extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted;
 
     this.hasResults = this.searchStatus.state.hasResults;
+    
+    const renderFacetEvent = new CustomEvent('renderFacet', {
+      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.showFacet},
+      bubbles: true,
+      composed: true,
+    })
+    this.dispatchEvent(renderFacetEvent);
   }
 
   updateFacetState() {
@@ -645,5 +654,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
         end: DateUtils.toLocalSearchApiDate(endDate),
       })
     );
+  }
+
+  get ariaLabelValue() {
+    return I18nUtils.format(this.labels.timeframeInputApply, this.field);
   }
 }

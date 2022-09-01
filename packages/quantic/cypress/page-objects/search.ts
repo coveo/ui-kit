@@ -238,3 +238,19 @@ export function getRoute(useCase?: string) {
     ? routeMatchers.insight
     : routeMatchers.search;
 }
+
+export function mockSearchWithoutAnyFacetValues() {
+  cy.intercept(routeMatchers.search, (req) => {
+    req.continue((res) => {
+      res.body.facets.forEach((facet: {values: string[]}) => {
+        facet.values = [];
+      });
+      res.body.results = [
+        {title: 'Result', uri: 'uri', raw: {urihash: 'resulthash'}},
+      ];
+      res.body.totalCount = 1;
+      res.body.totalCountFiltered = 1;
+      res.send();
+    });
+  }).as(InterceptAliases.Search.substring(1));
+}

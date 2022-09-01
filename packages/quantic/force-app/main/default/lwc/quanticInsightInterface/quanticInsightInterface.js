@@ -4,6 +4,7 @@ import {
   loadDependencies,
   setEngineOptions,
   HeadlessBundleNames,
+  destroyEngine
 } from 'c/quanticHeadlessLoader';
 
 // @ts-ignore
@@ -33,6 +34,10 @@ export default class QuanticInsightInterface extends LightningElement {
 
   /** @type {InsightEngineOptions} */
   engineOptions;
+
+  disconnectedCallback(){
+    destroyEngine(this.engineId);
+  }
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.insight).then(() => {

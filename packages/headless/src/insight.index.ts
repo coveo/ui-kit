@@ -1,14 +1,5 @@
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
-export type {Result} from './api/search/search/result';
-export type {
-  ResultTemplate,
-  ResultTemplateCondition,
-} from './features/result-templates/result-templates';
-export {ResultTemplatesHelpers} from './features';
-
-export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
-export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 
 // Main App
 export type {
@@ -38,8 +29,6 @@ export * from './features/recent-results/recent-results-actions-loader';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
-export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
-export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 
 // Controllers
 export type {
@@ -47,6 +36,8 @@ export type {
   Subscribable,
 } from './controllers/controller/headless-controller';
 export {buildController} from './controllers/controller/headless-controller';
+
+export type {HighlightKeyword} from './utils/highlight';
 
 export type {
   DidYouMean,
@@ -101,6 +92,14 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreCategoryFacet,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreCategoryFacetState,
 } from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 export {buildCategoryFacet} from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 
@@ -115,6 +114,14 @@ export type {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreFacet,
+  /**
+   * @deprecated This is an internal controller that will be removed in the next version.
+   */
+  CoreFacetState,
 } from './controllers/insight/facets/facet/headless-insight-facet';
 export {buildFacet} from './controllers/insight/facets/facet/headless-insight-facet';
 
@@ -257,6 +264,25 @@ export type {InsightInterfaceState} from './features/insight-interface/insight-i
 export type {InsightInterface} from './controllers/insight-interface/insight-interface';
 export {buildInsightInterface} from './controllers/insight-interface/insight-interface';
 
+// Features
+export type {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {ResultTemplatesHelpers} from './features';
+
+export type {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+
+export type {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
+
+export type {
+  QueryError,
+  QueryErrorState,
+} from './controllers/insight/query-error/headless-insight-query-error';
+export {buildQueryError} from './controllers/insight/query-error/headless-insight-query-error';
+
 export type {
   FacetValueRequest,
   FacetSortCriterion,
@@ -268,6 +294,10 @@ export type {
 } from './features/facets/range-facets/generic/interfaces/request';
 
 // Types & Helpers
+export type {Raw} from './api/search/search/raw';
+export type {InsightAPIErrorStatusResponse} from './api/service/insight/insight-api-client';
+export type {Result} from './api/search/search/result';
+
 export {
   SortOrder,
   buildDateSortCriterion,

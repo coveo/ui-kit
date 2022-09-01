@@ -1,11 +1,10 @@
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {FacetValueState} from '../../../../../features/facets/facet-api/value';
 import {
   formatDateForSearchApi,
   AbsoluteDate,
   validateAbsoluteDate,
+  parseDate,
 } from '../../../../../api/search/date/date-format';
 import {
   serializeRelativeDate,
@@ -15,8 +14,6 @@ import {
   validateRelativeDate,
 } from '../../../../../api/search/date/relative-date';
 import {isUndefined} from '@coveo/bueno';
-
-dayjs.extend(customParseFormat);
 
 export type DateRangeInput = AbsoluteDate | RelativeDate;
 
@@ -97,5 +94,5 @@ function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   }
 
   validateAbsoluteDate(rawDate, dateFormat);
-  return formatDateForSearchApi(dayjs(rawDate, dateFormat));
+  return formatDateForSearchApi(parseDate(rawDate, dateFormat));
 }

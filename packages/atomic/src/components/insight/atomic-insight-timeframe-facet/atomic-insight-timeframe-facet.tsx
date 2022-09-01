@@ -10,7 +10,6 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
-import {randomID} from '../../../utils/utils';
 import {BaseFacet, parseDependsOn} from '../../common/facets/facet-common';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
@@ -23,7 +22,6 @@ import {
   buildInsightSearchStatus,
   deserializeInsightRelativeDate,
   InsightDateFacet,
-  InsightDateFacetOptions,
   InsightDateFacetState,
   InsightDateFilter,
   InsightDateFilterState,
@@ -132,6 +130,7 @@ export class AtomicInsightTimeframeFacet
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
+      facetId: this.facetId,
       host: this.host,
       bindings: this.bindings,
       label: this.label,
@@ -139,6 +138,7 @@ export class AtomicInsightTimeframeFacet
       headingLevel: this.headingLevel,
       dependsOn: this.dependsOn,
       withDatePicker: this.withDatePicker,
+      setFacetId: (id: string) => (this.facetId = id),
       buildDependenciesManager: () =>
         buildInsightFacetConditionsManager(this.bindings.engine, {
           facetId:
@@ -163,9 +163,9 @@ export class AtomicInsightTimeframeFacet
   private initializeFacetForDatePicker() {
     this.facetForDatePicker = buildInsightDateFacet(this.bindings.engine, {
       options: {
+        facetId: `${this.facetId}_input_range`,
         numberOfValues: 1,
         generateAutomaticRanges: true,
-        facetId: randomID(this.facetId || this.field),
         field: this.field,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
@@ -175,34 +175,29 @@ export class AtomicInsightTimeframeFacet
   }
 
   private initializeFacetForDateRange(values: InsightDateRangeRequest[]) {
-    const options: InsightDateFacetOptions = {
-      facetId: this.facetId,
-      field: this.field,
-      currentValues: values,
-      generateAutomaticRanges: false,
-      sortCriteria: 'descending',
-      filterFacetCount: this.filterFacetCount,
-      injectionDepth: this.injectionDepth,
-    };
-
     this.facetForDateRange = buildInsightDateFacet(this.bindings.engine, {
-      options,
+      options: {
+        facetId: this.facetId,
+        field: this.field,
+        currentValues: values,
+        generateAutomaticRanges: false,
+        sortCriteria: 'descending',
+        filterFacetCount: this.filterFacetCount,
+        injectionDepth: this.injectionDepth,
+      },
     });
-    this.facetId = this.facetForDateRange.state.facetId;
+
     return this.facetForDateRange;
   }
 
   private initializeFilter() {
     this.filter = buildInsightDateFilter(this.bindings.engine, {
       options: {
-        facetId: this.facetId ? `${this.facetId}_input` : undefined,
+        facetId: `${this.facetId}_input`,
         field: this.field,
       },
     });
 
-    if (!this.facetId) {
-      this.facetId = this.filter.state.facetId;
-    }
     return this.filter;
   }
 

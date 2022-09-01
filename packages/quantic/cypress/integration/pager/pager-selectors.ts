@@ -12,8 +12,8 @@ export interface PagerSelector extends ComponentSelector {
 export const PagerSelectors: PagerSelector = {
   get: () => cy.get(pagerComponent),
 
-  previous: () => PagerSelectors.get().find('button[title="Previous"]'),
-  next: () => PagerSelectors.get().find('button[title="Next"]'),
+  previous: () => PagerSelectors.get().find('button[title="Previous Page"]'),
+  next: () => PagerSelectors.get().find('button[title="Next Page"]'),
   page: () => PagerSelectors.get().find('c-quantic-number-button button'),
   selectedPage: () =>
     PagerSelectors.get().find(

@@ -1,9 +1,24 @@
-import dayjs from 'dayjs';
 import {
   isSearchApiDate,
   formatDateForSearchApi,
   validateAbsoluteDate,
+  parseDate,
 } from './date-format';
+
+describe('#parseDate', () => {
+  it('can parse the search API format', () => {
+    expect(parseDate('2022/08/23@17:42:55').toDate().toUTCString()).toEqual(
+      new Date('2022-08-23T17:42:55').toUTCString()
+    );
+  });
+
+  it('parses the date in the current timezone by default', () => {
+    expect(parseDate('2022-08-23T17:42:55').toDate().toUTCString()).toEqual(
+      new Date('2022-08-23T17:42:55+08:45').toUTCString()
+    );
+    jest.resetAllMocks();
+  });
+});
 
 describe('#isSearchApiDate', () => {
   it('when the string matches the search api format, it returns true', () => {
@@ -18,8 +33,8 @@ describe('#isSearchApiDate', () => {
 describe('#formatDateForSearchApi', () => {
   it('returns the correct format', () => {
     const date = 818035920000;
-    expect(formatDateForSearchApi(dayjs(date))).toBe(
-      dayjs(date).format('YYYY/MM/DD@HH:mm:ss')
+    expect(formatDateForSearchApi(parseDate(date))).toBe(
+      parseDate(date).format('YYYY/MM/DD@HH:mm:ss')
     );
   });
 });

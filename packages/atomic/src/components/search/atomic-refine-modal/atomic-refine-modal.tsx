@@ -3,7 +3,6 @@ import {
   BreadcrumbManager,
   buildBreadcrumbManager,
   BreadcrumbManagerState,
-  buildQuerySummary,
   QuerySummary,
   QuerySummaryState,
   FacetManager,
@@ -12,6 +11,7 @@ import {
   Sort,
   buildSort,
   SortState,
+  buildQuerySummary,
 } from '@coveo/headless';
 import {
   BindStateToController,
@@ -26,7 +26,6 @@ import {
   getClonedFacetElements,
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
-import {Hidden} from '../../common/hidden';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -54,7 +53,6 @@ import {Hidden} from '../../common/hidden';
   shadow: true,
 })
 export class AtomicRefineModal implements InitializableComponent {
-  private refineModalCommon!: RefineModalCommon;
   private sort!: Sort;
   private breadcrumbManager!: BreadcrumbManager;
   public querySummary!: QuerySummary;
@@ -95,17 +93,9 @@ export class AtomicRefineModal implements InitializableComponent {
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
-    this.refineModalCommon = new RefineModalCommon({
-      host: this.host,
-      bindings: this.bindings,
-      initializeQuerySummary: () =>
-        (this.querySummary = buildQuerySummary(this.bindings.engine)),
-      onClose: () => {
-        this.isOpen = false;
-      },
-    });
     this.facetManager = buildFacetManager(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine);
+    this.querySummary = buildQuerySummary(this.bindings.engine);
     this.watchEnabled(this.isOpen);
   }
 
@@ -191,16 +181,22 @@ export class AtomicRefineModal implements InitializableComponent {
   }
 
   public render() {
-    if (!this.refineModalCommon) {
-      return <Hidden></Hidden>;
-    }
-    return this.refineModalCommon.render(this.renderBody(), {
-      isOpen: this.isOpen,
-      openButton: this.openButton,
-    });
+    return (
+      <RefineModalCommon
+        bindings={this.bindings}
+        host={this.host}
+        isOpen={this.isOpen}
+        onClose={() => (this.isOpen = false)}
+        title={this.bindings.i18n.t('sort-and-filter')}
+        querySummaryState={this.querySummaryState}
+        openButton={this.openButton}
+      >
+        {this.renderBody()}
+      </RefineModalCommon>
+    );
   }
 
   public componentDidLoad() {
-    this.refineModalCommon.showModal();
+    this.host.style.display = '';
   }
 }

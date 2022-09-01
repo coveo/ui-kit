@@ -47,6 +47,19 @@ describe('No Results Test Suites', () => {
     });
   });
 
+  describe('when the query contains HTML characters', () => {
+    beforeEach(() => {
+      env.withHash('q=<div>$@#()-^!gahaiusdhgaiuewjfsf</div>').init();
+    });
+
+    it('text content should match', () => {
+      cy.get(noResultsComponent)
+        .shadow()
+        .find('[part="no-results"] [part="highlight"]')
+        .should('contain.text', '<div>$@#()-^!gahaiusdhgaiuewjfsf</div>');
+    });
+  });
+
   it('cancel button should not be visible when there is no history', () => {
     env.withHash('q=gahaiusdhgaiuewjfsf').init();
     cy.get(noResultsComponent).shadow().get('button').should('not.exist');
