@@ -1,6 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {executeSearch} from '../search/search-actions';
-import {undoQueryTrigger} from './triggers-actions';
+import {
+  applyQueryTriggerModification,
+  updateIgnoreQueryTrigger,
+} from './triggers-actions';
 import {
   FunctionExecutionTrigger,
   getTriggerInitialState,
@@ -10,6 +13,14 @@ export const triggerReducer = createReducer(
   getTriggerInitialState(),
   (builder) =>
     builder
+      .addCase(executeSearch.pending, (state) => {
+        state.query = '';
+        state.queryModification = {
+          originalQuery: '',
+          modification: '',
+          ignore: state.queryModification.ignore,
+        };
+      })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const redirectTriggers: string[] = [];
         const queryTriggers: string[] = [];
@@ -22,9 +33,7 @@ export const triggerReducer = createReducer(
               redirectTriggers.push(trigger.content);
               break;
             case 'query':
-              if (trigger.content !== state.queryTriggerToIgnore) {
-                queryTriggers.push(trigger.content);
-              }
+              queryTriggers.push(trigger.content);
 
               break;
             case 'execute':
@@ -41,7 +50,7 @@ export const triggerReducer = createReducer(
 
         state.redirectTo = redirectTriggers[0] ?? '';
 
-        state.query = queryTriggers[0] ?? '';
+        state.query = state.queryModification.modification;
 
         state.execute = executeTriggers[0] ?? {functionName: '', params: []};
         state.executions = executeTriggers;
@@ -49,7 +58,10 @@ export const triggerReducer = createReducer(
         state.notification = notifyTriggers[0] ?? '';
         state.notifications = notifyTriggers;
       })
-      .addCase(undoQueryTrigger, (state, action) => {
-        state.queryTriggerToIgnore = action.payload;
+      .addCase(applyQueryTriggerModification, (state, action) => {
+        state.queryModification = {...action.payload, ignore: ''};
+      })
+      .addCase(updateIgnoreQueryTrigger, (state, action) => {
+        state.queryModification.ignore = action.payload;
       })
 );

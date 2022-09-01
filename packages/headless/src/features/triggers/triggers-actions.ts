@@ -1,10 +1,25 @@
+import {RecordValue, StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload';
+import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
 
-export const undoQueryTrigger = createAction(
-  'trigger/query/undo',
-  (q: string) => validatePayload(q, requiredNonEmptyString)
+export interface ApplyQueryTriggerModificationPayload {
+  originalQuery: string;
+  modification: string;
+}
+
+export const updateIgnoreQueryTrigger = createAction(
+  'trigger/query/ignore',
+  (q: string) =>
+    validatePayload(q, new StringValue({emptyAllowed: true, required: true}))
+);
+
+export const applyQueryTriggerModification = createAction(
+  'trigger/query/modification',
+  (payload: ApplyQueryTriggerModificationPayload) =>
+    validatePayload<ApplyQueryTriggerModificationPayload>(
+      payload,
+      new RecordValue({
+        values: {originalQuery: nonEmptyString, modification: nonEmptyString},
+      })
+    )
 );

@@ -50,9 +50,13 @@ export interface TriggerState {
   notifications: string[];
 
   /**
-   * Query trigger that should be ignored as requested by the end user with the undo feature.
+   * The modification that should be applied as a result of a query trigger.
    */
-  queryTriggerToIgnore: string;
+  queryModification: {
+    originalQuery: string;
+    modification: string;
+    ignore: string;
+  };
 }
 
 export const getTriggerInitialState: () => TriggerState = () => ({
@@ -62,5 +66,5 @@ export const getTriggerInitialState: () => TriggerState = () => ({
   executions: [],
   notification: '',
   notifications: [],
-  queryTriggerToIgnore: '',
+  queryModification: {originalQuery: '', modification: '', ignore: ''},
 });
