@@ -4,6 +4,8 @@ import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
+import {getHtml} from '../../search/html/html-api-client';
+import {HtmlRequest} from '../../search/html/html-request';
 import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {SearchResponseSuccess} from '../../search/search/search-response';
 import {
@@ -111,5 +113,9 @@ export class InsightAPIClient {
     return response.ok
       ? {success: body as InsightUserActionsResponse}
       : {error: body as InsightAPIErrorStatusResponse};
+  }
+
+  async html(req: HtmlRequest) {
+    return getHtml(req, {...this.options});
   }
 }
