@@ -74,12 +74,11 @@ export default class QuanticFacet extends LightningElement {
    *   - `score`
    *   - `alphanumeric`
    *   - `occurrences`
-   *   - `automatic`
    * @api
    * @type  {'score' | 'alphanumeric' | 'occurrences'}
-   * @defaultValue `'alphanumeric'`
+   * @defaultValue `'score'`
    */
-  @api sortCriteria = 'alphanumeric';
+  @api sortCriteria = 'score';
   /**
    * Whether this facet should not contain a search box.
    * @api
