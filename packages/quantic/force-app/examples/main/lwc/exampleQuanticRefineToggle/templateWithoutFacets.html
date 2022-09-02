@@ -37,6 +37,7 @@
             engine-id={engineId}
             full-screen={config.fullScreen}
             hide-sort={config.hideSort}
+            title={config.title}
           >
             <div slot="refine-title" class="refine-modal__title">
               Custom Title
@@ -46,7 +47,7 @@
               <lightning-icon
                 size="x-small"
                 icon-name="utility:filterList"
-                alternative-text={buttonLabel}
+                alternative-text={config.title}
                 class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right"
               >
               </lightning-icon>
