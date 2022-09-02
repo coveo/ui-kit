@@ -14,6 +14,14 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .logDetail(`${should(display)} display the refine toggle`);
     },
 
+    refineToggleTitleContains: (title: string) => {
+      selector
+        .refineToggle()
+        .invoke('attr', 'title')
+        .should('eq', title)
+        .logDetail(`The refine toggle title should contain ${title}`);
+    },
+
     displayRefineToggleIcon: (display: boolean) => {
       selector
         .refineToggleIcon()
@@ -115,6 +123,14 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .filtersCountBadge()
         .contains(`${count}`)
         .logDetail(`The filters count badge should contain "${count}"`);
+    },
+
+    refineToggleDisabled: (disabled: boolean) => {
+      selector
+        .refineToggle()
+        .invoke('attr', 'disabled')
+        .should(disabled ? 'exist' : 'not.exist')
+        .logDetail(`The refine button ${should(disabled)} be disabled`);
     },
   };
 }

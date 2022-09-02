@@ -1,5 +1,6 @@
 import {h, VNode, FunctionalComponent} from '@stencil/core';
-import MagnifyingGlass from '../../../images/magnifying-glass.svg';
+import MagnifyingGlassIcon from '../../../images/magnifying-glass.svg';
+import {LocalizedString} from '../../../utils/jsx-utils';
 import {AnyBindings} from '../interface/bindings';
 
 interface NoResultsProps {
@@ -15,27 +16,68 @@ interface NoResultsProps {
   };
   setAriaLive: (message: string) => void;
 }
+
+const BetweenQuotes: FunctionalComponent<{
+  content: string;
+  bindings: AnyBindings;
+}> = (props) => {
+  return (
+    <span class="font-bold" part="highlight">
+      <LocalizedString
+        key="between-quotations"
+        params={{text: props.content}}
+        bindings={props.bindings}
+      />
+    </span>
+  );
+};
+
+const MagnifyingGlass: FunctionalComponent = () => (
+  <atomic-icon
+    part="icon"
+    icon={MagnifyingGlassIcon}
+    class="my-6 flex flex-col items-center w-1/2 max-w-lg"
+  ></atomic-icon>
+);
+
+const NoResults: FunctionalComponent<{
+  querySummaryState: NoResultsProps['querySummaryState'];
+  bindings: AnyBindings;
+}> = (props) => {
+  const {hasQuery, query} = props.querySummaryState;
+  const content = hasQuery ? (
+    <LocalizedString
+      bindings={props.bindings}
+      key="no-results-for"
+      params={{
+        query: <BetweenQuotes bindings={props.bindings} content={query} />,
+      }}
+    />
+  ) : (
+    props.bindings.i18n.t('no-results')
+  );
+  return (
+    <div
+      class="my-2 text-2xl font-medium truncate overflow-hidden max-w-full"
+      part="no-results"
+    >
+      {content}
+    </div>
+  );
+};
+
+const SearchTips: FunctionalComponent<{bindings: AnyBindings}> = (props) => {
+  return (
+    <div class="my-2 text-lg text-neutral-dark" part="search-tips">
+      {props.bindings.i18n.t('search-tips')}
+    </div>
+  );
+};
+
 export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
   props,
   children
 ) => {
-  const wrapHighlight = (content: string) => {
-    return `<span class="font-bold" part="highlight">${props.bindings.i18n.t(
-      'between-quotations',
-      {text: escape(content), interpolation: {escapeValue: false}}
-    )}</span>`;
-  };
-
-  const renderMagnifyingGlass = (): VNode => {
-    return (
-      <atomic-icon
-        part="icon"
-        icon={MagnifyingGlass}
-        class="my-6 flex flex-col items-center w-1/2 max-w-lg"
-      ></atomic-icon>
-    );
-  };
-
   const getSummary = () => {
     return props.querySummaryState.hasQuery
       ? props.bindings.i18n.t('no-results-for', {
@@ -43,32 +85,6 @@ export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
           query: props.querySummaryState.query,
         })
       : props.bindings.i18n.t('no-results');
-  };
-
-  const renderNoResults = (): VNode => {
-    const {hasQuery, query} = props.querySummaryState;
-    const content = hasQuery
-      ? props.bindings.i18n.t('no-results-for', {
-          interpolation: {escapeValue: false},
-          query: wrapHighlight(query),
-        })
-      : props.bindings.i18n.t('no-results');
-    return (
-      // file deepcode ignore ReactSetInnerHtml: This is not React code.
-      <div
-        class="my-2 text-2xl font-medium truncate overflow-hidden max-w-full"
-        part="no-results"
-        innerHTML={content}
-      ></div>
-    );
-  };
-
-  const renderSearchTips = (): VNode => {
-    return (
-      <div class="my-2 text-lg text-neutral-dark" part="search-tips">
-        {props.bindings.i18n.t('search-tips')}
-      </div>
-    );
   };
 
   const {firstSearchExecuted, isLoading, hasResults} = props.searchStatusState;
@@ -80,9 +96,9 @@ export const NoResultsCommon: FunctionalComponent<NoResultsProps> = (
 
   return [
     <div class="flex flex-col items-center h-full w-full text-on-background">
-      {renderMagnifyingGlass()}
-      {renderNoResults()}
-      {renderSearchTips()}
+      <MagnifyingGlass />
+      <NoResults {...props} />
+      <SearchTips {...props} />
       {...children}
     </div>,
     <slot></slot>,
