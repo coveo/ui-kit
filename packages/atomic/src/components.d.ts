@@ -453,6 +453,10 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage": number;
     }
     interface AtomicInsightLayout {
         /**
@@ -1358,6 +1362,9 @@ export namespace Components {
         "mobileBreakpoint": string;
     }
     interface AtomicSegmentedFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+         */
         "dependsOn": Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
@@ -1387,7 +1394,6 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
-        "withSearch": boolean;
     }
     interface AtomicSegmentedFacetScrollable {
     }
@@ -2703,6 +2709,10 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage"?: number;
     }
     interface AtomicInsightLayout {
         /**
@@ -3572,6 +3582,9 @@ declare namespace LocalJSX {
         "mobileBreakpoint"?: string;
     }
     interface AtomicSegmentedFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+         */
         "dependsOn"?: Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
@@ -3601,7 +3614,6 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
-        "withSearch"?: boolean;
     }
     interface AtomicSegmentedFacetScrollable {
     }

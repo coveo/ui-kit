@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.41.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.40.1...@coveo/quantic@1.41.0) (2022-09-02)
+
+
+### Bug Fixes
+
+* **quantic:** added the missing title of the refine toggle button ([#2387](https://github.com/coveo/ui-kit/issues/2387)) ([cf7c98a](https://github.com/coveo/ui-kit/commit/cf7c98a9f965257481e2d2989be1715eb9b919f2))
+* **quantic:** JS doc comment fixed to generate the correct documentation for the QuanticNoResults component ([#2376](https://github.com/coveo/ui-kit/issues/2376)) ([285ffdc](https://github.com/coveo/ui-kit/commit/285ffdca7fe95d7fee55cb8af138d8da5ddaa28e))
+* **quantic:** logic added to disable refine toggle when there is nothing to show in the filters tab ([#2375](https://github.com/coveo/ui-kit/issues/2375)) ([5a02c13](https://github.com/coveo/ui-kit/commit/5a02c132fe1abff2c20b00b2d0704199650a3b86))
+
+
+### Features
+
+* **quantic:** add focus control to modal ([#2374](https://github.com/coveo/ui-kit/issues/2374)) ([dbbfb32](https://github.com/coveo/ui-kit/commit/dbbfb32ca5003fff3a43e55fba322275f2a59f33))
+
+
+
+
+
 ## [1.40.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.40.0...@coveo/quantic@1.40.1) (2022-08-26)
 
 

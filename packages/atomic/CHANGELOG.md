@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.106.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.106.0...@coveo/atomic@1.106.1) (2022-09-02)
+
+
+### Bug Fixes
+
+* **atomic:** cleanup unused prop for segmented facet and add support for depends on ([#2390](https://github.com/coveo/ui-kit/issues/2390)) ([9d07f4f](https://github.com/coveo/ui-kit/commit/9d07f4f529c2009d758bcde952189543309c379c))
+
+
+
+
+
+# [1.106.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.105.1...@coveo/atomic@1.106.0) (2022-09-02)
+
+
+### Features
+
+* **atomic:** set default insight panel results per page ([#2385](https://github.com/coveo/ui-kit/issues/2385)) ([41c84e0](https://github.com/coveo/ui-kit/commit/41c84e09fd6b7a93fa9da86b0140c198ff8b7d87))
+
+
+
+
+
 ## [1.105.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.105.0...@coveo/atomic@1.105.1) (2022-08-29)
 
 

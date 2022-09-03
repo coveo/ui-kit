@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.103.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.102.0...@coveo/headless@1.103.0) (2022-09-02)
+
+
+### Features
+
+* **headless:** added insight use case to ref doc ([#2277](https://github.com/coveo/ui-kit/issues/2277)) ([6e3c76d](https://github.com/coveo/ui-kit/commit/6e3c76da84d83560dcbbd47942bb7a52d12ecfde))
+
+
+
+
+
 # [1.102.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.101.2...@coveo/headless@1.102.0) (2022-08-24)
 
 
