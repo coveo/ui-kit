@@ -2,6 +2,7 @@ import {Component, h, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
 import {makeMatchConditions} from '../../common/result-template/result-template';
 import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
+import {ResultTemplatesHelpers} from '@coveo/headless';
 
 /**
  * @internal
@@ -25,6 +26,20 @@ export class AtomicInsightResultTemplate {
   @Prop() public conditions: InsightResultTemplateCondition[] = [];
 
   /**
+   * The field that, when defined on a result item, would allow the template to be applied.
+   *
+   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `is-defined="filetype,sourcetype"`
+   */
+  @Prop({reflect: true}) isDefined?: string;
+
+  /**
+   * The field that, when defined on a result item, would prevent the template from being applied.
+   *
+   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `is-not-defined="filetype,sourcetype"`
+   */
+  @Prop({reflect: true}) isNotDefined?: string;
+
+  /**
    * The field and values that define which result items the condition must be applied to.
    *
    * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
@@ -40,6 +55,18 @@ export class AtomicInsightResultTemplate {
     {};
 
   public componentWillLoad() {
+    if (this.isDefined) {
+      const fieldNames = this.isDefined.split(',');
+      this.conditions.push(
+        ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
+      );
+    }
+    if (this.isNotDefined) {
+      const fieldNames = this.isNotDefined.split(',');
+      this.conditions.push(
+        ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
+      );
+    }
     this.matchConditions.push(
       ...makeMatchConditions(this.mustMatch, this.mustNotMatch)
     );
