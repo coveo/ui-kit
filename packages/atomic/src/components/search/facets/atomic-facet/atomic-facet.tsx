@@ -120,7 +120,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @Prop({reflect: true}) public displayValuesAs: 'checkbox' | 'link' | 'box' =
     'checkbox';
   /**
-   * Specifies if the facet is collapsed.
+   * Specifies if the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, it will control this property.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
