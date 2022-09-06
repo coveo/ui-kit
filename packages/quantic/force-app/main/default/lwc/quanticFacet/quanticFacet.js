@@ -74,12 +74,11 @@ export default class QuanticFacet extends LightningElement {
    *   - `score`
    *   - `alphanumeric`
    *   - `occurrences`
-   *   - `automatic`
    * @api
-   * @type  {'score' | 'alphanumeric' | 'occurrences' | 'automatic'}
-   * @defaultValue `'automatic'`
+   * @type  {'score' | 'alphanumeric' | 'occurrences'}
+   * @defaultValue `'score'`
    */
-  @api sortCriteria = 'automatic';
+  @api sortCriteria = 'score';
   /**
    * Whether this facet should not contain a search box.
    * @api
@@ -221,9 +220,12 @@ export default class QuanticFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
-    
+
     const renderFacetEvent = new CustomEvent('renderFacet', {
-      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.hasValues},
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.hasValues,
+      },
       bubbles: true,
       composed: true,
     });
