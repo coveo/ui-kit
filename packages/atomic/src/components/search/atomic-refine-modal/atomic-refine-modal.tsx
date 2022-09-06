@@ -46,6 +46,8 @@ import {
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
  * @part footer - The footer of the modal, containing the clear all button.
  * @part footer-button - The button in the footer that closes the modal.
+ * @part footer-button-text - The text inside the button in the footer that closes the modal.
+ * @part footer-button-count - The count inside the button in the footer that closes the modal.
  */
 @Component({
   tag: 'atomic-refine-modal',

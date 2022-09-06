@@ -55,10 +55,10 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
           class="w-full p-3 flex text-lg justify-center"
           onClick={props.onClose}
         >
-          <span class="truncate mr-1">
+          <span part="footer-button-text" class="truncate mr-1">
             {props.bindings.i18n.t('view-results')}
           </span>
-          <span>
+          <span part="footer-button-count">
             {props.bindings.i18n.t('between-parentheses', {
               text: props.querySummaryState.total.toLocaleString(
                 props.bindings.i18n.language
