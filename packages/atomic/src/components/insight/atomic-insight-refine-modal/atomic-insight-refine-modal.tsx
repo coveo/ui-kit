@@ -1,4 +1,14 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
+import {
+  buildFacetManager,
+  FacetManager,
+  QuerySummary,
+  QuerySummaryState,
+  buildQuerySummary,
+  BreadcrumbManager,
+  BreadcrumbManagerState,
+  buildBreadcrumbManager,
+} from '@coveo/headless/insight';
 import {debounce} from 'ts-debounce';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
@@ -11,17 +21,11 @@ import {
   InsightInterfaceDimensions,
 } from '../atomic-insight-interface/atomic-insight-interface';
 import {
-  buildInsightFacetManager,
-  InsightFacetManager,
-  InsightQuerySummary,
-  InsightQuerySummaryState,
-  buildInsightQuerySummary,
-} from '..';
-import {
   getClonedFacetElements,
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
 import {Hidden} from '../../common/hidden';
+import {Button} from '../../common/button';
 
 /**
  * @internal
@@ -39,7 +43,11 @@ export class AtomicInsightRefineModal
 
   @BindStateToController('querySummary')
   @State()
-  public querySummaryState!: InsightQuerySummaryState;
+  public querySummaryState!: QuerySummaryState;
+
+  @BindStateToController('breadcrumbManager')
+  @State()
+  public breadcrumbManagerState!: BreadcrumbManagerState;
 
   @State()
   public error!: Error;
@@ -52,11 +60,12 @@ export class AtomicInsightRefineModal
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
   private interfaceDimensions?: InsightInterfaceDimensions;
-  private facetManager!: InsightFacetManager;
+  private facetManager!: FacetManager;
   private resizeObserver?: ResizeObserver;
   private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
   private scrollCallback = () => this.debouncedUpdateDimensions();
-  public querySummary!: InsightQuerySummary;
+  public querySummary!: QuerySummary;
+  private breadcrumbManager!: BreadcrumbManager;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -106,8 +115,27 @@ export class AtomicInsightRefineModal
   }
 
   public initialize() {
-    this.facetManager = buildInsightFacetManager(this.bindings.engine);
-    this.querySummary = buildInsightQuerySummary(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
+    this.querySummary = buildQuerySummary(this.bindings.engine);
+    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
+  }
+
+  private renderHeader() {
+    return (
+      <div class="w-full flex justify-between mb-3">
+        <h2 class="text-2xl font-bold truncate">
+          {this.bindings.i18n.t('filters')}
+        </h2>
+        {this.breadcrumbManagerState.hasBreadcrumbs && (
+          <Button
+            onClick={() => this.breadcrumbManager.deselectAll()}
+            style="text-primary"
+            text={this.bindings.i18n.t('clear-all-filters')}
+            class="px-2 py-1"
+          ></Button>
+        )}
+      </div>
+    );
   }
 
   private renderBody() {
@@ -117,6 +145,7 @@ export class AtomicInsightRefineModal
 
     return (
       <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+        {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
     );
