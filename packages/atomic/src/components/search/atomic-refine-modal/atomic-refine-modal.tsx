@@ -1,4 +1,12 @@
-import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Element,
+  Watch,
+  Fragment,
+} from '@stencil/core';
 import {
   BreadcrumbManager,
   buildBreadcrumbManager,
@@ -35,16 +43,23 @@ import {
  * @part container - The modal's outermost container.
  * @part header-wrapper - The wrapper around the header.
  * @part header - The header of the modal, containing the title.
- * @part section-title - The title for each section.
+ * @part title - The title of the modal.
  * @part close-button - The button in the header that closes the modal.
+ * @part close-icon - The icon of the close button.
  * @part header-ruler - The horizontal ruler underneath the header.
  * @part body-wrapper - The wrapper around the body.
  * @part body - The body of the modal, between the header and the footer.
+ * @part content - The wrapper around the content inside the body of the modal.
+ * @part section-title - The title for each section.
+ * @part select-wrapper - The wrapper around the select element, used to position the icon.
  * @part select - The `<select>` element of the drop-down list.
  * @part select-icon - The select dropdown's sort icon.
+ * @part select-icon-size - The element around the sort icon that can be used to resize it.
+ * @part filter-section - The section containing facets and the "filters" title.
  * @part filter-clear-all - The button that resets all actively selected facet values.
  * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
- * @part footer - The footer of the modal, containing the clear all button.
+ * @part footer - The footer of the modal.
+ * @part footer-content - The wrapper around the content inside the footer of the modal, containing the button to view results.
  * @part footer-button - The button in the footer that closes the modal.
  * @part footer-button-text - The text inside the button in the footer that closes the modal.
  * @part footer-button-count - The count inside the button in the footer that closes the modal.
@@ -126,27 +141,33 @@ export class AtomicRefineModal implements InitializableComponent {
       return;
     }
 
-    return [
-      <h1 part="section-title" class="text-2xl font-bold truncate mb-3">
-        {this.bindings.i18n.t('sort')}
-      </h1>,
-      <div class="relative">
-        <select
-          class="btn-outline-neutral w-full cursor-pointer text-lg font-bold grow appearance-none rounded-lg px-6 py-5"
-          part="select"
-          aria-label={this.bindings.i18n.t('sort-by')}
-          onChange={(option) => this.select(option)}
-        >
-          {this.options.map((option) => this.buildOption(option))}
-        </select>
-        <div
-          part="select-icon"
-          class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6"
-        >
-          <atomic-icon icon={SortIcon} class="w-6 h-6"></atomic-icon>
+    return (
+      <Fragment>
+        <h1 part="section-title" class="text-2xl font-bold truncate mb-3">
+          {this.bindings.i18n.t('sort')}
+        </h1>
+        <div part="select-wrapper" class="relative">
+          <select
+            class="btn-outline-neutral w-full cursor-pointer text-lg font-bold grow appearance-none rounded-lg px-6 py-5"
+            part="select"
+            aria-label={this.bindings.i18n.t('sort-by')}
+            onChange={(option) => this.select(option)}
+          >
+            {this.options.map((option) => this.buildOption(option))}
+          </select>
+          <div
+            part="select-icon"
+            class="absolute pointer-events-none top-0 bottom-0 right-0 flex justify-center items-center pr-6"
+          >
+            <atomic-icon
+              part="select-icon-size" // TODO: in v2, rename to "select-icon", and rename parent.
+              icon={SortIcon}
+              class="w-6 h-6"
+            ></atomic-icon>
+          </div>
         </div>
-      </div>,
-    ];
+      </Fragment>
+    );
   }
 
   private renderFilters() {
@@ -154,28 +175,37 @@ export class AtomicRefineModal implements InitializableComponent {
       return;
     }
 
-    return [
-      <div class="w-full flex justify-between mt-8 mb-3">
-        <h1 part="section-title" class="text-2xl font-bold truncate">
-          {this.bindings.i18n.t('filters')}
-        </h1>
-        {this.breadcrumbManagerState.hasBreadcrumbs && (
-          <Button
-            onClick={() => this.breadcrumbManager.deselectAll()}
-            style="text-primary"
-            text={this.bindings.i18n.t('clear')}
-            class="px-2 py-1"
-            part="filter-clear-all"
-          ></Button>
-        )}
-      </div>,
-      <slot name="facets"></slot>,
-    ];
+    return (
+      <Fragment>
+        <div
+          part="filter-section"
+          class="w-full flex justify-between mt-8 mb-3"
+        >
+          <h1 part="section-title" class="text-2xl font-bold truncate">
+            {this.bindings.i18n.t('filters')}
+          </h1>
+          {this.breadcrumbManagerState.hasBreadcrumbs && (
+            <Button
+              onClick={() => this.breadcrumbManager.deselectAll()}
+              style="text-primary"
+              text={this.bindings.i18n.t('clear')}
+              class="px-2 py-1"
+              part="filter-clear-all"
+            ></Button>
+          )}
+        </div>
+        <slot name="facets"></slot>
+      </Fragment>
+    );
   }
 
   private renderBody() {
     return (
-      <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+      <aside
+        part="content"
+        slot="body"
+        class="flex flex-col w-full adjust-for-scroll-bar"
+      >
         {this.renderSort()}
         {this.renderFilters()}
       </aside>

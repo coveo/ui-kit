@@ -32,7 +32,9 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
   const renderHeader = () => {
     return (
       <div slot="header" class="contents">
-        <h1 class="truncate">{props.title}</h1>
+        <h1 part="title" class="truncate">
+          {props.title}
+        </h1>
         <Button
           style="text-transparent"
           class="grid place-items-center"
@@ -40,7 +42,11 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
           onClick={props.onClose}
           ariaLabel={props.bindings.i18n.t('close')}
         >
-          <atomic-icon class="w-5 h-5" icon={CloseIcon}></atomic-icon>
+          <atomic-icon
+            part="close-icon"
+            class="w-5 h-5"
+            icon={CloseIcon}
+          ></atomic-icon>
         </Button>
       </div>
     );
@@ -48,7 +54,7 @@ export const RefineModalCommon: FunctionalComponent<RefineModalCommonProps> = (
 
   const renderFooter = () => {
     return (
-      <div slot="footer">
+      <div part="footer-content" slot="footer">
         <Button
           style="primary"
           part="footer-button"
