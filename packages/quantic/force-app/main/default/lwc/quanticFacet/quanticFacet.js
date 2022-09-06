@@ -153,6 +153,8 @@ export default class QuanticFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  facetContentChanged;
 
   labels = {
     showMore,
@@ -175,6 +177,10 @@ export default class QuanticFacet extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
+    if (this.facetContentChanged) {
+      this.facetContentChanged = false;
+      this.setFocusToFirstFacetValue();
+    }
   }
 
   /**
@@ -399,10 +405,12 @@ export default class QuanticFacet extends LightningElement {
 
   showMore() {
     this.facet.showMoreValues();
+    this.facetContentChanged = true;
   }
 
   showLess() {
     this.facet.showLessValues();
+    this.facetContentChanged = true;
   }
 
   clearSelections() {
@@ -444,5 +452,14 @@ export default class QuanticFacet extends LightningElement {
       regex,
       '<b class="facet__search-result_highlight">$1</b>'
     );
+  }
+
+  setFocusToFirstFacetValue() {
+    const focusTarget = this.template.querySelector('c-quantic-facet-value');
+
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
   }
 }

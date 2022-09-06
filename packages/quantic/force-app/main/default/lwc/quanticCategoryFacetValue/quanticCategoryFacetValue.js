@@ -39,6 +39,18 @@ export default class QuanticCategoryFacetValue extends LightningElement {
    * @defaultValue `false`
    */
   @api nonActiveParent = false;
+  /**
+   * A function used to set focus to the value.
+   * @api
+   * @type {VoidFunction}
+   */
+  @api setFocus() {
+    const focusTarget = this.template.querySelector('div [role="button"]');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
+  }
 
   labels = {
     inLabel,
