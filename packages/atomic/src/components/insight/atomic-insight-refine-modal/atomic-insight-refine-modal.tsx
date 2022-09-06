@@ -1,15 +1,10 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
-import {debounce} from 'ts-debounce';
-import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  InsightBindings,
-  InsightInterfaceDimensions,
-} from '../atomic-insight-interface/atomic-insight-interface';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
   buildInsightFacetManager,
   InsightFacetManager,
@@ -45,17 +40,14 @@ export class AtomicInsightRefineModal
   public error!: Error;
 
   @State()
-  public loadingDimensions = true;
+  public interfaceDimensions?: DOMRect;
 
   @Prop({mutable: true}) openButton?: HTMLElement;
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
-
-  private interfaceDimensions?: InsightInterfaceDimensions;
   private facetManager!: InsightFacetManager;
   private resizeObserver?: ResizeObserver;
-  private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
-  private scrollCallback = () => this.debouncedUpdateDimensions();
+  private scrollCallback = () => this.updateDimensions();
   public querySummary!: InsightQuerySummary;
 
   @Watch('isOpen')
@@ -69,11 +61,11 @@ export class AtomicInsightRefineModal
           )
         );
       }
-      this.debouncedUpdateDimensions();
+      this.updateDimensions();
       if (window.ResizeObserver) {
         if (!this.resizeObserver) {
           this.resizeObserver = new ResizeObserver(() =>
-            this.debouncedUpdateDimensions()
+            this.updateDimensions()
           );
         }
         this.resizeObserver.observe(document.body);
@@ -81,28 +73,19 @@ export class AtomicInsightRefineModal
 
       document.addEventListener('scroll', this.scrollCallback);
     } else {
-      this.loadingDimensions = true;
       this.resizeObserver?.disconnect();
       document.removeEventListener('scroll', this.scrollCallback);
     }
   }
 
+  public updateDimensions() {
+    this.interfaceDimensions =
+      this.bindings.interfaceElement.getBoundingClientRect();
+  }
+
   public disconnectedCallback() {
     this.resizeObserver?.disconnect();
     document.removeEventListener('scroll', this.scrollCallback);
-  }
-
-  public updateDimensions() {
-    this.loadingDimensions = true;
-    this.host.dispatchEvent(
-      buildCustomEvent(
-        'atomic/insight/getDimensions',
-        (dimensions: InsightInterfaceDimensions) => {
-          this.interfaceDimensions = dimensions;
-          this.loadingDimensions = false;
-        }
-      )
-    );
   }
 
   public initialize() {
