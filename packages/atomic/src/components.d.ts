@@ -231,7 +231,7 @@ export namespace Components {
          */
         "conditions": ResultTemplateCondition[];
         /**
-          * Verifies wheter the specified fields are defined.
+          * Verifies whether the specified fields are defined.
          */
         "ifDefined"?: string;
         /**
@@ -590,6 +590,14 @@ export namespace Components {
           * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -2503,7 +2511,7 @@ declare namespace LocalJSX {
          */
         "conditions"?: ResultTemplateCondition[];
         /**
-          * Verifies wheter the specified fields are defined.
+          * Verifies whether the specified fields are defined.
          */
         "ifDefined"?: string;
         /**
@@ -2843,6 +2851,14 @@ declare namespace LocalJSX {
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions"?: InsightResultTemplateCondition[];
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicInsightSearchBox {
         /**

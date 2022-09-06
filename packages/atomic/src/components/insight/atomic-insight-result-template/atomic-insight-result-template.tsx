@@ -28,16 +28,16 @@ export class AtomicInsightResultTemplate {
   /**
    * The field that, when defined on a result item, would allow the template to be applied.
    *
-   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `is-defined="filetype,sourcetype"`
+   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
    */
-  @Prop({reflect: true}) isDefined?: string;
+  @Prop({reflect: true}) ifDefined?: string;
 
   /**
    * The field that, when defined on a result item, would prevent the template from being applied.
    *
-   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `is-not-defined="filetype,sourcetype"`
+   * For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
    */
-  @Prop({reflect: true}) isNotDefined?: string;
+  @Prop({reflect: true}) ifNotDefined?: string;
 
   /**
    * The field and values that define which result items the condition must be applied to.
@@ -55,14 +55,14 @@ export class AtomicInsightResultTemplate {
     {};
 
   public componentWillLoad() {
-    if (this.isDefined) {
-      const fieldNames = this.isDefined.split(',');
+    if (this.ifDefined) {
+      const fieldNames = this.ifDefined.split(',');
       this.conditions.push(
         ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
       );
     }
-    if (this.isNotDefined) {
-      const fieldNames = this.isNotDefined.split(',');
+    if (this.ifNotDefined) {
+      const fieldNames = this.ifNotDefined.split(',');
       this.conditions.push(
         ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
       );
