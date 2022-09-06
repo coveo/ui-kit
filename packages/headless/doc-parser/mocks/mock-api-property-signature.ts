@@ -14,6 +14,7 @@ export function buildMockApiPropertySignature(
     name: '',
     propertyTypeTokenRange: {startIndex: 0, endIndex: 0},
     releaseTag: ReleaseTag.None,
+    isReadonly: false,
     ...config,
   });
 }
