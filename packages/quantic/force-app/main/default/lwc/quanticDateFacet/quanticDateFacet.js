@@ -11,7 +11,6 @@ import LOCALE from '@salesforce/i18n/locale';
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
 import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
-import clearFilterFacet_plural from '@salesforce/label/c.quantic_ClearFilterFacet_plural';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
@@ -111,7 +110,6 @@ export default class QuanticDateFacet extends LightningElement {
     clearFilter,
     clearFilter_plural,
     clearFilterFacet,
-    clearFilterFacet_plural,
     collapseFacet,
     expandFacet,
   };
@@ -219,18 +217,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   get clearFilterAriaLabelValue() {
-    if (this.hasActiveValues) {
-      const labelName = I18nUtils.getLabelNameWithCount(
-        'clearFilterFacet',
-        this.numberOfSelectedValues
-      );
-      return `${I18nUtils.format(
-        this.labels[labelName],
-        this.field,
-        this.numberOfSelectedValues
-      )}`;
-    }
-    return '';
+    return `${I18nUtils.format(this.labels.clearFilterFacet, this.field)}`;
   }
 
   /**

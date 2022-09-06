@@ -75,7 +75,7 @@
         <value>Clear filter for the {{0}} facet.</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Clear filter for the potato facet.</shortDescription>
+        <shortDescription>Clear filter for the file type facet.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_ClearFilter_plural</fullName>
@@ -83,13 +83,6 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Clear 2 filters</shortDescription>
-    </labels>
-    <labels>
-        <fullName>quantic_ClearFilterFacet_plural</fullName>
-        <value>Clear {{1}} filters for the {{0}} facet.</value>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>Clear [count] filters for the [value] facet.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_ShowMore</fullName>
@@ -187,7 +180,7 @@
         <value>Show {{0}} results per page</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Show N results per page</shortDescription>
+        <shortDescription>Show [count] results per page.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_Search</fullName>
@@ -590,7 +583,7 @@
     </labels>
     <labels>
         <fullName>quantic_NoPreviewAvailable</fullName>
-        <value>No preview available</value>
+        <value>No preview available.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>No preview available</shortDescription>
