@@ -364,6 +364,9 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {number}
    */
   getAbsoluteWidth(element) {
+    if (!element) {
+      return 0;
+    }
     const paddings = this.getElementPadding(element);
     const padding = paddings.left + paddings.right;
 
