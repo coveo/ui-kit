@@ -10,11 +10,11 @@
       </c-configurator>
     </div>
 
-    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
       <c-quantic-pager
         engine-id={engineId}
         number-of-pages={config.numberOfPages}>
       </c-quantic-pager>
-    </c-quantic-search-interface>
+    </c-example-use-case>
   </c-example-layout>
 </template>

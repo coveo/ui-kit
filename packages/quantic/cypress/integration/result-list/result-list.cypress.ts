@@ -1,7 +1,7 @@
 import {configure} from '../../page-objects/configurator';
 import {
   extractResults,
-  InterceptAliases,
+  getAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../page-objects/search';
@@ -9,8 +9,14 @@ import {ResultListExpectations as Expect} from './result-list-expectations';
 import {getNextResults} from '../../page-objects/actions/action-get-next-results';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {scope} from '../../reporters/detailed-collector';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 
 interface ResultListOptions {
+  useCase: string;
   fieldsToInclude: string;
 }
 
@@ -27,71 +33,87 @@ describe('quantic-resultlist', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
+      performSearch();
+    }
   }
 
-  function setupWithPauseBeforeSearch() {
+  function setupWithPauseBeforeSearch(useCase: string) {
     interceptSearchIndefinitely();
     cy.visit(pageUrl);
-    configure();
+    configure({useCase});
   }
 
-  function aliasResultValues() {
-    cy.wait(InterceptAliases.Search).then((interception) => {
+  function aliasResultValues(useCase: string) {
+    cy.wait(getAlias(useCase)).then((interception) => {
       const results = extractResults(interception.response);
       cy.wrap(results).as(indexResultsAlias.substring(1));
     });
   }
 
-  it('should render a placeholder before results have returned', () => {
-    setupWithPauseBeforeSearch();
+  useCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      it('should render a placeholder before results have returned', () => {
+        setupWithPauseBeforeSearch(param.useCase);
 
-    Expect.displayPlaceholder(true);
-    Expect.displayResults(false);
-  });
-
-  describe('with default options', () => {
-    it('should work as expected', () => {
-      visitResultList({
-        fieldsToInclude: defaultFieldsToInclude,
-      });
-      aliasResultValues();
-
-      scope('when loading the page', () => {
-        Expect.events.receivedEvent(true, registerResultTemplatesEvent);
-        Expect.resultsEqual(indexResultsAlias);
-
-        performSearch();
-
-        Expect.requestFields(defaultFieldsToInclude.split(','));
+        Expect.displayPlaceholder(true);
+        Expect.displayResults(false);
       });
 
-      scope('when getting different results', () => {
-        getNextResults();
+      describe('with default options', () => {
+        it('should work as expected', () => {
+          visitResultList({
+            fieldsToInclude: defaultFieldsToInclude,
+            useCase: param.useCase,
+          });
+          aliasResultValues(param.useCase);
 
-        Expect.resultsEqual(indexResultsAlias);
+          scope('when loading the page', () => {
+            Expect.events.receivedEvent(true, registerResultTemplatesEvent);
+            Expect.resultsEqual(indexResultsAlias);
 
-        performSearch();
+            performSearch();
 
-        Expect.requestFields(defaultFieldsToInclude.split(','));
+            Expect.requestFields(
+              defaultFieldsToInclude.split(','),
+              param.useCase
+            );
+          });
+
+          scope('when getting different results', () => {
+            getNextResults();
+
+            Expect.resultsEqual(indexResultsAlias);
+
+            performSearch();
+
+            Expect.requestFields(
+              defaultFieldsToInclude.split(','),
+              param.useCase
+            );
+          });
+        });
       });
-    });
-  });
 
-  describe('with custom options', () => {
-    const customFieldsToInclude =
-      'source,language,sfcasestatus,sfcreatedbyname';
+      describe('with custom options', () => {
+        const customFieldsToInclude =
+          'source,language,sfcasestatus,sfcreatedbyname';
 
-    it('should work as expected', () => {
-      visitResultList({
-        fieldsToInclude: customFieldsToInclude,
+        it('should work as expected', () => {
+          visitResultList({
+            fieldsToInclude: customFieldsToInclude,
+            useCase: param.useCase,
+          });
+          aliasResultValues(param.useCase);
+
+          Expect.resultsEqual(indexResultsAlias);
+
+          performSearch();
+
+          Expect.requestFields(customFieldsToInclude.split(','), param.useCase);
+        });
       });
-      aliasResultValues();
-
-      Expect.resultsEqual(indexResultsAlias);
-
-      performSearch();
-
-      Expect.requestFields(customFieldsToInclude.split(','));
     });
   });
 });

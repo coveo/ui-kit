@@ -6,10 +6,11 @@
   
     <div slot="configuration">
       <c-configurator options={options} ontryitnow={handleTryItNow}>
+        <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
       </c-configurator>
     </div>
 
-    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
       <div class="slds-grid slds-gutters_direct slds-wrap main slds-grid_align-center">
         <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_6-of-12">
           <c-quantic-facet-manager engine-id={engineId}>
@@ -33,6 +34,6 @@
           ></c-quantic-breadcrumb-manager>
         </div>
       </div>
-    </c-quantic-search-interface>
+    </c-example-use-case>
   </c-example-layout>
 </template>

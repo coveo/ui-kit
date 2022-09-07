@@ -1,4 +1,4 @@
-import {InterceptAliases} from '../../page-objects/search';
+import {getAlias} from '../../page-objects/search';
 import {should} from '../common-selectors';
 import {EventExpectations} from '../event-expectations';
 import {ResultListSelector, ResultListSelectors} from './result-list-selectors';
@@ -33,8 +33,8 @@ function resultListExpectations(selector: ResultListSelector) {
           .logDetail('should render the received results');
       });
     },
-    requestFields: (expectedFieldsToInclude: string[]) => {
-      cy.wait(InterceptAliases.Search)
+    requestFields: (expectedFieldsToInclude: string[], useCase: string) => {
+      cy.wait(getAlias(useCase))
         .then((interception) => {
           const fieldsToInclude = interception.request.body.fieldsToInclude;
           expectedFieldsToInclude.forEach((field) =>

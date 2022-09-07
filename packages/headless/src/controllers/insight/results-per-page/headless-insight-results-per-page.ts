@@ -33,6 +33,12 @@ export function buildResultsPerPage(
   return {
     ...coreController,
 
+    get state() {
+      return {
+        ...coreController.state,
+      };
+    },
+
     set(num: number) {
       coreController.set(num);
       dispatch(executeSearch(logPagerResize()));
