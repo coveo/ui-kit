@@ -1,14 +1,4 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
-import {
-  buildFacetManager,
-  FacetManager,
-  QuerySummary,
-  QuerySummaryState,
-  buildQuerySummary,
-  BreadcrumbManager,
-  BreadcrumbManagerState,
-  buildBreadcrumbManager,
-} from '@coveo/headless/insight';
 import {debounce} from 'ts-debounce';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
@@ -20,6 +10,16 @@ import {
   InsightBindings,
   InsightInterfaceDimensions,
 } from '../atomic-insight-interface/atomic-insight-interface';
+import {
+  InsightFacetManager,
+  buildInsightFacetManager,
+  InsightQuerySummary,
+  InsightQuerySummaryState,
+  buildInsightQuerySummary,
+  InsightBreadcrumbManager,
+  InsightBreadcrumbManagerState,
+  buildInsightBreadcrumbManager,
+} from '..';
 import {
   getClonedFacetElements,
   RefineModalCommon,
@@ -43,11 +43,11 @@ export class AtomicInsightRefineModal
 
   @BindStateToController('querySummary')
   @State()
-  public querySummaryState!: QuerySummaryState;
+  public querySummaryState!: InsightQuerySummaryState;
 
   @BindStateToController('breadcrumbManager')
   @State()
-  public breadcrumbManagerState!: BreadcrumbManagerState;
+  public breadcrumbManagerState!: InsightBreadcrumbManagerState;
 
   @State()
   public error!: Error;
@@ -60,12 +60,12 @@ export class AtomicInsightRefineModal
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
   private interfaceDimensions?: InsightInterfaceDimensions;
-  private facetManager!: FacetManager;
+  private facetManager!: InsightFacetManager;
   private resizeObserver?: ResizeObserver;
   private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
   private scrollCallback = () => this.debouncedUpdateDimensions();
-  public querySummary!: QuerySummary;
-  private breadcrumbManager!: BreadcrumbManager;
+  public querySummary!: InsightQuerySummary;
+  private breadcrumbManager!: InsightBreadcrumbManager;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -115,9 +115,11 @@ export class AtomicInsightRefineModal
   }
 
   public initialize() {
-    this.facetManager = buildFacetManager(this.bindings.engine);
-    this.querySummary = buildQuerySummary(this.bindings.engine);
-    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
+    this.facetManager = buildInsightFacetManager(this.bindings.engine);
+    this.querySummary = buildInsightQuerySummary(this.bindings.engine);
+    this.breadcrumbManager = buildInsightBreadcrumbManager(
+      this.bindings.engine
+    );
   }
 
   private renderHeader() {
