@@ -11,17 +11,21 @@ import {
   InsightInterfaceDimensions,
 } from '../atomic-insight-interface/atomic-insight-interface';
 import {
-  buildInsightFacetManager,
   InsightFacetManager,
+  buildInsightFacetManager,
   InsightQuerySummary,
   InsightQuerySummaryState,
   buildInsightQuerySummary,
+  InsightBreadcrumbManager,
+  InsightBreadcrumbManagerState,
+  buildInsightBreadcrumbManager,
 } from '..';
 import {
   getClonedFacetElements,
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
 import {Hidden} from '../../common/hidden';
+import {Button} from '../../common/button';
 
 /**
  * @internal
@@ -41,6 +45,10 @@ export class AtomicInsightRefineModal
   @State()
   public querySummaryState!: InsightQuerySummaryState;
 
+  @BindStateToController('breadcrumbManager')
+  @State()
+  public breadcrumbManagerState!: InsightBreadcrumbManagerState;
+
   @State()
   public error!: Error;
 
@@ -57,6 +65,7 @@ export class AtomicInsightRefineModal
   private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
   private scrollCallback = () => this.debouncedUpdateDimensions();
   public querySummary!: InsightQuerySummary;
+  private breadcrumbManager!: InsightBreadcrumbManager;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -108,6 +117,27 @@ export class AtomicInsightRefineModal
   public initialize() {
     this.facetManager = buildInsightFacetManager(this.bindings.engine);
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
+    this.breadcrumbManager = buildInsightBreadcrumbManager(
+      this.bindings.engine
+    );
+  }
+
+  private renderHeader() {
+    return (
+      <div class="w-full flex justify-between mb-3">
+        <h2 class="text-2xl font-bold truncate">
+          {this.bindings.i18n.t('filters')}
+        </h2>
+        {this.breadcrumbManagerState.hasBreadcrumbs && (
+          <Button
+            onClick={() => this.breadcrumbManager.deselectAll()}
+            style="text-primary"
+            text={this.bindings.i18n.t('clear-all-filters')}
+            class="px-2 py-1"
+          ></Button>
+        )}
+      </div>
+    );
   }
 
   private renderBody() {
@@ -117,6 +147,7 @@ export class AtomicInsightRefineModal
 
     return (
       <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+        {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
     );
