@@ -813,6 +813,13 @@
       <shortDescription>Loading</shortDescription>
     </labels>
     <labels>
+      <fullName>quantic_LoadingResults</fullName>
+      <value>Loading search results</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Loading search results</shortDescription>
+    </labels>
+    <labels>
       <fullName>quantic_NoSuggestions</fullName>
       <value>No suggestions</value>
       <language>en_US</language>

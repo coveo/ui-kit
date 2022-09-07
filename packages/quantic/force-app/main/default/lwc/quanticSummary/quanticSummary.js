@@ -88,7 +88,7 @@ export default class QuanticSummary extends LightningElement {
     const docElement = document.createElement('div');
     // eslint-disable-next-line @lwc/lwc/no-inner-html
     docElement.innerHTML = this.summaryLabel;
-    this.summaryAriaMessage.dispatchMessage(docElement.innerText)
+    this.summaryAriaMessage.dispatchMessage(docElement.innerText);
   }
 
   get hasResults() {
