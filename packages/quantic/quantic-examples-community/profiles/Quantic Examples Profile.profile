@@ -53,6 +53,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>InsightController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>ITokenProvider</apexClass>
         <enabled>false</enabled>
     </classAccesses>
