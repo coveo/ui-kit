@@ -22,6 +22,7 @@ import {
   InsightEngine,
   InsightEngineConfiguration,
   buildInsightEngine,
+  buildInsightResultsPerPage,
 } from '..';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
@@ -95,6 +96,10 @@ export class AtomicInsightInterface
    * A list of non-default fields to include in the query results, separated by commas.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
+  /**
+   * The number of results per page. By default, this is set to `5`.
+   */
+  @Prop({reflect: true}) resultsPerPage = 5;
 
   @Element() public host!: HTMLAtomicInsightInterfaceElement;
 
@@ -127,6 +132,15 @@ export class AtomicInsightInterface
   public connectedCallback() {
     this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
     this.updateFieldsToInclude();
+  }
+
+  private initResultsPerPage() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+    buildInsightResultsPerPage(this.bindings.engine, {
+      initialState: {numberOfResults: this.resultsPerPage},
+    });
   }
 
   private updateFieldsToInclude() {
@@ -225,6 +239,7 @@ export class AtomicInsightInterface
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
+    this.initResultsPerPage();
     this.initialized = true;
   }
 }

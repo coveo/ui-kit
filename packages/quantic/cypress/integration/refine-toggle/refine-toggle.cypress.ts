@@ -18,6 +18,7 @@ import {
 interface RefineToggleOptions {
   fullScreen: boolean;
   hideSort: boolean;
+  title: string;
 }
 
 const viewResultsLabel = (value: number) => {
@@ -26,6 +27,8 @@ const viewResultsLabel = (value: number) => {
 
 const customRefineModalTitle = 'Custom Title';
 const customRefineToggleLabel = 'Custom Label';
+const defaultRefineToggleTitle = 'Sort & Filters';
+const customRefineToggleTitle = 'Filters';
 
 describe('quantic-refine-toggle', () => {
   const pageUrl = 's/quantic-refine-toggle';
@@ -57,6 +60,7 @@ describe('quantic-refine-toggle', () => {
         cy.wait(InterceptAliases.Search).then((interception) => {
           scope('when loading the page', () => {
             Expect.displayRefineToggle(true);
+            Expect.refineToggleTitleContains(defaultRefineToggleTitle);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
             Expect.refineToggleContains(customRefineToggleLabel);
@@ -135,6 +139,7 @@ describe('quantic-refine-toggle', () => {
         cy.wait(InterceptAliases.Search).then((interception) => {
           scope('when loading the page', () => {
             Expect.displayRefineToggle(true);
+            Expect.refineToggleTitleContains(defaultRefineToggleTitle);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
             Expect.refineToggleContains(customRefineToggleLabel);
@@ -265,6 +270,7 @@ describe('quantic-refine-toggle', () => {
         cy.wait(InterceptAliases.Search).then((interception) => {
           scope('when loading the page', () => {
             Expect.displayRefineToggle(true);
+            Expect.refineToggleTitleContains(defaultRefineToggleTitle);
             Expect.displayRefineToggleIcon(true);
             Expect.displayModal(false);
             Expect.refineToggleContains(customRefineToggleLabel);
@@ -417,6 +423,21 @@ describe('quantic-refine-toggle', () => {
             viewResultsLabel(interception.response?.body.totalCount)
           );
         });
+      });
+    });
+  });
+
+  describe('when using a custom refine toggle title', () => {
+    it('should have the correct title', () => {
+      visitPage({
+        title: customRefineToggleTitle,
+      });
+      cy.wait(InterceptAliases.Search);
+
+      scope('when loading the page', () => {
+        Expect.displayRefineToggle(true);
+        Expect.refineToggleTitleContains(customRefineToggleTitle);
+        Expect.displayRefineToggleIcon(true);
       });
     });
   });

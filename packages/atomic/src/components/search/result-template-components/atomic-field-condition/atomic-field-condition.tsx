@@ -22,7 +22,7 @@ export class AtomicFieldCondition {
   @Element() host!: HTMLElement;
 
   /**
-   * Verifies wheter the specified fields are defined.
+   * Verifies whether the specified fields are defined.
    */
   @Prop({reflect: true}) ifDefined?: string;
   /**
