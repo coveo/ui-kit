@@ -5,10 +5,12 @@ import {
   HeadlessBundleNames,
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {I18nUtils} from 'c/quanticUtils';
 
 import close from '@salesforce/label/c.quantic_Close';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
 import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
+import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -90,6 +92,7 @@ export default class QuanticResultQuickview extends LightningElement {
     close,
     openPreview,
     noPreview,
+    openFileForPreview,
   };
 
   connectedCallback() {
@@ -227,6 +230,10 @@ export default class QuanticResultQuickview extends LightningElement {
       'slds-current-color',
       this.previewButtonLabel && 'slds-button__icon_right',
     ].join(' ');
+  }
+
+  get buttonAriaLabelValue() {
+    return I18nUtils.format(this.labels.openFileForPreview, this.result.title);
   }
 
   get hasButtonLabel() {

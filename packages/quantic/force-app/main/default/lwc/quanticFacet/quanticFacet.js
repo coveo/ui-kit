@@ -13,6 +13,7 @@ import showMoreFacetValues from '@salesforce/label/c.quantic_ShowMoreFacetValues
 import showLessFacetValues from '@salesforce/label/c.quantic_ShowLessFacetValues';
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
 import search from '@salesforce/label/c.quantic_Search';
 import moreMatchesFor from '@salesforce/label/c.quantic_MoreMatchesFor';
 import noMatchesFor from '@salesforce/label/c.quantic_NoMatchesFor';
@@ -163,6 +164,7 @@ export default class QuanticFacet extends LightningElement {
     showLessFacetValues,
     clearFilter,
     clearFilter_plural,
+    clearFilterFacet,
     search,
     moreMatchesFor,
     noMatchesFor,
@@ -354,6 +356,13 @@ export default class QuanticFacet extends LightningElement {
         this.labels[labelName],
         this.numberOfSelectedValues
       )}`;
+    }
+    return '';
+  }
+
+  get clearFilterAriaLabelValue() {
+    if (this.hasActiveValues) {
+      return `${I18nUtils.format(this.labels.clearFilterFacet, this.field)}`;
     }
     return '';
   }
