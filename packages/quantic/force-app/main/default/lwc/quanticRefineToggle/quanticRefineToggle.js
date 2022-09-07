@@ -24,11 +24,11 @@ import viewResults from '@salesforce/label/c.quantic_ViewResults';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen>
+ * <c-quantic-refine-toggle engine-id={engineId} hide-sort full-screen title="Filters">
  *   <div slot="refine-title">Custom Title</div>
  *   <div slot="button-content">
  *     Custom Label
- *     <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonLabel}
+ *     <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text="Filters"
  *       class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right">
  *     </lightning-icon>
  *   </div>
@@ -59,6 +59,12 @@ export default class QuanticRefineToggle extends LightningElement {
    * @defaultValue `false`
    */
   @api fullScreen = false;
+  /**
+   * The title of the toggle button.
+   * @api
+   * @type {string}
+   */
+  @api title = this.labels.sortAndFilters;
 
   /** @type {QuerySummary} */
   querySummary;
