@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.42.1...@coveo/quantic@1.43.0) (2022-09-07)
+
+
+### Features
+
+* **quantic:** add labels for buttons ([#2369](https://github.com/coveo/ui-kit/issues/2369)) ([8abd555](https://github.com/coveo/ui-kit/commit/8abd5551434b9dfa728d92d389d8c76a2b1cdc1a))
+* **quantic:** Quickview header icon now has a label ([#2361](https://github.com/coveo/ui-kit/issues/2361)) ([792f2b2](https://github.com/coveo/ui-kit/commit/792f2b282562d4534436b08da64cdaeb30cd524a))
+
+
+
+
+
 ## [1.42.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.42.0...@coveo/quantic@1.42.1) (2022-09-07)
 
 **Note:** Version bump only for package @coveo/quantic
