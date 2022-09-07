@@ -10,6 +10,7 @@ import LOCALE from '@salesforce/i18n/locale';
 
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 
@@ -108,6 +109,7 @@ export default class QuanticDateFacet extends LightningElement {
   labels = {
     clearFilter,
     clearFilter_plural,
+    clearFilterFacet,
     collapseFacet,
     expandFacet,
   };
@@ -219,6 +221,10 @@ export default class QuanticDateFacet extends LightningElement {
       )}`;
     }
     return '';
+  }
+
+  get clearFilterAriaLabelValue() {
+    return `${I18nUtils.format(this.labels.clearFilterFacet, this.field)}`;
   }
 
   /**
