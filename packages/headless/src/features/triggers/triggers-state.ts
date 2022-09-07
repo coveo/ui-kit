@@ -53,9 +53,18 @@ export interface TriggerState {
    * The modification that should be applied as a result of a query trigger.
    */
   queryModification: {
+    /**
+     * The original query performed by the end user.
+     */
     originalQuery: string;
-    modification: string;
-    ignore: string;
+    /**
+     * The new query that should be executed.
+     */
+    newQuery: string;
+    /**
+     * The query modification that should be ignored when explicitly requested by the end user.
+     */
+    queryToIgnore: string;
   };
 }
 
@@ -66,5 +75,5 @@ export const getTriggerInitialState: () => TriggerState = () => ({
   executions: [],
   notification: '',
   notifications: [],
-  queryModification: {originalQuery: '', modification: '', ignore: ''},
+  queryModification: {originalQuery: '', newQuery: '', queryToIgnore: ''},
 });

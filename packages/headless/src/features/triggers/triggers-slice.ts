@@ -17,8 +17,8 @@ export const triggerReducer = createReducer(
         state.query = '';
         state.queryModification = {
           originalQuery: '',
-          modification: '',
-          ignore: state.queryModification.ignore,
+          newQuery: '',
+          queryToIgnore: state.queryModification.queryToIgnore,
         };
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
@@ -50,7 +50,7 @@ export const triggerReducer = createReducer(
 
         state.redirectTo = redirectTriggers[0] ?? '';
 
-        state.query = state.queryModification.modification;
+        state.query = state.queryModification.newQuery;
 
         state.execute = executeTriggers[0] ?? {functionName: '', params: []};
         state.executions = executeTriggers;
@@ -59,9 +59,9 @@ export const triggerReducer = createReducer(
         state.notifications = notifyTriggers;
       })
       .addCase(applyQueryTriggerModification, (state, action) => {
-        state.queryModification = {...action.payload, ignore: ''};
+        state.queryModification = {...action.payload, queryToIgnore: ''};
       })
       .addCase(updateIgnoreQueryTrigger, (state, action) => {
-        state.queryModification.ignore = action.payload;
+        state.queryModification.queryToIgnore = action.payload;
       })
 );
