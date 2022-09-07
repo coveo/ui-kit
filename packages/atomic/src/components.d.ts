@@ -231,7 +231,7 @@ export namespace Components {
          */
         "conditions": ResultTemplateCondition[];
         /**
-          * Verifies wheter the specified fields are defined.
+          * Verifies whether the specified fields are defined.
          */
         "ifDefined"?: string;
         /**
@@ -453,6 +453,10 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage": number;
     }
     interface AtomicInsightLayout {
         /**
@@ -586,6 +590,14 @@ export namespace Components {
           * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -1358,6 +1370,9 @@ export namespace Components {
         "mobileBreakpoint": string;
     }
     interface AtomicSegmentedFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+         */
         "dependsOn": Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
@@ -1387,7 +1402,6 @@ export namespace Components {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
-        "withSearch": boolean;
     }
     interface AtomicSegmentedFacetScrollable {
     }
@@ -1530,6 +1544,46 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+}
+export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicFacetDateInputElement;
+}
+export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicFacetNumberInputElement;
+}
+export interface AtomicFocusDetectorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicFocusDetectorElement;
+}
+export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightPagerElement;
+}
+export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicModalElement;
+}
+export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicPagerElement;
+}
+export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetAnswerElement;
+}
+export interface AtomicSmartSnippetExpandableAnswerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetExpandableAnswerElement;
+}
+export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetFeedbackModalElement;
+}
+export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetSourceElement;
 }
 declare global {
     interface HTMLAtomicAriaLiveElement extends Components.AtomicAriaLive, HTMLStencilElement {
@@ -2475,7 +2529,7 @@ declare namespace LocalJSX {
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
-        "onAtomic/dateInputApply"?: (event: CustomEvent<any>) => void;
+        "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
     }
     interface AtomicFacetManager {
         /**
@@ -2488,7 +2542,7 @@ declare namespace LocalJSX {
         "filter": NumericFilter;
         "filterState": NumericFilterState;
         "label": string;
-        "onAtomic/numberInputApply"?: (event: CustomEvent<any>) => void;
+        "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
         "type": NumberInputType;
     }
     interface AtomicFieldCondition {
@@ -2497,7 +2551,7 @@ declare namespace LocalJSX {
          */
         "conditions"?: ResultTemplateCondition[];
         /**
-          * Verifies wheter the specified fields are defined.
+          * Verifies whether the specified fields are defined.
          */
         "ifDefined"?: string;
         /**
@@ -2506,8 +2560,8 @@ declare namespace LocalJSX {
         "ifNotDefined"?: string;
     }
     interface AtomicFocusDetector {
-        "onFocusEnter"?: (event: CustomEvent<any>) => void;
-        "onFocusExit"?: (event: CustomEvent<any>) => void;
+        "onFocusEnter"?: (event: AtomicFocusDetectorCustomEvent<any>) => void;
+        "onFocusExit"?: (event: AtomicFocusDetectorCustomEvent<any>) => void;
     }
     interface AtomicFocusTrap {
         "active"?: boolean;
@@ -2703,6 +2757,10 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage"?: number;
     }
     interface AtomicInsightLayout {
         /**
@@ -2771,7 +2829,7 @@ declare namespace LocalJSX {
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
+        "onAtomic/scrollToTop"?: (event: AtomicInsightPagerCustomEvent<any>) => void;
     }
     interface AtomicInsightQueryError {
     }
@@ -2833,6 +2891,14 @@ declare namespace LocalJSX {
           * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions"?: InsightResultTemplateCondition[];
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -2925,7 +2991,7 @@ declare namespace LocalJSX {
         "container"?: HTMLElement;
         "fullscreen"?: boolean;
         "isOpen"?: boolean;
-        "onAnimationEnded"?: (event: CustomEvent<never>) => void;
+        "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
         "source"?: HTMLElement;
     }
     interface AtomicNoResults {
@@ -3021,7 +3087,7 @@ declare namespace LocalJSX {
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: CustomEvent<any>) => void;
+        "onAtomic/scrollToTop"?: (event: AtomicPagerCustomEvent<any>) => void;
     }
     interface AtomicPopover {
     }
@@ -3572,6 +3638,9 @@ declare namespace LocalJSX {
         "mobileBreakpoint"?: string;
     }
     interface AtomicSegmentedFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+         */
         "dependsOn"?: Record<string, string>;
         /**
           * Specifies a unique identifier for the facet.
@@ -3601,7 +3670,6 @@ declare namespace LocalJSX {
           * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
-        "withSearch"?: boolean;
     }
     interface AtomicSegmentedFacetScrollable {
     }
@@ -3626,7 +3694,7 @@ declare namespace LocalJSX {
     interface AtomicSmartSnippetAnswer {
         "htmlContent": string;
         "innerStyle"?: string;
-        "onAnswerSizeUpdated"?: (event: CustomEvent<{height: number}>) => void;
+        "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -3639,8 +3707,8 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
-        "onCollapse"?: (event: CustomEvent<any>) => void;
-        "onExpand"?: (event: CustomEvent<any>) => void;
+        "onCollapse"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
+        "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
         /**
           * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */
@@ -3648,13 +3716,13 @@ declare namespace LocalJSX {
     }
     interface AtomicSmartSnippetFeedbackModal {
         "isOpen"?: boolean;
-        "onFeedbackSent"?: (event: CustomEvent<any>) => void;
+        "onFeedbackSent"?: (event: AtomicSmartSnippetFeedbackModalCustomEvent<any>) => void;
         "source"?: HTMLElement;
     }
     interface AtomicSmartSnippetSource {
-        "onBeginDelayedSelectSource"?: (event: CustomEvent<any>) => void;
-        "onCancelPendingSelectSource"?: (event: CustomEvent<any>) => void;
-        "onSelectSource"?: (event: CustomEvent<any>) => void;
+        "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
         "source": Result;
     }
     interface AtomicSmartSnippetSuggestions {
