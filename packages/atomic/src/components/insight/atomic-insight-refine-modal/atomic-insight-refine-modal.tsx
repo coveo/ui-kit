@@ -17,6 +17,7 @@ import {
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
 import {Hidden} from '../../common/hidden';
+import {debounce} from 'ts-debounce';
 
 /**
  * @internal
@@ -47,7 +48,7 @@ export class AtomicInsightRefineModal
   @Prop({reflect: true, mutable: true}) isOpen = false;
   private facetManager!: InsightFacetManager;
   private resizeObserver?: ResizeObserver;
-  private scrollCallback = () => this.updateDimensions();
+  private onScroll: () => void = debounce(() => this.updateDimensions(), 500);
   public querySummary!: InsightQuerySummary;
 
   @Watch('isOpen')
@@ -71,10 +72,10 @@ export class AtomicInsightRefineModal
         this.resizeObserver.observe(document.body);
       }
 
-      document.addEventListener('scroll', this.scrollCallback);
+      document.addEventListener('scroll', this.onScroll);
     } else {
       this.resizeObserver?.disconnect();
-      document.removeEventListener('scroll', this.scrollCallback);
+      document.removeEventListener('scroll', this.onScroll);
     }
   }
 
@@ -85,7 +86,7 @@ export class AtomicInsightRefineModal
 
   public disconnectedCallback() {
     this.resizeObserver?.disconnect();
-    document.removeEventListener('scroll', this.scrollCallback);
+    document.removeEventListener('scroll', this.onScroll);
   }
 
   public initialize() {
