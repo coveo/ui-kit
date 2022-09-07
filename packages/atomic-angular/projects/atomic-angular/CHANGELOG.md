@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.29.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.6...@coveo/atomic-angular@1.29.7) (2022-09-06)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.29.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.5...@coveo/atomic-angular@1.29.6) (2022-09-02)
+
+
+### Bug Fixes
+
+* **atomic:** cleanup unused prop for segmented facet and add support for depends on ([#2390](https://github.com/coveo/ui-kit/issues/2390)) ([9d07f4f](https://github.com/coveo/ui-kit/commit/9d07f4f529c2009d758bcde952189543309c379c))
+
+
+
+
+
+## [1.29.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.4...@coveo/atomic-angular@1.29.5) (2022-09-02)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
+## [1.29.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.3...@coveo/atomic-angular@1.29.4) (2022-08-29)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 ## [1.29.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.2...@coveo/atomic-angular@1.29.3) (2022-08-26)
 
 **Note:** Version bump only for package @coveo/atomic-angular

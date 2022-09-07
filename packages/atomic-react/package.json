@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-react",
   "sideEffects": false,
-  "version": "1.23.3",
+  "version": "1.23.7",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -10,7 +10,6 @@
   },
   "scripts": {
     "build": "npm run clean && npm run compile && npm run copy:assets",
-    "link:packages": "npm link ../atomic ../samples/atomic-react/node_modules/react/",
     "clean": "rimraf -rf dist",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "compile:cjs": "tsc -p tsconfig.cjs.json",
@@ -25,12 +24,12 @@
     "dist/"
   ],
   "dependencies": {
-    "@coveo/atomic": "1.105.0"
+    "@coveo/atomic": "1.107.0"
   },
   "devDependencies": {
     "@types/node": "15.14.9",
-    "@types/react": "18.0.14",
-    "@types/react-dom": "18.0.5",
+    "@types/react": "18.0.17",
+    "@types/react-dom": "18.0.6",
     "ncp": "2.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"

@@ -9,6 +9,8 @@ import {
   CategoryFacetSearchState,
   CategoryFacetState,
   CategoryFacetValue,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 } from '../../../core/facets/category-facet/headless-core-category-facet';
 import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {
@@ -35,6 +37,8 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 };
 
 /**

@@ -1,6 +1,6 @@
-const Environment = require('jest-environment-jsdom');
+import Environment from 'jest-environment-jsdom';
 
-module.exports = class CustomTestEnvironment extends Environment {
+export default class CustomTestEnvironment extends Environment {
   async setup() {
     await super.setup();
     if (
@@ -12,4 +12,4 @@ module.exports = class CustomTestEnvironment extends Environment {
       this.global.TextDecoder = TextDecoder;
     }
   }
-};
+}

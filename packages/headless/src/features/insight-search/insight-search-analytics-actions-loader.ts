@@ -17,6 +17,8 @@ export interface InsightSearchAnalyticsActionCreators {
   /**
    * The event to log when the context is updated.
    *
+   * @param caseId - The case ID.
+   * @param caseNumber - The case number.
    * @returns A dispatchable action.
    */
   logContextChanged(
@@ -33,6 +35,10 @@ export interface InsightSearchAnalyticsActionCreators {
   /**
    * The event to log when the full search page is opened.
    *
+   * @param caseId - The case ID.
+   * @param caseNumber - The case number.
+   * @param fullSearchComponentName - The name of the full search component to open.
+   * @param triggeredBy - The action that triggered the event.
    * @returns A dispatchable action.
    */
   logExpandToFullUI(
