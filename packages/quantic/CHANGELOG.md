@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.42.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.41.1...@coveo/quantic@1.42.0) (2022-09-07)
+
+
+### Features
+
+* **quantic:** add focus control for facetValue ([#2379](https://github.com/coveo/ui-kit/issues/2379)) ([1a4983a](https://github.com/coveo/ui-kit/commit/1a4983a6a6e4aeb35b4857b15b4b07d264032c62))
+* **quantic:** change sortCriteria for facetValue ([#2388](https://github.com/coveo/ui-kit/issues/2388)) ([792d512](https://github.com/coveo/ui-kit/commit/792d5124e2dcd0b7855c99609425db38468afc5e))
+
+
+
+
+
 ## [1.41.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.41.0...@coveo/quantic@1.41.1) (2022-09-06)
 
 **Note:** Version bump only for package @coveo/quantic
