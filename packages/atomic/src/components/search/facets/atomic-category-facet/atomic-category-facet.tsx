@@ -157,7 +157,7 @@ export class AtomicCategoryFacet
    */
   @Prop({reflect: true}) public filterByBasePath = true;
   /**
-   * Specifies if the facet is collapsed.
+   * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed = false;
   /**
