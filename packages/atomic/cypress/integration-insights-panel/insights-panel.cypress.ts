@@ -169,7 +169,7 @@ describe('Insights panel test suites', () => {
       InsightPanelsSelectors.querySummary()
         .should('exist')
         .shadow()
-        .should('contain.text', 'Results 1-10')
+        .should('contain.text', 'Results 1-5')
         .should('contain.text', 'for test');
     });
   });
