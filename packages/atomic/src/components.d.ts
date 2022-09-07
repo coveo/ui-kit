@@ -186,7 +186,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, it will control this property.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
