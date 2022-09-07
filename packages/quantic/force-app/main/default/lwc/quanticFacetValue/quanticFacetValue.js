@@ -44,6 +44,20 @@ export default class QuanticFacetValue extends LightningElement {
    */
   @api formattingFunction;
 
+  /**
+   * A function used to set focus to the value.
+   * @api
+   * @type {VoidFunction}
+   * @defaultValue `undefined`
+   */
+  @api setFocus() {
+    const focusTarget = this.template.querySelector('.facet__value-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
+  }
+
   get isStandardFacet() {
     return !this.formattingFunction;
   }

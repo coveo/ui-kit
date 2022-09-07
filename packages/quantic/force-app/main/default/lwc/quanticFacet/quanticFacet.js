@@ -74,12 +74,11 @@ export default class QuanticFacet extends LightningElement {
    *   - `score`
    *   - `alphanumeric`
    *   - `occurrences`
-   *   - `automatic`
    * @api
-   * @type  {'score' | 'alphanumeric' | 'occurrences' | 'automatic'}
-   * @defaultValue `'automatic'`
+   * @type  {'score' | 'alphanumeric' | 'occurrences'}
+   * @defaultValue `'score'`
    */
-  @api sortCriteria = 'automatic';
+  @api sortCriteria = 'score';
   /**
    * Whether this facet should not contain a search box.
    * @api
@@ -154,6 +153,8 @@ export default class QuanticFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {boolean} */
+  facetContentChanged;
 
   labels = {
     showMore,
@@ -176,6 +177,10 @@ export default class QuanticFacet extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
+    if (this.facetContentChanged) {
+      this.facetContentChanged = false;
+      this.setFocusToFirstFacetValue();
+    }
   }
 
   /**
@@ -221,9 +226,12 @@ export default class QuanticFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
-    
+
     const renderFacetEvent = new CustomEvent('renderFacet', {
-      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.hasValues},
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.hasValues,
+      },
       bubbles: true,
       composed: true,
     });
@@ -397,10 +405,12 @@ export default class QuanticFacet extends LightningElement {
 
   showMore() {
     this.facet.showMoreValues();
+    this.facetContentChanged = true;
   }
 
   showLess() {
     this.facet.showLessValues();
+    this.facetContentChanged = true;
   }
 
   clearSelections() {
@@ -442,5 +452,14 @@ export default class QuanticFacet extends LightningElement {
       regex,
       '<b class="facet__search-result_highlight">$1</b>'
     );
+  }
+
+  setFocusToFirstFacetValue() {
+    const focusTarget = this.template.querySelector('c-quantic-facet-value');
+
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
   }
 }

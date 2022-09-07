@@ -107,10 +107,12 @@ interface AsyncThunkConfig {
   extra: ClientThunkExtraArguments<SearchAPIClient>;
 }
 
+type QueryCorrectionCallback = (modification: string) => void;
+
 export class AsyncSearchThunkProcessor<RejectionType> {
   constructor(
     private config: AsyncThunkConfig,
-    private onUpdateQueryForCorrection: (modification: string) => void = (
+    private onUpdateQueryForCorrection: QueryCorrectionCallback = (
       modification
     ) => {
       this.dispatch(updateQuery({q: modification}));
@@ -220,7 +222,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
-    const ignored = this.getState().triggers?.queryModification.ignore;
+    const ignored = this.getState().triggers?.queryModification.queryToIgnore;
 
     if (ignored === correctedQuery) {
       this.dispatch(updateIgnoreQueryTrigger(''));
