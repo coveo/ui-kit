@@ -89,4 +89,11 @@ export default class QuanticResultLink extends LightningElement {
       this.headless.buildInteractiveResult
     );
   };
+
+  /**
+   * Returns the title to display.
+   */
+  get displayedTitle() {
+    return this.result.title || this.result.clickUri;
+  }
 }

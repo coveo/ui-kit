@@ -102,26 +102,6 @@ describe('trigger slice', () => {
     expect(finalState.query).toEqual('');
   });
 
-  it('when an executeSearch fulfilled is received and the payload contains TriggerQuery objects, it updates #state.query', () => {
-    const state = getTriggerInitialState();
-    const triggers = [buildMockQueryTrigger({content: 'Euro'})];
-    const response = buildMockSearchResponse({
-      triggers,
-    });
-    const searchState = buildMockSearch({
-      response,
-    });
-
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
-    const finalState = triggerReducer(state, action);
-
-    expect(finalState.query).toEqual('Euro');
-  });
-
   it('when an executeSearch fulfilled is received and the payload does not contain any TriggerExecute objects, it does not update #state.execute', () => {
     const state = getTriggerInitialState();
     const triggers = [
@@ -224,7 +204,6 @@ describe('trigger slice', () => {
       'https://google.com/search?q=coveo%20query%20triggers',
       'https://docs.coveo.com/en/search/#q=coveo%20query%20triggers',
     ];
-    const expectedQueries = ['Foo', 'Bar'];
     const expectedExecutions = [
       {functionName: 'info', params: ['String param', 1, false]},
       {functionName: 'error', params: [2, true, 'No']},
@@ -235,8 +214,6 @@ describe('trigger slice', () => {
     const triggers = [
       buildMockRedirectTrigger({content: expectedRedirections[0]}),
       buildMockRedirectTrigger({content: expectedRedirections[1]}),
-      buildMockQueryTrigger({content: expectedQueries[0]}),
-      buildMockQueryTrigger({content: expectedQueries[1]}),
       buildMockExecuteTrigger({
         content: {
           name: expectedExecutions[0].functionName,
@@ -267,8 +244,6 @@ describe('trigger slice', () => {
     const finalState = triggerReducer(state, action);
 
     expect(finalState.redirectTo).toEqual(expectedRedirections[0]);
-
-    expect(finalState.query).toEqual(expectedQueries[0]);
 
     expect(finalState.execute).toEqual(expectedExecutions[0]);
     expect(finalState.executions).toEqual(expectedExecutions);

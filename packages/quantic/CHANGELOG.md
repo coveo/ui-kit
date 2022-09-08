@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.0...@coveo/quantic@1.43.1) (2022-09-08)
+
+
+### Bug Fixes
+
+* **quantic:** new title for the refine toggle when it's disabled ([#2400](https://github.com/coveo/ui-kit/issues/2400)) ([d81ba15](https://github.com/coveo/ui-kit/commit/d81ba156f30beb99ae1bb70a3c3b0f62b44b6a0a))
+
+
+
+
+
 # [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.42.1...@coveo/quantic@1.43.0) (2022-09-07)
 
 
