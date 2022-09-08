@@ -24,12 +24,14 @@ export class AtomicIconButton {
   @Prop({mutable: true}) public icon!: string;
   @Prop({mutable: true}) public buttonRef?: (el?: HTMLButtonElement) => void;
   @Prop({mutable: true}) public badge?: VNode;
+  @Prop() public disabled = false;
 
   public render() {
     return (
       <Host>
         <Button
           style="outline-neutral"
+          disabled={this.disabled}
           ariaLabel={this.bindings.i18n.t(this.labelI18nKey)}
           class="p-3 relative"
           part="button"

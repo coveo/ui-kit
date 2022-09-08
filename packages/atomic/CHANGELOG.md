@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.108.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.0...@coveo/atomic@1.108.1) (2022-09-08)
+
+
+### Bug Fixes
+
+* **atomic:** disable atomic-insight-refine-toggle button on no results ([#2401](https://github.com/coveo/ui-kit/issues/2401)) ([c39a368](https://github.com/coveo/ui-kit/commit/c39a368ed81c8e316bb14f184983f65780147b37))
+* **atomic:** fixed atomic-insight-refine-modal open animation ([#2392](https://github.com/coveo/ui-kit/issues/2392)) ([ac0ea66](https://github.com/coveo/ui-kit/commit/ac0ea66bc2c5a23573aa2f49e9a7da6736b91048))
+
+
+
+
+
 # [1.108.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.107.1...@coveo/atomic@1.108.0) (2022-09-07)
 
 

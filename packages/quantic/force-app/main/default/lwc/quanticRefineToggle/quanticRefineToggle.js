@@ -8,6 +8,8 @@ import {
 import LOCALE from '@salesforce/i18n/locale';
 import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
 import viewResults from '@salesforce/label/c.quantic_ViewResults';
+import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
+
 
 /**
  * @typedef {Object} QuanticModalElement
@@ -38,6 +40,7 @@ export default class QuanticRefineToggle extends LightningElement {
   labels = {
     sortAndFilters,
     viewResults,
+    noFiltersAvailableForThisQuery
   };
 
   /**
@@ -255,5 +258,15 @@ export default class QuanticRefineToggle extends LightningElement {
     return `${this.labels.viewResults} (${new Intl.NumberFormat(LOCALE).format(
       this.total
     )})`;
+  }
+
+  /**
+   * Returns the title of the refine toggle.
+   * @returns {string}
+   */
+  get buttonTitle() {
+    return this.refineButtonDisabled
+      ? this.labels.noFiltersAvailableForThisQuery
+      : this.title;
   }
 }

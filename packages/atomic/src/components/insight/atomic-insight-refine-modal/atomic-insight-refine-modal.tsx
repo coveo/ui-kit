@@ -1,15 +1,10 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
-import {debounce} from 'ts-debounce';
-import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  InsightBindings,
-  InsightInterfaceDimensions,
-} from '../atomic-insight-interface/atomic-insight-interface';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
   InsightFacetManager,
   buildInsightFacetManager,
@@ -26,6 +21,7 @@ import {
 } from '../../common/refine-modal/refine-modal-common';
 import {Hidden} from '../../common/hidden';
 import {Button} from '../../common/button';
+import {rectEquals} from '../../../utils/dom-utils';
 
 /**
  * @internal
@@ -53,17 +49,13 @@ export class AtomicInsightRefineModal
   public error!: Error;
 
   @State()
-  public loadingDimensions = true;
+  public interfaceDimensions?: DOMRect;
 
   @Prop({mutable: true}) openButton?: HTMLElement;
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
-  private interfaceDimensions?: InsightInterfaceDimensions;
   private facetManager!: InsightFacetManager;
-  private resizeObserver?: ResizeObserver;
-  private debouncedUpdateDimensions = debounce(this.updateDimensions, 500);
-  private scrollCallback = () => this.debouncedUpdateDimensions();
   public querySummary!: InsightQuerySummary;
   private breadcrumbManager!: InsightBreadcrumbManager;
 
@@ -78,40 +70,34 @@ export class AtomicInsightRefineModal
           )
         );
       }
-      this.debouncedUpdateDimensions();
-      if (window.ResizeObserver) {
-        if (!this.resizeObserver) {
-          this.resizeObserver = new ResizeObserver(() =>
-            this.debouncedUpdateDimensions()
-          );
-        }
-        this.resizeObserver.observe(document.body);
-      }
-
-      document.addEventListener('scroll', this.scrollCallback);
-    } else {
-      this.loadingDimensions = true;
-      this.resizeObserver?.disconnect();
-      document.removeEventListener('scroll', this.scrollCallback);
+      this.onAnimationFrame();
     }
   }
 
-  public disconnectedCallback() {
-    this.resizeObserver?.disconnect();
-    document.removeEventListener('scroll', this.scrollCallback);
+  private onAnimationFrame() {
+    if (!this.isOpen) {
+      return;
+    }
+    if (this.dimensionChanged()) {
+      this.updateDimensions();
+    }
+    window.requestAnimationFrame(() => this.onAnimationFrame());
+  }
+
+  private dimensionChanged() {
+    if (!this.interfaceDimensions) {
+      return true;
+    }
+
+    return !rectEquals(
+      this.interfaceDimensions,
+      this.bindings.interfaceElement.getBoundingClientRect()
+    );
   }
 
   public updateDimensions() {
-    this.loadingDimensions = true;
-    this.host.dispatchEvent(
-      buildCustomEvent(
-        'atomic/insight/getDimensions',
-        (dimensions: InsightInterfaceDimensions) => {
-          this.interfaceDimensions = dimensions;
-          this.loadingDimensions = false;
-        }
-      )
-    );
+    this.interfaceDimensions =
+      this.bindings.interfaceElement.getBoundingClientRect();
   }
 
   public initialize() {
