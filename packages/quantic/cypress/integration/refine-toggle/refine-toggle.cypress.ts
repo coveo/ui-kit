@@ -29,6 +29,7 @@ const customRefineModalTitle = 'Custom Title';
 const customRefineToggleLabel = 'Custom Label';
 const defaultRefineToggleTitle = 'Sort & Filters';
 const customRefineToggleTitle = 'Filters';
+const disabledRefineToggleTitle = 'No filters available for this query';
 
 describe('quantic-refine-toggle', () => {
   const pageUrl = 's/quantic-refine-toggle';
@@ -110,6 +111,7 @@ describe('quantic-refine-toggle', () => {
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(true);
+          Expect.refineToggleTitleContains(disabledRefineToggleTitle);
         });
       });
     });
@@ -126,6 +128,7 @@ describe('quantic-refine-toggle', () => {
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(true);
+          Expect.refineToggleTitleContains(disabledRefineToggleTitle);
         });
       });
     });
@@ -257,6 +260,7 @@ describe('quantic-refine-toggle', () => {
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(true);
+          Expect.refineToggleTitleContains(disabledRefineToggleTitle);
         });
       });
     });
@@ -370,6 +374,7 @@ describe('quantic-refine-toggle', () => {
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
             Expect.refineToggleDisabled(true);
+            Expect.refineToggleTitleContains(disabledRefineToggleTitle);
           });
         });
       });
@@ -388,6 +393,7 @@ describe('quantic-refine-toggle', () => {
           Expect.refineToggleContains(customRefineToggleLabel);
           Expect.displayFiltersCountBadge(false);
           Expect.refineToggleDisabled(true);
+          Expect.refineToggleTitleContains(disabledRefineToggleTitle);
         });
       });
     });
