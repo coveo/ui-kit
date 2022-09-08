@@ -4,7 +4,7 @@ import {nonEmptyString, validatePayload} from '../../utils/validate-payload';
 
 export interface ApplyQueryTriggerModificationPayload {
   originalQuery: string;
-  modification: string;
+  newQuery: string;
 }
 
 export const updateIgnoreQueryTrigger = createAction(

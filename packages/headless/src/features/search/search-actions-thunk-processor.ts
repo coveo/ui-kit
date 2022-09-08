@@ -285,7 +285,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   ) {
     this.dispatch(
       applyQueryTriggerModification({
-        modification: modified,
+        newQuery: modified,
         originalQuery: this.getOriginalQuery(),
       })
     );
