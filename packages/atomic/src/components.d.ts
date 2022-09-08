@@ -352,6 +352,7 @@ export namespace Components {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback": () => void;
+        "disabled": boolean;
         "icon": string;
         "labelI18nKey": string;
         "tooltip": string;
@@ -2668,6 +2669,7 @@ declare namespace LocalJSX {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback"?: () => void;
+        "disabled"?: boolean;
         "icon": string;
         "labelI18nKey": string;
         "tooltip"?: string;
