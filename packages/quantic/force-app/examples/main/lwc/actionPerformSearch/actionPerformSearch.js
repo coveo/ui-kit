@@ -1,3 +1,4 @@
+import { getHeadlessBundle } from 'c/quanticHeadlessLoader';
 import { api, LightningElement } from 'lwc';
 
 export default class ActionPerformSearch extends LightningElement {
@@ -7,6 +8,7 @@ export default class ActionPerformSearch extends LightningElement {
 
   searchBox;
   input;
+  headless;
 
   handlePerformSearch() {
     if(!this.input && this.withInput) {
@@ -30,9 +32,10 @@ export default class ActionPerformSearch extends LightningElement {
   }
 
   resolveSearchBoxController() {
+    this.headless = getHeadlessBundle(this.engineId);
     return window.coveoHeadless?.[this.engineId]?.enginePromise
       .then((engine) => {
-        return CoveoHeadless.buildSearchBox(engine, {
+        return this.headless.buildSearchBox(engine, {
           options: {
             numberOfSuggestions: 0
           }

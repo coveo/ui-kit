@@ -71,6 +71,13 @@
         <shortDescription>Clear filter</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_ClearFilterFacet</fullName>
+        <value>Clear filter for the {{0}} facet.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Clear filter for the file type facet.</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_ClearFilter_plural</fullName>
         <value>Clear {{0}} filters</value>
         <language>en_US</language>
@@ -170,10 +177,10 @@
     </labels>
     <labels>
         <fullName>quantic_ShowNResultsPerPage</fullName>
-        <value>Show {{0}} number of results per page</value>
+        <value>Show {{0}} results per page</value>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Show N results per page.</shortDescription>
+        <shortDescription>Show [count] results per page.</shortDescription>
     </labels>
     <labels>
         <fullName>quantic_Search</fullName>
@@ -568,8 +575,15 @@
         <shortDescription>Open preview</shortDescription>
     </labels>
     <labels>
+        <fullName>quantic_OpenFileForPreview</fullName>
+        <value>Open {{0}} for preview.</value>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Open [file] for preview.</shortDescription>
+    </labels>
+    <labels>
         <fullName>quantic_NoPreviewAvailable</fullName>
-        <value>No preview available</value>
+        <value>No preview available.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>No preview available</shortDescription>
@@ -853,5 +867,12 @@
       <language>en_US</language>
       <protected>false</protected>
       <shortDescription>View results</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_NoFiltersAvailableForThisQuery</fullName>
+      <value>No filters available for this query</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>No filters available for this query</shortDescription>
     </labels>
 </CustomLabels>

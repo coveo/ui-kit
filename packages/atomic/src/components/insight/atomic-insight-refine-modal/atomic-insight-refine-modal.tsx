@@ -6,18 +6,21 @@ import {
 } from '../../../utils/initialization-utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
-  buildInsightFacetManager,
   InsightFacetManager,
+  buildInsightFacetManager,
   InsightQuerySummary,
   InsightQuerySummaryState,
   buildInsightQuerySummary,
+  InsightBreadcrumbManager,
+  InsightBreadcrumbManagerState,
+  buildInsightBreadcrumbManager,
 } from '..';
 import {
   getClonedFacetElements,
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
 import {Hidden} from '../../common/hidden';
-import {debounce} from 'ts-debounce';
+import {Button} from '../../common/button';
 
 /**
  * @internal
@@ -37,6 +40,10 @@ export class AtomicInsightRefineModal
   @State()
   public querySummaryState!: InsightQuerySummaryState;
 
+  @BindStateToController('breadcrumbManager')
+  @State()
+  public breadcrumbManagerState!: InsightBreadcrumbManagerState;
+
   @State()
   public error!: Error;
 
@@ -46,10 +53,13 @@ export class AtomicInsightRefineModal
   @Prop({mutable: true}) openButton?: HTMLElement;
 
   @Prop({reflect: true, mutable: true}) isOpen = false;
+
   private facetManager!: InsightFacetManager;
   private resizeObserver?: ResizeObserver;
-  private onScroll: () => void = debounce(() => this.updateDimensions(), 500);
+  private updateDimensionsOnNextFrame = () =>
+    requestAnimationFrame(this.updateDimensions.bind(this));
   public querySummary!: InsightQuerySummary;
+  private breadcrumbManager!: InsightBreadcrumbManager;
 
   @Watch('isOpen')
   watchEnabled(isOpen: boolean) {
@@ -62,21 +72,26 @@ export class AtomicInsightRefineModal
           )
         );
       }
-      this.updateDimensions();
+      this.updateDimensionsOnNextFrame();
       if (window.ResizeObserver) {
         if (!this.resizeObserver) {
           this.resizeObserver = new ResizeObserver(() =>
-            this.updateDimensions()
+            this.updateDimensionsOnNextFrame()
           );
         }
         this.resizeObserver.observe(document.body);
       }
 
-      document.addEventListener('scroll', this.onScroll);
+      document.addEventListener('scroll', this.updateDimensionsOnNextFrame);
     } else {
       this.resizeObserver?.disconnect();
-      document.removeEventListener('scroll', this.onScroll);
+      document.removeEventListener('scroll', this.updateDimensionsOnNextFrame);
     }
+  }
+
+  public disconnectedCallback() {
+    this.resizeObserver?.disconnect();
+    document.removeEventListener('scroll', this.updateDimensionsOnNextFrame);
   }
 
   public updateDimensions() {
@@ -84,14 +99,30 @@ export class AtomicInsightRefineModal
       this.bindings.interfaceElement.getBoundingClientRect();
   }
 
-  public disconnectedCallback() {
-    this.resizeObserver?.disconnect();
-    document.removeEventListener('scroll', this.onScroll);
-  }
-
   public initialize() {
     this.facetManager = buildInsightFacetManager(this.bindings.engine);
     this.querySummary = buildInsightQuerySummary(this.bindings.engine);
+    this.breadcrumbManager = buildInsightBreadcrumbManager(
+      this.bindings.engine
+    );
+  }
+
+  private renderHeader() {
+    return (
+      <div class="w-full flex justify-between mb-3">
+        <h2 class="text-2xl font-bold truncate">
+          {this.bindings.i18n.t('filters')}
+        </h2>
+        {this.breadcrumbManagerState.hasBreadcrumbs && (
+          <Button
+            onClick={() => this.breadcrumbManager.deselectAll()}
+            style="text-primary"
+            text={this.bindings.i18n.t('clear-all-filters')}
+            class="px-2 py-1"
+          ></Button>
+        )}
+      </div>
+    );
   }
 
   private renderBody() {
@@ -101,6 +132,7 @@ export class AtomicInsightRefineModal
 
     return (
       <aside slot="body" class="flex flex-col w-full adjust-for-scroll-bar">
+        {this.renderHeader()}
         <slot name="facets"></slot>
       </aside>
     );

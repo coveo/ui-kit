@@ -1,3 +1,4 @@
+import { getHeadlessBundle } from 'c/quanticHeadlessLoader';
 import { api, LightningElement } from 'lwc';
 
 
@@ -7,6 +8,7 @@ export default class ActionSelectResults extends LightningElement {
 
   interactiveResult;
   count = 1;
+  headless;
 
   handle() {
     const result = { 
@@ -27,9 +29,10 @@ export default class ActionSelectResults extends LightningElement {
   }
 
   resolveInteractiveResultController(result) {
+    this.headless = getHeadlessBundle(this.engineId);
     return window.coveoHeadless?.[this.engineId]?.enginePromise
       .then((engine) => {
-        return CoveoHeadless.buildInteractiveResult(engine, {
+        return this.headless.buildInteractiveResult(engine, {
           options: {result: JSON.parse(JSON.stringify(result))},
       });
     });
