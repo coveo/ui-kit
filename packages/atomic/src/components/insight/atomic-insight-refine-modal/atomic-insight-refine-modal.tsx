@@ -21,6 +21,7 @@ import {
 } from '../../common/refine-modal/refine-modal-common';
 import {Hidden} from '../../common/hidden';
 import {Button} from '../../common/button';
+import {rectEquals} from '../../../utils/dom-utils';
 
 /**
  * @internal
@@ -55,9 +56,6 @@ export class AtomicInsightRefineModal
   @Prop({reflect: true, mutable: true}) isOpen = false;
 
   private facetManager!: InsightFacetManager;
-  private resizeObserver?: ResizeObserver;
-  private updateDimensionsOnNextFrame = () =>
-    requestAnimationFrame(this.updateDimensions.bind(this));
   public querySummary!: InsightQuerySummary;
   private breadcrumbManager!: InsightBreadcrumbManager;
 
@@ -72,26 +70,29 @@ export class AtomicInsightRefineModal
           )
         );
       }
-      this.updateDimensionsOnNextFrame();
-      if (window.ResizeObserver) {
-        if (!this.resizeObserver) {
-          this.resizeObserver = new ResizeObserver(() =>
-            this.updateDimensionsOnNextFrame()
-          );
-        }
-        this.resizeObserver.observe(document.body);
-      }
-
-      document.addEventListener('scroll', this.updateDimensionsOnNextFrame);
-    } else {
-      this.resizeObserver?.disconnect();
-      document.removeEventListener('scroll', this.updateDimensionsOnNextFrame);
+      this.onAnimationFrame();
     }
   }
 
-  public disconnectedCallback() {
-    this.resizeObserver?.disconnect();
-    document.removeEventListener('scroll', this.updateDimensionsOnNextFrame);
+  private onAnimationFrame() {
+    if (!this.isOpen) {
+      return;
+    }
+    if (this.dimensionChanged()) {
+      this.updateDimensions();
+    }
+    window.requestAnimationFrame(() => this.onAnimationFrame());
+  }
+
+  private dimensionChanged() {
+    if (!this.interfaceDimensions) {
+      return true;
+    }
+
+    return !rectEquals(
+      this.interfaceDimensions,
+      this.bindings.interfaceElement.getBoundingClientRect()
+    );
   }
 
   public updateDimensions() {
