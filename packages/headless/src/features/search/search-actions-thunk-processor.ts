@@ -229,6 +229,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
+    if (this.analyticsAction) {
+      await this.dispatch(this.analyticsAction);
+    }
+
     const retried = await this.automaticallyRetryQueryWithTriggerModification(
       correctedQuery
     );
