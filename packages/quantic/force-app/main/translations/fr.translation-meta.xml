@@ -460,4 +460,8 @@
       <label>Afficher {{0}} résultats par page.</label>
       <name>quantic_ShowNResultsPerPage</name>
     </customLabels>
+    <customLabels>
+      <label>Aucun filtre disponible pour cette requête</label>
+      <name>quantic_NoFiltersAvailableForThisQuery</name>
+    </customLabels>
 </Translations>
