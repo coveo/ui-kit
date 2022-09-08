@@ -3,15 +3,10 @@ import {TriggerSection, QuerySection} from '../../state/state-sections';
 import {triggers, query} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
+import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions';
+import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {
-  updateQuery,
-  UpdateQueryActionCreatorPayload,
-} from '../../features/query/query-actions';
-import {
-  logTriggerQuery,
-  logUndoTriggerQuery,
-} from '../../features/triggers/trigger-analytics-actions';
+import {logUndoTriggerQuery} from '../../features/triggers/trigger-analytics-actions';
 
 /**
  * The `QueryTrigger` controller handles query triggers.
@@ -63,72 +58,31 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
 
   const getState = () => engine.state;
 
-  let correction: {originalQuery: string; newQuery: string} | null = null;
-  let queryToIgnore: string | null = null;
+  const modification = () => getState().triggers.queryModification.newQuery;
+  const originalQuery = () =>
+    getState().triggers.queryModification.originalQuery;
 
   return {
     ...controller,
 
-    subscribe(listener: () => void) {
-      const strictListener = () => {
-        const currentTrigger = getState().triggers.query;
-        const currentQuery = getState().query.q;
-
-        if (currentQuery === queryToIgnore) {
-          return;
-        }
-        queryToIgnore = null;
-
-        if (correction) {
-          const wasQueryUndone = currentQuery === correction.originalQuery;
-          if (wasQueryUndone) {
-            // We don't want a query trigger to immediately redo what the user intends to undo.
-            queryToIgnore = currentQuery;
-          }
-
-          correction = null;
-          listener();
-          return;
-        }
-
-        if (currentTrigger) {
-          correction = {
-            originalQuery: currentQuery,
-            newQuery: currentTrigger,
-          };
-          queryToIgnore = currentTrigger;
-          const updateQueryPayload: UpdateQueryActionCreatorPayload = {
-            q: currentTrigger,
-          };
-          dispatch(updateQuery(updateQueryPayload));
-          listener();
-          dispatch(executeSearch(logTriggerQuery()));
-          return;
-        }
-      };
-      strictListener();
-      return engine.subscribe(strictListener);
-    },
-
     get state() {
       return {
-        newQuery: correction?.newQuery ?? '',
-        originalQuery: correction?.originalQuery ?? '',
-        wasQueryModified: !!correction,
+        newQuery: modification(),
+        originalQuery: originalQuery(),
+        wasQueryModified: modification() !== '',
       };
     },
 
     undo() {
-      if (!correction) {
-        return;
-      }
-
-      const undoneQuery = correction.newQuery;
-      const updateQueryPayload: UpdateQueryActionCreatorPayload = {
-        q: correction.originalQuery,
-      };
-      dispatch(updateQuery(updateQueryPayload));
-      dispatch(executeSearch(logUndoTriggerQuery({undoneQuery})));
+      dispatch(updateIgnoreQueryTrigger(modification()));
+      dispatch(updateQuery({q: originalQuery()}));
+      dispatch(
+        executeSearch(
+          logUndoTriggerQuery({
+            undoneQuery: modification(),
+          })
+        )
+      );
     },
   };
 }
