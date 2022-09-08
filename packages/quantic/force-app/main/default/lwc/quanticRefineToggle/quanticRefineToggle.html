@@ -1,9 +1,9 @@
 <template>
   <button class="slds-button slds-button_neutral refine-button slds-is-relative" onclick={openModal}
-    title={title} disabled={refineButtonDisabled}>
+    title={buttonTitle} disabled={refineButtonDisabled}>
     <slot name="button-content">
       {labels.sortAndFilters}
-      <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={title}
+      <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonTitle}
         class="slds-current-color slds-var-p-vertical_x-small slds-button__icon_right">
       </lightning-icon>
     </slot>

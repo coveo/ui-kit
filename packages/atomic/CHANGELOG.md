@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.108.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.107.1...@coveo/atomic@1.108.0) (2022-09-07)
+
+
+### Bug Fixes
+
+* **atomic:** added missing parts to refine modal ([#2394](https://github.com/coveo/ui-kit/issues/2394)) ([9ba24f4](https://github.com/coveo/ui-kit/commit/9ba24f46dbc205746ce9a64e4602029d06f093f7))
+
+
+### Features
+
+* **atomic:** added "filters" header with clear button to insight refine modal ([#2393](https://github.com/coveo/ui-kit/issues/2393)) ([8d7cafe](https://github.com/coveo/ui-kit/commit/8d7cafe9f85e6181657380fee5311229fe25ca08))
+
+
+
+
+
+## [1.107.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.107.0...@coveo/atomic@1.107.1) (2022-09-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.107.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.106.1...@coveo/atomic@1.107.0) (2022-09-06)
 
 

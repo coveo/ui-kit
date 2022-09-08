@@ -1,5 +1,15 @@
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {configure, reset} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {
+  getAlias,
+  InterceptAliases,
+  interceptSearch,
+} from '../../page-objects/search';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 import {scope} from '../../reporters/detailed-collector';
 import {BreadcrumbManagerActions as Actions} from './breadcrumb-manager-actions';
 import {BreadcrumbManagerExpectations as Expect} from './breadcrumb-manager-expectations';
@@ -14,6 +24,7 @@ describe('quantic-breadcrumb-manager', () => {
   const clearActionName = 'Clear filter';
 
   interface BreadcrumbOptions {
+    useCase: string;
     categoryDivider: string;
     collapseThreshold: number;
   }
@@ -25,8 +36,12 @@ describe('quantic-breadcrumb-manager', () => {
     interceptSearch();
     cy.visit(breadcrumbManagertUrl);
     configure(options);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
+      performSearch();
+    }
     if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
+      cy.wait(getAlias(options.useCase));
     }
   }
 
@@ -36,276 +51,289 @@ describe('quantic-breadcrumb-manager', () => {
     configure();
   }
 
-  describe('with default values', () => {
-    it('should work as expected', () => {
-      visitBreadcrumbManager();
+  useCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      describe('with default values', () => {
+        it('should work as expected', () => {
+          visitBreadcrumbManager({useCase: param.useCase});
 
-      scope('when selecting values in numeric facet', () => {
-        Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
-        Expect.displayClearFilters(false);
+          scope('when selecting values in numeric facet', () => {
+            Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
+            Expect.displayClearFilters(false);
 
-        Actions.numericFacet.checkFirstValue();
-        cy.wait(InterceptAliases.UA.Facet.Select);
-
-        Expect.displayClearFilters(true);
-        Expect.numericFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.numericFacetBreadcrumb.displayLabel(true);
-        Expect.numericFacetBreadcrumb.labelContains('Youtube Likes');
-        Expect.numericFacetBreadcrumb.displayValues(true);
-        Expect.numericFacetBreadcrumb.numberOfValues(1);
-
-        scope('when selecting more values', () => {
-          for (let index = 1; index <= 4; index++) {
-            Actions.numericFacet.checkValueAt(index);
+            Actions.numericFacet.checkFirstValue();
             cy.wait(InterceptAliases.UA.Facet.Select);
 
+            Expect.displayClearFilters(true);
+            Expect.numericFacetBreadcrumb.displayBreadcrumb(true);
+            Expect.numericFacetBreadcrumb.displayLabel(true);
+            Expect.numericFacetBreadcrumb.labelContains('Youtube Likes');
             Expect.numericFacetBreadcrumb.displayValues(true);
-            Expect.numericFacetBreadcrumb.numberOfValues(index + 1);
-            Expect.numericFacetBreadcrumb.displayShowMore(false);
-          }
+            Expect.numericFacetBreadcrumb.numberOfValues(1);
 
-          Actions.numericFacet.checkValueAt(5);
-          cy.wait(InterceptAliases.UA.Facet.Select);
+            scope('when selecting more values', () => {
+              for (let index = 1; index <= 4; index++) {
+                Actions.numericFacet.checkValueAt(index);
+                cy.wait(InterceptAliases.UA.Facet.Select);
 
-          Expect.numericFacetBreadcrumb.displayValues(true);
-          Expect.numericFacetBreadcrumb.numberOfValues(5);
-          Expect.numericFacetBreadcrumb.displayShowMore(true);
+                Expect.numericFacetBreadcrumb.displayValues(true);
+                Expect.numericFacetBreadcrumb.numberOfValues(index + 1);
+                Expect.numericFacetBreadcrumb.displayShowMore(false);
+              }
 
-          Actions.clickShowMoreNumericFacetBreadcrumb();
+              Actions.numericFacet.checkValueAt(5);
+              cy.wait(InterceptAliases.UA.Facet.Select);
 
-          Expect.numericFacetBreadcrumb.numberOfValues(6);
-          Expect.numericFacetBreadcrumb.displayShowMore(false);
-        });
+              Expect.numericFacetBreadcrumb.displayValues(true);
+              Expect.numericFacetBreadcrumb.numberOfValues(5);
+              Expect.numericFacetBreadcrumb.displayShowMore(true);
 
-        scope('when clearing a value', () => {
-          Actions.clickFirstValueNumericFacetBreadcrumb();
+              Actions.clickShowMoreNumericFacetBreadcrumb();
 
-          Expect.logFacetBreadcrumbFacet(numericField);
-          Expect.numericFacetBreadcrumb.numberOfValues(5);
-        });
-      });
+              Expect.numericFacetBreadcrumb.numberOfValues(6);
+              Expect.numericFacetBreadcrumb.displayShowMore(false);
+            });
 
-      scope('when selecting values in time frame facet', () => {
-        const dateFacetName = 'Date';
-        const timeframeLabel1 = 'Past 6 months';
-        const timeframeLabel2 = 'Past 10 years';
-        Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
+            scope('when clearing a value', () => {
+              Actions.clickFirstValueNumericFacetBreadcrumb();
 
-        Actions.timeframeFacet.selectValue(timeframeLabel1);
-        cy.wait(InterceptAliases.UA.Facet.Select);
+              Expect.logFacetBreadcrumbFacet(numericField);
+              Expect.numericFacetBreadcrumb.numberOfValues(5);
+            });
+          });
 
-        Expect.dateFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.dateFacetBreadcrumb.displayLabel(true);
-        Expect.dateFacetBreadcrumb.labelContains(dateFacetName);
-        Expect.dateFacetBreadcrumb.numberOfValues(1);
-        Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-          timeframeLabel1
-        );
-        Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextEq(
-          `${dateFacetName} ${timeframeLabel1} ${clearActionName}`
-        );
+          scope('when selecting values in time frame facet', () => {
+            const dateFacetName = 'Date';
+            const timeframeLabel1 = 'Past 6 months';
+            const timeframeLabel2 = 'Past 10 years';
+            Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
 
-        Actions.timeframeFacet.selectValue(timeframeLabel2);
-        cy.wait(InterceptAliases.UA.Facet.Select);
+            Actions.timeframeFacet.selectValue(timeframeLabel1);
+            cy.wait(InterceptAliases.UA.Facet.Select);
 
-        Expect.dateFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.dateFacetBreadcrumb.displayLabel(true);
-        Expect.dateFacetBreadcrumb.numberOfValues(1);
-        Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-          timeframeLabel2
-        );
-      });
+            Expect.dateFacetBreadcrumb.displayBreadcrumb(true);
+            Expect.dateFacetBreadcrumb.displayLabel(true);
+            Expect.dateFacetBreadcrumb.labelContains(dateFacetName);
+            Expect.dateFacetBreadcrumb.numberOfValues(1);
+            Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+              timeframeLabel1
+            );
+            Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextEq(
+              `${dateFacetName} ${timeframeLabel1} ${clearActionName}`
+            );
 
-      scope('when clearing all filters', () => {
-        Actions.clickClearFilters();
+            Actions.timeframeFacet.selectValue(timeframeLabel2);
+            cy.wait(InterceptAliases.UA.Facet.Select);
 
-        Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
-        Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
-      });
-
-      scope('when selecting values in category facet', () => {
-        const path = ['North America', 'Canada', 'British Columbia'];
-        const categoryFacetName = 'Country';
-
-        Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
-
-        Actions.categoryFacet.selectChildValue(path[0]);
-        cy.wait(InterceptAliases.UA.Facet.Select);
-
-        Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.categoryFacetBreadcrumb.displayLabel(true);
-        Expect.categoryFacetBreadcrumb.labelContains(categoryFacetName);
-        Expect.categoryFacetBreadcrumb.displayValues(true);
-        Expect.categoryFacetBreadcrumb.numberOfValues(1);
-        Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-          path[0]
-        );
-        Expect.categoryFacetBreadcrumb.firstBreadcrumbAltTextEq(
-          `${categoryFacetName} ${path[0]} ${clearActionName}`
-        );
-
-        Actions.categoryFacet.selectChildValue(path[1]);
-        cy.wait(InterceptAliases.UA.Facet.Select);
-
-        Expect.categoryFacetBreadcrumb.numberOfValues(1);
-        Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-          path.slice(0, 1).join(' / ')
-        );
-
-        Actions.categoryFacet.selectChildValue(path[2]);
-        cy.wait(InterceptAliases.UA.Facet.Select);
-
-        Expect.categoryFacetBreadcrumb.numberOfValues(1);
-        Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-          path.join(' / ')
-        );
-
-        Actions.clickCategoryFacetBreadcrumb();
-
-        Expect.logCategoryFacetBreadcrumbFacet(categoryField);
-        Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
-        Expect.displayClearFilters(false);
-      });
-
-      scope('when selecting values in facet', () => {
-        cy.then(Actions.facet.selectFirstLinkValue)
-          .wait(InterceptAliases.UA.Facet.Select)
-          .then((interception) => {
-            Expect.facetBreadcrumb.firstBreadcrumbValueLabelContains(
-              interception.request.body.customData.facetValue
+            Expect.dateFacetBreadcrumb.displayBreadcrumb(true);
+            Expect.dateFacetBreadcrumb.displayLabel(true);
+            Expect.dateFacetBreadcrumb.numberOfValues(1);
+            Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+              timeframeLabel2
             );
           });
 
-        Expect.facetBreadcrumb.displayBreadcrumb(true);
-        Expect.facetBreadcrumb.labelContains('File Type');
-        Expect.facetBreadcrumb.displayValues(true);
-        Expect.facetBreadcrumb.numberOfValues(1);
+          scope('when clearing all filters', () => {
+            Actions.clickClearFilters();
 
-        Actions.facet.clickShowMoreButton();
-        cy.wait(InterceptAliases.Search);
+            Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
+            Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
+          });
 
-        Actions.facet.selectLastLinkValue();
-        cy.wait(InterceptAliases.Search);
+          scope('when selecting values in category facet', () => {
+            const path = ['North America', 'Canada', 'British Columbia'];
+            const categoryFacetName = 'Country';
 
-        Expect.facetBreadcrumb.numberOfValues(1);
-      });
-    });
-  });
-  describe('when loading from URL', () => {
-    it('should work as expected', () => {
-      scope('with one filter', () => {
-        const path = 'Africa,Togo';
-        const url = `cf[${categoryField}]=${path}`;
+            Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
 
-        loadFromUrlHash(url);
-        Expect.displayBreadcrumbManager(true);
-        Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.categoryFacetBreadcrumb.displayLabel(true);
-        Expect.categoryFacetBreadcrumb.labelContains('Country');
-        Expect.categoryFacetBreadcrumb.displayValues(true);
-        Expect.categoryFacetBreadcrumb.numberOfValues(1);
-        Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
-        Expect.facetBreadcrumb.displayBreadcrumb(false);
-        Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
-        Expect.displayClearFilters(true);
-      });
+            Actions.categoryFacet.selectChildValue(path[0]);
+            cy.wait(InterceptAliases.UA.Facet.Select);
 
-      reset();
+            Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
+            Expect.categoryFacetBreadcrumb.displayLabel(true);
+            Expect.categoryFacetBreadcrumb.labelContains(categoryFacetName);
+            Expect.categoryFacetBreadcrumb.displayValues(true);
+            Expect.categoryFacetBreadcrumb.numberOfValues(1);
+            Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+              path[0]
+            );
+            Expect.categoryFacetBreadcrumb.firstBreadcrumbAltTextEq(
+              `${categoryFacetName} ${path[0]} ${clearActionName}`
+            );
 
-      scope('with 3 filters', () => {
-        const path = 'North America,Canada';
-        const timeframeRange = 'past-6-month..now';
-        const fileType = 'txt';
-        const url = `cf[${categoryField}]=${path}&f[${facetField}]=${fileType}&df[${dateField}]=${timeframeRange}`;
+            Actions.categoryFacet.selectChildValue(path[1]);
+            cy.wait(InterceptAliases.UA.Facet.Select);
 
-        loadFromUrlHash(url);
-        Expect.facetBreadcrumb.displayBreadcrumb(true);
-        Expect.facetBreadcrumb.displayLabel(true);
-        Expect.facetBreadcrumb.labelContains('File Type');
-        Expect.facetBreadcrumb.displayValues(true);
-        Expect.facetBreadcrumb.numberOfValues(1);
-        Expect.facetBreadcrumb.firstBreadcrumbValueLabelContains(fileType);
+            Expect.categoryFacetBreadcrumb.numberOfValues(1);
+            Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+              path.slice(0, 1).join(' / ')
+            );
 
-        const dateFacetName = 'Date';
-        Expect.dateFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.dateFacetBreadcrumb.displayLabel(true);
-        Expect.dateFacetBreadcrumb.labelContains(dateFacetName);
-        Expect.dateFacetBreadcrumb.displayValues(true);
-        Expect.dateFacetBreadcrumb.numberOfValues(1);
-        Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-          'Past 6 months'
-        );
-        Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextEq(
-          `${dateFacetName} Past 6 months ${clearActionName}`
-        );
-        Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
-        Expect.categoryFacetBreadcrumb.displayLabel(true);
-        Expect.categoryFacetBreadcrumb.labelContains('Country');
-        Expect.categoryFacetBreadcrumb.displayValues(true);
-        Expect.categoryFacetBreadcrumb.numberOfValues(1);
-        Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-          path.split(',').join(' / ')
-        );
+            Actions.categoryFacet.selectChildValue(path[2]);
+            cy.wait(InterceptAliases.UA.Facet.Select);
 
-        Expect.displayClearFilters(true);
-      });
-    });
-  });
+            Expect.categoryFacetBreadcrumb.numberOfValues(1);
+            Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+              path.join(' / ')
+            );
 
-  describe('with custom category divider', () => {
-    it('should work as expected', () => {
-      visitBreadcrumbManager({
-        categoryDivider: '*',
+            Actions.clickCategoryFacetBreadcrumb();
+
+            Expect.logCategoryFacetBreadcrumbFacet(categoryField);
+            Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
+            Expect.displayClearFilters(false);
+          });
+
+          scope('when selecting values in facet', () => {
+            cy.then(Actions.facet.selectFirstLinkValue)
+              .wait(InterceptAliases.UA.Facet.Select)
+              .then((interception) => {
+                Expect.facetBreadcrumb.firstBreadcrumbValueLabelContains(
+                  interception.request.body.customData.facetValue
+                );
+              });
+
+            Expect.facetBreadcrumb.displayBreadcrumb(true);
+            Expect.facetBreadcrumb.labelContains('File Type');
+            Expect.facetBreadcrumb.displayValues(true);
+            Expect.facetBreadcrumb.numberOfValues(1);
+
+            Actions.facet.clickShowMoreButton();
+            cy.wait(getAlias(param.useCase));
+
+            Actions.facet.selectLastLinkValue();
+            cy.wait(getAlias(param.useCase));
+
+            Expect.facetBreadcrumb.numberOfValues(1);
+          });
+        });
       });
 
-      const path = ['North America', 'Canada', 'British Columbia'];
+      if (param.useCase === useCaseEnum.search) {
+        describe('when loading from URL', () => {
+          it('should work as expected', () => {
+            scope('with one filter', () => {
+              const path = 'Africa,Togo';
+              const url = `cf[${categoryField}]=${path}`;
 
-      Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
+              loadFromUrlHash(url);
+              Expect.displayBreadcrumbManager(true);
+              Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
+              Expect.categoryFacetBreadcrumb.displayLabel(true);
+              Expect.categoryFacetBreadcrumb.labelContains('Country');
+              Expect.categoryFacetBreadcrumb.displayValues(true);
+              Expect.categoryFacetBreadcrumb.numberOfValues(1);
+              Expect.numericFacetBreadcrumb.displayBreadcrumb(false);
+              Expect.facetBreadcrumb.displayBreadcrumb(false);
+              Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
+              Expect.displayClearFilters(true);
+            });
 
-      Actions.categoryFacet.selectChildValue(path[0]);
-      cy.wait(InterceptAliases.UA.Facet.Select);
+            reset();
 
-      Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
-      Expect.categoryFacetBreadcrumb.displayLabel(true);
-      Expect.categoryFacetBreadcrumb.labelContains('Country');
-      Expect.categoryFacetBreadcrumb.displayValues(true);
-      Expect.categoryFacetBreadcrumb.numberOfValues(1);
-      Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(path[0]);
+            scope('with 3 filters', () => {
+              const path = 'North America,Canada';
+              const timeframeRange = 'past-6-month..now';
+              const fileType = 'txt';
+              const url = `cf[${categoryField}]=${path}&f[${facetField}]=${fileType}&df[${dateField}]=${timeframeRange}`;
 
-      Actions.categoryFacet.selectChildValue(path[1]);
-      cy.wait(InterceptAliases.UA.Facet.Select);
+              loadFromUrlHash(url);
+              Expect.facetBreadcrumb.displayBreadcrumb(true);
+              Expect.facetBreadcrumb.displayLabel(true);
+              Expect.facetBreadcrumb.labelContains('File Type');
+              Expect.facetBreadcrumb.displayValues(true);
+              Expect.facetBreadcrumb.numberOfValues(1);
+              Expect.facetBreadcrumb.firstBreadcrumbValueLabelContains(
+                fileType
+              );
 
-      Expect.categoryFacetBreadcrumb.numberOfValues(1);
-      Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-        path.slice(0, 1).join(' * ')
-      );
+              const dateFacetName = 'Date';
+              Expect.dateFacetBreadcrumb.displayBreadcrumb(true);
+              Expect.dateFacetBreadcrumb.displayLabel(true);
+              Expect.dateFacetBreadcrumb.labelContains(dateFacetName);
+              Expect.dateFacetBreadcrumb.displayValues(true);
+              Expect.dateFacetBreadcrumb.numberOfValues(1);
+              Expect.dateFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+                'Past 6 months'
+              );
+              Expect.dateFacetBreadcrumb.firstBreadcrumbAltTextEq(
+                `${dateFacetName} Past 6 months ${clearActionName}`
+              );
+              Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
+              Expect.categoryFacetBreadcrumb.displayLabel(true);
+              Expect.categoryFacetBreadcrumb.labelContains('Country');
+              Expect.categoryFacetBreadcrumb.displayValues(true);
+              Expect.categoryFacetBreadcrumb.numberOfValues(1);
+              Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+                path.split(',').join(' / ')
+              );
 
-      Actions.categoryFacet.selectChildValue(path[2]);
-      cy.wait(InterceptAliases.UA.Facet.Select);
+              Expect.displayClearFilters(true);
+            });
+          });
+        });
+      }
 
-      Expect.categoryFacetBreadcrumb.numberOfValues(1);
-      Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
-        path.join(' * ')
-      );
-    });
-  });
+      describe('with custom category divider', () => {
+        it('should work as expected', () => {
+          visitBreadcrumbManager({
+            categoryDivider: '*',
+            useCase: param.useCase,
+          });
 
-  describe('with custom collapse threshold', () => {
-    it('should work as expected', () => {
-      visitBreadcrumbManager({
-        collapseThreshold: 2,
+          const path = ['North America', 'Canada', 'British Columbia'];
+
+          Expect.categoryFacetBreadcrumb.displayBreadcrumb(false);
+
+          Actions.categoryFacet.selectChildValue(path[0]);
+          cy.wait(InterceptAliases.UA.Facet.Select);
+
+          Expect.categoryFacetBreadcrumb.displayBreadcrumb(true);
+          Expect.categoryFacetBreadcrumb.displayLabel(true);
+          Expect.categoryFacetBreadcrumb.labelContains('Country');
+          Expect.categoryFacetBreadcrumb.displayValues(true);
+          Expect.categoryFacetBreadcrumb.numberOfValues(1);
+          Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+            path[0]
+          );
+
+          Actions.categoryFacet.selectChildValue(path[1]);
+          cy.wait(InterceptAliases.UA.Facet.Select);
+
+          Expect.categoryFacetBreadcrumb.numberOfValues(1);
+          Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+            path.slice(0, 1).join(' * ')
+          );
+
+          Actions.categoryFacet.selectChildValue(path[2]);
+          cy.wait(InterceptAliases.UA.Facet.Select);
+
+          Expect.categoryFacetBreadcrumb.numberOfValues(1);
+          Expect.categoryFacetBreadcrumb.firstBreadcrumbValueLabelContains(
+            path.join(' * ')
+          );
+        });
       });
 
-      Actions.numericFacet.checkValueAt(0);
-      Expect.numericFacetBreadcrumb.displayBreadcrumb(true);
-      Expect.numericFacetBreadcrumb.numberOfValues(1);
+      describe('with custom collapse threshold', () => {
+        it('should work as expected', () => {
+          visitBreadcrumbManager({
+            collapseThreshold: 2,
+            useCase: param.useCase,
+          });
 
-      Actions.numericFacet.checkValueAt(1);
-      Expect.numericFacetBreadcrumb.numberOfValues(2);
+          Actions.numericFacet.checkValueAt(0);
+          Expect.numericFacetBreadcrumb.displayBreadcrumb(true);
+          Expect.numericFacetBreadcrumb.numberOfValues(1);
 
-      Actions.numericFacet.checkValueAt(2);
-      Expect.numericFacetBreadcrumb.numberOfValues(2);
-      Expect.numericFacetBreadcrumb.displayShowMore(true);
+          Actions.numericFacet.checkValueAt(1);
+          Expect.numericFacetBreadcrumb.numberOfValues(2);
+
+          Actions.numericFacet.checkValueAt(2);
+          Expect.numericFacetBreadcrumb.numberOfValues(2);
+          Expect.numericFacetBreadcrumb.displayShowMore(true);
+        });
+      });
     });
   });
 });

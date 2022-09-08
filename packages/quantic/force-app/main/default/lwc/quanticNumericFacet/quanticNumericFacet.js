@@ -11,6 +11,7 @@ import LOCALE from '@salesforce/i18n/locale';
 
 import clearFilter from '@salesforce/label/c.quantic_ClearFilter';
 import clearFilter_plural from '@salesforce/label/c.quantic_ClearFilter_plural';
+import clearFilterFacet from '@salesforce/label/c.quantic_ClearFilterFacet';
 import collapseFacet from '@salesforce/label/c.quantic_CollapseFacet';
 import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 import min from '@salesforce/label/c.quantic_Min';
@@ -172,6 +173,7 @@ export default class QuanticNumericFacet extends LightningElement {
   labels = {
     clearFilter,
     clearFilter_plural,
+    clearFilterFacet,
     collapseFacet,
     expandFacet,
     min,
@@ -354,6 +356,10 @@ export default class QuanticNumericFacet extends LightningElement {
       )}`;
     }
     return '';
+  }
+
+  get clearFilterAriaLabelValue() {
+    return `${I18nUtils.format(this.labels.clearFilterFacet, this.field)}`;
   }
 
   get shouldRenderInput() {

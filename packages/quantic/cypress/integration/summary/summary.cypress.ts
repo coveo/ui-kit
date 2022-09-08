@@ -1,6 +1,6 @@
 import {configure} from '../../page-objects/configurator';
 import {
-  InterceptAliases,
+  getAlias,
   interceptSearch,
   interceptSearchIndefinitely,
   mockSearchNoResults,
@@ -11,24 +11,34 @@ import {
   setPageSizeValue,
   setResultsPerPage,
 } from '../../page-objects/actions/action-set-results-per-page';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
+import {performSearch} from '../../page-objects/actions/action-perform-search';
 
 describe('quantic-summary', () => {
   const summaryUrl = 's/quantic-summary';
   const defaultNumberOfResults = 10;
 
-  function visitSummary(waitForSearch = true) {
+  function visitSummary(useCase: string, waitForSearch = true) {
     interceptSearch();
     cy.visit(summaryUrl);
-    configure();
+    configure({useCase: useCase});
+    if (useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
+      performSearch();
+    }
     if (waitForSearch) {
-      cy.wait(InterceptAliases.Search);
+      cy.wait(getAlias(useCase));
     }
   }
 
-  function setupWithPauseBeforeSearch() {
+  function setupWithPauseBeforeSearch(useCase: string) {
     interceptSearchIndefinitely();
     cy.visit(summaryUrl);
-    configure();
+    configure({useCase: useCase});
   }
 
   function loadFromUrlHash(urlHash: string) {
@@ -38,85 +48,92 @@ describe('quantic-summary', () => {
     configure();
   }
 
-  it('should not render before results have returned', () => {
-    setupWithPauseBeforeSearch();
+  useCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      it('should not render before results have returned', () => {
+        setupWithPauseBeforeSearch(param.useCase);
 
-    Expect.displaySummary(false);
-  });
-
-  describe('when loading default summary', () => {
-    it('should work as expected', () => {
-      visitSummary(false);
-
-      cy.wait(InterceptAliases.Search).then((interception) => {
-        Expect.displaySummary(true);
-        Expect.displayQuery(false);
-        Expect.displayRange(true);
-        Expect.rangeContains(`1-${defaultNumberOfResults}`);
-        Expect.displayTotal(true);
-        Expect.totalContains(interception.response?.body.totalCount);
+        Expect.displaySummary(false);
       });
-    });
-  });
 
-  describe('when a query yields no results', () => {
-    it('should work as expected', () => {
-      mockSearchNoResults();
-      visitSummary();
+      describe('when loading default summary', () => {
+        it('should work as expected', () => {
+          visitSummary(param.useCase, false);
 
-      Expect.displaySummary(false);
-    });
-  });
-
-  describe('when a query yields one result', () => {
-    it('should work as expected', () => {
-      const query = "Queen's Gambit sparks world of online chess celebrities";
-      const url = `q=${query}`;
-      loadFromUrlHash(url);
-
-      Expect.displaySummary(true);
-      Expect.displayRange(true);
-      Expect.rangeContains('1-1');
-      Expect.displayTotal(true);
-      Expect.totalContains(1);
-      Expect.displayQuery(true);
-      Expect.queryContains(query);
-    });
-  });
-
-  describe('when selecting result per page', () => {
-    it('should work as expected', () => {
-      visitSummary();
-      const customResultsPerPage = 45;
-      setPageSizeValue(customResultsPerPage);
-      setResultsPerPage();
-
-      cy.wait(InterceptAliases.Search).then((interception) => {
-        Expect.displaySummary(true);
-        Expect.displayQuery(false);
-        Expect.displayRange(true);
-        Expect.rangeContains(`1-${customResultsPerPage}`);
-        Expect.displayTotal(true);
-        Expect.totalContains(interception.response?.body.totalCount);
+          cy.wait(getAlias(param.useCase)).then((interception) => {
+            Expect.displaySummary(true);
+            Expect.displayQuery(false);
+            Expect.displayRange(true);
+            Expect.rangeContains(`1-${defaultNumberOfResults}`);
+            Expect.displayTotal(true);
+            Expect.totalContains(interception.response?.body.totalCount);
+          });
+        });
       });
-    });
-  });
 
-  describe('when selecting next page', () => {
-    it('should work as expected', () => {
-      visitSummary();
+      describe('when a query yields no results', () => {
+        it('should work as expected', () => {
+          mockSearchNoResults(param.useCase);
+          visitSummary(param.useCase);
 
-      getNextResults();
+          Expect.displaySummary(false);
+        });
+      });
 
-      cy.wait(InterceptAliases.Search).then((interception) => {
-        Expect.displaySummary(true);
-        Expect.displayQuery(false);
-        Expect.displayRange(true);
-        Expect.rangeContains(
-          `${defaultNumberOfResults + 1}-${defaultNumberOfResults * 2}`
-        );
-        Expect.displayTotal(true);
-        Expect.totalContains(interception.response?.body.totalCount);
+      if (param.useCase === useCaseEnum.search) {
+        describe('when a query yields one result', () => {
+          it('should work as expected', () => {
+            const query =
+              "Queen's Gambit sparks world of online chess celebrities";
+            const url = `q=${query}`;
+            loadFromUrlHash(url);
+
+            Expect.displaySummary(true);
+            Expect.displayRange(true);
+            Expect.rangeContains('1-1');
+            Expect.displayTotal(true);
+            Expect.totalContains(1);
+            Expect.displayQuery(true);
+            Expect.queryContains(query);
+          });
+        });
+      }
+
+      describe('when selecting result per page', () => {
+        it('should work as expected', () => {
+          visitSummary(param.useCase);
+          const customResultsPerPage = 45;
+          setPageSizeValue(customResultsPerPage);
+          setResultsPerPage();
+
+          cy.wait(getAlias(param.useCase)).then((interception) => {
+            Expect.displaySummary(true);
+            Expect.displayQuery(false);
+            Expect.displayRange(true);
+            Expect.rangeContains(`1-${customResultsPerPage}`);
+            Expect.displayTotal(true);
+            Expect.totalContains(interception.response?.body.totalCount);
+          });
+        });
+      });
+
+      describe('when selecting next page', () => {
+        it('should work as expected', () => {
+          visitSummary(param.useCase);
+
+          getNextResults();
+
+          cy.wait(getAlias(param.useCase)).then((interception) => {
+            Expect.displaySummary(true);
+            Expect.displayQuery(false);
+            Expect.displayRange(true);
+            Expect.rangeContains(
+              `${defaultNumberOfResults + 1}-${defaultNumberOfResults * 2}`
+            );
+            Expect.displayTotal(true);
+            Expect.totalContains(interception.response?.body.totalCount);
+          });
+        });
       });
     });
   });

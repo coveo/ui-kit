@@ -70,7 +70,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
@@ -120,7 +120,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
@@ -186,7 +186,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
@@ -352,6 +352,7 @@ export namespace Components {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback": () => void;
+        "disabled": boolean;
         "icon": string;
         "labelI18nKey": string;
         "tooltip": string;
@@ -738,7 +739,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
@@ -831,7 +832,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
@@ -881,7 +882,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
@@ -1532,7 +1533,7 @@ export namespace Components {
          */
         "injectionDepth": number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed": boolean;
         /**
@@ -2388,7 +2389,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed"?: boolean;
         /**
@@ -2438,7 +2439,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed"?: boolean;
         /**
@@ -2504,7 +2505,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed"?: boolean;
         /**
@@ -2668,6 +2669,7 @@ declare namespace LocalJSX {
         "badge"?: VNode;
         "buttonRef"?: (el?: HTMLButtonElement) => void;
         "clickCallback"?: () => void;
+        "disabled"?: boolean;
         "icon": string;
         "labelI18nKey": string;
         "tooltip"?: string;
@@ -3040,7 +3042,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed"?: boolean;
         /**
@@ -3134,7 +3136,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed"?: boolean;
         /**
@@ -3184,7 +3186,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed"?: boolean;
         /**
@@ -3807,7 +3809,7 @@ declare namespace LocalJSX {
          */
         "injectionDepth"?: number;
         /**
-          * Specifies if the facet is collapsed.
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
          */
         "isCollapsed"?: boolean;
         /**

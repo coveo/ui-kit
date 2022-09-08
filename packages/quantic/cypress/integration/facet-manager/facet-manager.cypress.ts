@@ -2,7 +2,12 @@
 import {Interception} from 'cypress/types/net-stubbing';
 import {performSearch} from '../../page-objects/actions/action-perform-search';
 import {configure} from '../../page-objects/configurator';
-import {InterceptAliases, interceptSearch} from '../../page-objects/search';
+import {getAlias, getRoute, interceptSearch} from '../../page-objects/search';
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../page-objects/use-case';
 import {scope} from '../../reporters/detailed-collector';
 import {FacetManagerExpectations as Expect} from './facet-manager-expectations';
 
@@ -10,14 +15,22 @@ describe('quantic-facet-manager', () => {
   const pageUrl = 's/quantic-facet-manager';
   const responseFacetIdsAlias = '@responseFacetIds';
 
-  function visit() {
-    interceptSearch();
-    cy.visit(pageUrl);
-    return configure({});
+  interface FacetManagerOptions {
+    useCase: string;
   }
 
-  function mockFacetOrder(facetIds: string[]) {
-    cy.intercept('POST', '**/rest/search/v2?*', (req) => {
+  function visit(options: Partial<FacetManagerOptions> = {}) {
+    interceptSearch();
+    cy.visit(pageUrl);
+    configure(options);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
+      performSearch();
+    }
+  }
+
+  function mockFacetOrder(facetIds: string[], useCase: string) {
+    cy.intercept('POST', getRoute(useCase), (req) => {
       req.continue((res) => {
         const facets = res.body.facets;
         const reordered: unknown[] = [];
@@ -35,7 +48,7 @@ describe('quantic-facet-manager', () => {
         res.body.facets = reordered;
         res.send();
       });
-    }).as(InterceptAliases.Search.substring(1));
+    }).as(getAlias(useCase).substring(1));
   }
 
   function getFacetOrder(interception: Interception) {
@@ -45,18 +58,23 @@ describe('quantic-facet-manager', () => {
     cy.wrap(ids).as(responseFacetIdsAlias.substring(1));
   }
 
-  it('should load facets in the same order as in the search response', () => {
-    visit()
-      .wait(InterceptAliases.Search)
-      .then((interception) => getFacetOrder(interception));
-    Expect.containsFacets(responseFacetIdsAlias);
+  useCaseParamTest.forEach((param) => {
+    describe(param.label, () => {
+      it('should load facets in the same order as in the search response', () => {
+        visit({useCase: param.useCase});
+        cy.wait(getAlias(param.useCase)).then((interception) =>
+          getFacetOrder(interception)
+        );
+        Expect.containsFacets(responseFacetIdsAlias);
 
-    scope('when reordering the facets', () => {
-      mockFacetOrder(['language', 'objecttype', 'date']);
-      performSearch()
-        .wait(InterceptAliases.Search)
-        .then((interception) => getFacetOrder(interception));
-      Expect.containsFacets(responseFacetIdsAlias);
+        scope('when reordering the facets', () => {
+          mockFacetOrder(['language', 'objecttype', 'date'], param.useCase);
+          performSearch()
+            .wait(getAlias(param.useCase))
+            .then((interception) => getFacetOrder(interception));
+          Expect.containsFacets(responseFacetIdsAlias);
+        });
+      });
     });
   });
 });

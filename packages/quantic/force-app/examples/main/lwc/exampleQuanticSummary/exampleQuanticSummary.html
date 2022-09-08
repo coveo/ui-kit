@@ -8,11 +8,12 @@
       <c-configurator options={options} ontryitnow={handleTryItNow}>
         <c-action-results-per-page slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-results-per-page>
         <c-action-next-results slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-next-results>
+        <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
       </c-configurator>
     </div>
 
-    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
         <c-quantic-summary engine-id={engineId}></c-quantic-summary>
-    </c-quantic-search-interface>
+    </c-example-use-case>
   </c-example-layout>
 </template>

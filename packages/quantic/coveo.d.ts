@@ -11,6 +11,7 @@ import {LightningElement} from 'lwc';
 import {Deferred} from 'utils';
 import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine';
 import {ExternalEngineOptions} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine-configuration';
+import {InsightEngine, SearchEngine} from '@coveo/headless';
 
 interface Bindings {
   engine?:
@@ -28,6 +29,8 @@ declare global {
     | CoveoHeadless
     | CoveoHeadlessCaseAssist
     | CoveoHeadlessInsight;
+
+  type AnyEngine = SearchEngine | InsightEngine;
 
   interface Window {
     coveoHeadless: {

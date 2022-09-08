@@ -4,9 +4,11 @@
         description={pageDescription}
         show-preview={isConfigured}>
 
-        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}></c-configurator>
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+            <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
+        </c-configurator>
 
-        <c-quantic-search-interface slot="preview" engine-id={engineId}>
+        <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
             <c-quantic-category-facet
                 engine-id={engineId}
                 field={config.field}
@@ -20,6 +22,6 @@
                 with-search={config.withSearch}
                 is-collapsed={config.isCollapsed}>
             </c-quantic-category-facet>
-        </c-quantic-search-interface>
+        </c-example-use-case>
     </c-example-layout>
 </template>
