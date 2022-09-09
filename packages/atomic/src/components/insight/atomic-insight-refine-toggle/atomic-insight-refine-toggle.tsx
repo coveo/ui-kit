@@ -79,7 +79,9 @@ export class AtomicInsightRefineToggle {
       <atomic-icon-button
         tooltip={this.bindings.i18n.t('filters')}
         icon={FilterIcon}
-        disabled={!this.searchStatusState.hasResults}
+        disabled={
+          !this.searchStatusState.hasResults && !this.numberOfBreadcrumbs
+        }
         labelI18nKey="sort"
         clickCallback={() => {
           this.bindings.store.waitUntilAppLoaded(() => {
