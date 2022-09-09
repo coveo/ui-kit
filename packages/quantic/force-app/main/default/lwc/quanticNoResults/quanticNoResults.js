@@ -1,6 +1,6 @@
 import {api, LightningElement, track} from 'lwc';
 import {initializeWithHeadless, registerComponentForInit, getHeadlessBundle,} from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
 
 import noResultsForTitle from '@salesforce/label/c.quantic_NoResultsForTitle';
 import noResultsTitle from '@salesforce/label/c.quantic_NoResultsTitle';
@@ -61,6 +61,8 @@ export default class QuanticNoResults extends LightningElement {
   unsubscribeQuerySummary;
   /** @type {Function} */
   unsubscribeBreadcrumbsManager;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  noResultAriaMessage;
 
   labels = {
     noResultsTitle,
@@ -93,6 +95,7 @@ export default class QuanticNoResults extends LightningElement {
       this.historyManager = this.headless.buildHistoryManager(engine);
       this.unsubscribeHistoryManager = this.historyManager.subscribe(() => this.updateState());
     }
+    this.noResultAriaMessage = AriaLiveRegion('noresult', this);
   }
 
   disconnectedCallback() {
@@ -104,9 +107,16 @@ export default class QuanticNoResults extends LightningElement {
   
   updateState() {
     this.showNoResultsPanel = this.searchStatus.state.firstSearchExecuted && !this.searchStatus.state.isLoading && !this.searchStatus.state.hasResults && !this.searchStatus.state.hasError;
+    if(this.showNoResultsPanel) {
+      this.updateAriaMessage();
+    }
     this.showUndoButton = !this.disableCancelLastAction && this.historyManager?.state.past.length;
     this.query = this.querySummary.state.hasQuery ? this.querySummary.state.query : "";
     this.hasBreadcrumbs = this.breadcrumbManager.state.hasBreadcrumbs;
+  }
+
+  updateAriaMessage() {
+    this.noResultAriaMessage.dispatchMessage(this.query ? I18nUtils.format(this.labels.noResultsForTitle, this.query) : this.labels.noResultsTitle);
   }
 
   onUndoLastActionClick() {

@@ -4,6 +4,9 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion, I18nUtils} from 'c/quanticUtils';
+
+import loadingResults from '@salesforce/label/c.quantic_LoadingResults';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").ResultList} ResultList */
@@ -55,6 +58,12 @@ export default class QuanticResultList extends LightningElement {
   resultTemplatesManager;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  loadingAriaLiveMessage;
+
+  labels = {
+    loadingResults
+  }
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -68,6 +77,7 @@ export default class QuanticResultList extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.loadingAriaLiveMessage = AriaLiveRegion('loading', this);
     this.headless = getHeadlessBundle(this.engineId);
     this.resultsPerPage = this.headless.buildResultsPerPage(engine);
     this.unsubscribeResultsPerPage = this.resultsPerPage.subscribe(() =>
@@ -113,6 +123,9 @@ export default class QuanticResultList extends LightningElement {
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted &&
       !!this.numberOfResults;
+    if(this.showPlaceholder) {
+      this.loadingAriaLiveMessage.dispatchMessage(I18nUtils.format(this.labels.loadingResults));
+    }
   }
 
   get fields() {

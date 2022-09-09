@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
-import { I18nUtils } from 'c/quanticUtils';
+import { AriaLiveRegion, I18nUtils } from 'c/quanticUtils';
 
 import coveoOnlineHelpLink from '@salesforce/label/c.quantic_CoveoOnlineHelpLink';
 import moreInformation from '@salesforce/label/c.quantic_MoreInformation';
@@ -41,6 +41,8 @@ export default class QuanticQueryError extends LightningElement {
   queryError;
   /** @type {Function} */
   unsubscribe;
+  /** @type {import('c/quanticUtils').AriaLiveUtils} */
+  errorAriaMessage;
 
   showMoreInfo = false;
 
@@ -67,6 +69,7 @@ export default class QuanticQueryError extends LightningElement {
   initialize = (engine) => {
     this.queryError = CoveoHeadless.buildQueryError(engine);
     this.unsubscribe = this.queryError.subscribe(() => this.updateState());
+    this.errorAriaMessage = AriaLiveRegion('queryerror', this);
   }
 
   disconnectedCallback() {
@@ -76,7 +79,14 @@ export default class QuanticQueryError extends LightningElement {
   updateState() {
     this.type = this.queryError.state.error?.type;
     this.hasError = this.queryError.state.hasError;
+    if(this.hasError) {
+      this.updateAriaLive();
+    }
     this.error = this.queryError.state.error ? JSON.stringify(this.queryError.state.error, null, 2): "";
+  }
+
+  updateAriaLive() {
+    this.errorAriaMessage.dispatchMessage(this.errorTitle);
   }
 
   get errorTitle() {
