@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.43.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.1...@coveo/quantic@1.43.2) (2022-09-09)
+
+
+### Bug Fixes
+
+* **quantic:** Display the click URI in the QuanticResultLink when the title is not present ([#2403](https://github.com/coveo/ui-kit/issues/2403)) ([c38d7e4](https://github.com/coveo/ui-kit/commit/c38d7e4018dc5378148a2a9455d3ff90a66295a8))
+* **quantic:** issue fixed when QuanticTabBar doesn't contain any tab ([#2397](https://github.com/coveo/ui-kit/issues/2397)) ([bec9924](https://github.com/coveo/ui-kit/commit/bec9924dc06fecba106cb896d6ee67cbcb6bb595))
+* **quantic:** removed unnecessary margins from result template slots ([#2402](https://github.com/coveo/ui-kit/issues/2402)) ([f2ef2a3](https://github.com/coveo/ui-kit/commit/f2ef2a3fa26faab14bdeb3e4e4cff1f5627b728f))
+
+
+
+
+
+## [1.43.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.0...@coveo/quantic@1.43.1) (2022-09-08)
+
+
+### Bug Fixes
+
+* **quantic:** new title for the refine toggle when it's disabled ([#2400](https://github.com/coveo/ui-kit/issues/2400)) ([d81ba15](https://github.com/coveo/ui-kit/commit/d81ba156f30beb99ae1bb70a3c3b0f62b44b6a0a))
+
+
+
+
+
 # [1.43.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.42.1...@coveo/quantic@1.43.0) (2022-09-07)
 
 

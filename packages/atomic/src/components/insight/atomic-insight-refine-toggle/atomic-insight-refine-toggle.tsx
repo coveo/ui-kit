@@ -1,8 +1,11 @@
 import {Component, h, State, Element} from '@stencil/core';
 import {
   buildInsightBreadcrumbManager,
+  buildInsightSearchStatus,
   InsightBreadcrumbManager,
   InsightBreadcrumbManagerState,
+  InsightSearchStatus,
+  InsightSearchStatusState,
 } from '..';
 import FilterIcon from '../../../images/filter.svg';
 import {
@@ -28,7 +31,12 @@ export class AtomicInsightRefineToggle {
   @State()
   private breadcrumbManagerState!: InsightBreadcrumbManagerState;
 
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: InsightSearchStatusState;
+
   public breadcrumbManager!: InsightBreadcrumbManager;
+  public searchStatus!: InsightSearchStatus;
   private modalRef?: HTMLAtomicInsightRefineModalElement;
   private buttonRef?: HTMLButtonElement;
 
@@ -46,6 +54,7 @@ export class AtomicInsightRefineToggle {
     this.breadcrumbManager = buildInsightBreadcrumbManager(
       this.bindings.engine
     );
+    this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
 
   private enableModal() {
@@ -70,6 +79,7 @@ export class AtomicInsightRefineToggle {
       <atomic-icon-button
         tooltip={this.bindings.i18n.t('filters')}
         icon={FilterIcon}
+        disabled={!this.searchStatusState.hasResults}
         labelI18nKey="sort"
         clickCallback={() => {
           this.bindings.store.waitUntilAppLoaded(() => {
