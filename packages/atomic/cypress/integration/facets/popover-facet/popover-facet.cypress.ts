@@ -7,6 +7,7 @@ import * as PopoverAssertions from './popover-facet-assertions';
 import {colorFacetField} from '../color-facet/color-facet-actions';
 import {hierarchicalField} from '../category-facet/category-facet-actions';
 import {ratingFacetField} from '../rating-facet/rating-facet-actions';
+import {createTimeframeElements} from '../timeframe-facet/timeframe-facet-action';
 
 describe('Popover Facet Test Suites', () => {
   function testSuites() {
@@ -58,7 +59,7 @@ describe('Popover Facet Test Suites', () => {
     testSuites();
   });
 
-  describe('with an atomic-numeric-facet', () => {
+  describe('with an atomic-numeric-facet with ranges', () => {
     before(() => {
       new TestFixture()
         .with(
@@ -70,8 +71,42 @@ describe('Popover Facet Test Suites', () => {
     testSuites();
   });
 
-  // TODO: KIT-2021 fix popover not showing when no ranges (hasValues)
-  describe.skip('with an atomic-timeframe-facet', () => {
+  describe('with an atomic-numeric-facet without ranges', () => {
+    before(() => {
+      new TestFixture()
+        .with(
+          addPopover('atomic-numeric-facet', {
+            label,
+            field: numericFacetField,
+            'with-input': 'integer',
+            'number-of-values': '0',
+          })
+        )
+        .init();
+    });
+
+    testSuites();
+  });
+
+  describe('with an atomic-timeframe-facet with ranges', () => {
+    before(() => {
+      new TestFixture()
+        .with(
+          addPopover(
+            'atomic-timeframe-facet',
+            {
+              label,
+            },
+            createTimeframeElements()
+          )
+        )
+        .init();
+    });
+
+    testSuites();
+  });
+
+  describe('with an atomic-timeframe-facet without ranges', () => {
     before(() => {
       new TestFixture()
         .with(

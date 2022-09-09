@@ -131,7 +131,7 @@ export class NumericFacetCommon {
   }
 
   private get hasValues() {
-    if (this.filter?.state.range) {
+    if (this.facetForInput?.state.values.length) {
       return true;
     }
 
