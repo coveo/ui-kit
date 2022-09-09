@@ -2,13 +2,11 @@
   <host>
     <article class="card">
       <header class="slds-grid slds-p-horizontal_x-small slds-has-flexi-truncate">
-        <div class="slds-media__body">
-          <div class="slds-grid card__header">
+        <div class="slds-media__body" onclick={toggleVisibility}  onkeydown={onKeyDown} role="button" tabindex="0">
+          <div class="slds-grid card__header" >
             <span class="slds-text-heading_small slds-truncate">{title}</span>
+            <div class="slds-float_right"><slot name="actions"></slot></div>
           </div>
-        </div>
-        <div class="slds-no-flex">
-          <slot name="actions"></slot>
         </div>
       </header>
       <div>

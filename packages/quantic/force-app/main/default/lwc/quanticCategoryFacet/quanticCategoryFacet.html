@@ -3,15 +3,15 @@
     <c-quantic-placeholder variant="card" number-of-rows={numberOfValues}></c-quantic-placeholder>
   </template>
   <template if:true={hasParentsOrValues}>
-    <c-quantic-card-container title={label}>
+    <c-quantic-card-container title={label} toggle-visibility={toggleVisibility}>
       <lightning-button-icon
         class={actionButtonCssClasses}
         slot="actions"
-        onclick={toggleFacetVisibility}
         onmousedown={preventDefault}
         icon-name={actionButtonIcon}
         alternative-text={actionButtonLabel}
         variant="bare"
+        tabindex="-1"
       >
       </lightning-button-icon>
       <template if:false={isCollapsed}>

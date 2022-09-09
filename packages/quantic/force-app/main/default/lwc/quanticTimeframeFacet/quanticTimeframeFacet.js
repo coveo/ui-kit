@@ -305,7 +305,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
   get hasActiveValues() {
     return (
-      this.formattedValues.some((v) => v.selected) || this.dateFilterState?.range
+      this.formattedValues.some((v) => v.selected) ||
+      this.dateFilterState?.range
     );
   }
 
@@ -362,6 +363,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
       format: this.formatFacetValue,
       element: this.template.host,
     });
+
+    this.toggleVisibility = this.toggleFacetVisibility.bind(this);
   };
 
   /**
@@ -417,12 +420,15 @@ export default class QuanticTimeframeFacet extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted;
 
     this.hasResults = this.searchStatus.state.hasResults;
-    
+
     const renderFacetEvent = new CustomEvent('renderFacet', {
-      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.showFacet},
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.showFacet,
+      },
       bubbles: true,
       composed: true,
-    })
+    });
     this.dispatchEvent(renderFacetEvent);
   }
 

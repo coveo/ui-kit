@@ -6,15 +6,15 @@
   </template>
   <template if:false={showPlaceholder}>
     <template if:true={showFacet}>
-      <c-quantic-card-container title={label}>
+      <c-quantic-card-container title={label} toggle-visibility={toggleVisibility}>
         <lightning-button-icon
           slot="actions"
           class={actionButtonCssClasses}
           icon-name={actionButtonIcon}
           alternative-text={actionButtonLabel}
-          onclick={toggleFacetVisibility}
           onmousedown={preventDefault}
           variant="bare"
+          tabindex="-1"
         ></lightning-button-icon>
 
         <template if:true={hasActiveValues}>

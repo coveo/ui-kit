@@ -86,6 +86,7 @@ export default class QuanticFacetValue extends LightningElement {
    */
   onSelect(evt) {
     evt.preventDefault();
+
     this.dispatchEvent(
       new CustomEvent('selectvalue', {
         detail: {

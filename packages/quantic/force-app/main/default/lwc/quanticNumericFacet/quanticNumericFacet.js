@@ -220,6 +220,8 @@ export default class QuanticNumericFacet extends LightningElement {
       format: this.formattingFunction,
       element: this.template.host,
     });
+
+    this.toggleVisibility = this.toggleFacetVisibility.bind(this);
   };
 
   /**
@@ -270,10 +272,13 @@ export default class QuanticNumericFacet extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted;
 
     const renderFacetEvent = new CustomEvent('renderFacet', {
-      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.shouldRenderFacet},
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.shouldRenderFacet,
+      },
       bubbles: true,
       composed: true,
-    })
+    });
     this.dispatchEvent(renderFacetEvent);
   }
 

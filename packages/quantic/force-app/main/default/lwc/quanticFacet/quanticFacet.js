@@ -215,6 +215,8 @@ export default class QuanticFacet extends LightningElement {
       facetId: this.facet.state.facetId,
       element: this.template.host,
     });
+
+    this.toggleVisibility = this.toggleFacetVisibility.bind(this);
   };
 
   disconnectedCallback() {
