@@ -92,7 +92,7 @@ type ValidReturnTypeFromProcessingStep<RejectionType> =
   | ExecuteSearchThunkReturn
   | RejectionType;
 
-interface AsyncThunkConfig {
+export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
