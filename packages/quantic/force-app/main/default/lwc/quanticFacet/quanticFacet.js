@@ -154,8 +154,8 @@ export default class QuanticFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {boolean} */
-  facetContentChanged;
+  /** @type {string|number|undefined} */
+  nextFocusedIndex;
 
   labels = {
     showMore,
@@ -179,9 +179,18 @@ export default class QuanticFacet extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
-    if (this.facetContentChanged) {
-      this.facetContentChanged = false;
-      this.setFocusToFirstFacetValue();
+
+    if (this.nextFocusedIndex !== undefined) {
+      this.nextFocusedIndex =
+        typeof this.nextFocusedIndex === 'number'
+          ? this.nextFocusedIndex
+          : this.values
+              .map((item) => item.value)
+              .indexOf(this.nextFocusedIndex);
+
+      if (this.nextFocusedIndex >= 0) {
+        this.setFocusToFacetValue(this.nextFocusedIndex);
+      }
     }
   }
 
@@ -231,7 +240,7 @@ export default class QuanticFacet extends LightningElement {
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
 
-    const renderFacetEvent = new CustomEvent('renderFacet', {
+    const renderFacetEvent = new CustomEvent('renderfacet', {
       detail: {
         id: this.facetId ?? this.field,
         shouldRenderFacet: this.hasValues,
@@ -374,6 +383,7 @@ export default class QuanticFacet extends LightningElement {
   }
 
   onSelectClickHandler(value) {
+    console.log('select Trigger');
     if (this.isDisplayAsLink) {
       this.facet.toggleSingleSelect(value);
     } else {
@@ -410,18 +420,19 @@ export default class QuanticFacet extends LightningElement {
       }
     } else {
       this.onSelectClickHandler(item);
+      this.nextFocusedIndex = item.value;
     }
     this.clearInput();
   }
 
   showMore() {
     this.facet.showMoreValues();
-    this.facetContentChanged = true;
+    this.nextFocusedIndex = 0;
   }
 
   showLess() {
     this.facet.showLessValues();
-    this.facetContentChanged = true;
+    this.nextFocusedIndex = 0;
   }
 
   clearSelections() {
@@ -465,8 +476,11 @@ export default class QuanticFacet extends LightningElement {
     );
   }
 
-  setFocusToFirstFacetValue() {
-    const focusTarget = this.template.querySelector('c-quantic-facet-value');
+  setFocusToFacetValue(index) {
+    console.log(this.template.querySelectorAll('c-quantic-facet-value')[index]);
+    const focusTarget = this.template.querySelectorAll('c-quantic-facet-value')[
+      index
+    ];
 
     if (focusTarget) {
       // @ts-ignore
