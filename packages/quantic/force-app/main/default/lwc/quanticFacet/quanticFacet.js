@@ -445,6 +445,7 @@ export default class QuanticFacet extends LightningElement {
       this.clearInput();
     }
     this._isCollapsed = !this.isCollapsed;
+    this.nextFocusedIndex = undefined;
   }
 
   preventDefault(evt) {
