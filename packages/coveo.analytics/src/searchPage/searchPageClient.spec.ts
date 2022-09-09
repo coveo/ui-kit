@@ -135,12 +135,16 @@ describe('SearchPageClient', () => {
         });
     };
 
-    const expectMatchCustomEventPayload = (actionCause: SearchPageEvents, meta = {}) => {
+    const expectMatchCustomEventPayload = (
+        actionCause: SearchPageEvents,
+        meta = {},
+        eventType = CustomEventsTypes[actionCause]
+    ) => {
         const [, {body}] = fetchMock.lastCall();
         const customData = {foo: 'bar', ...meta};
         expect(JSON.parse(body.toString())).toMatchObject({
             eventValue: actionCause,
-            eventType: CustomEventsTypes[actionCause],
+            eventType,
             lastSearchQueryUid: 'my-uid',
             customData,
             language: 'en',
@@ -282,7 +286,7 @@ describe('SearchPageClient', () => {
             query: 'queryText',
         };
         await client.logTriggerQuery();
-        expectMatchCustomEventPayload(SearchPageEvents.triggerQuery, meta);
+        expectMatchCustomEventPayload(SearchPageEvents.triggerQuery, meta, 'queryPipelineTriggers');
     });
 
     it('should send proper payload for #logUndoTriggerQuery', async () => {

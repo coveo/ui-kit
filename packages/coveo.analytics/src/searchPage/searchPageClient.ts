@@ -168,7 +168,7 @@ export class CoveoSearchPageClient {
 
     public logTriggerQuery() {
         const meta = {query: this.provider.getSearchEventRequestPayload().queryText};
-        return this.logCustomEvent(SearchPageEvents.triggerQuery, meta);
+        return this.logCustomEvent(SearchPageEvents.triggerQuery, meta, 'queryPipelineTriggers');
     }
 
     public logUndoTriggerQuery(meta: UndoTriggerRedirectMetadata) {
@@ -356,12 +356,16 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.showLessFoldedResults);
     }
 
-    public async logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+    public async logCustomEvent(
+        event: SearchPageEvents,
+        metadata?: Record<string, any>,
+        eventType: string = CustomEventsTypes[event]!
+    ) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
             ...(await this.getBaseCustomEventRequest(customData)),
-            eventType: CustomEventsTypes[event]!,
+            eventType,
             eventValue: event,
         };
 
