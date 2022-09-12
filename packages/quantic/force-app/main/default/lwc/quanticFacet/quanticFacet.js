@@ -383,7 +383,6 @@ export default class QuanticFacet extends LightningElement {
   }
 
   onSelectClickHandler(value) {
-    console.log('select Trigger');
     if (this.isDisplayAsLink) {
       this.facet.toggleSingleSelect(value);
     } else {
@@ -478,7 +477,6 @@ export default class QuanticFacet extends LightningElement {
   }
 
   setFocusToFacetValue(index) {
-    console.log(this.template.querySelectorAll('c-quantic-facet-value')[index]);
     const focusTarget = this.template.querySelectorAll('c-quantic-facet-value')[
       index
     ];
