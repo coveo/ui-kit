@@ -88,7 +88,7 @@ export function assertLogDislikeSmartSnippet() {
   });
 }
 
-export function assertlogOpenSmartSnippetSource(log: boolean) {
+export function assertLogOpenSmartSnippetSource(log: boolean) {
   it(`${should(log)} log a openSmartSnippetSource click event`, () => {
     if (log) {
       cy.expectClickEvent('openSmartSnippetSource');
@@ -99,7 +99,7 @@ export function assertlogOpenSmartSnippetSource(log: boolean) {
   });
 }
 
-export function assertlogOpenSmartSnippetInlineLink(
+export function assertLogOpenSmartSnippetInlineLink(
   getLinkToLog: (() => InlineLink) | null
 ) {
   it(`${should(

@@ -281,7 +281,7 @@ describe('Smart Snippet Test Suites', () => {
       SmartSnippetSelectors.sourceTitle().rightclick();
     });
 
-    SmartSnippetAssertions.assertlogOpenSmartSnippetSource(true);
+    SmartSnippetAssertions.assertLogOpenSmartSnippetSource(true);
 
     describe('then liking the snippet then clicking the title again', () => {
       beforeEach(() => {
@@ -290,7 +290,7 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetSelectors.sourceTitle().rightclick();
       });
 
-      SmartSnippetAssertions.assertlogOpenSmartSnippetSource(false);
+      SmartSnippetAssertions.assertLogOpenSmartSnippetSource(false);
     });
 
     describe('then getting a new snippet and clicking on the title again', () => {
@@ -300,7 +300,7 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetSelectors.sourceTitle().rightclick();
       });
 
-      SmartSnippetAssertions.assertlogOpenSmartSnippetSource(true);
+      SmartSnippetAssertions.assertLogOpenSmartSnippetSource(true);
     });
   });
 
@@ -328,7 +328,7 @@ describe('Smart Snippet Test Suites', () => {
       click(SmartSnippetSelectors.answer().find('a').eq(0));
     });
 
-    SmartSnippetAssertions.assertlogOpenSmartSnippetInlineLink(
+    SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
       () => lastClickedLink
     );
 
@@ -339,7 +339,7 @@ describe('Smart Snippet Test Suites', () => {
         click(SmartSnippetSelectors.answer().find('a').eq(0));
       });
 
-      SmartSnippetAssertions.assertlogOpenSmartSnippetInlineLink(null);
+      SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(null);
     });
 
     describe('then getting a new snippet and clicking on the same inline link again', () => {
@@ -351,7 +351,7 @@ describe('Smart Snippet Test Suites', () => {
         click(SmartSnippetSelectors.answer().find('a').eq(0));
       });
 
-      SmartSnippetAssertions.assertlogOpenSmartSnippetInlineLink(
+      SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
         () => lastClickedLink
       );
     });
@@ -362,7 +362,7 @@ describe('Smart Snippet Test Suites', () => {
         click(SmartSnippetSelectors.answer().find('a').eq(1));
       });
 
-      SmartSnippetAssertions.assertlogOpenSmartSnippetInlineLink(
+      SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
         () => lastClickedLink
       );
     });

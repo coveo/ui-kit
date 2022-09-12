@@ -28,7 +28,7 @@ export function assertAnswerBottomMargin(
   });
 }
 
-export function assertlogOpenSmartSnippetSuggestionsSource(log: boolean) {
+export function assertLogOpenSmartSnippetSuggestionsSource(log: boolean) {
   it(`${should(
     log
   )} log a openSmartSnippetSuggestionSource click event`, () => {
@@ -41,7 +41,7 @@ export function assertlogOpenSmartSnippetSuggestionsSource(log: boolean) {
   });
 }
 
-export function assertlogOpenSmartSnippetSuggestionsInlineLink(
+export function assertLogOpenSmartSnippetSuggestionsInlineLink(
   getLinkToLog: (() => InlineLink) | null
 ) {
   it(`${should(
