@@ -1,6 +1,7 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {
+  AdvancedSearchQueriesSection,
   CategoryFacetSection,
   ConfigurationSection,
   ContextSection,
@@ -78,7 +79,8 @@ export type StateNeededByFetchProductListing = ConfigurationSection &
       DateFacetSection &
       FacetOptionsSection &
       FacetOrderSection &
-      ContextSection
+      ContextSection &
+      AdvancedSearchQueriesSection
   >;
 
 export interface FetchProductListingThunkReturn {
@@ -155,6 +157,11 @@ export const buildProductListingRequest = async (
     }),
     ...(state.context && {
       userContext: state.context.contextValues,
+    }),
+    ...(state.advancedSearchQueries && {
+      advancedFiltersModel: {
+        queryFilter: state.advancedSearchQueries.aq,
+      },
     }),
   };
 };
