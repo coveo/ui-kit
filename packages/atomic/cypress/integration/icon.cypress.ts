@@ -21,6 +21,7 @@ describe('Icon Test Suites', () => {
       () => cy.get(IconSelectors.svg),
       'attachment'
     );
+    CommonAssertions.assertConsoleWarning(false);
   });
 
   describe('with the contents of the custom.svg icon', () => {
@@ -31,6 +32,7 @@ describe('Icon Test Suites', () => {
     });
 
     IconAssertions.assertRendersIcon(() => cy.get(IconSelectors.svg), 'custom');
+    CommonAssertions.assertConsoleWarning(false);
   });
 
   describe('with a url to email.svg', () => {
@@ -45,6 +47,35 @@ describe('Icon Test Suites', () => {
     });
 
     IconAssertions.assertRendersIcon(() => cy.get(IconSelectors.svg), 'email');
+    CommonAssertions.assertConsoleWarning(false);
+  });
+
+  describe('with a url to a non svg file', () => {
+    beforeEach(() => {
+      getSvg('email').then((icon) => {
+        const url = 'https://some-website-with-icons.com/my-icon.png';
+        cy.intercept(url, {
+          body: icon,
+        });
+        setupIcon(url);
+      });
+    });
+
+    CommonAssertions.assertConsoleWarningMessage(
+      'The url https://some-website-with-icons.com/my-icon.png should fetch an icon of type "SVG". You may encounter rendering issues.'
+    );
+  });
+
+  describe('with the contents of an inline non svg icon', () => {
+    beforeEach(() => {
+      getSvg('custom').then(() => {
+        setupIcon('<img />');
+      });
+    });
+
+    CommonAssertions.assertConsoleWarningMessage(
+      'The inline "icon" prop is not an svg element. You may encounter rendering issues.'
+    );
   });
 
   it('should not be vulnerable to XSS injections in an SVG string', () => {

@@ -81,6 +81,20 @@ export function assertConsoleErrorMessage(msg: string) {
   });
 }
 
+export function assertConsoleWarning(warn = true) {
+  it(`${should(warn)} log a warning to the console`, () => {
+    cy.get(TestFixture.consoleAliases.warn).should(
+      warn ? 'be.called' : 'not.be.called'
+    );
+  });
+}
+
+export function assertConsoleWarningMessage(msg: string) {
+  it('should log a warning containing the appropriate message to the console', () => {
+    cy.get(TestFixture.consoleAliases.warn).should('be.calledWithMatch', msg);
+  });
+}
+
 export function assertRemovesComponent(
   selector: () => Cypress.Chainable<JQuery<HTMLElement>>
 ) {
