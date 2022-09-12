@@ -41,6 +41,6 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=8192
         run: npx snyk code test --all-projects --sarif > ./sarifs/snyk-code.sarif
       - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@d1ad3b49578d8a66828f9c8e8fbf5f9faec38f85 # tag=v1
+        uses: github/codeql-action/upload-sarif@7cce9bbfb550e880420fd42bdb2f6a2908df139e # tag=v1
         with:
           sarif_file: ./sarifs
