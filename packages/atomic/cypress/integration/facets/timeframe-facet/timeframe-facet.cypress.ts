@@ -104,7 +104,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
         before(setupSelectLinkValue);
         TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
           timeframeFacetField,
-          unitFrames[selectionIndex].unit
+          unitFrames[selectionIndex].unit,
+          unitFrames[selectionIndex].period,
+          unitFrames[selectionIndex].amount
         );
       });
 
@@ -322,9 +324,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
   describe('with custom #amount timeframe', () => {
     const periodFrames = [
-      {unit: 'month', amount: 20},
-      {unit: 'year', amount: 3},
-      {unit: 'year', amount: 5},
+      {period: 'past', unit: 'month', amount: 20},
+      {period: 'past', unit: 'year', amount: 3},
+      {period: 'past', unit: 'year', amount: 5},
     ];
     const customNumberOfValues = periodFrames.length;
     const selectionIndex = 0;
@@ -489,7 +491,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     );
     TimeframeFacetAssertions.assertFacetValueContainsText(
       2,
-      `Past ${unitFrames[2].unit}`
+      `Past ${unitFrames[2].amount} ${unitFrames[2].unit}s`
     );
   });
 
