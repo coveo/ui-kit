@@ -1,4 +1,8 @@
-import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import {
+  generateComponentHTML,
+  interceptSearchResponse,
+  TestFixture,
+} from '../fixtures/test-fixture';
 import {
   smartSnippetSuggestionsComponent,
   SmartSnippetSuggestionsSelectors,
@@ -10,8 +14,10 @@ import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippetSuggestions,
   addSmartSnippetSuggestionsDefaultOptions,
+  getResponseModifierWithSmartSnippetSuggestions,
 } from './smart-snippet-suggestions-actions';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
+import {InlineLink} from '@coveo/headless';
 
 const {remSize, relatedQuestions: defaultRelatedQuestions} =
   addSmartSnippetSuggestionsDefaultOptions;
@@ -294,6 +300,92 @@ describe('Smart Snippet Suggestions Test Suites', () => {
 
       SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsSource(
         true
+      );
+    });
+  });
+
+  describe('after clicking on an inline link', () => {
+    let lastClickedLink: InlineLink;
+    function click(selector: Cypress.Chainable<JQuery<HTMLAnchorElement>>) {
+      selector.rightclick().then(([el]) => {
+        lastClickedLink = {linkText: el.innerText, linkURL: el.href};
+      });
+    }
+
+    function getRelatedQuestions(question?: string) {
+      return defaultRelatedQuestions.map((relatedQuestion) => ({
+        ...relatedQuestion,
+        get question() {
+          return question ?? relatedQuestion.question;
+        },
+      }));
+    }
+
+    beforeEach(() => {
+      new TestFixture()
+        .with(
+          addSmartSnippetSuggestions({
+            relatedQuestions: getRelatedQuestions(),
+            timesToIntercept: 1,
+          })
+        )
+        .with(addSearchBox())
+        .init();
+      SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+        .first()
+        .click();
+      SmartSnippetSuggestionsSelectors.questionExpandedButton()
+        .its('length')
+        .should('eq', 1);
+      click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
+    });
+
+    SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsInlineLink(
+      () => lastClickedLink
+    );
+
+    describe('then clicking on the same inline link again', () => {
+      beforeEach(() => {
+        AnalyticsTracker.reset();
+        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
+      });
+
+      SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsInlineLink(
+        null
+      );
+    });
+
+    describe('then getting a new snippet and clicking on the same inline link again', () => {
+      beforeEach(() => {
+        interceptSearchResponse(
+          getResponseModifierWithSmartSnippetSuggestions({
+            relatedQuestions: getRelatedQuestions('test'),
+          }),
+          1
+        );
+        SearchBoxSelectors.submitButton().click();
+        SmartSnippetSuggestionsSelectors.questionExpandedButton().should(
+          (buttons) => expect(buttons.length).to.eq(0)
+        );
+        SmartSnippetSuggestionsSelectors.questionCollapsedButton()
+          .first()
+          .click();
+        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(0));
+      });
+
+      SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsInlineLink(
+        () => lastClickedLink
+      );
+    });
+
+    describe('then clicking on a different inline link', () => {
+      beforeEach(() => {
+        AnalyticsTracker.reset();
+        click(SmartSnippetSuggestionsSelectors.answer().eq(0).find('a').eq(1));
+      });
+
+      SmartSnippetSuggestionsAssertions.assertlogOpenSmartSnippetSuggestionsInlineLink(
+        () => lastClickedLink
       );
     });
   });
