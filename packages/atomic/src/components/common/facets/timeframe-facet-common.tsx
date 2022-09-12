@@ -147,7 +147,7 @@ export class TimeframeFacetCommon {
   }
 
   private get hasValues() {
-    if (this.filter?.state.range) {
+    if (this.facetForDatePicker?.state.values.length) {
       return true;
     }
 
