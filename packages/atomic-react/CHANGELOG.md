@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.23.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.23.11...@coveo/atomic-react@1.23.12) (2022-09-12)
+
+
+### Bug Fixes
+
+* **atomic-react:** add peer deps for react version 18 ([#2410](https://github.com/coveo/ui-kit/issues/2410)) ([63c3ad7](https://github.com/coveo/ui-kit/commit/63c3ad798c92d7cc44676b1ec23a831644182d71))
+
+
+
+
+
 ## [1.23.11](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.23.10...@coveo/atomic-react@1.23.11) (2022-09-09)
 
 **Note:** Version bump only for package @coveo/atomic-react
