@@ -14,7 +14,7 @@ export const timeframeFacetField = 'date';
 export const unitFrames: UnitRange[] = [
   {unit: 'month'},
   {unit: 'quarter'},
-  {unit: 'year'},
+  {unit: 'year', amount: '10'},
 ];
 
 export const unitFramesCustom = [{unit: 'day', period: 'next', amout: 2}];
