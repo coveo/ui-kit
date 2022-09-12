@@ -1,21 +1,28 @@
+import {AsyncThunkAction} from '@reduxjs/toolkit';
+import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {validatePayload} from '../../utils/validate-payload';
 import {
   AnalyticsType,
+  AsyncThunkAnalyticsOptions,
   documentIdentifier,
   makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
-import {getResultProperty} from '../result-templates/result-templates-helpers';
 import {
+  inlineLinkPayloadDefinition,
   isQuestionAnsweringUniqueIdentifierActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   uniqueIdentifierPayloadDefinition,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
-import {relatedQuestionSelector} from './question-answering-selectors';
+import {
+  answerSourceSelector,
+  relatedQuestionSelector,
+} from './question-answering-selectors';
 
 export type SmartSnippetFeedback =
   | 'does_not_answer'
@@ -46,15 +53,59 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
   (client) => client.logDislikeSmartSnippet()
 );
 
-export const logOpenSmartSnippetSource = (source: Result) =>
+/**
+ * @returns A dispatchable action.
+ * @deprecated
+ * */
+export function logOpenSmartSnippetSource(source: Result): AsyncThunkAction<
+  {
+    analyticsType: AnalyticsType.Click;
+  },
+  void,
+  AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+>;
+/**
+ * @returns A dispatchable action.
+ */
+export function logOpenSmartSnippetSource(): AsyncThunkAction<
+  {
+    analyticsType: AnalyticsType.Click;
+  },
+  void,
+  AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+>;
+export function logOpenSmartSnippetSource(source?: Result) {
+  return makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      if (source) {
+        validateResultPayload(source);
+      }
+      const result = source ?? answerSourceSelector(state)!;
+      return client.logOpenSmartSnippetSource(
+        partialDocumentInformation(result, state),
+        documentIdentifier(result)
+      );
+    }
+  )();
+}
+
+export const logOpenSmartSnippetInlineLink = (
+  payload: QuestionAnsweringInlineLinkActionCreatorPayload
+) =>
   makeAnalyticsAction(
     'analytics/smartSnippet/source/open',
     AnalyticsType.Click,
     (client, state) => {
-      validateResultPayload(source);
-      return client.logOpenSmartSnippetSource(
-        partialDocumentInformation(source, state),
-        documentIdentifier(source)
+      validatePayload(payload, inlineLinkPayloadDefinition());
+      const result = answerSourceSelector(state)!;
+      return client.logOpenSmartSnippetInlineLink(
+        partialDocumentInformation(result, state),
+        {
+          ...documentIdentifier(result),
+          ...payload,
+        }
       );
     }
   )();
@@ -163,11 +214,7 @@ export const logOpenSmartSnippetSuggestionSource = (
       if (!relatedQuestion) {
         return;
       }
-      const source = state.search?.results.find(
-        (result) =>
-          getResultProperty(result, relatedQuestion.documentId.contentIdKey) ===
-          relatedQuestion.documentId.contentIdValue
-      );
+      const source = answerSourceSelector(state, relatedQuestion.documentId);
       if (!source) {
         return;
       }
@@ -178,6 +225,42 @@ export const logOpenSmartSnippetSuggestionSource = (
           question: relatedQuestion.question,
           answerSnippet: relatedQuestion.answerSnippet,
           documentId: relatedQuestion.documentId,
+        }
+      );
+    }
+  )();
+
+export const logOpenSmartSnippetSuggestionInlineLink = (
+  identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  link: QuestionAnsweringInlineLinkActionCreatorPayload
+) =>
+  makeAnalyticsAction(
+    'analytics/smartSnippet/source/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      validatePayload(identifier, uniqueIdentifierPayloadDefinition());
+      validatePayload(link, inlineLinkPayloadDefinition());
+
+      const relatedQuestion = relatedQuestionSelector(
+        state,
+        identifier.questionAnswerId
+      );
+      if (!relatedQuestion) {
+        return;
+      }
+      const source = answerSourceSelector(state, relatedQuestion.documentId);
+      if (!source) {
+        return;
+      }
+
+      return client.logOpenSmartSnippetSuggestionInlineLink(
+        partialDocumentInformation(source, state),
+        {
+          question: relatedQuestion.question,
+          answerSnippet: relatedQuestion.answerSnippet,
+          documentId: relatedQuestion.documentId,
+          linkText: link.linkText,
+          linkURL: link.linkURL,
         }
       );
     }

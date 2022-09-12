@@ -3,10 +3,15 @@ import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-a
 import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
+  logOpenSmartSnippetInlineLink,
   logOpenSmartSnippetSource,
+  logOpenSmartSnippetSuggestionInlineLink,
   logOpenSmartSnippetSuggestionSource,
 } from '../question-answering/question-answering-analytics-actions';
-import {QuestionAnsweringUniqueIdentifierActionCreatorPayload} from '../question-answering/question-answering-document-id';
+import {
+  QuestionAnsweringInlineLinkActionCreatorPayload,
+  QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+} from '../question-answering/question-answering-document-id';
 import {logDocumentOpen} from '../result/result-analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 
@@ -32,6 +37,7 @@ export interface ClickAnalyticsActionCreators {
    *
    * @param source - The source of the clicked smart snippet.
    * @returns A dispatchable action.
+   * @deprecated
    */
   logOpenSmartSnippetSource(source: Result): AsyncThunkAction<
     {
@@ -41,13 +47,57 @@ export interface ClickAnalyticsActionCreators {
     AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
   /**
+   * The event to log when the source of a smart snippet is clicked.
+   *
+   * @returns A dispatchable action.
+   */
+  logOpenSmartSnippetSource(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Click;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
+  /**
    * The event to log when the source of a smart snippet suggestion, or related question, is clicked.
+   *
+   * @param identifier - The identifier of the suggestion.
+   * @returns A dispatchable action.
+   */
+  logOpenSmartSnippetSuggestionSource(
+    identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Click;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
+  /**
+   * The event to log when a link inside the snippet of a smart snippet is clicked.
    *
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logOpenSmartSnippetSuggestionSource(
-    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
+  logOpenSmartSnippetInlineLink(
+    payload: QuestionAnsweringInlineLinkActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Click;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+  >;
+  /**
+   * The event to log when the source of a smart snippet suggestion, or related question, is clicked.
+   *
+   * @param identifier - The identifier of the suggestion.
+   * @param link - The link that was opened.
+   * @returns A dispatchable action.
+   */
+  logOpenSmartSnippetSuggestionInlineLink(
+    identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+    link: QuestionAnsweringInlineLinkActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Click;
@@ -72,5 +122,7 @@ export function loadClickAnalyticsActions(
     logDocumentOpen,
     logOpenSmartSnippetSource,
     logOpenSmartSnippetSuggestionSource,
+    logOpenSmartSnippetInlineLink,
+    logOpenSmartSnippetSuggestionInlineLink,
   };
 }

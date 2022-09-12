@@ -13,6 +13,6 @@ export function resultFromFieldSelector(
   return (
     state.search.results.find(
       (result) => getResultProperty(result, contentIdKey) === contentIdValue
-    ) ?? null
+    ) ?? undefined
   );
 }
