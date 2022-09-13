@@ -55,7 +55,7 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
 
 /**
  * @returns A dispatchable action.
- * @deprecated
+ * @deprecated Providing a source is no longer necessary.
  * */
 export function logOpenSmartSnippetSource(source: Result): AsyncThunkAction<
   {

@@ -37,7 +37,7 @@ export interface ClickAnalyticsActionCreators {
    *
    * @param source - The source of the clicked smart snippet.
    * @returns A dispatchable action.
-   * @deprecated
+   * @deprecated Providing a source is no longer necessary.
    */
   logOpenSmartSnippetSource(source: Result): AsyncThunkAction<
     {

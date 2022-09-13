@@ -10,9 +10,7 @@ export function resultFromFieldSelector(
   contentIdKey: string,
   contentIdValue: string
 ) {
-  return (
-    state.search.results.find(
-      (result) => getResultProperty(result, contentIdKey) === contentIdValue
-    ) ?? undefined
+  return state.search.results.find(
+    (result) => getResultProperty(result, contentIdKey) === contentIdValue
   );
 }
