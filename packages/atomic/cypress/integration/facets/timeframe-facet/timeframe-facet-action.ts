@@ -6,15 +6,17 @@ import {
 import {TimeframeFacetSelectors} from './timeframe-facet-selectors';
 
 export interface UnitRange extends TagProps {
+  period: string;
+  amount: number;
   unit: string;
 }
 
 export const timeframeFacetLabel = 'Timeframe';
 export const timeframeFacetField = 'date';
 export const unitFrames: UnitRange[] = [
-  {unit: 'month'},
-  {unit: 'quarter'},
-  {unit: 'year', amount: '10'},
+  {period: 'past', unit: 'month', amount: 1},
+  {period: 'past', unit: 'quarter', amount: 1},
+  {period: 'past', unit: 'year', amount: 10},
 ];
 
 export const unitFramesCustom = [{unit: 'day', period: 'next', amout: 2}];
