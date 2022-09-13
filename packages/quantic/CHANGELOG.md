@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.2...@coveo/quantic@1.44.0) (2022-09-12)
+
+
+### Features
+
+* **quantic:** add focus to selected category facet ([#2398](https://github.com/coveo/ui-kit/issues/2398)) ([5c417fd](https://github.com/coveo/ui-kit/commit/5c417fd69f41094ef276237c3f6c9819972b1ba2))
+* **quantic:** Aria-live regions announcements for quantic components ([#2383](https://github.com/coveo/ui-kit/issues/2383)) ([f61cc7f](https://github.com/coveo/ui-kit/commit/f61cc7f8607e9a2c89f63ed9761e6a00e726b617))
+
+
+
+
+
 ## [1.43.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.1...@coveo/quantic@1.43.2) (2022-09-09)
 
 
