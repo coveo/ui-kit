@@ -50,22 +50,6 @@ describe('Icon Test Suites', () => {
     CommonAssertions.assertConsoleWarning(false);
   });
 
-  describe('with a url to a non svg file', () => {
-    beforeEach(() => {
-      getSvg('email').then((icon) => {
-        const url = 'https://some-website-with-icons.com/my-icon.png';
-        cy.intercept(url, {
-          body: icon,
-        });
-        setupIcon(url);
-      });
-    });
-
-    CommonAssertions.assertConsoleWarningMessage(
-      'The url https://some-website-with-icons.com/my-icon.png should fetch an icon of type "SVG". You may encounter rendering issues.'
-    );
-  });
-
   describe('with the contents of an inline non svg icon', () => {
     beforeEach(() => {
       getSvg('custom').then(() => {

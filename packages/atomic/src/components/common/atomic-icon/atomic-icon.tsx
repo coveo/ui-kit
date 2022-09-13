@@ -46,11 +46,6 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
 
   private async fetchIcon(url: string) {
     try {
-      if (!this.isUrlSVG(url)) {
-        this.bindings.engine.logger.warn(
-          `The url ${url} should fetch an icon of type "SVG". You may encounter rendering issues.`
-        );
-      }
       // deepcode ignore Ssrf: client side code
       const response = await fetch(url);
       if (response.status !== 200 && response.status !== 304) {
@@ -64,10 +59,6 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
       forceUpdate(this);
       return null;
     }
-  }
-
-  private isUrlSVG(url: string) {
-    return /.+\.svg$/i.test(url);
   }
 
   private validateSVG(svg: string) {
