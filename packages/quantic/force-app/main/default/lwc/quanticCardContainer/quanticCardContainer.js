@@ -13,23 +13,21 @@ export default class QuanticCardContainer extends LightningElement {
    * @type {string}
    */
   @api title;
-  /**
-   * The title label to display in the card header.
-   * @api
-   * @type {VoidFunction}
-   */
-  @api toggleVisibility;
+
+  handleHeaderClick(evt) {
+    evt.preventDefault();
+    const headerClickEvent = new CustomEvent('headerclick', {});
+    this.dispatchEvent(headerClickEvent);
+  }
 
   /**
    * @param {KeyboardEvent} evt
    */
-  onKeyDown(evt) {
-    if (
-      (evt.code === 'Enter' || evt.code === 'Space') &&
-      this.toggleVisibility
-    ) {
+  handleHeaderKeyDown(evt) {
+    if (evt.code === 'Enter' || evt.code === 'Space') {
       evt.preventDefault();
-      this.toggleVisibility();
+      const headerKeyDownEvent = new CustomEvent('headerkeydown', {});
+      this.dispatchEvent(headerKeyDownEvent);
     }
   }
 }

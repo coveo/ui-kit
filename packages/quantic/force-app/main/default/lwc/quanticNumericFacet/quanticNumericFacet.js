@@ -220,8 +220,6 @@ export default class QuanticNumericFacet extends LightningElement {
       format: this.formattingFunction,
       element: this.template.host,
     });
-
-    this.toggleVisibility = this.toggleFacetVisibility.bind(this);
   };
 
   /**

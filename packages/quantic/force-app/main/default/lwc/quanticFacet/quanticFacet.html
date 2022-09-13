@@ -4,14 +4,13 @@
   </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
-      <c-quantic-card-container title={label} toggle-visibility={toggleVisibility}>
+      <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
         <lightning-button-icon
           class={actionButtonCssClasses}
           slot="actions"
           onmousedown={preventDefault}
           icon-name={actionButtonIcon}
           alternative-text={actionButtonLabel}
-          aria-hidden="true"
           variant="bare"
           tabindex="-1"
           aria-hidden="true"
