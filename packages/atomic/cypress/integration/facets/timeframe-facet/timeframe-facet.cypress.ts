@@ -104,7 +104,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
         before(setupSelectLinkValue);
         TimeframeFacetAssertions.assertLogTimeframeFacetSelect(
           timeframeFacetField,
-          unitFrames[selectionIndex].unit
+          unitFrames[selectionIndex].unit,
+          unitFrames[selectionIndex].period,
+          unitFrames[selectionIndex].amount
         );
       });
 
@@ -174,31 +176,46 @@ describe('Timeframe Facet V1 Test Suites', () => {
     });
 
     describe('with custom #withInput', () => {
-      function setupTimeFrameWithInputRange() {
-        new TestFixture()
-          .with(
-            addTimeframeFacet(
-              {
-                label: timeframeFacetLabel,
-                field: timeframeFacetField,
-                'with-date-picker': '',
-              },
-              unitFrames
-            )
+      const addTimeFrameWithInputRange = () => (fixture: TestFixture) => {
+        fixture.with(
+          addTimeframeFacet(
+            {
+              label: timeframeFacetLabel,
+              field: timeframeFacetField,
+              'with-date-picker': '',
+            },
+            unitFrames
           )
-          .init();
-      }
+        );
+      };
 
       describe('verify rendering', () => {
         before(() => {
-          setupTimeFrameWithInputRange();
+          new TestFixture().with(addTimeFrameWithInputRange()).init();
         });
         TimeframeFacetAssertions.assertDisplayRangeInput(true);
       });
 
+      describe('with a date range in the hash', () => {
+        before(() => {
+          new TestFixture()
+            .with(addTimeFrameWithInputRange())
+            .withHash(
+              `df[date_input]=${startDate.replaceAll(
+                '-',
+                '/'
+              )}@00:00:00..${endDate.replaceAll('-', '/')}@00:00:00`
+            )
+            .init();
+        });
+
+        TimeframeFacetAssertions.assertMinInputValue(startDate);
+        TimeframeFacetAssertions.assertMaxInputValue(endDate);
+      });
+
       describe('when select a valid range', () => {
         function setupInputRange() {
-          setupTimeFrameWithInputRange();
+          new TestFixture().with(addTimeFrameWithInputRange()).init();
           inputStartDate(startDate);
           inputEndDate(endDate);
           clickApplyButton();
@@ -206,6 +223,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
         describe('verify rendering', () => {
           before(setupInputRange);
+          TimeframeFacetAssertions.assertRangeHash(startDate, endDate);
           TimeframeFacetAssertions.assertDisplayRangeInput(true);
           CommonFacetAssertions.assertDisplayValues(
             TimeframeFacetSelectors,
@@ -322,9 +340,9 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
   describe('with custom #amount timeframe', () => {
     const periodFrames = [
-      {unit: 'month', amount: 20},
-      {unit: 'year', amount: 3},
-      {unit: 'year', amount: 5},
+      {period: 'past', unit: 'month', amount: 20},
+      {period: 'past', unit: 'year', amount: 3},
+      {period: 'past', unit: 'year', amount: 5},
     ];
     const customNumberOfValues = periodFrames.length;
     const selectionIndex = 0;
@@ -489,7 +507,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
     );
     TimeframeFacetAssertions.assertFacetValueContainsText(
       2,
-      `Past ${unitFrames[2].unit}`
+      `Past ${unitFrames[2].amount} ${unitFrames[2].unit}s`
     );
   });
 

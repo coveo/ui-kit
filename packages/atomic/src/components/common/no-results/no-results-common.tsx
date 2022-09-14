@@ -22,7 +22,10 @@ const BetweenQuotes: FunctionalComponent<{
   bindings: AnyBindings;
 }> = (props) => {
   return (
-    <span class="font-bold" part="highlight">
+    <span
+      class="font-bold truncate inline-block align-bottom max-w-full whitespace-normal"
+      part="highlight"
+    >
       <LocalizedString
         key="between-quotations"
         params={{text: props.content}}
@@ -58,7 +61,7 @@ const NoResults: FunctionalComponent<{
   );
   return (
     <div
-      class="my-2 text-2xl font-medium truncate overflow-hidden max-w-full"
+      class="my-2 text-2xl font-medium max-w-full text-center"
       part="no-results"
     >
       {content}
@@ -68,7 +71,7 @@ const NoResults: FunctionalComponent<{
 
 const SearchTips: FunctionalComponent<{bindings: AnyBindings}> = (props) => {
   return (
-    <div class="my-2 text-lg text-neutral-dark" part="search-tips">
+    <div class="my-2 text-lg text-neutral-dark text-center" part="search-tips">
       {props.bindings.i18n.t('search-tips')}
     </div>
   );

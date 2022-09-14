@@ -3,7 +3,7 @@ import {
   addColorFacet,
   colorFacetField,
   colorFacetLabel,
-  selectIdleBoxValueAt,
+  selectIdleBoxValueAt as selectColorFacetIdleBoxValueAt,
 } from './facets/color-facet/color-facet-actions';
 import {addFacet, field, label} from './facets/facet/facet-actions';
 import {FacetSelectors} from './facets/facet/facet-selectors';
@@ -28,7 +28,7 @@ import {
   addCategoryFacet,
   canadaHierarchy,
   canadaHierarchyIndex,
-  selectChildValueAt,
+  selectChildValueAt as selectCategoryFacetChildValueAt,
 } from './facets/category-facet/category-facet-actions';
 import {
   addNumericFacet,
@@ -118,9 +118,9 @@ describe('Breadbox Test Suites', () => {
     function setupBreadboxWithDifferentTypeSelectedFacet() {
       const selectionIndex = 0;
       setupBreadboxWithMultipleFacets();
-      selectChildValueAt(canadaHierarchyIndex[0]);
+      selectCategoryFacetChildValueAt(canadaHierarchyIndex[0]);
       selectIdleLinkValueAt(TimeframeFacetSelectors, selectionIndex);
-      selectIdleBoxValueAt(selectionIndex);
+      selectColorFacetIdleBoxValueAt(selectionIndex);
     }
     describe('verify rendering', () => {
       before(setupBreadboxWithDifferentTypeSelectedFacet);

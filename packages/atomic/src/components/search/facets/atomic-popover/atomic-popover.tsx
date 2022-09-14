@@ -27,7 +27,7 @@ import {
  * @slot default - The required slotted facet.
  * @part backdrop - The transparent backdrop hiding the content behind popover menu.
  * @part popover-button - The button to click to display or hide the popover menu.
- * @part label - The associated facet label.
+ * @part value-label - The associated facet label.
  * @part value-count - Number of selected values for the facet
  * @part arrow-icon - The arrow icon on the button to display or hide the popover menu.
  * @part placeholder - The placeholder displayed when the facet is loading.
