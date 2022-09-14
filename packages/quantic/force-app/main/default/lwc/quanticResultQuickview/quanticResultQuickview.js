@@ -5,7 +5,7 @@ import {
   HeadlessBundleNames,
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, isFocusable} from 'c/quanticUtils';
+import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
 
 import close from '@salesforce/label/c.quantic_Close';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
@@ -260,21 +260,6 @@ export default class QuanticResultQuickview extends LightningElement {
     }
   }
 
-  getLastFocusableElement(node) {
-    if (!node || node.nodeType === 3) return null;
-
-    const lastFocusable = Array.from(node.childNodes)
-      .map((item) => this.getLastFocusableElement(item))
-      .filter((item) => !!item);
-
-    if (lastFocusable.length > 0) {
-      return lastFocusable[lastFocusable.length - 1];
-    } else if (isFocusable(node)) {
-      return node;
-    }
-    return null;
-  }
-
   /**
    * @param {KeyboardEvent} evt
    */
@@ -284,8 +269,9 @@ export default class QuanticResultQuickview extends LightningElement {
       const el = this.template.querySelector('.quickview__content-container');
 
       if (el) {
-        const lastElement = this.getLastFocusableElement(el);
+        const lastElement = getLastFocusableElement(el);
         if (lastElement) {
+          // @ts-ignore
           lastElement.focus();
         } else {
           this.setFocusToHeader();

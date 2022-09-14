@@ -517,7 +517,7 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
 
 /**
  * isFocusable checks whether
- * @param {HTMLElement} element
+ * @param {HTMLElement | Element}  element
  * @returns {boolean}
  */
 export function isFocusable(element) {
@@ -545,4 +545,25 @@ export function isFocusable(element) {
     default:
       return false;
   }
+}
+
+/**
+ * getLastFocusableElement return the last Focusable for a HTMLElement. 
+ * This function would NOT work with shadow root.
+ * @param {Element | null} element
+ * @returns {Element | null}
+ */
+ export function getLastFocusableElement(element) {
+  if (!element || element.nodeType === 3) return null;
+
+  const lastFocusable = Array.from(element.childNodes)
+    .map((item) => this.getLastFocusableElement(item))
+    .filter((item) => !!item);
+
+  if (lastFocusable.length) {
+    return lastFocusable[lastFocusable.length - 1];
+  } else if (isFocusable(element)) {
+    return element;
+  }
+  return null;
 }
