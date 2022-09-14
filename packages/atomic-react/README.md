@@ -10,13 +10,13 @@ The integration of React-based projects (using JSX) with Web based components ca
 
 `npm i @coveo/atomic-react`
 
-### Alternate installation -- CDN
+### Alternate installation — CDN
 
-The library is also available from Coveo's CDN as an `IIFE` (Immediately Invoked Function Expression). This is an approach that we recommend only for quick prototyping and testing, and that can be used with very minimal front end tooling and build tools.
+The library is also available in the Coveo CDN as an `IIFE` (Immediately Invoked Function Expression). This is an approach that we recommend only for quick prototyping and testing, and that can be used with very minimal front-end tooling and build tools.
 
-The `IIFE` approach in production is discouraged - the browser has to download the entire library code, regardless of which components are actually used. Using a bundler (for example Webpack) is recommended.
+We recommend against using the `IIFE` approach in production. The browser has to download the entire library code, regardless of which components are actually used. We rather recommend using a bundler in this situation (for example Webpack).
 
-You can read more on this approach down below.
+You can read more about this approach [below](#usage-with-cdn-scripts--iife-).
 ## Usage
 
 Since Atomic React is built on top of the core [Atomic](https://docs.coveo.com/en/atomic/latest/) web-components library, the vast majority of concepts that apply to core Atomic will apply to Atomic React.
@@ -273,13 +273,13 @@ import {AtomicSearchInterface} from '@coveo/atomic-react';
 ></AtomicSearchInterface>;
 ```
 
-## Usage with CDN scripts
+## Usage with CDN Scripts (IIFE)
 
-For this approach to work, different scripts need to be pulled in the page in the correct order, using proper external dependencies with matching versions.
+For this approach to work, you need to pull different scripts in the page in the correct order, using proper external dependencies with matching versions.
 
 First, identify the version of `@coveo/atomic` that is used by `@coveo-atomic-react`.
 
-This can be done with `npm view @coveo/atomic-react`, and identify the `@coveo/atomic` dependencies:
+You can do that by running `npm view @coveo/atomic-react`, and then identifying the `@coveo/atomic` dependency:
 
 ```
 npm view @coveo/atomic-react
@@ -299,9 +299,9 @@ dependencies:
 @coveo/atomic: 1.108.2
 ```
 
-In the above example, we can see that of the time of this writing, the current latest version of `@coveo/atomic-react` is `1.23.11`, and that it is using `@coveo/atomic` at version `1.108.2`.
+In the above example, you can see that of the time of this writing, the current latest version of `@coveo/atomic-react` is `1.23.11`, and that it is using `@coveo/atomic` at version `1.108.2`.
 
-Then, the same need to be done for the matching version of `@coveo/headless` used by the matching `@coveo/atomic` version.
+Then, you need to do the same to find the matching version of `@coveo/headless` used by the target`@coveo/atomic` version.
 
 Using the above example with `@coveo/atomic@1.108.2`:
 
@@ -328,9 +328,9 @@ dependencies:
 
 ```
 
-In the above example, we can see that that `@coveo/atomic@1.108.2` has a dependency on `@coveo/headless@1.103.3`.
+In the above example, you can see that `@coveo/atomic@1.108.2` has the dependency `@coveo/headless@1.103.3`.
 
-In summary, as of the time of this writing, the versions that we should keep in mind are the following:
+To summarize, as of the time of this writing, the versions that we should keep in mind are the following:
 
 - `@coveo/atomic-react` -> 1.23.11
 - `@coveo/atomic` -> 1.108.2
@@ -360,7 +360,7 @@ In summary, as of the time of this writing, the versions that we should keep in 
 </head>
 ```
 
-Once this is done, you can now start using `CoveoAtomicReact` directly with an inline script tag: 
+Once this is done, you can start using `CoveoAtomicReact` directly with an inline script tag: 
 
 ```html
 <!DOCTYPE html>
