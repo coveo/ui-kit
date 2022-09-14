@@ -1,10 +1,10 @@
 import {getFocusableDescendants} from '../../src/utils/accessibility-utils';
 import {TestFixture} from '../fixtures/test-fixture';
-import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
   // Setting JQuery<HTMLElement> is incompatible with Stencil's HTML elements
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   shadow: () => Cypress.Chainable<JQuery<any>>;
 }
 
@@ -78,6 +78,20 @@ export function assertConsoleError(error = true) {
 export function assertConsoleErrorMessage(msg: string) {
   it('should log an error containing the appropriate message to the console', () => {
     cy.get(TestFixture.consoleAliases.error).should('be.calledWithMatch', msg);
+  });
+}
+
+export function assertConsoleWarning(warn = true) {
+  it(`${should(warn)} log a warning to the console`, () => {
+    cy.get(TestFixture.consoleAliases.warn).should(
+      warn ? 'be.called' : 'not.be.called'
+    );
+  });
+}
+
+export function assertConsoleWarningMessage(msg: string) {
+  it('should log a warning containing the appropriate message to the console', () => {
+    cy.get(TestFixture.consoleAliases.warn).should('be.calledWithMatch', msg);
   });
 }
 
