@@ -13,7 +13,7 @@ const outputIIFE = ({minify}) => ({
     react: 'React',
     'react-dom': 'ReactDOM',
     '@coveo/atomic': 'CoveoAtomic',
-    '@coveo/atomic/headless': 'CoveoHeadless'
+    '@coveo/atomic/headless': 'CoveoHeadless',
   },
   plugins: minify ? [terser()] : [],
 });
@@ -24,7 +24,7 @@ export default {
   external: ['react', 'react-dom', '@coveo/atomic', '@coveo/atomic/headless'],
   plugins: [
     nodePolyfills(),
-    typescript({tsconfig: 'tsconfig.umd.json'}),
+    typescript({tsconfig: 'tsconfig.iife.json'}),
     commonjs(),
     nodeResolve(),
     replace({
