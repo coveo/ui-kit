@@ -3524,7 +3524,7 @@ declare namespace LocalJSX {
         "numberOfQueries"?: number;
         /**
           * Event that is emitted when redirection is triggered. If the default behaviour is not prevented, the search box will directly change the URL.
-          * @example <atomic-search-box   redirection-url="/search"   onRedirect={(e) => {     e.preventDefault();     // handle redirection   }} ></atomic-search-box>
+          * @example ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
          */
         "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
         /**

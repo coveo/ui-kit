@@ -1245,13 +1245,16 @@ export class AtomicResultsPerPage {
 import type { RedirectionPayload as IAtomicSearchBoxRedirectionPayload } from '@coveo/atomic';
 export declare interface AtomicSearchBox extends Components.AtomicSearchBox {
   /**
-   * Event that is emitted when redirection is triggered. If the default behaviour is not prevented, the search box will directly change the URL. @example <atomic-search-box
-  redirection-url="/search"
-  onRedirect={(e) => {
+   * Event that is emitted when redirection is triggered. If the default behaviour is not prevented, the search box will directly change the URL. @example ```html
+<script>
+  document.querySelector('atomic-search-box').addEventListener((e) => {
     e.preventDefault();
     // handle redirection
-  }}
-></atomic-search-box>
+  });
+</script>
+...
+<atomic-search-box redirection-url="/search"></atomic-search-box>
+```
    */
   'redirect': EventEmitter<CustomEvent<IAtomicSearchBoxRedirectionPayload>>;
 
