@@ -1,4 +1,14 @@
-import {Component, h, State, Prop, Listen, Watch, Element} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Listen,
+  Watch,
+  Element,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -38,6 +48,7 @@ import {
 } from './search-suggestion';
 
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
+import {RedirectionPayload} from './redirection-payload';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -144,6 +155,23 @@ export class AtomicSearchBox {
    */
   @Prop({reflect: true}) public clearFilters = true;
 
+  /**
+   * Event that is emitted when redirection is triggered. If the default behaviour is not prevented, the search box will directly change the URL.
+   *
+   * @example
+   * <atomic-search-box
+   *   redirection-url="/search"
+   *   onRedirect={(e) => {
+   *     e.preventDefault();
+   *     // handle redirection
+   *   }}
+   * ></atomic-search-box>
+   */
+  @Event({
+    eventName: 'redirect',
+  })
+  public redirect!: EventEmitter<RedirectionPayload>;
+
   @AriaLiveRegion('search-box')
   protected searchBoxAriaMessage!: string;
 
@@ -204,7 +232,10 @@ export class AtomicSearchBox {
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
     this.searchBox.afterRedirection();
-    window.location.href = redirectTo;
+    const event = this.redirect.emit({redirectTo, value});
+    if (!event.defaultPrevented) {
+      window.location.href = redirectTo;
+    }
   }
 
   @Listen('atomic/searchBoxSuggestion/register')
