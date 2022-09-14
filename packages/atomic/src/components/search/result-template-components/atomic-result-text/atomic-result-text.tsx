@@ -74,9 +74,6 @@ export class AtomicResultText implements InitializableComponent {
         `atomic-result-text cannot be used with multi value field "${this.field}" with values "${resultValueRaw}". Use atomic-result-multi-value-text instead.`,
         this
       );
-      this.bindings.engine.logger.error(
-        'atomic-result-text will be removed the template'
-      );
     }
   }
 
