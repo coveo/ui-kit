@@ -7,7 +7,7 @@
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/themes/coveo.css" />
+    <link rel="stylesheet" href="/themes/accessible.css" />
     <script type="module">
       async function main() {
         await customElements.whenDefined('atomic-insight-interface');
@@ -113,11 +113,6 @@
                   .result-root.image-small atomic-result-section-visual,
                   .result-root.image-large atomic-result-section-visual {
                     border-radius: var(--atomic-border-radius-xl);
-                  }
-
-                  .salesforce-badge::part(result-badge-element) {
-                    background-color: #44a1da;
-                    color: white;
                   }
                 </style>
                 <atomic-result-section-badges>
