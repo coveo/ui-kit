@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.103.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.2...@coveo/headless@1.103.3) (2022-09-09)
+
+
+### Bug Fixes
+
+* **headless:** refactor query trigger and search actions to better support undo feature ([#2389](https://github.com/coveo/ui-kit/issues/2389)) ([8433ad5](https://github.com/coveo/ui-kit/commit/8433ad51c4836a5a23630430d72e752eee3dacf7))
+
+
+
+
+
 ## [1.103.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.1...@coveo/headless@1.103.2) (2022-09-07)
 
 **Note:** Version bump only for package @coveo/headless

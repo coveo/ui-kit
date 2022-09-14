@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.108.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.2...@coveo/atomic@1.108.3) (2022-09-12)
+
+
+### Bug Fixes
+
+* **atomic:** add popover tests & make color facet compatible ([#2405](https://github.com/coveo/ui-kit/issues/2405)) ([2a1779a](https://github.com/coveo/ui-kit/commit/2a1779a164b1fdb7304e62481a7bae7857afe422))
+* **atomic:** display no results full query ([#2414](https://github.com/coveo/ui-kit/issues/2414)) ([43512ae](https://github.com/coveo/ui-kit/commit/43512ae0ce23e54ba2425ebc4e922f6e44f51845))
+* **atomic:** handle active breadcrumb corner case for insight-refine-toggle disable ([#2406](https://github.com/coveo/ui-kit/issues/2406)) ([fd68e21](https://github.com/coveo/ui-kit/commit/fd68e212dc8d85ca2a0b85a2a362ce4c9127cc7c))
+* **atomic:** timefrace facet test ([#2415](https://github.com/coveo/ui-kit/issues/2415)) ([8e2b98f](https://github.com/coveo/ui-kit/commit/8e2b98fea75072b68daf11d24f14dc1172dac98a))
+
+
+
+
+
+## [1.108.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.1...@coveo/atomic@1.108.2) (2022-09-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.108.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.0...@coveo/atomic@1.108.1) (2022-09-08)
 
 
