@@ -159,13 +159,16 @@ export class AtomicSearchBox {
    * Event that is emitted when redirection is triggered. If the default behaviour is not prevented, the search box will directly change the URL.
    *
    * @example
-   * <atomic-search-box
-   *   redirection-url="/search"
-   *   onRedirect={(e) => {
+   * ```html
+   * <script>
+   *   document.querySelector('atomic-search-box').addEventListener((e) => {
    *     e.preventDefault();
    *     // handle redirection
-   *   }}
-   * ></atomic-search-box>
+   *   });
+   * </script>
+   * ...
+   * <atomic-search-box redirection-url="/search"></atomic-search-box>
+   * ```
    */
   @Event({
     eventName: 'redirect',
