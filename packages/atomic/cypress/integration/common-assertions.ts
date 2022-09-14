@@ -1,10 +1,10 @@
 import {getFocusableDescendants} from '../../src/utils/accessibility-utils';
 import {TestFixture} from '../fixtures/test-fixture';
-import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
   // Setting JQuery<HTMLElement> is incompatible with Stencil's HTML elements
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   shadow: () => Cypress.Chainable<JQuery<any>>;
 }
 
