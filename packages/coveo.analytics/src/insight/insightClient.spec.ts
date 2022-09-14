@@ -4,7 +4,19 @@ import {NoopAnalytics} from '../client/noopAnalytics';
 import {CustomEventsTypes, SearchPageEvents, StaticFilterToggleValueMetadata} from '../searchPage/searchPageEvents';
 import {CoveoInsightClient, InsightClientProvider} from './insightClient';
 import doNotTrack from '../donottrack';
-import {InsightEvents} from './insightEvents';
+import {InsightEvents, InsightStaticFilterToggleValueMetadata} from './insightEvents';
+
+const baseCaseMetadata = {
+    caseId: '1234',
+    caseNumber: '5678',
+    caseContext: {Case_Subject: 'test subject', Case_Description: 'test description'},
+};
+
+const expectedBaseCaseMetadata = {
+    CaseId: '1234',
+    CaseNumber: '5678',
+    CaseSubject: 'test subject',
+};
 
 jest.mock('../donottrack', () => {
     return {
@@ -103,182 +115,514 @@ describe('InsightClient', () => {
         fetchMock.reset();
     });
 
-    it('should send proper payload for #interfaceLoad', async () => {
-        await client.logInterfaceLoad();
-        expectMatchPayload(SearchPageEvents.interfaceLoad);
-    });
-
-    it('should send proper payload for #interfaceChange', async () => {
-        await client.logInterfaceChange({
-            interfaceChangeTo: 'bob',
+    describe('when the case metadata is not included', () => {
+        it('should send proper payload for #interfaceLoad', async () => {
+            await client.logInterfaceLoad();
+            expectMatchPayload(SearchPageEvents.interfaceLoad);
         });
-        expectMatchPayload(SearchPageEvents.interfaceChange, {interfaceChangeTo: 'bob'});
+
+        it('should send proper payload for #interfaceChange', async () => {
+            await client.logInterfaceChange({
+                interfaceChangeTo: 'bob',
+            });
+            expectMatchPayload(SearchPageEvents.interfaceChange, {interfaceChangeTo: 'bob'});
+        });
+
+        it('should send proper payload for #fetchMoreResults', async () => {
+            await client.logFetchMoreResults();
+            expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
+        });
+
+        it('should send proper payload for #staticFilterDeselect', async () => {
+            const meta: StaticFilterToggleValueMetadata = {
+                staticFilterId: 'filetypes',
+                staticFilterValue: {
+                    caption: 'Youtube',
+                    expression: '@filetype="youtubevideo"',
+                },
+            };
+            await client.logStaticFilterDeselect(meta);
+
+            expectMatchPayload(SearchPageEvents.staticFilterDeselect, meta);
+        });
+
+        it('should send proper payload for #breadcrumbResetAll', async () => {
+            await client.logBreadcrumbResetAll();
+            expectMatchPayload(SearchPageEvents.breadcrumbResetAll);
+        });
+
+        it('should send proper payload for #breadcrumbFacet', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
+            await client.logBreadcrumbFacet(meta);
+            expectMatchPayload(SearchPageEvents.breadcrumbFacet, meta);
+        });
+
+        it('should send proper payload for #logFacetSelect', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
+
+            await client.logFacetSelect(meta);
+            expectMatchPayload(SearchPageEvents.facetSelect, meta);
+        });
+
+        it('should send proper payload for #logFacetDeselect', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
+
+            await client.logFacetDeselect(meta);
+            expectMatchPayload(SearchPageEvents.facetDeselect, meta);
+        });
+
+        it('should send proper payload for #logFacetUpdateSort', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                criteria: 'bazz',
+            };
+            await client.logFacetUpdateSort(meta);
+            expectMatchPayload(SearchPageEvents.facetUpdateSort, meta);
+        });
+
+        it('should send proper payload for #logFacetClearAll', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+            await client.logFacetClearAll(meta);
+            expectMatchPayload(SearchPageEvents.facetClearAll, meta);
+        });
+
+        it('should send proper payload for #logFacetShowMore', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+            await client.logFacetShowMore(meta);
+            expectMatchCustomEventPayload(SearchPageEvents.facetShowMore, meta);
+        });
+
+        it('should send proper payload for #logFacetShowLess', async () => {
+            const meta = {
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+            await client.logFacetShowLess(meta);
+            expectMatchCustomEventPayload(SearchPageEvents.facetShowLess, meta);
+        });
+
+        it('should send proper payload for #logQueryError', async () => {
+            const meta = {
+                query: 'q',
+                aq: 'aq',
+                cq: 'cq',
+                dq: 'dq',
+                errorMessage: 'boom',
+                errorType: 'a bad one',
+            };
+            await client.logQueryError(meta);
+            expectMatchCustomEventPayload(SearchPageEvents.queryError, meta);
+        });
+
+        it('should send proper payload for #logPagerNumber', async () => {
+            const meta = {pagerNumber: 123};
+            await client.logPagerNumber(meta);
+            expectMatchCustomEventPayload(SearchPageEvents.pagerNumber, meta);
+        });
+
+        it('should send proper payload for #logPagerNext', async () => {
+            const meta = {pagerNumber: 123};
+            await client.logPagerNext(meta);
+            expectMatchCustomEventPayload(SearchPageEvents.pagerNext, meta);
+        });
+
+        it('should send proper payload for #logPagerPrevious', async () => {
+            const meta = {pagerNumber: 123};
+            await client.logPagerPrevious(meta);
+            expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, meta);
+        });
+
+        it('should send proper payload for #didyoumeanAutomatic', async () => {
+            await client.logDidYouMeanAutomatic();
+            expectMatchPayload(SearchPageEvents.didyoumeanAutomatic);
+        });
+
+        it('should send proper payload for #didyoumeanClick', async () => {
+            await client.logDidYouMeanClick();
+            expectMatchPayload(SearchPageEvents.didyoumeanClick);
+        });
+
+        it('should send proper payload for #resultsSort', async () => {
+            await client.logResultsSort({resultsSortBy: 'date ascending'});
+            expectMatchPayload(SearchPageEvents.resultsSort, {resultsSortBy: 'date ascending'});
+        });
+
+        it('should send proper payload for #searchboxSubmit', async () => {
+            await client.logSearchboxSubmit();
+            expectMatchPayload(SearchPageEvents.searchboxSubmit);
+        });
     });
 
-    it('should send proper payload for #fetchMoreResults', async () => {
-        await client.logFetchMoreResults();
-        expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
-    });
+    describe('when the case metadata is included', () => {
+        it('should send proper payload for #interfaceLoad', async () => {
+            const metadata = baseCaseMetadata;
 
-    it('should send proper payload for #staticFilterDeselect', async () => {
-        const meta: StaticFilterToggleValueMetadata = {
-            staticFilterId: 'filetypes',
-            staticFilterValue: {
-                caption: 'Youtube',
-                expression: '@filetype="youtubevideo"',
-            },
-        };
-        await client.logStaticFilterDeselect(meta);
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logInterfaceLoad(metadata);
+            expectMatchPayload(SearchPageEvents.interfaceLoad, expectedMetadata);
+        });
 
-        expectMatchPayload(SearchPageEvents.staticFilterDeselect, meta);
-    });
+        it('should send proper payload for #interfaceChange', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                interfaceChangeTo: 'bob',
+            };
 
-    it('should send proper payload for #breadcrumbResetAll', async () => {
-        await client.logBreadcrumbResetAll();
-        expectMatchPayload(SearchPageEvents.breadcrumbResetAll);
-    });
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                interfaceChangeTo: 'bob',
+            };
+            await client.logInterfaceChange(metadata);
+            expectMatchPayload(SearchPageEvents.interfaceChange, expectedMetadata);
+        });
 
-    it('should send proper payload for #breadcrumbFacet', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-            facetValue: 'qwerty',
-        };
-        await client.logBreadcrumbFacet(meta);
-        expectMatchPayload(SearchPageEvents.breadcrumbFacet, meta);
-    });
+        it('should send proper payload for #fetchMoreResults', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+            };
 
-    it('should send proper payload for #breadcrumbResetAll', async () => {
-        await client.logBreadcrumbResetAll();
-        expectMatchPayload(SearchPageEvents.breadcrumbResetAll);
-    });
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                type: 'getMoreResults',
+            };
+            await client.logFetchMoreResults(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, expectedMetadata);
+        });
 
-    it('should send proper payload for #breadcrumbFacet', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-            facetValue: 'qwerty',
-        };
-        await client.logBreadcrumbFacet(meta);
-        expectMatchPayload(SearchPageEvents.breadcrumbFacet, meta);
-    });
+        it('should send proper payload for #staticFilterDeselect', async () => {
+            const metadata: InsightStaticFilterToggleValueMetadata = {
+                ...baseCaseMetadata,
+                staticFilterId: 'filetypes',
+                staticFilterValue: {
+                    caption: 'Youtube',
+                    expression: '@filetype="youtubevideo"',
+                },
+            };
 
-    it('should send proper payload for #logFacetSelect', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-            facetValue: 'qwerty',
-        };
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                staticFilterId: 'filetypes',
+                staticFilterValue: {
+                    caption: 'Youtube',
+                    expression: '@filetype="youtubevideo"',
+                },
+            };
+            await client.logStaticFilterDeselect(metadata);
 
-        await client.logFacetSelect(meta);
-        expectMatchPayload(SearchPageEvents.facetSelect, meta);
-    });
+            expectMatchPayload(SearchPageEvents.staticFilterDeselect, expectedMetadata);
+        });
 
-    it('should send proper payload for #logFacetDeselect', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-            facetValue: 'qwerty',
-        };
+        it('should send proper payload for #breadcrumbResetAll', async () => {
+            const metadata = baseCaseMetadata;
 
-        await client.logFacetDeselect(meta);
-        expectMatchPayload(SearchPageEvents.facetDeselect, meta);
-    });
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logBreadcrumbResetAll(metadata);
+            expectMatchPayload(SearchPageEvents.breadcrumbResetAll, expectedMetadata);
+        });
 
-    it('should send proper payload for #logFacetUpdateSort', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-            criteria: 'bazz',
-        };
-        await client.logFacetUpdateSort(meta);
-        expectMatchPayload(SearchPageEvents.facetUpdateSort, meta);
-    });
+        it('should send proper payload for #breadcrumbFacet', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
 
-    it('should send proper payload for #logFacetClearAll', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-        };
-        await client.logFacetClearAll(meta);
-        expectMatchPayload(SearchPageEvents.facetClearAll, meta);
-    });
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
+            await client.logBreadcrumbFacet(metadata);
+            expectMatchPayload(SearchPageEvents.breadcrumbFacet, expectedMetadata);
+        });
 
-    it('should send proper payload for #logFacetShowMore', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-        };
-        await client.logFacetShowMore(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.facetShowMore, meta);
-    });
+        it('should send proper payload for #logFacetSelect', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
 
-    it('should send proper payload for #logFacetShowLess', async () => {
-        const meta = {
-            facetField: '@foo',
-            facetId: 'bar',
-            facetTitle: 'title',
-        };
-        await client.logFacetShowLess(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.facetShowLess, meta);
-    });
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
 
-    it('should send proper payload for #logQueryError', async () => {
-        const meta = {
-            query: 'q',
-            aq: 'aq',
-            cq: 'cq',
-            dq: 'dq',
-            errorMessage: 'boom',
-            errorType: 'a bad one',
-        };
-        await client.logQueryError(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.queryError, meta);
-    });
+            await client.logFacetSelect(metadata);
+            expectMatchPayload(SearchPageEvents.facetSelect, expectedMetadata);
+        });
 
-    it('should send proper payload for #logPagerNumber', async () => {
-        const meta = {pagerNumber: 123};
-        await client.logPagerNumber(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.pagerNumber, meta);
-    });
+        it('should send proper payload for #logFacetDeselect', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
 
-    it('should send proper payload for #logPagerNext', async () => {
-        const meta = {pagerNumber: 123};
-        await client.logPagerNext(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.pagerNext, meta);
-    });
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                facetValue: 'qwerty',
+            };
 
-    it('should send proper payload for #logPagerPrevious', async () => {
-        const meta = {pagerNumber: 123};
-        await client.logPagerPrevious(meta);
-        expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, meta);
-    });
+            await client.logFacetDeselect(metadata);
+            expectMatchPayload(SearchPageEvents.facetDeselect, expectedMetadata);
+        });
 
-    it('should send proper payload for #didyoumeanAutomatic', async () => {
-        await client.logDidYouMeanAutomatic();
-        expectMatchPayload(SearchPageEvents.didyoumeanAutomatic);
-    });
+        it('should send proper payload for #logFacetUpdateSort', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                criteria: 'bazz',
+            };
 
-    it('should send proper payload for #didyoumeanClick', async () => {
-        await client.logDidYouMeanClick();
-        expectMatchPayload(SearchPageEvents.didyoumeanClick);
-    });
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+                criteria: 'bazz',
+            };
+            await client.logFacetUpdateSort(metadata);
+            expectMatchPayload(SearchPageEvents.facetUpdateSort, expectedMetadata);
+        });
 
-    it('should send proper payload for #resultsSort', async () => {
-        await client.logResultsSort({resultsSortBy: 'date ascending'});
-        expectMatchPayload(SearchPageEvents.resultsSort, {resultsSortBy: 'date ascending'});
-    });
+        it('should send proper payload for #logFacetClearAll', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
 
-    it('should send proper payload for #searchboxSubmit', async () => {
-        await client.logSearchboxSubmit();
-        expectMatchPayload(SearchPageEvents.searchboxSubmit);
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+            await client.logFacetClearAll(metadata);
+            expectMatchPayload(SearchPageEvents.facetClearAll, expectedMetadata);
+        });
+
+        it('should send proper payload for #logFacetShowMore', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+            await client.logFacetShowMore(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.facetShowMore, expectedMetadata);
+        });
+
+        it('should send proper payload for #logFacetShowLess', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                facetField: '@foo',
+                facetId: 'bar',
+                facetTitle: 'title',
+            };
+            await client.logFacetShowLess(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.facetShowLess, expectedMetadata);
+        });
+
+        it('should send proper payload for #logQueryError', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                query: 'q',
+                aq: 'aq',
+                cq: 'cq',
+                dq: 'dq',
+                errorMessage: 'boom',
+                errorType: 'a bad one',
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                query: 'q',
+                aq: 'aq',
+                cq: 'cq',
+                dq: 'dq',
+                errorMessage: 'boom',
+                errorType: 'a bad one',
+            };
+            await client.logQueryError(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.queryError, expectedMetadata);
+        });
+
+        it('should send proper payload for #logPagerNumber', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                pagerNumber: 123,
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                pagerNumber: 123,
+            };
+            await client.logPagerNumber(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.pagerNumber, expectedMetadata);
+        });
+
+        it('should send proper payload for #logPagerNext', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                pagerNumber: 123,
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                pagerNumber: 123,
+            };
+            await client.logPagerNext(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.pagerNext, expectedMetadata);
+        });
+
+        it('should send proper payload for #logPagerPrevious', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                pagerNumber: 123,
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                pagerNumber: 123,
+            };
+            await client.logPagerPrevious(metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.pagerPrevious, expectedMetadata);
+        });
+
+        it('should send proper payload for #didyoumeanAutomatic', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logDidYouMeanAutomatic(metadata);
+            expectMatchPayload(SearchPageEvents.didyoumeanAutomatic, expectedMetadata);
+        });
+
+        it('should send proper payload for #didyoumeanClick', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logDidYouMeanClick(metadata);
+            expectMatchPayload(SearchPageEvents.didyoumeanClick, expectedMetadata);
+        });
+
+        it('should send proper payload for #resultsSort', async () => {
+            const metadata = {
+                ...baseCaseMetadata,
+                resultsSortBy: 'date ascending',
+            };
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+                resultsSortBy: 'date ascending',
+            };
+            await client.logResultsSort(metadata);
+            expectMatchPayload(SearchPageEvents.resultsSort, expectedMetadata);
+        });
+
+        it('should send proper payload for #searchboxSubmit', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logSearchboxSubmit(metadata);
+            expectMatchPayload(SearchPageEvents.searchboxSubmit, expectedMetadata);
+        });
     });
 
     it('should enable analytics tracking by default', () => {
