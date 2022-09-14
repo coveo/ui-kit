@@ -17,6 +17,7 @@ import {
 } from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
 import {
+  ExpectedHierarchy,
   assertRendersGrandchildren,
   assertRendersWholeCollection,
 } from './folded-result-list-assertions';
@@ -25,9 +26,8 @@ import {RouteAlias} from '../../utils/setupComponent';
 
 const setSourceAndSortCriteria = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
-    request.body.aq =
-      '@source==("iNaturalistTaxons") AND @foldingcollection==("Pyrenomycetes")';
-    request.body.sortCriteria = 'date descending';
+    request.body.aq = '@foldingcollection==("Pyrenomycetes")';
+    request.body.sortCriteria = 'inat_sort_id ascending';
   });
 };
 
@@ -41,15 +41,15 @@ describe('Folded Result List Component', () => {
       .init();
 
     FoldedResultListSelectors.firstResult()
-      .contains('Pyrenomycetes')
+      .contains(ExpectedHierarchy.rootName)
       .should('be.visible');
 
     FoldedResultListSelectors.childResultAtIndex(0)
       .find(resultLinkComponent)
-      .contains('Powdery Mildews');
+      .contains(ExpectedHierarchy.children[0].name);
     FoldedResultListSelectors.childResultAtIndex(1)
       .find(resultLinkComponent)
-      .contains('common lichens');
+      .contains(ExpectedHierarchy.children[1].name);
   });
 
   it('renders content before and after children only when there are children', () => {
