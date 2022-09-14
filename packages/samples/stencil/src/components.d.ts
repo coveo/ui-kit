@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { SearchEngine } from "@coveo/atomic/headless";
 import { Router } from "stencil-router-v2";
 export namespace Components {
     interface AppRoot {
@@ -16,6 +17,7 @@ export namespace Components {
     interface SampleResultComponent {
     }
     interface SearchPage {
+        "engine"?: SearchEngine;
     }
     interface StandaloneSearchBox {
         "router": Router;
@@ -77,6 +79,7 @@ declare namespace LocalJSX {
     interface SampleResultComponent {
     }
     interface SearchPage {
+        "engine"?: SearchEngine;
     }
     interface StandaloneSearchBox {
         "router": Router;
