@@ -64,30 +64,35 @@ export class AtomicResultText implements InitializableComponent {
     }
   }
 
+  private possiblyWarnOnBadFieldType() {
+    const resultValueRaw = ResultTemplatesHelpers.getResultProperty(
+      this.result,
+      this.field
+    );
+    if (isArray(resultValueRaw)) {
+      this.bindings.engine.logger.error(
+        `atomic-result-text cannot be used with multi value field "${this.field}" with values "${resultValueRaw}". Use atomic-result-multi-value-text instead.`,
+        this
+      );
+      this.bindings.engine.logger.error(
+        'atomic-result-text will be removed the template'
+      );
+    }
+  }
+
   public render() {
     const resultValueAsString = getStringValueFromResultOrNull(
       this.result,
       this.field
     );
     if (!resultValueAsString && !this.default) {
-      const resultValueRaw = ResultTemplatesHelpers.getResultProperty(
-        this.result,
-        this.field
-      );
-      if (isArray(resultValueRaw)) {
-        this.bindings.engine.logger.error(
-          `atomic-result-text cannot be used with multi value field "${this.field}" with values "${resultValueRaw}". Use atomic-result-multi-value-text instead.`,
-          this
-        );
-        this.bindings.engine.logger.error(
-          'atomic-result-text will be removed the template'
-        );
-      }
+      this.possiblyWarnOnBadFieldType();
       this.host.remove();
       return;
     }
 
     if (!resultValueAsString && this.default) {
+      this.possiblyWarnOnBadFieldType();
       return (
         <atomic-text
           value={getFieldValueCaption(
