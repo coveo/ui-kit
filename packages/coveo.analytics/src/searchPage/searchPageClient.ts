@@ -26,6 +26,7 @@ import {
     StaticFilterMetadata,
     StaticFilterToggleValueMetadata,
     UndoTriggerRedirectMetadata,
+    SmartSnippetLinkMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -325,6 +326,33 @@ export class CoveoSearchPageClient {
             info,
             {contentIDKey: snippet.documentId.contentIdKey, contentIDValue: snippet.documentId.contentIdValue},
             snippet
+        );
+    }
+
+    public logOpenSmartSnippetInlineLink(
+        info: PartialDocumentInformation,
+        identifierAndLink: DocumentIdentifier & SmartSnippetLinkMeta
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.openSmartSnippetInlineLink,
+            info,
+            {contentIDKey: identifierAndLink.contentIDKey, contentIDValue: identifierAndLink.contentIDValue},
+            identifierAndLink
+        );
+    }
+
+    public logOpenSmartSnippetSuggestionInlineLink(
+        info: PartialDocumentInformation,
+        snippetAndLink: SmartSnippetSuggestionMeta & SmartSnippetLinkMeta
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.openSmartSnippetSuggestionInlineLink,
+            info,
+            {
+                contentIDKey: snippetAndLink.documentId.contentIdKey,
+                contentIDValue: snippetAndLink.documentId.contentIdValue,
+            },
+            snippetAndLink
         );
     }
 

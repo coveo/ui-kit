@@ -637,6 +637,32 @@ describe('SearchPageClient', () => {
         });
     });
 
+    it('should send proper payload for #logOpenSmartSnippetInlineLink', async () => {
+        const meta = {
+            ...fakeDocID,
+            linkText: 'Some text',
+            linkURL: 'https://invalid.com',
+        };
+        await client.logOpenSmartSnippetInlineLink(fakeDocInfo, meta);
+        expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetInlineLink, fakeDocInfo, meta);
+    });
+
+    it('should send proper payload for #logOpenSmartSnippetSuggestionInlineLink', async () => {
+        const meta = {
+            question: 'Abc',
+            answerSnippet: 'Def',
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+            linkText: 'Some text',
+            linkURL: 'https://invalid.com',
+        };
+        await client.logOpenSmartSnippetSuggestionInlineLink(fakeDocInfo, meta);
+        expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSuggestionInlineLink, fakeDocInfo, {
+            ...meta,
+            contentIDKey: meta.documentId.contentIdKey,
+            contentIDValue: meta.documentId.contentIdValue,
+        });
+    });
+
     it('should send proper payload for #logRecentQueryClick', async () => {
         await client.logRecentQueryClick();
         expectMatchPayload(SearchPageEvents.recentQueryClick);

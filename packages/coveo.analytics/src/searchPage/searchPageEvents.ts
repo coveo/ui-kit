@@ -239,6 +239,14 @@ export enum SearchPageEvents {
      */
     openSmartSnippetSuggestionSource = 'openSmartSnippetSuggestionSource',
     /**
+     * Identifies the custom event that gets logged when a user clicks on a link in the answer of a smart snippet.
+     */
+    openSmartSnippetInlineLink = 'openSmartSnippetInlineLink',
+    /**
+     * Identifies the custom event that gets logged when a user clicks on a link in the snippet suggestion for a related question.
+     */
+    openSmartSnippetSuggestionInlineLink = 'openSmartSnippetSuggestionInlineLink',
+    /**
      * Identifies the search event that gets logged when a recent queries list item gets clicked.
      */
     recentQueryClick = 'recentQueriesClick',
@@ -417,6 +425,11 @@ export interface SmartSnippetSuggestionMeta {
     question: string;
     answerSnippet: string;
     documentId: SmartSnippetDocumentIdentifier;
+}
+
+export interface SmartSnippetLinkMeta {
+    linkText: string;
+    linkURL: string;
 }
 
 export interface SmartSnippetDocumentIdentifier {
