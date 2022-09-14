@@ -260,11 +260,11 @@ export default class QuanticResultQuickview extends LightningElement {
     }
   }
 
-  getLsatFocusableElement(node) {
+  getLastFocusableElement(node) {
     if (!node || node.nodeType === 3) return null;
 
     const lastFocusable = Array.from(node.childNodes)
-      .map((item) => this.getLsatFocusableElement(item))
+      .map((item) => this.getLastFocusableElement(item))
       .filter((item) => !!item);
 
     if (lastFocusable.length > 0) {
@@ -284,7 +284,7 @@ export default class QuanticResultQuickview extends LightningElement {
       const el = this.template.querySelector('.quickview__content-container');
 
       if (el) {
-        const lastElement = this.getLsatFocusableElement(el);
+        const lastElement = this.getLastFocusableElement(el);
         if (lastElement) {
           lastElement.focus();
         } else {
