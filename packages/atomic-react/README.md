@@ -10,6 +10,13 @@ The integration of React-based projects (using JSX) with Web based components ca
 
 `npm i @coveo/atomic-react`
 
+### Alternate installation — CDN
+
+The library is also available in the Coveo CDN as an `IIFE` (Immediately Invoked Function Expression). This is an approach that we recommend only for quick prototyping and testing, and that can be used with very minimal front-end tooling and build tools.
+
+We recommend against using the `IIFE` approach in production. The browser has to download the entire library code, regardless of which components are actually used. We rather recommend using a bundler in this situation (for example Webpack).
+
+You can read more about this approach [below](#usage-with-cdn-scripts--iife-).
 ## Usage
 
 Since Atomic React is built on top of the core [Atomic](https://docs.coveo.com/en/atomic/latest/) web-components library, the vast majority of concepts that apply to core Atomic will apply to Atomic React.
@@ -264,4 +271,134 @@ import {AtomicSearchInterface} from '@coveo/atomic-react';
     });
   }}
 ></AtomicSearchInterface>;
+```
+
+## Usage with CDN Scripts (IIFE)
+
+For this approach to work, you need to pull different scripts in the page in the correct order, using proper external dependencies with matching versions.
+
+First, identify the version of `@coveo/atomic` that is used by `@coveo-atomic-react`.
+
+You can do that by running `npm view @coveo/atomic-react`, and then identifying the `@coveo/atomic` dependency:
+
+```
+npm view @coveo/atomic-react
+
+
+@coveo/atomic-react@1.23.11 | Proprietary | deps: 1 | versions: 209
+React specific wrapper for the Atomic component library
+https://github.com/coveo/ui-kit#readme
+
+dist
+.tarball: https://registry.npmjs.org/@coveo/atomic-react/-/atomic-react-1.23.11.tgz
+.shasum: 64ba0a5f686e3638b1180910f6fed5e4980bd9e2
+.integrity: sha512-/qI5O7SWNinBYWAedRW62ko0oF4c/hfapgqKe9xSq/NJfg+KBzcR3SbdyhpaUAWpPX1910GP9cMyr4wf8irJnQ==
+.unpackedSize: 771.1 kB
+
+dependencies:
+@coveo/atomic: 1.108.2
+```
+
+In the above example, you can see that of the time of this writing, the current latest version of `@coveo/atomic-react` is `1.23.11`, and that it is using `@coveo/atomic` at version `1.108.2`.
+
+Then, you need to do the same to find the matching version of `@coveo/headless` used by the target`@coveo/atomic` version.
+
+Using the above example with `@coveo/atomic@1.108.2`:
+
+```bash
+npm view @coveo/atomic@1.108.2
+
+
+@coveo/atomic@1.108.2 | Apache-2.0 | deps: 15 | versions: 728
+A web-component library for building modern UIs interfacing with the Coveo platform
+https://docs.coveo.com/en/atomic/latest/
+
+dist
+.tarball: https://registry.npmjs.org/@coveo/atomic/-/atomic-1.108.2.tgz
+.shasum: 6e844073f55f10328b4b828c0190b8fe31403fbf
+.integrity: sha512-LhFR6k7NdGi8pYHmWOq3gM3rE0zeTKc6biTa1Z+ZKr5TEXIr97rpxi1HSnViQUowQYYCcY44dvsAYz2yyPvXTA==
+.unpackedSize: 87.1 MB
+
+dependencies:
+@coveo/bueno: 0.42.1                  @stencil/store: 1.5.0                 focus-visible: 5.2.0
+@coveo/headless: 1.103.3              coveo-styleguide: 9.34.4              i18next-http-backend: 1.4.1
+@popperjs/core: ^2.11.6               dayjs: 1.11.5                         i18next: 20.6.1
+@salesforce-ux/design-system: ^2.16.1 dompurify: 2.3.10                     stencil-inline-svg: 1.1.0
+@stencil/core: 2.17.3                 escape-html: 1.0.3                    ts-debounce: ^4.0.0
+
+```
+
+In the above example, you can see that `@coveo/atomic@1.108.2` has the dependency `@coveo/headless@1.103.3`.
+
+To summarize, as of the time of this writing, the versions that we should keep in mind are the following:
+
+- `@coveo/atomic-react` -> 1.23.11
+- `@coveo/atomic` -> 1.108.2
+- `@coveo/headless` -> 1.103.3
+
+```html
+<head>
+  <!-- React and ReactDOM need to be included  -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Optional script, which allows to use JSX directly in an inline script in the page -->
+  <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <!-- @coveo/headless need to be included as a dependency -->
+  <!-- Note the matching major and minor version as explained above -->
+  <script crossorigin src="https://static.cloud.coveo.com/headless/v1.103/headless.js"></script>
+
+  
+  <!-- @coveo/atomic need to be included as a dependency -->
+  <!-- Note the matching major and minor version as explained above -->
+  <script crossorigin type="module" src="https://static.cloud.coveo.com/atomic/v1.108/atomic.esm.js"></script>
+  
+  <!--And then finally @coveo/atomic-react is included -->
+  <!-- Note the matching major and minor version as explained above -->
+  <script crossorigin src="https://static.cloud.coveo.com/atomic-react/v1.23/iife/atomic-react.min.js"></script>
+</head>
+```
+
+Once this is done, you can start using `CoveoAtomicReact` directly with an inline script tag: 
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    [...]
+  </head>
+  <body>
+    <div id="container"></div>
+  </body>
+  <script type="text/babel">
+    'use strict';
+
+    class SearchPage extends React.Component {
+      constructor(props) {
+        super(props);
+        // Configure engine
+        this.engine = CoveoAtomicReact.buildSearchEngine({...});
+      }
+
+      render() {
+        return (
+          <CoveoAtomicReact.AtomicSearchInterface engine={this.engine}>
+            <CoveoAtomicReact.AtomicSearchBox></CoveoAtomicReact.AtomicSearchBox>
+            <CoveoAtomicReact.AtomicResultList
+              template={MyTemplateFunction}
+            ></CoveoAtomicReact.AtomicResultList>
+            [... etc ...]
+          </CoveoAtomicReact.AtomicSearchInterface>
+        );
+      }
+    }
+
+    const domContainer = document.querySelector('#container');
+    const root = ReactDOM.createRoot(domContainer);
+    root.render(React.createElement(SearchPage));
+  </script>
+</html>
+
+
 ```

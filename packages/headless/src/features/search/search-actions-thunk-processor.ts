@@ -92,7 +92,7 @@ type ValidReturnTypeFromProcessingStep<RejectionType> =
   | ExecuteSearchThunkReturn
   | RejectionType;
 
-interface AsyncThunkConfig {
+export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
@@ -227,6 +227,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     if (ignored === correctedQuery) {
       this.dispatch(updateIgnoreQueryTrigger(''));
       return null;
+    }
+
+    if (this.analyticsAction) {
+      await this.dispatch(this.analyticsAction);
     }
 
     const retried = await this.automaticallyRetryQueryWithTriggerModification(
