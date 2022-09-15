@@ -786,9 +786,12 @@ export class AtomicSearchBox {
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => this.onKeyDown(e)}
             onClear={() => this.searchBox.clear()}
-            aria-controls={this.popupId}
-            role="combobox"
-            aria-activedescendant={this.activeDescendant}
+            popup={{
+              id: this.popupId,
+              activeDescendant: this.activeDescendant,
+              expanded: this.isExpanded,
+              hasSuggestions: this.hasSuggestions,
+            }}
           />
           {this.renderSuggestions()}
           <SubmitButton
