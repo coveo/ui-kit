@@ -6,7 +6,7 @@ import {
 import {
   logFacetDeselect as logInsightFacetDeselect,
   logFacetSelect as logInsightFacetSelect,
-} from '../../facet-set/facet-set-analytics-actions';
+} from '../../facet-set/facet-set-insight-analytics-actions';
 import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
 
 export const isRangeFacetValueSelected = (selection: RangeFacetValue) => {
