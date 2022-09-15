@@ -1,6 +1,7 @@
 import {RecordValue} from '@coveo/bueno';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
+  requiredEmptyAllowedString,
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
@@ -15,6 +16,11 @@ export interface QuestionAnsweringDocumentIdActionCreatorPayload
 
 export interface QuestionAnsweringUniqueIdentifierActionCreatorPayload {
   questionAnswerId: string;
+}
+
+export interface QuestionAnsweringInlineLinkActionCreatorPayload {
+  linkText: string;
+  linkURL: string;
 }
 
 export const documentIdentifierPayloadDefinition = () =>
@@ -36,6 +42,15 @@ export const uniqueIdentifierPayloadDefinition = () =>
   new RecordValue({
     values: {
       questionAnswerId: requiredNonEmptyString,
+    },
+    options: {required: true},
+  });
+
+export const inlineLinkPayloadDefinition = () =>
+  new RecordValue({
+    values: {
+      linkText: requiredEmptyAllowedString,
+      linkURL: requiredEmptyAllowedString,
     },
     options: {required: true},
   });
