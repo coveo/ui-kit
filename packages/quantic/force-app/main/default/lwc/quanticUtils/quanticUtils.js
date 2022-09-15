@@ -525,10 +525,7 @@ export function isFocusable(element) {
   if (element.getAttribute('tabindex') === '-1') {
     return false;
   }
-  if (element.hasAttribute('tabindex')) {
-    return true;
-  }
-  if (element.getAttribute('contentEditable') === 'true') {
+  if (element.hasAttribute('tabindex') || element.getAttribute('contentEditable') === 'true') {
     return true;
   }
   switch (element.tagName) {
