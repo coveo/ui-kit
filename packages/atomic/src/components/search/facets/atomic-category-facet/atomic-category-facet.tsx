@@ -224,7 +224,9 @@ export class AtomicCategoryFacet
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
       basePath: this.basePath
-        ? this.basePath.split(',').map((value) => value.trim())
+        ? this.basePath
+            .split(this.delimitingCharacter)
+            .map((value) => value.trim())
         : undefined,
       delimitingCharacter: this.delimitingCharacter,
       filterByBasePath: this.filterByBasePath,
