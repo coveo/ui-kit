@@ -3,7 +3,7 @@ import {
   SafeStorage,
   StorageItems,
 } from '../../../src/utils/local-storage-utils';
-import {SearchBoxSelectors} from './search-box-selectors';
+import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
 import {addSearchBox} from './search-box-actions';
 import * as CommonAssertions from '../common-assertions';
 import * as SearchBoxAssertions from './search-box-assertions';
@@ -80,6 +80,7 @@ describe('Search Box Test Suites', () => {
       });
 
       SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
+      CommonAssertions.assertAccessibility(searchBoxComponent);
       CommonAssertions.assertAriaLiveMessage(
         SearchBoxSelectors.searchBoxAriaLive,
         expectedSum.toString()
@@ -202,7 +203,7 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('with no suggestions nor recentQueries', () => {
-    beforeEach(() => {
+    before(() => {
       new TestFixture()
         .with(setSuggestions(0))
         .with(setRecentQueries(0))
@@ -215,6 +216,7 @@ describe('Search Box Test Suites', () => {
       SearchBoxSelectors.searchBoxAriaLive,
       ' no '
     );
+    CommonAssertions.assertAccessibility(searchBoxComponent);
   });
 
   describe('with a basic search box', () => {

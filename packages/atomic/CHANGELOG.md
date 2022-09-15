@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.110.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.109.0...@coveo/atomic@1.110.0) (2022-09-15)
+
+
+### Bug Fixes
+
+* **atomic:** add insight interface to initializeBindings ([#2432](https://github.com/coveo/ui-kit/issues/2432)) ([5bda1c3](https://github.com/coveo/ui-kit/commit/5bda1c392c48af39e7b2a5ec1af4fe6456b099be))
+
+
+### Features
+
+* **atomic:** add onRedirect event to search box, make Stencil sample a SPA ([#2427](https://github.com/coveo/ui-kit/issues/2427)) ([f2f5cde](https://github.com/coveo/ui-kit/commit/f2f5cdeb6f0bab94f1cbf563292938d50590d52d))
+
+
+
+
+
 # [1.109.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.3...@coveo/atomic@1.109.0) (2022-09-14)
 
 

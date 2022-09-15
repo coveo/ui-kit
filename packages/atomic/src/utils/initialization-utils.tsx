@@ -20,7 +20,11 @@ declare global {
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
-const initializableElements = ['atomic-search-interface', 'atomic-external'];
+const initializableElements = [
+  'atomic-search-interface',
+  'atomic-insight-interface',
+  'atomic-external',
+];
 
 /**
  * Retrieves `Bindings` on a configured parent search interface.

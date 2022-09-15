@@ -9,8 +9,10 @@ import {
 } from '../core/interactive-result/headless-core-interactive-result';
 import {logOpenSmartSnippetSuggestionSource} from '../../features/question-answering/question-answering-analytics-actions';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
-import {relatedQuestionSelector} from '../../features/question-answering/question-answering-selectors';
-import {resultFromFieldSelector} from '../../features/search/search-selectors';
+import {
+  answerSourceSelector,
+  relatedQuestionSelector,
+} from '../../features/question-answering/question-answering-selectors';
 
 /**
  * @internal
@@ -54,11 +56,7 @@ export function buildSmartSnippetInteractiveQuestions(
     if (!questionAnswer) {
       return null;
     }
-    return resultFromFieldSelector(
-      state,
-      questionAnswer.documentId.contentIdKey,
-      questionAnswer.documentId.contentIdValue
-    );
+    return answerSourceSelector(state, questionAnswer.documentId);
   };
 
   const clickedRelatedQuestions = new Set<string>();

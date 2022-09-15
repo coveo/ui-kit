@@ -21,6 +21,11 @@ export type SearchResponseModifierPredicate = (
   response: SearchResponseSuccess
 ) => SearchResponseSuccess | void;
 
+interface SearchResponseModifier {
+  predicate: SearchResponseModifierPredicate;
+  times: number;
+}
+
 export type SearchInterface = HTMLElement & {
   initialize: (opts: {
     accessToken: string;
@@ -48,7 +53,7 @@ export class TestFixture {
   private fieldCaptions: {field: string; captions: Record<string, string>}[] =
     [];
   private translations: Record<string, string> = {};
-  private responseModifiers: SearchResponseModifierPredicate[] = [];
+  private responseModifiers: SearchResponseModifier[] = [];
   private returnError = false;
   private reflectStateInUrl = true;
   private redirected = false;
@@ -122,8 +127,11 @@ export class TestFixture {
     return this;
   }
 
-  public withCustomResponse(predicate: SearchResponseModifierPredicate) {
-    this.responseModifiers.push(predicate);
+  public withCustomResponse(
+    predicate: SearchResponseModifierPredicate,
+    times = 9999
+  ) {
+    this.responseModifiers.push({predicate, times});
     return this;
   }
 
@@ -186,13 +194,18 @@ export class TestFixture {
       }
 
       if (this.responseModifiers.length) {
-        interceptSearchResponse((response) =>
-          this.responseModifiers.reduce(
-            (combinedResponse, modifier) =>
-              modifier(combinedResponse) || combinedResponse,
-            response
-          )
-        );
+        interceptSearchResponse((response) => {
+          let combinedResponse = response;
+          this.responseModifiers.forEach((modifier) => {
+            if (modifier.times <= 0) {
+              return;
+            }
+            combinedResponse =
+              modifier.predicate(combinedResponse) || combinedResponse;
+            modifier.times--;
+          });
+          return combinedResponse;
+        });
       }
 
       if (this.returnError) {
