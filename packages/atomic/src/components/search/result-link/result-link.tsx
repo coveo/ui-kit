@@ -1,21 +1,52 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {filterProtocol} from '../../../utils/xss-utils';
 
-export interface ResultLinkProps {
+export interface ResultLinkEventProps {
+  onSelect: () => void;
+  onBeginDelayedSelect: () => void;
+  onCancelPendingSelect: () => void;
+  stopPropagation?: boolean;
+}
+
+export interface ResultLinkProps extends ResultLinkEventProps {
   href: string;
   target: string;
   className?: string;
   part?: string;
   title?: string;
-  onSelect: () => void;
-  onBeginDelayedSelect: () => void;
-  onCancelPendingSelect: () => void;
   ref?: (elm?: HTMLAnchorElement) => void;
   stopPropagation?: boolean;
   attributes?: Attr[];
   tabIndex?: number;
   ariaHidden?: boolean;
 }
+
+export const bindAnalyticsToLink = (
+  link: HTMLAnchorElement,
+  {
+    onSelect,
+    onBeginDelayedSelect,
+    onCancelPendingSelect,
+    stopPropagation = true,
+  }: ResultLinkEventProps
+) => {
+  const stopPropagationAndProcess = (e: Event, process: () => void) => {
+    stopPropagation && e.stopPropagation();
+    process();
+  };
+  (['click', 'contextmenu', 'mousedown', 'mouseup'] as const).forEach(
+    (eventName) =>
+      link.addEventListener(eventName, (e) =>
+        stopPropagationAndProcess(e, onSelect)
+      )
+  );
+  link.addEventListener('touchstart', (e) =>
+    stopPropagationAndProcess(e, onBeginDelayedSelect)
+  );
+  link.addEventListener('touchend', (e) =>
+    stopPropagationAndProcess(e, onCancelPendingSelect)
+  );
+};
 
 export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
   {
@@ -35,35 +66,36 @@ export const LinkWithResultAnalytics: FunctionalComponent<ResultLinkProps> = (
   },
   children
 ) => {
-  const stopPropagationAndProcess = (e: Event, process: () => void) => {
-    stopPropagation && e.stopPropagation();
-    process();
-  };
   return (
     <a
       class={className}
       part={part}
       href={filterProtocol(href)}
       title={title}
-      onClick={(e) => stopPropagationAndProcess(e, onSelect)}
-      onContextMenu={(e) => stopPropagationAndProcess(e, onSelect)}
-      onMouseDown={(e) => stopPropagationAndProcess(e, onSelect)}
-      onMouseUp={(e) => stopPropagationAndProcess(e, onSelect)}
-      onTouchStart={(e) => stopPropagationAndProcess(e, onBeginDelayedSelect)}
-      onTouchEnd={(e) => stopPropagationAndProcess(e, onCancelPendingSelect)}
       target={target}
       ref={(el) => {
         if (ref) {
           ref(el);
         }
 
+        if (!el) {
+          return;
+        }
+
+        bindAnalyticsToLink(el, {
+          onSelect,
+          onBeginDelayedSelect,
+          onCancelPendingSelect,
+          stopPropagation,
+        });
+
         if (attributes?.length) {
           [...attributes].forEach(({nodeName, nodeValue}) => {
-            el?.setAttribute(nodeName, nodeValue!);
+            el.setAttribute(nodeName, nodeValue!);
           });
         }
 
-        if (ariaHidden && el) {
+        if (ariaHidden) {
           el.setAttribute('aria-hidden', 'true');
         }
       }}

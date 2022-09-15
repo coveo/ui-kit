@@ -1,4 +1,14 @@
-import {Component, h, State, Prop, Listen, Watch, Element} from '@stencil/core';
+import {
+  Component,
+  h,
+  State,
+  Prop,
+  Listen,
+  Watch,
+  Element,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -38,6 +48,7 @@ import {
 } from './search-suggestion';
 
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
+import {RedirectionPayload} from './redirection-payload';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -144,6 +155,26 @@ export class AtomicSearchBox {
    */
   @Prop({reflect: true}) public clearFilters = true;
 
+  /**
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+   *
+   * @example
+   * ```html
+   * <script>
+   *   document.querySelector('atomic-search-box').addEventListener((e) => {
+   *     e.preventDefault();
+   *     // handle redirection
+   *   });
+   * </script>
+   * ...
+   * <atomic-search-box redirection-url="/search"></atomic-search-box>
+   * ```
+   */
+  @Event({
+    eventName: 'redirect',
+  })
+  public redirect!: EventEmitter<RedirectionPayload>;
+
   @AriaLiveRegion('search-box')
   protected searchBoxAriaMessage!: string;
 
@@ -204,7 +235,10 @@ export class AtomicSearchBox {
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
     this.searchBox.afterRedirection();
-    window.location.href = redirectTo;
+    const event = this.redirect.emit({redirectTo, value});
+    if (!event.defaultPrevented) {
+      window.location.href = redirectTo;
+    }
   }
 
   @Listen('atomic/searchBoxSuggestion/register')
@@ -752,9 +786,12 @@ export class AtomicSearchBox {
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => this.onKeyDown(e)}
             onClear={() => this.searchBox.clear()}
-            aria-controls={this.popupId}
-            role="combobox"
-            aria-activedescendant={this.activeDescendant}
+            popup={{
+              id: this.popupId,
+              activeDescendant: this.activeDescendant,
+              expanded: this.isExpanded,
+              hasSuggestions: this.hasSuggestions,
+            }}
           />
           {this.renderSuggestions()}
           <SubmitButton

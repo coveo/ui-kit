@@ -1,3 +1,4 @@
+import {InlineLink} from '@coveo/headless';
 import {
   h,
   Component,
@@ -54,6 +55,12 @@ export class AtomicSmartSnippetExpandableAnswer {
 
   @Event() expand!: EventEmitter;
   @Event() collapse!: EventEmitter;
+  @Event({bubbles: false})
+  private selectInlineLink!: EventEmitter<InlineLink>;
+  @Event({bubbles: false})
+  private beginDelayedSelectInlineLink!: EventEmitter<InlineLink>;
+  @Event({bubbles: false})
+  private cancelPendingSelectInlineLink!: EventEmitter<InlineLink>;
 
   private validateProps() {
     if (this.maximumHeight < this.collapsedHeight) {
@@ -109,6 +116,13 @@ export class AtomicSmartSnippetExpandableAnswer {
           htmlContent={this.htmlContent}
           innerStyle={this.snippetStyle}
           onAnswerSizeUpdated={(e) => (this.fullHeight = e.detail.height)}
+          onSelectInlineLink={(e) => this.selectInlineLink.emit(e.detail)}
+          onBeginDelayedSelectInlineLink={(e) =>
+            this.beginDelayedSelectInlineLink.emit(e.detail)
+          }
+          onCancelPendingSelectInlineLink={(e) =>
+            this.cancelPendingSelectInlineLink.emit(e.detail)
+          }
         ></atomic-smart-snippet-answer>
       </div>
     );
