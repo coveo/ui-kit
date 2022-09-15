@@ -5,7 +5,7 @@ describe('smoke test', () => {
       path: '**/rest/ua/v15/analytics/*',
     }).as('analytics');
 
-    cy.visit('http://localhost:3666').wait('@analytics');
+    cy.visit('http://localhost:3666/search').wait('@analytics');
   });
 
   it('should load', () => {
