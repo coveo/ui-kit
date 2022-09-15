@@ -34,14 +34,17 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 import {
   logFacetClearAll,
+  logFacetDeselect,
+  logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {FacetSelectionChangeMetadata} from '../../../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
 
 export type {
   FacetOptions,
@@ -173,4 +176,18 @@ function loadFacetReducers(
 > {
   engine.addReducers({facetSet, configuration, facetSearchSet, search});
   return true;
+}
+
+function getAnalyticsActionForToggleFacetSelect(
+  facetId: string,
+  selection: FacetValue
+) {
+  const payload: FacetSelectionChangeMetadata = {
+    facetId: facetId,
+    facetValue: selection.value,
+  };
+
+  return isFacetValueSelected(selection)
+    ? logFacetDeselect(payload)
+    : logFacetSelect(payload);
 }

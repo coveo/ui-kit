@@ -1,7 +1,6 @@
 import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
 import {DateFacetOptions} from '../../../../core/facets/range-facet/date-facet/headless-date-facet-options';
 import {
   buildCoreDateFacet,
@@ -17,8 +16,13 @@ import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {
   logFacetClearAll,
+  logFacetDeselect,
+  logFacetSelect,
   logFacetUpdateSort,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {RangeFacetValue} from '../../../../../features/facets/range-facets/generic/interfaces/range-facet';
+import {FacetSelectionChangeMetadata} from '../../../../../features/facets/facet-set/facet-set-analytics-actions-utils';
+import {isRangeFacetValueSelected} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
 
 export type {
   DateFacetOptions,
@@ -76,4 +80,16 @@ export function buildDateFacet(
       return coreController.state;
     },
   };
+}
+
+function getAnalyticsActionForToggleRangeFacetSelect(
+  facetId: string,
+  selection: RangeFacetValue
+) {
+  const facetValue = `${selection.start}..${selection.end}`;
+  const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
+
+  return isRangeFacetValueSelected(selection)
+    ? logFacetDeselect(payload)
+    : logFacetSelect(payload);
 }
