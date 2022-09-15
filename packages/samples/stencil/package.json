@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "stencil build --dev --watch --serve --port 3666 --no-open",
-    "start": "npm run build && npx serve www -l 3666",
+    "start": "stencil build --dev --watch --serve --port 3666 --no-open",
     "build": "stencil build",
     "cypress:open": "cypress open"
   },
