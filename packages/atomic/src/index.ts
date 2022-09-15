@@ -22,3 +22,4 @@ export {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from './components/search/search-box-suggestions/suggestions-common';
+export {RedirectionPayload} from './components/search/atomic-search-box/redirection-payload';
