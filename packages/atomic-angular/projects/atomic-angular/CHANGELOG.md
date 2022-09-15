@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.30.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.13...@coveo/atomic-angular@1.30.0) (2022-09-15)
+
+
+### Features
+
+* **atomic:** add onRedirect event to search box, make Stencil sample a SPA ([#2427](https://github.com/coveo/ui-kit/issues/2427)) ([f2f5cde](https://github.com/coveo/ui-kit/commit/f2f5cdeb6f0bab94f1cbf563292938d50590d52d))
+
+
+
+
+
+## [1.29.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.12...@coveo/atomic-angular@1.29.13) (2022-09-14)
+
+**Note:** Version bump only for package @coveo/atomic-angular
+
+
+
+
+
 ## [1.29.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.29.11...@coveo/atomic-angular@1.29.12) (2022-09-12)
 
 **Note:** Version bump only for package @coveo/atomic-angular

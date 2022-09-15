@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.110.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.109.0...@coveo/atomic@1.110.0) (2022-09-15)
+
+
+### Bug Fixes
+
+* **atomic:** add insight interface to initializeBindings ([#2432](https://github.com/coveo/ui-kit/issues/2432)) ([5bda1c3](https://github.com/coveo/ui-kit/commit/5bda1c392c48af39e7b2a5ec1af4fe6456b099be))
+
+
+### Features
+
+* **atomic:** add onRedirect event to search box, make Stencil sample a SPA ([#2427](https://github.com/coveo/ui-kit/issues/2427)) ([f2f5cde](https://github.com/coveo/ui-kit/commit/f2f5cdeb6f0bab94f1cbf563292938d50590d52d))
+
+
+
+
+
+# [1.109.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.3...@coveo/atomic@1.109.0) (2022-09-14)
+
+
+### Bug Fixes
+
+* **atomic:** add rendering condition to insight result list ([#2429](https://github.com/coveo/ui-kit/issues/2429)) ([62c6d82](https://github.com/coveo/ui-kit/commit/62c6d82e453f340e50000b4b93fccd6ada7ede36))
+* **atomic:** removed timespan offset input timezone offset ([#2420](https://github.com/coveo/ui-kit/issues/2420)) ([b30153c](https://github.com/coveo/ui-kit/commit/b30153c622e3a52dda87e93ccf9e7587d39cb135))
+
+
+### Features
+
+* **atomic:** add warning for possible rendering issues with atomic-icon ([#2418](https://github.com/coveo/ui-kit/issues/2418)) ([4044e97](https://github.com/coveo/ui-kit/commit/4044e97e5e8e6adea19297f3c9f96be5f5477add))
+
+
+
+
+
 ## [1.108.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.2...@coveo/atomic@1.108.3) (2022-09-12)
 
 
