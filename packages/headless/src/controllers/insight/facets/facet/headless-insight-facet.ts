@@ -41,7 +41,7 @@ import {
   logFacetShowMore,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils';
+import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils';
 
 export type {
   FacetOptions,

@@ -1,12 +1,15 @@
 import {FacetValue} from './interfaces/response';
-import {logFacetDeselect, logFacetSelect} from './facet-set-analytics-actions';
+import {
+  logFacetDeselect,
+  logFacetSelect,
+} from './facet-set-insight-analytics-actions';
 import {FacetSelectionChangeMetadata} from './facet-set-analytics-actions-utils';
 
 export const isFacetValueSelected = (value: FacetValue) => {
   return value.state === 'selected';
 };
 
-export const getAnalyticsActionForToggleFacetSelect = (
+export const getInsightAnalyticsActionForToggleFacetSelect = (
   facetId: string,
   selection: FacetValue
 ) => {

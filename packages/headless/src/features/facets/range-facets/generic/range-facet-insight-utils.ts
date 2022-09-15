@@ -2,14 +2,14 @@ import {RangeFacetValue} from './interfaces/range-facet';
 import {
   logFacetDeselect,
   logFacetSelect,
-} from '../../facet-set/facet-set-analytics-actions';
+} from '../../facet-set/facet-set-insight-analytics-actions';
 import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
 
 export const isRangeFacetValueSelected = (selection: RangeFacetValue) => {
   return selection.state === 'selected';
 };
 
-export const getAnalyticsActionForToggleRangeFacetSelect = (
+export const getInsightAnalyticsActionForToggleRangeFacetSelect = (
   facetId: string,
   selection: RangeFacetValue
 ) => {

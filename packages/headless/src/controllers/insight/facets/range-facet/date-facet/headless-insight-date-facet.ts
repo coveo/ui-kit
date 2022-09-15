@@ -18,7 +18,7 @@ import {
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
+import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
 
 export type {
   DateFacetOptions,
