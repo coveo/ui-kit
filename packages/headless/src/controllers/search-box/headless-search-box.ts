@@ -9,6 +9,7 @@ import {
   SearchBoxState,
   Suggestion,
 } from '../core/search-box/headless-core-search-box';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 
 export type {
   SearchBoxOptions,
@@ -76,9 +77,16 @@ export function buildSearchBox(
   engine: SearchEngine,
   props: SearchBoxProps = {}
 ): SearchBox {
-  return buildCoreSearchBox(engine, {
+  const searchBox = buildCoreSearchBox(engine, {
     ...props,
     executeSearchActionCreator: executeSearch,
     fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
   });
+
+  return {
+    ...searchBox,
+    submit() {
+      searchBox.submit(logSearchboxSubmit());
+    },
+  };
 }

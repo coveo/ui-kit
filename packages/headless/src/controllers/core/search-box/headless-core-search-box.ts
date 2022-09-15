@@ -40,7 +40,10 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
-import {SearchAction} from '../../../features/analytics/analytics-utils';
+import {
+  InsightAction,
+  SearchAction,
+} from '../../../features/analytics/analytics-utils';
 import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
 import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
@@ -141,7 +144,7 @@ export interface SearchBox extends Controller {
   /**
    * Deselects all facets and triggers a search query.
    */
-  submit(): void;
+  submit(analytics?: SearchAction): void;
 
   /**
    * The state of the `SearchBox` controller.
@@ -231,8 +234,8 @@ export function buildCoreSearchBox(
       );
     },
 
-    submit() {
-      performSearch(logSearchboxSubmit());
+    submit(analytics: SearchAction | InsightAction = logSearchboxSubmit()) {
+      performSearch(analytics);
       dispatch(clearQuerySuggest({id}));
     },
 

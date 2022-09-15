@@ -36,6 +36,11 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../../../features/breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
+
+jest.mock('../../../features/query/query-analytics-actions', () => ({
+  logSearchboxSubmit: jest.fn(() => () => {}),
+}));
 
 describe('headless CoreSearchBox', () => {
   const id = 'search-box-123';
@@ -69,6 +74,10 @@ describe('headless CoreSearchBox', () => {
 
     initState();
     initController();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   function initState() {
@@ -305,6 +314,7 @@ describe('headless CoreSearchBox', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
+      expect(logSearchboxSubmit).toBeCalledTimes(1);
     });
 
     it('it dispatches a clear suggestions action', () => {
