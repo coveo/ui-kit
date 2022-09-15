@@ -1,9 +1,12 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
+import {
+  generateComponentHTML,
+  TestFixture,
+} from '../../../fixtures/test-fixture';
 import {
   SafeStorage,
   StorageItems,
 } from '../../../../src/utils/local-storage-utils';
-import {SearchBoxSelectors} from '../search-box-selectors';
+import {searchBoxComponent, SearchBoxSelectors} from '../search-box-selectors';
 import {addSearchBox} from '../search-box-actions';
 import * as CommonAssertions from '../../common-assertions';
 import * as SearchBoxAssertions from '../search-box-assertions';
@@ -12,6 +15,8 @@ import {InstantResultsSelectors} from './search-box-instant-results-selectors';
 import {AriaLabelGenerator} from '../../../../src/components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results';
 import {initializeBindings} from '../../../../src/utils/initialization-utils';
 import {buildMockResult} from '../../../utils/mock-result';
+import {buildTemplateWithoutSections} from '../../result-list/result-list-actions';
+import {resultTextComponent} from '../../result-list/result-components/result-text-selectors';
 
 const delay = (force = false) => ({delay: 200, force});
 const downKeys = (count: number) => Array(count).fill('{downarrow}').join('');
@@ -81,6 +86,9 @@ describe('Instant Results Test Suites', () => {
           addSearchBox({
             suggestions: {maxWithoutQuery: 8, maxWithQuery: 8},
             instantResults: {
+              template: buildTemplateWithoutSections(
+                generateComponentHTML(resultTextComponent, {field: 'title'})
+              ),
               ariaLabelGenerator: cy
                 .stub()
                 .as(ariaLabelGeneratorAlias)
@@ -94,7 +102,12 @@ describe('Instant Results Test Suites', () => {
         )
         .init();
       SearchBoxSelectors.inputBox().type(`${downKeys(2)}`, delay());
+      InstantResultsSelectors.results()
+        .find(resultTextComponent, {includeShadowDom: true})
+        .should(($els) => expect($els.text().trim().length).to.greaterThan(0));
     });
+
+    CommonAssertions.assertAccessibility(searchBoxComponent);
 
     it('uses the generated labels', () => {
       InstantResultsSelectors.results().should(([...results]) =>
