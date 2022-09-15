@@ -23,7 +23,7 @@ export const logTriggerQuery = makeAnalyticsAction(
   'analytics/trigger/query',
   AnalyticsType.Search,
   (client, state) => {
-    if (state.triggers?.query) {
+    if (state.triggers?.queryModification.newQuery) {
       return client.logTriggerQuery();
     }
     return;

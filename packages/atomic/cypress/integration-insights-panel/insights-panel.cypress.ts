@@ -164,6 +164,7 @@ describe('Insights panel test suites', () => {
         .shadow()
         .find('input')
         .type('test{enter}');
+      cy.wait(200);
     });
     it('display query summary', () => {
       InsightPanelsSelectors.querySummary()

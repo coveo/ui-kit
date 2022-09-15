@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.103.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.3...@coveo/headless@1.103.4) (2022-09-14)
+
+
+### Bug Fixes
+
+* **headless:** log search box submit + custom event on query trigger modification ([#2404](https://github.com/coveo/ui-kit/issues/2404)) ([35dd953](https://github.com/coveo/ui-kit/commit/35dd953735f0f9d5f7c9e7f2c801d4eeaee7d98b))
+
+
+
+
+
 ## [1.103.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.2...@coveo/headless@1.103.3) (2022-09-09)
 
 

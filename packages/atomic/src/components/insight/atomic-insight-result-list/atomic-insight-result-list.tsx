@@ -156,6 +156,12 @@ export class AtomicInsightResultList {
     if (this.resultListState.hasError) {
       return null;
     }
+    if (
+      this.resultListState.firstSearchExecuted &&
+      !this.resultListState.hasResults
+    ) {
+      return;
+    }
     return (
       <Host>
         {this.templateHasError && <slot></slot>}
