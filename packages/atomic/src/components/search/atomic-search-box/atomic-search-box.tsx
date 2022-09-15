@@ -156,7 +156,7 @@ export class AtomicSearchBox {
   @Prop({reflect: true}) public clearFilters = true;
 
   /**
-   * Event that is emitted when redirection is triggered. If the default behaviour is not prevented, the search box will directly change the URL.
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
    *
    * @example
    * ```html
