@@ -363,8 +363,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
       format: this.formatFacetValue,
       element: this.template.host,
     });
-
-    this.toggleVisibility = this.toggleFacetVisibility.bind(this);
   };
 
   /**
