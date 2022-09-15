@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.110.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.110.0...@coveo/atomic@1.110.1) (2022-09-15)
+
+
+### Bug Fixes
+
+* **atomic:** added smart snippet inline link analytics ([#2417](https://github.com/coveo/ui-kit/issues/2417)) ([bb8cf73](https://github.com/coveo/ui-kit/commit/bb8cf73a35f02663a6abecad0dbeb598bfba1426))
+* **atomic:** fixed combobox ARIA attributes ([#2433](https://github.com/coveo/ui-kit/issues/2433)) ([76c0ed7](https://github.com/coveo/ui-kit/commit/76c0ed73e9bcff7634f8e276b592b89f0b777cac))
+
+
+
+
+
 # [1.110.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.109.0...@coveo/atomic@1.110.0) (2022-09-15)
 
 
