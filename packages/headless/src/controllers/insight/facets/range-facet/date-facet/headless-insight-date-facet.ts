@@ -16,13 +16,9 @@ import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
 import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {
   logFacetClearAll,
-  logFacetDeselect,
-  logFacetSelect,
   logFacetUpdateSort,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {RangeFacetValue} from '../../../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {FacetSelectionChangeMetadata} from '../../../../../features/facets/facet-set/facet-set-analytics-actions-utils';
-import {isRangeFacetValueSelected} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
+import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
 
 export type {
   DateFacetOptions,
@@ -71,7 +67,10 @@ export function buildDateFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch(
-          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
+          getInsightAnalyticsActionForToggleRangeFacetSelect(
+            getFacetId(),
+            selection
+          )
         )
       );
     },
@@ -80,16 +79,4 @@ export function buildDateFacet(
       return coreController.state;
     },
   };
-}
-
-function getAnalyticsActionForToggleRangeFacetSelect(
-  facetId: string,
-  selection: RangeFacetValue
-) {
-  const facetValue = `${selection.start}..${selection.end}`;
-  const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
-
-  return isRangeFacetValueSelected(selection)
-    ? logFacetDeselect(payload)
-    : logFacetSelect(payload);
 }

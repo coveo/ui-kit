@@ -3,6 +3,10 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../facet-set/facet-set-analytics-actions';
+import {
+  logFacetDeselect as logInsightFacetDeselect,
+  logFacetSelect as logInsightFacetSelect,
+} from '../../facet-set/facet-set-analytics-actions';
 import {FacetSelectionChangeMetadata} from '../../facet-set/facet-set-analytics-actions-utils';
 
 export const isRangeFacetValueSelected = (selection: RangeFacetValue) => {
@@ -19,4 +23,16 @@ export const getAnalyticsActionForToggleRangeFacetSelect = (
   return isRangeFacetValueSelected(selection)
     ? logFacetDeselect(payload)
     : logFacetSelect(payload);
+};
+
+export const getInsightAnalyticsActionForToggleRangeFacetSelect = (
+  facetId: string,
+  selection: RangeFacetValue
+) => {
+  const facetValue = `${selection.start}..${selection.end}`;
+  const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
+
+  return isRangeFacetValueSelected(selection)
+    ? logInsightFacetDeselect(payload)
+    : logInsightFacetSelect(payload);
 };
