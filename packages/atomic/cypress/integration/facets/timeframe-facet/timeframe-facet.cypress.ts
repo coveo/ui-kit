@@ -176,31 +176,46 @@ describe('Timeframe Facet V1 Test Suites', () => {
     });
 
     describe('with custom #withInput', () => {
-      function setupTimeFrameWithInputRange() {
-        new TestFixture()
-          .with(
-            addTimeframeFacet(
-              {
-                label: timeframeFacetLabel,
-                field: timeframeFacetField,
-                'with-date-picker': '',
-              },
-              unitFrames
-            )
+      const addTimeFrameWithInputRange = () => (fixture: TestFixture) => {
+        fixture.with(
+          addTimeframeFacet(
+            {
+              label: timeframeFacetLabel,
+              field: timeframeFacetField,
+              'with-date-picker': '',
+            },
+            unitFrames
           )
-          .init();
-      }
+        );
+      };
 
       describe('verify rendering', () => {
         before(() => {
-          setupTimeFrameWithInputRange();
+          new TestFixture().with(addTimeFrameWithInputRange()).init();
         });
         TimeframeFacetAssertions.assertDisplayRangeInput(true);
       });
 
+      describe('with a date range in the hash', () => {
+        before(() => {
+          new TestFixture()
+            .with(addTimeFrameWithInputRange())
+            .withHash(
+              `df[date_input]=${startDate.replaceAll(
+                '-',
+                '/'
+              )}@00:00:00..${endDate.replaceAll('-', '/')}@00:00:00`
+            )
+            .init();
+        });
+
+        TimeframeFacetAssertions.assertMinInputValue(startDate);
+        TimeframeFacetAssertions.assertMaxInputValue(endDate);
+      });
+
       describe('when select a valid range', () => {
         function setupInputRange() {
-          setupTimeFrameWithInputRange();
+          new TestFixture().with(addTimeFrameWithInputRange()).init();
           inputStartDate(startDate);
           inputEndDate(endDate);
           clickApplyButton();
@@ -208,6 +223,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
 
         describe('verify rendering', () => {
           before(setupInputRange);
+          TimeframeFacetAssertions.assertRangeHash(startDate, endDate);
           TimeframeFacetAssertions.assertDisplayRangeInput(true);
           CommonFacetAssertions.assertDisplayValues(
             TimeframeFacetSelectors,

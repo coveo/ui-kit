@@ -71,6 +71,7 @@ import {
 } from '../question-answering/question-answering-analytics-actions';
 import {
   QuestionAnsweringDocumentIdActionCreatorPayload,
+  QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../question-answering/question-answering-document-id';
 import {SearchEngine} from '../../app/search-engine/search-engine';
@@ -102,6 +103,7 @@ export type {
   LogQuerySuggestionClickActionCreatorPayload,
   QuestionAnsweringDocumentIdActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
+  QuestionAnsweringInlineLinkActionCreatorPayload,
   LogStaticFilterToggleValueActionCreatorPayload,
   LogStaticFilterClearAllActionCreatorPayload,
   StaticFilterValueMetadata,
@@ -463,7 +465,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a smart snipped is collapsed.
+   * The event to log when a smart snippet is collapsed.
    *
    * @returns A dispatchable action.
    */
@@ -476,7 +478,7 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a smart snipped is expanded.
+   * The event to log when a smart snippet is expanded.
    *
    * @returns A dispatchable action.
    */
