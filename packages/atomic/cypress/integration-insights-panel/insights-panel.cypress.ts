@@ -166,6 +166,9 @@ describe('Insights panel test suites', () => {
   describe('when there is something written in the search box', () => {
     before(() => {
       setupPage();
+      InsightPanelsSelectors.results()
+        .its('length')
+        .should('be.greaterThan', 0);
       InsightPanelsSelectors.searchbox()
         .shadow()
         .find('input')
