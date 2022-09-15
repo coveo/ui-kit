@@ -143,6 +143,8 @@ export interface SearchBox extends Controller {
 
   /**
    * Deselects all facets and triggers a search query.
+   *
+   * @param analytics -  The analytics action to log after submitting a query.
    */
   submit(analytics?: SearchAction): void;
 
