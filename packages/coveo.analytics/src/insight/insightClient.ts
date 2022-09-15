@@ -2,22 +2,22 @@ import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/an
 import {NoopAnalytics} from '../client/noopAnalytics';
 import doNotTrack from '../donottrack';
 import {CustomEventRequest, SearchEventRequest} from '../events';
+import {CustomEventsTypes, FacetStateMetadata, SearchPageEvents} from '../searchPage/searchPageEvents';
 import {
-    CustomEventsTypes,
-    FacetBaseMeta,
-    FacetMetadata,
-    FacetSortMeta,
-    FacetStateMetadata,
-    PagerMetadata,
-    InterfaceChangeMetadata,
-    QueryErrorMeta,
-    SearchPageEvents,
-    ResultsSortMetadata,
-    FacetRangeMetadata,
-    CategoryFacetMetadata,
-    StaticFilterToggleValueMetadata,
-} from '../searchPage/searchPageEvents';
-import {ContextChangedMetadata, ExpandToFullUIMetadata, InsightEvents} from './insightEvents';
+    ExpandToFullUIMetadata,
+    InsightEvents,
+    InsightFacetMetadata,
+    InsightInterfaceChangeMetadata,
+    InsightStaticFilterToggleValueMetadata,
+    InsightFacetRangeMetadata,
+    InsightCategoryFacetMetadata,
+    CaseMetadata,
+    InsightFacetSortMeta,
+    InsightFacetBaseMeta,
+    InsightQueryErrorMeta,
+    InsightPagerMetadata,
+    InsightResultsSortMetadata,
+} from './insightEvents';
 
 export interface InsightClientProvider {
     getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
@@ -37,14 +37,31 @@ export interface InsightClientOptions extends ClientOptions {
     enableAnalytics: boolean;
 }
 
-const extractContextFromMetadata = (meta: {caseContext: Record<string, string>}) => {
+const extractContextFromMetadata = (meta: {caseContext?: Record<string, string>}) => {
     const context: Record<string, string> = {};
-    Object.keys(meta.caseContext).forEach((contextKey) => {
-        const keyToBeSent = `context_${contextKey}`;
-        context[keyToBeSent] = meta.caseContext[contextKey];
-    });
-
+    if (meta.caseContext) {
+        Object.keys(meta.caseContext).forEach((contextKey) => {
+            const value = meta.caseContext?.[contextKey];
+            if (value) {
+                const keyToBeSent = `context_${contextKey}`;
+                context[keyToBeSent] = value;
+            }
+        });
+    }
     return context;
+};
+
+const generateMetadataToSend = (metadata: CaseMetadata, includeContext = true) => {
+    const {caseContext, caseId, caseNumber, ...metadataWithoutContext} = metadata;
+    const context = extractContextFromMetadata(metadata);
+
+    return {
+        CaseId: caseId,
+        CaseNumber: caseNumber,
+        ...metadataWithoutContext,
+        ...(!!context.context_Case_Subject && {CaseSubject: context.context_Case_Subject}),
+        ...(includeContext && context),
+    };
 };
 
 export class CoveoInsightClient {
@@ -66,56 +83,134 @@ export class CoveoInsightClient {
         this.coveoAnalyticsClient = new CoveoAnalyticsClient(this.opts);
     }
 
-    public logInterfaceLoad() {
+    public logInterfaceLoad(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logSearchEvent(SearchPageEvents.interfaceLoad, metadataToSend);
+        }
         return this.logSearchEvent(SearchPageEvents.interfaceLoad);
     }
 
-    public logInterfaceChange(metadata: InterfaceChangeMetadata) {
-        return this.logSearchEvent(SearchPageEvents.interfaceChange, metadata);
+    public logInterfaceChange(metadata: InsightInterfaceChangeMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.interfaceChange, metadataToSend);
     }
 
-    public logStaticFilterDeselect(meta: StaticFilterToggleValueMetadata) {
-        return this.logSearchEvent(SearchPageEvents.staticFilterDeselect, meta);
+    public logStaticFilterDeselect(metadata: InsightStaticFilterToggleValueMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.staticFilterDeselect, metadataToSend);
     }
 
-    public logFetchMoreResults() {
+    public logFetchMoreResults(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logCustomEvent(SearchPageEvents.pagerScrolling, {...metadataToSend, type: 'getMoreResults'});
+        }
         return this.logCustomEvent(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
     }
 
-    public logBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
+    public logBreadcrumbFacet(
+        metadata: InsightFacetMetadata | InsightFacetRangeMetadata | InsightCategoryFacetMetadata
+    ) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadataToSend);
     }
 
-    public logBreadcrumbResetAll() {
+    public logBreadcrumbResetAll(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logSearchEvent(SearchPageEvents.breadcrumbResetAll, metadataToSend);
+        }
         return this.logSearchEvent(SearchPageEvents.breadcrumbResetAll);
     }
 
-    public logFacetSelect(meta: FacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.facetSelect, meta);
+    public logFacetSelect(metadata: InsightFacetMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.facetSelect, metadataToSend);
     }
 
-    public logFacetDeselect(meta: FacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.facetDeselect, meta);
+    public logFacetDeselect(metadata: InsightFacetMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.facetDeselect, metadataToSend);
     }
 
-    public logFacetUpdateSort(meta: FacetSortMeta) {
-        return this.logSearchEvent(SearchPageEvents.facetUpdateSort, meta);
+    public logFacetUpdateSort(metadata: InsightFacetSortMeta) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.facetUpdateSort, metadataToSend);
     }
 
-    public logFacetClearAll(meta: FacetBaseMeta) {
-        return this.logSearchEvent(SearchPageEvents.facetClearAll, meta);
+    public logFacetClearAll(metadata: InsightFacetBaseMeta) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.facetClearAll, metadataToSend);
     }
 
-    public logFacetShowMore(meta: FacetBaseMeta) {
-        return this.logCustomEvent(SearchPageEvents.facetShowMore, meta);
+    public logFacetShowMore(metadata: InsightFacetBaseMeta) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(SearchPageEvents.facetShowMore, metadataToSend);
     }
 
-    public logFacetShowLess(meta: FacetBaseMeta) {
-        return this.logCustomEvent(SearchPageEvents.facetShowLess, meta);
+    public logFacetShowLess(metadata: InsightFacetBaseMeta) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(SearchPageEvents.facetShowLess, metadataToSend);
     }
 
-    public logQueryError(meta: QueryErrorMeta) {
-        return this.logCustomEvent(SearchPageEvents.queryError, meta);
+    public logQueryError(metadata: InsightQueryErrorMeta) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(SearchPageEvents.queryError, metadataToSend);
+    }
+
+    public logPagerNumber(metadata: InsightPagerMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(SearchPageEvents.pagerNumber, metadataToSend);
+    }
+
+    public logPagerNext(metadata: InsightPagerMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(SearchPageEvents.pagerNext, metadataToSend);
+    }
+
+    public logPagerPrevious(metadata: InsightPagerMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata, false);
+        return this.logCustomEvent(SearchPageEvents.pagerPrevious, metadataToSend);
+    }
+
+    public logDidYouMeanAutomatic(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logSearchEvent(SearchPageEvents.didyoumeanAutomatic, metadataToSend);
+        }
+        return this.logSearchEvent(SearchPageEvents.didyoumeanAutomatic);
+    }
+
+    public logDidYouMeanClick(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logSearchEvent(SearchPageEvents.didyoumeanClick, metadataToSend);
+        }
+        return this.logSearchEvent(SearchPageEvents.didyoumeanClick);
+    }
+
+    public logResultsSort(metadata: InsightResultsSortMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(SearchPageEvents.resultsSort, metadataToSend);
+    }
+
+    public logSearchboxSubmit(metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logSearchEvent(SearchPageEvents.searchboxSubmit, metadataToSend);
+        }
+        return this.logSearchEvent(SearchPageEvents.searchboxSubmit);
+    }
+
+    public logContextChanged(metadata: CaseMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logSearchEvent(InsightEvents.contextChanged, metadataToSend);
+    }
+
+    public logExpandToFullUI(metadata: ExpandToFullUIMetadata) {
+        const metadataToSend = generateMetadataToSend(metadata);
+        return this.logCustomEvent(InsightEvents.expandToFullUI, metadataToSend);
     }
 
     public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
@@ -132,61 +227,6 @@ export class CoveoInsightClient {
 
     public async logSearchEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         return this.coveoAnalyticsClient.sendSearchEvent(await this.getBaseSearchEventRequest(event, metadata));
-    }
-
-    public logPagerNumber(meta: PagerMetadata) {
-        return this.logCustomEvent(SearchPageEvents.pagerNumber, meta);
-    }
-
-    public logPagerNext(meta: PagerMetadata) {
-        return this.logCustomEvent(SearchPageEvents.pagerNext, meta);
-    }
-
-    public logPagerPrevious(meta: PagerMetadata) {
-        return this.logCustomEvent(SearchPageEvents.pagerPrevious, meta);
-    }
-
-    public logDidYouMeanAutomatic() {
-        return this.logSearchEvent(SearchPageEvents.didyoumeanAutomatic);
-    }
-
-    public logDidYouMeanClick() {
-        return this.logSearchEvent(SearchPageEvents.didyoumeanClick);
-    }
-
-    public logResultsSort(metadata: ResultsSortMetadata) {
-        return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
-    }
-
-    public logSearchboxSubmit() {
-        return this.logSearchEvent(SearchPageEvents.searchboxSubmit);
-    }
-
-    public logContextChanged(meta: ContextChangedMetadata) {
-        const context = extractContextFromMetadata(meta);
-
-        const {caseId, caseNumber} = meta;
-        const metaToBeSent = {
-            CaseId: caseId,
-            CaseNumber: caseNumber,
-            ...(!!context.context_Case_Subject && {CaseSubject: context.context_Case_Subject}),
-            ...context,
-        };
-        return this.logSearchEvent(InsightEvents.contextChanged, metaToBeSent);
-    }
-
-    public logExpandToFullUI(meta: ExpandToFullUIMetadata) {
-        const context = extractContextFromMetadata(meta);
-
-        const {caseId, caseNumber, triggeredBy, fullSearchComponentName} = meta;
-        const metaToBeSent = {
-            CaseId: caseId,
-            CaseNumber: caseNumber,
-            triggeredBy,
-            fullSearchComponentName,
-            ...(!!context.context_Case_Subject && {CaseSubject: context.context_Case_Subject}),
-        };
-        return this.logCustomEvent(InsightEvents.expandToFullUI, metaToBeSent);
     }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
