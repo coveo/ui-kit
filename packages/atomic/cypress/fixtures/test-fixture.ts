@@ -204,6 +204,7 @@ export class TestFixture {
               modifier.predicate(combinedResponse) || combinedResponse;
             modifier.times--;
           });
+          return combinedResponse;
         });
       }
 
