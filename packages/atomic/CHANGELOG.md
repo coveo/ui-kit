@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.111.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.110.1...@coveo/atomic@1.111.0) (2022-09-16)
+
+
+### Features
+
+* **atomic:** add error message when result-value-text is used with multi value field ([#2430](https://github.com/coveo/ui-kit/issues/2430)) ([4b9ea3e](https://github.com/coveo/ui-kit/commit/4b9ea3e26455767e836026b9bb87f73543fe561d))
+* **stencil:** make SPA with a single interface, switching search box type ([#2431](https://github.com/coveo/ui-kit/issues/2431)) ([cf5d01c](https://github.com/coveo/ui-kit/commit/cf5d01c7add8ed68858af0494251885ae971eb1a))
+
+
+
+
+
 ## [1.110.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.110.0...@coveo/atomic@1.110.1) (2022-09-15)
 
 

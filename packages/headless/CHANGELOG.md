@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.103.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.5...@coveo/headless@1.103.6) (2022-09-16)
+
+
+### Bug Fixes
+
+* **headless:** insightFacet and insightDateFacet controllers set to use the correct analytics actions ([#2434](https://github.com/coveo/ui-kit/issues/2434)) ([6234ace](https://github.com/coveo/ui-kit/commit/6234acee8fba53fff75868459fce17004640e54c))
+
+
+
+
+
 ## [1.103.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.4...@coveo/headless@1.103.5) (2022-09-15)
 
 
