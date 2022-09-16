@@ -101,7 +101,7 @@ export class AtomicSearchBox {
   private leftPanelRef: HTMLElement | undefined;
   private rightPanelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
-  private pendingSuggestionEvents: SearchBoxSuggestionsEvent[] = [];
+  private suggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
   @Element() private host!: HTMLElement;
 
@@ -209,12 +209,9 @@ export class AtomicSearchBox {
           options: searchBoxOptions,
         });
 
-    this.suggestions.push(
-      ...this.pendingSuggestionEvents.map((event) =>
-        event(this.suggestionBindings)
-      )
+    this.suggestions = this.suggestionEvents.map((event) =>
+      event(this.suggestionBindings)
     );
-    this.pendingSuggestionEvents = [];
   }
 
   public componentWillUpdate() {
@@ -245,11 +242,10 @@ export class AtomicSearchBox {
   public registerSuggestions(event: CustomEvent<SearchBoxSuggestionsEvent>) {
     event.preventDefault();
     event.stopPropagation();
+    this.suggestionEvents.push(event.detail);
     if (this.searchBox) {
       this.suggestions.push(event.detail(this.suggestionBindings));
-      return;
     }
-    this.pendingSuggestionEvents.push(event.detail);
   }
 
   @Watch('redirectionUrl')
