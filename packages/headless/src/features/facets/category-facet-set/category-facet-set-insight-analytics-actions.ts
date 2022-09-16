@@ -46,9 +46,13 @@ export const logCategoryFacetBreadcrumb = (
     AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
+      const metadata = {
+        ...getCategoryFacetMetadata(state, payload),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
-      return client.logBreadcrumbFacet(
-        getCategoryFacetMetadata(state, payload)
-      );
+      return client.logBreadcrumbFacet(metadata);
     }
   )();

@@ -23,10 +23,15 @@ export const logFacetShowMore = (facetId: string) =>
     AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
+      const metadata = {
+        ...buildFacetBaseMetadata(
+          facetId,
+          getStateNeededForFacetMetadata(state)
+        ),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
       return client.logFacetShowMore(metadata);
     }
   )();
@@ -37,10 +42,15 @@ export const logFacetShowLess = (facetId: string) =>
     AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
+      const metadata = {
+        ...buildFacetBaseMetadata(
+          facetId,
+          getStateNeededForFacetMetadata(state)
+        ),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
       return client.logFacetShowLess(metadata);
     }
@@ -76,7 +86,13 @@ export const logFacetUpdateSort = (
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
 
       const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const metadata = {...base, criteria: sortCriterion};
+      const metadata = {
+        ...base,
+        criteria: sortCriterion,
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
       return client.logFacetUpdateSort(metadata);
     }
@@ -90,7 +106,12 @@ export const logFacetClearAll = (facetId: string) =>
       validatePayload(facetId, facetIdDefinition);
 
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
+      const metadata = {
+        ...buildFacetBaseMetadata(facetId, stateForAnalytics),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
       return client.logFacetClearAll(metadata);
     }
@@ -117,12 +138,13 @@ export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
-
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        stateForAnalytics
-      );
+      const metadata = {
+        ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
       return client.logFacetSelect(metadata);
     }
@@ -152,10 +174,12 @@ export const logFacetDeselect = (
         facetValue: requiredNonEmptyString,
       });
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        stateForAnalytics
-      );
+      const metadata = {
+        ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
       return client.logFacetDeselect(metadata);
     }
@@ -172,10 +196,15 @@ export const logFacetBreadcrumb = (
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        getStateNeededForFacetMetadata(state)
-      );
+      const metadata = {
+        ...buildFacetSelectionChangeMetadata(
+          payload,
+          getStateNeededForFacetMetadata(state)
+        ),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
       return client.logBreadcrumbFacet(metadata);
     }

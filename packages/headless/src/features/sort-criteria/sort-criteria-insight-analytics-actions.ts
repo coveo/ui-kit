@@ -10,5 +10,8 @@ export const logResultsSort = makeInsightAnalyticsAction(
   (client, state) =>
     client.logResultsSort({
       resultsSortBy: state.sortCriteria || getSortCriteriaInitialState(),
+      caseContext: state.insightCaseContext?.caseContext || {},
+      caseId: state.insightCaseContext?.caseId,
+      caseNumber: state.insightCaseContext?.caseNumber,
     })
 );

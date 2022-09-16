@@ -6,11 +6,21 @@ import {
 export const logDidYouMeanClick = makeInsightAnalyticsAction(
   'analytics/didyoumean/click',
   AnalyticsType.Search,
-  (client) => client.logDidYouMeanClick()
+  (client, state) =>
+    client.logDidYouMeanClick({
+      caseContext: state.insightCaseContext?.caseContext || {},
+      caseId: state.insightCaseContext?.caseId,
+      caseNumber: state.insightCaseContext?.caseNumber,
+    })
 );
 
 export const logDidYouMeanAutomatic = makeInsightAnalyticsAction(
   'analytics/didyoumean/automatic',
   AnalyticsType.Search,
-  (client) => client.logDidYouMeanAutomatic()
+  (client, state) =>
+    client.logDidYouMeanAutomatic({
+      caseContext: state.insightCaseContext?.caseContext || {},
+      caseId: state.insightCaseContext?.caseId,
+      caseNumber: state.insightCaseContext?.caseNumber,
+    })
 );

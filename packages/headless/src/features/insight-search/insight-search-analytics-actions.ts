@@ -8,7 +8,12 @@ import {getQueryInitialState} from '../query/query-state';
 export const logFetchMoreResults = makeInsightAnalyticsAction(
   'search/logFetchMoreResults',
   AnalyticsType.Search,
-  (client) => client.logFetchMoreResults()
+  (client, state) =>
+    client.logFetchMoreResults({
+      caseContext: state.insightCaseContext?.caseContext || {},
+      caseId: state.insightCaseContext?.caseId,
+      caseNumber: state.insightCaseContext?.caseNumber,
+    })
 );
 
 export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
@@ -17,6 +22,9 @@ export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
     AnalyticsType.Search,
     (client, state) =>
       client.logQueryError({
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
         query: state.query?.q || getQueryInitialState().q,
         aq: '',
         cq: '',

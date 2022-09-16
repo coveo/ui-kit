@@ -18,7 +18,12 @@ export const logNumericFacetBreadcrumb = (
         payload,
         rangeFacetSelectionPayloadDefinition(payload.selection)
       );
-      const metadata = getRangeFacetMetadata(state, payload);
+      const metadata = {
+        ...getRangeFacetMetadata(state, payload),
+        caseContext: state.insightCaseContext?.caseContext || {},
+        caseId: state.insightCaseContext?.caseId,
+        caseNumber: state.insightCaseContext?.caseNumber,
+      };
 
       return client.logBreadcrumbFacet(metadata);
     }
