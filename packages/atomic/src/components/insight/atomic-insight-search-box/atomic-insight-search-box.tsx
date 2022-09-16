@@ -7,12 +7,12 @@ import {
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {SearchInput} from '../../common/search-box/search-input';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
-import {SubmitButton} from '../../common/search-box/submit-button';
 import {
   buildInsightSearchBox,
   InsightSearchBox,
   InsightSearchBoxState,
 } from '..';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
 /**
  * @internal
@@ -77,6 +77,11 @@ export class AtomicInsightSearchBox {
   public render() {
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
+        <atomic-icon
+          part="submit-icon"
+          icon={SearchIcon}
+          class="w-4 h-4"
+        ></atomic-icon>
         <SearchInput
           inputRef={this.inputRef}
           loading={this.searchBoxState.isLoading}
@@ -84,16 +89,12 @@ export class AtomicInsightSearchBox {
           bindings={this.bindings}
           value={this.searchBoxState.value}
           ariaLabel={this.bindings.i18n.t('search-box')}
+          placeholder={this.bindings.i18n.t('search-ellipsis')}
           onKeyDown={(e) => this.onKeyDown(e)}
           onClear={() => this.searchBox.clear()}
           onInput={(e) => {
             this.searchBox.updateText((e.target as HTMLInputElement).value);
           }}
-        />
-        <SubmitButton
-          bindings={this.bindings}
-          disabled={this.disableSearch}
-          onClick={() => this.searchBox.submit()}
         />
       </SearchBoxWrapper>
     );
