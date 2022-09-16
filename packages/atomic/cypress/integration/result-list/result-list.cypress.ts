@@ -15,6 +15,7 @@ import {
   foldedResultListComponent,
   FoldedResultListSelectors,
 } from './folded-result-list-selectors';
+import {getSearchInterface} from '../search-interface-utils';
 
 const foldedResultListConfig = {
   componentSelectors: FoldedResultListSelectors,
@@ -57,6 +58,19 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
         new TestFixture().with(addResultFn()).init();
         componentSelectors.result().should('have.length', 10);
       });
+    });
+
+    describe('when injecting a result list after an initial search is executed', () => {
+      beforeEach(() => {
+        new TestFixture().init();
+        getSearchInterface((searchInterface) => {
+          const resultListEl = document.createElement('atomic-result-list');
+          searchInterface.appendChild(resultListEl);
+          cy.wait(200);
+        });
+      });
+
+      CommonAssertions.assertConsoleError(false);
     });
 
     describe('when multiple searches are executed', () => {
