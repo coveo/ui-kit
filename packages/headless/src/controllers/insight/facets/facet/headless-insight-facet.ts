@@ -34,7 +34,6 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-utils';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 import {
   logFacetClearAll,
@@ -42,6 +41,7 @@ import {
   logFacetShowMore,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils';
 
 export type {
   FacetOptions,
@@ -124,7 +124,7 @@ export function buildFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch(
-          getAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
+          getInsightAnalyticsActionForToggleFacetSelect(getFacetId(), selection)
         )
       );
     },
