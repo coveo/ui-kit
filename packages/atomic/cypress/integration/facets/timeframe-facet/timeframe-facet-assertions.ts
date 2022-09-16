@@ -30,13 +30,40 @@ export function assertDisplayInputWarning(length: number, message?: string) {
   });
 }
 
-export function assertMinInputValue(value: number) {
+export function assertRangeHash(
+  startDate: `${number}-${number}-${number}`,
+  endDate: `${number}-${number}-${number}`
+) {
+  const expectedRange = `${startDate.replaceAll(
+    '-',
+    '/'
+  )}@00:00:00..${endDate.replaceAll('-', '/')}@00:00:00` as const;
+
+  function getHash(win: Window) {
+    return win.location.hash
+      .slice(1)
+      .split('&')
+      .map((value) => value.split('='))
+      .reduce(
+        (obj, [key, value]) => ({...obj, [key]: value}),
+        <Record<string, string>>{}
+      );
+  }
+
+  it(`should set the date range in the hash to ${expectedRange}`, () => {
+    cy.window().should((win) =>
+      expect(getHash(win)).to.have.property('df[date_input]', expectedRange)
+    );
+  });
+}
+
+export function assertMinInputValue(value: string) {
   it(`should display Min value of "${value}"`, () => {
     TimeframeFacetSelectors.startDate().should('have.value', value);
   });
 }
 
-export function assertMaxInputValue(value: number) {
+export function assertMaxInputValue(value: string) {
   it(`should display Max value of "${value}"`, () => {
     TimeframeFacetSelectors.endDate().should('have.value', value);
   });

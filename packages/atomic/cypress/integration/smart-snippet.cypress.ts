@@ -12,6 +12,7 @@ import {
   addSmartSnippet,
   addSmartSnippetDefaultOptions,
 } from './smart-snippet-actions';
+import {InlineLink} from '@coveo/headless';
 
 const {
   remSize,
@@ -280,7 +281,7 @@ describe('Smart Snippet Test Suites', () => {
       SmartSnippetSelectors.sourceTitle().rightclick();
     });
 
-    SmartSnippetAssertions.assertlogOpenSmartSnippetSource(true);
+    SmartSnippetAssertions.assertLogOpenSmartSnippetSource(true);
 
     describe('then liking the snippet then clicking the title again', () => {
       beforeEach(() => {
@@ -289,7 +290,7 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetSelectors.sourceTitle().rightclick();
       });
 
-      SmartSnippetAssertions.assertlogOpenSmartSnippetSource(false);
+      SmartSnippetAssertions.assertLogOpenSmartSnippetSource(false);
     });
 
     describe('then getting a new snippet and clicking on the title again', () => {
@@ -299,7 +300,71 @@ describe('Smart Snippet Test Suites', () => {
         SmartSnippetSelectors.sourceTitle().rightclick();
       });
 
-      SmartSnippetAssertions.assertlogOpenSmartSnippetSource(true);
+      SmartSnippetAssertions.assertLogOpenSmartSnippetSource(true);
+    });
+  });
+
+  describe('after clicking on an inline link', () => {
+    let lastClickedLink: InlineLink;
+    function click(selector: Cypress.Chainable<JQuery<HTMLAnchorElement>>) {
+      selector.rightclick().then(([el]) => {
+        lastClickedLink = {linkText: el.innerText, linkURL: el.href};
+      });
+    }
+
+    let currentQuestion: string | undefined = undefined;
+    beforeEach(() => {
+      currentQuestion = undefined;
+      new TestFixture()
+        .with(
+          addSmartSnippet({
+            get question() {
+              return currentQuestion;
+            },
+          })
+        )
+        .with(addSearchBox())
+        .init();
+      click(SmartSnippetSelectors.answer().find('a').eq(0));
+    });
+
+    SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
+      () => lastClickedLink
+    );
+
+    describe('then liking the snippet then clicking on the same inline link again', () => {
+      beforeEach(() => {
+        SmartSnippetSelectors.feedbackLikeButton().click();
+        AnalyticsTracker.reset();
+        click(SmartSnippetSelectors.answer().find('a').eq(0));
+      });
+
+      SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(null);
+    });
+
+    describe('then getting a new snippet and clicking on the same inline link again', () => {
+      beforeEach(() => {
+        currentQuestion = 'Hello, World!';
+        SearchBoxSelectors.submitButton().click();
+        AnalyticsTracker.reset();
+        SmartSnippetSelectors.question().should('have.text', currentQuestion);
+        click(SmartSnippetSelectors.answer().find('a').eq(0));
+      });
+
+      SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
+        () => lastClickedLink
+      );
+    });
+
+    describe('then clicking a different inline link', () => {
+      beforeEach(() => {
+        AnalyticsTracker.reset();
+        click(SmartSnippetSelectors.answer().find('a').eq(1));
+      });
+
+      SmartSnippetAssertions.assertLogOpenSmartSnippetInlineLink(
+        () => lastClickedLink
+      );
     });
   });
 

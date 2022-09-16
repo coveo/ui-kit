@@ -1,10 +1,10 @@
 import {getFocusableDescendants} from '../../src/utils/accessibility-utils';
 import {TestFixture} from '../fixtures/test-fixture';
-import {AriaLiveSelectors} from './aria-live-selectors';
 import {ComponentErrorSelectors} from './component-error-selectors';
 
 export interface ComponentSelector {
   // Setting JQuery<HTMLElement> is incompatible with Stencil's HTML elements
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   shadow: () => Cypress.Chainable<JQuery<any>>;
 }
 
@@ -13,7 +13,7 @@ export function should(should: boolean) {
 }
 
 export function assertAccessibility(
-  component: string | (() => Cypress.Chainable<JQuery<HTMLElement>>)
+  component?: string | (() => Cypress.Chainable<JQuery<HTMLElement>>)
 ) {
   const rulesToIgnore = ['landmark-one-main', 'page-has-heading-one', 'region'];
   const rules = rulesToIgnore.reduce(
@@ -24,16 +24,21 @@ export function assertAccessibility(
   it('should pass accessibility tests', () => {
     if (typeof component === 'string') {
       cy.checkA11y(component, {rules});
-    } else {
+    } else if (typeof component === 'function') {
       component().should(([el]) => {
         cy.checkA11y(el, {rules});
       });
+    } else {
+      cy.checkA11y({}, {rules});
     }
   });
 
   it('every interactive element with innerText and an aria label passes WCAG success criterion 2.5.3', () => {
     function splitIntoWords(text: string) {
-      return text.split(/\b/g).filter((word) => !word.match(/[^a-z]/i));
+      return text
+        .split(/\b/g)
+        .filter((word) => !word.match(/[^a-z]/i))
+        .map((word) => word.toLowerCase());
     }
 
     cy.window()
@@ -78,6 +83,20 @@ export function assertConsoleError(error = true) {
 export function assertConsoleErrorMessage(msg: string) {
   it('should log an error containing the appropriate message to the console', () => {
     cy.get(TestFixture.consoleAliases.error).should('be.calledWithMatch', msg);
+  });
+}
+
+export function assertConsoleWarning(warn = true) {
+  it(`${should(warn)} log a warning to the console`, () => {
+    cy.get(TestFixture.consoleAliases.warn).should(
+      warn ? 'be.called' : 'not.be.called'
+    );
+  });
+}
+
+export function assertConsoleWarningMessage(msg: string) {
+  it('should log a warning containing the appropriate message to the console', () => {
+    cy.get(TestFixture.consoleAliases.warn).should('be.calledWithMatch', msg);
   });
 }
 

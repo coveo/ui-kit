@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.24.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.24.2...@coveo/atomic-react@1.24.3) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.24.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.24.1...@coveo/atomic-react@1.24.2) (2022-09-15)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+## [1.24.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.24.0...@coveo/atomic-react@1.24.1) (2022-09-15)
+
+**Note:** Version bump only for package @coveo/atomic-react
+
+
+
+
+
+# [1.24.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.23.13...@coveo/atomic-react@1.24.0) (2022-09-14)
+
+
+### Features
+
+* **atomic-react:** add iife output for atomic react + publish to CDN ([#2426](https://github.com/coveo/ui-kit/issues/2426)) ([f229564](https://github.com/coveo/ui-kit/commit/f2295641b9eb70851fb4b28ab9565ffa07339441))
+
+
+
+
+
+## [1.23.13](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.23.12...@coveo/atomic-react@1.23.13) (2022-09-13)
+
+
+### Bug Fixes
+
+* **atomic-react:** only have react 18 as peer dependency ([#2424](https://github.com/coveo/ui-kit/issues/2424)) ([22eba83](https://github.com/coveo/ui-kit/commit/22eba83cbf8530ade09b063cec7c33536c873802))
+
+
+
+
+
 ## [1.23.12](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.23.11...@coveo/atomic-react@1.23.12) (2022-09-12)
 
 
