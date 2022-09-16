@@ -43,7 +43,7 @@ export interface SearchBoxSuggestionElement {
 }
 
 /**
- * List of suggestions that will be displayed along other lists when the search box's input is selected.
+ * List of suggestions that will be displayed along other lists (e.g recent queries) when the search box's input is selected.
  */
 export interface SearchBoxSuggestions {
   /**
@@ -59,7 +59,7 @@ export interface SearchBoxSuggestions {
    */
   renderItems(): SearchBoxSuggestionElement[];
   /**
-   * Hook called when when the user changes the search box's input value.
+   * Hook called when the user changes the search box's input value.
    */
   onInput?(): Promise<unknown> | void;
   /**
