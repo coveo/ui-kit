@@ -1,7 +1,6 @@
 import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-utils';
 import {DateFacetOptions} from '../../../../core/facets/range-facet/date-facet/headless-date-facet-options';
 import {
   buildCoreDateFacet,
@@ -19,6 +18,7 @@ import {
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
 
 export type {
   DateFacetOptions,
@@ -67,7 +67,10 @@ export function buildDateFacet(
       coreController.toggleSelect(selection);
       dispatch(
         executeSearch(
-          getAnalyticsActionForToggleRangeFacetSelect(getFacetId(), selection)
+          getInsightAnalyticsActionForToggleRangeFacetSelect(
+            getFacetId(),
+            selection
+          )
         )
       );
     },
