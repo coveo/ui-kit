@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.112.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.111.0...@coveo/atomic@1.112.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* **atomic:** render result list content when it's ready ([#2438](https://github.com/coveo/ui-kit/issues/2438)) ([0f62dcd](https://github.com/coveo/ui-kit/commit/0f62dcd4ea66b35033fc1199b59f216cbe718b02))
+
+
+### Features
+
+* **atomic:** added support for multiple notifications ([#2437](https://github.com/coveo/ui-kit/issues/2437)) ([a40dce2](https://github.com/coveo/ui-kit/commit/a40dce2cfa68e101e0e03d901673f192468c1993))
+
+
+
+
+
 # [1.111.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.110.1...@coveo/atomic@1.111.0) (2022-09-16)
 
 
