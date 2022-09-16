@@ -85,6 +85,25 @@ describe('Result Text Component', () => {
     CommonAssertions.assertConsoleError(false);
   });
 
+  describe('when the field value is multi value', () => {
+    const field = 'hello';
+    beforeEach(() => {
+      new TestFixture()
+        .with(addResultTextInResultList({field}))
+        .withCustomResponse((response) =>
+          response.results.forEach(
+            (result) => (result.raw[field] = ['a', 'b', 'c'])
+          )
+        )
+        .init();
+    });
+
+    CommonAssertions.assertRemovesComponent(ResultTextSelectors.firstInResult);
+    CommonAssertions.assertConsoleErrorMessage(
+      'atomic-result-text cannot be used with multi value field'
+    );
+  });
+
   describe('when the field value exists & is a string', () => {
     const field = 'hello_world';
     const rawValue = 'Hello World!';
