@@ -9,10 +9,27 @@ interface Props extends JSXBase.InputHTMLAttributes<HTMLInputElement> {
   bindings: AnyBindings;
   value: string;
   ariaLabel: string;
-  ariaOwns?: string;
-  isExpanded?: string;
-  activeDescendant?: string;
   onClear(): void;
+  popup?: {
+    id: string;
+    activeDescendant: string;
+    expanded: boolean;
+    hasSuggestions: boolean;
+  };
+}
+
+function getPopupAttributes(props: Required<Props>['popup']) {
+  return {
+    role: 'combobox',
+    autocomplete: 'off',
+    autocapitalize: 'off',
+    autocorrect: 'off',
+    'aria-activedescendant': props.activeDescendant,
+    'aria-expanded': `${props.hasSuggestions && props.expanded}`,
+    'aria-autocomplete': 'both',
+    'aria-haspopup': 'true',
+    'aria-controls': props.id,
+  };
 }
 
 export const SearchInput: FunctionalComponent<Props> = ({
@@ -23,23 +40,20 @@ export const SearchInput: FunctionalComponent<Props> = ({
   value,
   ariaLabel,
   onClear,
+  popup,
   ...defaultInputProps
 }) => (
   <div class="grow flex items-center">
     <input
       part="input"
       aria-label={ariaLabel}
-      aria-autocomplete="both"
-      aria-haspopup="true"
-      autocomplete="off"
-      autocapitalize="off"
-      autocorrect="off"
       placeholder={bindings.i18n.t('search')}
       type="text"
       class="h-full outline-none bg-transparent w-0 grow px-4 py-3.5 text-neutral-dark placeholder-neutral-dark text-lg"
       onKeyDown={(e) => {
         onKeyDown?.(e);
       }}
+      {...(popup && getPopupAttributes(popup))}
       {...defaultInputProps}
       value={value}
     />

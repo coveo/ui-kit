@@ -15,6 +15,10 @@ import {
 import {Result} from '../../api/search/search/result';
 import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
 import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
+import {
+  buildSmartSnippetInteractiveInlineLinks,
+  InlineLink,
+} from '../smart-snippet/headless-smart-snippet-interactive-inline-links';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
@@ -98,6 +102,37 @@ export interface SmartSnippetQuestionsList extends Controller {
    * @param identifier - The `questionAnswerId` of the smart snippet to collapse.
    */
   cancelPendingSelectSource(identifier: string): void;
+  /**
+   * Selects a link inside an answer, logging a UA event to the Coveo Platform if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
+   * @param link - The link to select.
+   */
+  selectInlineLink(identifier: string, link: InlineLink): void;
+  /**
+   * Prepares to select a link inside an answer after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
+   * @param link - The link to select.
+   */
+  beginDelayedSelectInlineLink(identifier: string, link: InlineLink): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelectInlineLink`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   *
+   * @param identifier - The `questionAnswerId` of the smart snippet containing the link.
+   * @param link - The link to select.
+   */
+  cancelPendingSelectInlineLink(identifier: string, link: InlineLink): void;
 }
 
 /**
@@ -171,6 +206,13 @@ export function buildSmartSnippetQuestionsList(
     options: {selectionDelay: props?.options?.selectionDelay},
   });
 
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
+    engine,
+    {
+      options: {selectionDelay: props?.options?.selectionDelay},
+    }
+  );
+
   const getPayloadFromIdentifier = (
     identifier: string | QuestionAnswerDocumentIdentifier
   ) =>
@@ -217,6 +259,15 @@ export function buildSmartSnippetQuestionsList(
     },
     cancelPendingSelectSource(identifier) {
       interactiveQuestions.cancelPendingSelectSource(identifier);
+    },
+    selectInlineLink(identifier, link) {
+      interactiveInlineLinks.selectInlineLink(link, identifier);
+    },
+    beginDelayedSelectInlineLink(identifier, link) {
+      interactiveInlineLinks.beginDelayedSelectInlineLink(link, identifier);
+    },
+    cancelPendingSelectInlineLink(identifier, link) {
+      interactiveInlineLinks.cancelPendingSelectInlineLink(link, identifier);
     },
   };
 }

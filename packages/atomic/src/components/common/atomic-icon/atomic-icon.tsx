@@ -61,12 +61,25 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
     }
   }
 
+  private validateSVG(svg: string) {
+    if (!/^<svg[\s\S]+<\/svg>$/gm.test(svg)) {
+      this.bindings.engine.logger.warn(
+        'The inline "icon" prop is not an svg element. You may encounter rendering issues.',
+        this.icon
+      );
+    }
+  }
+
   private async getIcon() {
     const url = parseAssetURL(
       this.icon,
       this.bindings.store.getIconAssetsPath()
     );
     const svg = url ? await this.fetchIcon(url) : this.icon;
+
+    if (svg) {
+      this.validateSVG(svg);
+    }
     const sanitizedSvg = svg
       ? sanitize(svg, {
           USE_PROFILES: {svg: true, svgFilters: true},

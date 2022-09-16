@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {QuestionAnswer} from '../../api/search/search/question-answering';
-import {encodedBtoa} from '../../utils/utils';
+import {getObjectHash} from '../../utils/utils';
 import {executeSearch} from '../search/search-actions';
 import {
   collapseSmartSnippet,
@@ -40,14 +40,12 @@ function hashQuestionAnswer({
   answerSnippet,
   documentId: {contentIdKey, contentIdValue},
 }: QuestionAnswer) {
-  return encodedBtoa(
-    JSON.stringify({
-      question,
-      answerSnippet,
-      contentIdKey,
-      contentIdValue,
-    })
-  );
+  return getObjectHash({
+    question,
+    answerSnippet,
+    contentIdKey,
+    contentIdValue,
+  });
 }
 
 function buildQuestionAnsweringRelatedQuestionState(

@@ -1,3 +1,4 @@
+import {InlineLink} from '@coveo/headless';
 import {
   Component,
   h,
@@ -9,6 +10,7 @@ import {
 } from '@stencil/core';
 import {sanitize} from 'dompurify';
 import {sanitizeStyle} from '../../../utils/utils';
+import {bindAnalyticsToLink} from '../result-link/result-link';
 
 /**
  * @part answer - The container displaying the full document excerpt.
@@ -27,6 +29,12 @@ export class AtomicSmartSnippetAnswer {
 
   @Event({bubbles: false})
   private answerSizeUpdated!: EventEmitter<{height: number}>;
+  @Event({bubbles: false})
+  private selectInlineLink!: EventEmitter<InlineLink>;
+  @Event({bubbles: false})
+  private beginDelayedSelectInlineLink!: EventEmitter<InlineLink>;
+  @Event({bubbles: false})
+  private cancelPendingSelectInlineLink!: EventEmitter<InlineLink>;
   private wrapperElement?: HTMLElement;
   private isRendering = true;
   private resizeObserver: ResizeObserver | undefined;
@@ -80,6 +88,26 @@ export class AtomicSmartSnippetAnswer {
     this.answerSizeUpdated.emit({height: this.wrapperElement!.scrollHeight});
   }
 
+  private bindAnalyticsToLink(element: HTMLAnchorElement) {
+    const link: InlineLink = {
+      linkText: element.innerText,
+      linkURL: element.href,
+    };
+    bindAnalyticsToLink(element, {
+      stopPropagation: false,
+      onSelect: () => this.selectInlineLink.emit(link),
+      onBeginDelayedSelect: () => this.beginDelayedSelectInlineLink.emit(link),
+      onCancelPendingSelect: () =>
+        this.cancelPendingSelectInlineLink.emit(link),
+    });
+  }
+
+  private bindAnalyticsToLinks(root: HTMLElement) {
+    Array.from(root.querySelectorAll('a')).forEach((link) =>
+      this.bindAnalyticsToLink(link)
+    );
+  }
+
   private renderStyle() {
     const style = this.sanitizedStyle;
     if (!style) {
@@ -100,6 +128,7 @@ export class AtomicSmartSnippetAnswer {
           innerHTML={sanitize(this.htmlContent, {
             USE_PROFILES: {html: true},
           })}
+          ref={(element) => element && this.bindAnalyticsToLinks(element)}
           part="answer"
           class="margin"
         ></div>

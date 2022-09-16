@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -22,6 +22,7 @@ import { Section } from "./components/common/atomic-layout-section/sections";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicStore } from "./components/search/atomic-search-interface/store";
+import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
@@ -1569,6 +1570,10 @@ export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicPagerElement;
+}
+export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSearchBoxElement;
 }
 export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3518,6 +3523,11 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
         /**
+          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+          * @example ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
+         */
+        "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
+        /**
           * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
          */
         "redirectionUrl"?: string;
@@ -3697,6 +3707,9 @@ declare namespace LocalJSX {
         "htmlContent": string;
         "innerStyle"?: string;
         "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -3709,8 +3722,11 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
         "onCollapse"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
         "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
         /**
           * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */

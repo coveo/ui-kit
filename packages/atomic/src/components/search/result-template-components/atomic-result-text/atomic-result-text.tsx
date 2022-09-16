@@ -8,6 +8,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {isArray} from '@coveo/bueno';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.
@@ -63,14 +64,32 @@ export class AtomicResultText implements InitializableComponent {
     }
   }
 
+  private possiblyWarnOnBadFieldType() {
+    const resultValueRaw = ResultTemplatesHelpers.getResultProperty(
+      this.result,
+      this.field
+    );
+    if (isArray(resultValueRaw)) {
+      this.bindings.engine.logger.error(
+        `atomic-result-text cannot be used with multi value field "${this.field}" with values "${resultValueRaw}". Use atomic-result-multi-value-text instead.`,
+        this
+      );
+    }
+  }
+
   public render() {
-    const resultValue = getStringValueFromResultOrNull(this.result, this.field);
-    if (!resultValue && !this.default) {
+    const resultValueAsString = getStringValueFromResultOrNull(
+      this.result,
+      this.field
+    );
+    if (!resultValueAsString && !this.default) {
+      this.possiblyWarnOnBadFieldType();
       this.host.remove();
       return;
     }
 
-    if (!resultValue && this.default) {
+    if (!resultValueAsString && this.default) {
+      this.possiblyWarnOnBadFieldType();
       return (
         <atomic-text
           value={getFieldValueCaption(
@@ -82,7 +101,7 @@ export class AtomicResultText implements InitializableComponent {
       );
     }
 
-    const textValue = `${resultValue}`;
+    const textValue = `${resultValueAsString}`;
     const highlightsValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       `${this.field}Highlights`

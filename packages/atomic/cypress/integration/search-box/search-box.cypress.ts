@@ -3,7 +3,7 @@ import {
   SafeStorage,
   StorageItems,
 } from '../../../src/utils/local-storage-utils';
-import {SearchBoxSelectors} from './search-box-selectors';
+import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
 import {addSearchBox} from './search-box-actions';
 import * as CommonAssertions from '../common-assertions';
 import * as SearchBoxAssertions from './search-box-assertions';
@@ -80,10 +80,33 @@ describe('Search Box Test Suites', () => {
       });
 
       SearchBoxAssertions.assertHasSuggestionsCount(expectedSum);
+      CommonAssertions.assertAccessibility(searchBoxComponent);
       CommonAssertions.assertAriaLiveMessage(
         SearchBoxSelectors.searchBoxAriaLive,
         expectedSum.toString()
       );
+    });
+
+    describe('when changing the redirection-url prop, reinitializing the search box', () => {
+      before(() => {
+        new TestFixture()
+          .with(setSuggestions(numOfSuggestions))
+          .with(
+            addSearchBox({
+              props: {
+                'redirection-url': '/search',
+              },
+            })
+          )
+          .init();
+        cy.get(searchBoxComponent).invoke('attr', 'redirection-url', '');
+        cy.wait(100);
+
+        SearchBoxSelectors.inputBox().click();
+        SearchBoxSelectors.querySuggestions().eq(1).click();
+      });
+
+      SearchBoxAssertions.assertHasText('query-suggestion-1');
     });
 
     describe('with input', () => {
@@ -202,7 +225,7 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('with no suggestions nor recentQueries', () => {
-    beforeEach(() => {
+    before(() => {
       new TestFixture()
         .with(setSuggestions(0))
         .with(setRecentQueries(0))
@@ -215,6 +238,7 @@ describe('Search Box Test Suites', () => {
       SearchBoxSelectors.searchBoxAriaLive,
       ' no '
     );
+    CommonAssertions.assertAccessibility(searchBoxComponent);
   });
 
   describe('with a basic search box', () => {

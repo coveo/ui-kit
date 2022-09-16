@@ -3,6 +3,14 @@ export interface CaseContextState {
    * The case context
    */
   caseContext: Record<string, string>;
+  /**
+   * The case id
+   */
+  caseId: string;
+  /**
+   * The case number
+   */
+  caseNumber: string;
 }
 
 /**
@@ -11,4 +19,6 @@ export interface CaseContextState {
  */
 export const getCaseContextInitialState = (): CaseContextState => ({
   caseContext: {},
+  caseId: '',
+  caseNumber: '',
 });
