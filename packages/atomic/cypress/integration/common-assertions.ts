@@ -12,8 +12,8 @@ export function should(should: boolean) {
   return should ? 'should' : 'should not';
 }
 
-export function assertAccessibility(
-  component?: string | (() => Cypress.Chainable<JQuery<HTMLElement>>)
+export function assertAccessibility<T extends HTMLElement>(
+  component?: string | (() => Cypress.Chainable<JQuery<T>>)
 ) {
   const rulesToIgnore = ['landmark-one-main', 'page-has-heading-one', 'region'];
   const rules = rulesToIgnore.reduce(
