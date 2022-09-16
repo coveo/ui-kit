@@ -88,5 +88,8 @@ export function buildSearchBox(
     submit() {
       searchBox.submit(logSearchboxSubmit());
     },
+    get state() {
+      return searchBox.state;
+    },
   };
 }
