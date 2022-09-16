@@ -15,6 +15,7 @@ import {
   NumericFacetSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
+import {getObjectHash} from '../../../../utils/utils';
 
 export interface AnyFacetValuesCondition<T extends AnyFacetValueRequest> {
   /**
@@ -71,49 +72,41 @@ export function buildCoreFacetConditionsManager(
   if (!loadFacetConditionsManagerReducers(engine)) {
     throw loadReducerError;
   }
-  const lastObservedValuesPerParentFacet: Record<string, string> = {};
 
   const isFacetEnabled = (facetId: string) => {
-    return engine.state.facetOptions.facets[facetId]?.enabled ?? true;
+    return engine.state.facetOptions.facets[facetId]?.enabled ?? false;
   };
 
-  const getFacetValuesById = (facetId: string) => {
-    if (engine.state.facetSet && facetId in engine.state.facetSet) {
-      return engine.state.facetSet[facetId].currentValues;
-    }
-    if (
-      engine.state.categoryFacetSet &&
-      facetId in engine.state.categoryFacetSet
-    ) {
-      return engine.state.categoryFacetSet[facetId]!.request.currentValues;
-    }
-    if (
-      engine.state.numericFacetSet &&
-      facetId in engine.state.numericFacetSet
-    ) {
-      return engine.state.numericFacetSet[facetId].currentValues;
-    }
-    if (engine.state.dateFacetSet && facetId in engine.state.dateFacetSet) {
-      return engine.state.dateFacetSet[facetId].currentValues;
-    }
-    return null;
-  };
+  const getFacetValuesById = (facetId: string) =>
+    engine.state.facetSet?.[facetId]?.currentValues ??
+    engine.state.categoryFacetSet?.[facetId]?.request?.currentValues ??
+    engine.state.numericFacetSet?.[facetId]?.currentValues ??
+    engine.state.dateFacetSet?.[facetId]?.currentValues ??
+    null;
 
-  const checkIfParentValuesWereChanged = () => {
-    let anyParentWasUpdated = false;
-    Object.keys(lastObservedValuesPerParentFacet).forEach((parentFacetId) => {
-      const stringifiedValues = JSON.stringify(
-        getFacetValuesById(parentFacetId)
-      );
-      if (
-        stringifiedValues === lastObservedValuesPerParentFacet[parentFacetId]
-      ) {
-        return;
-      }
-      lastObservedValuesPerParentFacet[parentFacetId] = stringifiedValues;
-      anyParentWasUpdated = true;
+  const isFacetRegistered = (facetId: string) =>
+    facetId in engine.state.facetOptions.facets;
+
+  const getRelevantStateHash = () =>
+    getObjectHash({
+      isFacetRegistered: isFacetRegistered(props.facetId),
+      parentFacets: props.conditions.map(({parentFacetId}) =>
+        isFacetRegistered(parentFacetId)
+          ? {
+              enabled: isFacetEnabled(parentFacetId),
+              values: getFacetValuesById(parentFacetId),
+            }
+          : null
+      ),
     });
-    return anyParentWasUpdated;
+
+  const relevantStateHasChanged = () => {
+    const newStateHash = getRelevantStateHash();
+    if (newStateHash === relevantStateHash) {
+      return false;
+    }
+    relevantStateHash = newStateHash;
+    return true;
   };
 
   const areConditionsMet = () => {
@@ -142,6 +135,9 @@ export function buildCoreFacetConditionsManager(
   };
 
   const ensureConditions = () => {
+    if (!isFacetRegistered(props.facetId)) {
+      return;
+    }
     const isEnabled = isFacetEnabled(props.facetId);
     const shouldBeEnabled = areConditionsMet();
     if (isEnabled !== shouldBeEnabled) {
@@ -154,24 +150,18 @@ export function buildCoreFacetConditionsManager(
     }
   };
 
-  props.conditions.forEach((condition) => {
-    if (!(condition.parentFacetId in lastObservedValuesPerParentFacet)) {
-      lastObservedValuesPerParentFacet[condition.parentFacetId] =
-        JSON.stringify(getFacetValuesById(condition.parentFacetId));
+  if (!props.conditions.length) {
+    return {stopWatching() {}};
+  }
+
+  let relevantStateHash = getRelevantStateHash();
+  const unsubscribe = engine.subscribe(() => {
+    if (relevantStateHasChanged()) {
+      ensureConditions();
     }
   });
 
-  const unsubscribe = props.conditions.length
-    ? engine.subscribe(() => {
-        if (checkIfParentValuesWereChanged()) {
-          ensureConditions();
-        }
-      })
-    : () => {};
-
-  if (props.conditions.length) {
-    ensureConditions();
-  }
+  ensureConditions();
 
   return {
     stopWatching() {
