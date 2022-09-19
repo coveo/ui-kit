@@ -13,12 +13,12 @@ import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockFacetOptions} from '../../../../test/mock-facet-options';
 import {buildFacetOptionsSlice} from '../../../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {FacetValueState} from '../facet/headless-core-facet';
 import {
   buildCoreFacetConditionsManager,
   FacetConditionsManager,
@@ -51,6 +51,8 @@ describe('facet conditions manager', () => {
     let condition: jest.Mock;
 
     function initCondition() {
+      state.facetSet[facetId] = buildMockFacetRequest();
+      state.facetOptions.facets[facetId] = buildFacetOptionsSlice();
       facetConditionsManager = buildCoreFacetConditionsManager(engine, {
         facetId: facetId,
         conditions: [
@@ -75,10 +77,8 @@ describe('facet conditions manager', () => {
 
     describe('with a parent facet', () => {
       beforeEach(() => {
-        state.facetSet = {[parentFacetId]: buildMockFacetRequest()};
-        state.facetOptions = buildMockFacetOptions({
-          facets: {[parentFacetId]: buildFacetOptionsSlice()},
-        });
+        state.facetSet[parentFacetId] = buildMockFacetRequest();
+        state.facetOptions.facets[parentFacetId] = buildFacetOptionsSlice();
         initCondition();
         state.facetSet[parentFacetId].currentValues = [
           buildMockFacetValueRequest({
@@ -102,12 +102,8 @@ describe('facet conditions manager', () => {
 
     describe('with a parent category facet', () => {
       beforeEach(() => {
-        state.categoryFacetSet = {
-          [parentFacetId]: buildMockCategoryFacetSlice(),
-        };
-        state.facetOptions = buildMockFacetOptions({
-          facets: {[parentFacetId]: buildFacetOptionsSlice()},
-        });
+        state.categoryFacetSet[parentFacetId] = buildMockCategoryFacetSlice();
+        state.facetOptions.facets[parentFacetId] = buildFacetOptionsSlice();
         initCondition();
         state.categoryFacetSet[parentFacetId]!.request.currentValues = [
           buildMockCategoryFacetValueRequest({
@@ -131,12 +127,8 @@ describe('facet conditions manager', () => {
 
     describe('with a parent numeric facet', () => {
       beforeEach(() => {
-        state.numericFacetSet = {
-          [parentFacetId]: buildMockNumericFacetRequest(),
-        };
-        state.facetOptions = buildMockFacetOptions({
-          facets: {[parentFacetId]: buildFacetOptionsSlice()},
-        });
+        state.numericFacetSet[parentFacetId] = buildMockNumericFacetRequest();
+        state.facetOptions.facets[parentFacetId] = buildFacetOptionsSlice();
         initCondition();
         state.numericFacetSet[parentFacetId].currentValues = [
           buildMockNumericFacetValue({
@@ -162,10 +154,8 @@ describe('facet conditions manager', () => {
 
     describe('with a parent date facet', () => {
       beforeEach(() => {
-        state.dateFacetSet = {[parentFacetId]: buildMockDateFacetRequest()};
-        state.facetOptions = buildMockFacetOptions({
-          facets: {[parentFacetId]: buildFacetOptionsSlice()},
-        });
+        state.dateFacetSet[parentFacetId] = buildMockDateFacetRequest();
+        state.facetOptions.facets[parentFacetId] = buildFacetOptionsSlice();
         initCondition();
         state.dateFacetSet[parentFacetId].currentValues = [
           buildMockDateFacetValue({
@@ -191,114 +181,265 @@ describe('facet conditions manager', () => {
   });
 
   describe('with two conditions', () => {
-    const facetId = 'abc';
+    const dependentFacetId = 'abc';
     const parentFacetAId = 'def';
     const parentFacetBId = 'ghi';
-    function initConditions(
-      facetEnabled: boolean,
-      facetA: {enabled: boolean; conditionMet: boolean},
-      facetB: {enabled: boolean; conditionMet: boolean}
-    ) {
-      state.facetOptions = buildMockFacetOptions({
-        facets: {
-          [facetId]: buildFacetOptionsSlice({
-            enabled: facetEnabled,
-          }),
-          [parentFacetAId]: buildFacetOptionsSlice({enabled: facetA.enabled}),
-          [parentFacetBId]: buildFacetOptionsSlice({enabled: facetB.enabled}),
-        },
-      });
-      state.facetSet[parentFacetAId] = buildMockFacetRequest({
-        facetId: parentFacetAId,
-      });
-      state.facetSet[parentFacetBId] = buildMockFacetRequest({
-        facetId: parentFacetBId,
-      });
+    function updateFacetValues(facetId: string, conditionMet: boolean) {
+      const values = state.facetSet[facetId]!.currentValues;
+      const valueState: FacetValueState = conditionMet ? 'selected' : 'idle';
+      if (values.length) {
+        values[0].value += 'a';
+        values[0].state = valueState;
+      } else {
+        values.push({value: 'a', state: valueState});
+      }
+    }
+
+    function getConditionIsMet(facetId: string) {
+      return state.facetSet?.[facetId].currentValues?.[0]?.state === 'selected';
+    }
+
+    function initFacet({
+      facetId,
+      enabled,
+      conditionMet,
+    }: {
+      facetId: string;
+      enabled: boolean;
+      conditionMet?: boolean;
+    }) {
+      state.facetOptions.facets[facetId] = buildFacetOptionsSlice({enabled});
+      state.facetSet[facetId] = buildMockFacetRequest({facetId});
+      if (conditionMet) {
+        updateFacetValues(facetId, true);
+      }
+    }
+
+    function initConditions() {
       buildCoreFacetConditionsManager(engine, {
-        facetId: facetId,
+        facetId: dependentFacetId,
         conditions: [
           {
             parentFacetId: parentFacetAId,
-            condition: jest.fn(() => facetA.conditionMet),
+            condition: jest.fn(() => getConditionIsMet(parentFacetAId)),
           },
           {
             parentFacetId: parentFacetBId,
-            condition: jest.fn(() => facetB.conditionMet),
+            condition: jest.fn(() => getConditionIsMet(parentFacetBId)),
           },
         ],
       });
     }
 
-    it('when all facets are enabled and no condition is met, disables the facet', () => {
-      initConditions(
-        true,
-        {enabled: true, conditionMet: false},
-        {enabled: true, conditionMet: false}
-      );
-      expect(engine.actions).toContainEqual(disableFacet(facetId));
+    describe('when facets are initialized before the conditions manager', () => {
+      it('when all facets are enabled and no condition is met, disables the facet', () => {
+        initFacet({facetId: dependentFacetId, enabled: true});
+        initFacet({
+          facetId: parentFacetAId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toContainEqual(disableFacet(dependentFacetId));
+      });
+
+      it('when all facets are enabled and one condition is met, does not dispatch any action', () => {
+        initFacet({facetId: dependentFacetId, enabled: true});
+        initFacet({facetId: parentFacetAId, enabled: true, conditionMet: true});
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toEqual([]);
+      });
+
+      it('when only the child facet is disabled and no condition is met, does not dispatch any action', () => {
+        initFacet({facetId: dependentFacetId, enabled: false});
+        initFacet({
+          facetId: parentFacetAId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toEqual([]);
+      });
+
+      it('when only the child facet is disabled and one condition is met, enables the facet', () => {
+        initFacet({facetId: dependentFacetId, enabled: false});
+        initFacet({facetId: parentFacetAId, enabled: true, conditionMet: true});
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toContainEqual(enableFacet(dependentFacetId));
+      });
+
+      it('when only facet B is enabled and condition A is met, does not dispatch any action', () => {
+        initFacet({facetId: dependentFacetId, enabled: false});
+        initFacet({
+          facetId: parentFacetAId,
+          enabled: false,
+          conditionMet: true,
+        });
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toEqual([]);
+      });
+
+      it('when only facet A is enabled and condition A is met, enables the facet', () => {
+        initFacet({facetId: dependentFacetId, enabled: false});
+        initFacet({facetId: parentFacetAId, enabled: true, conditionMet: true});
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: false,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toContainEqual(enableFacet(dependentFacetId));
+      });
+
+      it('when only facet A is disabled and condition A is met, disables the facet', () => {
+        initFacet({facetId: dependentFacetId, enabled: true});
+        initFacet({
+          facetId: parentFacetAId,
+          enabled: false,
+          conditionMet: true,
+        });
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: true,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toContainEqual(disableFacet(dependentFacetId));
+      });
+
+      it('when only facet B is disabled and condition A is met, does not dispatch any action', () => {
+        initFacet({facetId: dependentFacetId, enabled: true});
+        initFacet({facetId: parentFacetAId, enabled: true, conditionMet: true});
+        initFacet({
+          facetId: parentFacetBId,
+          enabled: false,
+          conditionMet: false,
+        });
+        initConditions();
+        expect(engine.actions).toEqual([]);
+      });
     });
 
-    it('when all facets are enabled and one condition is met, does not dispatch any action', () => {
-      initConditions(
-        true,
-        {enabled: true, conditionMet: true},
-        {enabled: true, conditionMet: false}
-      );
-      expect(engine.actions).toEqual([]);
-    });
+    describe('when facets are initialized after the conditions manager', () => {
+      beforeEach(() => {
+        initConditions();
+        engineListener();
+      });
 
-    it('when only the child facet is disabled and no condition is met, does not dispatch any action', () => {
-      initConditions(
-        false,
-        {enabled: true, conditionMet: false},
-        {enabled: true, conditionMet: false}
-      );
-      expect(engine.actions).toEqual([]);
-    });
+      it('does not dispatch any action', () => {
+        expect(engine.actions).toEqual([]);
+      });
 
-    it('when only the child facet is disabled and one condition is met, enables the facet', () => {
-      initConditions(
-        false,
-        {enabled: true, conditionMet: true},
-        {enabled: true, conditionMet: false}
-      );
-      expect(engine.actions).toContainEqual(enableFacet(facetId));
-    });
+      describe('when the dependent facet is initialized and enabled', () => {
+        beforeEach(() => {
+          initFacet({facetId: dependentFacetId, enabled: true});
+        });
 
-    it('when only facet B is enabled and condition A is met, does not dispatch any action', () => {
-      initConditions(
-        false,
-        {enabled: false, conditionMet: true},
-        {enabled: true, conditionMet: false}
-      );
-      expect(engine.actions).toEqual([]);
-    });
+        describe('and no parent is initialized', () => {
+          beforeEach(() => {
+            engineListener();
+          });
 
-    it('when only facet A is enabled and condition A is met, enables the facet', () => {
-      initConditions(
-        false,
-        {enabled: true, conditionMet: true},
-        {enabled: false, conditionMet: false}
-      );
-      expect(engine.actions).toContainEqual(enableFacet(facetId));
-    });
+          it('disables the facet', () => {
+            expect(engine.actions).toContainEqual(
+              disableFacet(dependentFacetId)
+            );
+          });
+        });
 
-    it('when only facet A is disabled and condition A is met, disables the facet', () => {
-      initConditions(
-        true,
-        {enabled: false, conditionMet: true},
-        {enabled: true, conditionMet: false}
-      );
-      expect(engine.actions).toContainEqual(disableFacet(facetId));
-    });
+        describe("and a parent is initialized but its condition isn't met", () => {
+          beforeEach(() => {
+            initFacet({
+              facetId: parentFacetAId,
+              enabled: true,
+              conditionMet: false,
+            });
+            engineListener();
+          });
 
-    it('when only facet B is disabled and condition A is met, does not dispatch any action', () => {
-      initConditions(
-        true,
-        {enabled: true, conditionMet: true},
-        {enabled: false, conditionMet: false}
-      );
-      expect(engine.actions).toEqual([]);
+          it('disables the facet', () => {
+            expect(engine.actions).toContainEqual(
+              disableFacet(dependentFacetId)
+            );
+          });
+        });
+      });
+
+      describe('when the dependent facet is initialized and disabled', () => {
+        beforeEach(() => {
+          initFacet({facetId: dependentFacetId, enabled: false});
+        });
+
+        describe('and a parent is initialized and its condition is met', () => {
+          beforeEach(() => {
+            initFacet({
+              facetId: parentFacetAId,
+              enabled: true,
+              conditionMet: true,
+            });
+            engineListener();
+          });
+
+          it('enables the facet', () => {
+            expect(engine.actions).toContainEqual(
+              enableFacet(dependentFacetId)
+            );
+          });
+        });
+
+        describe("and a parent is initialized and it condition isn't met", () => {
+          beforeEach(() => {
+            initFacet({
+              facetId: parentFacetAId,
+              enabled: true,
+              conditionMet: false,
+            });
+            engineListener();
+          });
+
+          it('does not dispatch any action', () => {
+            expect(engine.actions).toEqual([]);
+          });
+
+          describe('then facet values are updated and the condition becomes met', () => {
+            beforeEach(() => {
+              updateFacetValues(parentFacetAId, true);
+              engineListener();
+            });
+
+            it('enables the facet', () => {
+              expect(engine.actions).toContainEqual(
+                enableFacet(dependentFacetId)
+              );
+            });
+          });
+        });
+      });
     });
   });
 });

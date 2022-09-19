@@ -36,12 +36,23 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
   ): void;
 }
 
+export const isRefineModalFacet = 'is-refine-modal';
+
 export function createAtomicCommonStore<
   StoreData extends AtomicCommonStoreData
 >(initialStoreData: StoreData): AtomicCommonStore<StoreData> {
   const stencilStore = createStore(
     initialStoreData
   ) as CommonStencilStore<StoreData>;
+
+  const clearExistingFacetElement = (facetType: FacetType, facetId: string) => {
+    if (stencilStore.state[facetType][facetId]) {
+      stencilStore.state.facetElements =
+        stencilStore.state.facetElements.filter(
+          (facetElement) => facetElement.getAttribute('facet-id') !== facetId
+        );
+    }
+  };
 
   return {
     ...stencilStore,
@@ -50,12 +61,13 @@ export function createAtomicCommonStore<
       facetType: T,
       data: StoreData[T][U] & {facetId: U; element: HTMLElement}
     ) {
-      if (stencilStore.state[facetType][data.facetId]) {
+      if (data.element.getAttribute(isRefineModalFacet) !== null) {
         return;
       }
 
-      stencilStore.state[facetType][data.facetId] = data;
+      clearExistingFacetElement(facetType, data.facetId);
       stencilStore.state.facetElements.push(data.element);
+      stencilStore.state[facetType][data.facetId] = data;
     },
 
     getIconAssetsPath() {
