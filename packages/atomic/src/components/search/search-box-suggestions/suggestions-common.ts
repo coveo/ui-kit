@@ -92,16 +92,15 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
    */
   id: string;
   /**
-   * Whether the search box is standalone.
+   * Whether the search box is [standalone](https://docs.coveo.com/en/atomic/latest/usage/ssb/).
    */
   isStandalone: boolean;
   /**
-   * The SearchBox headless controller.
+   * The [search box headless controller](https://docs.coveo.com/en/headless/latest/reference/search/controllers/search-box/).
    */
   searchBoxController: SearchBox;
   /**
-   * The amount of queries displayed when the user interacts with the search box.
-   * By default, a mix of query suggestions and recent queries will be shown.
+   * The amount of queries displayed when the user interacts with the search box, property set on the [Atomic Search box](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-box/#properties).
    */
   numberOfQueries: number;
   /**
