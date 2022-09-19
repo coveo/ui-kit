@@ -52,6 +52,7 @@ export class AtomicResultTemplate {
       },
       validParents: [
         'atomic-result-list',
+        // TODO: move in new atomic-recs-result-template
         'atomic-recs-list',
         'atomic-folded-result-list',
         'atomic-search-box-instant-results',
