@@ -1,12 +1,16 @@
+import * as CommonAssertions from '../integration/common-assertions';
 import {InsightPanelsSelectors} from './insight-panel-selectors';
 
 const host = 'http://localhost:3333/examples/insights.html';
 
 describe('Insights panel test suites', () => {
+  function setupPage() {
+    cy.visit(host);
+    cy.injectAxe();
+  }
+
   describe('when there is nothing written in the search box', () => {
-    before(() => {
-      cy.visit(host);
-    });
+    before(setupPage);
 
     it('should display placeholder while loading', () => {
       InsightPanelsSelectors.resultsPlaceholder()
@@ -155,17 +159,23 @@ describe('Insights panel test suites', () => {
         .find('button[aria-pressed="true"]')
         .should('have.text', 'PDF');
     });
+
+    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 
   describe('when there is something written in the search box', () => {
     before(() => {
-      cy.visit(host);
+      setupPage();
+      InsightPanelsSelectors.results()
+        .its('length')
+        .should('be.greaterThan', 0);
       InsightPanelsSelectors.searchbox()
         .shadow()
         .find('input')
         .type('test{enter}');
       cy.wait(200);
     });
+
     it('display query summary', () => {
       InsightPanelsSelectors.querySummary()
         .should('exist')
@@ -173,5 +183,7 @@ describe('Insights panel test suites', () => {
         .should('contain.text', 'Results 1-5')
         .should('contain.text', 'for test');
     });
+
+    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 });

@@ -84,6 +84,7 @@ export interface RenderListOptions extends DisplayOptions {
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
+  ready: boolean;
 }
 
 interface ResultListCommonOptions {
@@ -252,8 +253,12 @@ export class ResultListCommon {
     resultsPerPageState,
     setListWrapperRef,
     getContentOfResultTemplate,
+    ready,
   }: RenderListOptions) {
     this.updateBreakpoints?.(host);
+    if (!ready) {
+      return;
+    }
 
     if (resultListState.hasError) {
       return;

@@ -157,6 +157,13 @@ export class AtomicSmartSnippet implements InitializableComponent {
         snippetStyle={this.style}
         onExpand={() => this.smartSnippet.expand()}
         onCollapse={() => this.smartSnippet.collapse()}
+        onSelectInlineLink={(e) => this.smartSnippet.selectInlineLink(e.detail)}
+        onBeginDelayedSelectInlineLink={(e) =>
+          this.smartSnippet.beginDelayedSelectInlineLink(e.detail)
+        }
+        onCancelPendingSelectInlineLink={(e) =>
+          this.smartSnippet.cancelPendingSelectInlineLink(e.detail)
+        }
       ></atomic-smart-snippet-expandable-answer>
     );
   }

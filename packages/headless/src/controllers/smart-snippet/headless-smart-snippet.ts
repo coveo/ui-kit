@@ -25,15 +25,19 @@ import {
   openFeedbackModal,
 } from '../../features/question-answering/question-answering-actions';
 import {QuestionAnsweringSection} from '../../state/state-sections';
-import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
 import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
 import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
+import {answerSourceSelector} from '../../features/question-answering/question-answering-selectors';
+import {
+  buildSmartSnippetInteractiveInlineLinks,
+  InlineLink,
+} from './headless-smart-snippet-interactive-inline-links';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 export interface SmartSnippetOptions {
   /**
-   * The amount of time in milliseconds to wait before selecting the source after calling `beginDelayedSelect`.
+   * The amount of time in milliseconds to wait before selecting the source or inline links after calling `beginDelayedSelectSource` or `beginDelayedSelectInlineLink`.
    *
    * @defaultValue `1000`
    */
@@ -106,11 +110,39 @@ export interface SmartSnippet extends Controller {
    */
   beginDelayedSelectSource(): void;
   /**
-   * Cancels the pending selection caused by `beginDelayedSelect`.
+   * Cancels the pending selection caused by `beginDelayedSelectSource`.
    *
    * In a DOM context, we recommend calling this method on the `touchend` event.
    */
   cancelPendingSelectSource(): void;
+  /**
+   * Selects a link inside the answer, logging a UA event to the Coveo Platform if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on all of the following events:
+   * * `contextmenu`
+   * * `click`
+   * * `mouseup`
+   * * `mousedown`
+   *
+   * @param link - The link to select.
+   */
+  selectInlineLink(link: InlineLink): void;
+  /**
+   * Prepares to select a link inside the answer after a certain delay, sending analytics if it was never selected before.
+   *
+   * In a DOM context, we recommend calling this method on the `touchstart` event.
+   *
+   * @param link - The link to select.
+   */
+  beginDelayedSelectInlineLink(link: InlineLink): void;
+  /**
+   * Cancels the pending selection caused by `beginDelayedSelectInlineLink`.
+   *
+   * In a DOM context, we recommend calling this method on the `touchend` event.
+   *
+   * @param link - The link to select.
+   */
+  cancelPendingSelectInlineLink(link: InlineLink): void;
 }
 
 /**
@@ -173,13 +205,7 @@ export function buildSmartSnippet(
   const controller = buildController(engine);
   const getState = () => engine.state;
 
-  const getResult = () => {
-    const {contentIdKey, contentIdValue} =
-      getState().search.response.questionAnswer.documentId;
-    return engine.state.search.results.find(
-      (result) => getResultProperty(result, contentIdKey) === contentIdValue
-    );
-  };
+  const getResult = () => answerSourceSelector(getState());
 
   let lastSearchResponseId: string | null = null;
   const interactiveResult = buildInteractiveResultCore(
@@ -196,9 +222,14 @@ export function buildSmartSnippet(
         return;
       }
       lastSearchResponseId = searchResponseId;
-      engine.dispatch(logOpenSmartSnippetSource(result));
+      engine.dispatch(logOpenSmartSnippetSource());
       engine.dispatch(pushRecentResult(result));
     }
+  );
+
+  const interactiveInlineLinks = buildSmartSnippetInteractiveInlineLinks(
+    engine,
+    {options: {selectionDelay: props?.options?.selectionDelay}}
   );
 
   return {
@@ -258,6 +289,15 @@ export function buildSmartSnippet(
     },
     cancelPendingSelectSource() {
       interactiveResult.cancelPendingSelect();
+    },
+    selectInlineLink(link) {
+      interactiveInlineLinks.selectInlineLink(link);
+    },
+    beginDelayedSelectInlineLink(link) {
+      interactiveInlineLinks.beginDelayedSelectInlineLink(link);
+    },
+    cancelPendingSelectInlineLink(link) {
+      interactiveInlineLinks.cancelPendingSelectInlineLink(link);
     },
   };
 }

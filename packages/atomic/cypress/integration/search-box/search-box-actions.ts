@@ -9,7 +9,10 @@ import {searchBoxComponent} from './search-box-selectors';
 export interface AddSearchBoxOptions {
   suggestions?: {maxWithoutQuery: number; maxWithQuery: number};
   recentQueries?: {maxWithoutQuery: number; maxWithQuery: number};
-  instantResults?: {ariaLabelGenerator?: AriaLabelGenerator};
+  instantResults?: {
+    template?: HTMLElement;
+    ariaLabelGenerator?: AriaLabelGenerator;
+  };
   props?: TagProps;
 }
 
@@ -40,6 +43,9 @@ export const addSearchBox =
       const instantResultsElement = document.createElement(
         'atomic-search-box-instant-results'
       );
+      if (options.instantResults.template) {
+        instantResultsElement.appendChild(options.instantResults.template);
+      }
       if (options.instantResults.ariaLabelGenerator) {
         instantResultsElement.ariaLabelGenerator =
           options.instantResults.ariaLabelGenerator;
