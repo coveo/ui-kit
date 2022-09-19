@@ -83,7 +83,7 @@ export class AtomicNumericFacet
   @Element() private host!: HTMLElement;
   private manualRanges: NumericRangeWithLabel[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
-  private numericFacetCommon!: NumericFacetCommon;
+  private numericFacetCommon?: NumericFacetCommon;
 
   @BindStateToController('facetForRange')
   @State()
@@ -214,7 +214,7 @@ export class AtomicNumericFacet
   }
 
   public disconnectedCallback() {
-    this.numericFacetCommon.disconnectedCallback();
+    this.numericFacetCommon?.disconnectedCallback();
   }
 
   private initializeFacetForInput() {

@@ -51,11 +51,15 @@ export function createAtomicCommonStore<
       data: StoreData[T][U] & {facetId: U; element: HTMLElement}
     ) {
       if (stencilStore.state[facetType][data.facetId]) {
-        return;
+        stencilStore.state.facetElements =
+          stencilStore.state.facetElements.filter(
+            (facetElement) =>
+              facetElement.getAttribute('facet-id') !== data.facetId
+          );
       }
 
-      stencilStore.state[facetType][data.facetId] = data;
       stencilStore.state.facetElements.push(data.element);
+      stencilStore.state[facetType][data.facetId] = data;
     },
 
     getIconAssetsPath() {
