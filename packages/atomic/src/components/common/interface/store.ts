@@ -45,6 +45,15 @@ export function createAtomicCommonStore<
     initialStoreData
   ) as CommonStencilStore<StoreData>;
 
+  const clearExistingFacetElement = (facetType: FacetType, facetId: string) => {
+    if (stencilStore.state[facetType][facetId]) {
+      stencilStore.state.facetElements =
+        stencilStore.state.facetElements.filter(
+          (facetElement) => facetElement.getAttribute('facet-id') !== facetId
+        );
+    }
+  };
+
   return {
     ...stencilStore,
 
@@ -56,14 +65,7 @@ export function createAtomicCommonStore<
         return;
       }
 
-      if (stencilStore.state[facetType][data.facetId]) {
-        stencilStore.state.facetElements =
-          stencilStore.state.facetElements.filter(
-            (facetElement) =>
-              facetElement.getAttribute('facet-id') !== data.facetId
-          );
-      }
-
+      clearExistingFacetElement(facetType, data.facetId);
       stencilStore.state.facetElements.push(data.element);
       stencilStore.state[facetType][data.facetId] = data;
     },
