@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.104.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.0...@coveo/headless@1.104.1) (2022-09-16)
+
+
+### Bug Fixes
+
+* **headless:** insightSearchBox controller updated to use the correct analytics action when performing a search ([#2435](https://github.com/coveo/ui-kit/issues/2435)) ([c08776d](https://github.com/coveo/ui-kit/commit/c08776d38b02ea5f292d9e2f5f8d93d8b7ac81f9))
+
+
+
+
+
+# [1.104.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.6...@coveo/headless@1.104.0) (2022-09-16)
+
+
+### Features
+
+* **headless:** Case Id and Case Number added to the case context state ([#2442](https://github.com/coveo/ui-kit/issues/2442)) ([4768378](https://github.com/coveo/ui-kit/commit/4768378721420c876c85185baa8da0036f2e4fbb))
+
+
+
+
+
 ## [1.103.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.5...@coveo/headless@1.103.6) (2022-09-16)
 
 

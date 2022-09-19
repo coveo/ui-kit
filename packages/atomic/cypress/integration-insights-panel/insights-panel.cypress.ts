@@ -160,7 +160,7 @@ describe('Insights panel test suites', () => {
         .should('have.text', 'PDF');
     });
 
-    CommonAssertions.assertAccessibility();
+    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 
   describe('when there is something written in the search box', () => {
@@ -184,6 +184,6 @@ describe('Insights panel test suites', () => {
         .should('contain.text', 'for test');
     });
 
-    CommonAssertions.assertAccessibility();
+    CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);
   });
 });
