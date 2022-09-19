@@ -7,7 +7,6 @@ dist
 .size-snapshot.json
 reports/*.xml
 !.vscode/extensions.json
-.npmrc
 .yarn/*
 !.yarn/releases
 yarn.lock
