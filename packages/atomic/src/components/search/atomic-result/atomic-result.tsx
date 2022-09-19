@@ -6,13 +6,16 @@ import {
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
 import {ResultRenderingFunction} from '../result-lists/result-list-common';
-import {AtomicStore} from '../atomic-search-interface/store';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
+import {
+  AtomicCommonStore,
+  AtomicCommonStoreData,
+} from '../../common/interface/store';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -39,14 +42,15 @@ export class AtomicResult {
 
   /**
    * The headless search engine.
+   * @deprecated This property is currently un-used
    */
-  @Prop() engine!: SearchEngine;
+  @Prop() engine?: SearchEngine;
 
   /**
    * Global state for Atomic.
    * @internal
    */
-  @Prop() store?: AtomicStore;
+  @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
 
   /**
    * The result content to display.

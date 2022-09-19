@@ -43,7 +43,9 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   styleUrl: '../../../common/result-list/result-list.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {
+export class AtomicFoldedResultList
+  implements BaseResultList<Bindings>, ResultListInfo
+{
   @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -66,7 +68,7 @@ export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {
 
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
-  public resultListCommon!: ResultListCommon;
+  public resultListCommon!: ResultListCommon<Bindings>;
   private renderingFunction: ResultRenderingFunction | null = null;
   private loadingFlag = randomID('firstResultLoaded-');
 
@@ -213,7 +215,7 @@ export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {
       imageSize: this.imageSize,
       templateHasError: this.templateHasError,
       resultListState: this.foldedResultListState,
-      resultsPerPageState: this.resultsPerPageState,
+      numberOfResults: this.resultsPerPageState.numberOfResults,
       setListWrapperRef: (el) => {
         this.listWrapperRef = el as HTMLDivElement;
       },
