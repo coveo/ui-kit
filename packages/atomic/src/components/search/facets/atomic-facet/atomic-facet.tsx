@@ -72,7 +72,7 @@ import {
 })
 export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @InitializeBindings() public bindings!: Bindings;
-  public facetCommon!: FacetCommon;
+  public facetCommon?: FacetCommon;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -229,7 +229,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   }
 
   public disconnectedCallback() {
-    this.facetCommon.disconnectedCallback();
+    this.facetCommon?.disconnectedCallback();
   }
 
   public componentShouldUpdate(
