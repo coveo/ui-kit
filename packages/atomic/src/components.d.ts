@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -3707,6 +3707,9 @@ declare namespace LocalJSX {
         "htmlContent": string;
         "innerStyle"?: string;
         "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
     }
     interface AtomicSmartSnippetExpandableAnswer {
         /**
@@ -3719,8 +3722,11 @@ declare namespace LocalJSX {
           * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
          */
         "maximumHeight"?: number;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
         "onCollapse"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
         "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
         /**
           * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
          */

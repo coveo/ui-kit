@@ -87,6 +87,28 @@ describe('Search Box Test Suites', () => {
       );
     });
 
+    describe('when changing the redirection-url prop, reinitializing the search box', () => {
+      before(() => {
+        new TestFixture()
+          .with(setSuggestions(numOfSuggestions))
+          .with(
+            addSearchBox({
+              props: {
+                'redirection-url': '/search',
+              },
+            })
+          )
+          .init();
+        cy.get(searchBoxComponent).invoke('attr', 'redirection-url', '');
+        cy.wait(100);
+
+        SearchBoxSelectors.inputBox().click();
+        SearchBoxSelectors.querySuggestions().eq(1).click();
+      });
+
+      SearchBoxAssertions.assertHasText('query-suggestion-1');
+    });
+
     describe('with input', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
 

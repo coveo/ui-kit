@@ -166,6 +166,24 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
         exportparts="answer"
         htmlContent={relatedQuestion.answer}
         innerStyle={this.style}
+        onSelectInlineLink={(e) =>
+          this.smartSnippetQuestionsList.selectInlineLink(
+            relatedQuestion.questionAnswerId,
+            e.detail
+          )
+        }
+        onBeginDelayedSelectInlineLink={(e) =>
+          this.smartSnippetQuestionsList.beginDelayedSelectInlineLink(
+            relatedQuestion.questionAnswerId,
+            e.detail
+          )
+        }
+        onCancelPendingSelectInlineLink={(e) =>
+          this.smartSnippetQuestionsList.cancelPendingSelectInlineLink(
+            relatedQuestion.questionAnswerId,
+            e.detail
+          )
+        }
       ></atomic-smart-snippet-answer>
     );
   }

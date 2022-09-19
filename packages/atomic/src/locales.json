@@ -1366,6 +1366,10 @@
     "en": "Notifications",
     "fr": "Notifications"
   },
+  "notification-n": {
+    "en": "Notification {{n}}: {{text}}",
+    "fr": "Notification {{n}}\u00A0: {{text}}"
+  },
   "smart-snippet": {
     "en": "Potential answer to your question",
     "fr": "Réponse potentielle à votre question"
