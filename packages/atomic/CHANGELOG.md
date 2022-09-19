@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.112.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.1...@coveo/atomic@1.112.2) (2022-09-19)
+
+
+### Bug Fixes
+
+* **atomic:** fix default template for atomic-result-text on language ([#2447](https://github.com/coveo/ui-kit/issues/2447)) ([6b24146](https://github.com/coveo/ui-kit/commit/6b2414644a871e0e39bf0791b3a7f51908241344))
+
+
+
+
+
 ## [1.112.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.0...@coveo/atomic@1.112.1) (2022-09-16)
 
 **Note:** Version bump only for package @coveo/atomic
