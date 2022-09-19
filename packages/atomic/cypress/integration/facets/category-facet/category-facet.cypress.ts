@@ -520,14 +520,13 @@ describe('Category Facet Test Suites', () => {
     CategoryFacetAssertions.assertNumberOfParentValues(0);
   });
 
-  describe('with #basePath and #delimitingCharacter with non standard character', () => {
+  describe('with #basePath using a JSON string representation', () => {
     let test: TestFixture;
     before(() => {
       test = new TestFixture().with(
         addCategoryFacet(
           {
-            'base-path': 'some value with a, comma>another value',
-            'delimiting-character': '>',
+            'base-path': '["some value with a, comma","another value"]',
           },
           true
         )
@@ -547,6 +546,24 @@ describe('Category Facet Test Suites', () => {
         cy.wrap(basePathRequested[1]).should('eq', 'another value');
       });
     });
+  });
+
+  describe('with #basePath using incorrect JSON array', () => {
+    before(() => {
+      new TestFixture()
+        .with(
+          addCategoryFacet(
+            {
+              'base-path': 'not a JSON array',
+            },
+            true
+          )
+        )
+        .init();
+    });
+    CommonAssertions.assertConsoleWarningMessage(
+      'Error while parsing attribute base-path'
+    );
   });
 
   describe('with #basePath & #filterByBasePath set to false', () => {

@@ -1,3 +1,4 @@
+import {isArray} from '@coveo/bueno';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {camelToKebab, kebabToCamel} from './utils';
 
@@ -5,6 +6,13 @@ interface MapPropOptions {
   attributePrefix?: string;
   splitValues?: boolean;
 }
+
+interface ArrayPropOptions {
+  // @deprecated
+  // TODO v2: remove deprecation warning and change to a strict error only
+  deprecationWarning: boolean;
+}
+
 export function MapProp(opts?: MapPropOptions) {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
@@ -25,6 +33,56 @@ export function MapProp(opts?: MapPropOptions) {
         Array.from(attributes),
         opts?.splitValues ?? false
       );
+      componentWillLoad.call(this);
+    };
+  };
+}
+
+export function ArrayProp(opts: ArrayPropOptions) {
+  const logWithDeprecation = (msg: string, ...other: unknown[]) =>
+    opts.deprecationWarning
+      ? console.warn(
+          `${msg} This will be enforced in the next major version`,
+          other
+        )
+      : console.error(msg, other);
+
+  return (component: ComponentInterface, variableName: string) => {
+    const {componentWillLoad} = component;
+    const attributeWithBackets = camelToKebab(variableName);
+
+    if (!componentWillLoad) {
+      console.error(
+        'The "componentWillLoad" lifecycle method has to be defined for the ArrayProp decorator to work.'
+      );
+      return;
+    }
+
+    component.componentWillLoad = function () {
+      const attr =
+        getElement(this).attributes.getNamedItem(attributeWithBackets);
+      if (!attr) {
+        componentWillLoad.call(this);
+        return;
+      }
+
+      try {
+        const valueAsArray = JSON.parse(attr.value);
+        if (isArray(valueAsArray)) {
+          this[variableName] = valueAsArray;
+        } else {
+          logWithDeprecation(
+            `Property ${attributeWithBackets} should be an array`,
+            getElement(this)
+          );
+        }
+      } catch (e) {
+        logWithDeprecation(
+          `Error while parsing attribute ${attributeWithBackets} as array`,
+          e
+        );
+      }
+
       componentWillLoad.call(this);
     };
   };
