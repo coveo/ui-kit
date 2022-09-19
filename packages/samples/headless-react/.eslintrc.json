@@ -1,1 +1,4 @@
-{"ignorePatterns": ["build/**/*"]}
+{
+  "root": true,
+  "ignorePatterns": ["build/**/*"]
+}
