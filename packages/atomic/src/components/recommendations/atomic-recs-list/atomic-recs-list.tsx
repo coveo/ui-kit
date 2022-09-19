@@ -18,6 +18,7 @@ import {ResultListCommon} from '../../common/result-list/result-list-common';
  */
 @Component({
   tag: 'atomic-recs-list',
+  styleUrl: '../../common/result-list/result-list.pcss',
   shadow: true,
 })
 export class AtomicRecsList {
