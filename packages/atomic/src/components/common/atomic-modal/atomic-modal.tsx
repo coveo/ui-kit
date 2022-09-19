@@ -9,6 +9,7 @@ import {
   Event,
   EventEmitter,
   Host,
+  Listen,
 } from '@stencil/core';
 import {isIOS} from '../../../utils/device-utils';
 import {listenOnce} from '../../../utils/event-utils';
@@ -109,6 +110,11 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     return classes;
   }
 
+  @Listen('touchmove', {passive: false})
+  onWindowTouchMove(e: Event) {
+    this.isOpen && e.preventDefault();
+  }
+
   public componentDidLoad() {
     this.watchToggleOpen(this.isOpen);
   }
@@ -155,7 +161,18 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
                 part="body-wrapper"
                 class="overflow-auto grow flex flex-col items-center w-full"
               >
-                <div part="body" class="w-full max-w-lg">
+                <div
+                  part="body"
+                  class="w-full max-w-lg"
+                  ref={(element) =>
+                    element &&
+                    element.addEventListener(
+                      'touchmove',
+                      (e) => this.isOpen && e.stopPropagation(),
+                      {passive: false}
+                    )
+                  }
+                >
                   <slot name="body"></slot>
                 </div>
               </div>
