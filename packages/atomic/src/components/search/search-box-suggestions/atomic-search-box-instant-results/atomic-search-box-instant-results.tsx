@@ -16,7 +16,7 @@ import {
   BaseResultList,
   ResultListCommon,
   ResultRenderingFunction,
-} from '../../result-lists/result-list-common';
+} from '../../../common/result-list/result-list-common';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,

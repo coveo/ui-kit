@@ -16,8 +16,11 @@ import {
   ResultDisplayConfigContext,
   DisplayConfig,
 } from '../../result-template-components/result-template-decorators';
-import {BaseResultList, ResultListCommon} from '../result-list-common';
-import {TemplateContent} from '../../result-templates/result-template-common';
+import {
+  BaseResultList,
+  ResultListCommon,
+} from '../../../common/result-list/result-list-common';
+import {TemplateContent} from '../../../common/result-templates/result-template-common';
 import {
   FoldedResultListContext,
   FoldedResultListStateContext,

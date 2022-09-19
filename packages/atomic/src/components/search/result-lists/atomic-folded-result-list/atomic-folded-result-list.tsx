@@ -22,7 +22,7 @@ import {
   BaseResultList,
   ResultListCommon,
   ResultRenderingFunction,
-} from '../result-list-common';
+} from '../../../common/result-list/result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 import {randomID} from '../../../../utils/utils';
 import {
@@ -216,8 +216,8 @@ export class AtomicFoldedResultList
       templateHasError: this.templateHasError,
       resultListState: this.foldedResultListState,
       numberOfResults: this.resultsPerPageState.numberOfResults,
-      setListWrapperRef: (el) => {
-        this.listWrapperRef = el as HTMLDivElement;
+      setListWrapperRef: (el: HTMLDivElement) => {
+        this.listWrapperRef = el;
       },
       getContentOfResultTemplate: this.getContentOfResultTemplate,
       ready: this.ready,

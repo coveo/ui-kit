@@ -16,7 +16,7 @@ import {
   BaseResultList,
   ResultListCommon,
   ResultRenderingFunction,
-} from '../result-list-common';
+} from '../../../common/result-list/result-list-common';
 import {randomID} from '../../../../utils/utils';
 import {
   FocusTarget,

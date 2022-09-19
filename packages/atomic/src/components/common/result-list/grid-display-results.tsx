@@ -1,7 +1,7 @@
 import {buildInteractiveResult, SearchEngine} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
-import {AnyBindings} from '../../common/interface/bindings';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {AnyBindings} from '../interface/bindings';
+import {LinkWithResultAnalytics} from '../../search/result-link/result-link';
 import {ResultsProps} from './result-list-common';
 
 export const GridDisplayResults: FunctionalComponent<

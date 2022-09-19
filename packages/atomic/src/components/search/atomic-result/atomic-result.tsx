@@ -5,7 +5,7 @@ import {
   DisplayConfig,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
-import {ResultRenderingFunction} from '../result-lists/result-list-common';
+import {ResultRenderingFunction} from '../../common/result-list/result-list-common';
 import {
   ResultLayout,
   ResultDisplayDensity,

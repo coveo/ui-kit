@@ -11,7 +11,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 import {randomID} from '../../../utils/utils';
-import {ResultListCommon} from '../../search/result-lists/result-list-common';
+import {ResultListCommon} from '../../common/result-list/result-list-common';
 
 /**
  * @internal
