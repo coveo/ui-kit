@@ -19,7 +19,7 @@ import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
  */
 @Component({
   tag: 'atomic-result',
-  styleUrl: '../../common/result-styles/result.pcss',
+  styleUrl: 'atomic-result.pcss',
   shadow: true,
 })
 export class AtomicResult {
