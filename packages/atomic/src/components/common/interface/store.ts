@@ -36,6 +36,8 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
   ): void;
 }
 
+export const isRefineModalFacet = 'is-refine-modal';
+
 export function createAtomicCommonStore<
   StoreData extends AtomicCommonStoreData
 >(initialStoreData: StoreData): AtomicCommonStore<StoreData> {
@@ -50,6 +52,10 @@ export function createAtomicCommonStore<
       facetType: T,
       data: StoreData[T][U] & {facetId: U; element: HTMLElement}
     ) {
+      if (data.element.getAttribute(isRefineModalFacet) !== null) {
+        return;
+      }
+
       if (stencilStore.state[facetType][data.facetId]) {
         stencilStore.state.facetElements =
           stencilStore.state.facetElements.filter(
