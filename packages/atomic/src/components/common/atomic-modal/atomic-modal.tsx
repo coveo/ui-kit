@@ -165,8 +165,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
                   part="body"
                   class="w-full max-w-lg"
                   ref={(element) =>
-                    element &&
-                    element.addEventListener(
+                    element?.addEventListener(
                       'touchmove',
                       (e) => this.isOpen && e.stopPropagation(),
                       {passive: false}
