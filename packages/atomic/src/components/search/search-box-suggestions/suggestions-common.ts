@@ -47,7 +47,8 @@ export interface SearchBoxSuggestionElement {
  */
 export interface SearchBoxSuggestions {
   /**
-   * The position of the list of the suggestions relative to the others.
+   * The search box will sort the position of suggestions using this value. The lowest value being first.
+   * By default, the DOM position will be used.
    */
   position: number;
   /**
@@ -63,7 +64,8 @@ export interface SearchBoxSuggestions {
    */
   onInput?(): Promise<unknown> | void;
   /**
-   * Hook called when the suggested query changes. As a user traverses through the list of suggestions, instant results can be rendered based on the current suggested query.
+   * Hook called when the suggested query changes as a user traverses through the list of suggestions.
+   * This is used for instant results, which are rendered based on the current suggested query.
    * @param q The new suggested query.
    */
   onSuggestedQueryChange?(q: string): Promise<unknown> | void;
@@ -107,7 +109,8 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
    */
   clearFilters: boolean;
   /**
-   * Retrieves the suggestion query, meaning the query that will be sent if the search is executed.
+   * Retrieves the suggested query, meaning the query that would be sent if the search is executed.
+   * The suggested query changes as a user traverses through the list of suggestions.
    */
   suggestedQuery(): string;
   /**
@@ -115,7 +118,7 @@ export interface SearchBoxSuggestionsBindings extends Bindings {
    */
   clearSuggestions(): void;
   /**
-   * Triggers the retrieval of updated suggestions.
+   * Triggers update & retrieval of all suggestions.
    */
   triggerSuggestions(): void;
   /**
