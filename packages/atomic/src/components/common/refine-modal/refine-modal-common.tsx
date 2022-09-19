@@ -5,6 +5,7 @@ import {BaseFacetElement} from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
 import {FacetManager} from '../types';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
+import {isRefineModalFacet} from '../interface/store';
 
 interface RefineModalCommonProps {
   host: HTMLElement;
@@ -119,6 +120,7 @@ export function getClonedFacetElements(
     const clone = facetElement.cloneNode(true) as BaseFacetElement;
     clone.isCollapsed = true;
     clone.classList.remove(popoverClass);
+    clone.setAttribute(isRefineModalFacet, '');
     divSlot.append(clone);
   });
 

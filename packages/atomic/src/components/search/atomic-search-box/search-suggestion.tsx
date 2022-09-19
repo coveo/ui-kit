@@ -185,7 +185,6 @@ export const ButtonSearchSuggestion: FunctionalComponent<
       onMouseDown={(e) => e.preventDefault()}
       onClick={(e: Event) => props.onClick?.(e)}
       onMouseOver={(e: Event) => props.onMouseOver?.(e)}
-      aria-selected={`${props.isSelected}`}
       {...{[queryDataAttribute]: props.suggestion.query}}
     >
       {getContentForSuggestion(props.suggestion)}

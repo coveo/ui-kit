@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.44.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.5...@coveo/quantic@1.44.6) (2022-09-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.4...@coveo/quantic@1.44.5) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.3...@coveo/quantic@1.44.4) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.2...@coveo/quantic@1.44.3) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.1...@coveo/quantic@1.44.2) (2022-09-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.0...@coveo/quantic@1.44.1) (2022-09-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.2...@coveo/quantic@1.44.0) (2022-09-12)
 
 

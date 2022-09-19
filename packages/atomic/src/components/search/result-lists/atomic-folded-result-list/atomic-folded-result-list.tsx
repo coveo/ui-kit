@@ -218,6 +218,7 @@ export class AtomicFoldedResultList implements BaseResultList, ResultListInfo {
         this.listWrapperRef = el as HTMLDivElement;
       },
       getContentOfResultTemplate: this.getContentOfResultTemplate,
+      ready: this.ready,
     });
   }
 
