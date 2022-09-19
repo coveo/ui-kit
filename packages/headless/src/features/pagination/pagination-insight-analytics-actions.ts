@@ -3,6 +3,7 @@ import {
   AnalyticsType,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {currentPageSelector} from './pagination-selectors';
 
 export const logPageNumber = makeInsightAnalyticsAction(
@@ -11,9 +12,7 @@ export const logPageNumber = makeInsightAnalyticsAction(
   (client, state) =>
     client.logPagerNumber({
       pagerNumber: currentPageSelector(state as PaginationSection),
-      caseContext: state.insightCaseContext?.caseContext || {},
-      caseId: state.insightCaseContext?.caseId,
-      caseNumber: state.insightCaseContext?.caseNumber,
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
     })
 );
 
@@ -23,9 +22,7 @@ export const logPageNext = makeInsightAnalyticsAction(
   (client, state) =>
     client.logPagerNext({
       pagerNumber: currentPageSelector(state as PaginationSection),
-      caseContext: state.insightCaseContext?.caseContext || {},
-      caseId: state.insightCaseContext?.caseId,
-      caseNumber: state.insightCaseContext?.caseNumber,
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
     })
 );
 
@@ -35,8 +32,6 @@ export const logPagePrevious = makeInsightAnalyticsAction(
   (client, state) =>
     client.logPagerPrevious({
       pagerNumber: currentPageSelector(state as PaginationSection),
-      caseContext: state.insightCaseContext?.caseContext || {},
-      caseId: state.insightCaseContext?.caseId,
-      caseNumber: state.insightCaseContext?.caseNumber,
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
     })
 );

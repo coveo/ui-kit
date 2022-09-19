@@ -16,6 +16,7 @@ import {
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
 import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
+import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
 
 export const logFacetShowMore = (facetId: string) =>
   makeInsightAnalyticsAction(
@@ -28,9 +29,7 @@ export const logFacetShowMore = (facetId: string) =>
           facetId,
           getStateNeededForFacetMetadata(state)
         ),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
       return client.logFacetShowMore(metadata);
     }
@@ -47,9 +46,7 @@ export const logFacetShowLess = (facetId: string) =>
           facetId,
           getStateNeededForFacetMetadata(state)
         ),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logFacetShowLess(metadata);
@@ -89,9 +86,7 @@ export const logFacetUpdateSort = (
       const metadata = {
         ...base,
         criteria: sortCriterion,
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logFacetUpdateSort(metadata);
@@ -108,9 +103,7 @@ export const logFacetClearAll = (facetId: string) =>
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = {
         ...buildFacetBaseMetadata(facetId, stateForAnalytics),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logFacetClearAll(metadata);
@@ -141,9 +134,7 @@ export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = {
         ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logFacetSelect(metadata);
@@ -176,9 +167,7 @@ export const logFacetDeselect = (
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = {
         ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logFacetDeselect(metadata);
@@ -201,9 +190,7 @@ export const logFacetBreadcrumb = (
           payload,
           getStateNeededForFacetMetadata(state)
         ),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logBreadcrumbFacet(metadata);

@@ -9,6 +9,7 @@ import {
   AnalyticsType,
   makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
+import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {LogCategoryFacetBreadcrumbActionCreatorPayload} from './category-facet-set-analytics-actions';
 
@@ -48,9 +49,7 @@ export const logCategoryFacetBreadcrumb = (
       validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
       const metadata = {
         ...getCategoryFacetMetadata(state, payload),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logBreadcrumbFacet(metadata);

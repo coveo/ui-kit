@@ -6,6 +6,7 @@ import {
 import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
 import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
 import {LogDateFacetBreadcrumbActionCreatorPayload} from './date-facet-analytics-actions';
+import {getCaseContextAnalyticsMetadata} from '../../../case-context/case-context-state';
 
 export const logDateFacetBreadcrumb = (
   payload: LogDateFacetBreadcrumbActionCreatorPayload
@@ -20,9 +21,7 @@ export const logDateFacetBreadcrumb = (
       );
       const metadata = {
         ...getRangeFacetMetadata(state, payload),
-        caseContext: state.insightCaseContext?.caseContext || {},
-        caseId: state.insightCaseContext?.caseId,
-        caseNumber: state.insightCaseContext?.caseNumber,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       };
 
       return client.logBreadcrumbFacet(metadata);

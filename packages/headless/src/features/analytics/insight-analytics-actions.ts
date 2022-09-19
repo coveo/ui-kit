@@ -1,14 +1,13 @@
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {AnalyticsType, makeInsightAnalyticsAction} from './analytics-utils';
 
 export const logInsightInterfaceLoad = makeInsightAnalyticsAction(
   'analytics/interface/load',
   AnalyticsType.Search,
   (client, state) =>
-    client.logInterfaceLoad({
-      caseContext: state.insightCaseContext?.caseContext || {},
-      caseId: state.insightCaseContext?.caseId,
-      caseNumber: state.insightCaseContext?.caseNumber,
-    })
+    client.logInterfaceLoad(
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    )
 );
 
 export const logInsightInterfaceChange = makeInsightAnalyticsAction(
@@ -16,10 +15,8 @@ export const logInsightInterfaceChange = makeInsightAnalyticsAction(
   AnalyticsType.Search,
   (client, state) => {
     client.logInterfaceChange({
+      ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
       interfaceChangeTo: state.configuration.analytics.originLevel2,
-      caseContext: state.insightCaseContext?.caseContext || {},
-      caseId: state.insightCaseContext?.caseId,
-      caseNumber: state.insightCaseContext?.caseNumber,
     });
   }
 );
