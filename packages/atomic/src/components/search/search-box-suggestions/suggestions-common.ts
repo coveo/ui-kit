@@ -23,7 +23,7 @@ export interface SearchBoxSuggestionElement {
    */
   onSelect?(e: Event): void;
   /**
-   * The query associated with the suggestion, which will become the suggested query that would be sent if the search is executed.
+   * The query associated with the suggestion which will replace the query in the search box if the suggestion is selected.
    */
   query?: string;
   /**
@@ -51,7 +51,7 @@ export interface SearchBoxSuggestions {
    */
   position: number;
   /**
-   * Whether the suggestions should be listed in the right or left panel.
+   * Whether the suggestions should be listed in the right or left panel. By default, the suggestions are listed in the right panel.
    */
   panel?: 'left' | 'right';
   /**
@@ -59,11 +59,11 @@ export interface SearchBoxSuggestions {
    */
   renderItems(): SearchBoxSuggestionElement[];
   /**
-   * Hook called when the user changes the search box's input value.
+   * Hook called when the user changes the search box's input value. This can lead to all the query suggestions being updated.
    */
   onInput?(): Promise<unknown> | void;
   /**
-   * Hook called when the suggested query changes.
+   * Hook called when the suggested query changes. As a user traverses through the list of suggestions, instant results can be rendered based on the current suggested query.
    * @param q The new suggested query.
    */
   onSuggestedQueryChange?(q: string): Promise<unknown> | void;
