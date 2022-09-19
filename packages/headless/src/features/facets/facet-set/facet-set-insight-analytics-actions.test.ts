@@ -44,6 +44,27 @@ const exampleField = 'exampleField';
 const exampleValue = 'exampleValue';
 const exampleSortCriterion = 'score';
 
+const insightCaseContextState = {
+  caseContext: {
+    Case_Subject: exampleSubject,
+    Case_Description: exampleDescription,
+  },
+  caseId: exampleCaseId,
+  caseNumber: exampleCaseNumber,
+};
+
+const baseExpectedPayload = {
+  caseContext: {
+    Case_Subject: exampleSubject,
+    Case_Description: exampleDescription,
+  },
+  caseId: exampleCaseId,
+  caseNumber: exampleCaseNumber,
+  facetId: exampleFacetId,
+  facetField: exampleField,
+  facetTitle: `${exampleField}_${exampleFacetId}`,
+};
+
 describe('logBreadcrumbFacet', () => {
   it('should log #logBreadcrumbFacet with the right payload', async () => {
     const engine = buildMockInsightEngine({
@@ -54,14 +75,7 @@ describe('logBreadcrumbFacet', () => {
             field: exampleField,
           }),
         },
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
+        insightCaseContext: insightCaseContextState,
       }),
     });
 
@@ -73,16 +87,8 @@ describe('logBreadcrumbFacet', () => {
     );
 
     const expectedPayload = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-      facetId: exampleFacetId,
-      facetField: exampleField,
+      ...baseExpectedPayload,
       facetValue: exampleValue,
-      facetTitle: `${exampleField}_${exampleFacetId}`,
     };
 
     expect(mockLogBreadcrumbFacet).toBeCalledTimes(1);
@@ -102,14 +108,7 @@ describe('logFacetSelect', () => {
             field: exampleField,
           }),
         },
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
+        insightCaseContext: insightCaseContextState,
       }),
     });
 
@@ -121,16 +120,8 @@ describe('logFacetSelect', () => {
     );
 
     const expectedPayload = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-      facetId: exampleFacetId,
-      facetField: exampleField,
+      ...baseExpectedPayload,
       facetValue: exampleValue,
-      facetTitle: `${exampleField}_${exampleFacetId}`,
     };
 
     expect(mockLogFacetSelect).toBeCalledTimes(1);
@@ -148,14 +139,7 @@ describe('logFacetDeselect', () => {
             field: exampleField,
           }),
         },
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
+        insightCaseContext: insightCaseContextState,
       }),
     });
 
@@ -167,16 +151,8 @@ describe('logFacetDeselect', () => {
     );
 
     const expectedPayload = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-      facetId: exampleFacetId,
-      facetField: exampleField,
+      ...baseExpectedPayload,
       facetValue: exampleValue,
-      facetTitle: `${exampleField}_${exampleFacetId}`,
     };
 
     expect(mockLogFacetDeselect).toBeCalledTimes(1);
@@ -196,14 +172,7 @@ describe('logFacetUpdateSort', () => {
             field: exampleField,
           }),
         },
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
+        insightCaseContext: insightCaseContextState,
       }),
     });
 
@@ -215,15 +184,7 @@ describe('logFacetUpdateSort', () => {
     );
 
     const expectedPayload = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-      facetId: exampleFacetId,
-      facetField: exampleField,
-      facetTitle: `${exampleField}_${exampleFacetId}`,
+      ...baseExpectedPayload,
       criteria: exampleSortCriterion,
     };
 
@@ -244,30 +205,13 @@ describe('logFacetClearAll', () => {
             field: exampleField,
           }),
         },
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
+        insightCaseContext: insightCaseContextState,
       }),
     });
 
     await engine.dispatch(logFacetClearAll(exampleFacetId));
 
-    const expectedPayload = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-      facetId: exampleFacetId,
-      facetField: exampleField,
-      facetTitle: `${exampleField}_${exampleFacetId}`,
-    };
+    const expectedPayload = baseExpectedPayload;
 
     expect(mockLogFacetClearAll).toBeCalledTimes(1);
     expect(mockLogFacetClearAll.mock.calls[0][0]).toStrictEqual(
@@ -286,30 +230,13 @@ describe('logFacetShowMore', () => {
             field: exampleField,
           }),
         },
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
+        insightCaseContext: insightCaseContextState,
       }),
     });
 
     await engine.dispatch(logFacetShowMore(exampleFacetId));
 
-    const expectedPayload = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-      facetId: exampleFacetId,
-      facetField: exampleField,
-      facetTitle: `${exampleField}_${exampleFacetId}`,
-    };
+    const expectedPayload = baseExpectedPayload;
 
     expect(mockLogFacetShowMore).toBeCalledTimes(1);
     expect(mockLogFacetShowMore.mock.calls[0][0]).toStrictEqual(
@@ -328,30 +255,13 @@ describe('logFacetShowLess', () => {
             field: exampleField,
           }),
         },
-        insightCaseContext: {
-          caseContext: {
-            Case_Subject: exampleSubject,
-            Case_Description: exampleDescription,
-          },
-          caseId: exampleCaseId,
-          caseNumber: exampleCaseNumber,
-        },
+        insightCaseContext: insightCaseContextState,
       }),
     });
 
     await engine.dispatch(logFacetShowLess(exampleFacetId));
 
-    const expectedPayload = {
-      caseContext: {
-        Case_Subject: exampleSubject,
-        Case_Description: exampleDescription,
-      },
-      caseId: exampleCaseId,
-      caseNumber: exampleCaseNumber,
-      facetId: exampleFacetId,
-      facetField: exampleField,
-      facetTitle: `${exampleField}_${exampleFacetId}`,
-    };
+    const expectedPayload = baseExpectedPayload;
 
     expect(mockLogFacetShowLess).toBeCalledTimes(1);
     expect(mockLogFacetShowLess.mock.calls[0][0]).toStrictEqual(
