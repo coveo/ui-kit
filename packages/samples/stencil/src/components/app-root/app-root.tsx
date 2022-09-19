@@ -1,13 +1,12 @@
 import {Component, h} from '@stencil/core';
-import {createRouter, href, Route} from 'stencil-router-v2';
+import {createRouter, Route} from 'stencil-router-v2';
 import {
   getSampleSearchEngineConfiguration,
   SearchEngine,
 } from '@coveo/atomic/headless';
+import {Header, homePath, searchPath} from '../header/header';
 
 const Router = createRouter();
-const homePath = '/';
-const searchPath = '/search';
 
 @Component({
   tag: 'app-root',
@@ -30,23 +29,19 @@ export class AppRoot {
   public render() {
     return (
       <atomic-search-interface>
-        <header>
-          <nav>
-            <a {...href('/')}>Home</a>
-            <a {...href(searchPath)}>Search</a>
-            <atomic-search-box
-              redirection-url={
-                Router.activePath === homePath ? searchPath : undefined
-              }
-              onRedirect={(e) => {
-                e.preventDefault();
-                const {redirectTo, value} = e.detail;
-                const path = `${redirectTo}#q=${value}`;
-                Router.push(path);
-              }}
-            ></atomic-search-box>
-          </nav>
-        </header>
+        <Header>
+          <atomic-search-box
+            redirection-url={
+              Router.activePath === homePath ? searchPath : undefined
+            }
+            onRedirect={(e) => {
+              e.preventDefault();
+              const {redirectTo, value} = e.detail;
+              const path = `${redirectTo}#q=${value}`;
+              Router.push(path);
+            }}
+          ></atomic-search-box>
+        </Header>
         <Router.Switch>
           <Route path="/" render={() => <h1>Home</h1>} />
           <Route
