@@ -35,9 +35,9 @@ export namespace Components {
     }
     interface AtomicCategoryFacet {
         /**
-          * The base path shared by all values for the facet, separated by commas.
+          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```  Specifying the property as a comma separated string is deprecated.
          */
-        "basePath"?: string;
+        "basePath"?: string | string[];
         /**
           * The character that separates values of a multi-value field.
          */
@@ -2368,9 +2368,9 @@ declare namespace LocalJSX {
     }
     interface AtomicCategoryFacet {
         /**
-          * The base path shared by all values for the facet, separated by commas.
+          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```  Specifying the property as a comma separated string is deprecated.
          */
-        "basePath"?: string;
+        "basePath"?: string | string[];
         /**
           * The character that separates values of a multi-value field.
          */
