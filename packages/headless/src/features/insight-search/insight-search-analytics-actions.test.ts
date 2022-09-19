@@ -5,6 +5,7 @@ import {
   logExpandToFullUI,
 } from './insight-search-analytics-actions';
 import * as CoveoAnalytics from 'coveo.analytics';
+import {getCaseContextInitialState} from '../case-context/case-context-state';
 
 const mockLogContextChanged = jest.fn();
 const mockLogExpandtoFullUI = jest.fn();
@@ -30,6 +31,7 @@ describe('logContextChanged', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         insightCaseContext: {
+          ...getCaseContextInitialState(),
           caseContext: {
             Case_Subject: exampleSubject,
             Case_Description: exampleDescription,
@@ -60,6 +62,7 @@ describe('logExpandToFullUI', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         insightCaseContext: {
+          ...getCaseContextInitialState(),
           caseContext: {
             Case_Subject: exampleSubject,
             Case_Description: exampleDescription,

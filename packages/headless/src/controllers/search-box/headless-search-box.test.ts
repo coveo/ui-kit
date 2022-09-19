@@ -13,6 +13,11 @@ import {
   MockSearchEngine,
 } from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+
+jest.mock('../../features/query/query-analytics-actions', () => ({
+  logSearchboxSubmit: jest.fn(() => () => {}),
+}));
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -42,6 +47,10 @@ describe('headless searchBox', () => {
 
     initState();
     initController();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   function initState() {
@@ -111,6 +120,7 @@ describe('headless searchBox', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
+      expect(logSearchboxSubmit).toBeCalledTimes(1);
     });
   });
 });
