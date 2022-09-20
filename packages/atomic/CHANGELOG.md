@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.112.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.3...@coveo/atomic@1.112.4) (2022-09-19)
+
+
+### Bug Fixes
+
+* **atomic:** allow facets to be re-added to the interface ([#2450](https://github.com/coveo/ui-kit/issues/2450)) ([145cec4](https://github.com/coveo/ui-kit/commit/145cec4df503abc417076af5d4d55070ef105324))
+* **atomic:** prevent scrolling behind refine modal on iOS ([#2451](https://github.com/coveo/ui-kit/issues/2451)) ([f270912](https://github.com/coveo/ui-kit/commit/f270912d65ad28fc8788a0cbba5ac8f7632e62a1))
+* **atomic:** removed wrong section class from results ([#2452](https://github.com/coveo/ui-kit/issues/2452)) ([9011f57](https://github.com/coveo/ui-kit/commit/9011f57a5b0556f0438f00f818c66f3b2bdd5445))
+* **atomic:** use correct delimiting character for category facet headless controller ([#2439](https://github.com/coveo/ui-kit/issues/2439)) ([246e140](https://github.com/coveo/ui-kit/commit/246e140c97e84c7943e8d92ef89429fea4c5e817))
+
+
+
+
+
+## [1.112.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.2...@coveo/atomic@1.112.3) (2022-09-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.112.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.1...@coveo/atomic@1.112.2) (2022-09-19)
 
 

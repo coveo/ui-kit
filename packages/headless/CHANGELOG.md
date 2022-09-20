@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.104.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.1...@coveo/headless@1.104.2) (2022-09-19)
+
+
+### Bug Fixes
+
+* **headless:** made facet conditions manager initializable before facets ([#2446](https://github.com/coveo/ui-kit/issues/2446)) ([f5d0f20](https://github.com/coveo/ui-kit/commit/f5d0f2031538495e363d55ce17dceb015f1598b5))
+
+
+
+
+
 ## [1.104.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.0...@coveo/headless@1.104.1) (2022-09-16)
 
 

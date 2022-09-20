@@ -520,6 +520,52 @@ describe('Category Facet Test Suites', () => {
     CategoryFacetAssertions.assertNumberOfParentValues(0);
   });
 
+  describe('with #basePath using a JSON string representation', () => {
+    let test: TestFixture;
+    before(() => {
+      test = new TestFixture().with(
+        addCategoryFacet(
+          {
+            'base-path': '["some value with a, comma","another value"]',
+          },
+          true
+        )
+      );
+    });
+
+    it('should send the proper base path split on the delitiming character', () => {
+      cy.intercept({
+        method: 'POST',
+        url: '**/rest/search/v2?*',
+      }).as('searchRequest');
+
+      test.init();
+      cy.wait('@searchRequest').then(({request}) => {
+        const basePathRequested = request.body.facets[0].basePath;
+        cy.wrap(basePathRequested[0]).should('eq', 'some value with a, comma');
+        cy.wrap(basePathRequested[1]).should('eq', 'another value');
+      });
+    });
+  });
+
+  describe('with #basePath using incorrect JSON array', () => {
+    before(() => {
+      new TestFixture()
+        .with(
+          addCategoryFacet(
+            {
+              'base-path': 'not a JSON array',
+            },
+            true
+          )
+        )
+        .init();
+    });
+    CommonAssertions.assertConsoleWarningMessage(
+      'Error while parsing attribute base-path'
+    );
+  });
+
   describe('with #basePath & #filterByBasePath set to false', () => {
     before(() => {
       new TestFixture()
