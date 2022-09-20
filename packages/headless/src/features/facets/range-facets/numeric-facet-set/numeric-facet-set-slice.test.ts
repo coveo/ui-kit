@@ -33,6 +33,10 @@ describe('numeric-facet-set slice', () => {
     state = getNumericFacetSetInitialState();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('initializes the set to an empty object', () => {
     const finalState = numericFacetSetReducer(undefined, {type: ''});
     expect(finalState).toEqual({});

@@ -33,6 +33,10 @@ describe('date-facet-set slice', () => {
     state = getDateFacetSetInitialState();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('initializes the set to an empty object', () => {
     const finalState = dateFacetSetReducer(undefined, {type: ''});
     expect(finalState).toEqual({});
