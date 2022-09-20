@@ -1,4 +1,10 @@
 {
   "root": true,
-  "ignorePatterns": ["www", "dist"]
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["./node_modules/gts"],
+  "parserOptions": {
+    "jsxPragma": "h"
+  },
+  "ignorePatterns": ["**/*.js", "www", "dist"]
 }

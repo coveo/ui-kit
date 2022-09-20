@@ -1,4 +1,7 @@
 {
   "root": true,
-  "ignorePatterns": ["dist"]
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["./node_modules/gts"],
+  "ignorePatterns": ["**/*.js", "dist"]
 }

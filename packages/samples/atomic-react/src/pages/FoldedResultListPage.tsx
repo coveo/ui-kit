@@ -1,18 +1,13 @@
 import React, {FunctionComponent} from 'react';
 
 import {
-  AtomicFormatCurrency,
   AtomicResultBadge,
   AtomicResultFieldsList,
-  AtomicResultImage,
   AtomicResultLink,
   AtomicResultMultiValueText,
-  AtomicResultNumber,
   AtomicResultPrintableUri,
-  AtomicResultRating,
   AtomicResultSectionBadges,
   AtomicResultSectionBottomMetadata,
-  AtomicResultSectionEmphasized,
   AtomicResultSectionExcerpt,
   AtomicResultSectionTitle,
   AtomicResultSectionTitleMetadata,
