@@ -6,7 +6,8 @@
     "dev": "npm run copy:assets && ng serve",
     "link:angular": "node scripts/link-hoisted-dependencies.js",
     "watch": "ng build --watch --configuration development",
-    "copy:assets": "ncp ../../atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../atomic-angular/projects/atomic-angular/dist/lang src/lang"
+    "copy:assets": "ncp ../../atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../atomic-angular/projects/atomic-angular/dist/lang src/lang",
+    "cypress:open": "cypress open"
   },
   "private": true,
   "dependencies": {
@@ -29,7 +30,7 @@
     "@angular/compiler-cli": "13.3.0",
     "@types/jasmine": "3.10.6",
     "@types/node": "12.20.55",
-    "cypress": "9.7.0",
+    "cypress": "10.8.0",
     "ncp": "2.0.0",
     "typescript": "4.6.4"
   }
