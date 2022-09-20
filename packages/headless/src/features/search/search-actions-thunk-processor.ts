@@ -110,6 +110,8 @@ export interface AsyncThunkConfig {
 type QueryCorrectionCallback = (modification: string) => void;
 
 export class AsyncSearchThunkProcessor<RejectionType> {
+  private readonly originalQuery: string;
+
   constructor(
     private config: AsyncThunkConfig,
     private onUpdateQueryForCorrection: QueryCorrectionCallback = (
@@ -117,7 +119,9 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     ) => {
       this.dispatch(updateQuery({q: modification}));
     }
-  ) {}
+  ) {
+    this.originalQuery = this.getOriginalQuery();
+  }
 
   public async fetchFromAPI(
     {mappings, request}: MappedSearchRequest,
@@ -202,7 +206,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         queryCorrections: successResponse.queryCorrections,
       },
       automaticallyCorrected: true,
-      originalQuery: this.getOriginalQuery(),
+      originalQuery: this.originalQuery,
       analyticsAction: logDidYouMeanAutomatic(),
     };
   }
@@ -249,7 +253,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         ...retried.response.success,
       },
       automaticallyCorrected: false,
-      originalQuery: this.getOriginalQuery(),
+      originalQuery: this.originalQuery,
       analyticsAction: logTriggerQuery(),
     };
   }
@@ -262,7 +266,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       ...fetched,
       response: this.getSuccessResponse(fetched)!,
       automaticallyCorrected: false,
-      originalQuery: this.getOriginalQuery(),
+      originalQuery: this.originalQuery,
       analyticsAction: this.analyticsAction!,
     };
   }
@@ -290,7 +294,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     this.dispatch(
       applyQueryTriggerModification({
         newQuery: modified,
-        originalQuery: this.getOriginalQuery(),
+        originalQuery: this.originalQuery,
       })
     );
     this.onUpdateQueryForCorrection(modified);
