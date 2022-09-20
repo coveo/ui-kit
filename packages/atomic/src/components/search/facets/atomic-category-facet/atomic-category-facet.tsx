@@ -160,7 +160,7 @@ export class AtomicCategoryFacet
    * Specifying the property as a comma separated string is deprecated.
    */
   @ArrayProp({deprecationWarning: true})
-  @Prop({reflect: true})
+  @Prop({reflect: true, mutable: true})
   public basePath?: string | string[];
   /**
    * Whether to use basePath as a filter for the results.
