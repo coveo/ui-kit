@@ -21,10 +21,8 @@ import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-s
 import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {numericFacetSelectedValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
-import {
-  logInsightStaticFilterDeselect,
-  toggleSelectStaticFilterValue,
-} from '../../../features/static-filter-set/static-filter-set-actions';
+import {toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
+import {logInsightStaticFilterDeselect} from '../../../features/static-filter-set/static-filter-set-insight-analytics-actions';
 import {
   StaticFilterSlice,
   StaticFilterValue,

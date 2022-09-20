@@ -2,15 +2,22 @@ import {
   AnalyticsType,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logDidYouMeanClick = makeInsightAnalyticsAction(
   'analytics/didyoumean/click',
   AnalyticsType.Search,
-  (client) => client.logDidYouMeanClick()
+  (client, state) =>
+    client.logDidYouMeanClick(
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    )
 );
 
 export const logDidYouMeanAutomatic = makeInsightAnalyticsAction(
   'analytics/didyoumean/automatic',
   AnalyticsType.Search,
-  (client) => client.logDidYouMeanAutomatic()
+  (client, state) =>
+    client.logDidYouMeanAutomatic(
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    )
 );
