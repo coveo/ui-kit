@@ -1,1 +1,7 @@
-{"ignorePatterns": ["build/**/*"]}
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react"],
+  "extends": ["./node_modules/gts"],
+  "ignorePatterns": ["**/*.js", "build/**/*"]
+}
