@@ -49,10 +49,10 @@ jobs:
       matrix:
         spec:
           [
-            'cypress/integration/*',
-            'cypress/integration/result-list/**/*',
-            'cypress/integration/facets/**/*',
-            'cypress/integration/search-box/**/*',
+            'cypress/e2e/*',
+            'cypress/e2e/result-list/**/*',
+            'cypress/e2e/facets/**/*',
+            'cypress/e2e/search-box/**/*',
           ]
     steps:
       - uses: actions/checkout@v3
