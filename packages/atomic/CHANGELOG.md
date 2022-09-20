@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.113.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.4...@coveo/atomic@1.113.0) (2022-09-20)
+
+
+### Features
+
+* **atomic:** initial work for recommendations list and interface ([#2454](https://github.com/coveo/ui-kit/issues/2454)) ([7ba8de1](https://github.com/coveo/ui-kit/commit/7ba8de143b9bc281449c1820480695ebe5375764))
+
+
+
+
+
 ## [1.112.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.3...@coveo/atomic@1.112.4) (2022-09-19)
 
 
