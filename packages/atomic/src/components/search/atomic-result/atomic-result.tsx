@@ -4,22 +4,25 @@ import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
   ResultContextEvent,
-} from '../../search/result-template-components/result-template-decorators';
-import {ResultRenderingFunction} from '../result-list/result-list-common';
+} from '../result-template-components/result-template-decorators';
+import {ResultRenderingFunction} from '../../common/result-list/result-list-common';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
-} from '../layout/display-options';
-import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
+} from '../../common/layout/display-options';
+import {
+  AtomicCommonStore,
+  AtomicCommonStoreData,
+} from '../../common/interface/store';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
  */
 @Component({
   tag: 'atomic-result',
-  styleUrl: 'atomic-result.pcss',
+  styleUrl: '../../common/result/result.pcss',
   shadow: true,
 })
 export class AtomicResult {

@@ -5,7 +5,7 @@ import {
 import {h} from '@stencil/core';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {AtomicResultFieldsList} from './atomic-result-fields-list/atomic-result-fields-list';
-import {AtomicResult} from '../../common/atomic-result/atomic-result';
+import {AtomicResult} from '../atomic-result/atomic-result';
 import {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
 import {TestUtils} from '@coveo/headless';
 import {createAtomicStore} from '../atomic-search-interface/store';
