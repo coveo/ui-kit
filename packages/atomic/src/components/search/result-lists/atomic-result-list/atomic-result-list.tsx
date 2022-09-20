@@ -16,7 +16,7 @@ import {
   BaseResultList,
   ResultListCommon,
   ResultRenderingFunction,
-} from '../result-list-common';
+} from '../../../common/result-list/result-list-common';
 import {randomID} from '../../../../utils/utils';
 import {
   FocusTarget,
@@ -52,7 +52,9 @@ import {
   styleUrl: '../../../common/result-list/result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList implements BaseResultList, ResultListInfo {
+export class AtomicResultList
+  implements BaseResultList<Bindings>, ResultListInfo
+{
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
@@ -81,7 +83,7 @@ export class AtomicResultList implements BaseResultList, ResultListInfo {
 
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
-  public resultListCommon!: ResultListCommon;
+  public resultListCommon!: ResultListCommon<Bindings>;
   private renderingFunction: ResultRenderingFunction | null = null;
   private loadingFlag = randomID('firstResultLoaded-');
 
@@ -199,7 +201,7 @@ export class AtomicResultList implements BaseResultList, ResultListInfo {
       imageSize: this.determineImageSize,
       templateHasError: this.templateHasError,
       resultListState: this.resultListState,
-      resultsPerPageState: this.resultsPerPageState,
+      numberOfResults: this.resultsPerPageState.numberOfResults,
       setListWrapperRef: (el) => {
         this.listWrapperRef = el as HTMLDivElement;
       },

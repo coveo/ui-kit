@@ -1,9 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {AnyBindings} from '../../common/interface/bindings';
 import {ResultsProps} from './result-list-common';
 
-export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
-  props
-) => {
+export const TableDisplayResults: FunctionalComponent<
+  ResultsProps<AnyBindings>
+> = (props) => {
   const fieldColumns = getFieldTableColumns(props);
 
   if (fieldColumns.length === 0) {
@@ -56,7 +57,6 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
                   part="result-table-cell"
                 >
                   <atomic-result
-                    engine={props.bindings.engine}
                     store={props.bindings.store}
                     result={result}
                     display={props.display}
@@ -75,7 +75,7 @@ export const TableDisplayResults: FunctionalComponent<ResultsProps> = (
   );
 };
 
-const getFieldTableColumns = (props: ResultsProps) => {
+const getFieldTableColumns = (props: ResultsProps<AnyBindings>) => {
   if (props.renderingFunction) {
     return getFieldTableColumnsFromRenderingFunction(props);
   }
@@ -83,7 +83,7 @@ const getFieldTableColumns = (props: ResultsProps) => {
 };
 
 const getFieldTableColumnsFromRenderingFunction = (
-  props: ResultsProps
+  props: ResultsProps<AnyBindings>
 ): HTMLAtomicTableElementElement[] => {
   const contentOfRenderingFunction = document.createElement('div');
 
@@ -99,7 +99,7 @@ const getFieldTableColumnsFromRenderingFunction = (
 };
 
 const getFieldTableColumnsFromHTMLTemplate = (
-  props: ResultsProps
+  props: ResultsProps<AnyBindings>
 ): HTMLAtomicTableElementElement[] => {
   return Array.from(
     props
