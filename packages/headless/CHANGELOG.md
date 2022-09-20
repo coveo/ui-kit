@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.105.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.2...@coveo/headless@1.105.0) (2022-09-20)
+
+
+### Features
+
+* **headless:** send the case metadata in the payload of all the insight analytics events ([#2449](https://github.com/coveo/ui-kit/issues/2449)) ([a43f86a](https://github.com/coveo/ui-kit/commit/a43f86adb390ba78b7ae461624531d2a4e1d255e))
+
+
+
+
+
 ## [1.104.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.1...@coveo/headless@1.104.2) (2022-09-19)
 
 

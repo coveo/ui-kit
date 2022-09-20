@@ -3,12 +3,16 @@ import {
   AnalyticsType,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
+import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {getQueryInitialState} from '../query/query-state';
 
 export const logFetchMoreResults = makeInsightAnalyticsAction(
   'search/logFetchMoreResults',
   AnalyticsType.Search,
-  (client) => client.logFetchMoreResults()
+  (client, state) =>
+    client.logFetchMoreResults(
+      getCaseContextAnalyticsMetadata(state.insightCaseContext)
+    )
 );
 
 export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
@@ -17,6 +21,7 @@ export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
     AnalyticsType.Search,
     (client, state) =>
       client.logQueryError({
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
         query: state.query?.q || getQueryInitialState().q,
         aq: '',
         cq: '',

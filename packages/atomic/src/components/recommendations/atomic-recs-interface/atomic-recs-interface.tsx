@@ -19,7 +19,7 @@ import {
 import {createAtomicRecsStore, AtomicRecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
-export type Bindings = CommonBindings<
+export type RecsBindings = CommonBindings<
   RecommendationEngine,
   AtomicRecsStore,
   HTMLAtomicRecsInterfaceElement
@@ -124,7 +124,7 @@ export class AtomicRecsInterface
     return this.engine && <slot></slot>;
   }
 
-  public get bindings(): Bindings {
+  public get bindings(): RecsBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
