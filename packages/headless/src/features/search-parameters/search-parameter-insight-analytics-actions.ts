@@ -1,7 +1,7 @@
 import {SearchParameters} from './search-parameter-actions';
 import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
-import {logInsightInterfaceChange} from '../analytics/analytics-actions';
+import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
 import {
   logFacetClearAll,
   logFacetDeselect,

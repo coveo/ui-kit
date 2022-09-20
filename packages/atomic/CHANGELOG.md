@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.113.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.0...@coveo/atomic@1.113.1) (2022-09-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.113.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.4...@coveo/atomic@1.113.0) (2022-09-20)
 
 

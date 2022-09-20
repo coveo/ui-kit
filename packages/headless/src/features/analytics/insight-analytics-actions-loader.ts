@@ -30,14 +30,14 @@ import {
 } from '../pagination/pagination-insight-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
 import {
-  logInsightStaticFilterDeselect,
   LogStaticFilterToggleValueActionCreatorPayload,
   StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions';
+import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter-set-insight-analytics-actions';
 import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
-} from './analytics-actions';
+} from './insight-analytics-actions';
 import {
   AnalyticsType,
   AsyncThunkInsightAnalyticsOptions,

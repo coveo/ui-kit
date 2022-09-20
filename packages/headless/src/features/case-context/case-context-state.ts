@@ -22,3 +22,18 @@ export const getCaseContextInitialState = (): CaseContextState => ({
   caseId: '',
   caseNumber: '',
 });
+
+/**
+ * Return the case context metadata to be sent in the analytics
+ * @param state - The case context state
+ * @returns Case context metadata
+ */
+export const getCaseContextAnalyticsMetadata = (
+  state: CaseContextState | undefined
+) => {
+  return {
+    caseContext: state?.caseContext || {},
+    caseId: state?.caseId,
+    caseNumber: state?.caseNumber,
+  };
+};
