@@ -266,17 +266,37 @@ export default class QuanticResultQuickview extends LightningElement {
   onCloseKeyDown(evt) {
     if (evt.shiftKey && evt.code === 'Tab') {
       evt.preventDefault();
-      const el = this.template.querySelector('.quickview__content-container');
-
-      if (el) {
-        const lastElement = getLastFocusableElement(el);
-        if (lastElement) {
-          // @ts-ignore
-          lastElement.focus();
-        } else {
-          this.setFocusToHeader();
-        }
+      const lastFocusableElement =
+        this.lastFocusableElementInFooterSlot ||
+        this.lastFocusableElementInQuickview;
+      if (lastFocusableElement) {
+        // @ts-ignore
+        lastFocusableElement.focus();
+      } else {
+        this.setFocusToHeader();
       }
     }
+  }
+
+  get lastFocusableElementInFooterSlot() {
+    const footerSlot = this.template.querySelector('slot[name=footer]');
+    if (footerSlot) {
+      // @ts-ignore
+      const assignedElements = footerSlot.assignedElements();
+      for (let i = assignedElements.length - 1; i >= 0; i--) {
+        const lastElement = getLastFocusableElement(assignedElements[i]);
+        if (lastElement) return lastElement;
+      }
+    }
+    return null;
+  }
+
+  get lastFocusableElementInQuickview() {
+    const element = this.contentContainer;
+    if (element) {
+      const lastElement = getLastFocusableElement(element);
+      return lastElement;
+    }
+    return null;
   }
 }
