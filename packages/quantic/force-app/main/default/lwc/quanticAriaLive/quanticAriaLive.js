@@ -18,6 +18,7 @@ import { LightningElement, track, api } from 'lwc';
  * Add this component inside the `quantic-search-interface` markup so other components can send messages when content changes.
  * @category Search
  * @category Insight Panel
+ * @example
  * <c-quantic-search-interface>
  *     <c-quantic-aria-live></c-quantic-aria-live>
 *      [...]

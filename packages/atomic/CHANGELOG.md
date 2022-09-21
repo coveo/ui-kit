@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.113.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.1...@coveo/atomic@1.113.2) (2022-09-21)
+
+
+### Bug Fixes
+
+* **atomic:** use ArrayProp for facet allowed values option ([#2456](https://github.com/coveo/ui-kit/issues/2456)) ([6e17c1e](https://github.com/coveo/ui-kit/commit/6e17c1e3361ffadb432de0bf94da0931672c6e39))
+* **headless:** fixed didYoumean auto correction originalQuery ([#2461](https://github.com/coveo/ui-kit/issues/2461)) ([9e847ad](https://github.com/coveo/ui-kit/commit/9e847ad85f5caa5917e21b3774b0211c96ee0252))
+
+
+
+
+
+## [1.113.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.0...@coveo/atomic@1.113.1) (2022-09-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.113.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.4...@coveo/atomic@1.113.0) (2022-09-20)
+
+
+### Features
+
+* **atomic:** initial work for recommendations list and interface ([#2454](https://github.com/coveo/ui-kit/issues/2454)) ([7ba8de1](https://github.com/coveo/ui-kit/commit/7ba8de143b9bc281449c1820480695ebe5375764))
+
+
+
+
+
+## [1.112.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.3...@coveo/atomic@1.112.4) (2022-09-19)
+
+
+### Bug Fixes
+
+* **atomic:** allow facets to be re-added to the interface ([#2450](https://github.com/coveo/ui-kit/issues/2450)) ([145cec4](https://github.com/coveo/ui-kit/commit/145cec4df503abc417076af5d4d55070ef105324))
+* **atomic:** prevent scrolling behind refine modal on iOS ([#2451](https://github.com/coveo/ui-kit/issues/2451)) ([f270912](https://github.com/coveo/ui-kit/commit/f270912d65ad28fc8788a0cbba5ac8f7632e62a1))
+* **atomic:** removed wrong section class from results ([#2452](https://github.com/coveo/ui-kit/issues/2452)) ([9011f57](https://github.com/coveo/ui-kit/commit/9011f57a5b0556f0438f00f818c66f3b2bdd5445))
+* **atomic:** use correct delimiting character for category facet headless controller ([#2439](https://github.com/coveo/ui-kit/issues/2439)) ([246e140](https://github.com/coveo/ui-kit/commit/246e140c97e84c7943e8d92ef89429fea4c5e817))
+
+
+
+
+
 ## [1.112.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.2...@coveo/atomic@1.112.3) (2022-09-19)
 
 **Note:** Version bump only for package @coveo/atomic

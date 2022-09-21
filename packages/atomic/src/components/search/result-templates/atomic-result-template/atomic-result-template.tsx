@@ -1,8 +1,10 @@
 import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
 import {MapProp} from '../../../../utils/props-utils';
-import {ResultTemplateCommon} from '../result-template-common';
-import {makeMatchConditions} from '../../../common/result-template/result-template';
+import {
+  makeMatchConditions,
+  ResultTemplateCommon,
+} from '../../../common/result-templates/result-template-common';
 
 /**
  * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and either an `atomic-result-list` or `atomic-folded-result-list` must be the parent of each `atomic-result-template`.
@@ -50,6 +52,8 @@ export class AtomicResultTemplate {
       },
       validParents: [
         'atomic-result-list',
+        // TODO: move in new atomic-recs-result-template
+        'atomic-recs-list',
         'atomic-folded-result-list',
         'atomic-search-box-instant-results',
       ],

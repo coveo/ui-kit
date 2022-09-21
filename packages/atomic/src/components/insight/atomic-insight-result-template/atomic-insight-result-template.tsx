@@ -1,8 +1,8 @@
 import {Component, h, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
-import {makeMatchConditions} from '../../common/result-template/result-template';
 import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
 import {ResultTemplatesHelpers} from '@coveo/headless';
+import {makeMatchConditions} from '../../common/result-templates/result-template-common';
 
 /**
  * @internal

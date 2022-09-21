@@ -6,7 +6,7 @@ import {
 } from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {MapProp} from '../../../../utils/props-utils';
-import {makeMatchConditions} from '../../../common/result-template/result-template';
+import {makeMatchConditions} from '../../../common/result-templates/result-template-common';
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.

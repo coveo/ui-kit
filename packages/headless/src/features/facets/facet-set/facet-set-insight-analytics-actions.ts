@@ -16,6 +16,7 @@ import {
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
 import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
+import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
 
 export const logFacetShowMore = (facetId: string) =>
   makeInsightAnalyticsAction(
@@ -23,10 +24,13 @@ export const logFacetShowMore = (facetId: string) =>
     AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
+      const metadata = {
+        ...buildFacetBaseMetadata(
+          facetId,
+          getStateNeededForFacetMetadata(state)
+        ),
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      };
       return client.logFacetShowMore(metadata);
     }
   )();
@@ -37,10 +41,13 @@ export const logFacetShowLess = (facetId: string) =>
     AnalyticsType.Search,
     (client, state) => {
       validatePayload(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
+      const metadata = {
+        ...buildFacetBaseMetadata(
+          facetId,
+          getStateNeededForFacetMetadata(state)
+        ),
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      };
 
       return client.logFacetShowLess(metadata);
     }
@@ -76,7 +83,11 @@ export const logFacetUpdateSort = (
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
 
       const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const metadata = {...base, criteria: sortCriterion};
+      const metadata = {
+        ...base,
+        criteria: sortCriterion,
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      };
 
       return client.logFacetUpdateSort(metadata);
     }
@@ -90,7 +101,10 @@ export const logFacetClearAll = (facetId: string) =>
       validatePayload(facetId, facetIdDefinition);
 
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
+      const metadata = {
+        ...buildFacetBaseMetadata(facetId, stateForAnalytics),
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      };
 
       return client.logFacetClearAll(metadata);
     }
@@ -117,12 +131,11 @@ export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
-
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        stateForAnalytics
-      );
+      const metadata = {
+        ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      };
 
       return client.logFacetSelect(metadata);
     }
@@ -152,10 +165,10 @@ export const logFacetDeselect = (
         facetValue: requiredNonEmptyString,
       });
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        stateForAnalytics
-      );
+      const metadata = {
+        ...buildFacetSelectionChangeMetadata(payload, stateForAnalytics),
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      };
 
       return client.logFacetDeselect(metadata);
     }
@@ -172,10 +185,13 @@ export const logFacetBreadcrumb = (
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
-      const metadata = buildFacetSelectionChangeMetadata(
-        payload,
-        getStateNeededForFacetMetadata(state)
-      );
+      const metadata = {
+        ...buildFacetSelectionChangeMetadata(
+          payload,
+          getStateNeededForFacetMetadata(state)
+        ),
+        ...getCaseContextAnalyticsMetadata(state.insightCaseContext),
+      };
 
       return client.logBreadcrumbFacet(metadata);
     }
