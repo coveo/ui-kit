@@ -16,8 +16,11 @@ import {
   ResultDisplayConfigContext,
   DisplayConfig,
 } from '../../result-template-components/result-template-decorators';
-import {BaseResultList, ResultListCommon} from '../result-list-common';
-import {TemplateContent} from '../../result-templates/result-template-common';
+import {
+  BaseResultList,
+  ResultListCommon,
+} from '../../../common/result-list/result-list-common';
+import {TemplateContent} from '../../../common/result-templates/result-template-common';
 import {
   FoldedResultListContext,
   FoldedResultListStateContext,
@@ -42,7 +45,7 @@ const componentTag = 'atomic-result-children';
   styleUrl: 'atomic-result-children.pcss',
   shadow: true,
 })
-export class AtomicResultChildren implements BaseResultList {
+export class AtomicResultChildren implements BaseResultList<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
   @ChildTemplatesContext()
   public templatesManager!: ResultTemplatesManager<TemplateContent>;
@@ -51,7 +54,7 @@ export class AtomicResultChildren implements BaseResultList {
   @ResultDisplayConfigContext()
   private displayConfig!: DisplayConfig;
 
-  public resultListCommon!: ResultListCommon;
+  public resultListCommon!: ResultListCommon<Bindings>;
 
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
@@ -205,9 +208,7 @@ export class AtomicResultChildren implements BaseResultList {
     if (result.isLoadingMoreResults) {
       return (
         <ListDisplayResultsPlaceholder
-          resultsPerPageState={{
-            numberOfResults: result.children.length || 2,
-          }}
+          numberOfPlaceholders={result.children.length || 2}
           density={this.displayConfig.density}
           imageSize={this.imageSize || this.displayConfig.imageSize}
           isChild

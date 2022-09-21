@@ -11,8 +11,7 @@ export interface DisplayOptions {
   display?: ResultDisplayLayout;
 }
 
-export interface ResultPlaceholderProps<ResultsPerPageState>
-  extends Omit<DisplayOptions, 'image'> {
-  resultsPerPageState: ResultsPerPageState;
+export interface ResultPlaceholderProps extends Omit<DisplayOptions, 'image'> {
+  numberOfPlaceholders: number;
   isChild?: boolean;
 }

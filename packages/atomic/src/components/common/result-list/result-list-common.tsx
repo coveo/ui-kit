@@ -2,10 +2,7 @@ import {FunctionalComponent, h, Host} from '@stencil/core';
 import {
   FoldedCollection,
   FoldedResult,
-  FoldedResultListState,
   Result,
-  ResultListState,
-  ResultsPerPageState,
   ResultTemplatesManager,
   ResultTemplate,
   buildResultTemplatesManager,
@@ -31,36 +28,45 @@ import {
   DisplayOptions,
   ResultPlaceholderProps,
 } from '../../common/result-list/result-list';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
   getResultDisplayClasses,
 } from '../../common/layout/display-options';
+import {AnyBindings} from '../../common/interface/bindings';
 
-export interface BaseResultList extends InitializableComponent {
+export interface BaseResultList<Bindings extends AnyBindings>
+  extends InitializableComponent {
   host: HTMLElement;
   templateHasError: boolean;
-  resultListCommon: ResultListCommon;
-
+  resultListCommon: ResultListCommon<Bindings>;
   setRenderFunction?: SetRenderFunction;
-
   density?: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;
   image?: ResultDisplayImageSize;
   display?: ResultDisplayLayout;
 }
 
+export interface CommonResultListState {
+  hasError: boolean;
+  firstSearchExecuted: boolean;
+  hasResults: boolean;
+  isLoading: boolean;
+  results: Result[] | FoldedCollection[];
+  searchResponseId: string;
+}
+
 export type SetRenderFunction = (
   render: ResultRenderingFunction
 ) => Promise<void>;
 
-export interface ResultsProps extends DisplayOptions {
+export interface ResultsProps<Bindings extends AnyBindings>
+  extends DisplayOptions {
   host: HTMLElement;
   bindings: Bindings;
-  resultListState: FoldedResultListState | ResultListState;
-  resultListCommon: ResultListCommon;
+  resultListState: CommonResultListState;
+  resultListCommon: ResultListCommon<Bindings>;
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
@@ -78,15 +84,16 @@ interface TemplateElement extends HTMLElement {
 export interface RenderListOptions extends DisplayOptions {
   host: HTMLElement;
   templateHasError: boolean;
-  resultListState: FoldedResultListState | ResultListState;
-  resultsPerPageState: ResultsPerPageState;
+  resultListState: CommonResultListState;
   setListWrapperRef(el: HTMLDivElement | undefined): void;
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
+  numberOfResults: number;
+  ready: boolean;
 }
 
-interface ResultListCommonOptions {
+interface ResultListCommonOptions<Bindings extends AnyBindings> {
   host: HTMLElement;
   bindings: Bindings;
   templateElements: NodeListOf<TemplateElement>;
@@ -97,7 +104,7 @@ interface ResultListCommonOptions {
   nextNewResultTarget?: FocusTargetController;
 }
 
-export class ResultListCommon {
+export class ResultListCommon<Bindings extends AnyBindings> {
   private host: HTMLElement;
   private bindings: Bindings;
   private render?: ResultRenderingFunction;
@@ -109,7 +116,7 @@ export class ResultListCommon {
   public resultListControllerProps?: ResultListProps;
   public loadingFlag?: string;
 
-  constructor(opts: ResultListCommonOptions) {
+  constructor(opts: ResultListCommonOptions<Bindings>) {
     this.host = opts.host;
     this.bindings = opts.bindings;
     this.loadingFlag = opts.loadingFlag;
@@ -134,9 +141,7 @@ export class ResultListCommon {
     this.render = render;
   }
 
-  public focusOnNextNewResult(
-    resultListState: FoldedResultListState | ResultListState
-  ) {
+  public focusOnNextNewResult(resultListState: CommonResultListState) {
     if (!this.nextNewResultTarget) {
       throw "Cannot focus on next new result if nextNewResultTarget isn't defined";
     }
@@ -208,7 +213,7 @@ export class ResultListCommon {
 
   public getResultId(
     result: Result | FoldedCollection,
-    resultListState: FoldedResultListState | ResultListState
+    resultListState: CommonResultListState
   ) {
     return (
       this.getUnfoldedResult(result).uniqueId + resultListState.searchResponseId
@@ -224,22 +229,27 @@ export class ResultListCommon {
     return window.innerHeight + window.scrollY >= childEl?.offsetHeight;
   }
 
-  private getClasses(
-    display: ResultDisplayLayout = 'list',
-    density: ResultDisplayDensity,
-    imageSize: ResultDisplayImageSize,
+  private getLoadingClasses(
     firstSearchExecuted: boolean,
     isLoading: boolean,
     displayPlaceholders: boolean
-  ): string {
-    const classes = getResultDisplayClasses(display, density, imageSize);
+  ) {
+    const classes = [];
     if (firstSearchExecuted && isLoading) {
       classes.push('loading');
     }
     if (displayPlaceholders) {
       classes.push('placeholder');
     }
-    return classes.join(' ');
+    return classes;
+  }
+
+  private getListClasses(
+    display: ResultDisplayLayout,
+    density: ResultDisplayDensity,
+    imageSize: ResultDisplayImageSize
+  ) {
+    return getResultDisplayClasses(display, density, imageSize);
   }
 
   public renderList({
@@ -249,11 +259,15 @@ export class ResultListCommon {
     imageSize,
     templateHasError,
     resultListState,
-    resultsPerPageState,
+    numberOfResults,
     setListWrapperRef,
     getContentOfResultTemplate,
+    ready,
   }: RenderListOptions) {
     this.updateBreakpoints?.(host);
+    if (!ready) {
+      return;
+    }
 
     if (resultListState.hasError) {
       return;
@@ -265,30 +279,39 @@ export class ResultListCommon {
 
     const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
-    const classes = this.getClasses(
-      display,
-      density,
-      imageSize!,
+    const loadingClasses = this.getLoadingClasses(
       resultListState.firstSearchExecuted,
       resultListState.isLoading,
       displayPlaceholders
     );
+
+    const listClasses = [
+      ...loadingClasses,
+      ...this.getListClasses(display ?? 'list', density, imageSize ?? 'icon'),
+    ];
+
     return (
       <Host>
         {templateHasError && <slot></slot>}
-        <div class={`list-wrapper ${classes}`} ref={setListWrapperRef}>
-          <ResultDisplayWrapper classes={classes} display={display}>
+        <div
+          class={`list-wrapper ${listClasses.join(' ')}`}
+          ref={setListWrapperRef}
+        >
+          <ResultDisplayWrapper
+            classes={listClasses.join(' ')}
+            display={display}
+          >
             {displayPlaceholders && (
               <ResultsPlaceholder
                 display={display}
                 density={density}
                 imageSize={imageSize}
-                resultsPerPageState={resultsPerPageState}
+                numberOfPlaceholders={numberOfResults}
               />
             )}
             {resultListState.firstSearchExecuted && (
               <Results
-                classes={classes}
+                classes={loadingClasses.join(' ')}
                 bindings={this.bindings}
                 host={host}
                 display={display}
@@ -299,7 +322,7 @@ export class ResultListCommon {
                 getContentOfResultTemplate={getContentOfResultTemplate}
                 renderingFunction={this.render}
                 indexOfResultToFocus={this.indexOfResultToFocus}
-                newResultRef={(element) =>
+                newResultRef={(element: HTMLElement) =>
                   this.onFirstNewResultRendered(element)
                 }
               />
@@ -330,9 +353,9 @@ const ResultDisplayWrapper: FunctionalComponent<{
   );
 };
 
-const ResultsPlaceholder: FunctionalComponent<
-  ResultPlaceholderProps<ResultsPerPageState>
-> = (props) => {
+const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
+  props
+) => {
   switch (props.display) {
     case 'table':
       return <TableDisplayResultsPlaceholder {...props} />;
@@ -343,7 +366,7 @@ const ResultsPlaceholder: FunctionalComponent<
   }
 };
 
-const Results: FunctionalComponent<ResultsProps> = (props) => {
+const Results: FunctionalComponent<ResultsProps<AnyBindings>> = (props) => {
   if (!props.resultListState.results.length) {
     return null;
   }

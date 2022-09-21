@@ -3,6 +3,7 @@ import {
   executeSearch,
   fetchQuerySuggestions,
 } from '../../../features/insight-search/insight-search-actions';
+import {logSearchboxSubmit} from '../../../features/query/query-insight-analytics-actions';
 import {
   buildCoreSearchBox,
   Delimiters,
@@ -40,9 +41,19 @@ export function buildSearchBox(
   engine: InsightEngine,
   props: SearchBoxProps = {}
 ): SearchBox {
-  return buildCoreSearchBox(engine, {
+  const searchBox = buildCoreSearchBox(engine, {
     ...props,
     executeSearchActionCreator: executeSearch,
     fetchQuerySuggestionsActionCreator: fetchQuerySuggestions,
   });
+
+  return {
+    ...searchBox,
+    submit() {
+      searchBox.submit(logSearchboxSubmit());
+    },
+    get state() {
+      return searchBox.state;
+    },
+  };
 }

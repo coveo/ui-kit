@@ -1,5 +1,9 @@
 import {h} from '@stencil/core';
-import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
+import {
+  ResultTemplate,
+  ResultTemplateCondition,
+  ResultTemplatesHelpers,
+} from '@coveo/headless';
 
 export type TemplateContent = DocumentFragment;
 
@@ -100,4 +104,23 @@ export class ResultTemplateCommon {
 
 function getTemplateElement(host: HTMLElement) {
   return host.querySelector('template')!;
+}
+
+export function makeMatchConditions(
+  mustMatch: Record<string, string[]>,
+  mustNotMatch: Record<string, string[]>
+): ResultTemplateCondition[] {
+  const conditions: ResultTemplateCondition[] = [];
+  for (const field in mustMatch) {
+    conditions.push(
+      ResultTemplatesHelpers.fieldMustMatch(field, mustMatch[field])
+    );
+  }
+
+  for (const field in mustNotMatch) {
+    conditions.push(
+      ResultTemplatesHelpers.fieldMustNotMatch(field, mustNotMatch[field])
+    );
+  }
+  return conditions;
 }

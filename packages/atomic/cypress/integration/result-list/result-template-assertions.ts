@@ -15,8 +15,16 @@ export function assertRendersTemplate(shouldBeRendered: boolean) {
 }
 
 export function assertResultImageSize(size: ResultDisplayImageSize) {
+  function getImageClasses(element?: HTMLElement) {
+    return Array.from(element?.classList ?? []).filter((className) =>
+      className.startsWith('image-')
+    );
+  }
+
   it(`enforces the "${size}" image size on the result`, () => {
-    ResultListSelectors.firstResultRoot().should('have.class', `image-${size}`);
+    ResultListSelectors.firstResultRoot().should(([el]) =>
+      expect(getImageClasses(el)).to.deep.eq([`image-${size}`])
+    );
   });
 }
 
