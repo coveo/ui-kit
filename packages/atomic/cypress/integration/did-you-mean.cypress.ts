@@ -33,6 +33,8 @@ describe('Did You Mean Test Suites', () => {
     });
 
     QuerySummaryAssertions.assertHasQuery(newQuery);
+    DidYouMeanAssertions.assertHasAutoCorrectOriginalQuery(originalQuery);
+    DidYouMeanAssertions.assertHasAutoCorrectNewQuery(newQuery);
     DidYouMeanAssertions.assertDisplayAutoCorrected(true);
     DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
     DidYouMeanAssertions.assertDisplayQueryTriggered(false);
@@ -47,6 +49,7 @@ describe('Did You Mean Test Suites', () => {
     });
 
     QuerySummaryAssertions.assertHasQuery(originalQuery);
+    DidYouMeanAssertions.assertHasManualCorrectNewQuery(newQuery);
     DidYouMeanAssertions.assertDisplayAutoCorrected(false);
     DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(true);
     DidYouMeanAssertions.assertDisplayQueryTriggered(false);
@@ -83,7 +86,8 @@ describe('Did You Mean Test Suites', () => {
     });
 
     QuerySummaryAssertions.assertHasQuery(newQuery);
-    DidYouMeanAssertions.assertDisplayAutoCorrected(false);
+    DidYouMeanAssertions.assertHasTriggerOriginalQuery(originalQuery);
+    DidYouMeanAssertions.assertHasTriggerNewQuery(newQuery);
     DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
     DidYouMeanAssertions.assertDisplayQueryTriggered(true);
     DidYouMeanAssertions.assertDisplayUndoButton(true);
@@ -93,7 +97,7 @@ describe('Did You Mean Test Suites', () => {
         DidYouMeanSelectors.undoButton().click();
       });
 
-      QuerySummaryAssertions.assertHasQuery(originalQuery);
+      QuerySummaryAssertions.assertHasQuery(newQuery);
       DidYouMeanAssertions.assertDisplayAutoCorrected(false);
       DidYouMeanAssertions.assertDisplayDidYouMeanWithButton(false);
       DidYouMeanAssertions.assertDisplayQueryTriggered(false);
