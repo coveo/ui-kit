@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.44.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.9...@coveo/quantic@1.44.10) (2022-09-21)
+
+
+### Bug Fixes
+
+* **quantic:** links generated inside facet values ([#2443](https://github.com/coveo/ui-kit/issues/2443)) ([230d29e](https://github.com/coveo/ui-kit/commit/230d29e747ce794b25eacd9a2c543afb85e92bf2))
+
+
+
+
+
 ## [1.44.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.8...@coveo/quantic@1.44.9) (2022-09-21)
 
 **Note:** Version bump only for package @coveo/quantic

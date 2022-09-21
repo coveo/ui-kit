@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.113.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.2...@coveo/atomic@1.113.3) (2022-09-21)
+
+
+### Bug Fixes
+
+* **atomic:** allowed escaping commas in map props ([#2462](https://github.com/coveo/ui-kit/issues/2462)) ([04a032d](https://github.com/coveo/ui-kit/commit/04a032d47b2f2a5631ed8875116549cbd3289391))
+
+
+
+
+
 ## [1.113.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.1...@coveo/atomic@1.113.2) (2022-09-21)
 
 
