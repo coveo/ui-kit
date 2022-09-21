@@ -84,6 +84,7 @@ export interface RenderListOptions extends DisplayOptions {
   getContentOfResultTemplate(
     result: Result | FoldedResult
   ): HTMLElement | DocumentFragment;
+  ready: boolean;
 }
 
 interface ResultListCommonOptions {
@@ -224,22 +225,27 @@ export class ResultListCommon {
     return window.innerHeight + window.scrollY >= childEl?.offsetHeight;
   }
 
-  private getClasses(
-    display: ResultDisplayLayout = 'list',
-    density: ResultDisplayDensity,
-    imageSize: ResultDisplayImageSize,
+  private getLoadingClasses(
     firstSearchExecuted: boolean,
     isLoading: boolean,
     displayPlaceholders: boolean
-  ): string {
-    const classes = getResultDisplayClasses(display, density, imageSize);
+  ) {
+    const classes = [];
     if (firstSearchExecuted && isLoading) {
       classes.push('loading');
     }
     if (displayPlaceholders) {
       classes.push('placeholder');
     }
-    return classes.join(' ');
+    return classes;
+  }
+
+  private getListClasses(
+    display: ResultDisplayLayout,
+    density: ResultDisplayDensity,
+    imageSize: ResultDisplayImageSize
+  ) {
+    return getResultDisplayClasses(display, density, imageSize);
   }
 
   public renderList({
@@ -252,8 +258,12 @@ export class ResultListCommon {
     resultsPerPageState,
     setListWrapperRef,
     getContentOfResultTemplate,
+    ready,
   }: RenderListOptions) {
     this.updateBreakpoints?.(host);
+    if (!ready) {
+      return;
+    }
 
     if (resultListState.hasError) {
       return;
@@ -265,19 +275,28 @@ export class ResultListCommon {
 
     const displayPlaceholders = !this.bindings.store.isAppLoaded();
 
-    const classes = this.getClasses(
-      display,
-      density,
-      imageSize!,
+    const loadingClasses = this.getLoadingClasses(
       resultListState.firstSearchExecuted,
       resultListState.isLoading,
       displayPlaceholders
     );
+
+    const listClasses = [
+      ...loadingClasses,
+      ...this.getListClasses(display ?? 'list', density, imageSize ?? 'icon'),
+    ];
+
     return (
       <Host>
         {templateHasError && <slot></slot>}
-        <div class={`list-wrapper ${classes}`} ref={setListWrapperRef}>
-          <ResultDisplayWrapper classes={classes} display={display}>
+        <div
+          class={`list-wrapper ${listClasses.join(' ')}`}
+          ref={setListWrapperRef}
+        >
+          <ResultDisplayWrapper
+            classes={listClasses.join(' ')}
+            display={display}
+          >
             {displayPlaceholders && (
               <ResultsPlaceholder
                 display={display}
@@ -288,7 +307,7 @@ export class ResultListCommon {
             )}
             {resultListState.firstSearchExecuted && (
               <Results
-                classes={classes}
+                classes={loadingClasses.join(' ')}
                 bindings={this.bindings}
                 host={host}
                 display={display}

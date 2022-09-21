@@ -4,6 +4,7 @@ import {
   notificationsComponent,
   NotificationsSelectors,
 } from './notifications-selectors';
+import * as CommonAssertions from './common-assertions';
 
 describe('Notifications Test Suites', () => {
   describe('without any notify trigger', () => {
@@ -16,6 +17,29 @@ describe('Notifications Test Suites', () => {
     });
   });
 
+  describe('with a single notify triggers', () => {
+    const notification = 'Hello World!';
+    before(() => {
+      new TestFixture()
+        .with(addNotifications())
+        .with(addNotifyTriggers([notification]))
+        .init();
+    });
+
+    it('should render a single notification', () => {
+      NotificationsSelectors.notifications()
+        .children()
+        .its('length')
+        .should('eq', 1);
+      NotificationsSelectors.text().should('have.text', notification);
+    });
+
+    CommonAssertions.assertAriaLiveMessage(
+      NotificationsSelectors.ariaLive,
+      notification
+    );
+  });
+
   describe('with multiple notify triggers', () => {
     const notifications = ['abc', 'def'];
     before(() => {
@@ -25,10 +49,24 @@ describe('Notifications Test Suites', () => {
         .init();
     });
 
-    it('should only render the first notifications', () => {
-      NotificationsSelectors.text().its('length').should('eq', 1);
-      NotificationsSelectors.text().should('have.text', notifications[0]);
+    it('should render each notification', () => {
+      NotificationsSelectors.notifications()
+        .children()
+        .its('length')
+        .should('eq', 2);
+      NotificationsSelectors.text()
+        .map(($el) => $el.text())
+        .should('deep.equal', notifications);
     });
+
+    CommonAssertions.assertAriaLiveMessage(
+      NotificationsSelectors.ariaLive,
+      notifications[0]
+    );
+    CommonAssertions.assertAriaLiveMessage(
+      NotificationsSelectors.ariaLive,
+      notifications[1]
+    );
   });
 
   describe('with a notify trigger and a heading level of 4', () => {

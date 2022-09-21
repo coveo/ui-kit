@@ -5,7 +5,6 @@ import {
   InstantResults,
   Result,
 } from '@coveo/headless';
-
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -23,8 +22,8 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
-import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {getClassNameForButtonStyle} from '../../../common/button-style';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -163,9 +162,12 @@ export class AtomicSearchBoxInstantResults implements BaseResultList {
       elements.push({
         key: 'instant-results-show-all-button',
         content: (
-          <Button part="instant-results-show-all-button" style="text-primary">
+          <div
+            part="instant-results-show-all-button"
+            class={getClassNameForButtonStyle('text-primary')}
+          >
             {showAllText}
-          </Button>
+          </div>
         ),
         part: 'instant-results-show-all',
         ariaLabel: showAllText,

@@ -73,7 +73,7 @@ describe('analyticsConfig', () => {
       store.registerFacet(typeOfFacet, {
         facetId: 'some_id',
         label: 'This is a label',
-        element: jest.fn() as unknown as HTMLElement,
+        element: document.createElement('div'),
       });
 
       const out = resultingConfig.analyticsClientMiddleware!('an_event', {
