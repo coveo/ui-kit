@@ -516,7 +516,7 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
 }
 
 /**
- * isFocusable checks whether
+ * Checks whether an element is focusable.
  * @param {HTMLElement | Element}  element
  * @returns {boolean}
  */
@@ -545,7 +545,7 @@ export function isFocusable(element) {
 }
 
 /**
- * getLastFocusableElement return the last Focusable for a HTMLElement. 
+ * Returns the last focusable element of for an HTML element. 
  * This function would NOT work with shadow root.
  * @param {Element | null} element
  * @returns {Element | null}
