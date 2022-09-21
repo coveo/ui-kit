@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.113.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.1...@coveo/atomic@1.113.2) (2022-09-21)
+
+
+### Bug Fixes
+
+* **atomic:** use ArrayProp for facet allowed values option ([#2456](https://github.com/coveo/ui-kit/issues/2456)) ([6e17c1e](https://github.com/coveo/ui-kit/commit/6e17c1e3361ffadb432de0bf94da0931672c6e39))
+* **headless:** fixed didYoumean auto correction originalQuery ([#2461](https://github.com/coveo/ui-kit/issues/2461)) ([9e847ad](https://github.com/coveo/ui-kit/commit/9e847ad85f5caa5917e21b3774b0211c96ee0252))
+
+
+
+
+
 ## [1.113.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.0...@coveo/atomic@1.113.1) (2022-09-20)
 
 **Note:** Version bump only for package @coveo/atomic
