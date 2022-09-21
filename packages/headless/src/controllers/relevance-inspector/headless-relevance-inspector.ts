@@ -67,10 +67,6 @@ export interface RelevanceInspectorInitialState {
  */
 export interface RelevanceInspector extends Controller {
   /**
-   * @deprecated Use `fetchFieldsDescription` instead.
-   */
-  fetchFieldDescriptions(): void;
-  /**
    * Fetch the description of all fields available from the index.
    */
   fetchFieldsDescription(): void;
@@ -128,11 +124,6 @@ export interface RelevanceInspectorState {
    * The ranking expressions.
    */
   rankingExpressions?: QueryRankingExpression[];
-
-  /**
-   * @deprecated Use `fieldDescriptions`.
-   */
-  fieldDescriptions?: FieldDescription[];
 
   /**
    * The description of all fields available in the index.
@@ -230,7 +221,7 @@ export function buildRelevanceInspector(
         rankingExpressions,
       } = state.search.response as SearchResponseSuccessWithDebugInfo;
 
-      const {fieldsDescription, fetchAllFields} = state.fields;
+      const {fetchAllFields} = state.fields;
 
       return {
         isEnabled,
@@ -243,7 +234,6 @@ export function buildRelevanceInspector(
         },
         userIdentities,
         rankingExpressions,
-        fieldsDescription,
         fetchAllFields,
       };
     },
@@ -277,10 +267,6 @@ export function buildRelevanceInspector(
         https://docs.coveo.com/en/headless/latest/reference/search/controllers/result-list/#resultlistoptions
         https://docs.coveo.com/en/headless/latest/reference/search/actions/field/#registerfieldstoinclude`
       );
-    },
-
-    fetchFieldDescriptions() {
-      this.fetchFieldsDescription();
     },
   };
 }

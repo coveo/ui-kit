@@ -26,10 +26,7 @@ import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
@@ -313,16 +310,6 @@ describe('facet-set slice', () => {
     facetSetReducer(state, deselectAllFacetValues('1'));
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every facet', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll').mockReset();
-
-    state['1'] = buildMockFacetRequest();
-    state['2'] = buildMockFacetRequest();
-    facetSetReducer(state, deselectAllFacets());
-
-    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(2);
   });
 
   it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {

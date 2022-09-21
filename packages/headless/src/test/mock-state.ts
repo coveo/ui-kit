@@ -1,6 +1,5 @@
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
 import {getQueryInitialState} from '../features/query/query-state';
-import {getRedirectionInitialState} from '../features/redirection/redirection-state';
 import {getQuerySetInitialState} from '../features/query-set/query-set-state';
 import {getSearchInitialState} from '../features/search/search-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
@@ -63,7 +62,6 @@ export function createMockState(
     instantResults: getInstantResultsInitialState(),
     tabSet: getTabSetInitialState(),
     querySuggest: {},
-    redirection: getRedirectionInitialState(),
     search: getSearchInitialState(),
     sortCriteria: getSortCriteriaInitialState(),
     context: getContextInitialState(),

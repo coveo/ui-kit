@@ -58,14 +58,16 @@ export class SmartSnippetQuestionsList extends Component<
                   ></div>
                   <button
                     style={{display: question.expanded ? 'none' : 'block'}}
-                    onClick={() => this.controller.expand(question.documentId)}
+                    onClick={() =>
+                      this.controller.expand(question.questionAnswerId)
+                    }
                   >
                     Show answer
                   </button>
                   <button
                     style={{display: question.expanded ? 'block' : 'none'}}
                     onClick={() =>
-                      this.controller.collapse(question.documentId)
+                      this.controller.collapse(question.questionAnswerId)
                     }
                   >
                     Hide answer
