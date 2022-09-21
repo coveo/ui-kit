@@ -10,6 +10,8 @@ runs:
   steps:
     - uses: cypress-io/github-action@v4
       name: Run Cypress
+      env:
+        DEBUG: cypress:*
       with:
         working-directory: ./packages/samples/atomic-next
         start: npm run dev
