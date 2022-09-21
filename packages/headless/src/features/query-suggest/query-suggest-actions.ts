@@ -25,9 +25,8 @@ import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-pa
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &
-  Partial<
-    QuerySetSection & ContextSection & PipelineSection & SearchHubSection
-  >;
+  QuerySetSection &
+  Partial<ContextSection & PipelineSection & SearchHubSection>;
 
 const idDefinition = {
   id: requiredNonEmptyString,
@@ -158,10 +157,7 @@ export const buildQuerySuggestRequest = async (
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
     count: s.querySuggest[id]!.count,
-    /**
-     * @deprecated - Adjust `StateNeededByQuerySuggest` to make `querySet` required in v2.
-     */
-    q: s.querySet?.[id],
+    q: s.querySet[id],
     locale: s.configuration.search.locale,
     timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled
