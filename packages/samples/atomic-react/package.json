@@ -4,8 +4,8 @@
   "description": "Samples with atomic-react",
   "private": true,
   "dependencies": {
-    "@coveo/atomic": "^1.104.1",
-    "@coveo/atomic-react": "^1.23.2",
+    "@coveo/atomic": "^2.0.0",
+    "@coveo/atomic-react": "^2.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
