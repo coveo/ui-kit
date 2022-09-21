@@ -11,6 +11,7 @@ describe('smoke test', {viewportHeight: 2000, viewportWidth: 2000}, () => {
   });
 
   it('should load', () => {
+    cy.wait(2000);
     cy.visit('http://localhost:3000');
     cy.wait(2000);
     cy.get('atomic-search-box')
