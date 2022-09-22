@@ -81,8 +81,6 @@ export default class QuanticRefineToggle extends LightningElement {
   modalId = 'refineModal';
   /** @type {AnyHeadless} */
   headless;
-  /** @type {boolean} */
-  hasResults;
 
   renderedFacets = {};
 
@@ -109,16 +107,12 @@ export default class QuanticRefineToggle extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.querySummary = this.headless.buildQuerySummary(engine);
     this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
-    this.searchStatus = this.headless.buildSearchStatus(engine);
 
     this.unsubscribeQuerySummary = this.querySummary.subscribe(() =>
       this.updateTotalResults()
     );
     this.unsubscribeBreadcrumbManager = this.breadcrumbManager.subscribe(() =>
       this.updateActiveFiltersCount()
-    );
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.updateHasResults()
     );
 
     const registeredFacets = getAllFacetsFromStore(this.engineId);
@@ -132,13 +126,12 @@ export default class QuanticRefineToggle extends LightningElement {
       (result, facetRendered) => result || facetRendered,
       false
     );
-    return !this.hasResults || (this.hideSort && !areFacetsRendered);
+    return  this.hideSort && !areFacetsRendered;
   }
 
   disconnectedCallback() {
     this.unsubscribeQuerySummary?.();
     this.unsubscribeBreadcrumbManager?.();
-    this.unsubscribeSearchStatus?.();
     this.removeEventListener('renderFacet', this.handleRenderFacetEvent);
   }
 
@@ -148,14 +141,6 @@ export default class QuanticRefineToggle extends LightningElement {
    */
   updateTotalResults() {
     this.total = this.querySummary.state.total;
-  }
-
-  /**
-   * Updates the value of the hasResults.
-   * @returns {void}
-   */
-  updateHasResults() {
-    this.hasResults = this.searchStatus?.state?.hasResults;
   }
 
   /**
