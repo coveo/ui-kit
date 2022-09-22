@@ -57,3 +57,43 @@ export function assertLogQueryTriggerUndo(undoneQuery: string) {
     );
   });
 }
+
+export function assertHasAutoCorrectOriginalQuery(originalQuery: string) {
+  it(`should display the original query ("${originalQuery}")`, () => {
+    DidYouMeanSelectors.noResultsOriginalQuery().should(($el) =>
+      expect($el.text()).to.equal(originalQuery)
+    );
+  });
+}
+
+export function assertHasAutoCorrectNewQuery(newQuery: string) {
+  it(`should display the correction of an automatically corrected query ("${newQuery}")`, () => {
+    DidYouMeanSelectors.autoCorrectedNewQuery().should(($el) =>
+      expect($el.text()).to.equal(newQuery)
+    );
+  });
+}
+
+export function assertHasManualCorrectNewQuery(newQuery: string) {
+  it(`should display a manual correction button with the new query ("${newQuery}")`, () => {
+    DidYouMeanSelectors.correctionButton().should(($el) =>
+      expect($el.text()).to.equal(newQuery)
+    );
+  });
+}
+
+export function assertHasTriggerOriginalQuery(originalQuery: string) {
+  it(`should display an undo button with the original query ("${originalQuery}")`, () => {
+    DidYouMeanSelectors.undoButton().should(($el) =>
+      expect($el.text()).to.equal(originalQuery)
+    );
+  });
+}
+
+export function assertHasTriggerNewQuery(newQuery: string) {
+  it(`should display the correction of a query trigger ("${newQuery}")`, () => {
+    DidYouMeanSelectors.showingResultsForNewQuery().should(($el) =>
+      expect($el.text()).to.equal(newQuery)
+    );
+  });
+}
