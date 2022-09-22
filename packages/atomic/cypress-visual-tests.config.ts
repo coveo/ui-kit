@@ -24,6 +24,8 @@ export default defineConfig({
       return require('./cypress/plugins/index.js')(on, config);
     },
     baseUrl: 'http://localhost:3333',
-    specPattern: 'cypress/integration-screenshots/**/*.cypress.ts',
+    specPattern: 'cypress/integration-visual-tests/**/*.cypress.ts',
   },
 });
+
+require('@applitools/eyes-cypress')(module);
