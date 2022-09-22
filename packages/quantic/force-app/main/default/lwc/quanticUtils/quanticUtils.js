@@ -551,7 +551,7 @@ export function isFocusable(element) {
  * @returns {Element | null}
  */
  export function getLastFocusableElement(element) {
-  if (!element || element.nodeType === 3) return null;
+  if (!element || element.nodeType === Node.TEXT_NODE) return null;
 
   const lastFocusable = Array.from(element.childNodes)
     .map((item) => this.getLastFocusableElement(item))
