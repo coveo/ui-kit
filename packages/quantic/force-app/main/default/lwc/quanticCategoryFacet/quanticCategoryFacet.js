@@ -24,6 +24,11 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader'} type
+ */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
@@ -158,7 +163,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {{type: 'facetValue' | 'facetHeader'}} */
+  /** @type {FocusTarget} */
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;

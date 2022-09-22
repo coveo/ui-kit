@@ -30,6 +30,13 @@ import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRa
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader' | 'applyButton'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
@@ -160,7 +167,7 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {{type: 'facetValue' | 'facetHeader' | 'applyButton', index?: number, value?: string}} */
+  /** @type {FocusTarget} */
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;

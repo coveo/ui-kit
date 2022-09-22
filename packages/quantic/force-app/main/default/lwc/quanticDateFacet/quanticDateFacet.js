@@ -19,6 +19,13 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * The `QuanticDateFacet` component displays facet values as date ranges.
@@ -105,7 +112,7 @@ export default class QuanticDateFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {{type: 'facetValue' | 'facetHeader', index?: number, value?: string}} */
+  /** @type {FocusTarget} */
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;

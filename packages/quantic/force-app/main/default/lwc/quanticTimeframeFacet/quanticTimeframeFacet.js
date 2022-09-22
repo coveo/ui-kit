@@ -56,6 +56,13 @@ import timeframeInputApply from '@salesforce/label/c.quantic_TimeframeInputApply
  * @property {number} amount
  * @property {string} label
  */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader' | 'applyButton'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * The `QuanticTimeframeFacet` component displays dates as relative ranges.
@@ -162,7 +169,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   unsubscribeDateFilter;
   /** @type {AnyHeadless} */
   headless;
-  /** @type {{type: 'facetValue' | 'facetHeader' | 'applyButton', index?: number, value?: string}} */
+  /** @type {FocusTarget} */
   focusTarget;
   /** @type {boolean} */
   focusShouldBeInFacet = false;
