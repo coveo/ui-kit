@@ -30,7 +30,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const search = `${sectionSelector('search')} {
       width: 100%;
       display: grid;
-      grid-template-columns: 1fr auto auto auto;
+      grid-template-columns: 1fr auto;
       grid-gap: 0.5rem;
       background: var(--atomic-neutral-light);
       padding-top: 1.5rem;
