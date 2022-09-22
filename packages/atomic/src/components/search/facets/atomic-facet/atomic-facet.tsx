@@ -20,13 +20,14 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   BaseFacet,
   FacetCommon,
   parseDependsOn,
 } from '../../../common/facets/facet-common';
+import {isArray} from '@coveo/bueno';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -72,7 +73,7 @@ import {
 })
 export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   @InitializeBindings() public bindings!: Bindings;
-  public facetCommon!: FacetCommon;
+  public facetCommon?: FacetCommon;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -160,9 +161,10 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * ```
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
-
   /**
-   * Specifies an explicit list of `allowedValues` in the Search API request, separated by commas.
+   * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.
+   *
+   * Specifying the property as a comma separated string is deprecated.
    *
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
@@ -174,14 +176,16 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    * those other values.
    *
    * ```html
-   * <atomic-facet field="objecttype" allowed-values="Contact,Account,File"></div>
+   * <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div>
    * ```
    *
    * The maximum amount of allowed values is 25.
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  @Prop() public allowedValues?: string;
+  @ArrayProp({deprecationWarning: true})
+  @Prop({mutable: true})
+  public allowedValues?: string | string[];
 
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
@@ -201,7 +205,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues?.trim().split(','),
+      allowedValues: this.processAllowedValues(),
     };
 
     this.facet = buildFacet(this.bindings.engine, {options});
@@ -229,7 +233,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   }
 
   public disconnectedCallback() {
-    this.facetCommon.disconnectedCallback();
+    this.facetCommon?.disconnectedCallback();
   }
 
   public componentShouldUpdate(
@@ -266,5 +270,19 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       showMoreFocus: this.showMoreFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
+  }
+
+  private processAllowedValues() {
+    // @deprecated
+    // TODO, V2:
+    // basePath should only support JSON string representation.
+    // deprecate comma delimited string
+    if (isArray(this.allowedValues)) {
+      return this.allowedValues;
+    }
+    if (this.allowedValues) {
+      return this.allowedValues?.trim().split(',');
+    }
+    return undefined;
   }
 }

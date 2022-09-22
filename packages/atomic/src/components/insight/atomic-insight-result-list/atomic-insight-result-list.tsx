@@ -169,7 +169,7 @@ export class AtomicInsightResultList {
           <div class={`list-root  ${this.getClasses()}`} part="result-list">
             {!this.bindings.store.isAppLoaded() && (
               <ListDisplayResultsPlaceholder
-                resultsPerPageState={this.resultPerPageState}
+                numberOfPlaceholders={this.resultPerPageState.numberOfResults}
                 display="list"
                 density={this.density}
                 imageSize={this.imageSize}
