@@ -33,9 +33,6 @@ export default class QuanticCardContainer extends LightningElement {
     this.dispatchEvent(headerClickEvent);
   }
 
-  /**
-   * @param {KeyboardEvent} evt
-   */
   handleHeaderKeyDown(evt) {
     if (evt.code === 'Enter' || evt.code === 'Space') {
       evt.preventDefault();
