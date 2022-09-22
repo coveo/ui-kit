@@ -48,7 +48,7 @@ export class AtomicInsightTimeframeFacet
   public facetForDateRange?: InsightDateFacet;
   public facetForDatePicker?: InsightDateFacet;
 
-  private timeframeFacetCommon!: TimeframeFacetCommon;
+  private timeframeFacetCommon?: TimeframeFacetCommon;
   public filter?: InsightDateFilter;
   public searchStatus!: InsightSearchStatus;
   @Element() private host!: HTMLElement;
@@ -157,7 +157,7 @@ export class AtomicInsightTimeframeFacet
   }
 
   public disconnectedCallback() {
-    this.timeframeFacetCommon.disconnectedCallback();
+    this.timeframeFacetCommon?.disconnectedCallback();
   }
 
   private initializeFacetForDatePicker() {

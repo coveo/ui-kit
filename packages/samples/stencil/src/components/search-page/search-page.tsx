@@ -28,11 +28,13 @@ export class SearchPage {
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
             <atomic-facet
+              facet-id="source"
               field="source"
               label="Source"
               display-values-as="checkbox"
             ></atomic-facet>
             <atomic-facet
+              facet-id="filetype"
               field="filetype"
               label="Filetype"
               display-values-as="checkbox"

@@ -65,7 +65,7 @@ export class AtomicTimeframeFacet
   public facetForDateRange?: DateFacet;
   public facetForDatePicker?: DateFacet;
 
-  private timeframeFacetCommon!: TimeframeFacetCommon;
+  private timeframeFacetCommon?: TimeframeFacetCommon;
   public filter?: DateFilter;
   public searchStatus!: SearchStatus;
   @Element() private host!: HTMLElement;
@@ -174,7 +174,7 @@ export class AtomicTimeframeFacet
   }
 
   public disconnectedCallback() {
-    this.timeframeFacetCommon.disconnectedCallback();
+    this.timeframeFacetCommon?.disconnectedCallback();
   }
 
   private initializeFacetForDatePicker() {
