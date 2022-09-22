@@ -12,3 +12,4 @@ reports/*.xml
 yarn.lock
 .dccache
 sarifs
+.cy.ts.mp4

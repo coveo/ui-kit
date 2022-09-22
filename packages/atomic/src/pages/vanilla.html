@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  </head>
+
+  <body>
+    <input type="search" id="searchbox" placeholder="Search..." />
+    <ul id="resultlist"></ul>
+  </body>
+
+  <script type="module">
+    import {
+      buildSearchEngine,
+      getSampleSearchEngineConfiguration,
+      buildSearchBox,
+      buildResultList,
+    } from 'https://static.cloud.coveo.com/headless/latest/headless.esm.js';
+
+    const searchBoxContainer = document.querySelector('#searchbox');
+    const resultListContainer = document.querySelector('#resultlist');
+
+    const engine = buildSearchEngine({configuration: getSampleSearchEngineConfiguration()});
+
+    const searchbox = buildSearchBox(engine);
+    const resultList = buildResultList(engine);
+
+    searchBoxContainer.addEventListener('keyup', (e) => {
+      if (e.keyCode === 13) {
+        searchbox.submit();
+        return;
+      }
+
+      searchbox.updateText(searchBoxContainer.value);
+    });
+
+    resultList.subscribe(() => {
+      const {results} = resultList.state;
+      resultListContainer.innerHTML = '';
+
+      results.forEach((result) => {
+        const resultElement = document.createElement('li');
+
+        const title = document.createElement('h1');
+        title.textContent = result.title;
+
+        const excerpt = document.createElement('div');
+        excerpt.textContent = result.excerpt;
+
+        resultElement.appendChild(title);
+        resultElement.appendChild(excerpt);
+        resultListContainer.appendChild(resultElement);
+      });
+    });
+  </script>
+</html>
