@@ -1,6 +1,6 @@
 import {defineConfig} from 'cypress';
 
-const cfg = defineConfig({
+export default defineConfig({
   projectId: '5ph2j4',
   experimentalFetchPolyfill: true,
   reporter: 'spec',
@@ -18,14 +18,12 @@ const cfg = defineConfig({
   requestTimeout: 10000,
   watchForFileChanges: true,
   e2e: {
+    // We've imported your old cypress plugins here.
+    // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config);
     },
     baseUrl: 'http://localhost:3333',
-    specPattern: 'cypress/integration-visual-tests/**/*.cypress.ts',
+    specPattern: 'cypress/integration-insights-panel/**/*.cypress.ts',
   },
 });
-
-module.exports = cfg;
-require('@applitools/eyes-cypress')(module);
-export default cfg;
