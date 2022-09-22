@@ -105,6 +105,10 @@ export default class QuanticDateFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {{type: 'facetValue' | 'facetHeader', index?: number, value?: string}} */
+  focusTarget;
+  /** @type {boolean} */
+  focusShouldBeInFacet = false;
 
   labels = {
     clearFilter,
@@ -120,6 +124,10 @@ export default class QuanticDateFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
+    }
   }
 
   /**
@@ -238,10 +246,20 @@ export default class QuanticDateFacet extends LightningElement {
       (value) => this.formattingFunction(value) === evt.detail.value
     );
     this.facet.toggleSelect(item);
+
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      value: evt.detail.value,
+    };
   }
 
   clearSelections() {
     this.facet.deselectAll();
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetHeader',
+    };
   }
 
   toggleFacetVisibility() {
@@ -250,5 +268,53 @@ export default class QuanticDateFacet extends LightningElement {
 
   preventDefault(evt) {
     evt.preventDefault();
+  }
+
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+    // eslint-disable-next-line default-case
+    switch (this.focusTarget.type) {
+      case 'facetHeader':
+        this.setFocusOnHeader();
+        return;
+      case 'facetValue':
+        if (this.focusTarget.value) {
+          const facetValueIndex = this.values.findIndex(
+            (value) => this.formattingFunction(value) === this.focusTarget.value
+          );
+          this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+          this.setFocusOnFacetValue();
+        }
+    }
+  }
+
+  /**
+   * Sets the focus on the target facet value.
+   */
+  setFocusOnFacetValue() {
+    const focusTarget = this.template.querySelectorAll('c-quantic-facet-value')[
+      this.focusTarget.index
+    ];
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
   }
 }

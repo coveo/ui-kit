@@ -14,6 +14,19 @@ export default class QuanticCardContainer extends LightningElement {
    */
   @api title;
 
+  /**
+   * Sets the focus on the card header.
+   * @api
+   * @type {VoidFunction}
+   */
+  @api setFocus() {
+    const focusTarget = this.template.querySelector('.card_focusable-header');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
+  }
+
   handleHeaderClick(evt) {
     evt.preventDefault();
     const headerClickEvent = new CustomEvent('headerclick', {});

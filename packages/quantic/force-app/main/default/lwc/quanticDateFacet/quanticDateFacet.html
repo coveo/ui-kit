@@ -4,7 +4,7 @@
   </template>
   <template if:true={hasValues}>
     <div class="slds-size_1-of-1">
-      <c-quantic-card-container title={label}>
+      <c-quantic-card-container title={label} onheaderclick={toggleFacetVisibility} onheaderkeydown={toggleFacetVisibility}>
         <lightning-button-icon
           class="actionButtonCssClasses"
           slot="actions"

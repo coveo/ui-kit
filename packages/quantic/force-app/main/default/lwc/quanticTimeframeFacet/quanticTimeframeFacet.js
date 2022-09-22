@@ -162,6 +162,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
   unsubscribeDateFilter;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {{type: 'facetValue' | 'facetHeader' | 'applyButton', index?: number, value?: string}} */
+  focusTarget;
+  /** @type {boolean} */
+  focusShouldBeInFacet = false;
 
   _isCollapsed = false;
   _showValues = true;
@@ -183,6 +187,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
+    }
   }
 
   disconnectedCallback() {
@@ -515,6 +523,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
       (value) => value.label === evt.detail.value
     );
     this.facet.toggleSingleSelect(item);
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      value: evt.detail.value,
+    };
   }
 
   toggleFacetVisibility() {
@@ -530,6 +543,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
       return;
     }
     this.facet.deselectAll();
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetHeader',
+    };
   }
 
   /**
@@ -600,6 +617,11 @@ export default class QuanticTimeframeFacet extends LightningElement {
     );
 
     this.updateRangeInHeadless(startDate, endDate);
+
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'applyButton',
+    };
   }
 
   enableRangeValidation(forceRequired) {
@@ -668,5 +690,67 @@ export default class QuanticTimeframeFacet extends LightningElement {
 
   get ariaLabelValue() {
     return I18nUtils.format(this.labels.timeframeInputApply, this.field);
+  }
+
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+    // eslint-disable-next-line default-case
+    switch (this.focusTarget.type) {
+      case 'facetHeader':
+        this.setFocusOnHeader();
+        return;
+      case 'applyButton':
+        this.setFocusOnApplyButton();
+        return;
+      case 'facetValue':
+        if (this.focusTarget.value) {
+          const facetValueIndex = this.formattedValues.findIndex(
+            (value) => value.label === this.focusTarget.value
+          );
+          this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+          this.setFocusOnFacetValue();
+        }
+    }
+  }
+
+  /**
+   * Sets the focus on the target facet value.
+   */
+  setFocusOnFacetValue() {
+    const focusTarget = this.template.querySelectorAll('c-quantic-facet-value')[
+      this.focusTarget.index
+    ];
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+  
+  /**
+   * Sets the focus on the apply button.
+   */
+  setFocusOnApplyButton() {
+    const focusTarget = this.template.querySelector('.timeframe-facet__apply');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
   }
 }

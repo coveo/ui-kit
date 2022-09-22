@@ -45,7 +45,7 @@
               </li>
             </template>
             <template for:each={nonActiveParents} for:item="v">
-              <li class="slds-grid" key={v.value}>
+              <li class="slds-grid facet__non-active-parent" key={v.value}>
                 <c-quantic-category-facet-value
                   onselectvalue={onSelectValue}
                   item={v}
@@ -64,7 +64,7 @@
                 <legend class="slds-assistive-text">{field}</legend>
                 <ul class="slds-size_1-of-1">
                   <template for:each={values} for:item="v">
-                    <li class="slds-var-m-left_large slds-grid" key={v.value}>
+                    <li class="facet__value slds-var-m-left_large slds-grid" key={v.value}>
                       <c-quantic-category-facet-value onselectvalue={onSelectValue} item={v} active-parent={activeParent}>
                       </c-quantic-category-facet-value>
                     </li>
