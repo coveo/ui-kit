@@ -88,6 +88,17 @@ export function ArrayProp(opts: ArrayPropOptions) {
   };
 }
 
+function splitAttributeValueOnCommas(attributeValue: string) {
+  const splitButIgnoreEscapeSymbolsExpression = /(?:\\.|[^,])+/g;
+  const [...valuesWithEscapeSymbols] =
+    attributeValue.matchAll(splitButIgnoreEscapeSymbolsExpression) ?? [];
+
+  const removeEscapeSymbolsExpression = /\\(.)/g;
+  return valuesWithEscapeSymbols.map(([valuesWithEscapeSymbols]) =>
+    valuesWithEscapeSymbols.replace(removeEscapeSymbolsExpression, '$1')
+  );
+}
+
 export function mapAttributesToProp(
   prefix: string,
   mapVariable: Record<string, string | string[]>,
@@ -105,7 +116,9 @@ function stringMapToStringArrayMap(map: Record<string, string>) {
   return Object.entries(map).reduce(
     (acc, [key, value]) => ({
       ...acc,
-      [key]: value.split(',').map((subValue) => subValue.trim()),
+      [key]: splitAttributeValueOnCommas(value).map((subValue) =>
+        subValue.trim()
+      ),
     }),
     {}
   );

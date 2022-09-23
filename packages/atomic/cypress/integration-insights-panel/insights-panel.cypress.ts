@@ -1,4 +1,4 @@
-import * as CommonAssertions from '../integration/common-assertions';
+import * as CommonAssertions from '../e2e/common-assertions';
 import {InsightPanelsSelectors} from './insight-panel-selectors';
 
 const host = 'http://localhost:3333/examples/insights.html';
