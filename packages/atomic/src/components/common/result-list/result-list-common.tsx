@@ -36,14 +36,10 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
   private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
   constructor(private props: ResultListCommonProps) {
-    this.setLoadingFlag();
+    this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
+    this.props.bindings.store.registerResultList(this);
     this.addUpdateBreakpointOnce();
     this.registerResultTemplates();
-    this.props.bindings.store.registerResultList(this);
-  }
-
-  private setLoadingFlag() {
-    this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
   }
 
   private addUpdateBreakpointOnce() {
