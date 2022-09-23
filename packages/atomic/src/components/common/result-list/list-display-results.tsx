@@ -17,6 +17,7 @@ export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
         density={props.getDensity()}
         image-size={props.getImageSize()}
         ref={(element) => props.setNewResultRef(element!, index)}
+        renderingFunction={props.getResultRenderingFunction()}
       ></atomic-result>
     );
   });

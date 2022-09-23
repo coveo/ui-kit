@@ -95,7 +95,7 @@ export class AtomicResult {
    *
    * @internal
    */
-  @Prop() renderingFunction?: ResultRenderingFunction;
+  @Prop() renderingFunction: ResultRenderingFunction = null;
 
   private resultRootRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;

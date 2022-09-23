@@ -11,6 +11,7 @@ import {ResultListInfo} from '../../search/atomic-search-interface/store';
 import {
   GridDisplayResultsPlaceholder,
   ListDisplayResultsPlaceholder,
+  ResultPlaceholderProps,
   TableDisplayResultsPlaceholder,
 } from '../atomic-result-placeholder/placeholders';
 import {AnyResult, extractFoldedResult} from '../interface/result';
@@ -21,7 +22,6 @@ import {
 import {TemplateContent} from '../result-templates/result-template-common';
 import {GridDisplayResults} from './grid-display-results';
 import {ListDisplayResults} from './list-display-results';
-import {ResultPlaceholderProps} from './result-list';
 import {
   ResultListCommonProps,
   ResultListDisplayProps,
@@ -42,18 +42,17 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
     this.props.bindings.store.registerResultList(this);
   }
 
-  // TODO: handle renderingFunction
-  // set renderingFunction(render: ResultRenderingFunction) {
-  //   this.render = render;
-  // }
-
   private setLoadingFlag() {
     this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
   }
 
   private addUpdateBreakpointOnce() {
+    if (!this.props.layoutSelector) {
+      return;
+    }
+
     this.updateBreakpoints = once((host: HTMLElement) => {
-      updateBreakpoints(host);
+      updateBreakpoints(host, this.props.layoutSelector!);
     });
   }
 

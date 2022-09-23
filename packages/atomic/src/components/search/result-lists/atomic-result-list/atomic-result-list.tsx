@@ -54,7 +54,7 @@ export class AtomicResultList implements InitializableComponent {
   public resultsPerPage!: ResultsPerPage;
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstResultLoaded-');
-  // private renderingFunction: ResultRenderingFunction | null = null; // TODO: add render method
+  private resultRenderingFunction: ResultRenderingFunction = null;
 
   @Element() public host!: HTMLDivElement;
 
@@ -99,12 +99,12 @@ export class AtomicResultList implements InitializableComponent {
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *
-   * @param render
+   * @param resultRenderingFunction
    */
-  // TODO: add render method
-  @Method() public async setRenderFunction(_render: ResultRenderingFunction) {
-    // this.renderingFunction = render;
-    // this.assignRenderingFunctionIfPossible();
+  @Method() public async setRenderFunction(
+    resultRenderingFunction: ResultRenderingFunction
+  ) {
+    this.resultRenderingFunction = resultRenderingFunction;
   }
 
   public connectedCallback() {
@@ -151,6 +151,7 @@ export class AtomicResultList implements InitializableComponent {
       setTemplateHasError: (value: boolean) => {
         this.templateHasError = value;
       },
+      getResultRenderingFunction: () => this.resultRenderingFunction,
     });
   }
 

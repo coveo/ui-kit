@@ -28,6 +28,7 @@ export interface ResultListCommonProps {
   setResultTemplateRegistered(value: boolean): void;
   getTemplateHasError(): boolean;
   setTemplateHasError(value: boolean): void;
+  getResultRenderingFunction(): ResultRenderingFunction | null;
   resultTemplateSelector: string;
   layoutSelector?: string;
   nextNewResultTarget: FocusTargetController;
@@ -51,8 +52,6 @@ export interface TemplateElement extends HTMLElement {
   getTemplate(): Promise<ResultTemplate<DocumentFragment> | null>;
 }
 
-// TODO: rewrite
-export type ResultRenderingFunction = (
-  result: AnyResult,
-  root: HTMLElement
-) => string;
+export type ResultRenderingFunction =
+  | ((result: AnyResult, root: HTMLElement) => string)
+  | null;

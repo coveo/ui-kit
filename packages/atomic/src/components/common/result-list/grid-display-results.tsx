@@ -42,6 +42,7 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
           display={props.getDisplay()}
           density={props.getDensity()}
           image-size={props.getImageSize()}
+          renderingFunction={props.getResultRenderingFunction()}
         ></atomic-result>
       </div>
     );

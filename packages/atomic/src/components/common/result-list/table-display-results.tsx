@@ -60,28 +60,28 @@ export const TableDisplayResults: FunctionalComponent<
 };
 
 const getFieldTableColumns = (props: ResultListDisplayProps) => {
-  // if (props.renderingFunction) {
-  //   return getFieldTableColumnsFromRenderingFunction(props);
-  // }
+  if (props.getResultRenderingFunction()) {
+    return getFieldTableColumnsFromRenderingFunction(props);
+  }
   return getFieldTableColumnsFromHTMLTemplate(props);
 };
 
-// TODO: enable render func
-// const getFieldTableColumnsFromRenderingFunction = (
-//   props: ResultListDisplayProps
-// ): HTMLAtomicTableElementElement[] => {
-//   const contentOfRenderingFunction = document.createElement('div');
+const getFieldTableColumnsFromRenderingFunction = (
+  props: ResultListDisplayProps
+): HTMLAtomicTableElementElement[] => {
+  const contentOfRenderingFunction = document.createElement('div');
+  const resultRenderingFunction = props.getResultRenderingFunction()!;
 
-//   const contentOfRenderingFunctionAsString = props.renderingFunction!(
-//     props.resultListState.results[0],
-//     document.createElement('div')
-//   );
-//   contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
+  const contentOfRenderingFunctionAsString = resultRenderingFunction(
+    props.getResultListState().results[0],
+    document.createElement('div')
+  );
+  contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
 
-//   return Array.from(
-//     contentOfRenderingFunction.querySelectorAll('atomic-table-element')
-//   );
-// };
+  return Array.from(
+    contentOfRenderingFunction.querySelectorAll('atomic-table-element')
+  );
+};
 
 const getFieldTableColumnsFromHTMLTemplate = (
   props: ResultListDisplayProps
