@@ -178,7 +178,14 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
             listClasses={this.listClasses}
             display={this.props.getDisplay()}
           >
-            {this.displayPlaceholders && <ResultsPlaceholder {...this.props} />}
+            {this.displayPlaceholders && (
+              <ResultsPlaceholder
+                numberOfPlaceholders={this.props.getNumberOfPlaceholders()}
+                density={this.props.getDensity()}
+                display={this.props.getDisplay()}
+                imageSize={this.props.getImageSize()}
+              />
+            )}
             {this.props.getResultListState().firstSearchExecuted && (
               <ResultListDisplay
                 getResultId={(result: AnyResult) => this.getResultId(result)}
@@ -204,6 +211,7 @@ const ResultDisplayWrapper: FunctionalComponent<{
   if (props.display === 'table') {
     return children;
   }
+
   return (
     <div class={`list-root ${props.listClasses}`} part="result-list">
       {children}
@@ -211,22 +219,16 @@ const ResultDisplayWrapper: FunctionalComponent<{
   );
 };
 
-const ResultsPlaceholder: FunctionalComponent<ResultListCommonProps> = (
+const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   props
 ) => {
-  const placeholderProps: ResultPlaceholderProps = {
-    density: props.getDensity(),
-    display: props.getDisplay(),
-    imageSize: props.getImageSize(),
-    numberOfPlaceholders: props.getNumberOfPlaceholders(),
-  };
-  switch (props.getDisplay()) {
+  switch (props.display) {
     case 'table':
-      return <TableDisplayResultsPlaceholder {...placeholderProps} />;
+      return <TableDisplayResultsPlaceholder {...props} />;
     case 'grid':
-      return <GridDisplayResultsPlaceholder {...placeholderProps} />;
+      return <GridDisplayResultsPlaceholder {...props} />;
     default:
-      return <ListDisplayResultsPlaceholder {...placeholderProps} />;
+      return <ListDisplayResultsPlaceholder {...props} />;
   }
 };
 
@@ -236,6 +238,7 @@ const ResultListDisplay: FunctionalComponent<ResultListDisplayProps> = (
   if (!props.getResultListState().results.length) {
     return null;
   }
+
   switch (props.getDisplay()) {
     case 'table':
       return <TableDisplayResults {...props} />;

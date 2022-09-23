@@ -32,7 +32,7 @@ export interface ResultListCommonProps {
   resultTemplateSelector: string;
   layoutSelector?: string;
   nextNewResultTarget: FocusTargetController;
-  // TODO: add generic way to get a result component (not just atomic-reult)
+  // TODO: add generic way to get a result component (not only atomic-result)
 }
 
 export interface ResultListCommonState<Result extends AnyResult> {
