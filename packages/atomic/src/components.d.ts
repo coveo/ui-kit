@@ -677,8 +677,7 @@ export namespace Components {
     }
     interface AtomicLoadMoreChildrenResults {
         /**
-          * The label for the button used to load more results.
-          * @defaultValue `Load all results`
+          * The non-localized label for the button used to load more results.
          */
         "label": string;
     }
@@ -1025,8 +1024,7 @@ export namespace Components {
          */
         "inheritTemplates": boolean;
         /**
-          * The copy for an empty result state.
-          * @defaultValue `No documents are related to this one.`
+          * The non-localized copy for an empty result state.
          */
         "noResultText": string;
     }
@@ -2993,8 +2991,7 @@ declare namespace LocalJSX {
     }
     interface AtomicLoadMoreChildrenResults {
         /**
-          * The label for the button used to load more results.
-          * @defaultValue `Load all results`
+          * The non-localized label for the button used to load more results.
          */
         "label"?: string;
     }
@@ -3339,8 +3336,7 @@ declare namespace LocalJSX {
          */
         "inheritTemplates"?: boolean;
         /**
-          * The copy for an empty result state.
-          * @defaultValue `No documents are related to this one.`
+          * The non-localized copy for an empty result state.
          */
         "noResultText"?: string;
     }
