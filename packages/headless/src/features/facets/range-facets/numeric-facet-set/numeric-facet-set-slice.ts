@@ -79,11 +79,7 @@ export const numericFacetSetReducer = createReducer(
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
           []) as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled(
-          state,
-          facets,
-          convertToRangeRequests
-        );
+        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
       })
       .addCase(disableFacet, (state, action) => {
         handleRangeFacetDeselectAll(state, action.payload);
