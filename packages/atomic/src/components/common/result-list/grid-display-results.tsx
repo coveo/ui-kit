@@ -1,53 +1,53 @@
 import {buildInteractiveResult, SearchEngine} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
-import {AnyBindings} from '../interface/bindings';
 import {LinkWithResultAnalytics} from '../../search/result-link/result-link';
-import {ResultsProps} from './result-list-common';
+import {ResultListDisplayProps} from './result-list-common-interface';
+import {extractFoldedResult} from '../interface/result';
 
-export const GridDisplayResults: FunctionalComponent<
-  ResultsProps<AnyBindings>
-> = (props) => {
-  return props.resultListState.results.map((result, index) => {
-    // TODO: support proper engine
+export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
+  props
+) =>
+  props.getResultListState().results.map((result) => {
+    const unFoldedResult = extractFoldedResult(result);
+    // TODO: support any engine in buildInteractiveResult
     const interactiveResult = buildInteractiveResult(
       props.bindings.engine as SearchEngine,
       {
-        options: {result: props.resultListCommon.getUnfoldedResult(result)},
+        options: {result: unFoldedResult},
       }
     );
 
     return (
       <div
         part="result-list-grid-clickable-container outline"
-        ref={(element) =>
-          element &&
-          props.indexOfResultToFocus === index &&
-          props.newResultRef?.(element)
-        }
+        // TODO: enable focus & ref
+        // ref={(element) =>
+        // element &&
+        //   props.indexOfResultToFocus === index &&
+        //   props.newResultRef?.(element)
+        // }
       >
         <LinkWithResultAnalytics
           part="result-list-grid-clickable"
           onSelect={() => interactiveResult.select()}
           onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
           onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-          href={props.resultListCommon.getUnfoldedResult(result).clickUri}
+          href={unFoldedResult.clickUri}
           target="_self"
-          title={props.resultListCommon.getUnfoldedResult(result).title}
+          title={unFoldedResult.title}
           tabIndex={-1}
           ariaHidden={true}
         />
         <atomic-result
-          key={props.resultListCommon.getResultId(
-            result,
-            props.resultListState
-          )}
+          key={props.getResultId(result)}
           result={result}
           store={props.bindings.store}
-          content={props.getContentOfResultTemplate(result)}
-          loadingFlag={props.resultListCommon.loadingFlag}
-          {...props}
+          content={props.getTemplateContent(result)}
+          loadingFlag={props.loadingFlag}
+          display={props.getDisplay()}
+          density={props.getDensity()}
+          image-size={props.getImageSize()}
         ></atomic-result>
       </div>
     );
   });
-};

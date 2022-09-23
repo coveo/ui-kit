@@ -4,6 +4,8 @@ import {
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
 
+// TODO: figure out what to do with this
+
 export interface DisplayOptions {
   density: ResultDisplayDensity;
   imageSize?: ResultDisplayImageSize;

@@ -35,6 +35,7 @@ function replateStyleContent(element: HTMLElement, breakpoint: string) {
 }
 
 export function updateBreakpoints(element: HTMLElement) {
+  // TODO: make selector a parameter
   const layout = closest(element, 'atomic-search-layout');
   if (!layout) {
     return;
