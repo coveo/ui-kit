@@ -92,6 +92,8 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
+  CoreCategoryFacet,
+  CoreCategoryFacetState,
 } from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 export {buildCategoryFacet} from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 
@@ -106,6 +108,8 @@ export type {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
+  CoreFacet,
+  CoreFacetState,
 } from './controllers/insight/facets/facet/headless-insight-facet';
 export {buildFacet} from './controllers/insight/facets/facet/headless-insight-facet';
 
