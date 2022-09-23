@@ -54,4 +54,4 @@ export interface TemplateElement extends HTMLElement {
 
 export type ResultRenderingFunction =
   | ((result: AnyResult, root: HTMLElement) => string)
-  | null;
+  | undefined;

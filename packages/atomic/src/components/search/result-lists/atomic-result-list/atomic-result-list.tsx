@@ -54,7 +54,7 @@ export class AtomicResultList implements InitializableComponent {
   public resultsPerPage!: ResultsPerPage;
   private resultListCommon!: ResultListCommon;
   private loadingFlag = randomID('firstResultLoaded-');
-  private resultRenderingFunction: ResultRenderingFunction = null;
+  private resultRenderingFunction: ResultRenderingFunction;
 
   @Element() public host!: HTMLDivElement;
 
