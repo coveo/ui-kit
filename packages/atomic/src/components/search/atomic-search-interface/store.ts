@@ -34,12 +34,9 @@ export interface AtomicStoreData extends AtomicCommonStoreData {
   categoryFacets: FacetStore<FacetInfo>;
   sortOptions: SortDropdownOption[];
   mobileBreakpoint: string;
-  resultList?: ResultListInfo;
 }
 
 export interface AtomicStore extends AtomicCommonStore<AtomicStoreData> {
-  registerResultList(data: ResultListInfo): void;
-
   getAllFacets(): {
     [facetId: string]:
       | FacetInfo
@@ -66,10 +63,6 @@ export function createAtomicStore(): AtomicStore {
 
   return {
     ...commonStore,
-
-    registerResultList(data: ResultListInfo) {
-      commonStore.set('resultList', data);
-    },
 
     getAllFacets() {
       return {

@@ -4,7 +4,7 @@ import {ResultListDisplayProps} from './result-list-common-interface';
 export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
   props
 ) =>
-  props.getResultListState().results.map((result) => {
+  props.getResultListState().results.map((result, index) => {
     return (
       <atomic-result
         key={props.getResultId(result)}
@@ -16,12 +16,7 @@ export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
         display={props.getDisplay()}
         density={props.getDensity()}
         image-size={props.getImageSize()}
-        // TODO: enable focus & ref
-        // ref={(element) =>
-        //   element &&
-        //   props.indexOfResultToFocus === index &&
-        //   props.newResultRef?.(element)
-        // }
+        ref={(element) => props.setNewResultRef(element!, index)}
       ></atomic-result>
     );
   });

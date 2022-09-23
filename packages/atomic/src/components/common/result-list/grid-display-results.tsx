@@ -7,7 +7,7 @@ import {extractFoldedResult} from '../interface/result';
 export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
   props
 ) =>
-  props.getResultListState().results.map((result) => {
+  props.getResultListState().results.map((result, index) => {
     const unFoldedResult = extractFoldedResult(result);
     // TODO: support any engine in buildInteractiveResult
     const interactiveResult = buildInteractiveResult(
@@ -20,12 +20,7 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
     return (
       <div
         part="result-list-grid-clickable-container outline"
-        // TODO: enable focus & ref
-        // ref={(element) =>
-        // element &&
-        //   props.indexOfResultToFocus === index &&
-        //   props.newResultRef?.(element)
-        // }
+        ref={(element) => props.setNewResultRef(element!, index)}
       >
         <LinkWithResultAnalytics
           part="result-list-grid-clickable"

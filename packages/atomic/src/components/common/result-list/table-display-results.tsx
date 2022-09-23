@@ -34,12 +34,7 @@ export const TableDisplayResults: FunctionalComponent<
                 ? 'result-table-row-even'
                 : 'result-table-row-odd') /* Offset by 1 since the index starts at 0 */
             }
-            // TODO: enable focus & ref
-            // ref={(element) =>
-            //   element &&
-            //   props.indexOfResultToFocus === rowIndex &&
-            //   props.newResultRef?.(element)
-            // }
+            ref={(element) => props.setNewResultRef(element!, rowIndex)}
           >
             {fieldColumns.map((column) => {
               <td

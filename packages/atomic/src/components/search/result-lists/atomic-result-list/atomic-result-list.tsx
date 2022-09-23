@@ -17,7 +17,6 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {ResultListInfo} from '../../atomic-search-interface/store';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   ResultDisplayDensity,
@@ -49,28 +48,25 @@ import {ResultRenderingFunction} from '../../../common/result-list/result-list-c
   styleUrl: '../../../common/result-list/result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList
-  implements InitializableComponent, ResultListInfo
-{
+export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
-  public listWrapperRef?: HTMLDivElement;
-  public resultListCommon!: ResultListCommon;
+  private resultListCommon!: ResultListCommon;
+  private loadingFlag = randomID('firstResultLoaded-');
   // private renderingFunction: ResultRenderingFunction | null = null; // TODO: add render method
-  public loadingFlag = randomID('firstResultLoaded-');
 
   @Element() public host!: HTMLDivElement;
 
   @BindStateToController('resultList')
   @State()
-  public resultListState!: ResultListState;
+  private resultListState!: ResultListState;
   @BindStateToController('resultsPerPage')
   @State()
-  public resultsPerPageState!: ResultsPerPageState;
-  @State() public resultTemplateRegistered = false;
+  private resultsPerPageState!: ResultsPerPageState;
+  @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
-  @State() public templateHasError = false;
+  @State() private templateHasError = false;
 
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
@@ -111,14 +107,6 @@ export class AtomicResultList
     // this.assignRenderingFunctionIfPossible();
   }
 
-  /**
-   * @internal
-   */
-  @Method() public async focusOnNextNewResult() {
-    // TODO: handle focus next result
-    // this.resultListCommon.focusOnNextNewResult(this.resultListState);
-  }
-
   public connectedCallback() {
     this.settleImageSize();
   }
@@ -143,8 +131,6 @@ export class AtomicResultList
       options: {fieldsToInclude: this.mergedFieldsToInclude},
     });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-
-    console.log('host', this.host);
     this.resultListCommon = new ResultListCommon({
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
       resultTemplateSelector: 'atomic-result-template',
@@ -154,7 +140,7 @@ export class AtomicResultList
       getDensity: () => this.density,
       getDisplay: () => this.display,
       getImageSize: () => this.imageSize,
-      focusOnNextNewResult: this.focusOnNextNewResult,
+      nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
@@ -166,7 +152,6 @@ export class AtomicResultList
         this.templateHasError = value;
       },
     });
-    this.bindings.store.registerResultList(this);
   }
 
   private get mergedFieldsToInclude() {

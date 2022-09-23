@@ -4,8 +4,10 @@ import {
   ResultTemplatesManager,
 } from '@coveo/headless';
 import {Host, h, FunctionalComponent} from '@stencil/core';
+import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once} from '../../../utils/utils';
+import {ResultListInfo} from '../../search/atomic-search-interface/store';
 import {
   GridDisplayResultsPlaceholder,
   ListDisplayResultsPlaceholder,
@@ -28,19 +30,19 @@ import {
 } from './result-list-common-interface';
 import {TableDisplayResults} from './table-display-results';
 
-export class ResultListCommon implements ResultListRenderer {
+export class ResultListCommon implements ResultListRenderer, ResultListInfo {
   private updateBreakpoints?: (host: HTMLElement) => void;
-  public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
+  private indexOfResultToFocus?: number;
+  private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
   constructor(private props: ResultListCommonProps) {
     this.setLoadingFlag();
     this.addUpdateBreakpointOnce();
-    // TODO: handle
-    // this.nextNewResultTarget = opts.nextNewResultTarget;
     this.registerResultTemplates();
+    this.props.bindings.store.registerResultList(this);
   }
 
-  // TODO: handle
+  // TODO: handle renderingFunction
   // set renderingFunction(render: ResultRenderingFunction) {
   //   this.render = render;
   // }
@@ -107,6 +109,25 @@ export class ResultListCommon implements ResultListRenderer {
     );
   }
 
+  public setNewResultRef(element: HTMLElement, resultIndex: number) {
+    if (resultIndex !== this.indexOfResultToFocus) {
+      return;
+    }
+
+    if (!element.children.length && !element.shadowRoot?.children.length) {
+      return;
+    }
+
+    this.indexOfResultToFocus = undefined;
+    const elementToFocus = getFirstFocusableDescendant(element) ?? element;
+    this.props.nextNewResultTarget.setTarget(elementToFocus);
+  }
+
+  public focusOnNextNewResult() {
+    this.indexOfResultToFocus = this.props.getResultListState().results.length;
+    this.props.nextNewResultTarget.focusOnNextTarget();
+  }
+
   private get displayPlaceholders() {
     return !this.props.bindings.store.isAppLoaded();
   }
@@ -153,9 +174,7 @@ export class ResultListCommon implements ResultListRenderer {
     return (
       <Host>
         {this.props.getTemplateHasError() && <slot></slot>}
-        <div
-          class={`list-wrapper ${this.listClasses}`} /*ref={setListWrapperRef}*/
-        >
+        <div class={`list-wrapper ${this.listClasses}`}>
           <ResultDisplayWrapper
             listClasses={this.listClasses}
             display={this.props.getDisplay()}
@@ -168,6 +187,7 @@ export class ResultListCommon implements ResultListRenderer {
                   this.getTemplateContent(result)
                 }
                 listClasses={this.listClasses}
+                setNewResultRef={(...args) => this.setNewResultRef(...args)}
                 {...this.props}
               />
             )}

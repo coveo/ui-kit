@@ -4,17 +4,18 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../layout/display-options';
-import {ResultListInfo} from '../../search/atomic-search-interface/store';
 import {AnyResult} from '../interface/result';
 import {ResultTemplate} from '@coveo/headless';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 
 export interface ResultListRenderer {
   getTemplateContent(result: AnyResult): HTMLElement | DocumentFragment;
   getResultId(result: AnyResult): string;
   listClasses: string;
+  setNewResultRef(element: HTMLElement, resultIndex: number): void;
 }
 
-export interface ResultListCommonProps extends ResultListInfo {
+export interface ResultListCommonProps {
   bindings: AnyBindings;
   host: HTMLElement;
   loadingFlag: string;
@@ -29,7 +30,8 @@ export interface ResultListCommonProps extends ResultListInfo {
   setTemplateHasError(value: boolean): void;
   resultTemplateSelector: string;
   layoutSelector?: string;
-  // renderResult(result: Result, index: number): VNode; TODO: add back some generic way to get a result
+  nextNewResultTarget: FocusTargetController;
+  // TODO: add generic way to get a result component (not just atomic-reult)
 }
 
 export interface ResultListCommonState<Result extends AnyResult> {

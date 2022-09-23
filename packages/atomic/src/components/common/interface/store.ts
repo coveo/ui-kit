@@ -1,5 +1,6 @@
 import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
+import {ResultListInfo} from '../../search/atomic-search-interface/store';
 import {
   FacetInfo,
   FacetStore,
@@ -18,6 +19,7 @@ export type AtomicCommonStoreData = {
   iconAssetsPath: string;
   fieldsToInclude: string[];
   facetElements: HTMLElement[];
+  resultList?: ResultListInfo;
 };
 
 export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
@@ -34,6 +36,7 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
     facetType: T,
     data: StoreData[T][U] & {facetId: U; element: HTMLElement}
   ): void;
+  registerResultList(data: ResultListInfo): void;
 }
 
 export const isRefineModalFacet = 'is-refine-modal';
@@ -89,6 +92,10 @@ export function createAtomicCommonStore<
 
     hasLoadingFlag(loadingFlag: string) {
       return stencilStore.get('loadingFlags').indexOf(loadingFlag) !== -1;
+    },
+
+    registerResultList(data: ResultListInfo) {
+      stencilStore.set('resultList', data);
     },
 
     waitUntilAppLoaded(callback: () => void) {
