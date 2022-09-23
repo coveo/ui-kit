@@ -12,7 +12,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/atomic
-        config-file: cypress-screenshots.json
+        config-file: cypress-screenshots.config.ts
         start: npm run start:prod
         wait-on: 'http://localhost:3333'
         install: false
