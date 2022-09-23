@@ -12,7 +12,7 @@ import {
   getOrganizationIdQueryParam,
 } from './search-api-params';
 import {buildMockFacetSearch} from '../../test/mock-facet-search';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {SearchAppState} from '../../state/search-app-state';
@@ -133,7 +133,7 @@ describe('search api client', () => {
           test: buildMockFacetSearch(),
         },
         facetSet: {
-          test: buildMockFacetRequest(),
+          test: buildMockFacetSlice(),
         },
       });
 
@@ -336,7 +336,7 @@ describe('search api client', () => {
       it('it calls Platform.call with the right options', async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
@@ -363,7 +363,7 @@ describe('search api client', () => {
       it('with an authentication provider it calls Platform.call with the right options', async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
@@ -386,7 +386,7 @@ describe('search api client', () => {
       it calls PlatformClient.call with the facet search params`, async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
@@ -407,7 +407,7 @@ describe('search api client', () => {
             captions: facetSearchState.options.captions,
             numberOfValues: facetSearchState.options.numberOfValues,
             query: newQuery,
-            field: facetState.field,
+            field: facetState.request.field,
             ignoreValues: [],
             searchContext: {
               ...searchRequest,

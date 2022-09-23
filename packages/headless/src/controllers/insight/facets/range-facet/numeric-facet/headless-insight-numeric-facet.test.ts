@@ -8,7 +8,7 @@ import {
   buildMockInsightEngine,
 } from '../../../../../test/mock-engine';
 import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {InsightAppState} from '../../../../../state/insight-app-state';
 import {buildMockInsightState} from '../../../../../test/mock-insight-state';
@@ -34,7 +34,7 @@ describe('insight numeric facet', () => {
     };
 
     state = buildMockInsightState();
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
     initNumericFacet();
   });

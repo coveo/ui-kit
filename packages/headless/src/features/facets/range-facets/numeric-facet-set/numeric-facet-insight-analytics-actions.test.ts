@@ -4,6 +4,7 @@ import {buildMockInsightEngine} from '../../../../test/mock-engine';
 import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 
 const mockLogBreadcrumbFacet = jest.fn();
 
@@ -31,9 +32,11 @@ describe('logBreadcrumbFacet', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         numericFacetSet: {
-          [exampleFacetId]: buildMockNumericFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockNumericFacetSlice({
+            request: buildMockNumericFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: {

@@ -20,7 +20,10 @@ import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
-import {getFacetSetInitialState} from './facet-set-state';
+import {
+  getFacetSetInitialState,
+  getFacetSetSliceInitialState,
+} from './facet-set-state';
 import {
   deselectAllFacets,
   updateFacetAutoSelection,
@@ -46,7 +49,9 @@ export const facetSetReducer = createReducer(
           return;
         }
 
-        state[facetId] = buildFacetRequest(action.payload);
+        state[facetId] = getFacetSetSliceInitialState(
+          buildFacetRequest(action.payload)
+        );
       })
       .addCase(change.fulfilled, (_, action) => {
         if (!action.payload) {
@@ -64,7 +69,7 @@ export const facetSetReducer = createReducer(
         const facetIds = Object.keys(state);
 
         facetIds.forEach((id) => {
-          const request = state[id];
+          const {request} = state[id]!;
           const selectedValues = f[id] || [];
           const idleValues = request.currentValues.filter(
             (facetValue) => !selectedValues.includes(facetValue.value)
@@ -83,7 +88,7 @@ export const facetSetReducer = createReducer(
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -105,7 +110,7 @@ export const facetSetReducer = createReducer(
       })
       .addCase(updateFreezeCurrentValues, (state, action) => {
         const {facetId, freezeCurrentValues} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -114,49 +119,41 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = freezeCurrentValues;
       })
       .addCase(deselectAllFacetValues, (state, action) => {
-        const request = state[action.payload];
-        handleFacetDeselectAll(request);
+        handleFacetDeselectAll(state[action.payload]?.request);
       })
       .addCase(deselectAllFacets, (state) => {
-        Object.keys(state).forEach((facetId) => {
-          const request = state[facetId];
-          handleFacetDeselectAll(request);
+        Object.values(state).forEach((slice) => {
+          handleFacetDeselectAll(slice.request);
         });
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.values(state)
-          .filter((req) => req.hasBreadcrumbs)
-          .forEach((req) => {
-            const request = state[req.facetId];
-            handleFacetDeselectAll(request);
-          });
+          .filter((slice) => slice.hasBreadcrumbs)
+          .forEach(({request}) => handleFacetDeselectAll(request));
       })
       .addCase(deselectAllNonBreadcrumbs, (state) => {
         Object.values(state)
-          .filter((req) => !req.hasBreadcrumbs)
-          .forEach((req) => {
-            const request = state[req.facetId];
-            handleFacetDeselectAll(request);
-          });
+          .filter((slice) => !slice.hasBreadcrumbs)
+          .forEach(({request}) => handleFacetDeselectAll(request));
       })
       .addCase(updateFacetAutoSelection, (state, action) =>
-        Object.keys(state).forEach((facetId) => {
-          state[facetId].preventAutoSelect = !action.payload.allow;
+        Object.values(state).forEach((slice) => {
+          slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
       .addCase(updateFacetSortCriterion, (state, action) => {
-        handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
+        handleFacetSortCriterionUpdate(state, action.payload);
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
         handleFacetUpdateNumberOfValues<FacetRequest>(
-          state[facetId],
+          state[facetId]?.request,
           numberOfValues
         );
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -168,7 +165,7 @@ export const facetSetReducer = createReducer(
         const facets = action.payload.response.facets;
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
-            state[facetResponse.facetId],
+            state[facetResponse.facetId]?.request,
             facetResponse
           )
         );
@@ -177,7 +174,7 @@ export const facetSetReducer = createReducer(
         const facets = action.payload.response?.facets?.results || [];
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
-            state[facetResponse.facetId],
+            state[facetResponse.facetId]?.request,
             facetResponse
           )
         );
@@ -186,14 +183,14 @@ export const facetSetReducer = createReducer(
         const facets = action.payload.response.facets;
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
-            state[facetResponse.facetId],
+            state[facetResponse.facetId]?.request,
             facetResponse
           )
         );
       })
       .addCase(selectFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -217,7 +214,7 @@ export const facetSetReducer = createReducer(
         if (!(action.payload in state)) {
           return;
         }
-        const request = state[action.payload];
+        const {request} = state[action.payload]!;
         handleFacetDeselectAll(request);
       });
   }
@@ -273,7 +270,6 @@ function buildFacetRequest(
     freezeCurrentValues: false,
     isFieldExpanded: false,
     preventAutoSelect: false,
-    hasBreadcrumbs: true,
     ...config,
   };
 }
