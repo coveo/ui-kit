@@ -34,14 +34,13 @@ function replateStyleContent(element: HTMLElement, breakpoint: string) {
   styleTag.textContent = replaceMediaQuery(styleTag.textContent!, breakpoint);
 }
 
-export function updateBreakpoints(
-  element: HTMLElement,
-  layoutSelector: string
-) {
-  const layout = closest<HTMLElement & {mobileBreakpoint?: string}>(
+export function updateBreakpoints(element: HTMLElement) {
+  const layout = closest(
     element,
-    layoutSelector
+    // TODO: support more layouts
+    'atomic-search-layout'
   );
+
   if (!layout?.mobileBreakpoint) {
     return;
   }

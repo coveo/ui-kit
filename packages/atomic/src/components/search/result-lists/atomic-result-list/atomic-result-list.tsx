@@ -149,7 +149,6 @@ export class AtomicResultList implements InitializableComponent {
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
       getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
-      layoutSelector: 'atomic-search-layout',
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,

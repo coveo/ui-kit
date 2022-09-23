@@ -24,8 +24,7 @@ export interface ResultListCommonProps {
   getImageSize(): ResultDisplayImageSize;
   getResultListState(): ResultListCommonState<AnyResult>;
   getNumberOfPlaceholders(): number;
-  getResultRenderingFunction(): ResultRenderingFunction | null;
-  layoutSelector?: string;
+  getResultRenderingFunction(): ResultRenderingFunction;
   nextNewResultTarget: FocusTargetController;
   // TODO: add generic way to get a result component (not only atomic-result)
 }

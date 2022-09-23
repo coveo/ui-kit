@@ -34,12 +34,8 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
   }
 
   private addUpdateBreakpointOnce() {
-    if (!this.props.layoutSelector) {
-      return;
-    }
-
     this.updateBreakpoints = once((host: HTMLElement) => {
-      updateBreakpoints(host, this.props.layoutSelector!);
+      updateBreakpoints(host);
     });
   }
 
