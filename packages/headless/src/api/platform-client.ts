@@ -9,6 +9,7 @@ import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {
+  PlatformClientOrigin,
   PlatformRequestOptions,
   PreprocessRequest,
   RequestMetadata,
@@ -19,6 +20,7 @@ function isThrottled(status: number): boolean {
 }
 
 export interface PlatformClientCallOptions {
+  origin: PlatformClientOrigin;
   url: string;
   method: HttpMethods;
   contentType: HTTPContentType;
@@ -53,7 +55,7 @@ export class PlatformClient {
       ...(preprocessRequest
         ? await preprocessRequest(
             defaultRequestOptions,
-            'searchApiFetch',
+            options.origin,
             requestMetadata
           )
         : {}),

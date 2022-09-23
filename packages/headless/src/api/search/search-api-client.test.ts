@@ -174,6 +174,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.query.q,
           debug: false,
@@ -245,6 +246,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }/plan?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.query.q,
           context: state.context.contextValues,
@@ -294,6 +296,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.querySet[id],
           count: state.querySuggest[id]!.count,
@@ -497,6 +500,7 @@ describe('search api client', () => {
           recommendationState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           recommendation: recommendationState.recommendation.id,
           aq: recommendationState.advancedSearchQueries.aq,
@@ -574,6 +578,7 @@ describe('search api client', () => {
           productRecommendationsState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           recommendation: productRecommendationsState.productRecommendations.id,
           context: productRecommendationsState.context.contextValues,
