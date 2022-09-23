@@ -79,7 +79,7 @@ export const dateFacetSetReducer = createReducer(
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
           []) as DateFacetResponse[];
-        onRangeFacetRequestFulfilled<DateFacetRequest, DateFacetResponse>(
+        onRangeFacetRequestFulfilled(
           state,
           facets,
           convertToRangeRequests

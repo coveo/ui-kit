@@ -79,7 +79,7 @@ export const numericFacetSetReducer = createReducer(
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
           []) as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled<NumericFacetRequest, NumericFacetResponse>(
+        onRangeFacetRequestFulfilled(
           state,
           facets,
           convertToRangeRequests
