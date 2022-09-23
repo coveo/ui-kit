@@ -56,7 +56,7 @@ describe('Insights panel test suites', () => {
         .shadow()
         .find('input')
         .should('exist')
-        .should('have.attr', 'placeholder', 'Search');
+        .should('have.attr', 'placeholder', 'Search...');
 
       InsightPanelsSelectors.searchbox()
         .shadow()
