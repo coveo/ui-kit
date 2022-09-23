@@ -1,8 +1,3 @@
-import {
-  buildResultTemplatesManager,
-  ResultTemplate,
-  ResultTemplatesManager,
-} from '@coveo/headless';
 import {Host, h, FunctionalComponent} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
@@ -19,27 +14,23 @@ import {
   getResultDisplayClasses,
   ResultDisplayLayout,
 } from '../layout/display-options';
-import {TemplateContent} from '../result-templates/result-template-common';
 import {GridDisplayResults} from './grid-display-results';
 import {ListDisplayResults} from './list-display-results';
 import {
   ResultListCommonProps,
   ResultListDisplayProps,
   ResultListRenderer,
-  TemplateElement,
 } from './result-list-common-interface';
 import {TableDisplayResults} from './table-display-results';
 
 export class ResultListCommon implements ResultListRenderer, ResultListInfo {
   private updateBreakpoints?: (host: HTMLElement) => void;
   private indexOfResultToFocus?: number;
-  private resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
 
   constructor(private props: ResultListCommonProps) {
     this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
     this.props.bindings.store.registerResultList(this);
     this.addUpdateBreakpointOnce();
-    this.registerResultTemplates();
   }
 
   private addUpdateBreakpointOnce() {
@@ -50,51 +41,6 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host, this.props.layoutSelector!);
     });
-  }
-
-  private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
-    const content = document.createDocumentFragment();
-    const linkEl = document.createElement('atomic-result-link');
-    content.appendChild(linkEl);
-    return {
-      content,
-      conditions: [],
-    };
-  }
-
-  private async registerResultTemplates() {
-    this.resultTemplatesManager = buildResultTemplatesManager(
-      this.props.bindings.engine
-    );
-
-    const elements: NodeListOf<TemplateElement> =
-      this.props.host.querySelectorAll(this.props.resultTemplateSelector);
-    const customTemplates = await Promise.all(
-      Array.from(elements).map(async (resultTemplateElement) => {
-        const template = await resultTemplateElement.getTemplate();
-        if (!template) {
-          this.props.setTemplateHasError(true);
-        }
-        return template;
-      })
-    );
-
-    const templates = (
-      !customTemplates.length ? [this.makeDefaultTemplate()] : []
-    ).concat(
-      customTemplates.filter(
-        (template) => template
-      ) as ResultTemplate<DocumentFragment>[]
-    );
-
-    this.resultTemplatesManager.registerTemplates(...templates);
-    this.props.setResultTemplateRegistered(true);
-  }
-
-  public getTemplateContent(result: AnyResult) {
-    return this.resultTemplatesManager.selectTemplate(
-      extractFoldedResult(result)
-    )!;
   }
 
   public getResultId(result: AnyResult) {
@@ -151,7 +97,7 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
   public render() {
     this.updateBreakpoints?.(this.props.host);
 
-    if (!this.props.getResultTemplateRegistered()) {
+    if (!this.props.resultTemplateProvider.ready) {
       return;
     }
 
@@ -168,7 +114,7 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
 
     return (
       <Host>
-        {this.props.getTemplateHasError() && <slot></slot>}
+        {this.props.resultTemplateProvider.hasError && <slot></slot>}
         <div class={`list-wrapper ${this.listClasses}`}>
           <ResultDisplayWrapper
             listClasses={this.listClasses}
@@ -185,9 +131,6 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
             {this.props.getResultListState().firstSearchExecuted && (
               <ResultListDisplay
                 getResultId={(result: AnyResult) => this.getResultId(result)}
-                getTemplateContent={(result: AnyResult) =>
-                  this.getTemplateContent(result)
-                }
                 listClasses={this.listClasses}
                 setNewResultRef={(...args) => this.setNewResultRef(...args)}
                 {...this.props}

@@ -25,6 +25,7 @@ import {
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -131,9 +132,23 @@ export class AtomicResultList implements InitializableComponent {
       options: {fieldsToInclude: this.mergedFieldsToInclude},
     });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.resultListCommon = new ResultListCommon({
-      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+    const resultTemplateProvider = new ResultTemplateProvider({
       resultTemplateSelector: 'atomic-result-template',
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
+      },
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+      host: this.host,
+      bindings: this.bindings,
+    });
+
+    this.resultListCommon = new ResultListCommon({
+      resultTemplateProvider,
+      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
       layoutSelector: 'atomic-search-layout',
       host: this.host,
       bindings: this.bindings,
@@ -143,14 +158,6 @@ export class AtomicResultList implements InitializableComponent {
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
-      getResultTemplateRegistered: () => this.resultTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.resultTemplateRegistered = value;
-      },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
       getResultRenderingFunction: () => this.resultRenderingFunction,
     });
   }

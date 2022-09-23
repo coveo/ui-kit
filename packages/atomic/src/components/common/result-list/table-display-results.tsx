@@ -87,7 +87,7 @@ const getFieldTableColumnsFromHTMLTemplate = (
   props: ResultListDisplayProps
 ): HTMLAtomicTableElementElement[] =>
   Array.from(
-    props
+    props.resultTemplateProvider
       .getTemplateContent(props.getResultListState().results[0])
       .querySelectorAll('atomic-table-element')
   );
