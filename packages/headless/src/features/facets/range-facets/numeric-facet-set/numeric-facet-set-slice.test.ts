@@ -23,12 +23,18 @@ import {deselectAllFacets} from '../../generic/facet-actions';
 import {getHistoryInitialState} from '../../../history/history-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;
 
   beforeEach(() => {
     state = getNumericFacetSetInitialState();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('initializes the set to an empty object', () => {
@@ -173,6 +179,20 @@ describe('numeric-facet-set slice', () => {
     numericFacetSetReducer(
       state,
       executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}))
+    );
+
+    expect(
+      RangeFacetReducers.onRangeFacetRequestFulfilled
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#fetchProductListing.fulfilled calls #onRangeFacetRequestFulfilled', () => {
+    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
+
+    const productListing = buildFetchProductListingResponse();
+    numericFacetSetReducer(
+      state,
+      fetchProductListing.fulfilled(productListing, '')
     );
 
     expect(
