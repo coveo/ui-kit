@@ -48,14 +48,14 @@ export class PlatformClient {
     options: PlatformClientCallOptions
   ): Promise<Response | PlatformClientCallError> {
     const defaultRequestOptions = buildDefaultRequestOptions(options);
-    const {preprocessRequest, logger, requestMetadata} = options;
+    const {origin, preprocessRequest, logger, requestMetadata} = options;
 
     const requestInfo: PlatformRequestOptions = {
       ...defaultRequestOptions,
       ...(preprocessRequest
         ? await preprocessRequest(
             defaultRequestOptions,
-            options.origin,
+            origin,
             requestMetadata
           )
         : {}),
