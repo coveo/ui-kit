@@ -25,6 +25,7 @@ import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {disableFacet} from '../../../facet-options/facet-options-actions';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 
 export const numericFacetSetReducer = createReducer(
   getNumericFacetSetInitialState(),
@@ -71,6 +72,15 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as NumericFacetResponse[];
+        onRangeFacetRequestFulfilled<NumericFacetRequest, NumericFacetResponse>(
+          state,
+          facets,
+          convertToRangeRequests
+        );
+      })
+      .addCase(fetchProductListing.fulfilled, (state, action) => {
+        const facets = (action.payload.response?.facets?.results ||
+          []) as NumericFacetResponse[];
         onRangeFacetRequestFulfilled<NumericFacetRequest, NumericFacetResponse>(
           state,
           facets,

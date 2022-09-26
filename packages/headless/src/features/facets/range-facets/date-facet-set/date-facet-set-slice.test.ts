@@ -22,12 +22,18 @@ import {
 import {getHistoryInitialState} from '../../../history/history-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;
 
   beforeEach(() => {
     state = getDateFacetSetInitialState();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('initializes the set to an empty object', () => {
@@ -157,6 +163,20 @@ describe('date-facet-set slice', () => {
     dateFacetSetReducer(
       state,
       executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}))
+    );
+
+    expect(
+      RangeFacetReducers.onRangeFacetRequestFulfilled
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#fetchProductListing.fulfilled calls #onRangeFacetRequestFulfilled', () => {
+    jest.spyOn(RangeFacetReducers, 'onRangeFacetRequestFulfilled');
+
+    const productListing = buildFetchProductListingResponse();
+    dateFacetSetReducer(
+      state,
+      fetchProductListing.fulfilled(productListing, '')
     );
 
     expect(
