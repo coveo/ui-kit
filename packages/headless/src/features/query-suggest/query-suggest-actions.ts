@@ -4,7 +4,7 @@ import {
   requiredNonEmptyString,
   requiredEmptyAllowedString,
 } from '../../utils/validate-payload';
-import {NumberValue, StringValue} from '@coveo/bueno';
+import {NumberValue} from '@coveo/bueno';
 import {
   isErrorResponse,
   AsyncThunkSearchOptions,
@@ -43,11 +43,6 @@ export interface RegisterQuerySuggestActionCreatorPayload {
   id: string;
 
   /**
-   * The partial basic query expression for which to request query suggestions (e.g., `cov`).
-   */
-  q?: string;
-
-  /**
    * The number of query suggestions to request from Coveo ML (e.g., `3`).
    *
    * @defaultValue `5`.
@@ -60,7 +55,6 @@ export const registerQuerySuggest = createAction(
   (payload: RegisterQuerySuggestActionCreatorPayload) =>
     validatePayload(payload, {
       ...idDefinition,
-      q: new StringValue(),
       count: new NumberValue({min: 0}),
     })
 );
