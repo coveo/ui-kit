@@ -221,7 +221,7 @@ export function buildRelevanceInspector(
         rankingExpressions,
       } = state.search.response as SearchResponseSuccessWithDebugInfo;
 
-      const {fetchAllFields} = state.fields;
+      const {fieldsDescription, fetchAllFields} = state.fields;
 
       return {
         isEnabled,
@@ -234,6 +234,7 @@ export function buildRelevanceInspector(
         },
         userIdentities,
         rankingExpressions,
+        fieldsDescription,
         fetchAllFields,
       };
     },
