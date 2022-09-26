@@ -73,7 +73,6 @@ describe('facet-set slice', () => {
       field: options.field,
       type: 'specific',
       currentValues: [],
-      delimitingCharacter: '>',
       filterFacetCount: true,
       freezeCurrentValues: false,
       hasBreadcrumbs: true,
