@@ -9,6 +9,7 @@
       options={options}
       ontryitnow={handleTryItNow}
     >
+    <c-action-select-tab slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-select-tab>
       <div slot="actions" class="slds-var-p-bottom_x-small">
         <c-action-add-facets
           label="Add Facets"

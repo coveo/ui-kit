@@ -27,6 +27,11 @@
     </div>
     <div class="slds-align_absolute-center" slot="content">
       <div class="refine-modal__content">
+        <template if:true={refineButtonDisabled}>
+          <div class="slds-align_absolute-center slds-text-color_weak refine-modal__empty-message">
+            {labels.noFiltersAvailableForThisQuerInTheCurrentTab}
+          </div>
+        </template>
         <c-quantic-refine-modal-content engine-id={engineId} hide-sort={hideSort}></c-quantic-refine-modal-content>
       </div>
     </div>

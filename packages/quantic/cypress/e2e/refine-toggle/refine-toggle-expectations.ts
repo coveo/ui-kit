@@ -132,6 +132,12 @@ function refineToggleSelector(selector: RefineToggleSelector) {
         .should(disabled ? 'exist' : 'not.exist')
         .logDetail(`The refine button ${should(disabled)} be disabled`);
     },
+    displayRefineModalEmptyMessage: (display: boolean) => {
+      selector
+        .refineModalEmptyMessage()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(`${should(display)} display the refine modal empty message`);
+    },
   };
 }
 

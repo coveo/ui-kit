@@ -15,6 +15,8 @@ import {
   addFacetsWithoutInputs,
 } from '../../page-objects/actions/action-add-facets';
 
+import {selectTab} from '../../page-objects/actions/action-select-tab';
+
 interface RefineToggleOptions {
   fullScreen: boolean;
   hideSort: boolean;
@@ -245,6 +247,49 @@ describe('quantic-refine-toggle', () => {
           });
         });
       });
+
+      describe('when a filter is selected and the search query does not return any results', () => {
+        it('should enable the refine toggle button and disable it only after clearing the filter', () => {
+          visitPage({hideSort: true}, true, true);
+          addFacets();
+          cy.wait(InterceptAliases.Search);
+
+          scope('when loading the page', () => {
+            Expect.displayRefineToggle(true);
+            Expect.displayModal(false);
+            Expect.refineToggleDisabled(false);
+            Expect.refineToggleTitleContains(defaultRefineToggleTitle);
+          });
+
+          scope('when selecting a filter', () => {
+            Actions.clickRefineButton();
+            Expect.displayModal(true);
+            Actions.clickDefaultFacetExpandButton();
+            Actions.clickDefaultFacetFirstOption();
+            Actions.clickRefineModalCloseButton();
+          });
+
+          scope('when selecting a tab that does not return any results', () => {
+            mockSearchNoResults();
+            selectTab();
+            Expect.refineToggleDisabled(false);
+          });
+
+          scope('when clearing the filter and the refine modal is open', () => {
+            Actions.clickRefineButton();
+            Expect.displayModal(true);
+            Actions.clickClearAllFilters();
+            Expect.displayRefineModalEmptyMessage(true);
+          });
+
+          scope('when closing the refine modal ', () => {
+            Actions.clickRefineModalCloseButton();
+            Expect.displayModal(false);
+            Expect.refineToggleDisabled(true);
+            Expect.refineToggleTitleContains(disabledRefineToggleTitle);
+          });
+        });
+      });
     });
 
     describe('when there is no results', () => {
@@ -373,6 +418,49 @@ describe('quantic-refine-toggle', () => {
             Expect.displayModal(false);
             Expect.refineToggleContains(customRefineToggleLabel);
             Expect.displayFiltersCountBadge(false);
+            Expect.refineToggleDisabled(true);
+            Expect.refineToggleTitleContains(disabledRefineToggleTitle);
+          });
+        });
+      });
+
+      describe('when a filter is selected and the search query does not return any results', () => {
+        it('should enable the refine toggle button and disable it only after clearing the filter', () => {
+          visitPage({hideSort: true}, true, true);
+          addFacetsWithoutInputs();
+          cy.wait(InterceptAliases.Search);
+
+          scope('when loading the page', () => {
+            Expect.displayRefineToggle(true);
+            Expect.displayModal(false);
+            Expect.refineToggleDisabled(false);
+            Expect.refineToggleTitleContains(defaultRefineToggleTitle);
+          });
+
+          scope('when selecting a filter', () => {
+            Actions.clickRefineButton();
+            Expect.displayModal(true);
+            Actions.clickDefaultFacetExpandButton();
+            Actions.clickDefaultFacetFirstOption();
+            Actions.clickRefineModalCloseButton();
+          });
+
+          scope('when selecting a tab that does not return any results', () => {
+            mockSearchNoResults();
+            selectTab();
+            Expect.refineToggleDisabled(false);
+          });
+
+          scope('when clearing the filter and the refine modal is open', () => {
+            Actions.clickRefineButton();
+            Expect.displayModal(true);
+            Actions.clickClearAllFilters();
+            Expect.displayRefineModalEmptyMessage(true);
+          });
+
+          scope('when closing the refine modal ', () => {
+            Actions.clickRefineModalCloseButton();
+            Expect.displayModal(false);
             Expect.refineToggleDisabled(true);
             Expect.refineToggleTitleContains(disabledRefineToggleTitle);
           });

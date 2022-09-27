@@ -24,6 +24,7 @@ export interface RefineToggleSelector extends ComponentSelector {
   categoryFacetFirstOption: () => CypressSelector;
   clearAllFiltersButton: () => CypressSelector;
   facetClearFiltersButton: () => CypressSelector;
+  refineModalEmptyMessage: () => CypressSelector;
 }
 
 export const RefineToggleSelectors: RefineToggleSelector = {
@@ -84,4 +85,6 @@ export const RefineToggleSelectors: RefineToggleSelector = {
     RefineToggleSelectors.modalContent().find(
       'c-quantic-facet .facet__clear-filter'
     ),
+  refineModalEmptyMessage: () =>
+    RefineToggleSelectors.get().find('.refine-modal__empty-message'),
 };

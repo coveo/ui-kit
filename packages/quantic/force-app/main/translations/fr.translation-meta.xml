@@ -464,4 +464,8 @@
       <label>Aucun filtre disponible pour cette requête</label>
       <name>quantic_NoFiltersAvailableForThisQuery</name>
     </customLabels>
+    <customLabels>
+      <label>Aucun filtre disponible pour cette requête dans l'onglet actuel</label>
+      <name>quantic_NoFiltersAvailableForThisQueryInTheCurrentTab</name>
+    </customLabels>
 </Translations>

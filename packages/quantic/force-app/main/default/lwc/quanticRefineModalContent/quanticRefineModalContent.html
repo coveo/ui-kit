@@ -11,7 +11,9 @@
     <div
       class="slds-align_absolute-center filters-header slds-var-m-bottom_small"
     >
-      <div class="slds-text-heading_small">{labels.filters}</div>
+      <template if:true={areFacetsRendered}>
+        <div class="slds-text-heading_small">{labels.filters}</div>
+      </template>
       <template if:true={hasActiveFilters}>
         <lightning-button
           variant="base"
