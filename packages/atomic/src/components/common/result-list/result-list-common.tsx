@@ -2,14 +2,14 @@ import {Host, h, FunctionalComponent} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once} from '../../../utils/utils';
-import {ResultListInfo} from '../../search/atomic-search-interface/store';
 import {
   GridDisplayResultsPlaceholder,
   ListDisplayResultsPlaceholder,
   ResultPlaceholderProps,
   TableDisplayResultsPlaceholder,
 } from '../atomic-result-placeholder/placeholders';
-import {AnyResult, extractFoldedResult} from '../interface/result';
+import {AnyResult, extractUnfoldedResult} from '../interface/result';
+import {ResultListInfo} from '../interface/store';
 import {
   getResultDisplayClasses,
   ResultDisplayLayout,
@@ -41,7 +41,7 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
 
   public getResultId(result: AnyResult) {
     return (
-      extractFoldedResult(result).uniqueId +
+      extractUnfoldedResult(result).uniqueId +
       this.props.getResultListState().searchResponseId
     );
   }

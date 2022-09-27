@@ -1,6 +1,5 @@
 import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
-import {ResultListInfo} from '../../search/atomic-search-interface/store';
 import {
   FacetInfo,
   FacetStore,
@@ -9,6 +8,10 @@ import {
 } from '../facets/facet-common-store';
 import {DateFacetValue, NumericFacetValue} from '../types';
 import {AnyEngineType, CommonStencilStore} from './bindings';
+
+export interface ResultListInfo {
+  focusOnNextNewResult(): void;
+}
 
 export type AtomicCommonStoreData = {
   facets: FacetStore<FacetInfo>;

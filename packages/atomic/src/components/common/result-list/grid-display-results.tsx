@@ -2,18 +2,18 @@ import {buildInteractiveResult, SearchEngine} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {LinkWithResultAnalytics} from '../../search/result-link/result-link';
 import {ResultListDisplayProps} from './result-list-common-interface';
-import {extractFoldedResult} from '../interface/result';
+import {extractUnfoldedResult} from '../interface/result';
 
 export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
   props
 ) =>
   props.getResultListState().results.map((result, index) => {
-    const unFoldedResult = extractFoldedResult(result);
+    const unfoldedResult = extractUnfoldedResult(result);
     // TODO: support any engine in buildInteractiveResult
     const interactiveResult = buildInteractiveResult(
       props.bindings.engine as SearchEngine,
       {
-        options: {result: unFoldedResult},
+        options: {result: unfoldedResult},
       }
     );
 
@@ -27,9 +27,9 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
           onSelect={() => interactiveResult.select()}
           onBeginDelayedSelect={() => interactiveResult.beginDelayedSelect()}
           onCancelPendingSelect={() => interactiveResult.cancelPendingSelect()}
-          href={unFoldedResult.clickUri}
+          href={unfoldedResult.clickUri}
           target="_self"
-          title={unFoldedResult.title}
+          title={unfoldedResult.title}
           tabIndex={-1}
           ariaHidden={true}
         />

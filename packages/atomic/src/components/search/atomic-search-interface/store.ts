@@ -17,10 +17,6 @@ import {
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 
-export interface ResultListInfo {
-  focusOnNextNewResult(): void;
-}
-
 export interface SortDropdownOption {
   expression: string;
   criteria: SortCriterion[];
