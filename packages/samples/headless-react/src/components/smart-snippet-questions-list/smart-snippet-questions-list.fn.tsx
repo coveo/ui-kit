@@ -34,13 +34,13 @@ export const SmartSnippetQuestionsList: FunctionComponent<
                 ></div>
                 <button
                   style={{display: question.expanded ? 'none' : 'block'}}
-                  onClick={() => controller.expand(question.documentId)}
+                  onClick={() => controller.expand(question.questionAnswerId)}
                 >
                   Show answer
                 </button>
                 <button
                   style={{display: question.expanded ? 'block' : 'none'}}
-                  onClick={() => controller.collapse(question.documentId)}
+                  onClick={() => controller.collapse(question.questionAnswerId)}
                 >
                   Hide answer
                 </button>

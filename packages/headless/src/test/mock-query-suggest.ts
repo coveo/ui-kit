@@ -7,7 +7,6 @@ export function buildMockQuerySuggest(
     id: '',
     count: 0,
     currentRequestId: '',
-    q: '',
     completions: [],
     responseId: '',
     error: null,
