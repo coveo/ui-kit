@@ -60,8 +60,6 @@ describe('Insights panel test suites', () => {
 
       InsightPanelsSelectors.searchbox()
         .shadow()
-        .find('button')
-        .should('exist')
         .find('atomic-icon')
         .should('have.attr', 'icon');
     });
