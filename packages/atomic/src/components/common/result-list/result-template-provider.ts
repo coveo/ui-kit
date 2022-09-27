@@ -4,7 +4,7 @@ import {
   buildResultTemplatesManager,
 } from '@coveo/headless';
 import {AnyBindings} from '../interface/bindings';
-import {AnyResult, extractFoldedResult} from '../interface/result';
+import {AnyResult, extractUnfoldedResult} from '../interface/result';
 import {TemplateContent} from '../result-templates/result-template-common';
 
 export interface TemplateElement extends HTMLElement {
@@ -12,13 +12,13 @@ export interface TemplateElement extends HTMLElement {
 }
 
 export interface ResultTemplateProviderProps {
-  host: HTMLElement;
   bindings: AnyBindings;
   getResultTemplateRegistered(): boolean;
   setResultTemplateRegistered(value: boolean): void;
   getTemplateHasError(): boolean;
   setTemplateHasError(value: boolean): void;
-  resultTemplateSelector: string;
+  templateElements: TemplateElement[];
+  includeDefaultTemplate: boolean;
 }
 
 export class ResultTemplateProvider {
@@ -43,10 +43,8 @@ export class ResultTemplateProvider {
       this.props.bindings.engine
     );
 
-    const elements: NodeListOf<TemplateElement> =
-      this.props.host.querySelectorAll(this.props.resultTemplateSelector);
     const customTemplates = await Promise.all(
-      Array.from(elements).map(async (resultTemplateElement) => {
+      this.props.templateElements.map(async (resultTemplateElement) => {
         const template = await resultTemplateElement.getTemplate();
         if (!template) {
           this.props.setTemplateHasError(true);
@@ -56,7 +54,9 @@ export class ResultTemplateProvider {
     );
 
     const templates = (
-      !customTemplates.length ? [this.makeDefaultTemplate()] : []
+      !customTemplates.length && this.props.includeDefaultTemplate
+        ? [this.makeDefaultTemplate()]
+        : []
     ).concat(
       customTemplates.filter(
         (template) => template
@@ -69,7 +69,7 @@ export class ResultTemplateProvider {
 
   public getTemplateContent(result: AnyResult) {
     return this.resultTemplatesManager.selectTemplate(
-      extractFoldedResult(result)
+      extractUnfoldedResult(result)
     )!;
   }
 

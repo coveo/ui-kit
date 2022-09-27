@@ -133,7 +133,10 @@ export class AtomicResultList implements InitializableComponent {
     });
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     const resultTemplateProvider = new ResultTemplateProvider({
-      resultTemplateSelector: 'atomic-result-template',
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-result-template')
+      ),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
       setResultTemplateRegistered: (value: boolean) => {
@@ -142,7 +145,6 @@ export class AtomicResultList implements InitializableComponent {
       setTemplateHasError: (value: boolean) => {
         this.templateHasError = value;
       },
-      host: this.host,
       bindings: this.bindings,
     });
 
