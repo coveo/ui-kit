@@ -3,6 +3,192 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.113.5](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.4...@coveo/atomic@1.113.5) (2022-09-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.113.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.3...@coveo/atomic@1.113.4) (2022-09-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.113.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.2...@coveo/atomic@1.113.3) (2022-09-21)
+
+
+### Bug Fixes
+
+* **atomic:** allowed escaping commas in map props ([#2462](https://github.com/coveo/ui-kit/issues/2462)) ([04a032d](https://github.com/coveo/ui-kit/commit/04a032d47b2f2a5631ed8875116549cbd3289391))
+
+
+
+
+
+## [1.113.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.1...@coveo/atomic@1.113.2) (2022-09-21)
+
+
+### Bug Fixes
+
+* **atomic:** use ArrayProp for facet allowed values option ([#2456](https://github.com/coveo/ui-kit/issues/2456)) ([6e17c1e](https://github.com/coveo/ui-kit/commit/6e17c1e3361ffadb432de0bf94da0931672c6e39))
+* **headless:** fixed didYoumean auto correction originalQuery ([#2461](https://github.com/coveo/ui-kit/issues/2461)) ([9e847ad](https://github.com/coveo/ui-kit/commit/9e847ad85f5caa5917e21b3774b0211c96ee0252))
+
+
+
+
+
+## [1.113.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.0...@coveo/atomic@1.113.1) (2022-09-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.113.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.4...@coveo/atomic@1.113.0) (2022-09-20)
+
+
+### Features
+
+* **atomic:** initial work for recommendations list and interface ([#2454](https://github.com/coveo/ui-kit/issues/2454)) ([7ba8de1](https://github.com/coveo/ui-kit/commit/7ba8de143b9bc281449c1820480695ebe5375764))
+
+
+
+
+
+## [1.112.4](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.3...@coveo/atomic@1.112.4) (2022-09-19)
+
+
+### Bug Fixes
+
+* **atomic:** allow facets to be re-added to the interface ([#2450](https://github.com/coveo/ui-kit/issues/2450)) ([145cec4](https://github.com/coveo/ui-kit/commit/145cec4df503abc417076af5d4d55070ef105324))
+* **atomic:** prevent scrolling behind refine modal on iOS ([#2451](https://github.com/coveo/ui-kit/issues/2451)) ([f270912](https://github.com/coveo/ui-kit/commit/f270912d65ad28fc8788a0cbba5ac8f7632e62a1))
+* **atomic:** removed wrong section class from results ([#2452](https://github.com/coveo/ui-kit/issues/2452)) ([9011f57](https://github.com/coveo/ui-kit/commit/9011f57a5b0556f0438f00f818c66f3b2bdd5445))
+* **atomic:** use correct delimiting character for category facet headless controller ([#2439](https://github.com/coveo/ui-kit/issues/2439)) ([246e140](https://github.com/coveo/ui-kit/commit/246e140c97e84c7943e8d92ef89429fea4c5e817))
+
+
+
+
+
+## [1.112.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.2...@coveo/atomic@1.112.3) (2022-09-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.112.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.1...@coveo/atomic@1.112.2) (2022-09-19)
+
+
+### Bug Fixes
+
+* **atomic:** fix default template for atomic-result-text on language ([#2447](https://github.com/coveo/ui-kit/issues/2447)) ([6b24146](https://github.com/coveo/ui-kit/commit/6b2414644a871e0e39bf0791b3a7f51908241344))
+
+
+
+
+
+## [1.112.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.112.0...@coveo/atomic@1.112.1) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.112.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.111.0...@coveo/atomic@1.112.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* **atomic:** render result list content when it's ready ([#2438](https://github.com/coveo/ui-kit/issues/2438)) ([0f62dcd](https://github.com/coveo/ui-kit/commit/0f62dcd4ea66b35033fc1199b59f216cbe718b02))
+
+
+### Features
+
+* **atomic:** added support for multiple notifications ([#2437](https://github.com/coveo/ui-kit/issues/2437)) ([a40dce2](https://github.com/coveo/ui-kit/commit/a40dce2cfa68e101e0e03d901673f192468c1993))
+
+
+
+
+
+# [1.111.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.110.1...@coveo/atomic@1.111.0) (2022-09-16)
+
+
+### Features
+
+* **atomic:** add error message when result-value-text is used with multi value field ([#2430](https://github.com/coveo/ui-kit/issues/2430)) ([4b9ea3e](https://github.com/coveo/ui-kit/commit/4b9ea3e26455767e836026b9bb87f73543fe561d))
+* **stencil:** make SPA with a single interface, switching search box type ([#2431](https://github.com/coveo/ui-kit/issues/2431)) ([cf5d01c](https://github.com/coveo/ui-kit/commit/cf5d01c7add8ed68858af0494251885ae971eb1a))
+
+
+
+
+
+## [1.110.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.110.0...@coveo/atomic@1.110.1) (2022-09-15)
+
+
+### Bug Fixes
+
+* **atomic:** added smart snippet inline link analytics ([#2417](https://github.com/coveo/ui-kit/issues/2417)) ([bb8cf73](https://github.com/coveo/ui-kit/commit/bb8cf73a35f02663a6abecad0dbeb598bfba1426))
+* **atomic:** fixed combobox ARIA attributes ([#2433](https://github.com/coveo/ui-kit/issues/2433)) ([76c0ed7](https://github.com/coveo/ui-kit/commit/76c0ed73e9bcff7634f8e276b592b89f0b777cac))
+
+
+
+
+
+# [1.110.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.109.0...@coveo/atomic@1.110.0) (2022-09-15)
+
+
+### Bug Fixes
+
+* **atomic:** add insight interface to initializeBindings ([#2432](https://github.com/coveo/ui-kit/issues/2432)) ([5bda1c3](https://github.com/coveo/ui-kit/commit/5bda1c392c48af39e7b2a5ec1af4fe6456b099be))
+
+
+### Features
+
+* **atomic:** add onRedirect event to search box, make Stencil sample a SPA ([#2427](https://github.com/coveo/ui-kit/issues/2427)) ([f2f5cde](https://github.com/coveo/ui-kit/commit/f2f5cdeb6f0bab94f1cbf563292938d50590d52d))
+
+
+
+
+
+# [1.109.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.3...@coveo/atomic@1.109.0) (2022-09-14)
+
+
+### Bug Fixes
+
+* **atomic:** add rendering condition to insight result list ([#2429](https://github.com/coveo/ui-kit/issues/2429)) ([62c6d82](https://github.com/coveo/ui-kit/commit/62c6d82e453f340e50000b4b93fccd6ada7ede36))
+* **atomic:** removed timespan offset input timezone offset ([#2420](https://github.com/coveo/ui-kit/issues/2420)) ([b30153c](https://github.com/coveo/ui-kit/commit/b30153c622e3a52dda87e93ccf9e7587d39cb135))
+
+
+### Features
+
+* **atomic:** add warning for possible rendering issues with atomic-icon ([#2418](https://github.com/coveo/ui-kit/issues/2418)) ([4044e97](https://github.com/coveo/ui-kit/commit/4044e97e5e8e6adea19297f3c9f96be5f5477add))
+
+
+
+
+
+## [1.108.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.2...@coveo/atomic@1.108.3) (2022-09-12)
+
+
+### Bug Fixes
+
+* **atomic:** add popover tests & make color facet compatible ([#2405](https://github.com/coveo/ui-kit/issues/2405)) ([2a1779a](https://github.com/coveo/ui-kit/commit/2a1779a164b1fdb7304e62481a7bae7857afe422))
+* **atomic:** display no results full query ([#2414](https://github.com/coveo/ui-kit/issues/2414)) ([43512ae](https://github.com/coveo/ui-kit/commit/43512ae0ce23e54ba2425ebc4e922f6e44f51845))
+* **atomic:** handle active breadcrumb corner case for insight-refine-toggle disable ([#2406](https://github.com/coveo/ui-kit/issues/2406)) ([fd68e21](https://github.com/coveo/ui-kit/commit/fd68e212dc8d85ca2a0b85a2a362ce4c9127cc7c))
+* **atomic:** timefrace facet test ([#2415](https://github.com/coveo/ui-kit/issues/2415)) ([8e2b98f](https://github.com/coveo/ui-kit/commit/8e2b98fea75072b68daf11d24f14dc1172dac98a))
+
+
+
+
+
 ## [1.108.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.108.1...@coveo/atomic@1.108.2) (2022-09-09)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -26,6 +26,7 @@ import {deselectAllFacets} from '../../generic/facet-actions';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {disableFacet} from '../../../facet-options/facet-options-actions';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),
@@ -74,6 +75,15 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];
+        onRangeFacetRequestFulfilled<DateFacetRequest, DateFacetResponse>(
+          state,
+          facets,
+          convertToRangeRequests
+        );
+      })
+      .addCase(fetchProductListing.fulfilled, (state, action) => {
+        const facets = (action.payload.response?.facets?.results ||
+          []) as DateFacetResponse[];
         onRangeFacetRequestFulfilled<DateFacetRequest, DateFacetResponse>(
           state,
           facets,

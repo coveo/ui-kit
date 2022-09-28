@@ -15,6 +15,11 @@ import {
 } from '../../../test/mock-engine';
 import {InsightAppState} from '../../../state/insight-app-state';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
+import {logSearchboxSubmit} from '../../../features/query/query-insight-analytics-actions';
+
+jest.mock('../../../features/query/query-insight-analytics-actions', () => ({
+  logSearchboxSubmit: jest.fn(() => () => {}),
+}));
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -112,6 +117,7 @@ describe('headless searchBox', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
+      expect(logSearchboxSubmit).toBeCalledTimes(1);
     });
   });
 });

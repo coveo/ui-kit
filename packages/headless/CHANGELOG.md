@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.105.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.105.1...@coveo/headless@1.105.2) (2022-09-22)
+
+
+### Bug Fixes
+
+* **headless:** Handle product listings range facets responses ([#2459](https://github.com/coveo/ui-kit/issues/2459)) ([629f95e](https://github.com/coveo/ui-kit/commit/629f95e222a14812234fbf1f9ec2fe6eb4b7a456))
+
+
+
+
+
+## [1.105.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.105.0...@coveo/headless@1.105.1) (2022-09-21)
+
+
+### Bug Fixes
+
+* **headless:** fixed didYoumean auto correction originalQuery ([#2461](https://github.com/coveo/ui-kit/issues/2461)) ([9e847ad](https://github.com/coveo/ui-kit/commit/9e847ad85f5caa5917e21b3774b0211c96ee0252))
+
+
+
+
+
+# [1.105.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.2...@coveo/headless@1.105.0) (2022-09-20)
+
+
+### Features
+
+* **headless:** send the case metadata in the payload of all the insight analytics events ([#2449](https://github.com/coveo/ui-kit/issues/2449)) ([a43f86a](https://github.com/coveo/ui-kit/commit/a43f86adb390ba78b7ae461624531d2a4e1d255e))
+
+
+
+
+
+## [1.104.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.1...@coveo/headless@1.104.2) (2022-09-19)
+
+
+### Bug Fixes
+
+* **headless:** made facet conditions manager initializable before facets ([#2446](https://github.com/coveo/ui-kit/issues/2446)) ([f5d0f20](https://github.com/coveo/ui-kit/commit/f5d0f2031538495e363d55ce17dceb015f1598b5))
+
+
+
+
+
+## [1.104.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.104.0...@coveo/headless@1.104.1) (2022-09-16)
+
+
+### Bug Fixes
+
+* **headless:** insightSearchBox controller updated to use the correct analytics action when performing a search ([#2435](https://github.com/coveo/ui-kit/issues/2435)) ([c08776d](https://github.com/coveo/ui-kit/commit/c08776d38b02ea5f292d9e2f5f8d93d8b7ac81f9))
+
+
+
+
+
+# [1.104.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.6...@coveo/headless@1.104.0) (2022-09-16)
+
+
+### Features
+
+* **headless:** Case Id and Case Number added to the case context state ([#2442](https://github.com/coveo/ui-kit/issues/2442)) ([4768378](https://github.com/coveo/ui-kit/commit/4768378721420c876c85185baa8da0036f2e4fbb))
+
+
+
+
+
+## [1.103.6](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.5...@coveo/headless@1.103.6) (2022-09-16)
+
+
+### Bug Fixes
+
+* **headless:** insightFacet and insightDateFacet controllers set to use the correct analytics actions ([#2434](https://github.com/coveo/ui-kit/issues/2434)) ([6234ace](https://github.com/coveo/ui-kit/commit/6234acee8fba53fff75868459fce17004640e54c))
+
+
+
+
+
+## [1.103.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.4...@coveo/headless@1.103.5) (2022-09-15)
+
+
+### Bug Fixes
+
+* **headless:** added smart snippet inline link analytics ([#2416](https://github.com/coveo/ui-kit/issues/2416)) ([99e5369](https://github.com/coveo/ui-kit/commit/99e5369032c0c35f0e5b57d373afe3c0ceda3e0e))
+
+
+
+
+
+## [1.103.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.3...@coveo/headless@1.103.4) (2022-09-14)
+
+
+### Bug Fixes
+
+* **headless:** log search box submit + custom event on query trigger modification ([#2404](https://github.com/coveo/ui-kit/issues/2404)) ([35dd953](https://github.com/coveo/ui-kit/commit/35dd953735f0f9d5f7c9e7f2c801d4eeaee7d98b))
+
+
+
+
+
 ## [1.103.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.103.2...@coveo/headless@1.103.3) (2022-09-09)
 
 

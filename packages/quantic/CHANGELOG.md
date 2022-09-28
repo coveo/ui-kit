@@ -3,6 +3,125 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.44.13](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.12...@coveo/quantic@1.44.13) (2022-09-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.12](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.11...@coveo/quantic@1.44.12) (2022-09-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.11](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.10...@coveo/quantic@1.44.11) (2022-09-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.10](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.9...@coveo/quantic@1.44.10) (2022-09-21)
+
+
+### Bug Fixes
+
+* **quantic:** links generated inside facet values ([#2443](https://github.com/coveo/ui-kit/issues/2443)) ([230d29e](https://github.com/coveo/ui-kit/commit/230d29e747ce794b25eacd9a2c543afb85e92bf2))
+
+
+
+
+
+## [1.44.9](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.8...@coveo/quantic@1.44.9) (2022-09-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.8](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.7...@coveo/quantic@1.44.8) (2022-09-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.7](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.6...@coveo/quantic@1.44.7) (2022-09-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.6](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.5...@coveo/quantic@1.44.6) (2022-09-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.4...@coveo/quantic@1.44.5) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.3...@coveo/quantic@1.44.4) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.2...@coveo/quantic@1.44.3) (2022-09-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.1...@coveo/quantic@1.44.2) (2022-09-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.44.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.0...@coveo/quantic@1.44.1) (2022-09-14)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.44.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.2...@coveo/quantic@1.44.0) (2022-09-12)
+
+
+### Features
+
+* **quantic:** add focus to selected category facet ([#2398](https://github.com/coveo/ui-kit/issues/2398)) ([5c417fd](https://github.com/coveo/ui-kit/commit/5c417fd69f41094ef276237c3f6c9819972b1ba2))
+* **quantic:** Aria-live regions announcements for quantic components ([#2383](https://github.com/coveo/ui-kit/issues/2383)) ([f61cc7f](https://github.com/coveo/ui-kit/commit/f61cc7f8607e9a2c89f63ed9761e6a00e726b617))
+
+
+
+
+
 ## [1.43.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.43.1...@coveo/quantic@1.43.2) (2022-09-09)
 
 

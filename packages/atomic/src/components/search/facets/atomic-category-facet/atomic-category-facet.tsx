@@ -45,12 +45,13 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {MapProp} from '../../../../utils/props-utils';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {BaseFacet} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {initializePopover} from '../atomic-popover/popover-type';
+import {isArray} from '@coveo/bueno';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -149,9 +150,18 @@ export class AtomicCategoryFacet
    */
   @Prop({reflect: true}) public delimitingCharacter = ';';
   /**
-   * The base path shared by all values for the facet, separated by commas.
+   * The base path shared by all values for the facet.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   *  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet>
+   * ```
+   *
+   * Specifying the property as a comma separated string is deprecated.
    */
-  @Prop({reflect: true}) public basePath?: string;
+  @ArrayProp({deprecationWarning: true})
+  @Prop({reflect: true, mutable: true})
+  public basePath?: string | string[];
   /**
    * Whether to use basePath as a filter for the results.
    */
@@ -223,9 +233,7 @@ export class AtomicCategoryFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      basePath: this.basePath
-        ? this.basePath.split(',').map((value) => value.trim())
-        : undefined,
+      basePath: this.processBasePath(),
       delimitingCharacter: this.delimitingCharacter,
       filterByBasePath: this.filterByBasePath,
       injectionDepth: this.injectionDepth,
@@ -267,6 +275,22 @@ export class AtomicCategoryFacet
     }
 
     return true;
+  }
+
+  private processBasePath() {
+    // @deprecated
+    // TODO, V2:
+    // basePath should only support JSON string representation.
+    // deprecate comma delimited string
+    if (isArray(this.basePath)) {
+      return this.basePath;
+    }
+
+    if (this.basePath) {
+      return this.basePath.split(',').map((value) => value.trim());
+    }
+
+    return undefined;
   }
 
   private get hasParents() {

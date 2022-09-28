@@ -7,9 +7,9 @@ dist
 .size-snapshot.json
 reports/*.xml
 !.vscode/extensions.json
-.npmrc
 .yarn/*
 !.yarn/releases
 yarn.lock
 .dccache
 sarifs
+.cy.ts.mp4

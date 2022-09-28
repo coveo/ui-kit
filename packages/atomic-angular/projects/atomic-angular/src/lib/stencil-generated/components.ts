@@ -1242,8 +1242,23 @@ export class AtomicResultsPerPage {
   }
 }
 
+import type { RedirectionPayload as IAtomicSearchBoxRedirectionPayload } from '@coveo/atomic';
+export declare interface AtomicSearchBox extends Components.AtomicSearchBox {
+  /**
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event. @example ```html
+<script>
+  document.querySelector('atomic-search-box').addEventListener((e) => {
+    e.preventDefault();
+    // handle redirection
+  });
+</script>
+...
+<atomic-search-box redirection-url="/search"></atomic-search-box>
+```
+   */
+  'redirect': EventEmitter<CustomEvent<IAtomicSearchBoxRedirectionPayload>>;
 
-export declare interface AtomicSearchBox extends Components.AtomicSearchBox {}
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
@@ -1260,6 +1275,7 @@ export class AtomicSearchBox {
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['redirect']);
   }
 }
 

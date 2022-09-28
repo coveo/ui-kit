@@ -92,7 +92,7 @@ type ValidReturnTypeFromProcessingStep<RejectionType> =
   | ExecuteSearchThunkReturn
   | RejectionType;
 
-interface AsyncThunkConfig {
+export interface AsyncThunkConfig {
   getState: () => StateNeededByExecuteSearch;
   dispatch: ThunkDispatch<
     StateNeededByExecuteSearch,
@@ -171,6 +171,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
+    const originalQuery = this.getCurrentQuery();
     const {correctedQuery} = successResponse.queryCorrections[0];
     const retried = await this.automaticallyRetryQueryWithCorrection(
       correctedQuery
@@ -202,7 +203,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         queryCorrections: successResponse.queryCorrections,
       },
       automaticallyCorrected: true,
-      originalQuery: this.getOriginalQuery(),
+      originalQuery,
       analyticsAction: logDidYouMeanAutomatic(),
     };
   }
@@ -229,6 +230,11 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       return null;
     }
 
+    if (this.analyticsAction) {
+      await this.dispatch(this.analyticsAction);
+    }
+
+    const originalQuery = this.getCurrentQuery();
     const retried = await this.automaticallyRetryQueryWithTriggerModification(
       correctedQuery
     );
@@ -245,7 +251,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         ...retried.response.success,
       },
       automaticallyCorrected: false,
-      originalQuery: this.getOriginalQuery(),
+      originalQuery,
       analyticsAction: logTriggerQuery(),
     };
   }
@@ -258,7 +264,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
       ...fetched,
       response: this.getSuccessResponse(fetched)!,
       automaticallyCorrected: false,
-      originalQuery: this.getOriginalQuery(),
+      originalQuery: this.getCurrentQuery(),
       analyticsAction: this.analyticsAction!,
     };
   }
@@ -286,7 +292,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     this.dispatch(
       applyQueryTriggerModification({
         newQuery: modified,
-        originalQuery: this.getOriginalQuery(),
+        originalQuery: this.getCurrentQuery(),
       })
     );
     this.onUpdateQueryForCorrection(modified);
@@ -321,7 +327,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     };
   }
 
-  private getOriginalQuery() {
+  private getCurrentQuery() {
     const state = this.getState();
     return state.query?.q !== undefined ? state.query.q : '';
   }

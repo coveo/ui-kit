@@ -16,7 +16,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
               clickUri: 'https://www.inaturalist.org/taxa/49968',
               uniqueId: '42.29355$https://www.inaturalist.org/taxa/49968',
               excerpt: 'Nurse Sharks',
-              firstSentences: null,
+              firstSentences: '',
               summary: null,
               flags: 'HasHtmlVersion;SkipSentencesScoring',
               hasHtmlVersion: true,
@@ -42,7 +42,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
               clickUri: 'https://www.inaturalist.org/taxa/86651',
               uniqueId: '42.29355$https://www.inaturalist.org/taxa/86651',
               excerpt: 'Brine Shrimp',
-              firstSentences: null,
+              firstSentences: '',
               summary: null,
               flags: 'HasHtmlVersion;SkipSentencesScoring',
               hasHtmlVersion: true,
@@ -68,7 +68,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
               clickUri: 'https://www.inaturalist.org/taxa/50704',
               uniqueId: '42.29355$https://www.inaturalist.org/taxa/50704',
               excerpt: 'Dove Snails',
-              firstSentences: null,
+              firstSentences: '',
               summary: null,
               flags: 'HasHtmlVersion;SkipSentencesScoring',
               hasHtmlVersion: true,
@@ -101,10 +101,10 @@ const {defaultModuleExport, exportedStory} = defaultStory(
                 question: 'Where does the name "Nurse Sharks" come from?',
                 answerSnippet: `
                   <p>
-                    The name nurse shark is thought to be a corruption of <b>nusse</b>, a name which once referred to the catsharks of the family Scyliorhinidae.
+                    The name nurse shark is thought to be a corruption of <b>nusse</b>, a name which once referred to the <a href="https://en.wikipedia.org/wiki/Catshark">catsharks</a> of the family Scyliorhinidae.
                   </p>
                   <p>
-                    The nurse shark family name, <b>Ginglymostomatidae</b>, derives from the Greek words <i>ginglymos</i> (γίγγλυμος) meaning "<b>hinge</b>" and <i>stoma</i> (στόμα) meaning "<b>mouth</b>". 
+                    The nurse shark family name, <b>Ginglymostomatidae</b>, derives from the <a href="https://en.wikipedia.org/wiki/Greek_language">Greek</a> words <i>ginglymos</i> (<a href="https://en.wiktionary.org/wiki/%CE%B3%CE%AF%CE%B3%CE%B3%CE%BB%CF%85%CE%BC%CE%BF%CF%82#Ancient_Greek">γίγγλυμος</a>) meaning "<b>hinge</b>" and <i>stoma</i> (<a href="https://en.wiktionary.org/wiki/%CF%83%CF%84%CF%8C%CE%BC%CE%B1#Ancient_Greek">στόμα</a>) meaning "<b>mouth</b>". 
                   </p>
                 `,
                 documentId: {
@@ -117,10 +117,10 @@ const {defaultModuleExport, exportedStory} = defaultStory(
                 question: 'What are sea monkeys?',
                 answerSnippet: `
                   <p>
-                    Breeds of Artemia are sold as novelty gifts under the marketing name Sea-Monkeys. 
+                    Breeds of Artemia are sold as novelty gifts under the marketing name <a href="https://en.wikipedia.org/wiki/Sea-Monkeys">Sea-Monkeys</a>. 
                   </p>
                   <p>
-                    <b>Artemia</b> is a genus of aquatic crustaceans also known as <b>brine shrimp</b>. Artemia, the only genus in the family <i>Artemiidae</i>.
+                    <b>Artemia</b> is a genus of aquatic crustaceans also known as <b>brine shrimp</b>. It is the only genus in the <a href="https://en.wikipedia.org/wiki/Family_(biology)">family</a> <b>Artemiidae</b>.
                   </p>
                 `,
                 documentId: {
@@ -133,7 +133,7 @@ const {defaultModuleExport, exportedStory} = defaultStory(
                 question: 'What is a dove snail?',
                 answerSnippet: `
                   <p>
-                    The <b>Columbellidae</b>, the dove snails or dove shells, are a family of minute to small sea snails, marine gastropod mollusks in the order <i>Neogastropoda</i>.
+                    The <b>Columbellidae</b>, the dove snails or dove shells, are a <a href="https://en.wikipedia.org/wiki/Family_(biology)">family</a> of minute to small <a href="https://en.wikipedia.org/wiki/Sea_snail">sea snails</a>, <a href="https://en.wikipedia.org/wiki/Marine_(ocean)">marine</a> <a href="https://en.wikipedia.org/wiki/Gastropod">gastropod</a> <a href="https://en.wikipedia.org/wiki/Mollusk">mollusks</a> in the order <a href="https://en.wikipedia.org/wiki/Neogastropoda">Neogastropoda</a>.
                   </p>
                 `,
                 documentId: {

@@ -11,7 +11,7 @@ import more from '@salesforce/label/c.quantic_More';
  *   <c-quantic-tab engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
  *   <c-quantic-tab engine-id={engineId} label="Tab 2" expression={expressionTwo}></c-quantic-tab>
  *   <c-quantic-tab engine-id={engineId} label="Tab 3" expression={expressionThree}></c-quantic-tab>
- * </quantic-tab-bar>
+ * </c-quantic-tab-bar>
  */
 export default class QuanticTabBar extends LightningElement {
   labels = {

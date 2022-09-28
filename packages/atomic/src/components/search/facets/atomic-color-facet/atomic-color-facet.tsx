@@ -47,6 +47,8 @@ import {
   parseDependsOn,
   validateDependsOn,
 } from '../../../common/facets/facet-common';
+import {initializePopover} from '../atomic-popover/popover-type';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -210,10 +212,16 @@ export class AtomicColorFacet
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.registerFacet('facets', {
+    const facetInfo: FacetInfo = {
       label: this.label,
       facetId: this.facetId!,
       element: this.host,
+    };
+    this.bindings.store.registerFacet('facets', facetInfo);
+    initializePopover(this.host, {
+      ...facetInfo,
+      hasValues: () => !!this.facet.state.values.length,
+      numberOfSelectedValues: () => this.numberOfSelectedValues,
     });
     this.inititalizeDependenciesManager();
   }

@@ -107,7 +107,9 @@ export class FacetDateInput {
           max={this.formattedDateValue(this.end)}
           value={this.formattedDateValue(this.filterState.range?.start)}
           onInput={(e) =>
-            (this.start = new Date((e.target as HTMLInputElement).value))
+            (this.start = parseDate(
+              (e.target as HTMLInputElement).value
+            ).toDate())
           }
         />
         <label
@@ -130,7 +132,9 @@ export class FacetDateInput {
           min={this.formattedDateValue(this.start)}
           value={this.formattedDateValue(this.filterState.range?.end)}
           onInput={(e) =>
-            (this.end = new Date((e.target as HTMLInputElement).value))
+            (this.end = parseDate(
+              (e.target as HTMLInputElement).value
+            ).toDate())
           }
         />
         <Button

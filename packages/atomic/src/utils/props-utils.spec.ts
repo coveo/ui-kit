@@ -44,4 +44,28 @@ describe('mapAttributesToProp', () => {
     );
     expect(map).toEqual({britishColumbia: ['vancouver']});
   });
+
+  it('should properly handle escape symbols', () => {
+    const map = {};
+    mapAttributesToProp(
+      'filters',
+      map,
+      [
+        {
+          name: 'filters-category',
+          value:
+            'Appliances,Clothing\\, Linens \\& more,Something \\\\, Something else',
+        },
+      ],
+      true
+    );
+    expect(map).toEqual({
+      category: [
+        'Appliances',
+        'Clothing, Linens & more',
+        'Something \\',
+        'Something else',
+      ],
+    });
+  });
 });

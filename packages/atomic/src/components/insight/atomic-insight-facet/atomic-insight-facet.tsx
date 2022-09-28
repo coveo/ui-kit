@@ -41,7 +41,7 @@ export class AtomicInsightFacet
   implements InitializableComponent<InsightBindings>, BaseFacet<InsightFacet>
 {
   @InitializeBindings() public bindings!: InsightBindings;
-  public facetCommon!: FacetCommon;
+  public facetCommon?: FacetCommon;
   public facet!: InsightFacet;
   public searchStatus!: InsightSearchStatus;
   public withSearch = false;
@@ -153,7 +153,7 @@ export class AtomicInsightFacet
   }
 
   public disconnectedCallback() {
-    this.facetCommon.disconnectedCallback();
+    this.facetCommon?.disconnectedCallback();
   }
 
   public render() {

@@ -25,7 +25,7 @@ import {
 import {Logger} from 'pino';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
 import {SearchAction} from '../../features/analytics/analytics-utils';
-import {logInsightInterfaceLoad} from '../../features/analytics/analytics-actions';
+import {logInsightInterfaceLoad} from '../../features/analytics/insight-analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {executeSearch} from '../../features/insight-search/insight-search-actions';
 
