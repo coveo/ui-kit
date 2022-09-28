@@ -10,7 +10,7 @@ import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
-import { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
+import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
 import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
@@ -277,7 +277,6 @@ export namespace Components {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
-        "focusOnNextNewResult": () => Promise<void>;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -289,9 +288,8 @@ export namespace Components {
         "parentField"?: string;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param render
          */
-        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicFormatCurrency {
         /**
@@ -939,6 +937,23 @@ export namespace Components {
         "logLevel"?: LogLevel;
     }
     interface AtomicRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -986,7 +1001,7 @@ export namespace Components {
         /**
           * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction"?: ResultRenderingFunction;
+        "renderingFunction": ResultRenderingFunction;
         /**
           * The result item.
          */
@@ -1094,7 +1109,6 @@ export namespace Components {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
-        "focusOnNextNewResult": () => Promise<void>;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -1105,9 +1119,9 @@ export namespace Components {
         "imageSize": ResultDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param render
+          * @param resultRenderingFunction
          */
-        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -1265,9 +1279,9 @@ export namespace Components {
         "maxResultsPerQuery": number;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param render
+          * @param resultRenderingFunction
          */
-        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -3251,6 +3265,18 @@ declare namespace LocalJSX {
         "logLevel"?: LogLevel;
     }
     interface AtomicRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicRefineModal {
         "isOpen"?: boolean;

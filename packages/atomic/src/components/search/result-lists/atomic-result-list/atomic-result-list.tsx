@@ -112,7 +112,7 @@ export class AtomicResultList implements InitializableComponent {
     this.settleImageSize();
   }
 
-  // TODO: remove when `image` prop is removed;
+  // TODO: remove v2 when `image` prop is removed;
   private settleImageSize() {
     if (this.host.hasAttribute('image-size')) {
       return;
