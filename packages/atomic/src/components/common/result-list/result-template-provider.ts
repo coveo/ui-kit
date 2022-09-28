@@ -73,7 +73,7 @@ export class ResultTemplateProvider {
     )!;
   }
 
-  public get ready() {
+  public get templatesRegistered() {
     return this.props.getResultTemplateRegistered();
   }
 

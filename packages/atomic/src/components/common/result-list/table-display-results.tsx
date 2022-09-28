@@ -6,7 +6,7 @@ export const TableDisplayResults: FunctionalComponent<
 > = (props) => {
   const fieldColumns = getFieldTableColumns(props);
 
-  if (fieldColumns.length === 0) {
+  if (!fieldColumns.length) {
     props.bindings.engine.logger.error(
       'atomic-table-element elements missing in the result template to display columns.',
       props.host
@@ -37,20 +37,24 @@ export const TableDisplayResults: FunctionalComponent<
             ref={(element) => props.setNewResultRef(element!, rowIndex)}
           >
             {fieldColumns.map((column) => {
-              <td
-                key={column.getAttribute('label')! + props.getResultId(result)}
-                part="result-table-cell"
-              >
-                <atomic-result
-                  store={props.bindings.store}
-                  result={result}
-                  display={props.getDisplay()}
-                  density={props.getDensity()}
-                  image-size={props.getImageSize()}
-                  content={column}
-                  loadingFlag={props.loadingFlag}
-                ></atomic-result>
-              </td>;
+              return (
+                <td
+                  key={
+                    column.getAttribute('label')! + props.getResultId(result)
+                  }
+                  part="result-table-cell"
+                >
+                  <atomic-result
+                    result={result}
+                    store={props.bindings.store}
+                    content={column}
+                    loadingFlag={props.loadingFlag}
+                    display={props.getDisplay()}
+                    density={props.getDensity()}
+                    image-size={props.getImageSize()}
+                  ></atomic-result>
+                </td>
+              );
             })}
           </tr>
         ))}

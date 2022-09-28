@@ -93,7 +93,7 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
   public render() {
     this.updateBreakpoints?.(this.props.host);
 
-    if (!this.props.resultTemplateProvider.ready) {
+    if (!this.props.resultTemplateProvider.templatesRegistered) {
       return;
     }
 
