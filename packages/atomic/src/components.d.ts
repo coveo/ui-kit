@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -19,7 +19,7 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { RecommendationEngine } from "@coveo/headless/recommendation";
+import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
@@ -910,6 +910,10 @@ export namespace Components {
          */
         "engine"?: RecommendationEngine;
         /**
+          * TODO: implement fieldsToInclude
+         */
+        "fieldsToInclude": string;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n": i18n;
@@ -1357,7 +1361,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -3242,6 +3246,10 @@ declare namespace LocalJSX {
          */
         "engine"?: RecommendationEngine;
         /**
+          * TODO: implement fieldsToInclude
+         */
+        "fieldsToInclude"?: string;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n"?: i18n;
@@ -3655,7 +3663,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */

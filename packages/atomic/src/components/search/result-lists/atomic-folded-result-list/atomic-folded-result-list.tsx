@@ -120,7 +120,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
     this.foldedResultList.loadCollection(event.detail);
   }
 
-  public async initialize() {
+  public initialize() {
     try {
       const localFieldsToInclude = this.fieldsToInclude
         ? this.fieldsToInclude.split(',').map((field) => field.trim())

@@ -93,7 +93,7 @@ export class AtomicResultChildren implements InitializableComponent {
     event.detail(this.resultTemplateProvider);
   }
 
-  public async initialize() {
+  public initialize() {
     if (this.inheritTemplates) {
       return;
     }

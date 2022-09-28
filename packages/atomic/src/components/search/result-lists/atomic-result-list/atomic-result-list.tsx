@@ -122,7 +122,7 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
-  public async initialize() {
+  public initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
       console.warn(
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
