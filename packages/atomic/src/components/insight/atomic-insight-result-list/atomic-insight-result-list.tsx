@@ -9,14 +9,11 @@ import {
   getResultDisplayClasses,
   ResultDisplayDensity,
   ResultDisplayImageSize,
+  ResultDisplayLayout,
 } from '../../common/layout/display-options';
 import {
-  insightBuildResultTemplatesManager,
   InsightResultList,
   InsightResultListState,
-  InsightResult,
-  InsightResultTemplate,
-  InsightResultTemplatesManager,
   buildInsightResultList,
 } from '..';
 import {randomID} from '../../../utils/utils';
@@ -26,12 +23,7 @@ import {
   ResultsPerPage,
   ResultsPerPageState,
 } from '@coveo/headless/insight';
-
-export type TemplateContent = DocumentFragment;
-
-interface TemplateElement extends HTMLElement {
-  getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null>;
-}
+import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
 
 /**
  * @internal
@@ -45,23 +37,21 @@ export class AtomicInsightResultList {
   @InitializeBindings() public bindings!: InsightBindings;
   public resultList!: InsightResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultTemplatesManager!: InsightResultTemplatesManager<TemplateContent>;
-  @State() public ready = false;
+  private resultTemplatesProvider!: ResultTemplateProvider;
+  private loadingFlag = randomID('firstInsightResultLoaded-');
+  private display: ResultDisplayLayout = 'list';
+
   @Element() public host!: HTMLDivElement;
 
   @BindStateToController('resultsPerPage')
   @State()
   public resultPerPageState!: ResultsPerPageState;
-
-  @State() public templateHasError = false;
-
   @BindStateToController('resultList')
   @State()
   public resultListState!: InsightResultListState;
-
+  @State() public templateHasError = false;
+  @State() public resultTemplateRegistered = false;
   @State() public error!: Error;
-
-  private loadingFlag = randomID('firstInsightResultLoaded-');
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -78,62 +68,31 @@ export class AtomicInsightResultList {
         fieldsToInclude: this.bindings.store.state.fieldsToInclude || undefined,
       },
     });
-    this.registerResultTemplates();
-    this.bindings.store.setLoadingFlag(this.loadingFlag);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    // TODO:
-    // this.bindings.store.registerResultList(this);
+
+    this.resultTemplatesProvider = new ResultTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-insight-result-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
+      },
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+      bindings: this.bindings,
+    });
+
+    this.bindings.store.setLoadingFlag(this.loadingFlag);
+    // TODO: this.bindings.store.registerResultList(this);
   }
 
-  public getTemplate(result: InsightResult) {
-    return this.resultTemplatesManager.selectTemplate(result);
-  }
-
-  private async registerResultTemplates() {
-    this.resultTemplatesManager = insightBuildResultTemplatesManager(
-      this.bindings.engine
-    );
-    const elements = this.host.querySelectorAll(
-      'atomic-insight-result-template'
-    ) as NodeListOf<TemplateElement>;
-    const customTemplates = await Promise.all(
-      Array.from(elements).map(async (resultTemplateElement) => {
-        const template = await resultTemplateElement.getTemplate();
-        if (!template) {
-          this.templateHasError = true;
-        }
-        return template;
-      })
-    );
-
-    const templates = [this.makeDefaultTemplate()].concat(
-      customTemplates.filter(
-        (template) => template
-      ) as InsightResultTemplate<DocumentFragment>[]
-    );
-
-    this.resultTemplatesManager.registerTemplates(...templates);
-    this.ready = true;
-  }
-
-  private makeDefaultTemplate(): InsightResultTemplate<DocumentFragment> {
-    const content = document.createDocumentFragment();
-    const linkEl = document.createElement('atomic-result-link');
-    content.appendChild(linkEl);
-    return {
-      content,
-      conditions: [],
-    };
-  }
-
-  private getContentOfResultTemplate(
-    result: InsightResult
-  ): HTMLElement | DocumentFragment {
-    return this.getTemplate(result)!;
-  }
   private getClasses(): string {
     const classes = getResultDisplayClasses(
-      'list',
+      this.display,
       this.density,
       this.imageSize
     );
@@ -150,18 +109,21 @@ export class AtomicInsightResultList {
   }
 
   render() {
-    if (!this.ready) {
-      return null;
+    if (!this.resultTemplateRegistered) {
+      return;
     }
+
     if (this.resultListState.hasError) {
-      return null;
+      return;
     }
+
     if (
       this.resultListState.firstSearchExecuted &&
       !this.resultListState.hasResults
     ) {
       return;
     }
+
     return (
       <Host>
         {this.templateHasError && <slot></slot>}
@@ -170,7 +132,7 @@ export class AtomicInsightResultList {
             {!this.bindings.store.isAppLoaded() && (
               <ListDisplayResultsPlaceholder
                 numberOfPlaceholders={this.resultPerPageState.numberOfResults}
-                display="list"
+                display={this.display}
                 density={this.density}
                 imageSize={this.imageSize}
               />
@@ -185,7 +147,9 @@ export class AtomicInsightResultList {
                   engine={this.bindings.engine}
                   density={this.density}
                   imageSize={this.imageSize}
-                  content={this.getContentOfResultTemplate(result)}
+                  content={this.resultTemplatesProvider.getTemplateContent(
+                    result
+                  )}
                   classes={this.getClasses()}
                   loadingFlag={this.loadingFlag}
                 />
