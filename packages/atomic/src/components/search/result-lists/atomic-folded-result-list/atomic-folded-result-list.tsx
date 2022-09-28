@@ -1,4 +1,12 @@
-import {Component, Element, State, Prop, Listen, Method} from '@stencil/core';
+import {
+  Component,
+  Element,
+  State,
+  Prop,
+  Listen,
+  Method,
+  h,
+} from '@stencil/core';
 import {
   ResultsPerPageState,
   ResultsPerPage,
@@ -162,6 +170,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
+      renderResult: (props) => <atomic-result {...props}></atomic-result>,
     });
   }
 

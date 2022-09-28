@@ -7,6 +7,8 @@ import {
 import {AnyResult} from '../interface/result';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {ResultTemplateProvider} from './result-template-provider';
+import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
+import {VNode} from '@stencil/core';
 
 export interface ResultListRenderer {
   getResultId(result: AnyResult): string;
@@ -26,7 +28,7 @@ export interface ResultListCommonProps {
   getResultListState(): ResultListCommonState<AnyResult>;
   getNumberOfPlaceholders(): number;
   getResultRenderingFunction(): ResultRenderingFunction;
-  // TODO: add generic way to get a result component to render (not only atomic-result)
+  renderResult(props: ResultRendererProps): VNode;
 }
 
 export interface ResultListCommonState<Result extends AnyResult> {
@@ -41,6 +43,20 @@ export interface ResultListCommonState<Result extends AnyResult> {
 export interface ResultListDisplayProps
   extends ResultListRenderer,
     ResultListCommonProps {}
+
+export interface ResultRendererProps {
+  key?: string;
+  part?: string;
+  result: AnyResult;
+  content?: ParentNode;
+  loadingFlag?: string;
+  store: AtomicCommonStore<AtomicCommonStoreData>;
+  display?: ResultDisplayLayout;
+  density?: ResultDisplayDensity;
+  imageSize?: ResultDisplayImageSize;
+  ref?: (elm?: HTMLElement | undefined) => void;
+  renderingFunction?: ResultRenderingFunction;
+}
 
 export type ResultRenderingFunction =
   | ((result: AnyResult, root: HTMLElement) => string)
