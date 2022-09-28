@@ -83,16 +83,16 @@ export class AtomicResultList implements InitializableComponent {
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true, mutable: true}) imageSize: ResultDisplayImageSize =
-    'icon';
+  @Prop({reflect: true, mutable: true})
+  public imageSize: ResultDisplayImageSize = 'icon';
   /**
    * @deprecated use `imageSize` instead.
    */
-  @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) public image: ResultDisplayImageSize = 'icon';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.

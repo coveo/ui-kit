@@ -19,14 +19,14 @@ export interface ResultListCommonProps {
   host: HTMLElement;
   loadingFlag: string;
   resultTemplateProvider: ResultTemplateProvider;
+  nextNewResultTarget: FocusTargetController;
   getDisplay(): ResultDisplayLayout;
   getDensity(): ResultDisplayDensity;
   getImageSize(): ResultDisplayImageSize;
   getResultListState(): ResultListCommonState<AnyResult>;
   getNumberOfPlaceholders(): number;
   getResultRenderingFunction(): ResultRenderingFunction;
-  nextNewResultTarget: FocusTargetController;
-  // TODO: add generic way to get a result component (not only atomic-result)
+  // TODO: add generic way to get a result component to render (not only atomic-result)
 }
 
 export interface ResultListCommonState<Result extends AnyResult> {
