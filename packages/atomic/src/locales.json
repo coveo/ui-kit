@@ -1430,5 +1430,25 @@
   },
   "insight-related-cases": {
     "en": "Insights related to this case"
+  },
+  "calendar-last-day": {
+    "en": "[Yesterday]",
+    "fr": "[Hier]"
+  },
+  "calendar-same-day": {
+    "en": "[Today]",
+    "fr": "[Aujourd'hui]"
+  },
+  "calendar-next-day": {
+    "en": "[Tomorrow]",
+    "fr": "[Demain]"
+  },
+  "calendar-next-week": {
+    "en": "dddd",
+    "fr": "dddd"
+  },
+  "calendar-last-week": {
+    "en": "[Last] dddd",
+    "fr": "dddd [dernier]"
   }
 }

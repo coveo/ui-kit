@@ -782,13 +782,13 @@ export declare interface AtomicResultDate extends Components.AtomicResultDate {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['field', 'format']
+  inputs: ['calendarTime', 'field', 'format']
 })
 @Component({
   selector: 'atomic-result-date',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['field', 'format']
+  inputs: ['calendarTime', 'field', 'format']
 })
 export class AtomicResultDate {
   protected el: HTMLElement;
@@ -1214,6 +1214,27 @@ export declare interface AtomicResultText extends Components.AtomicResultText {}
   inputs: ['default', 'field', 'shouldHighlight']
 })
 export class AtomicResultText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultTimespan extends Components.AtomicResultTimespan {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['field', 'format', 'unit']
+})
+@Component({
+  selector: 'atomic-result-timespan',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['field', 'format', 'unit']
+})
+export class AtomicResultTimespan {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();

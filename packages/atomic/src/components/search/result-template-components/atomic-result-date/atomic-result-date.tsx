@@ -7,6 +7,11 @@ import {
 } from '../../../../utils/initialization-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {parseDate} from '../../../../utils/date-utils';
+import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
+import updateLocale from 'dayjs/plugin/updateLocale';
+dayjs.extend(calendar);
+dayjs.extend(updateLocale);
 
 /**
  * The `atomic-result-date` component renders the value of a date result field.
@@ -36,6 +41,13 @@ export class AtomicResultDate implements InitializableComponent {
    */
   @Prop({reflect: true}) format = 'D/M/YYYY';
 
+  /**
+   * Specify that date should display as calendar time: https://day.js.org/docs/en/plugin/calendar.
+   *
+   * To modify the calendar time string, use the localization feature: https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+   */
+  @Prop({reflect: true}) calendarTime?: boolean;
+
   private dateToRender: string | null = null;
 
   private updateDateToRender() {
@@ -58,7 +70,21 @@ export class AtomicResultDate implements InitializableComponent {
       return;
     }
 
-    this.dateToRender = parsedValue.format(this.format);
+    if (this.calendarTime) {
+      dayjs.updateLocale(this.bindings.interfaceElement.language, {
+        calendar: {
+          sameDay: this.bindings.i18n.t('calendar-same-day'),
+          nextDay: this.bindings.i18n.t('calendar-next-day'),
+          nextWeek: this.bindings.i18n.t('calendar-next-week'),
+          lastDay: this.bindings.i18n.t('calendar-last-day'),
+          lastWeek: this.bindings.i18n.t('calendar-last-week'),
+          sameElse: this.format,
+        },
+      });
+      this.dateToRender = parsedValue.calendar();
+    } else {
+      this.dateToRender = parsedValue.format(this.format);
+    }
   }
 
   public componentWillRender() {

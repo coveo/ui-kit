@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   generateComponentHTML,
   TagProps,
@@ -13,6 +14,7 @@ import {
 interface ResultDateProps {
   field?: string;
   format?: string;
+  'calendar-time'?: boolean;
 }
 
 const addResultDateInResultList = (props: ResultDateProps = {}) =>
@@ -81,5 +83,30 @@ describe('Result Date Component', () => {
     });
 
     CommonAssertions.assertAccessibility(ResultDateSelectors.firstInResult);
+  });
+
+  describe('when using calendar time', () => {
+    const field = 'my-creation-date';
+    const format = 'YYYY-MM-DD';
+
+    const setup = (apiDate: string) => {
+      new TestFixture()
+        .with(addResultDateInResultList({field, format, 'calendar-time': true}))
+        .withCustomResponse((response) =>
+          response.results.forEach((result) => (result.raw[field] = apiDate))
+        )
+        .init();
+    };
+
+    [
+      {in: dayjs().subtract(1, 'day').toISOString(), out: 'Yesterday'},
+      {in: dayjs().add(1, 'day').toISOString(), out: 'Tomorrow'},
+      {in: dayjs().toISOString(), out: 'Today'},
+    ].forEach((testCase) => {
+      it(`should render the field value for ${testCase.out} correctly`, () => {
+        setup(testCase.in);
+        ResultDateSelectors.firstInResult().should('have.text', testCase.out);
+      });
+    });
   });
 });

@@ -1040,6 +1040,10 @@ export namespace Components {
     }
     interface AtomicResultDate {
         /**
+          * Specify that date should display as calendar time: https://day.js.org/docs/en/plugin/calendar.  To modify the calendar time string, use the localization feature: https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+         */
+        "calendarTime"?: boolean;
+        /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
@@ -1209,6 +1213,20 @@ export namespace Components {
           * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight": boolean;
+    }
+    interface AtomicResultTimespan {
+        /**
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format": string;
+        /**
+          * The unit of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit": string;
     }
     interface AtomicResultsPerPage {
         /**
@@ -2121,6 +2139,12 @@ declare global {
         prototype: HTMLAtomicResultTextElement;
         new (): HTMLAtomicResultTextElement;
     };
+    interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTimespanElement: {
+        prototype: HTMLAtomicResultTimespanElement;
+        new (): HTMLAtomicResultTimespanElement;
+    };
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
     }
     var HTMLAtomicResultsPerPageElement: {
@@ -2336,6 +2360,7 @@ declare global {
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
+        "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
@@ -3348,6 +3373,10 @@ declare namespace LocalJSX {
     }
     interface AtomicResultDate {
         /**
+          * Specify that date should display as calendar time: https://day.js.org/docs/en/plugin/calendar.  To modify the calendar time string, use the localization feature: https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+         */
+        "calendarTime"?: boolean;
+        /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field"?: string;
@@ -3507,6 +3536,20 @@ declare namespace LocalJSX {
           * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight"?: boolean;
+    }
+    interface AtomicResultTimespan {
+        /**
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format"?: string;
+        /**
+          * The unit of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit"?: string;
     }
     interface AtomicResultsPerPage {
         /**
@@ -3935,6 +3978,7 @@ declare namespace LocalJSX {
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
+        "atomic-result-timespan": AtomicResultTimespan;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
@@ -4050,6 +4094,7 @@ declare module "@stencil/core" {
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
+            "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
