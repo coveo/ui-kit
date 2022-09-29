@@ -16,7 +16,9 @@ export interface ResultListRenderer {
   setNewResultRef(element: HTMLElement, resultIndex: number): void;
 }
 
-export interface ResultListCommonProps {
+export interface ResultListCommonProps<
+  SpecificResult extends AnyResult = AnyResult
+> {
   bindings: AnyBindings;
   host: HTMLElement;
   loadingFlag: string;
@@ -25,18 +27,18 @@ export interface ResultListCommonProps {
   getDisplay(): ResultDisplayLayout;
   getDensity(): ResultDisplayDensity;
   getImageSize(): ResultDisplayImageSize;
-  getResultListState(): ResultListCommonState<AnyResult>;
+  getResultListState(): ResultListCommonState<SpecificResult>;
   getNumberOfPlaceholders(): number;
   getResultRenderingFunction(): ResultRenderingFunction;
-  renderResult(props: ResultRendererProps): VNode;
+  renderResult(props: ResultRendererProps<SpecificResult>): VNode;
 }
 
-export interface ResultListCommonState<Result extends AnyResult> {
+export interface ResultListCommonState<SpecificResult extends AnyResult> {
   hasError: boolean;
   firstSearchExecuted: boolean;
   hasResults: boolean;
   isLoading: boolean;
-  results: Result[];
+  results: SpecificResult[];
   searchResponseId: string;
 }
 
@@ -44,10 +46,12 @@ export interface ResultListDisplayProps
   extends ResultListRenderer,
     ResultListCommonProps {}
 
-export interface ResultRendererProps {
+export interface ResultRendererProps<
+  SpecificResult extends AnyResult = AnyResult
+> {
   key?: string;
   part?: string;
-  result: AnyResult;
+  result: SpecificResult;
   content?: ParentNode;
   loadingFlag?: string;
   store: AtomicCommonStore<AtomicCommonStoreData>;
@@ -58,6 +62,6 @@ export interface ResultRendererProps {
   renderingFunction?: ResultRenderingFunction;
 }
 
-export type ResultRenderingFunction =
-  | ((result: AnyResult, root: HTMLElement) => string)
-  | undefined;
+export type ResultRenderingFunction<
+  SpecificResult extends AnyResult = AnyResult
+> = ((result: SpecificResult, root: HTMLElement) => string) | undefined;
