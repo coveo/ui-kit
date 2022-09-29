@@ -24,7 +24,6 @@ runs:
           packages/atomic-angular/projects/atomic-angular/dist
           packages/samples/headless-react
           packages/quantic/force-app/main/default/staticresources/coveoheadless
-          packages/quantic/cypress/plugins/config
           !node_modules
           !**/node_modules
         key: ${{ github.sha }}
