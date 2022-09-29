@@ -11,6 +11,9 @@ inputs:
   jwtkey:
     description: The SFDX JWT key contents
     required: true
+  spec:
+    description: Specify the spec files to run
+    required: true
 runs:
   using: composite
   steps:
@@ -36,6 +39,7 @@ runs:
       name: Run Cypress
       with:
         working-directory: ./packages/quantic
+        spec: ${{ inputs.spec }}
         install: false
         record: false
         config: reporter=cypress/reporters/detailed-reporter.js

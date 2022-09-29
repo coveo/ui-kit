@@ -112,6 +112,15 @@ jobs:
     name: 'Run e2e tests on Quantic'
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        spec: [
+            'cypress/e2e/default-e2e/**/*',
+            'cypress/e2e/facets-e2e/**/*',
+            'cypress/e2e/results-e2e/**/*',
+            'cypress/e2e/search-box-e2e/**/*',
+          ]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -120,6 +129,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          spec: ${{ matrix.spec }}
   bump-version:
     name: 'Bump version'
     needs:
