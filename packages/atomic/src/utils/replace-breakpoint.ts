@@ -35,8 +35,13 @@ function replateStyleContent(element: HTMLElement, breakpoint: string) {
 }
 
 export function updateBreakpoints(element: HTMLElement) {
-  const layout = closest(element, 'atomic-search-layout');
-  if (!layout) {
+  const layout = closest(
+    element,
+    // TODO: support more layouts
+    'atomic-search-layout'
+  );
+
+  if (!layout?.mobileBreakpoint) {
     return;
   }
 

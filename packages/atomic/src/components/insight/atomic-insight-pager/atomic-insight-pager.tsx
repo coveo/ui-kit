@@ -52,7 +52,7 @@ export class AtomicInsightPager
    */
   @Prop({reflect: true}) numberOfPages = 5;
 
-  @FocusTarget()
+  @FocusTarget<InsightBindings>()
   private activePage!: FocusTargetController;
 
   public initialize() {

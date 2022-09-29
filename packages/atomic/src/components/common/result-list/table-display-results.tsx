@@ -1,13 +1,12 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {AnyBindings} from '../../common/interface/bindings';
-import {ResultsProps} from './result-list-common';
+import {ResultListDisplayProps} from './result-list-common-interface';
 
 export const TableDisplayResults: FunctionalComponent<
-  ResultsProps<AnyBindings>
+  ResultListDisplayProps
 > = (props) => {
   const fieldColumns = getFieldTableColumns(props);
 
-  if (fieldColumns.length === 0) {
+  if (!fieldColumns.length) {
     props.bindings.engine.logger.error(
       'atomic-table-element elements missing in the result template to display columns.',
       props.host
@@ -15,7 +14,7 @@ export const TableDisplayResults: FunctionalComponent<
   }
 
   return (
-    <table class={`list-root ${props.classes}`} part="result-table">
+    <table class={`list-root ${props.listClasses}`} part="result-table">
       <thead part="result-table-heading">
         <tr part="result-table-heading-row">
           {fieldColumns.map((column) => (
@@ -26,44 +25,33 @@ export const TableDisplayResults: FunctionalComponent<
         </tr>
       </thead>
       <tbody part="result-table-body">
-        {props.resultListState.results.map((result, rowIndex) => (
+        {props.getResultListState().results.map((result, rowIndex) => (
           <tr
-            key={props.resultListCommon.getResultId(
-              result,
-              props.resultListState
-            )}
+            key={props.getResultId(result)}
             part={
               'result-table-row ' +
               (rowIndex % 2 === 1
                 ? 'result-table-row-even'
                 : 'result-table-row-odd') /* Offset by 1 since the index starts at 0 */
             }
-            ref={(element) =>
-              element &&
-              props.indexOfResultToFocus === rowIndex &&
-              props.newResultRef?.(element)
-            }
+            ref={(element) => props.setNewResultRef(element!, rowIndex)}
           >
             {fieldColumns.map((column) => {
               return (
                 <td
                   key={
-                    column.getAttribute('label')! +
-                    props.resultListCommon.getResultId(
-                      result,
-                      props.resultListState
-                    )
+                    column.getAttribute('label')! + props.getResultId(result)
                   }
                   part="result-table-cell"
                 >
                   <atomic-result
-                    store={props.bindings.store}
                     result={result}
-                    display={props.display}
-                    density={props.density}
-                    image-size={props.imageSize}
+                    store={props.bindings.store}
                     content={column}
-                    loadingFlag={props.resultListCommon.loadingFlag}
+                    loadingFlag={props.loadingFlag}
+                    display={props.getDisplay()}
+                    density={props.getDensity()}
+                    image-size={props.getImageSize()}
                   ></atomic-result>
                 </td>
               );
@@ -75,20 +63,21 @@ export const TableDisplayResults: FunctionalComponent<
   );
 };
 
-const getFieldTableColumns = (props: ResultsProps<AnyBindings>) => {
-  if (props.renderingFunction) {
+const getFieldTableColumns = (props: ResultListDisplayProps) => {
+  if (props.getResultRenderingFunction()) {
     return getFieldTableColumnsFromRenderingFunction(props);
   }
   return getFieldTableColumnsFromHTMLTemplate(props);
 };
 
 const getFieldTableColumnsFromRenderingFunction = (
-  props: ResultsProps<AnyBindings>
+  props: ResultListDisplayProps
 ): HTMLAtomicTableElementElement[] => {
   const contentOfRenderingFunction = document.createElement('div');
+  const resultRenderingFunction = props.getResultRenderingFunction()!;
 
-  const contentOfRenderingFunctionAsString = props.renderingFunction!(
-    props.resultListState.results[0],
+  const contentOfRenderingFunctionAsString = resultRenderingFunction(
+    props.getResultListState().results[0],
     document.createElement('div')
   );
   contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
@@ -99,11 +88,10 @@ const getFieldTableColumnsFromRenderingFunction = (
 };
 
 const getFieldTableColumnsFromHTMLTemplate = (
-  props: ResultsProps<AnyBindings>
-): HTMLAtomicTableElementElement[] => {
-  return Array.from(
-    props
-      .getContentOfResultTemplate(props.resultListState.results[0])
+  props: ResultListDisplayProps
+): HTMLAtomicTableElementElement[] =>
+  Array.from(
+    props.resultTemplateProvider
+      .getTemplateContent(props.getResultListState().results[0])
       .querySelectorAll('atomic-table-element')
   );
-};

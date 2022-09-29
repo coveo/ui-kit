@@ -105,13 +105,13 @@ export class AtomicInsightFacet
    */
   @Prop() public injectionDepth = 1000;
 
-  @FocusTarget()
+  @FocusTarget<InsightBindings>()
   private showLessFocus!: FocusTargetController;
 
-  @FocusTarget()
+  @FocusTarget<InsightBindings>()
   private showMoreFocus!: FocusTargetController;
 
-  @FocusTarget()
+  @FocusTarget<InsightBindings>()
   private headerFocus!: FocusTargetController;
 
   public initialize() {

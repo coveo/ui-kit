@@ -9,6 +9,10 @@ import {
 import {DateFacetValue, NumericFacetValue} from '../types';
 import {AnyEngineType, CommonStencilStore} from './bindings';
 
+export interface ResultListInfo {
+  focusOnNextNewResult(): void;
+}
+
 export type AtomicCommonStoreData = {
   facets: FacetStore<FacetInfo>;
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
@@ -18,6 +22,7 @@ export type AtomicCommonStoreData = {
   iconAssetsPath: string;
   fieldsToInclude: string[];
   facetElements: HTMLElement[];
+  resultList?: ResultListInfo;
 };
 
 export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
@@ -34,6 +39,7 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
     facetType: T,
     data: StoreData[T][U] & {facetId: U; element: HTMLElement}
   ): void;
+  registerResultList(data: ResultListInfo): void;
 }
 
 export const isRefineModalFacet = 'is-refine-modal';
@@ -89,6 +95,10 @@ export function createAtomicCommonStore<
 
     hasLoadingFlag(loadingFlag: string) {
       return stencilStore.get('loadingFlags').indexOf(loadingFlag) !== -1;
+    },
+
+    registerResultList(data: ResultListInfo) {
+      stencilStore.set('resultList', data);
     },
 
     waitUntilAppLoaded(callback: () => void) {
