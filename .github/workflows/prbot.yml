@@ -153,7 +153,7 @@ jobs:
     steps:
       - run: npx --no-install ts-node scripts/build/delete-org.ts
         shell: bash
-        working-directory: ./packages/quantic
+        working-directory: packages/quantic
   required-jobs:
     if: success()
     needs:
