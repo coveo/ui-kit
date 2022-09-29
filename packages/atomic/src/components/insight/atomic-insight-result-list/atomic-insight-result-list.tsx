@@ -72,7 +72,7 @@ export class AtomicInsightResultList {
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
 
-  public async initialize() {
+  public initialize() {
     this.resultList = buildInsightResultList(this.bindings.engine, {
       options: {
         fieldsToInclude: this.bindings.store.state.fieldsToInclude || undefined,
