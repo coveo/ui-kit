@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {AnyBindings} from '../components/common/interface/bindings';
-import {InsightBindings} from '../components/insight/atomic-insight-interface/atomic-insight-interface';
+import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
@@ -53,9 +53,9 @@ export interface FocusTargetController {
   disableForCurrentSearch(): void;
 }
 
-export function FocusTarget() {
+export function FocusTarget<SpecificBindings extends AnyBindings = Bindings>() {
   return (
-    component: InitializableComponent | InitializableComponent<InsightBindings>,
+    component: InitializableComponent<SpecificBindings>,
     setterName: string
   ) => {
     const {componentWillLoad} = component;
