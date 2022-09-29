@@ -77,11 +77,7 @@ export class AtomicInsightSearchBox {
   public render() {
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
-        <atomic-icon
-          part="submit-icon"
-          icon={SearchIcon}
-          class="w-4 h-4"
-        ></atomic-icon>
+        <atomic-icon part="submit-icon" icon={SearchIcon} class="w-4 h-4" />
         <SearchInput
           inputRef={this.inputRef}
           loading={this.searchBoxState.isLoading}
