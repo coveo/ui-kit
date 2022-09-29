@@ -1,26 +1,23 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {AnyBindings} from '../../common/interface/bindings';
-import {ResultsProps} from './result-list-common';
+import {ResultListDisplayProps} from './result-list-common-interface';
 
-export const ListDisplayResults: FunctionalComponent<
-  ResultsProps<AnyBindings>
-> = (props) => {
-  return props.resultListState.results.map((result, index) => {
+export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
+  props
+) =>
+  props.getResultListState().results.map((result, index) => {
     return (
       <atomic-result
-        key={props.resultListCommon.getResultId(result, props.resultListState)}
+        key={props.getResultId(result)}
         part="outline"
         result={result}
         store={props.bindings.store}
-        content={props.getContentOfResultTemplate(result)}
-        loadingFlag={props.resultListCommon.loadingFlag}
-        ref={(element) =>
-          element &&
-          props.indexOfResultToFocus === index &&
-          props.newResultRef?.(element)
-        }
-        {...props}
+        content={props.resultTemplateProvider.getTemplateContent(result)}
+        loadingFlag={props.loadingFlag}
+        display={props.getDisplay()}
+        density={props.getDensity()}
+        image-size={props.getImageSize()}
+        ref={(element) => props.setNewResultRef(element!, index)}
+        renderingFunction={props.getResultRenderingFunction()}
       ></atomic-result>
     );
   });
-};
