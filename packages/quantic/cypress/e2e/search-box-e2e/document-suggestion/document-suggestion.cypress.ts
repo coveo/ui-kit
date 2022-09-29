@@ -8,8 +8,8 @@ import {
   interceptSuggestionIndefinitely,
 } from '../../../page-objects/case-assist';
 import {sendRating} from '../../../page-objects/actions/action-send-rating';
-import allDocuments from '../../fixtures/documentSuggestions.json';
-import similarDocuments from '../../fixtures/similarDocumentSuggestions.json';
+import allDocuments from '../../../fixtures/documentSuggestions.json';
+import similarDocuments from '../../../fixtures/similarDocumentSuggestions.json';
 import {fetchSuggestions} from '../../../page-objects/actions/action-get-suggestions';
 import {
   InterceptAliases,
