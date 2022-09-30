@@ -1,4 +1,4 @@
-import {Component, Element, State, Prop, Method} from '@stencil/core';
+import {Component, Element, State, Prop, Method, h} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -160,6 +160,7 @@ export class AtomicResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
+      renderResult: (props) => <atomic-result {...props}></atomic-result>,
     });
   }
 

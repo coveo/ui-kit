@@ -4,7 +4,7 @@ import {
   RecommendationListState,
   Result,
 } from '@coveo/headless/recommendation';
-import {Component, State, Element, Prop, Method} from '@stencil/core';
+import {Component, State, Element, Prop, Method, h} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -114,6 +114,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListCommonState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
+      renderResult: (props) => <atomic-result {...props}></atomic-result>,
     });
 
     this.recommendationList.refresh();
