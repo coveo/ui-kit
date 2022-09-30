@@ -27,14 +27,6 @@ export interface ClickAnalyticsActionCreators {
   /**
    * The event to log when the source of a smart snippet is clicked.
    *
-   * @param source - The source of the clicked smart snippet.
-   * @returns A dispatchable action.
-   * @deprecated Providing a source is no longer necessary.
-   */
-  logOpenSmartSnippetSource(source: Result): ClickAction;
-  /**
-   * The event to log when the source of a smart snippet is clicked.
-   *
    * @returns A dispatchable action.
    */
   logOpenSmartSnippetSource(): ClickAction;

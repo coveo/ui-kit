@@ -64,7 +64,6 @@ import {
   SmartSnippetFeedback,
 } from '../question-answering/question-answering-analytics-actions';
 import {
-  QuestionAnsweringDocumentIdActionCreatorPayload,
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../question-answering/question-answering-document-id';
@@ -95,7 +94,6 @@ export type {
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
-  QuestionAnsweringDocumentIdActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   QuestionAnsweringInlineLinkActionCreatorPayload,
   LogStaticFilterToggleValueActionCreatorPayload,
@@ -373,9 +371,7 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logExpandSmartSnippetSuggestion(
-    payload:
-      | QuestionAnsweringDocumentIdActionCreatorPayload
-      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): CustomAction;
 
   /**
@@ -385,9 +381,7 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logCollapseSmartSnippetSuggestion(
-    payload:
-      | QuestionAnsweringDocumentIdActionCreatorPayload
-      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
+    payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
   ): CustomAction;
 
   /**

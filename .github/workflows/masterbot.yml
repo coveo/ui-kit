@@ -34,7 +34,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: ["cypress/integration/*", "cypress/integration/result-list/**/*", "cypress/integration/facets/**/*", "cypress/integration/search-box/**/*"]
+        spec: [
+            'cypress/e2e/*',
+            'cypress/e2e/result-list/**/*',
+            'cypress/e2e/facets/**/*',
+            'cypress/e2e/search-box/**/*',
+          ]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup

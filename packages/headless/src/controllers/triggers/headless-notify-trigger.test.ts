@@ -16,7 +16,6 @@ describe('NotifyTrigger', () => {
 
   function setEngineTriggersState(notifications: string[]) {
     engine.state.triggers.notifications = notifications;
-    engine.state.triggers.notification = notifications[0] ?? '';
   }
 
   function getLogTriggerNotifyAction() {

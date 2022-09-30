@@ -92,13 +92,7 @@ export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
   CategoryFacetSearchResult,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreCategoryFacet,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreCategoryFacetState,
 } from './controllers/insight/facets/category-facet/headless-insight-category-facet';
 export {buildCategoryFacet} from './controllers/insight/facets/category-facet/headless-insight-category-facet';
@@ -114,13 +108,7 @@ export type {
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreFacet,
-  /**
-   * @deprecated This is an internal controller that will be removed in the next version.
-   */
   CoreFacetState,
 } from './controllers/insight/facets/facet/headless-insight-facet';
 export {buildFacet} from './controllers/insight/facets/facet/headless-insight-facet';

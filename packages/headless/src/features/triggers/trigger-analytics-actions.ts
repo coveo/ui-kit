@@ -52,12 +52,12 @@ export const logNotifyTrigger = (): SearchAction =>
     'analytics/trigger/notify',
     AnalyticsType.Search,
     (client, state) => {
-      if (state.triggers?.notification) {
-        return client.makeTriggerNotify({
-          notification: state.triggers.notification,
-        });
+      if (!state.triggers?.notifications.length) {
+        return null;
       }
-      return null;
+      return client.makeTriggerNotify({
+        notification: state.triggers.notifications[0],
+      });
     }
   );
 
@@ -83,11 +83,11 @@ export const logTriggerExecute = (): SearchAction =>
     'analytics/trigger/execute',
     AnalyticsType.Search,
     (client, state) => {
-      if (state.triggers?.execute) {
-        return client.makeTriggerExecute({
-          executed: state.triggers.execute.functionName,
-        });
+      if (!state.triggers?.executions.length) {
+        return null;
       }
-      return null;
+      return client.makeTriggerExecute({
+        executed: state.triggers.executions[0].functionName,
+      });
     }
   );

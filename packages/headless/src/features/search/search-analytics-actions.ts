@@ -29,8 +29,9 @@ export const logQueryError = (
         cq:
           state.advancedSearchQueries?.cq ||
           getAdvancedSearchQueriesInitialState().cq,
-        // TODO: add dq when its added to advanced queries
-        dq: '',
+        dq:
+          state.advancedSearchQueries?.dq ||
+          getAdvancedSearchQueriesInitialState().dq,
         errorType: error.type,
         errorMessage: error.message,
       })

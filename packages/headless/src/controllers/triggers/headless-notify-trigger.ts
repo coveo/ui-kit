@@ -21,12 +21,6 @@ export interface NotifyTrigger extends Controller {
  */
 export interface NotifyTriggerState {
   /**
-   * The notification to display to the user after receiving a notification trigger.
-   *
-   * @deprecated Use `notifications` instead.
-   */
-  notification: string;
-  /**
    * The notifications to display to the user after receiving notification triggers.
    */
   notifications: string[];
@@ -72,7 +66,6 @@ export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
 
     get state() {
       return {
-        notification: getState().triggers.notification,
         notifications: getState().triggers.notifications,
       };
     },
