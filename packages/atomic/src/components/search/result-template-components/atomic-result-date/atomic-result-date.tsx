@@ -42,9 +42,9 @@ export class AtomicResultDate implements InitializableComponent {
   @Prop({reflect: true}) format = 'D/M/YYYY';
 
   /**
-   * Specify that date should display as calendar time: https://day.js.org/docs/en/plugin/calendar.
+   * Whether the date should display in the [calendar time format](https://day.js.org/docs/en/plugin/calendar). 
    *
-   * To modify the calendar time string, use the localization feature: https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+   * To modify the calendar time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
    */
   @Prop({reflect: true}) calendarTime?: boolean;
 

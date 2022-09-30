@@ -10,7 +10,7 @@ import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 /**
- * The `atomic-result-timespan` component renders the duration of a number result field.
+ * The `atomic-result-timespan` component renders a target result number field value as a duration.
  */
 @Component({
   tag: 'atomic-result-timespan',
@@ -24,22 +24,22 @@ export class AtomicResultTimespan {
   @State() public error!: Error;
 
   /**
-   * The result field which the component should use.
-   * This will look for the field in the Result object first, and then in the Result.raw object.
+   * The target result field.
+   * The component first looks for the field in the Result object, and then in the Result.raw object.
    * It is important to include the necessary field in the ResultList component.
    */
   @Prop({reflect: true}) field!: string;
   /**
-   * The unit of the field value.
+   * The unit of measurement of the field value.
    * Available units: https://day.js.org/docs/en/durations/creating
    */
   @Prop({reflect: true}) unit = 'ms';
   /**
-   * Specify the format into which the duration should be formatted.
+   * The format to apply to the result field value.
    *
-   * If not specified, the component will fallback to an algorithm that approximates the duration if it is very long (years, months or days) or HH:mm:ss if under a day.
+   * By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).
    *
-   * The string displayed when there is an approximation can be modified with localization.
+   * The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
    *
    * Available formats: https://day.js.org/docs/en/durations/format
    */
