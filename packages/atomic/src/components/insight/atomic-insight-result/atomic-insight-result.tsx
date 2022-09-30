@@ -36,8 +36,9 @@ export class AtomicInsightResult {
 
   /**
    * The headless search engine.
+   * @deprecated This property is currently un-used
    */
-  @Prop() engine!: InsightEngine;
+  @Prop() engine?: InsightEngine;
 
   /**
    * Global state for Atomic.
