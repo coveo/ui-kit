@@ -1450,5 +1450,29 @@
   "calendar-last-week": {
     "en": "[Last] dddd",
     "fr": "dddd [dernier]"
+  },
+  "approx_year": {
+    "en": "About a year",
+    "fr": "Environ un an"
+  },
+  "approx_year_plural": {
+    "en": "About {{count}} years",
+    "fr": "Environ {{count}} années"
+  },
+  "approx_month": {
+    "en": "About a month",
+    "fr": "Environ un mois"
+  },
+  "approx_month_plural": {
+    "en": "About {{count}} months",
+    "fr": "Environ {{count}} mois"
+  },
+  "approx_day": {
+    "en": "About a day",
+    "fr": "Environ un jour"
+  },
+  "day_plural": {
+    "en": "About {{count}} days",
+    "fr": "Environ {{value}} jours"
   }
 }

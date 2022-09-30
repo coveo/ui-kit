@@ -1238,9 +1238,9 @@ export namespace Components {
          */
         "field": string;
         /**
-          * Available formats: https://day.js.org/docs/en/durations/format
+          * Specify the format into which the duration should be formatted.  If not specified, will fallback to an algorithm that approximate the duration if it is very long (years, months, days) or HH:mm:ss if under a day.  Available formats: https://day.js.org/docs/en/durations/format
          */
-        "format": string;
+        "format"?: string;
         /**
           * The unit of the field value. Available units: https://day.js.org/docs/en/durations/creating
          */
@@ -3577,7 +3577,7 @@ declare namespace LocalJSX {
          */
         "field": string;
         /**
-          * Available formats: https://day.js.org/docs/en/durations/format
+          * Specify the format into which the duration should be formatted.  If not specified, will fallback to an algorithm that approximate the duration if it is very long (years, months, days) or HH:mm:ss if under a day.  Available formats: https://day.js.org/docs/en/durations/format
          */
         "format"?: string;
         /**

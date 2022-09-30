@@ -35,9 +35,13 @@ export class AtomicResultTimespan {
    */
   @Prop({reflect: true}) unit = 'ms';
   /**
+   * Specify the format into which the duration should be formatted.
+   *
+   * If not specified, will fallback to an algorithm that approximate the duration if it is very long (years, months, days) or HH:mm:ss if under a day.
+   *
    * Available formats: https://day.js.org/docs/en/durations/format
    */
-  @Prop({reflect: true}) format = 'HH:mm:ss';
+  @Prop({reflect: true}) format?: string;
 
   public initialize() {
     new Schema({
@@ -57,9 +61,30 @@ export class AtomicResultTimespan {
   }
 
   public render() {
-    return dayjs
-      .duration(this.value, this.unit as DurationUnitType)
-      .format(this.format);
+    const duration = dayjs.duration(this.value, this.unit as DurationUnitType);
+    if (this.format) {
+      return duration.format(this.format);
+    }
+
+    if (duration.asYears() >= 1) {
+      return this.bindings.i18n.t('approx_year', {
+        count: Math.round(duration.asYears()),
+      });
+    }
+
+    if (duration.asMonths() >= 1) {
+      return this.bindings.i18n.t('approx_month', {
+        count: Math.round(duration.asMonths()),
+      });
+    }
+
+    if (duration.asDays() >= 1) {
+      return this.bindings.i18n.t('approx_day', {
+        count: Math.round(duration.asDays()),
+      });
+    }
+
+    return duration.format('HH:mm:ss');
   }
 
   private get value() {
