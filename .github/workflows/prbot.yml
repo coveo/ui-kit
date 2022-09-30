@@ -151,6 +151,7 @@ jobs:
     needs: e2e-quantic-test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
   required-jobs:
