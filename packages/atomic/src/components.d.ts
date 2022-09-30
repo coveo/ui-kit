@@ -1157,7 +1157,6 @@ export namespace Components {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
-        "isChild": boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -3476,7 +3475,6 @@ declare namespace LocalJSX {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
-        "isChild"?: boolean;
     }
     interface AtomicResultPrintableUri {
         /**
