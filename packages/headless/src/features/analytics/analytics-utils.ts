@@ -17,9 +17,11 @@ import {
   SearchPageClientProvider,
   CaseAssistClient,
   CoveoInsightClient,
+  EventBuilder,
+  EventDescription,
+  AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
-import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {AsyncThunk, createAsyncThunk} from '@reduxjs/toolkit';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
@@ -29,7 +31,6 @@ import {
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {ResultWithFolding} from '../folding/folding-slice';
 import {getAllIncludedResultsFrom} from '../folding/folding-utils';
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
 import {
   configureAnalytics,
   SearchAnalyticsProvider,
@@ -45,6 +46,10 @@ import {
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
+import {PreprocessRequest} from '../../api/preprocess-request';
+import {Logger} from 'pino';
+import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
+import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 
 export enum AnalyticsType {
   Search,
@@ -52,35 +57,80 @@ export enum AnalyticsType {
   Click,
 }
 
-export type SearchAction = AsyncThunkAction<
-  {analyticsType: AnalyticsType.Search},
-  void | {},
-  AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+export interface PreparableAnalyticsActionOptions<
+  StateNeeded extends ConfigurationSection
+> {
+  state: StateNeeded;
+  analyticsClientMiddleware: AnalyticsClientSendEventHook;
+  preprocessRequest: PreprocessRequest | undefined;
+  logger: Logger;
+}
+
+type WrappedAnalyticsType<T extends AnalyticsType = AnalyticsType> = {
+  analyticsType: T;
+};
+
+export type AnalyticsAsyncThunk<
+  EventType extends WrappedAnalyticsType | void,
+  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
+> = AsyncThunk<
+  EventType extends void ? void : EventType,
+  void,
+  AsyncThunkAnalyticsOptions<StateNeeded>
 >;
 
-export type InsightAction = AsyncThunkAction<
+export interface PreparedAnalyticsAction<
+  EventType extends WrappedAnalyticsType | void,
+  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
+> {
+  description?: EventDescription;
+  action: AnalyticsAsyncThunk<EventType, StateNeeded>;
+}
+
+export interface PreparableAnalyticsAction<
+  EventType extends WrappedAnalyticsType | void,
+  StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
+> extends AnalyticsAsyncThunk<EventType, StateNeeded> {
+  prepare(
+    options: PreparableAnalyticsActionOptions<StateNeeded>
+  ): PreparedAnalyticsAction<EventType, StateNeeded>;
+}
+
+export type SearchAction = PreparableAnalyticsAction<
   {analyticsType: AnalyticsType.Search},
-  void | {},
-  AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
+  StateNeededBySearchAnalyticsProvider
 >;
 
-export type CustomAction = AsyncThunkAction<
+export type CustomAction = PreparableAnalyticsAction<
   {analyticsType: AnalyticsType.Custom},
-  {},
-  {}
+  StateNeededBySearchAnalyticsProvider
 >;
 
-export type ClickAction = AsyncThunkAction<
+export type ClickAction = PreparableAnalyticsAction<
   {analyticsType: AnalyticsType.Click},
-  {},
-  {}
+  StateNeededBySearchAnalyticsProvider
 >;
 
-const searchPageState = (getState: () => unknown) =>
-  getState() as SearchAppState;
+export type InsightAction<T extends AnalyticsType = AnalyticsType.Search> =
+  PreparableAnalyticsAction<
+    {analyticsType: T},
+    StateNeededByInsightAnalyticsProvider
+  >;
+
+export type CaseAssistAction = PreparableAnalyticsAction<
+  void,
+  StateNeededByCaseAssistAnalytics
+>;
+
+export type ProductRecommendationAction<
+  T extends AnalyticsType = AnalyticsType.Search
+> = PreparableAnalyticsAction<
+  {analyticsType: T},
+  StateNeededByProductRecommendationsAnalyticsProvider
+>;
 
 export interface AsyncThunkAnalyticsOptions<
-  T extends Partial<StateNeededBySearchAnalyticsProvider>
+  T extends StateNeededBySearchAnalyticsProvider
 > {
   state: T;
   extra: ThunkExtraArguments;
@@ -93,28 +143,49 @@ export interface AsyncThunkInsightAnalyticsOptions<
   extra: ThunkExtraArguments;
 }
 
-export const makeAnalyticsAction = <T extends AnalyticsType>(
+function makePreparableAnalyticsAction<
+  EventType extends WrappedAnalyticsType | void,
+  StateNeeded extends ConfigurationSection
+>(
+  prepare: (
+    options: PreparableAnalyticsActionOptions<StateNeeded>
+  ) => PreparedAnalyticsAction<EventType, StateNeeded>
+): PreparableAnalyticsAction<EventType, StateNeeded> {
+  const rootAction = function () {
+    const thunkAction: ReturnType<
+      AnalyticsAsyncThunk<EventType, StateNeeded>
+    > = (dispatch, getState, extra) => {
+      const {analyticsClientMiddleware, preprocessRequest, logger} = extra;
+      return prepare({
+        state: getState(),
+        analyticsClientMiddleware,
+        preprocessRequest,
+        logger,
+      }).action()(dispatch, getState, extra);
+    };
+    return thunkAction;
+  } as PreparableAnalyticsAction<EventType>;
+  rootAction.prepare = prepare;
+
+  return rootAction;
+}
+
+export const makeAnalyticsAction = <EventType extends AnalyticsType>(
   prefix: string,
-  analyticsType: T,
-  log: (
+  analyticsType: EventType,
+  getBuilder: (
     client: CoveoSearchPageClient,
-    state: ConfigurationSection & Partial<SearchAppState>
-  ) => Promise<void | SearchEventResponse> | void,
+    state: StateNeededBySearchAnalyticsProvider
+  ) => EventBuilder | null,
   provider: (state: Partial<SearchAppState>) => SearchPageClientProvider = (
     s
   ) => new SearchAnalyticsProvider(s as StateNeededBySearchAnalyticsProvider)
-) => {
-  return createAsyncThunk<
-    {analyticsType: T},
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >(
-    prefix,
-    async (
-      _,
-      {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
-    ) => {
-      const state = searchPageState(getState);
+): PreparableAnalyticsAction<
+  WrappedAnalyticsType<EventType>,
+  StateNeededBySearchAnalyticsProvider
+> => {
+  return makePreparableAnalyticsAction(
+    ({state, analyticsClientMiddleware, preprocessRequest, logger}) => {
       const client = configureAnalytics({
         state,
         logger,
@@ -122,61 +193,131 @@ export const makeAnalyticsAction = <T extends AnalyticsType>(
         preprocessRequest,
         provider: provider(state),
       });
-      const response = await log(client, state);
-      logger.info(
-        {client: client.coveoAnalyticsClient, response},
-        'Analytics response'
-      );
-      return {analyticsType};
+      const builder = getBuilder(client, state);
+      return {
+        description: builder?.description,
+        action: createAsyncThunk(prefix, async () => {
+          const response = await builder?.log();
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+          return {analyticsType};
+        }),
+      };
     }
   );
 };
 
+// export const makeAnalyticsAction = <T extends AnalyticsType>(
+//   prefix: string,
+//   analyticsType: T,
+//   getBuilder: (
+//     client: CoveoSearchPageClient,
+//     state: ConfigurationSection & Partial<SearchAppState>
+//   ) => EventBuilder | null,
+//   provider: (state: Partial<SearchAppState>) => SearchPageClientProvider = (
+//     s
+//   ) => new SearchAnalyticsProvider(s as StateNeededBySearchAnalyticsProvider)
+// ): PreparableAnalyticsAction<T> => {
+//   const prepare = ({
+//     state,
+//     analyticsClientMiddleware,
+//     preprocessRequest,
+//     logger,
+//   }: PreparableAnalyticsActionOptions) => {
+//     const client = configureAnalytics({
+//       state,
+//       logger,
+//       analyticsClientMiddleware,
+//       preprocessRequest,
+//       provider: provider(state),
+//     });
+//     const builder = getBuilder(client, state);
+//     const action: AnalyticsAsyncThunk<T> = createAsyncThunk<
+//       {analyticsType: T},
+//       void,
+//       AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
+//     >(
+//       prefix,
+//       async (
+//         _,
+//         {
+//           getState,
+//           extra: {analyticsClientMiddleware, preprocessRequest, logger},
+//         }
+//       ) => {
+//         const state = searchPageState(getState);
+//         const client = configureAnalytics({
+//           state,
+//           logger,
+//           analyticsClientMiddleware,
+//           preprocessRequest,
+//           provider: provider(state),
+//         });
+//         const response = await builder?.log();
+//         logger.info(
+//           {client: client.coveoAnalyticsClient, response},
+//           'Analytics response'
+//         );
+//         return {analyticsType};
+//       }
+//     );
+//     return {description: builder?.description, action};
+//   };
+
+//   const rootAction = function () {
+//     const thunkAction: ReturnType<AnalyticsAsyncThunk<T>> = (
+//       dispatch,
+//       getState,
+//       extra
+//     ) => {
+//       const {analyticsClientMiddleware, preprocessRequest, logger} = extra;
+//       return prepare({
+//         state: getState(),
+//         analyticsClientMiddleware,
+//         preprocessRequest,
+//         logger,
+//       }).action()(dispatch, getState, extra);
+//     };
+//     return thunkAction;
+//   } as PreparableAnalyticsAction<T>;
+//   rootAction.prepare = prepare;
+
+//   return rootAction;
+// };
+
 export const makeNoopAnalyticsAction = <T extends AnalyticsType>(
   analyticsType: T
-) => {
-  return createAsyncThunk<
-    {analyticsType: T},
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >('analytics/noop', async () => {
-    return {analyticsType};
-  });
-};
+) => makeAnalyticsAction('analytics/noop', analyticsType, () => null);
 
-export const noopSearchAnalyticsAction = makeNoopAnalyticsAction(
-  AnalyticsType.Search
-);
+export const noopSearchAnalyticsAction = (): SearchAction =>
+  makeNoopAnalyticsAction(AnalyticsType.Search);
 
 export const makeCaseAssistAnalyticsAction = (
   prefix: string,
   log: (
     client: CaseAssistClient,
-    state: ConfigurationSection & Partial<CaseAssistAppState>
+    state: StateNeededByCaseAssistAnalytics
   ) => Promise<void | SearchEventResponse> | void
-) => {
-  return createAsyncThunk<
-    void,
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByCaseAssistAnalytics>
-  >(
-    prefix,
-    async (
-      _,
-      {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
-    ) => {
-      const state = getState();
+): PreparableAnalyticsAction<void, StateNeededByCaseAssistAnalytics> => {
+  return makePreparableAnalyticsAction(
+    ({state, analyticsClientMiddleware, preprocessRequest, logger}) => {
       const client = configureCaseAssistAnalytics({
         state,
         logger,
         analyticsClientMiddleware,
         preprocessRequest,
       });
-      const response = await log(client, state);
-      logger.info(
-        {client: client.coveoAnalyticsClient, response},
-        'Analytics response'
-      );
+      return {
+        action: createAsyncThunk(prefix, async () => {
+          const response = await log(client, state);
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+        }),
+      };
     }
   );
 };
@@ -186,23 +327,14 @@ export const makeInsightAnalyticsAction = <T extends AnalyticsType>(
   analyticsType: T,
   log: (
     client: CoveoInsightClient,
-    state: ConfigurationSection & Partial<InsightAppState>
+    state: StateNeededByInsightAnalyticsProvider
   ) => Promise<void | SearchEventResponse> | void,
   provider: (state: Partial<InsightAppState>) => InsightAnalyticsProvider = (
     s
   ) => new InsightAnalyticsProvider(s as StateNeededByInsightAnalyticsProvider)
 ) => {
-  return createAsyncThunk<
-    {analyticsType: T},
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >(
-    prefix,
-    async (
-      _,
-      {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
-    ) => {
-      const state = getState();
+  return makePreparableAnalyticsAction(
+    ({state, analyticsClientMiddleware, preprocessRequest, logger}) => {
       const client = configureInsightAnalytics({
         state,
         logger,
@@ -210,12 +342,16 @@ export const makeInsightAnalyticsAction = <T extends AnalyticsType>(
         preprocessRequest,
         provider: provider(state),
       });
-      const response = await log(client, state);
-      logger.info(
-        {client: client.coveoAnalyticsClient, response},
-        'Analytics response'
-      );
-      return {analyticsType};
+      return {
+        action: createAsyncThunk(prefix, async () => {
+          const response = await log(client, state);
+          logger.info(
+            {client: client.coveoAnalyticsClient, response},
+            'Analytics response'
+          );
+          return {analyticsType};
+        }),
+      };
     }
   );
 };

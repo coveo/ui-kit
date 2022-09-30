@@ -5,10 +5,10 @@ export const logRedirection = makeAnalyticsAction(
   AnalyticsType.Search,
   (client, state) => {
     if (state.redirection?.redirectTo) {
-      return client.logTriggerRedirect({
+      return client.makeTriggerRedirect({
         redirectedTo: state.redirection.redirectTo,
       });
     }
-    return;
+    return null;
   }
 );

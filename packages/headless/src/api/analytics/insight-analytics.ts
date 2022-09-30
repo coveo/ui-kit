@@ -13,6 +13,7 @@ import {
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchInitialState} from '../../features/search/search-state';
+import {InsightAppState} from '../../state/insight-app-state';
 import {
   ConfigurationSection,
   PipelineSection,
@@ -24,6 +25,7 @@ import {PreprocessRequest} from '../preprocess-request';
 import {BaseAnalyticsProvider} from './base-analytics';
 
 export type StateNeededByInsightAnalyticsProvider = ConfigurationSection &
+  Partial<InsightAppState> &
   Partial<
     SearchHubSection &
       SearchSection &

@@ -9,6 +9,7 @@ import {Value} from '@coveo/bueno';
 import {
   AnalyticsType,
   makeAnalyticsAction,
+  SearchAction,
 } from '../../analytics/analytics-utils';
 import {
   buildFacetBaseMetadata,
@@ -16,7 +17,7 @@ import {
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
 
-export const logFacetShowMore = (facetId: string) =>
+export const logFacetShowMore = (facetId: string): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/showMore',
     AnalyticsType.Search,
@@ -26,11 +27,11 @@ export const logFacetShowMore = (facetId: string) =>
         facetId,
         getStateNeededForFacetMetadata(state)
       );
-      return client.logFacetShowMore(metadata);
+      return client.makeFacetShowMore(metadata);
     }
-  )();
+  );
 
-export const logFacetShowLess = (facetId: string) =>
+export const logFacetShowLess = (facetId: string): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/showLess',
     AnalyticsType.Search,
@@ -41,11 +42,11 @@ export const logFacetShowLess = (facetId: string) =>
         getStateNeededForFacetMetadata(state)
       );
 
-      return client.logFacetShowLess(metadata);
+      return client.makeFacetShowLess(metadata);
     }
-  )();
+  );
 
-export const logFacetSearch = (facetId: string) =>
+export const logFacetSearch = (facetId: string): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/search',
     AnalyticsType.Search,
@@ -54,9 +55,9 @@ export const logFacetSearch = (facetId: string) =>
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
 
-      return client.logFacetSearch(metadata);
+      return client.makeFacetSearch(metadata);
     }
-  )();
+  );
 
 export interface LogFacetUpdateSortActionCreatorPayload {
   /**
@@ -72,7 +73,7 @@ export interface LogFacetUpdateSortActionCreatorPayload {
 
 export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
-) =>
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/sortChange',
     AnalyticsType.Search,
@@ -90,11 +91,11 @@ export const logFacetUpdateSort = (
       const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
       const metadata = {...base, criteria: criterion};
 
-      return client.logFacetUpdateSort(metadata);
+      return client.makeFacetUpdateSort(metadata);
     }
-  )();
+  );
 
-export const logFacetClearAll = (facetId: string) =>
+export const logFacetClearAll = (facetId: string): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/reset',
     AnalyticsType.Search,
@@ -104,9 +105,9 @@ export const logFacetClearAll = (facetId: string) =>
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
 
-      return client.logFacetClearAll(metadata);
+      return client.makeFacetClearAll(metadata);
     }
-  )();
+  );
 
 export interface LogFacetSelectActionCreatorPayload {
   /**
@@ -120,7 +121,9 @@ export interface LogFacetSelectActionCreatorPayload {
   facetValue: string;
 }
 
-export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
+export const logFacetSelect = (
+  payload: LogFacetSelectActionCreatorPayload
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/select',
     AnalyticsType.Search,
@@ -136,9 +139,9 @@ export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
         stateForAnalytics
       );
 
-      return client.logFacetSelect(metadata);
+      return client.makeFacetSelect(metadata);
     }
-  )();
+  );
 
 export interface LogFacetDeselectActionCreatorPayload {
   /**
@@ -154,7 +157,7 @@ export interface LogFacetDeselectActionCreatorPayload {
 
 export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
-) =>
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/deselect',
     AnalyticsType.Search,
@@ -169,9 +172,9 @@ export const logFacetDeselect = (
         stateForAnalytics
       );
 
-      return client.logFacetDeselect(metadata);
+      return client.makeFacetDeselect(metadata);
     }
-  )();
+  );
 
 export interface LogFacetBreadcrumbActionCreatorPayload {
   /**
@@ -187,7 +190,7 @@ export interface LogFacetBreadcrumbActionCreatorPayload {
 
 export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
-) =>
+): SearchAction =>
   makeAnalyticsAction(
     'analytics/facet/breadcrumb',
     AnalyticsType.Search,
@@ -201,6 +204,6 @@ export const logFacetBreadcrumb = (
         getStateNeededForFacetMetadata(state)
       );
 
-      return client.logBreadcrumbFacet(metadata);
+      return client.makeBreadcrumbFacet(metadata);
     }
-  )();
+  );

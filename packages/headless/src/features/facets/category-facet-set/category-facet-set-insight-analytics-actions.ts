@@ -7,6 +7,7 @@ import {
 } from '../../../utils/validate-payload';
 import {
   AnalyticsType,
+  InsightAction,
   makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
@@ -41,7 +42,7 @@ const getCategoryFacetMetadata = (
 
 export const logCategoryFacetBreadcrumb = (
   payload: LogCategoryFacetBreadcrumbActionCreatorPayload
-) =>
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/categoryFacet/breadcrumb',
     AnalyticsType.Search,
@@ -54,4 +55,4 @@ export const logCategoryFacetBreadcrumb = (
 
       return client.logBreadcrumbFacet(metadata);
     }
-  )();
+  );

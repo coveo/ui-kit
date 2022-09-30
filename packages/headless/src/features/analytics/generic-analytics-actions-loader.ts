@@ -1,6 +1,4 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
-import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
+import {ClickAction, CustomAction, SearchAction} from './analytics-utils';
 import {
   logSearchEvent,
   LogSearchEventActionCreatorPayload,
@@ -27,13 +25,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logSearchEvent(payload: LogSearchEventActionCreatorPayload): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logSearchEvent(payload: LogSearchEventActionCreatorPayload): SearchAction;
 
   /**
    * Creates a click analytics event.
@@ -41,13 +33,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logClickEvent(payload: LogClickEventActionCreatorPayload): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logClickEvent(payload: LogClickEventActionCreatorPayload): ClickAction;
 
   /**
    * Creates a custom analytics event.
@@ -55,13 +41,7 @@ export interface GenericAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logCustomEvent(payload: LogCustomEventActionCreatorPayload): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logCustomEvent(payload: LogCustomEventActionCreatorPayload): CustomAction;
 }
 
 /**

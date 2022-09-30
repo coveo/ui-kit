@@ -1,3 +1,4 @@
+import {EventDescription} from 'coveo.analytics';
 import {SearchAppState} from '../..';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
@@ -12,11 +13,14 @@ import {mapSearchRequest} from './search-mappings';
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;
 
-export const buildSearchRequest = async (state: StateNeededBySearchRequest) => {
+export const buildSearchRequest = async (
+  state: StateNeededBySearchRequest,
+  eventDescription?: EventDescription
+) => {
   const cq = buildConstantQuery(state);
   const facets = getFacets(state);
   const sharedWithFoldingRequest =
-    await buildSearchAndFoldingLoadCollectionRequest(state);
+    await buildSearchAndFoldingLoadCollectionRequest(state, eventDescription);
 
   // Corner case:
   // If the number of results requested would go over the index limit (maximumNumberOfResultsFromIndex)

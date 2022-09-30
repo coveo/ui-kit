@@ -99,6 +99,8 @@ export interface TimezoneParam {
 
 export interface AnalyticsParam {
   analytics?: {
+    actionCause?: string;
+    customData?: object;
     clientId: string;
     deviceId?: string;
     pageId?: string;

@@ -1,11 +1,9 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 
 import {
   AnalyticsType,
-  AsyncThunkAnalyticsOptions,
+  ProductRecommendationAction,
 } from '../analytics/analytics-utils';
 import {logProductRecommendationOpen} from './product-recommendations-analytics.actions';
 
@@ -21,13 +19,7 @@ export interface ClickAnalyticsActionCreators {
    */
   logProductRecommendationOpen(
     productRecommendation: ProductRecommendation
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): ProductRecommendationAction<AnalyticsType.Click>;
 }
 
 /**

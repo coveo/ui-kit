@@ -1,10 +1,11 @@
 import {
   AnalyticsType,
+  InsightAction,
   makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
 
-export const logClearBreadcrumbs = () =>
+export const logClearBreadcrumbs = (): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/deselectAllBreadcrumbs',
     AnalyticsType.Search,
@@ -13,4 +14,4 @@ export const logClearBreadcrumbs = () =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     }
-  )();
+  );
