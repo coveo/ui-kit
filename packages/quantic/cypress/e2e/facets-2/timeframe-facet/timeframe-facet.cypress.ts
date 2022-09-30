@@ -108,8 +108,7 @@ describe('quantic-timeframe-facet', () => {
       });
 
       describe('with default options', () => {
-        // TODO: FIX TEST
-        it.skip('should work as expected', () => {
+        it('should work as expected', () => {
           visitTimeframeFacet({useCase: param.useCase});
 
           scope('validate initial rendering', () => {
