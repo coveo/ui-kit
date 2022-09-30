@@ -23,11 +23,13 @@ import {
 } from './result-list-common-interface';
 import {TableDisplayResults} from './table-display-results';
 
-export class ResultListCommon implements ResultListRenderer, ResultListInfo {
+export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
+  implements ResultListRenderer, ResultListInfo
+{
   private updateBreakpoints?: (host: HTMLElement) => void;
   private indexOfResultToFocus?: number;
 
-  constructor(private props: ResultListCommonProps) {
+  constructor(private props: ResultListCommonProps<SpecificResult>) {
     this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
     this.props.bindings.store.registerResultList(this);
     this.addUpdateBreakpointOnce();
