@@ -1,34 +1,31 @@
-import {Component, Element, State, Prop, Listen, Method} from '@stencil/core';
+import {Component, Element, State, Prop, Method} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
   buildResultList,
-  Result,
   ResultsPerPageState,
   ResultsPerPage,
   buildResultsPerPage,
 } from '@coveo/headless';
 import {
   BindStateToController,
+  InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {
-  BaseResultList,
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../../../common/result-list/result-list-common';
 import {randomID} from '../../../../utils/utils';
 import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {ResultListInfo} from '../../atomic-search-interface/store';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
+import {ResultListCommon} from '../../../common/result-list/result-list-common';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.
@@ -52,40 +49,27 @@ import {
   styleUrl: '../../../common/result-list/result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList
-  implements BaseResultList<Bindings>, ResultListInfo
-{
+export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultList!: ResultList;
   public resultsPerPage!: ResultsPerPage;
-  public listWrapperRef?: HTMLDivElement;
+  private resultListCommon!: ResultListCommon;
+  private loadingFlag = randomID('firstResultLoaded-');
+  private resultRenderingFunction: ResultRenderingFunction;
 
   @Element() public host!: HTMLDivElement;
 
-  /**
-   * Whether to automatically retrieve an additional page of results and append it to the
-   * current results when the user scrolls down to the bottom of element
-   */
-  private enableInfiniteScroll = false;
-
   @BindStateToController('resultList')
   @State()
-  public resultListState!: ResultListState;
-
+  private resultListState!: ResultListState;
   @BindStateToController('resultsPerPage')
   @State()
-  public resultsPerPageState!: ResultsPerPageState;
-
-  @State() public ready = false;
-
+  private resultsPerPageState!: ResultsPerPageState;
+  @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
-  @State() public templateHasError = false;
+  @State() private templateHasError = false;
 
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
-
-  public resultListCommon!: ResultListCommon<Bindings>;
-  private renderingFunction: ResultRenderingFunction | null = null;
-  private loadingFlag = randomID('firstResultLoaded-');
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -99,18 +83,16 @@ export class AtomicResultList
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true, mutable: true})
+  public imageSize: ResultDisplayImageSize = 'icon';
   /**
    * @deprecated use `imageSize` instead.
    */
-  @Prop({reflect: true}) image: ResultDisplayImageSize = 'icon';
-
-  // to remove when `image` prop is removed;
-  private propToUseForImageSize: 'image' | 'imageSize' = 'imageSize';
+  @Prop({reflect: true}) public image: ResultDisplayImageSize = 'icon';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -118,109 +100,79 @@ export class AtomicResultList
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *
-   * @param render
+   * @param resultRenderingFunction
    */
-  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
-    this.renderingFunction = render;
-    this.assignRenderingFunctionIfPossible();
+  @Method() public async setRenderFunction(
+    resultRenderingFunction: ResultRenderingFunction
+  ) {
+    this.resultRenderingFunction = resultRenderingFunction;
   }
 
-  /**
-   * @internal
-   */
-  @Method() public async focusOnNextNewResult() {
-    this.resultListCommon.focusOnNextNewResult(this.resultListState);
+  public connectedCallback() {
+    this.settleImageSize();
   }
 
-  connectedCallback() {
-    // to remove when `image` prop is removed;
-    if (this.host.hasAttribute('image')) {
-      this.propToUseForImageSize = 'image';
-    }
+  // TODO: remove v2 when `image` prop is removed;
+  private settleImageSize() {
     if (this.host.hasAttribute('image-size')) {
-      this.propToUseForImageSize = 'imageSize';
+      return;
+    }
+    if (this.host.hasAttribute('image')) {
+      this.imageSize = this.image;
     }
   }
 
-  @Listen('scroll', {target: 'window'})
-  handleInfiniteScroll() {
-    if (
-      this.enableInfiniteScroll &&
-      this.resultListCommon.scrollHasReachedEndOfList
-    ) {
-      this.resultList.fetchMoreResults();
-    }
-  }
-
-  public async initialize() {
+  public initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
       console.warn(
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
-    this.resultListCommon = new ResultListCommon({
-      host: this.host,
+    this.resultList = buildResultList(this.bindings.engine, {
+      options: {fieldsToInclude: this.mergedFieldsToInclude},
+    });
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
+    const resultTemplateProvider = new ResultTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-result-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
+      },
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
       bindings: this.bindings,
-      templateElements: this.host.querySelectorAll('atomic-result-template'),
-      onReady: () => {
-        this.ready = true;
-        this.assignRenderingFunctionIfPossible();
-      },
-      onError: () => {
-        this.templateHasError = true;
-      },
-      loadingFlag: this.loadingFlag,
-      nextNewResultTarget: this.nextNewResultTarget,
     });
 
+    this.resultListCommon = new ResultListCommon({
+      resultTemplateProvider,
+      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+      host: this.host,
+      bindings: this.bindings,
+      getDensity: () => this.density,
+      getDisplay: () => this.display,
+      getImageSize: () => this.imageSize,
+      nextNewResultTarget: this.nextNewResultTarget,
+      loadingFlag: this.loadingFlag,
+      getResultListState: () => this.resultListState,
+      getResultRenderingFunction: () => this.resultRenderingFunction,
+    });
+  }
+
+  private get mergedFieldsToInclude() {
     const localFieldsToInclude = this.fieldsToInclude
       ? this.fieldsToInclude.split(',').map((field) => field.trim())
       : [];
-    const fieldsToInclude = localFieldsToInclude.concat(
+    return localFieldsToInclude.concat(
       this.bindings.store.state.fieldsToInclude
     );
-
-    this.resultList = buildResultList(this.bindings.engine, {
-      options: {fieldsToInclude},
-    });
-    this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    this.bindings.store.registerResultList(this);
-  }
-
-  public getContentOfResultTemplate(
-    result: Result
-  ): HTMLElement | DocumentFragment {
-    return this.resultListCommon.getContentOfResultTemplate(result);
   }
 
   public render() {
-    return this.resultListCommon.renderList({
-      host: this.host,
-      display: this.display,
-      density: this.density,
-      imageSize: this.determineImageSize,
-      templateHasError: this.templateHasError,
-      resultListState: this.resultListState,
-      numberOfResults: this.resultsPerPageState.numberOfResults,
-      setListWrapperRef: (el) => {
-        this.listWrapperRef = el as HTMLDivElement;
-      },
-      getContentOfResultTemplate: this.getContentOfResultTemplate,
-      ready: this.ready,
-    });
-  }
-
-  private assignRenderingFunctionIfPossible() {
-    if (this.resultListCommon && this.renderingFunction) {
-      this.resultListCommon.renderingFunction = this
-        .renderingFunction as ResultRenderingFunction;
-    }
-  }
-
-  private get determineImageSize() {
-    if (this.propToUseForImageSize === 'image') {
-      return this.image;
-    }
-    return this.imageSize;
+    return this.resultListCommon.render();
   }
 }

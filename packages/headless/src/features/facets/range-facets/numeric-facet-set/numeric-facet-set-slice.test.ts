@@ -19,7 +19,6 @@ import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
-import {deselectAllFacets} from '../../generic/facet-actions';
 import {getHistoryInitialState} from '../../../history/history-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
@@ -132,18 +131,6 @@ describe('numeric-facet-set slice', () => {
     numericFacetSetReducer(state, action);
 
     expect(RangeFacetReducers.updateRangeValues).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatching #deselectAllFacets calls #handleRangeFacetDeselectAll for every numeric facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
-
-    state['1'] = buildMockNumericFacetSlice();
-    state['2'] = buildMockNumericFacetSlice();
-    numericFacetSetReducer(state, deselectAllFacets);
-
-    expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(2);
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every numeric facet', () => {

@@ -102,7 +102,6 @@ describe('facet', () => {
       field: 'author',
       sortCriteria: 'score',
       facetId,
-      delimitingCharacter: '>',
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,

@@ -19,7 +19,6 @@ import {
   DateFacetSetState,
   getDateFacetSetInitialState,
 } from './date-facet-set-state';
-import {deselectAllFacets} from '../../generic/facet-actions';
 import {getHistoryInitialState} from '../../../history/history-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
@@ -129,18 +128,6 @@ describe('date-facet-set slice', () => {
     expect(
       RangeFacetReducers.handleRangeFacetDeselectAll
     ).toHaveBeenCalledTimes(1);
-  });
-
-  it('dispatching #deselectAllFacets calls #handleRangeFacetDeselectAll for every date facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
-
-    state['1'] = buildMockDateFacetSlice();
-    state['2'] = buildMockDateFacetSlice();
-    dateFacetSetReducer(state, deselectAllFacets);
-
-    expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(2);
   });
 
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every date facet', () => {
