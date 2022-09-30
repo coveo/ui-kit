@@ -108,18 +108,29 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insights-panel
 
+  e2e-quantic-setup:
+    name: 'Setup e2e tests on Quantic'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-quantic-setup
+        with:
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
   e2e-quantic-test:
     name: 'Run e2e tests on Quantic'
-    needs: build
+    needs: e2e-quantic-setup
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         spec: [
-            'cypress/e2e/default-e2e/**/*',
-            'cypress/e2e/facets-e2e/**/*',
-            'cypress/e2e/results-e2e/**/*',
-            'cypress/e2e/search-box-e2e/**/*',
+            'cypress/e2e/default-1/**/*',
+            'cypress/e2e/default-2/**/*',
+            'cypress/e2e/facets-1/**/*',
+            'cypress/e2e/facets-2/**/*',
           ]
     steps:
       - uses: actions/checkout@v3
@@ -127,10 +138,17 @@ jobs:
       - uses: ./.github/actions/e2e-quantic
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
           spec: ${{ matrix.spec }}
-  bump-version:
+  e2e-quantic-cleanup:
+    if: always()
+    needs: e2e-quantic-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
+        shell: bash
+
     name: 'Bump version'
     needs:
       - 'lint-check'

@@ -135,10 +135,10 @@ jobs:
       fail-fast: false
       matrix:
         spec: [
-            'cypress/e2e/default-e2e/**/*',
-            'cypress/e2e/facets-e2e/**/*',
-            'cypress/e2e/results-e2e/**/*',
-            'cypress/e2e/search-box-e2e/**/*',
+            'cypress/e2e/default-1/**/*',
+            'cypress/e2e/default-2/**/*',
+            'cypress/e2e/facets-1/**/*',
+            'cypress/e2e/facets-2/**/*',
           ]
     steps:
       - uses: actions/checkout@v3
