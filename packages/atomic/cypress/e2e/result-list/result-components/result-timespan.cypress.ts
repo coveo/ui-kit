@@ -80,7 +80,7 @@ describe('Result Timespan Component', () => {
       ResultTimespanSelectors.firstInResult().should('have.text', '01:00:00');
     });
 
-    it('displays with the proper HH:mm:ss by default in minutes', () => {
+    it('displays with the proper approximation by default in minutes', () => {
       setup({unit: 'm'});
       ResultTimespanSelectors.firstInResult().should(
         'have.text',
@@ -88,7 +88,7 @@ describe('Result Timespan Component', () => {
       );
     });
 
-    it('displays with the proper HH:mm:ss by default in hours', () => {
+    it('displays with the proper approximation by default in hours', () => {
       setup({unit: 'h'});
       ResultTimespanSelectors.firstInResult().should(
         'have.text',
@@ -96,7 +96,7 @@ describe('Result Timespan Component', () => {
       );
     });
 
-    it('displays with the proper HH:mm:ss by default in days', () => {
+    it('displays with the proper approximation by default in days', () => {
       setup({unit: 'd'});
       ResultTimespanSelectors.firstInResult().should(
         'have.text',
