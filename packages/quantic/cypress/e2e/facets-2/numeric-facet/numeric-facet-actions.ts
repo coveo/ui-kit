@@ -1,7 +1,7 @@
 import {
   baseFacetActions,
   facetWithValuesActions,
-} from '../facet-common-actions';
+} from '../../facets-1/facet-common-actions';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,

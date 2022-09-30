@@ -2,7 +2,7 @@ import {ComponentSelector, CypressSelector} from '../../common-selectors';
 import {
   BaseFacetSelector,
   FacetWithValuesSelector,
-} from '../facet-common-selectors';
+} from '../../facets-1/facet-common-selectors';
 
 export const numericFacetComponent = 'c-quantic-numeric-facet';
 

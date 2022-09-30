@@ -6,7 +6,7 @@ import {SearchExpectations} from '../../search-expectations';
 import {
   baseFacetExpectations,
   facetWithValuesExpectations,
-} from '../facet-common-expectations';
+} from '../../facets-1/facet-common-expectations';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,

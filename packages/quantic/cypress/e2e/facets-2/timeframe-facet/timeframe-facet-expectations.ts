@@ -4,7 +4,7 @@ import {should} from '../../common-selectors';
 import {
   BaseFacetSelector,
   FacetWithValuesSelector,
-} from '../facet-common-selectors';
+} from '../../facets-1/facet-common-selectors';
 import {
   TimeframeFacetSelectors,
   WithDateRangeSelector,

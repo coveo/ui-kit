@@ -3,9 +3,9 @@ import {
   BreadcrumbManagerSelector,
   BreadcrumbManagerSelectors,
 } from './breadcrumb-manager-selectors';
-import {CategoryFacetActions} from '../category-facet/category-facet-actions';
+import {CategoryFacetActions} from '../../facets-1/category-facet/category-facet-actions';
 import {NumericFacetActions} from '../numeric-facet/numeric-facet-actions';
-import {FacetActions} from '../facet/facet-actions';
+import {FacetActions} from '../../facets-1/facet/facet-actions';
 
 function breadcrumbManagerActions(selector: BreadcrumbManagerSelector) {
   return {
