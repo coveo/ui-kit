@@ -1065,7 +1065,7 @@ export namespace Components {
     }
     interface AtomicResultDate {
         /**
-          * Specify that date should display as calendar time: https://day.js.org/docs/en/plugin/calendar.  To modify the calendar time string, use the localization feature: https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+          * Whether the date should display in the [calendar time format](https://day.js.org/docs/en/plugin/calendar).   To modify the calendar time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
          */
         "calendarTime"?: boolean;
         /**
@@ -1240,15 +1240,15 @@ export namespace Components {
     }
     interface AtomicResultTimespan {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
         /**
-          * Specify the format into which the duration should be formatted.  If not specified, will fallback to an algorithm that approximate the duration if it is very long (years, months, days) or HH:mm:ss if under a day.  Available formats: https://day.js.org/docs/en/durations/format
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
          */
         "format"?: string;
         /**
-          * The unit of the field value. Available units: https://day.js.org/docs/en/durations/creating
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
          */
         "unit": string;
     }
@@ -3414,7 +3414,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultDate {
         /**
-          * Specify that date should display as calendar time: https://day.js.org/docs/en/plugin/calendar.  To modify the calendar time string, use the localization feature: https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/
+          * Whether the date should display in the [calendar time format](https://day.js.org/docs/en/plugin/calendar).   To modify the calendar time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
          */
         "calendarTime"?: boolean;
         /**
@@ -3580,15 +3580,15 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTimespan {
         /**
-          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
         /**
-          * Specify the format into which the duration should be formatted.  If not specified, will fallback to an algorithm that approximate the duration if it is very long (years, months, days) or HH:mm:ss if under a day.  Available formats: https://day.js.org/docs/en/durations/format
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
          */
         "format"?: string;
         /**
-          * The unit of the field value. Available units: https://day.js.org/docs/en/durations/creating
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
          */
         "unit"?: string;
     }
