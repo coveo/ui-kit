@@ -156,7 +156,7 @@ export class AtomicInsightNumericFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
-  @FocusTarget<InsightBindings>()
+  @FocusTarget()
   private headerFocus!: FocusTargetController;
 
   public initialize() {
