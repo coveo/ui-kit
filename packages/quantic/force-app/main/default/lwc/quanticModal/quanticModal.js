@@ -116,7 +116,7 @@ export default class QuanticModal extends LightningElement {
       // @ts-ignore
       ...footerSlot.assignedElements(),
     ].map((element) => Array.from([element, ...element.childNodes]));
-    return allAssignedElements.flat();
+    return this.flattenArray(allAssignedElements);
   }
 
   focusOnLastElement() {
@@ -139,5 +139,14 @@ export default class QuanticModal extends LightningElement {
         break;
       }
     }
+  }
+
+  /**
+   * Flattens an array.
+   * @param {array} array 
+   * @returns array
+   */
+  flattenArray(array){
+    return array.reduce((value, acc) => acc.concat(value), [])
   }
 }
