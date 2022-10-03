@@ -20,6 +20,8 @@ import { NumericFacetDisplayValues } from "./components/common/facets/numeric-fa
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecsResult } from "./components/recommendations";
+import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
@@ -964,6 +966,45 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicRecsResult {
+        /**
+          * Classes that will be added to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize": ResultDisplayImageSize;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: AtomicRecsStore;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -1954,6 +1995,12 @@ declare global {
         prototype: HTMLAtomicRecsListElement;
         new (): HTMLAtomicRecsListElement;
     };
+    interface HTMLAtomicRecsResultElement extends Components.AtomicRecsResult, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultElement: {
+        prototype: HTMLAtomicRecsResultElement;
+        new (): HTMLAtomicRecsResultElement;
+    };
     interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicRefineModalElement: {
@@ -2324,6 +2371,7 @@ declare global {
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
+        "atomic-recs-result": HTMLAtomicRecsResultElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
@@ -3288,6 +3336,45 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
     }
+    interface AtomicRecsResult {
+        /**
+          * Classes that will be added to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global state for Atomic.
+         */
+        "store"?: AtomicRecsStore;
+    }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
@@ -3935,6 +4022,7 @@ declare namespace LocalJSX {
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
+        "atomic-recs-result": AtomicRecsResult;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
@@ -4050,6 +4138,7 @@ declare module "@stencil/core" {
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
+            "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;

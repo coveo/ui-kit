@@ -114,7 +114,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListCommonState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => <atomic-result {...props}></atomic-result>,
+      renderResult: (props) => (
+        <atomic-recs-result {...props}></atomic-recs-result>
+      ),
     });
 
     this.recommendationList.refresh();
