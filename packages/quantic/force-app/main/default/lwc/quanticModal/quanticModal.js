@@ -64,6 +64,7 @@ export default class QuanticModal extends LightningElement {
    */
   @api openModal() {
     this.isVisible = true;
+    // 500ms is the duration time of the animation to open the modal.
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     setTimeout(() => {
       this.focusOnFirstElement();
