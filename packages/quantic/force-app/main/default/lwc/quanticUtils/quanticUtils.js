@@ -555,7 +555,7 @@ export function isFocusable(element) {
 export function getLastFocusableElement(element) {
   if (!element || element.nodeType === Node.TEXT_NODE) return null;
   if (isCustomElement(element)) {
-    if (element.dataset.focusable.toString() === 'true') {
+    if (element.dataset?.focusable?.toString() === 'true') {
       return element;
     }
     return null;
@@ -582,7 +582,7 @@ export function getLastFocusableElement(element) {
 export function getFirstFocusableElement(element) {
   if (!element || element.nodeType === Node.TEXT_NODE) return null;
   if (isCustomElement(element)) {
-    if (element.dataset.focusable.toString() === 'true') {
+    if (element.dataset?.focusable?.toString() === 'true') {
       return element;
     }
     return null;
