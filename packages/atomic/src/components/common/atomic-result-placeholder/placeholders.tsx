@@ -1,5 +1,18 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {ResultPlaceholderProps} from '../result-list/result-list';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../common/layout/display-options';
+
+export interface ResultPlaceholderProps {
+  density: ResultDisplayDensity;
+  imageSize?: ResultDisplayImageSize;
+  display?: ResultDisplayLayout;
+  numberOfPlaceholders: number;
+  // TODO: check is still needed
+  isChild?: boolean;
+}
 
 export const ListDisplayResultsPlaceholder: FunctionalComponent<
   ResultPlaceholderProps

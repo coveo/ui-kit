@@ -125,7 +125,7 @@ export class AtomicInsightTimeframeFacet
    */
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
-  @FocusTarget()
+  @FocusTarget<InsightBindings>()
   private headerFocus!: FocusTargetController;
 
   public initialize() {
