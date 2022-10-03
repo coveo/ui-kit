@@ -162,7 +162,7 @@ export class I18nUtils {
   }
 
   /**
-   * @param {string} html 
+   * @param {string} html
    * @returns {string}
    */
   static escapeHTML(html) {
@@ -270,7 +270,7 @@ export class DateUtils {
    * Replace `@` characters in date string with `T`.
    * @param {string} dateString
    * @returns {string}
-   */  
+   */
   static fromSearchApiDate(dateString) {
     return dateString.replaceAll('/', '-').replaceAll('@', 'T');
   }
@@ -287,7 +287,7 @@ export class DateUtils {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const seconds = date.getSeconds().toString().padStart(2, '0');
-  
+
     return `${year}/${month}/${day}@${hours}:${minutes}:${seconds}`;
   }
 
@@ -300,7 +300,7 @@ export class DateUtils {
     const year = date.getFullYear().toString().padStart(4, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-  
+
     return `${year}-${month}-${day}T00:00:00`;
   }
 
@@ -325,7 +325,7 @@ export class DateUtils {
         'The specified time is invalid. It must be between 00:00:00 and 23:59:59.'
       );
     }
-  
+
     const withoutTime = DateUtils.trimIsoTime(dateString);
     const time =
       hours.toString().padStart(2, '0') +
@@ -333,7 +333,7 @@ export class DateUtils {
       minutes.toString().padStart(2, '0') +
       ':' +
       seconds.toString().padStart(2, '0');
-  
+
     return new Date(`${withoutTime}T${time}`);
   }
 
@@ -431,21 +431,21 @@ export class RelativeDateFormatter {
 }
 
 export class Store {
-
   static facetTypes = {
-    FACETS: 'facets' , 
-    NUMERICFACETS: 'numericFacets' , 
-    DATEFACETS: 'dateFacets' , 
-    CATEGORYFACETS: 'categoryFacets' 
-  }
+    FACETS: 'facets',
+    NUMERICFACETS: 'numericFacets',
+    DATEFACETS: 'dateFacets',
+    CATEGORYFACETS: 'categoryFacets',
+  };
   static initialize() {
-    return { 
-      state : { 
+    return {
+      state: {
         facets: {},
         numericFacets: {},
         dateFacets: {},
         categoryFacets: {},
-      }}
+      },
+    };
   }
   /**
    * @param {Record<String, unknown>} store
@@ -453,7 +453,7 @@ export class Store {
    * @param {{ label?: string; facetId: any; format?: Function;}} data
    */
   static registerFacetToStore(store, facetType, data) {
-    if(store?.state[facetType][data.facetId]) {
+    if (store?.state[facetType][data.facetId]) {
       return;
     }
     store.state[facetType][data.facetId] = data;
@@ -468,7 +468,7 @@ export class Store {
   }
 }
 
-/** 
+/**
  * AriaLiveUtils
  * @typedef {Object} AriaLiveUtils
  * @property {Function} dispatchMessage
@@ -477,21 +477,20 @@ export class Store {
 
 /**
  * AriaLiveRegion Create an AriaLiveRegion to be able to send events to dispatch messages for assistive technologies.
- * @param {string} regionName 
- * @param {Object} elem 
- * @param {boolean} assertive 
+ * @param {string} regionName
+ * @param {Object} elem
+ * @param {boolean} assertive
  * @returns {AriaLiveUtils}
  */
 export function AriaLiveRegion(regionName, elem, assertive = false) {
-
   function dispatchMessage(message) {
     const ariaLiveMessageEvent = new CustomEvent('arialivemessage', {
       bubbles: true,
       detail: {
         regionName,
         assertive,
-        message
-      }
+        message,
+      },
     });
     elem.dispatchEvent(ariaLiveMessageEvent);
   }
@@ -499,10 +498,10 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
   function registerRegion() {
     const registerRegionEvent = new CustomEvent('registerregion', {
       bubbles: true,
-        detail: {
+      detail: {
         regionName,
-        assertive
-      }
+        assertive,
+      },
     });
     elem.dispatchEvent(registerRegionEvent);
   }
@@ -513,4 +512,102 @@ export function AriaLiveRegion(regionName, elem, assertive = false) {
     dispatchMessage,
     registerRegion,
   };
+}
+
+/**
+ * Checks whether an element is focusable.
+ * @param {HTMLElement | Element}  element
+ * @returns {boolean}
+ */
+export function isFocusable(element) {
+  // Source: https://stackoverflow.com/a/30753870
+  if (element.getAttribute('tabindex') === '-1') {
+    return false;
+  }
+  if (
+    element.hasAttribute('tabindex') ||
+    element.getAttribute('contentEditable') === 'true'
+  ) {
+    return true;
+  }
+  switch (element.tagName) {
+    case 'A':
+    case 'AREA':
+      return element.hasAttribute('href');
+    case 'INPUT':
+    case 'SELECT':
+    case 'TEXTAREA':
+    case 'BUTTON':
+      return !element.hasAttribute('disabled');
+    case 'IFRAME':
+      return true;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Returns the last focusable element of for an HTML element.
+ * This function would NOT work with shadow root.
+ * @param {HTMLElement | null} element
+ * @returns {Element | null}
+ */
+export function getLastFocusableElement(element) {
+  if (!element || element.nodeType === Node.TEXT_NODE) return null;
+  if (isCustomElement(element)) {
+    if (element.dataset.focusable.toString() === 'true') {
+      return element;
+    }
+    return null;
+  }
+
+  const focusableElements = Array.from(element.childNodes)
+    .map((item) => this.getLastFocusableElement(item))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[focusableElements.length - 1];
+  } else if (isFocusable(element)) {
+    return element;
+  }
+  return null;
+}
+
+/**
+ * Returns the First focusable element of for an HTML element.
+ * This function would NOT work with shadow root.
+ * @param {HTMLElement | null} element
+ * @returns {Element | null}
+ */
+export function getFirstFocusableElement(element) {
+  if (!element || element.nodeType === Node.TEXT_NODE) return null;
+  if (isCustomElement(element)) {
+    if (element.dataset.focusable.toString() === 'true') {
+      return element;
+    }
+    return null;
+  }
+
+  const focusableElements = Array.from(element.childNodes)
+    .map((item) => this.getFirstFocusableElement(item))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[0];
+  } else if (isFocusable(element)) {
+    return element;
+  }
+  return null;
+}
+
+/**
+ * Checks whether an element is a custom element.
+ * @param {HTMLElement | null} element
+ * @returns {boolean}
+ */
+function isCustomElement(element) {
+  if (element && element.tagName.includes('-')) {
+    return true;
+  }
+  return false;
 }

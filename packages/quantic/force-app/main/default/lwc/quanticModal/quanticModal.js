@@ -1,4 +1,8 @@
 import {LightningElement, api} from 'lwc';
+import {
+  getFirstFocusableElement,
+  getLastFocusableElement,
+} from 'c/quanticUtils';
 
 /**
  * The `QuanticModal` is a container component that displays slotted content in a modal. This component handles the animation logic, exposes methods to open and close the modal, offers the option to open the modal in full screen or just to cover the search interface, and exposes a set of slots to fully customize the modal content.
@@ -60,6 +64,10 @@ export default class QuanticModal extends LightningElement {
    */
   @api openModal() {
     this.isVisible = true;
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    setTimeout(() => {
+      this.focusOnFirstElement();
+    }, 500);
   }
 
   /**
@@ -93,5 +101,43 @@ export default class QuanticModal extends LightningElement {
    */
   get tabindex() {
     return this.isVisible ? 0 : -1;
+  }
+
+  get allAssignedElements() {
+    const headerSlot = this.template.querySelector('slot[name=header]');
+    const contentSlot = this.template.querySelector('slot[name=content]');
+    const footerSlot = this.template.querySelector('slot[name=footer]');
+
+    const allAssignedElements = [
+      // @ts-ignore
+      ...headerSlot.assignedElements(),
+      // @ts-ignore
+      ...contentSlot.assignedElements(),
+      // @ts-ignore
+      ...footerSlot.assignedElements(),
+    ].map((element) => Array.from([element, ...element.childNodes]));
+    return allAssignedElements.flat();
+  }
+
+  focusOnLastElement() {
+    for (const element of this.allAssignedElements.reverse()) {
+      const lastFocusableElement = getLastFocusableElement(element);
+      if (lastFocusableElement) {
+        // @ts-ignore
+        lastFocusableElement.focus();
+        break;
+      }
+    }
+  }
+
+  focusOnFirstElement() {
+    for (const element of this.allAssignedElements) {
+      const firstFocusableElement = getFirstFocusableElement(element);
+      if (firstFocusableElement) {
+        // @ts-ignore
+        firstFocusableElement.focus();
+        break;
+      }
+    }
   }
 }
