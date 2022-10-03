@@ -1,10 +1,17 @@
-import {Component, Element, State, Prop, Listen, Method} from '@stencil/core';
+import {
+  Component,
+  Element,
+  State,
+  Prop,
+  Listen,
+  Method,
+  h,
+} from '@stencil/core';
 import {
   ResultsPerPageState,
   ResultsPerPage,
   buildFoldedResultList,
   FoldedResultList,
-  FoldedResult,
   FoldedResultListState,
   buildResultsPerPage,
   ResultListProps,
@@ -12,25 +19,23 @@ import {
 } from '@coveo/headless';
 import {
   BindStateToController,
+  InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../../common/layout/display-options';
-import {
-  BaseResultList,
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../../../common/result-list/result-list-common';
+import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 import {randomID} from '../../../../utils/utils';
 import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
-import {ResultListInfo} from '../../atomic-search-interface/store';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
@@ -43,40 +48,27 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
   styleUrl: '../../../common/result-list/result-list.pcss',
   shadow: true,
 })
-export class AtomicFoldedResultList
-  implements BaseResultList<Bindings>, ResultListInfo
-{
+export class AtomicFoldedResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public foldedResultList!: FoldedResultList;
   public resultsPerPage!: ResultsPerPage;
-  public listWrapperRef?: HTMLDivElement;
+  private resultListCommon!: ResultListCommon;
+  private resultRenderingFunction: ResultRenderingFunction;
+  private loadingFlag = randomID('firstResultLoaded-');
 
   @Element() public host!: HTMLDivElement;
 
   @BindStateToController('foldedResultList')
   @State()
   public foldedResultListState!: FoldedResultListState;
-
   @BindStateToController('resultsPerPage')
   @State()
   public resultsPerPageState!: ResultsPerPageState;
-
-  @State() public ready = false;
-
+  @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
-  @State() public templateHasError = false;
+  @State() private templateHasError = false;
 
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
-
-  public resultListCommon!: ResultListCommon<Bindings>;
-  private renderingFunction: ResultRenderingFunction | null = null;
-  private loadingFlag = randomID('firstResultLoaded-');
-
-  /**
-   * Whether to automatically retrieve an additional page of results and append it to the
-   * current results when the user scrolls down to the bottom of element
-   */
-  private enableInfiniteScroll = false;
 
   /**
    * A list of non-default fields to include in the query results, separated by commas.
@@ -115,29 +107,11 @@ export class AtomicFoldedResultList
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
-   *
-   * @param render
    */
-  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
-    this.renderingFunction = render;
-    this.assignRenderingFunctionIfPossible();
-  }
-
-  /**
-   * @internal
-   */
-  @Method() public async focusOnNextNewResult() {
-    this.resultListCommon.focusOnNextNewResult(this.foldedResultListState);
-  }
-
-  @Listen('scroll', {target: 'window'})
-  handleInfiniteScroll() {
-    if (
-      this.enableInfiniteScroll &&
-      this.resultListCommon.scrollHasReachedEndOfList
-    ) {
-      this.foldedResultList.fetchMoreResults();
-    }
+  @Method() public async setRenderFunction(
+    resultRenderingFunction: ResultRenderingFunction
+  ) {
+    this.resultRenderingFunction = resultRenderingFunction;
   }
 
   @Listen('atomic/resolveFoldedResultList')
@@ -154,22 +128,7 @@ export class AtomicFoldedResultList
     this.foldedResultList.loadCollection(event.detail);
   }
 
-  public async initialize() {
-    this.resultListCommon = new ResultListCommon({
-      host: this.host,
-      bindings: this.bindings,
-      templateElements: this.host.querySelectorAll('atomic-result-template'),
-      onReady: () => {
-        this.ready = true;
-        this.assignRenderingFunctionIfPossible();
-      },
-      onError: () => {
-        this.templateHasError = true;
-      },
-      loadingFlag: this.loadingFlag,
-      nextNewResultTarget: this.nextNewResultTarget,
-    });
-
+  public initialize() {
     try {
       const localFieldsToInclude = this.fieldsToInclude
         ? this.fieldsToInclude.split(',').map((field) => field.trim())
@@ -184,7 +143,35 @@ export class AtomicFoldedResultList
       this.error = e as Error;
     }
 
-    this.bindings.store.registerResultList(this);
+    const resultTemplateProvider = new ResultTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-result-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
+      },
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+      bindings: this.bindings,
+    });
+    this.resultListCommon = new ResultListCommon({
+      resultTemplateProvider,
+      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+      host: this.host,
+      bindings: this.bindings,
+      getDensity: () => this.density,
+      getDisplay: () => 'list',
+      getImageSize: () => this.imageSize,
+      nextNewResultTarget: this.nextNewResultTarget,
+      loadingFlag: this.loadingFlag,
+      getResultListState: () => this.foldedResultListState,
+      getResultRenderingFunction: () => this.resultRenderingFunction,
+      renderResult: (props) => <atomic-result {...props}></atomic-result>,
+    });
   }
 
   private initFolding(
@@ -202,32 +189,7 @@ export class AtomicFoldedResultList
     });
   }
 
-  public getContentOfResultTemplate(
-    foldedResult: FoldedResult
-  ): HTMLElement | DocumentFragment {
-    return this.resultListCommon.getContentOfResultTemplate(foldedResult);
-  }
-
   public render() {
-    return this.resultListCommon.renderList({
-      host: this.host,
-      density: this.density,
-      imageSize: this.imageSize,
-      templateHasError: this.templateHasError,
-      resultListState: this.foldedResultListState,
-      numberOfResults: this.resultsPerPageState.numberOfResults,
-      setListWrapperRef: (el: HTMLDivElement) => {
-        this.listWrapperRef = el;
-      },
-      getContentOfResultTemplate: this.getContentOfResultTemplate,
-      ready: this.ready,
-    });
-  }
-
-  private assignRenderingFunctionIfPossible() {
-    if (this.resultListCommon && this.renderingFunction) {
-      this.resultListCommon.renderingFunction = this
-        .renderingFunction as ResultRenderingFunction;
-    }
+    return this.resultListCommon.render();
   }
 }

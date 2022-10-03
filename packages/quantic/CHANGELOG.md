@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.13...@coveo/quantic@1.45.0) (2022-09-30)
+
+
+### Features
+
+* **quantic:** labels added to numeric facet inputs ([#2474](https://github.com/coveo/ui-kit/issues/2474)) ([8ccd67f](https://github.com/coveo/ui-kit/commit/8ccd67f522472d6c1cd2f6b9f7110f6a817bebd0))
+
+
+
+
+
 ## [1.44.13](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.12...@coveo/quantic@1.44.13) (2022-09-22)
 
 **Note:** Version bump only for package @coveo/quantic

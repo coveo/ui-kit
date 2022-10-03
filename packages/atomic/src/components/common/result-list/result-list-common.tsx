@@ -1,330 +1,137 @@
-import {FunctionalComponent, h, Host} from '@stencil/core';
-import {
-  FoldedCollection,
-  FoldedResult,
-  Result,
-  ResultTemplatesManager,
-  ResultTemplate,
-  buildResultTemplatesManager,
-  ResultListProps,
-} from '@coveo/headless';
-import {InitializableComponent} from '../../../utils/initialization-utils';
-import {TemplateContent} from '../result-templates/result-template-common';
-import {TableDisplayResults} from './table-display-results';
-import {ListDisplayResults} from './list-display-results';
-import {GridDisplayResults} from './grid-display-results';
-import {
-  ListDisplayResultsPlaceholder,
-  GridDisplayResultsPlaceholder,
-  TableDisplayResultsPlaceholder,
-} from '../../common/atomic-result-placeholder/placeholders';
-import {once} from '../../../utils/utils';
+import {Host, h, FunctionalComponent} from '@stencil/core';
+import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {once} from '../../../utils/utils';
 import {
-  FocusTargetController,
-  getFirstFocusableDescendant,
-} from '../../../utils/accessibility-utils';
-import {
-  DisplayOptions,
+  GridDisplayResultsPlaceholder,
+  ListDisplayResultsPlaceholder,
   ResultPlaceholderProps,
-} from '../../common/result-list/result-list';
+  TableDisplayResultsPlaceholder,
+} from '../atomic-result-placeholder/placeholders';
+import {AnyResult, extractUnfoldedResult} from '../interface/result';
+import {ResultListInfo} from '../interface/store';
 import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
   getResultDisplayClasses,
-} from '../../common/layout/display-options';
-import {AnyBindings} from '../../common/interface/bindings';
+  ResultDisplayLayout,
+} from '../layout/display-options';
+import {GridDisplayResults} from './grid-display-results';
+import {ListDisplayResults} from './list-display-results';
+import {
+  ResultListCommonProps,
+  ResultListDisplayProps,
+  ResultListRenderer,
+} from './result-list-common-interface';
+import {TableDisplayResults} from './table-display-results';
 
-export interface BaseResultList<Bindings extends AnyBindings>
-  extends InitializableComponent {
-  host: HTMLElement;
-  templateHasError: boolean;
-  resultListCommon: ResultListCommon<Bindings>;
-  setRenderFunction?: SetRenderFunction;
-  density?: ResultDisplayDensity;
-  imageSize?: ResultDisplayImageSize;
-  image?: ResultDisplayImageSize;
-  display?: ResultDisplayLayout;
-}
-
-export interface CommonResultListState {
-  hasError: boolean;
-  firstSearchExecuted: boolean;
-  hasResults: boolean;
-  isLoading: boolean;
-  results: Result[] | FoldedCollection[];
-  searchResponseId: string;
-}
-
-export type SetRenderFunction = (
-  render: ResultRenderingFunction
-) => Promise<void>;
-
-export interface ResultsProps<Bindings extends AnyBindings>
-  extends DisplayOptions {
-  host: HTMLElement;
-  bindings: Bindings;
-  resultListState: CommonResultListState;
-  resultListCommon: ResultListCommon<Bindings>;
-  getContentOfResultTemplate(
-    result: Result | FoldedResult
-  ): HTMLElement | DocumentFragment;
-  newResultRef?: (element: HTMLElement) => void;
-  indexOfResultToFocus?: number;
-
-  classes: string;
-  renderingFunction?: ResultRenderingFunction;
-}
-
-interface TemplateElement extends HTMLElement {
-  getTemplate(): Promise<ResultTemplate<DocumentFragment> | null>;
-}
-
-export interface RenderListOptions extends DisplayOptions {
-  host: HTMLElement;
-  templateHasError: boolean;
-  resultListState: CommonResultListState;
-  setListWrapperRef(el: HTMLDivElement | undefined): void;
-  getContentOfResultTemplate(
-    result: Result | FoldedResult
-  ): HTMLElement | DocumentFragment;
-  numberOfResults: number;
-  ready: boolean;
-}
-
-interface ResultListCommonOptions<Bindings extends AnyBindings> {
-  host: HTMLElement;
-  bindings: Bindings;
-  templateElements: NodeListOf<TemplateElement>;
-  includeDefaultTemplate?: boolean;
-  loadingFlag?: string;
-  onReady(): void;
-  onError(): void;
-  nextNewResultTarget?: FocusTargetController;
-}
-
-export class ResultListCommon<Bindings extends AnyBindings> {
-  private host: HTMLElement;
-  private bindings: Bindings;
-  private render?: ResultRenderingFunction;
+export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
+  implements ResultListRenderer, ResultListInfo
+{
   private updateBreakpoints?: (host: HTMLElement) => void;
-  private nextNewResultTarget?: FocusTargetController;
   private indexOfResultToFocus?: number;
 
-  public resultTemplatesManager!: ResultTemplatesManager<TemplateContent>;
-  public resultListControllerProps?: ResultListProps;
-  public loadingFlag?: string;
+  constructor(private props: ResultListCommonProps<SpecificResult>) {
+    this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
+    this.props.bindings.store.registerResultList(this);
+    this.addUpdateBreakpointOnce();
+  }
 
-  constructor(opts: ResultListCommonOptions<Bindings>) {
-    this.host = opts.host;
-    this.bindings = opts.bindings;
-    this.loadingFlag = opts.loadingFlag;
-
-    if (this.loadingFlag) {
-      this.bindings.store.setLoadingFlag(this.loadingFlag);
-    }
+  private addUpdateBreakpointOnce() {
     this.updateBreakpoints = once((host: HTMLElement) => {
       updateBreakpoints(host);
     });
-    this.nextNewResultTarget = opts.nextNewResultTarget;
+  }
 
-    this.registerResultTemplates(
-      opts.templateElements,
-      opts.includeDefaultTemplate,
-      opts.onReady,
-      opts.onError
+  public getResultId(result: AnyResult) {
+    return (
+      extractUnfoldedResult(result).uniqueId +
+      this.props.getResultListState().searchResponseId
     );
   }
 
-  set renderingFunction(render: ResultRenderingFunction) {
-    this.render = render;
-  }
-
-  public focusOnNextNewResult(resultListState: CommonResultListState) {
-    if (!this.nextNewResultTarget) {
-      throw "Cannot focus on next new result if nextNewResultTarget isn't defined";
+  public setNewResultRef(element: HTMLElement, resultIndex: number) {
+    if (resultIndex !== this.indexOfResultToFocus) {
+      return;
     }
-    this.indexOfResultToFocus = resultListState.results.length;
-    this.nextNewResultTarget.focusOnNextTarget();
-  }
 
-  public getTemplate(result: Result) {
-    return this.resultTemplatesManager.selectTemplate(result);
-  }
-
-  public getContentOfResultTemplate(
-    resultOrFolded: Result | FoldedResult
-  ): HTMLElement | DocumentFragment {
-    const result = (resultOrFolded as FoldedResult).result || resultOrFolded;
-    return this.getTemplate(result)!;
-  }
-
-  private onFirstNewResultRendered(element: HTMLElement) {
     if (!element.children.length && !element.shadowRoot?.children.length) {
       return;
     }
+
     this.indexOfResultToFocus = undefined;
     const elementToFocus = getFirstFocusableDescendant(element) ?? element;
-    this.nextNewResultTarget?.setTarget(elementToFocus);
+    this.props.nextNewResultTarget.setTarget(elementToFocus);
   }
 
-  private makeDefaultTemplate(): ResultTemplate<DocumentFragment> {
-    const content = document.createDocumentFragment();
-    const linkEl = document.createElement('atomic-result-link');
-    content.appendChild(linkEl);
-    return {
-      content,
-      conditions: [],
-    };
+  public focusOnNextNewResult() {
+    this.indexOfResultToFocus = this.props.getResultListState().results.length;
+    this.props.nextNewResultTarget.focusOnNextTarget();
   }
 
-  public async registerResultTemplates(
-    elements: NodeListOf<TemplateElement>,
-    includeDefaultTemplate = true,
-    onReady: () => void,
-    onError: () => void
-  ) {
-    this.resultTemplatesManager = buildResultTemplatesManager(
-      this.bindings.engine
+  private get displayPlaceholders() {
+    return !this.props.bindings.store.isAppLoaded();
+  }
+
+  public get listClasses() {
+    const classes = getResultDisplayClasses(
+      this.props.getDisplay(),
+      this.props.getDensity(),
+      this.props.getImageSize()
     );
 
-    const customTemplates = await Promise.all(
-      Array.from(elements).map(async (resultTemplateElement) => {
-        const template = await resultTemplateElement.getTemplate();
-        if (!template) {
-          onError();
-        }
-        return template;
-      })
-    );
-
-    const templates = (
-      includeDefaultTemplate ? [this.makeDefaultTemplate()] : []
-    ).concat(
-      customTemplates.filter(
-        (template) => template
-      ) as ResultTemplate<DocumentFragment>[]
-    );
-
-    this.resultTemplatesManager.registerTemplates(...templates);
-    onReady();
-  }
-
-  public getResultId(
-    result: Result | FoldedCollection,
-    resultListState: CommonResultListState
-  ) {
-    return (
-      this.getUnfoldedResult(result).uniqueId + resultListState.searchResponseId
-    );
-  }
-
-  public getUnfoldedResult(result: Result | FoldedResult): Result {
-    return (result as FoldedResult).result ?? result;
-  }
-
-  public get scrollHasReachedEndOfList() {
-    const childEl = this.host.shadowRoot?.firstElementChild as HTMLElement;
-    return window.innerHeight + window.scrollY >= childEl?.offsetHeight;
-  }
-
-  private getLoadingClasses(
-    firstSearchExecuted: boolean,
-    isLoading: boolean,
-    displayPlaceholders: boolean
-  ) {
-    const classes = [];
-    if (firstSearchExecuted && isLoading) {
+    if (
+      this.props.getResultListState().firstSearchExecuted &&
+      this.props.getResultListState().isLoading
+    ) {
       classes.push('loading');
     }
-    if (displayPlaceholders) {
+
+    if (this.displayPlaceholders) {
       classes.push('placeholder');
     }
-    return classes;
+
+    return classes.join(' ');
   }
 
-  private getListClasses(
-    display: ResultDisplayLayout,
-    density: ResultDisplayDensity,
-    imageSize: ResultDisplayImageSize
-  ) {
-    return getResultDisplayClasses(display, density, imageSize);
-  }
+  public render() {
+    this.updateBreakpoints?.(this.props.host);
 
-  public renderList({
-    host,
-    display,
-    density,
-    imageSize,
-    templateHasError,
-    resultListState,
-    numberOfResults,
-    setListWrapperRef,
-    getContentOfResultTemplate,
-    ready,
-  }: RenderListOptions) {
-    this.updateBreakpoints?.(host);
-    if (!ready) {
+    if (!this.props.resultTemplateProvider.templatesRegistered) {
       return;
     }
 
-    if (resultListState.hasError) {
+    if (this.props.getResultListState().hasError) {
       return;
     }
 
-    if (resultListState.firstSearchExecuted && !resultListState.hasResults) {
+    if (
+      this.props.getResultListState().firstSearchExecuted &&
+      !this.props.getResultListState().hasResults
+    ) {
       return;
     }
-
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
-
-    const loadingClasses = this.getLoadingClasses(
-      resultListState.firstSearchExecuted,
-      resultListState.isLoading,
-      displayPlaceholders
-    );
-
-    const listClasses = [
-      ...loadingClasses,
-      ...this.getListClasses(display ?? 'list', density, imageSize ?? 'icon'),
-    ];
 
     return (
       <Host>
-        {templateHasError && <slot></slot>}
-        <div
-          class={`list-wrapper ${listClasses.join(' ')}`}
-          ref={setListWrapperRef}
-        >
+        {this.props.resultTemplateProvider.hasError && <slot></slot>}
+        <div class={`list-wrapper ${this.listClasses}`}>
           <ResultDisplayWrapper
-            classes={listClasses.join(' ')}
-            display={display}
+            listClasses={this.listClasses}
+            display={this.props.getDisplay()}
           >
-            {displayPlaceholders && (
+            {this.displayPlaceholders && (
               <ResultsPlaceholder
-                display={display}
-                density={density}
-                imageSize={imageSize}
-                numberOfPlaceholders={numberOfResults}
+                numberOfPlaceholders={this.props.getNumberOfPlaceholders()}
+                density={this.props.getDensity()}
+                display={this.props.getDisplay()}
+                imageSize={this.props.getImageSize()}
               />
             )}
-            {resultListState.firstSearchExecuted && (
-              <Results
-                classes={loadingClasses.join(' ')}
-                bindings={this.bindings}
-                host={host}
-                display={display}
-                density={density}
-                imageSize={imageSize}
-                resultListState={resultListState}
-                resultListCommon={this}
-                getContentOfResultTemplate={getContentOfResultTemplate}
-                renderingFunction={this.render}
-                indexOfResultToFocus={this.indexOfResultToFocus}
-                newResultRef={(element: HTMLElement) =>
-                  this.onFirstNewResultRendered(element)
-                }
+            {this.props.getResultListState().firstSearchExecuted && (
+              <ResultListDisplay
+                getResultId={(result: AnyResult) => this.getResultId(result)}
+                listClasses={this.listClasses}
+                setNewResultRef={(...args) => this.setNewResultRef(...args)}
+                {...this.props}
               />
             )}
           </ResultDisplayWrapper>
@@ -334,20 +141,16 @@ export class ResultListCommon<Bindings extends AnyBindings> {
   }
 }
 
-export type ResultRenderingFunction = (
-  result: Result | FoldedResult,
-  root: HTMLElement
-) => string;
-
 const ResultDisplayWrapper: FunctionalComponent<{
   display?: ResultDisplayLayout;
-  classes: string;
+  listClasses: string;
 }> = (props, children) => {
   if (props.display === 'table') {
     return children;
   }
+
   return (
-    <div class={`list-root ${props.classes}`} part="result-list">
+    <div class={`list-root ${props.listClasses}`} part="result-list">
       {children}
     </div>
   );
@@ -366,11 +169,14 @@ const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   }
 };
 
-const Results: FunctionalComponent<ResultsProps<AnyBindings>> = (props) => {
-  if (!props.resultListState.results.length) {
+const ResultListDisplay: FunctionalComponent<ResultListDisplayProps> = (
+  props
+) => {
+  if (!props.getResultListState().results.length) {
     return null;
   }
-  switch (props.display) {
+
+  switch (props.getDisplay()) {
     case 'table':
       return <TableDisplayResults {...props} />;
     case 'grid':

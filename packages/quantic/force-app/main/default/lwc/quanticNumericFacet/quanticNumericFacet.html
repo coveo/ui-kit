@@ -38,7 +38,7 @@
               <div class="slds-p-horizontal_x-small">
                 <form
                   onsubmit={onApply}
-                  class="facet__search-form slds-grid slds-gutters slds-var-p-bottom_small slds-var-p-top_small"
+                  class="facet__search-form slds-grid slds-gutters slds-var-p-bottom_small"
                 >
                   <div class="slds-col slds-p-right_none">
                     <lightning-input
@@ -48,7 +48,6 @@
                       message-when-range-overflow={customMessageOverflow}
                       class="numeric__input-min"
                       label={labels.min}
-                      variant="label-hidden"
                       placeholder={labels.min}
                       aria-label={numberInputMinimumLabel}
                       onchange={onChangeMin}
@@ -63,7 +62,6 @@
                       message-when-range-underflow={customMessageUnderflow}
                       class="numeric__input-max"
                       label={labels.max}
-                      variant="label-hidden"
                       placeholder={labels.max}
                       aria-label={numberInputMaximumLabel}
                       onchange={onChangeMax}
