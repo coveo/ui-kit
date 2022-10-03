@@ -130,14 +130,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   public initialize() {
     try {
-      const localFieldsToInclude = this.fieldsToInclude
-        ? this.fieldsToInclude.split(',').map((field) => field.trim())
-        : [];
-      const fieldsToInclude = localFieldsToInclude.concat(
-        this.bindings.store.state.fieldsToInclude
+      this.bindings.store.addFieldsToInclude(
+        this.fieldsToInclude
+          ? this.fieldsToInclude.split(',').map((field) => field.trim())
+          : []
       );
-
-      this.foldedResultList = this.initFolding({options: {fieldsToInclude}});
+      this.foldedResultList = this.initFolding();
       this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     } catch (e) {
       this.error = e as Error;
