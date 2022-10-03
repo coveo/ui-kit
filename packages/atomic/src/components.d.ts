@@ -1133,6 +1133,16 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
+    interface AtomicResultLocalizedText {
+        /**
+          * The numerical field value that should be used to determine if the singular or plural value of a translation should be used
+         */
+        "fieldCount"?: string;
+        /**
+          * The i18n translation key
+         */
+        "key": string;
+    }
     interface AtomicResultMultiValueText {
         /**
           * The delimiter used to separate values when the field isn't indexed as a multi value field.
@@ -2043,6 +2053,12 @@ declare global {
         prototype: HTMLAtomicResultListElement;
         new (): HTMLAtomicResultListElement;
     };
+    interface HTMLAtomicResultLocalizedTextElement extends Components.AtomicResultLocalizedText, HTMLStencilElement {
+    }
+    var HTMLAtomicResultLocalizedTextElement: {
+        prototype: HTMLAtomicResultLocalizedTextElement;
+        new (): HTMLAtomicResultLocalizedTextElement;
+    };
     interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
     }
     var HTMLAtomicResultMultiValueTextElement: {
@@ -2343,6 +2359,7 @@ declare global {
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
+        "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
         "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
@@ -3452,6 +3469,16 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
     }
+    interface AtomicResultLocalizedText {
+        /**
+          * The numerical field value that should be used to determine if the singular or plural value of a translation should be used
+         */
+        "fieldCount"?: string;
+        /**
+          * The i18n translation key
+         */
+        "key": string;
+    }
     interface AtomicResultMultiValueText {
         /**
           * The delimiter used to separate values when the field isn't indexed as a multi value field.
@@ -3959,6 +3986,7 @@ declare namespace LocalJSX {
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
+        "atomic-result-localized-text": AtomicResultLocalizedText;
         "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-number": AtomicResultNumber;
         "atomic-result-placeholder": AtomicResultPlaceholder;
@@ -4074,6 +4102,7 @@ declare module "@stencil/core" {
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
+            "atomic-result-localized-text": LocalJSX.AtomicResultLocalizedText & JSXBase.HTMLAttributes<HTMLAtomicResultLocalizedTextElement>;
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
