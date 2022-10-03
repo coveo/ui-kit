@@ -3,6 +3,7 @@ import {api, LightningElement} from 'lwc';
 import inLabel from '@salesforce/label/c.quantic_InLabel';
 
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
+/** @typedef {Element & {setFocus: function}} CategoryFacetValueElement */
 
 /**
  * The `QuanticCategoryFacetValue` component is used by a `QuanticCategoryFacet` component to display a formatted facet value, path to that value and the number of results with that value.

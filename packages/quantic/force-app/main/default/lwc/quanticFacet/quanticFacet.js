@@ -25,6 +25,8 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").FacetValue} FacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import('../quanticFacetValue/quanticFacetValue').FacetValueElement} FacetValueElement */
+/** @typedef {import('../quanticCardContainer/quanticCardContainer').CardContainerElement} CardContainerElement */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -497,19 +499,16 @@ export default class QuanticFacet extends LightningElement {
     if (!this.focusTarget) {
       return;
     }
-    // eslint-disable-next-line default-case
-    switch (this.focusTarget.type) {
-      case 'facetHeader':
-        this.setFocusOnHeader();
-        return;
-      case 'facetValue':
-        if (this.focusTarget.value) {
-          const facetValueIndex = this.values.findIndex(
-            (item) => item.value === this.focusTarget.value
-          );
-          this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
-        }
-        this.setFocusOnFacetValue();
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.focusTarget.value) {
+        const facetValueIndex = this.values.findIndex(
+          (item) => item.value === this.focusTarget.value
+        );
+        this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+      }
+      this.setFocusOnFacetValue();
     }
   }
 
@@ -517,11 +516,10 @@ export default class QuanticFacet extends LightningElement {
    * Sets the focus on the target facet value.
    */
   setFocusOnFacetValue() {
-    const focusTarget = this.template.querySelectorAll('c-quantic-facet-value')[
-      this.focusTarget.index
-    ];
+    /** @type {NodeListOf<FacetValueElement>} */
+    const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
+    const focusTarget = facetValues[this.focusTarget.index];
     if (focusTarget) {
-      // @ts-ignore
       focusTarget.setFocus();
     }
   }
@@ -530,10 +528,10 @@ export default class QuanticFacet extends LightningElement {
    * Sets the focus on the facet header.
    */
   setFocusOnHeader() {
+    /** @type {CardContainerElement} */
     const focusTarget = this.template.querySelector('c-quantic-card-container');
     if (focusTarget) {
-      // @ts-ignore
-      focusTarget.setFocus();
+      focusTarget.setFocusOnHeader();
     }
   }
 }

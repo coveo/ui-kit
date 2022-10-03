@@ -33,6 +33,8 @@ import timeframeInputApply from '@salesforce/label/c.quantic_TimeframeInputApply
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").RelativeDatePeriod} RelativeDatePeriod */
 /** @typedef {import("coveo").RelativeDateUnit} RelativeDateUnit */
+/** @typedef {import('../quanticFacetValue/quanticFacetValue').FacetValueElement} FacetValueElement */
+/** @typedef {import('../quanticCardContainer/quanticCardContainer').CardContainerElement} CardContainerElement */
 /**
  * @typedef {Object} DatepickerElement
  * @property {string} min
@@ -707,22 +709,19 @@ export default class QuanticTimeframeFacet extends LightningElement {
     if (!this.focusTarget) {
       return;
     }
-    // eslint-disable-next-line default-case
-    switch (this.focusTarget.type) {
-      case 'facetHeader':
-        this.setFocusOnHeader();
-        return;
-      case 'applyButton':
-        this.setFocusOnApplyButton();
-        return;
-      case 'facetValue':
-        if (this.focusTarget.value) {
-          const facetValueIndex = this.formattedValues.findIndex(
-            (value) => value.label === this.focusTarget.value
-          );
-          this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
-          this.setFocusOnFacetValue();
-        }
+
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'applyButton') {
+      this.setFocusOnApplyButton();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.focusTarget.value) {
+        const facetValueIndex = this.formattedValues.findIndex(
+          (value) => value.label === this.focusTarget.value
+        );
+        this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+        this.setFocusOnFacetValue();
+      }
     }
   }
 
@@ -730,11 +729,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * Sets the focus on the target facet value.
    */
   setFocusOnFacetValue() {
-    const focusTarget = this.template.querySelectorAll('c-quantic-facet-value')[
-      this.focusTarget.index
-    ];
+    /** @type {NodeListOf<FacetValueElement>} */
+    const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
+    const focusTarget = facetValues[this.focusTarget.index];
     if (focusTarget) {
-      // @ts-ignore
       focusTarget.setFocus();
     }
   }
@@ -743,20 +741,20 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * Sets the focus on the facet header.
    */
   setFocusOnHeader() {
+    /** @type {CardContainerElement} */
     const focusTarget = this.template.querySelector('c-quantic-card-container');
     if (focusTarget) {
-      // @ts-ignore
-      focusTarget.setFocus();
+      focusTarget.setFocusOnHeader();
     }
   }
-  
+
   /**
    * Sets the focus on the apply button.
    */
   setFocusOnApplyButton() {
+    /** @type {Element & {focus: function}} */
     const focusTarget = this.template.querySelector('.timeframe-facet__apply');
     if (focusTarget) {
-      // @ts-ignore
       focusTarget.focus();
     }
   }

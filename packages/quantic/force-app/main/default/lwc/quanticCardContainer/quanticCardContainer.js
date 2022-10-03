@@ -1,5 +1,7 @@
 import {LightningElement, api} from 'lwc';
 
+/** @typedef {Element & {setFocusOnHeader: function}} CardContainerElement */
+
 /**
  * The `QuanticCardContainer` component is used internally as a styling container.
  * @category Utility
@@ -19,7 +21,7 @@ export default class QuanticCardContainer extends LightningElement {
    * @api
    * @type {VoidFunction}
    */
-  @api setFocus() {
+  @api setFocusOnHeader() {
     const focusTarget = this.template.querySelector('.card_focusable-header');
     if (focusTarget) {
       // @ts-ignore
