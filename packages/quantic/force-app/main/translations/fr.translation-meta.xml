@@ -466,6 +466,6 @@
     </customLabels>
     <customLabels>
       <label>Aucun filtre disponible pour cette requête dans l'onglet actuel</label>
-      <name>quantic_NoFiltersAvailableForThisQueryInTheCurrentTab</name>
+      <name>quantic_NoFilterForCurrentTab</name>
     </customLabels>
 </Translations>

@@ -883,7 +883,7 @@
       <shortDescription>No filters available for this query</shortDescription>
     </labels>
     <labels>
-      <fullName>quantic_NoFiltersAvailableForThisQueryInTheCurrentTab</fullName>
+      <fullName>quantic_NoFilterForCurrentTab</fullName>
       <value>No filters available for this query in the current tab</value>
       <language>en_US</language>
       <protected>false</protected>

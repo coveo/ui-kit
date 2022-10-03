@@ -9,7 +9,7 @@ import LOCALE from '@salesforce/i18n/locale';
 import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
 import viewResults from '@salesforce/label/c.quantic_ViewResults';
 import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
-import noFiltersAvailableForThisQuerInTheCurrentTab from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQueryInTheCurrentTab';
+import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurrentTab';
 
 /**
  * @typedef {Object} QuanticModalElement
@@ -41,7 +41,7 @@ export default class QuanticRefineToggle extends LightningElement {
     sortAndFilters,
     viewResults,
     noFiltersAvailableForThisQuery,
-    noFiltersAvailableForThisQuerInTheCurrentTab,
+    noFilterForCurrentTab,
   };
 
   /**
@@ -134,7 +134,7 @@ export default class QuanticRefineToggle extends LightningElement {
     );
   }
 
-  get areFacetsRendered() {
+  get someFacetsRendered() {
     return Object.values(this.renderedFacets).reduce(
       (result, facetRendered) => result || facetRendered,
       false
@@ -149,7 +149,7 @@ export default class QuanticRefineToggle extends LightningElement {
   }
 
   get isContentEmpty() {
-    return this.hideSort && !this.areFacetsRendered;
+    return this.hideSort && !this.someFacetsRendered;
   }
 
   /**

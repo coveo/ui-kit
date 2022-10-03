@@ -62,7 +62,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   /** @type {object} */
   renderedFacets = {};
   /** @type {boolean} */
-  areFacetsRendered = false;
+  someFacetsRendered = false;
 
 
   connectedCallback() {
@@ -249,7 +249,7 @@ export default class QuanticRefineModalContent extends LightningElement {
    */
   handleRenderFacetEvent = (event) => {
     this.renderedFacets[event.detail.id] = event.detail.shouldRenderFacet;
-    this.areFacetsRendered = Object.values(this.renderedFacets).reduce(
+    this.someFacetsRendered = Object.values(this.renderedFacets).reduce(
       (result, facetRendered) => result || facetRendered,
       false
     );
