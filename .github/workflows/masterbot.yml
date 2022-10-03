@@ -144,7 +144,8 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash
-  name: 'Bump version'
+  bump-version:
+    name: 'Bump version'
     needs:
       - 'lint-check'
       - 'unit-test'
