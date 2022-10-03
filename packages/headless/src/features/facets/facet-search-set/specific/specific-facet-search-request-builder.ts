@@ -7,7 +7,7 @@ export const buildSpecificFacetSearchRequest = async (
   state: StateNeededForSpecificFacetSearch
 ): Promise<SpecificFacetSearchRequest> => {
   const {captions, query, numberOfValues} = state.facetSearchSet[id].options;
-  const {field, currentValues, filterFacetCount} = state.facetSet[id];
+  const {field, currentValues, filterFacetCount} = state.facetSet[id]!.request;
   const searchContext = (await buildSearchRequest(state)).request;
   const ignoreValues = currentValues
     .filter((v) => v.state !== 'idle')

@@ -4,6 +4,7 @@ import {buildMockInsightEngine} from '../../../../test/mock-engine';
 import {logDateFacetBreadcrumb} from './date-facet-insight-analytics-actions';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 
 const mockLogBreadcrumbFacet = jest.fn();
 
@@ -31,9 +32,11 @@ describe('logBreadcrumbFacet', () => {
     const engine = buildMockInsightEngine({
       state: buildMockInsightState({
         dateFacetSet: {
-          [exampleFacetId]: buildMockDateFacetRequest({
-            facetId: exampleFacetId,
-            field: exampleField,
+          [exampleFacetId]: buildMockDateFacetSlice({
+            request: buildMockDateFacetRequest({
+              facetId: exampleFacetId,
+              field: exampleField,
+            }),
           }),
         },
         insightCaseContext: {
