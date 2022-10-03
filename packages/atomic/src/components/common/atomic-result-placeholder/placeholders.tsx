@@ -1,28 +1,25 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {ResultPlaceholderProps} from '../result-list/result-list';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../common/layout/display-options';
 
-export const ListDisplayResultsPlaceholder: FunctionalComponent<
-  ResultPlaceholderProps
-> = (props) => {
+export interface ResultPlaceholderProps {
+  density: ResultDisplayDensity;
+  imageSize?: ResultDisplayImageSize;
+  display?: ResultDisplayLayout;
+  numberOfPlaceholders: number;
+}
+
+export const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
+  props
+) => {
   return Array.from({length: props.numberOfPlaceholders}, (_, i) => (
     <atomic-result-placeholder
       key={`placeholder-${i}`}
       density={props.density}
-      display="list"
-      imageSize={props.imageSize!}
-      isChild={props.isChild}
-    ></atomic-result-placeholder>
-  ));
-};
-
-export const GridDisplayResultsPlaceholder: FunctionalComponent<
-  ResultPlaceholderProps
-> = (props) => {
-  return Array.from({length: props.numberOfPlaceholders}, (_, i) => (
-    <atomic-result-placeholder
-      key={`placeholder-${i}`}
-      density={props.density}
-      display="grid"
+      display={props.display || 'list'}
       imageSize={props.imageSize!}
     ></atomic-result-placeholder>
   ));

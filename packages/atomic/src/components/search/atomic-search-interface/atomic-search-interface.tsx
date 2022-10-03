@@ -21,6 +21,7 @@ import {
   loadSearchConfigurationActions,
   loadQueryActions,
   EcommerceDefaultFieldsToInclude,
+  loadFieldActions,
 } from '@coveo/headless';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
@@ -153,7 +154,7 @@ export class AtomicSearchInterface
   public connectedCallback() {
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
-    this.updateFieldsToInclude();
+    this.initFieldsToInclude();
   }
 
   @Watch('searchHub')
@@ -289,25 +290,27 @@ export class AtomicSearchInterface
     };
   }
 
-  public render() {
-    return [
-      this.engine && (
-        <atomic-relevance-inspector
-          bindings={this.bindings}
-        ></atomic-relevance-inspector>
-      ),
-      <slot></slot>,
-    ];
-  }
-
-  private updateFieldsToInclude() {
+  private initFieldsToInclude() {
     const fields = [...EcommerceDefaultFieldsToInclude];
     if (this.fieldsToInclude) {
       fields.push(
         ...this.fieldsToInclude.split(',').map((field) => field.trim())
       );
     }
-    this.store.set('fieldsToInclude', fields);
+    this.store.addFieldsToInclude(fields);
+
+    // TODO: delete v2 when fields-to-include prop on result list removed
+    this.store.onChange('fieldsToInclude', () =>
+      this.registerFieldsToInclude()
+    );
+  }
+
+  public registerFieldsToInclude() {
+    this.engine?.dispatch(
+      loadFieldActions(this.engine!).registerFieldsToInclude(
+        this.store.state.fieldsToInclude
+      )
+    );
   }
 
   private updateMobileBreakpoint() {
@@ -433,8 +436,20 @@ export class AtomicSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.initFieldsToInclude();
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
+  }
+
+  public render() {
+    return [
+      this.engine && (
+        <atomic-relevance-inspector
+          bindings={this.bindings}
+        ></atomic-relevance-inspector>
+      ),
+      <slot></slot>,
+    ];
   }
 }

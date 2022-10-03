@@ -2,8 +2,6 @@ import {
   FoldedResult,
   FoldedResultList,
   FoldedResultListState,
-  Result,
-  ResultTemplatesManager,
 } from '@coveo/headless';
 import {
   Component,
@@ -15,28 +13,27 @@ import {
   Host,
   VNode,
 } from '@stencil/core';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
 import {
   ResultContext,
-  ChildTemplatesContext,
   ChildTemplatesContextEvent,
   ResultDisplayConfigContext,
   DisplayConfig,
+  ChildTemplatesContext,
 } from '../../result-template-components/result-template-decorators';
-import {
-  BaseResultList,
-  ResultListCommon,
-} from '../../../common/result-list/result-list-common';
-import {TemplateContent} from '../../../common/result-templates/result-template-common';
 import {
   FoldedResultListContext,
   FoldedResultListStateContext,
 } from '../result-list-decorators';
 import {ResultDisplayImageSize} from '../../../common/layout/display-options';
-import {ListDisplayResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
+import {ResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -55,11 +52,10 @@ const componentTag = 'atomic-result-children';
   styleUrl: 'atomic-result-children.pcss',
   shadow: true,
 })
-export class AtomicResultChildren implements BaseResultList<Bindings> {
+export class AtomicResultChildren implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public resultListCommon!: ResultListCommon<Bindings>;
   @ChildTemplatesContext()
-  public templatesManager!: ResultTemplatesManager<TemplateContent>;
+  public resultTemplateProvider?: ResultTemplateProvider;
   @FoldedResultListContext()
   private foldedResultList!: FoldedResultList;
   @ResultContext({folded: true})
@@ -70,8 +66,8 @@ export class AtomicResultChildren implements BaseResultList<Bindings> {
 
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
-  @State() public ready = false;
-  @State() public templateHasError = false;
+  @State() private resultTemplateRegistered = false;
+  @State() private templateHasError = false;
   @FoldedResultListStateContext()
   @State()
   private foldedResultListState!: FoldedResultListState;
@@ -94,64 +90,49 @@ export class AtomicResultChildren implements BaseResultList<Bindings> {
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
     event.preventDefault();
-    event.detail(this.resultListCommon?.resultTemplatesManager);
+    event.detail(this.resultTemplateProvider);
   }
 
-  public async initialize() {
+  public initialize() {
+    if (this.inheritTemplates) {
+      return;
+    }
+
     const childrenTemplates = Array.from(
       this.host.querySelectorAll(childTemplateComponent)
     ).filter(
       (template) => !elementHasAncestorTag(template, childTemplateComponent)
     );
 
-    if (!childrenTemplates.length && !this.inheritTemplates) {
+    if (!childrenTemplates.length) {
       this.error = new Error(
         `The "${componentTag}" component requires at least one "${childTemplateComponent}" component.`
       );
       return;
     }
 
-    this.resultListCommon = new ResultListCommon({
-      host: this.host,
-      bindings: this.bindings,
-      templateElements: this.host.querySelectorAll(childTemplateComponent),
+    this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: false,
-      onReady: () => {
-        this.ready = true;
+      templateElements: childrenTemplates,
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
       },
-      onError: () => {
-        this.templateHasError = true;
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
       },
+      bindings: this.bindings,
     });
   }
 
-  private selectInheritedTemplate(result: Result) {
-    const content = this.templatesManager?.selectTemplate(result);
+  private renderChild(child: FoldedResult, isLast: boolean) {
+    const content = this.resultTemplateProvider?.getTemplateContent(
+      child.result
+    );
+
     if (!content) {
       return;
-    }
-
-    const fragment = document.createDocumentFragment();
-    const children = Array.from(content.children).filter(
-      (el) =>
-        el.tagName.toLowerCase() !== componentTag &&
-        !el.querySelector(componentTag)
-    );
-    fragment.append(...children.map((c) => c.cloneNode(true)));
-    return fragment;
-  }
-
-  private getTemplatedContent(result: Result) {
-    return (
-      this.resultListCommon!.resultTemplatesManager.selectTemplate(result) ||
-      this.selectInheritedTemplate(result)
-    );
-  }
-
-  private renderChild(child: FoldedResult, isLast: boolean) {
-    const content = this.getTemplatedContent(child.result);
-    if (!content) {
-      return null;
     }
 
     const key =
@@ -200,11 +181,10 @@ export class AtomicResultChildren implements BaseResultList<Bindings> {
 
   private renderPlaceholder() {
     return (
-      <ListDisplayResultsPlaceholder
+      <ResultsPlaceholder
         numberOfPlaceholders={this.numberOfChildren || 2}
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}
-        isChild
       />
     );
   }
@@ -242,7 +222,7 @@ export class AtomicResultChildren implements BaseResultList<Bindings> {
         </Button>
       );
     }
-    return null;
+    return;
   }
 
   private renderChildrenWrapper(content: VNode | VNode[]) {
@@ -299,11 +279,11 @@ export class AtomicResultChildren implements BaseResultList<Bindings> {
   }
 
   public render() {
-    if (!this.ready) {
-      return null;
+    if (!this.inheritTemplates && !this.resultTemplateRegistered) {
+      return;
     }
 
-    if (this.templateHasError) {
+    if (!this.inheritTemplates && this.templateHasError) {
       return <slot></slot>;
     }
 
