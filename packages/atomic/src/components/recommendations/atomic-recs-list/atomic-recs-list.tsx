@@ -17,7 +17,7 @@ import {ResultTemplateProvider} from '../../common/result-list/result-template-p
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
-  ResultDisplayLayout,
+  ResultDisplayBasicLayout,
 } from '../../common/layout/display-options';
 import {
   ResultListCommonState,
@@ -58,7 +58,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
+  @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */

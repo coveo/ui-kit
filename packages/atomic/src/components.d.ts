@@ -9,7 +9,7 @@ import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLin
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
 import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
@@ -954,7 +954,7 @@ export namespace Components {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display": ResultDisplayLayout;
+        "display": ResultDisplayBasicLayout;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -1274,10 +1274,6 @@ export namespace Components {
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density": ResultDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display": ResultDisplayLayout;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -3286,7 +3282,7 @@ declare namespace LocalJSX {
         /**
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ResultDisplayBasicLayout;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -3593,10 +3589,6 @@ declare namespace LocalJSX {
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density"?: ResultDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display"?: ResultDisplayLayout;
         /**
           * The expected size of the image displayed in the results.
          */
