@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.113.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.7...@coveo/atomic@1.113.8) (2022-09-30)
+
+
+### Bug Fixes
+
+* **atomic:** flaky category focus tests ([#2478](https://github.com/coveo/ui-kit/issues/2478)) ([c0f24a4](https://github.com/coveo/ui-kit/commit/c0f24a42cb72a8145de31ef3b4cd06db46b0318c))
+
+
+
+
+
 ## [1.113.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.6...@coveo/atomic@1.113.7) (2022-09-30)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -53,6 +53,10 @@
     "zh-CN": "无标题",
     "zh-TW": "無標題"
   },
+  "search-ellipsis": {
+    "en": "Search...",
+    "fr": "Recherche..."
+  },
   "left": {
     "en": "Left",
     "fr": "Gauche"
