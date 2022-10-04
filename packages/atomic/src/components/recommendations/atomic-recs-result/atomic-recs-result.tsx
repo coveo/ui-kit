@@ -29,7 +29,7 @@ export class AtomicRecsResult {
   @Element() host!: HTMLElement;
 
   /**
-   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   * Whether an atomic-result-link inside atomic-recs-result should stop propagation.
    */
   @Prop() stopPropagation?: boolean;
 
@@ -77,7 +77,7 @@ export class AtomicRecsResult {
   @Prop() loadingFlag?: string;
 
   /**
-   * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system.
+   * Internal function used by atomic-recs-list in advanced setup, that allows to bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
    * @internal
