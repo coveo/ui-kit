@@ -104,50 +104,40 @@ export default class QuanticModal extends LightningElement {
     return this.isVisible ? 0 : -1;
   }
 
+  /** @return {Array} */
   get allAssignedElements() {
+    /** @type {HTMLSlotElement} */
     const headerSlot = this.template.querySelector('slot[name=header]');
+    /** @type {HTMLSlotElement} */
     const contentSlot = this.template.querySelector('slot[name=content]');
+    /** @type {HTMLSlotElement} */
     const footerSlot = this.template.querySelector('slot[name=footer]');
 
     const allAssignedElements = [
-      // @ts-ignore
       ...headerSlot.assignedElements(),
-      // @ts-ignore
       ...contentSlot.assignedElements(),
-      // @ts-ignore
       ...footerSlot.assignedElements(),
     ].map((element) => Array.from([element, ...element.childNodes]));
-    return this.flattenArray(allAssignedElements);
+    return allAssignedElements.flat();
   }
 
   focusOnLastElement() {
-    for (const element of this.allAssignedElements.reverse()) {
-      const lastFocusableElement = getLastFocusableElement(element);
-      if (lastFocusableElement) {
-        // @ts-ignore
-        lastFocusableElement.focus();
-        break;
-      }
+    const focusableElement = this.allAssignedElements
+      .reverse()
+      .find((element) => !!getLastFocusableElement(element));
+    if (focusableElement) {
+      const lastFocusableElement = getLastFocusableElement(focusableElement);
+      lastFocusableElement.focus();
     }
   }
 
   focusOnFirstElement() {
-    for (const element of this.allAssignedElements) {
-      const firstFocusableElement = getFirstFocusableElement(element);
-      if (firstFocusableElement) {
-        // @ts-ignore
-        firstFocusableElement.focus();
-        break;
-      }
+    const focusableElement = this.allAssignedElements.find(
+      (element) => !!getFirstFocusableElement(element)
+    );
+    if (focusableElement) {
+      const firstFocusableElement = getFirstFocusableElement(focusableElement);
+      firstFocusableElement.focus();
     }
-  }
-
-  /**
-   * Flattens an array.
-   * @param {array} array 
-   * @returns array
-   */
-  flattenArray(array){
-    return array.reduce((value, acc) => acc.concat(value), [])
   }
 }

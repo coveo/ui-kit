@@ -550,10 +550,11 @@ export function isFocusable(element) {
  * Returns the last focusable element of for an HTML element.
  * This function would NOT work with shadow root.
  * @param {HTMLElement | null} element
- * @returns {Element | null}
+ * @returns {HTMLElement | null}
  */
 export function getLastFocusableElement(element) {
   if (!element || element.nodeType === Node.TEXT_NODE) return null;
+
   if (isCustomElement(element)) {
     if (element.dataset?.focusable?.toString() === 'true') {
       return element;
@@ -577,10 +578,11 @@ export function getLastFocusableElement(element) {
  * Returns the First focusable element of for an HTML element.
  * This function would NOT work with shadow root.
  * @param {HTMLElement | null} element
- * @returns {Element | null}
+ * @returns {HTMLElement | null}
  */
 export function getFirstFocusableElement(element) {
   if (!element || element.nodeType === Node.TEXT_NODE) return null;
+
   if (isCustomElement(element)) {
     if (element.dataset?.focusable?.toString() === 'true') {
       return element;
