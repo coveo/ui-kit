@@ -52,7 +52,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @State()
   public recommendationListState!: RecommendationListState;
 
-  @FocusTarget<RecsBindings>()
+  @FocusTarget()
   private nextNewResultTarget!: FocusTargetController;
 
   /**

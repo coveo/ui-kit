@@ -24,6 +24,7 @@ import {
   buildInsightEngine,
   buildInsightResultsPerPage,
 } from '..';
+import {loadFieldActions} from '@coveo/headless/insight';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
@@ -108,7 +109,6 @@ export class AtomicInsightInterface
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstInsightRequestExecutedFlag);
-    this.updateFieldsToInclude();
   }
 
   private initResultsPerPage() {
@@ -120,11 +120,12 @@ export class AtomicInsightInterface
     });
   }
 
-  private updateFieldsToInclude() {
+  public registerFieldsToInclude() {
     if (this.fieldsToInclude) {
-      this.store.set(
-        'fieldsToInclude',
-        this.fieldsToInclude.split(',').map((field) => field.trim())
+      this.engine!.dispatch(
+        loadFieldActions(this.engine!).registerFieldsToInclude(
+          this.fieldsToInclude.split(',').map((field) => field.trim())
+        )
       );
     }
   }
@@ -182,10 +183,6 @@ export class AtomicInsightInterface
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
-  render() {
-    return this.engine && <slot></slot>;
-  }
-
   public get bindings(): InsightBindings {
     return {
       engine: this.engine!,
@@ -215,8 +212,13 @@ export class AtomicInsightInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.registerFieldsToInclude();
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
     this.initResultsPerPage();
     this.initialized = true;
+  }
+
+  render() {
+    return this.engine && <slot></slot>;
   }
 }

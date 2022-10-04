@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.113.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.8...@coveo/atomic@1.113.9) (2022-10-03)
+
+
+### Bug Fixes
+
+* **atomic:** improve styling for the insight panel ([#2467](https://github.com/coveo/ui-kit/issues/2467)) ([19b2bcb](https://github.com/coveo/ui-kit/commit/19b2bcb08a204f846af79cef5c0f2d0588d41a66))
+
+
+
+
+
 ## [1.113.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.7...@coveo/atomic@1.113.8) (2022-09-30)
 
 
