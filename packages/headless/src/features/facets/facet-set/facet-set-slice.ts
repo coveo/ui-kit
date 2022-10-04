@@ -166,12 +166,23 @@ export const facetSetReducer = createReducer(
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
+        const generatedFacets =
+          action.payload.response.generateAutomaticFacets.facets;
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
             state[facetResponse.facetId],
             facetResponse
           )
         );
+        generatedFacets.forEach((generatedFacet) => {
+          const facetId = generatedFacet.field;
+          if (!state[facetId]) {
+            state[facetId] = buildFacetRequest(generatedFacet);
+          } else {
+            mutateStateFromFacetResponse(state[facetId], generatedFacet);
+          }
+          state[facetId].generated = true;
+        });
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = action.payload.response?.facets?.results || [];

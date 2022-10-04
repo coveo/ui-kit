@@ -1,4 +1,4 @@
-import {Component, h, Element, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
 import {
   FacetManager,
   buildFacetManager,
@@ -15,6 +15,7 @@ import {
 import {NumberValue, Schema} from '@coveo/bueno';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {BaseFacetElement} from '../../common/facets/facet-common';
+import {FacetResponse} from '@coveo/headless/dist/definitions/features/facets/facet-set/interfaces/response';
 
 /**
  * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
@@ -66,6 +67,7 @@ export class AtomicFacetManager implements InitializableComponent {
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
+    console.log(sortedFacets);
     this.updateCollapsedState(sortedFacets);
     this.host.append(...sortedFacets);
   };
@@ -108,6 +110,20 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   public render() {
-    return <slot />;
+    const dymamics = this.facetManagerState.dynamicFacets as FacetResponse[];
+
+    return (
+      <Fragment>
+        <slot />
+        {dymamics.map((dynamic) => {
+          return (
+            <atomic-facet
+              field={dynamic.field}
+              label={dynamic.field}
+            ></atomic-facet>
+          );
+        })}
+      </Fragment>
+    );
   }
 }

@@ -16,6 +16,7 @@ export interface SearchResponseSuccess {
   searchUid: string;
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
+  generateAutomaticFacets: {facets: AnyFacetResponse[]};
   queryCorrections: QueryCorrection[];
   triggers: Trigger[];
   questionAnswer: QuestionsAnswers;

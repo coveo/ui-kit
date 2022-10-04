@@ -65,6 +65,7 @@ export function getSearchInitialState(): SearchState {
       questionAnswer: emptyQuestionAnswer(),
       pipeline: '',
       splitTestRun: '',
+      generateAutomaticFacets: {facets: []},
     },
     duration: 0,
     queryExecuted: '',

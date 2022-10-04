@@ -84,7 +84,10 @@ export class SearchAPIClient implements FacetSearchAPIClient {
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
-      requestParams: pickNonBaseParams(req),
+      requestParams: {
+        ...pickNonBaseParams(req),
+        generateAutomaticFacets: {desiredCount: 10},
+      },
       requestMetadata: {method: 'plan'},
       ...this.options,
     });
@@ -148,7 +151,10 @@ export class SearchAPIClient implements FacetSearchAPIClient {
 
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
-      requestParams: pickNonBaseParams(req),
+      requestParams: {
+        ...pickNonBaseParams(req),
+        generateAutomaticFacets: {desiredCount: 10},
+      },
       requestMetadata: {method: 'search', origin: options?.origin},
       ...this.options,
       signal: this.searchAbortController?.signal,
