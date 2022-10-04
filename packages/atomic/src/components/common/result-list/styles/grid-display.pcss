@@ -67,12 +67,6 @@
     }
   }
 
-  @define-mixin atomic-grid-with-cards {
-    @mixin atomic-list-with-cards;
-    grid-column-gap: 0.5rem;
-    grid-row-gap: 0.5rem;
-  }
-
   @screen mobile-only {
     &.image-large {
       @media not all and (min-width: 768px) {

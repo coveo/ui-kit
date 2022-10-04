@@ -10,6 +10,12 @@
   }
 }
 
+@define-mixin atomic-grid-with-cards {
+  @mixin atomic-list-with-cards;
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 0.5rem;
+}
+
 @define-mixin atomic-list-with-dividers {
   &.density-comfortable {
     [part~='outline'] {

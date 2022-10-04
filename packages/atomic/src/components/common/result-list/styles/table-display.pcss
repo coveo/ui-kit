@@ -1,4 +1,9 @@
-@define-mixin atomic-result-table {
+.list-wrapper.display-table {
+  display: grid;
+  overflow-x: auto;
+}
+
+.list-root.display-table {
   min-width: 100%;
   border-spacing: 0;
   border-collapse: separate;
@@ -56,13 +61,4 @@
   &.density-compact {
     --padding: 1rem;
   }
-}
-
-.list-wrapper.display-table {
-  display: grid;
-  overflow-x: auto;
-}
-
-.list-root.display-table {
-  @mixin atomic-result-table;
 }
