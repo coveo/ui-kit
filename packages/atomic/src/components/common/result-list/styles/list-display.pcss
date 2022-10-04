@@ -1,0 +1,40 @@
+@import './mixins.pcss';
+
+[part~='divider'] {
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--atomic-neutral);
+    padding-bottom: 1rem;
+  }
+  margin-bottom: 1rem;
+}
+
+.list-root.display-list {
+  display: flex;
+  flex-direction: column;
+
+  atomic-result,
+  atomic-result-placeholder {
+    width: auto;
+  }
+
+  @screen desktop-only {
+    @mixin atomic-list-with-dividers;
+  }
+
+  @screen mobile-only {
+    &.image-large {
+      @mixin atomic-list-with-dividers;
+      display: grid;
+      justify-content: space-evenly;
+      grid-template-columns: minmax(auto, 35rem);
+    }
+
+    &.image-small,
+    &.image-icon,
+    &.image-none {
+      grid-row-gap: 1rem;
+
+      @mixin atomic-list-with-cards;
+    }
+  }
+}

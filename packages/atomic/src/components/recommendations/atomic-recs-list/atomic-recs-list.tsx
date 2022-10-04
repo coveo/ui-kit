@@ -30,10 +30,15 @@ import {
 
 /**
  * @internal
+ * The `atomic-recs-list` component is responsible for displaying recommendations by applying one or more result templates.
+ *
+ * @part result-list - The element containing every result of a result list
+ * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
+ * @part result-list-grid-clickable - The clickable link encompassing the result when results are displayed as a grid
  */
 @Component({
   tag: 'atomic-recs-list',
-  styleUrl: '../../common/result-list/result-list.pcss',
+  styleUrl: 'atomic-recs-list.pcss',
   shadow: true,
 })
 export class AtomicRecsList implements InitializableComponent<RecsBindings> {
@@ -131,9 +136,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
   private get resultListCommonState(): ResultListCommonState<Result> {
     return {
-      firstSearchExecuted:
-        !this.recommendationListState.isLoading &&
-        this.recommendationListState.recommendations.length !== 0,
+      firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
       isLoading: this.recommendationListState.isLoading,
       hasError: this.recommendationListState.error !== null,
       hasResults: this.recommendationListState.recommendations.length !== 0,

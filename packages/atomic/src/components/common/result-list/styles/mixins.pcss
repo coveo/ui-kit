@@ -1,0 +1,72 @@
+@define-mixin atomic-list-with-cards {
+  [part~='outline'] {
+    border: 1px solid var(--atomic-neutral);
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  atomic-result-placeholder {
+    border-color: transparent;
+  }
+}
+
+@define-mixin atomic-list-with-dividers {
+  &.density-comfortable {
+    [part~='outline'] {
+      &::before {
+        margin: 2rem 0;
+      }
+    }
+  }
+
+  &.density-normal {
+    [part~='outline'] {
+      &::before {
+        margin: 1.5rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      [part~='outline'] {
+        &::before {
+          margin: 1.75rem 0;
+        }
+      }
+    }
+  }
+
+  &.density-compact {
+    [part~='outline'] {
+      &::before {
+        margin: 1rem 0;
+      }
+    }
+
+    @screen mobile-only {
+      [part~='outline'] {
+        &::before {
+          margin: 1.5rem 0;
+        }
+      }
+    }
+  }
+
+  [part~='outline'] {
+    &::before {
+      display: block;
+      content: ' ';
+      height: 1px;
+      background-color: var(--atomic-neutral);
+    }
+
+    &:first-of-type::before {
+      display: none;
+    }
+  }
+
+  atomic-result-placeholder {
+    &::before {
+      background-color: transparent;
+    }
+  }
+}

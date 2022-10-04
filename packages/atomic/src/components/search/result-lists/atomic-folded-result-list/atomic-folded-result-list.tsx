@@ -45,7 +45,7 @@ import {ResultTemplateProvider} from '../../../common/result-list/result-templat
  */
 @Component({
   tag: 'atomic-folded-result-list',
-  styleUrl: '../../../common/result-list/result-list.pcss',
+  styleUrl: 'atomic-folded-result-list.pcss',
   shadow: true,
 })
 export class AtomicFoldedResultList implements InitializableComponent {
