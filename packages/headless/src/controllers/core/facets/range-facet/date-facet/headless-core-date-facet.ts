@@ -185,7 +185,7 @@ export function buildCoreDateFacet(
     engine,
     {
       facetId,
-      getRequest: () => engine.state.dateFacetSet[facetId],
+      getRequest: () => engine.state.dateFacetSet[facetId]!.request,
     }
   );
 

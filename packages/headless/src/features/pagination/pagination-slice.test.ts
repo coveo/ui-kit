@@ -32,7 +32,6 @@ import {
   deselectAllNumericFacetValues,
   updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {Action} from '@reduxjs/toolkit';
@@ -280,10 +279,6 @@ describe('pagination slice', () => {
 
     it('when all numeric facet values are deselected, #firstResult is set to 0', () => {
       testResetPagination(deselectAllNumericFacetValues);
-    });
-
-    it('when all facets are deselected, #firstResult is set to 0', () => {
-      testResetPagination(deselectAllFacets);
     });
 
     it('when all breadcrumbs are deselected, #firstResult is set to 0', () => {

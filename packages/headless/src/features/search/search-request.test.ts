@@ -11,11 +11,11 @@ import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
 import {buildSearchRequest} from './search-request';
 import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
-import {omit} from '../../utils/utils';
-import {FacetRequest} from '../facets/facet-set/interfaces/request';
-import {FacetSetState} from '../facets/facet-set/facet-set-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -78,11 +78,10 @@ describe('search request', () => {
 
   it('#searchRequest returns the facets in the state #facetSet', async () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
-    state.facetSet[1] = request;
+    state.facetSet[1] = buildMockFacetSlice({request});
     const {facets} = (await buildSearchRequest(state)).request;
-    const {hasBreadcrumbs, ...rest} = request;
 
-    expect(facets).toContainEqual(rest);
+    expect(facets).toContainEqual(request);
   });
 
   it('#searchRequest returns the facets in the state #numericFacetSet', async () => {
@@ -90,7 +89,7 @@ describe('search request', () => {
       field: 'objecttype',
       currentValues: [{start: 0, end: 10, endInclusive: true, state: 'idle'}],
     });
-    state.numericFacetSet[1] = request;
+    state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(request);
@@ -102,7 +101,7 @@ describe('search request', () => {
       currentValues: [{start: 0, end: 10, endInclusive: true, state: 'idle'}],
       generateAutomaticRanges: true,
     });
-    state.numericFacetSet[1] = request;
+    state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(
@@ -123,7 +122,7 @@ describe('search request', () => {
       ],
       generateAutomaticRanges: true,
     });
-    state.numericFacetSet[1] = request;
+    state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(request);
@@ -134,7 +133,7 @@ describe('search request', () => {
       field: 'date',
       currentValues: [buildMockDateFacetValue({state: 'idle'})],
     });
-    state.dateFacetSet[1] = request;
+    state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(request);
@@ -146,7 +145,7 @@ describe('search request', () => {
       currentValues: [buildMockDateFacetValue({state: 'idle'})],
       generateAutomaticRanges: true,
     });
-    state.dateFacetSet[1] = request;
+    state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(
@@ -167,7 +166,7 @@ describe('search request', () => {
       ],
       generateAutomaticRanges: true,
     });
-    state.dateFacetSet[1] = request;
+    state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
     const {facets} = (await buildSearchRequest(state)).request;
     expect(facets).toContainEqual(request);
@@ -215,12 +214,20 @@ describe('search request', () => {
       facetId: 'h',
     });
 
-    state.facetSet['a'] = enabledFacetRequest;
-    state.facetSet['b'] = disabledFacetRequest;
-    state.numericFacetSet['c'] = enabledNumericFacetRequest;
-    state.numericFacetSet['d'] = disabledNumericFacetRequest;
-    state.dateFacetSet['e'] = enabledDateFacetRequest;
-    state.dateFacetSet['f'] = disabledDateFacetRequest;
+    state.facetSet['a'] = buildMockFacetSlice({request: enabledFacetRequest});
+    state.facetSet['b'] = buildMockFacetSlice({request: disabledFacetRequest});
+    state.numericFacetSet['c'] = buildMockNumericFacetSlice({
+      request: enabledNumericFacetRequest,
+    });
+    state.numericFacetSet['d'] = buildMockNumericFacetSlice({
+      request: disabledNumericFacetRequest,
+    });
+    state.dateFacetSet['e'] = buildMockDateFacetSlice({
+      request: enabledDateFacetRequest,
+    });
+    state.dateFacetSet['f'] = buildMockDateFacetSlice({
+      request: disabledDateFacetRequest,
+    });
     state.categoryFacetSet['g'] = buildMockCategoryFacetSlice({
       request: enabledCategoryFacetRequest,
     });
@@ -237,10 +244,8 @@ describe('search request', () => {
     state.facetOptions.facets['g'] = buildFacetOptionsSlice();
     state.facetOptions.facets['h'] = buildFacetOptionsSlice({enabled: false});
 
-    const {hasBreadcrumbs, ...enabledFacetRequestParams} = enabledFacetRequest;
-
     const {facets} = (await buildSearchRequest(state)).request;
-    expect(facets).toContainEqual(enabledFacetRequestParams);
+    expect(facets).toContainEqual(enabledFacetRequest);
     expect(facets).toContainEqual(enabledNumericFacetRequest);
     expect(facets).toContainEqual(enabledDateFacetRequest);
     expect(facets).toContainEqual(enabledCategoryFacetRequest);
@@ -262,14 +267,17 @@ describe('search request', () => {
 
     state.facetOrder = [facetId2, facetId1];
 
-    state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
-    state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
+    state.facetSet[facetId1] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId: facetId1}),
+    });
+    state.facetSet[facetId2] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId: facetId2}),
+    });
 
     const {facets} = (await buildSearchRequest(state)).request;
-    omitField('hasBreadcrumbs', state.facetSet);
     expect(facets).toEqual([
-      state.facetSet[facetId2],
-      state.facetSet[facetId1],
+      state.facetSet[facetId2].request,
+      state.facetSet[facetId1].request,
     ]);
   });
 
@@ -280,14 +288,17 @@ describe('search request', () => {
 
     state.facetOrder = [facetId2];
 
-    state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
-    state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
+    state.facetSet[facetId1] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId: facetId1}),
+    });
+    state.facetSet[facetId2] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId: facetId2}),
+    });
 
     const {facets} = (await buildSearchRequest(state)).request;
-    omitField('hasBreadcrumbs', state.facetSet);
     expect(facets).toEqual([
-      state.facetSet[facetId2],
-      state.facetSet[facetId1],
+      state.facetSet[facetId2].request,
+      state.facetSet[facetId1].request,
     ]);
   });
 
@@ -310,16 +321,6 @@ describe('search request', () => {
     expect(
       (await buildSearchRequest(state)).request.visitorId
     ).not.toBeDefined();
-  });
-
-  it('should not send hasBreadcrumbs', async () => {
-    const facetId1 = '1';
-
-    state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
-
-    const {facets} = (await buildSearchRequest(state)).request;
-
-    expect((facets![0] as FacetRequest).hasBreadcrumbs).not.toBeDefined();
   });
 
   it('#searchRequest.tab holds the #originLevel2', async () => {
@@ -424,11 +425,3 @@ describe('search request', () => {
     expect((await buildSearchRequest(state)).request.cq).toBe('a');
   });
 });
-
-function omitField(field: keyof FacetRequest, set: FacetSetState) {
-  Object.values(set)
-    .filter(({facetId}) => set[facetId])
-    .forEach(
-      ({facetId}) => (set[facetId] = omit(field, set[facetId]) as FacetRequest)
-    );
-}

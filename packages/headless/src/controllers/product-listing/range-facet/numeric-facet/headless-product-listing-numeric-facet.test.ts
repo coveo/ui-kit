@@ -8,7 +8,7 @@ import {
   buildMockProductListingEngine,
 } from '../../../../test/mock-engine';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
@@ -30,7 +30,7 @@ describe('numeric facet', () => {
     };
 
     state = buildMockProductListingState();
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice();
 
     engine = buildMockProductListingEngine({state});
     numericFacet = buildNumericFacet(engine, {options});

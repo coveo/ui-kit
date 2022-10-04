@@ -232,7 +232,6 @@ const configureMockStore = (logger: Logger) => {
     SearchThunkExtraArguments,
     'analyticsClientMiddleware'
   > = {
-    searchAPIClient: buildMockSearchAPIClient({logger}),
     apiClient: buildMockSearchAPIClient({logger}),
     validatePayload: validatePayloadAndThrow,
     logger,

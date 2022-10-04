@@ -85,7 +85,6 @@ describe('headless CoreSearchBox', () => {
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({
       id,
-      q: 'some value',
       completions: [
         {
           expression: 'a',
@@ -166,7 +165,6 @@ describe('headless CoreSearchBox', () => {
     expect(engine.actions).toContainEqual(
       registerQuerySuggest({
         id,
-        q: state.query.q,
         count: props.options!.numberOfSuggestions,
       })
     );

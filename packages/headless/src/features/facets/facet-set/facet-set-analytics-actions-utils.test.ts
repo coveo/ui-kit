@@ -2,13 +2,14 @@ import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-r
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockDateFacetResponse} from '../../../test/mock-date-facet-response';
+import {buildMockDateFacetSlice} from '../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockNumericFacetResponse} from '../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
 import {createMockState} from '../../../test/mock-state';
 import {
@@ -33,7 +34,9 @@ describe('facet-set-analytics-action-utils', () => {
         });
         state.search.response.facets = [facetResponse];
         state.facetSet = {
-          [facetResponse.facetId]: buildMockFacetRequest({facetId, field}),
+          [facetResponse.facetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({facetId, field}),
+          }),
         };
         return {state, facetResponse};
       };
@@ -182,7 +185,7 @@ describe('facet-set-analytics-action-utils', () => {
         });
         state.search.response.facets = [facetResponse];
         state.numericFacetSet = {
-          [facetResponse.facetId]: buildMockNumericFacetRequest(),
+          [facetResponse.facetId]: buildMockNumericFacetSlice(),
         };
         return {state, facetResponse};
       };
@@ -240,7 +243,7 @@ describe('facet-set-analytics-action-utils', () => {
         });
         state.search.response.facets = [facetResponse];
         state.dateFacetSet = {
-          [facetResponse.facetId]: buildMockDateFacetRequest(),
+          [facetResponse.facetId]: buildMockDateFacetSlice(),
         };
         return {state, facetResponse};
       };

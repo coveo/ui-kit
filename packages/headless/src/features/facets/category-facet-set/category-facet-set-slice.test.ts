@@ -29,10 +29,7 @@ import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
 
 describe('category facet slice', () => {
@@ -324,16 +321,6 @@ describe('category facet slice', () => {
           initialNumberOfValues
         );
       });
-    });
-
-    it('dispatching #deselectAllFacets calls #handleCategoryFacetDeselectAll for every facet', () => {
-      jest.spyOn(CategoryFacetReducers, 'handleCategoryFacetDeselectAll');
-
-      categoryFacetSetReducer(state, deselectAllFacets());
-
-      expect(
-        CategoryFacetReducers.handleCategoryFacetDeselectAll
-      ).toHaveBeenCalledTimes(2);
     });
 
     it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {

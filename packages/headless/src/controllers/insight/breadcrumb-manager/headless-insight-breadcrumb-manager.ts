@@ -14,11 +14,8 @@ import {
   updateFreezeCurrentValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {facetResponseSelectedValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {toggleSelectDateFacetValue} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {dateFacetSelectedValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
-import {DateFacetValue} from '../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {numericFacetSelectedValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
 import {toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
@@ -86,7 +83,7 @@ export function buildBreadcrumbManager(
   const getState = () => engine.state;
 
   const getFacetBreadcrumbs = (): FacetBreadcrumb[] => {
-    return getBreadcrumbs<FacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().facetSet,
       ({facetId, selection}) => {
@@ -105,7 +102,7 @@ export function buildBreadcrumbManager(
   };
 
   const getNumericFacetBreadcrumbs = (): NumericFacetBreadcrumb[] => {
-    return getBreadcrumbs<NumericFacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().numericFacetSet,
       (payload) => {
@@ -117,7 +114,7 @@ export function buildBreadcrumbManager(
   };
 
   const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
-    return getBreadcrumbs<DateFacetValue>(
+    return getBreadcrumbs(
       engine,
       getState().dateFacetSet,
       (payload) => {

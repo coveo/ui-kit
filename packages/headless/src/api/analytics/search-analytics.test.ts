@@ -6,6 +6,7 @@ import {getConfigurationInitialState} from '../../features/configuration/configu
 import {buildMockResult, createMockState} from '../../test';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockSearchState} from '../../test/mock-search-state';
@@ -122,7 +123,11 @@ describe('search analytics', () => {
 
     it('should properly return facet state', () => {
       const state = getBaseState();
-      state.facetSet = {the_facet: buildMockFacetRequest({field: 'foo'})};
+      state.facetSet = {
+        the_facet: buildMockFacetSlice({
+          request: buildMockFacetRequest({field: 'foo'}),
+        }),
+      };
       state.search = buildMockSearchState({});
       state.search.response.facets = [
         buildMockFacetResponse({

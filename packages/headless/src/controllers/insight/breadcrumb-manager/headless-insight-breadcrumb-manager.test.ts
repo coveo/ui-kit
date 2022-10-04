@@ -1,10 +1,13 @@
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value';
 import {buildMockDateFacetResponse} from '../../../test/mock-date-facet-response';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
 import {buildMockNumericFacetResponse} from '../../../test/mock-numeric-facet-response';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
@@ -96,7 +99,9 @@ describe('insight breadcrumb manager', () => {
           },
         },
         facetSet: {
-          [facetId]: buildMockFacetRequest({facetId}),
+          [facetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest({facetId}),
+          }),
         },
       });
       initController();
@@ -162,7 +167,9 @@ describe('insight breadcrumb manager', () => {
           },
         },
         dateFacetSet: {
-          [facetId]: buildMockDateFacetRequest({facetId}),
+          [facetId]: buildMockDateFacetSlice({
+            request: buildMockDateFacetRequest({facetId}),
+          }),
         },
       });
       initController();
@@ -218,7 +225,9 @@ describe('insight breadcrumb manager', () => {
           },
         },
         numericFacetSet: {
-          [facetId]: buildMockNumericFacetRequest({facetId}),
+          [facetId]: buildMockNumericFacetSlice({
+            request: buildMockNumericFacetRequest({facetId}),
+          }),
         },
       });
       initController();
@@ -375,7 +384,9 @@ describe('insight breadcrumb manager', () => {
   });
 
   it('hasBreadcrumbs returns true when a facet value is selected', () => {
-    state.numericFacetSet[facetId] = buildMockNumericFacetRequest({facetId});
+    state.numericFacetSet[facetId] = buildMockNumericFacetSlice({
+      request: buildMockNumericFacetRequest({facetId}),
+    });
     const mockValue = buildMockNumericFacetValue({state: 'selected'});
     state.search.response.facets = [
       buildMockNumericFacetResponse({facetId, values: [mockValue]}),

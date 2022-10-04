@@ -1,10 +1,9 @@
 import {SearchAppState} from '../..';
 import {ConfigurationSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
+import {getFacetRequests} from '../facets/generic/interfaces/generic-facet-request';
 import {AnyFacetValue} from '../facets/generic/interfaces/generic-facet-response';
-import {RangeFacetRequest} from '../facets/range-facets/generic/interfaces/range-facet';
+import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/range-facet';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
 import {mapSearchRequest} from './search-mappings';
@@ -71,28 +70,15 @@ function getAllEnabledFacets(state: StateNeededBySearchRequest) {
 
 function getAllFacets(state: StateNeededBySearchRequest) {
   return [
-    ...getFacetRequests(state.facetSet),
-    ...getRangeFacetRequests(state.numericFacetSet),
-    ...getRangeFacetRequests(state.dateFacetSet),
-    ...getCategoryFacetRequests(state.categoryFacetSet),
+    ...getFacetRequests(state.facetSet ?? {}),
+    ...getRangeFacetRequests(state.numericFacetSet ?? {}),
+    ...getRangeFacetRequests(state.dateFacetSet ?? {}),
+    ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
 }
 
-function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
-  return Object.values(state || {}).map((slice) => slice!.request);
-}
-
-function getFacetRequests<T extends AnyFacetRequest>(
-  requests: Record<string, T> = {}
-) {
-  return Object.keys(requests).map((id) => requests[id]);
-}
-
-function getRangeFacetRequests<T extends RangeFacetRequest>(
-  requests: Record<string, T> = {}
-) {
-  return Object.keys(requests).map((id) => {
-    const request = requests[id];
+function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
+  return getFacetRequests(state).map((request) => {
     const currentValues = request.currentValues as AnyFacetValue[];
     const hasSelectedValues = currentValues.find(
       ({state}) => state === 'selected'

@@ -164,7 +164,7 @@ function getFacets(state: Partial<SearchParametersState>) {
 
   const f = Object.entries(state.facetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
-    .map(([facetId, request]) => {
+    .map(([facetId, {request}]) => {
       const selectedValues = getSelectedValues(request.currentValues);
       return selectedValues.length ? {[facetId]: selectedValues} : {};
     })
@@ -204,7 +204,7 @@ function getNumericFacets(state: Partial<SearchParametersState>) {
 
   const nf = Object.entries(state.numericFacetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
-    .map(([facetId, request]) => {
+    .map(([facetId, {request}]) => {
       const selectedRanges = getSelectedRanges(request.currentValues);
       return selectedRanges.length ? {[facetId]: selectedRanges} : {};
     })
@@ -220,7 +220,7 @@ function getDateFacets(state: Partial<SearchParametersState>) {
 
   const df = Object.entries(state.dateFacetSet)
     .filter(([facetId]) => state.facetOptions?.facets[facetId]?.enabled ?? true)
-    .map(([facetId, request]) => {
+    .map(([facetId, {request}]) => {
       const selectedRanges = getSelectedRanges(request.currentValues);
       return selectedRanges.length ? {[facetId]: selectedRanges} : {};
     })

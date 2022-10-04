@@ -15,7 +15,6 @@ import {
   QuerySetSection,
   InstantResultSection,
   QuerySuggestionSection,
-  RedirectionSection,
   SearchHubSection,
   SearchSection,
   SortSection,
@@ -61,7 +60,6 @@ export type SearchAppState = SearchParametersState &
   ConfigurationSection &
   FacetSearchSection &
   CategoryFacetSearchSection &
-  RedirectionSection &
   StandaloneSearchBoxSection &
   QuerySuggestionSection &
   SearchSection &

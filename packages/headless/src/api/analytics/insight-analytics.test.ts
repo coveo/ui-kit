@@ -3,6 +3,7 @@ import pino from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockQueryState} from '../../test/mock-query-state';
@@ -73,7 +74,11 @@ describe('insight analytics', () => {
 
     it('should properly return facet state', () => {
       const state = getBaseState();
-      state.facetSet = {the_facet: buildMockFacetRequest({field: 'foo'})};
+      state.facetSet = {
+        the_facet: buildMockFacetSlice({
+          request: buildMockFacetRequest({field: 'foo'}),
+        }),
+      };
       state.search = buildMockSearchState({});
       state.search.response.facets = [
         buildMockFacetResponse({

@@ -1,6 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
 import {
-  QuestionAnsweringDocumentIdActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
   validateQuestionAnsweringActionCreatorPayload,
 } from './question-answering-document-id';
@@ -23,18 +22,12 @@ export const closeFeedbackModal = createAction(
 
 export const expandSmartSnippetRelatedQuestion = createAction(
   'smartSnippet/related/expand',
-  (
-    payload:
-      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-      | QuestionAnsweringDocumentIdActionCreatorPayload
-  ) => validateQuestionAnsweringActionCreatorPayload(payload)
+  (payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload) =>
+    validateQuestionAnsweringActionCreatorPayload(payload)
 );
 
 export const collapseSmartSnippetRelatedQuestion = createAction(
   'smartSnippet/related/collapse',
-  (
-    payload:
-      | QuestionAnsweringUniqueIdentifierActionCreatorPayload
-      | QuestionAnsweringDocumentIdActionCreatorPayload
-  ) => validateQuestionAnsweringActionCreatorPayload(payload)
+  (payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload) =>
+    validateQuestionAnsweringActionCreatorPayload(payload)
 );

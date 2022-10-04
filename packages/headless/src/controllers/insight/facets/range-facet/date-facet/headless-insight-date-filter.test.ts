@@ -1,4 +1,4 @@
-import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
 import {
   buildDateFilter,
   DateFilter,
@@ -38,7 +38,7 @@ describe('insight date filter', () => {
     };
 
     state = buildMockInsightState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     initDateFilter();
   });

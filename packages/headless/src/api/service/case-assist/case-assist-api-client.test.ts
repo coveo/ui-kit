@@ -71,6 +71,7 @@ describe('case assist api client', () => {
         contentType: 'application/json',
         url: `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/classify`,
         accessToken: request.accessToken,
+        origin: 'caseAssistApiFetch',
         requestParams: {
           visitorId: request.visitorId,
           locale: request.locale,
@@ -188,6 +189,7 @@ describe('case assist api client', () => {
         contentType: 'application/json',
         url: `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/documents/suggest`,
         accessToken: request.accessToken,
+        origin: 'caseAssistApiFetch',
         requestParams: {
           visitorId: request.visitorId,
           locale: request.locale,

@@ -14,6 +14,7 @@ import {
 } from './headless-field-suggestions';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 
 describe('fieldSuggestions', () => {
   const facetId = 'id';
@@ -28,7 +29,9 @@ describe('fieldSuggestions', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch({
       initialNumberOfValues: 5,
     });

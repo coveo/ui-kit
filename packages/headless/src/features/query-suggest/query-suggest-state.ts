@@ -15,12 +15,6 @@ export interface QuerySuggestState {
    */
   responseId: string;
   /**
-   * The partial basic query expression for which query suggestions were requested (e.g., `cov`).
-   *
-   * @deprecated The next major version will remove this property because it duplicates the values in the "querySet" slice. To access the value, please use "engine.state.querySet[id]".
-   */
-  q: string;
-  /**
    * A history of the queries for which query suggestions have been received
    */
   partialQueries: string[];

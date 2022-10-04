@@ -10,7 +10,7 @@ import {
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
 } from './numeric-facet-actions';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 import {change} from '../../../history/history-actions';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import * as RangeFacetReducers from '../generic/range-facet-reducers';
@@ -19,7 +19,6 @@ import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
-import {deselectAllFacets} from '../../generic/facet-actions';
 import {getHistoryInitialState} from '../../../history/history-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
@@ -55,7 +54,7 @@ describe('numeric-facet-set slice', () => {
       registerNumericFacet(options)
     );
 
-    expect(finalState[facetId]).toEqual({
+    expect(finalState[facetId]?.request).toEqual({
       ...options,
       currentValues: [],
       filterFacetCount: true,
@@ -70,7 +69,7 @@ describe('numeric-facet-set slice', () => {
   });
 
   it('it restores the numericFacetSet on history change', () => {
-    const numericFacetSet = {'1': buildMockNumericFacetRequest()};
+    const numericFacetSet = {'1': buildMockNumericFacetSlice()};
     const payload = {
       ...getHistoryInitialState(),
       numericFacetSet,
@@ -91,7 +90,7 @@ describe('numeric-facet-set slice', () => {
     );
 
     const facetId = '1';
-    state[facetId] = buildMockNumericFacetRequest();
+    state[facetId] = buildMockNumericFacetSlice();
 
     const value = buildMockNumericFacetValue();
     const nf = {[facetId]: [value]};
@@ -99,7 +98,7 @@ describe('numeric-facet-set slice', () => {
     const action = restoreSearchParameters({nf});
     const finalState = numericFacetSetReducer(state, action);
 
-    expect(finalState[facetId].currentValues).toContainEqual(value);
+    expect(finalState[facetId]?.request.currentValues).toContainEqual(value);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
@@ -134,23 +133,11 @@ describe('numeric-facet-set slice', () => {
     expect(RangeFacetReducers.updateRangeValues).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handleRangeFacetDeselectAll for every numeric facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
-
-    state['1'] = buildMockNumericFacetRequest();
-    state['2'] = buildMockNumericFacetRequest();
-    numericFacetSetReducer(state, deselectAllFacets);
-
-    expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(2);
-  });
-
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every numeric facet', () => {
     jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
-    state['1'] = buildMockNumericFacetRequest();
-    state['2'] = buildMockNumericFacetRequest();
+    state['1'] = buildMockNumericFacetSlice();
+    state['2'] = buildMockNumericFacetSlice();
     numericFacetSetReducer(state, deselectAllBreadcrumbs);
 
     expect(

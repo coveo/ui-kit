@@ -2,9 +2,12 @@ import {InsightAppState} from '../../state/insight-app-state';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
 import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
 import {buildInsightSearchRequest} from './insight-search-request';
@@ -55,16 +58,15 @@ describe('insight search request', () => {
 
   it('#insightSearchRequest returns the facets in the state #facetSet', async () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
-    state.facetSet[1] = request;
+    state.facetSet[1] = buildMockFacetSlice({request});
     const {facets} = (await buildInsightSearchRequest(state)).request;
-    const {hasBreadcrumbs, ...rest} = request;
 
-    expect(facets).toContainEqual(rest);
+    expect(facets).toContainEqual(request);
   });
 
   it('#insightSearchRequest returns the facets in the state #numericFacetSet', async () => {
     const request = buildMockNumericFacetRequest({field: 'objecttype'});
-    state.numericFacetSet[1] = request;
+    state.numericFacetSet[1] = buildMockNumericFacetSlice({request});
 
     const {facets} = (await buildInsightSearchRequest(state)).request;
     expect(facets).toContainEqual(request);
@@ -72,7 +74,7 @@ describe('insight search request', () => {
 
   it('#insightSearchRequest returns the facets in the state #dateFacetSet', async () => {
     const request = buildMockDateFacetRequest({field: 'objecttype'});
-    state.dateFacetSet[1] = request;
+    state.dateFacetSet[1] = buildMockDateFacetSlice({request});
 
     const {facets} = (await buildInsightSearchRequest(state)).request;
     expect(facets).toContainEqual(request);

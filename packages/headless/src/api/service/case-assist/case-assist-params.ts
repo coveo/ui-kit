@@ -1,4 +1,8 @@
-import {HTTPContentType, HttpMethods} from '../../platform-client';
+import {
+  HTTPContentType,
+  HttpMethods,
+  PlatformClientCallOptions,
+} from '../../platform-client';
 import {BaseParam} from '../../platform-service-params';
 
 export interface CaseAssistIdParam {
@@ -33,7 +37,10 @@ export const baseCaseAssistRequest = (
   contentType: HTTPContentType,
   path: string,
   queryStringArguments: Record<string, string> = {}
-) => {
+): Pick<
+  PlatformClientCallOptions,
+  'accessToken' | 'method' | 'contentType' | 'url' | 'origin'
+> => {
   validateCaseAssistRequestParams(req);
 
   const baseUrl = `${req.url}/rest/organizations/${req.organizationId}/caseassists/${req.caseAssistId}${path}`;
@@ -45,6 +52,7 @@ export const baseCaseAssistRequest = (
     method,
     contentType,
     url: effectiveUrl,
+    origin: 'caseAssistApiFetch',
   };
 };
 

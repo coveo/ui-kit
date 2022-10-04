@@ -10,7 +10,7 @@ import {
   createMockState,
   MockSearchEngine,
 } from '../../../../../test';
-import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
 import {
   buildCoreDateFilter,
   DateFilter,
@@ -49,7 +49,7 @@ describe('date filter', () => {
     };
 
     state = createMockState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     initDateFilter();
   });

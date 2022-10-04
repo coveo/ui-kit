@@ -25,11 +25,6 @@ export interface RegisterFacetActionCreatorPayload {
   field: string;
 
   /**
-   * @deprecated This option has no effect.
-   */
-  delimitingCharacter?: string;
-
-  /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * @defaultValue `true`
@@ -83,8 +78,6 @@ export interface RegisterFacetActionCreatorPayload {
 const facetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
   field: new StringValue({required: true, emptyAllowed: true}),
-  // TODO: Remove on next major version
-  delimitingCharacter: new StringValue({required: false, emptyAllowed: true}),
   filterFacetCount: new BooleanValue({required: false}),
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),

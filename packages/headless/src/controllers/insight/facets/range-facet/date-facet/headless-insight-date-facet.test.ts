@@ -12,7 +12,7 @@ import {
   toggleSelectDateFacetValue,
 } from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
-import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
@@ -41,7 +41,7 @@ describe('insight date facet', () => {
     };
 
     state = buildMockInsightState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     initDateFacet();
   });

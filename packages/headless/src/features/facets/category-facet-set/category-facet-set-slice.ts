@@ -20,10 +20,7 @@ import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {
   handleCategoryFacetDeselectAll,
@@ -112,11 +109,6 @@ export const categoryFacetSetReducer = createReducer(
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
         const facetId = action.payload;
         handleCategoryFacetDeselectAll(state, facetId);
-      })
-      .addCase(deselectAllFacets, (state) => {
-        Object.keys(state).forEach((facetId) =>
-          handleCategoryFacetDeselectAll(state, facetId)
-        );
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.keys(state).forEach((facetId) =>

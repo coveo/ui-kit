@@ -20,11 +20,11 @@ import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
-import {getFacetSetInitialState} from './facet-set-state';
 import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
+  getFacetSetInitialState,
+  getFacetSetSliceInitialState,
+} from './facet-set-state';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {fetchProductListing} from '../../product-listing/product-listing-actions';
 import {WritableDraft} from 'immer/dist/internal';
@@ -46,7 +46,9 @@ export const facetSetReducer = createReducer(
           return;
         }
 
-        state[facetId] = buildFacetRequest(action.payload);
+        state[facetId] = getFacetSetSliceInitialState(
+          buildFacetRequest(action.payload)
+        );
       })
       .addCase(change.fulfilled, (_, action) => {
         if (!action.payload) {
@@ -64,7 +66,7 @@ export const facetSetReducer = createReducer(
         const facetIds = Object.keys(state);
 
         facetIds.forEach((id) => {
-          const request = state[id];
+          const {request} = state[id]!;
           const selectedValues = f[id] || [];
           const idleValues = request.currentValues.filter(
             (facetValue) => !selectedValues.includes(facetValue.value)
@@ -83,7 +85,7 @@ export const facetSetReducer = createReducer(
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -105,7 +107,7 @@ export const facetSetReducer = createReducer(
       })
       .addCase(updateFreezeCurrentValues, (state, action) => {
         const {facetId, freezeCurrentValues} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -114,49 +116,36 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = freezeCurrentValues;
       })
       .addCase(deselectAllFacetValues, (state, action) => {
-        const request = state[action.payload];
-        handleFacetDeselectAll(request);
-      })
-      .addCase(deselectAllFacets, (state) => {
-        Object.keys(state).forEach((facetId) => {
-          const request = state[facetId];
-          handleFacetDeselectAll(request);
-        });
+        handleFacetDeselectAll(state[action.payload]?.request);
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.values(state)
-          .filter((req) => req.hasBreadcrumbs)
-          .forEach((req) => {
-            const request = state[req.facetId];
-            handleFacetDeselectAll(request);
-          });
+          .filter((slice) => slice.hasBreadcrumbs)
+          .forEach(({request}) => handleFacetDeselectAll(request));
       })
       .addCase(deselectAllNonBreadcrumbs, (state) => {
         Object.values(state)
-          .filter((req) => !req.hasBreadcrumbs)
-          .forEach((req) => {
-            const request = state[req.facetId];
-            handleFacetDeselectAll(request);
-          });
+          .filter((slice) => !slice.hasBreadcrumbs)
+          .forEach(({request}) => handleFacetDeselectAll(request));
       })
       .addCase(updateFacetAutoSelection, (state, action) =>
-        Object.keys(state).forEach((facetId) => {
-          state[facetId].preventAutoSelect = !action.payload.allow;
+        Object.values(state).forEach((slice) => {
+          slice.request.preventAutoSelect = !action.payload.allow;
         })
       )
       .addCase(updateFacetSortCriterion, (state, action) => {
-        handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
+        handleFacetSortCriterionUpdate(state, action.payload);
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
         handleFacetUpdateNumberOfValues<FacetRequest>(
-          state[facetId],
+          state[facetId]?.request,
           numberOfValues
         );
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -170,7 +159,7 @@ export const facetSetReducer = createReducer(
           action.payload.response.generateAutomaticFacets.facets;
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
-            state[facetResponse.facetId],
+            state[facetResponse.facetId]?.request,
             facetResponse
           )
         );
@@ -188,7 +177,7 @@ export const facetSetReducer = createReducer(
         const facets = action.payload.response?.facets?.results || [];
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
-            state[facetResponse.facetId],
+            state[facetResponse.facetId]?.request,
             facetResponse
           )
         );
@@ -197,14 +186,14 @@ export const facetSetReducer = createReducer(
         const facets = action.payload.response.facets;
         facets.forEach((facetResponse) =>
           mutateStateFromFacetResponse(
-            state[facetResponse.facetId],
+            state[facetResponse.facetId]?.request,
             facetResponse
           )
         );
       })
       .addCase(selectFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
-        const facetRequest = state[facetId];
+        const facetRequest = state[facetId]?.request;
 
         if (!facetRequest) {
           return;
@@ -228,7 +217,7 @@ export const facetSetReducer = createReducer(
         if (!(action.payload in state)) {
           return;
         }
-        const request = state[action.payload];
+        const {request} = state[action.payload]!;
         handleFacetDeselectAll(request);
       });
   }
@@ -266,8 +255,6 @@ function mutateStateFromFacetResponse(
 }
 
 export const defaultFacetOptions: FacetOptionalParameters = {
-  // TODO: Remove on next major version
-  delimitingCharacter: '>',
   filterFacetCount: true,
   injectionDepth: 1000,
   numberOfValues: 8,
@@ -284,7 +271,6 @@ function buildFacetRequest(
     freezeCurrentValues: false,
     isFieldExpanded: false,
     preventAutoSelect: false,
-    hasBreadcrumbs: true,
     ...config,
   };
 }

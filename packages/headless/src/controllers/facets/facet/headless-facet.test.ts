@@ -20,6 +20,7 @@ import {
 } from '../../../features/search/search-actions';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
@@ -47,7 +48,9 @@ describe('facet', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
@@ -99,7 +102,6 @@ describe('facet', () => {
       field: 'author',
       sortCriteria: 'score',
       facetId,
-      delimitingCharacter: '>',
       filterFacetCount: true,
       injectionDepth: 1000,
       numberOfValues: 8,

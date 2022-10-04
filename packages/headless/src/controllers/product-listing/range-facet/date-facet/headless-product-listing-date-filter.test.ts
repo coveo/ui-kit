@@ -2,7 +2,7 @@ import {
   buildMockProductListingEngine,
   MockProductListingEngine,
 } from '../../../../test';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {
   buildDateFilter,
   DateFilter,
@@ -30,7 +30,7 @@ describe('date filter', () => {
     };
 
     state = buildMockProductListingState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice();
 
     engine = buildMockProductListingEngine({state});
     dateFacet = buildDateFilter(engine, {options, initialState});

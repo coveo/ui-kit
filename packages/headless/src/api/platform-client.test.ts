@@ -46,6 +46,7 @@ describe('PlatformClient call', () => {
       url: platformUrl(),
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
+      origin: 'searchApiFetch',
       ...options,
     });
   }

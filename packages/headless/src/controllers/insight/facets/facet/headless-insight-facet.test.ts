@@ -22,6 +22,7 @@ import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {InsightAppState} from '../../../../state/insight-app-state';
 import {buildMockInsightState} from '../../../../test/mock-insight-state';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 
 describe('InsightFacet', () => {
   const facetId = '1';
@@ -36,7 +37,9 @@ describe('InsightFacet', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId, ...config}),
+    });
     state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 

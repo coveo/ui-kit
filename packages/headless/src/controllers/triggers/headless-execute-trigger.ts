@@ -4,7 +4,6 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {logTriggerExecute} from '../../features/triggers/trigger-analytics-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {ExecuteTriggerParams} from '../../api/search/trigger';
 import {FunctionExecutionTrigger} from '../../features/triggers/triggers-state';
 import {arrayEqual} from '../../utils/compare-utils';
 
@@ -22,20 +21,6 @@ export interface ExecuteTrigger extends Controller {
  * A scoped and simplified part of the headless state that is relevant to the `ExecuteTrigger` controller.
  */
 export interface ExecuteTriggerState {
-  /**
-   * The name of the function to be executed.
-   *
-   * @deprecated Use `executions` instead.
-   */
-  functionName: string;
-
-  /**
-   * The parameters of the function to be executed.
-   *
-   * @deprecated Use `executions` instead.
-   */
-  params: ExecuteTriggerParams;
-
   /**
    * The functions to be executed.
    */
@@ -88,8 +73,6 @@ export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
 
     get state() {
       return {
-        functionName: getState().triggers.execute.functionName,
-        params: getState().triggers.execute.params,
         executions: getState().triggers.executions,
       };
     },

@@ -27,7 +27,7 @@ export const baseFacetResponseSelector = (
 };
 
 export const facetRequestSelector = (state: FacetSection, id: string) => {
-  return state.facetSet[id];
+  return state.facetSet[id]?.request;
 };
 
 function isFacetResponse(

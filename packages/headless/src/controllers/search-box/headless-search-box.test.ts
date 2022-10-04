@@ -58,7 +58,6 @@ describe('headless searchBox', () => {
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({
       id,
-      q: 'some value',
       completions: [
         {
           expression: 'a',

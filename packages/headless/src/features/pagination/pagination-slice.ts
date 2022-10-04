@@ -27,7 +27,6 @@ import {
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
@@ -117,9 +116,6 @@ export const paginationReducer = createReducer(
         handlePaginationReset(state);
       })
       .addCase(toggleSelectNumericFacetValue, (state) => {
-        handlePaginationReset(state);
-      })
-      .addCase(deselectAllFacets, (state) => {
         handlePaginationReset(state);
       })
       .addCase(deselectAllBreadcrumbs, (state) => {

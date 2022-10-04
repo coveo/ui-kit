@@ -5,9 +5,11 @@ import {
 } from './date-facet-selectors';
 import {createMockState} from '../../../../test';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
 
 describe('date facet selectors', () => {
@@ -24,7 +26,9 @@ describe('date facet selectors', () => {
   });
 
   it('#dateFacetResponseSelector gets a valid date facet response', () => {
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest({facetId});
+    state.dateFacetSet[facetId] = buildMockDateFacetSlice({
+      request: buildMockDateFacetRequest({facetId}),
+    });
     const mockResponse = buildMockDateFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
@@ -33,7 +37,9 @@ describe('date facet selectors', () => {
   });
 
   it('#dateFacetResponseSelector returns undefined if facet is of wrong type', () => {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId}),
+    });
     const mockResponse = buildMockFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
@@ -43,7 +49,9 @@ describe('date facet selectors', () => {
 
   describe('#dateFacetSelectedValuesSelector', () => {
     beforeEach(() => {
-      state.dateFacetSet[facetId] = buildMockDateFacetRequest({facetId});
+      state.dateFacetSet[facetId] = buildMockDateFacetSlice({
+        request: buildMockDateFacetRequest({facetId}),
+      });
     });
 
     it('#dateFacetSelectedValuesSelector returns an empty array if the facet does not exist', () => {

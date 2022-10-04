@@ -30,6 +30,7 @@ describe('case assist params', () => {
         accessToken: request.accessToken,
         method,
         contentType,
+        origin: 'caseAssistApiFetch',
         url: `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}${path}`,
       });
     });

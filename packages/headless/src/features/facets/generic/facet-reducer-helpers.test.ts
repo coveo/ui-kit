@@ -6,20 +6,21 @@ import {
 } from './facet-reducer-helpers';
 import {FacetRequest} from '../facet-set/interfaces/request';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 
 describe('generic facet reducers', () => {
   describe('#handleFacetSortCriterionUpdate', () => {
     it('when the facet id is registered, it updates the sort criterion to the passed value', () => {
       const id = '1';
       const criterion = 'alphanumeric';
-      const state = {[id]: buildMockFacetRequest()};
+      const state = {[id]: buildMockFacetSlice()};
 
-      handleFacetSortCriterionUpdate<FacetRequest>(state, {
+      handleFacetSortCriterionUpdate(state, {
         facetId: id,
         criterion,
       });
 
-      expect(state[id].sortCriteria).toBe(criterion);
+      expect(state[id]?.request.sortCriteria).toBe(criterion);
     });
 
     it('when the facet id is not registered, it does not throw', () => {
@@ -27,10 +28,7 @@ describe('generic facet reducers', () => {
       const criterion = 'alphanumeric';
 
       const method = () =>
-        handleFacetSortCriterionUpdate<FacetRequest>(
-          {},
-          {facetId: id, criterion}
-        );
+        handleFacetSortCriterionUpdate({}, {facetId: id, criterion});
       expect(method).not.toThrow();
     });
   });

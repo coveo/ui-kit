@@ -10,6 +10,7 @@ import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-r
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 
 describe('category facet selectors', () => {
   const facetId = 'abc123';
@@ -35,7 +36,9 @@ describe('category facet selectors', () => {
   });
 
   it('#categoryFacetResponseSelector returns undefined if facet is of wrong type', () => {
-    state.facetSet[facetId] = buildMockFacetRequest({facetId});
+    state.facetSet[facetId] = buildMockFacetSlice({
+      request: buildMockFacetRequest({facetId}),
+    });
     const mockResponse = buildMockFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
