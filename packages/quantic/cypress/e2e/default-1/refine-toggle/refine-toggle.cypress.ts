@@ -15,7 +15,7 @@ import {
   addFacetsWithoutInputs,
 } from '../../../page-objects/actions/action-add-facets';
 
-import {selectTab} from '../../page-objects/actions/action-select-tab';
+import {selectTab} from '../../../page-objects/actions/action-select-tab';
 
 interface RefineToggleOptions {
   fullScreen: boolean;

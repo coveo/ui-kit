@@ -77,6 +77,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeSearchStatus?.();
     this.unsubscribeBreadcrumbManager?.();
+    this.removeEventListener('renderFacet', this.handleRenderFacetEvent);
   }
 
   /**
