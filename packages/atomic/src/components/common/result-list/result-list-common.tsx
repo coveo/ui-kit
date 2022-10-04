@@ -22,6 +22,8 @@ import {
 } from './result-list-common-interface';
 import {TableDisplayResults} from './table-display-results';
 
+export const resultComponentClass = 'result-component';
+
 export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
   implements ResultListRenderer, ResultListInfo
 {

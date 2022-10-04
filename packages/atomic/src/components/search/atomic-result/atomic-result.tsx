@@ -1,4 +1,4 @@
-import {Component, h, Prop, Element, Listen} from '@stencil/core';
+import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
@@ -16,6 +16,7 @@ import {
   AtomicCommonStoreData,
 } from '../../common/interface/store';
 import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {resultComponentClass} from '../../common/result-list/result-list-common';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -152,21 +153,25 @@ export class AtomicResult {
   public render() {
     if (this.isCustomRenderFunctionMode) {
       return (
-        <div
-          class="result-root"
-          ref={(ref) => (this.resultRootRef = ref)}
-        ></div>
+        <Host class={resultComponentClass}>
+          <div
+            class="result-root"
+            ref={(ref) => (this.resultRootRef = ref)}
+          ></div>
+        </Host>
       );
     }
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
-      <div
-        class={`result-root ${this.layout
-          .getClasses()
-          .concat(this.classes)
-          .join(' ')}`}
-        innerHTML={this.getContentHTML()}
-      ></div>
+      <Host class={resultComponentClass}>
+        <div
+          class={`result-root ${this.layout
+            .getClasses()
+            .concat(this.classes)
+            .join(' ')}`}
+          innerHTML={this.getContentHTML()}
+        ></div>
+      </Host>
     );
   }
 
