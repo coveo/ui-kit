@@ -962,6 +962,10 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
+          * The number of recommendations to return.
+         */
+        "numberOfRecommendations": number;
+        /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
@@ -3335,6 +3339,10 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The number of recommendations to return.
+         */
+        "numberOfRecommendations"?: number;
     }
     interface AtomicRecsResult {
         /**

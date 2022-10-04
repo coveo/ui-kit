@@ -70,6 +70,11 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   public imageSize: ResultDisplayImageSize = 'icon';
 
   /**
+   * The number of recommendations to return.
+   */
+  @Prop({reflect: true}) public numberOfRecommendations = 10;
+
+  /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
    * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
    *
@@ -84,7 +89,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   public initialize() {
-    this.recommendationList = buildRecommendationList(this.bindings.engine);
+    this.recommendationList = buildRecommendationList(this.bindings.engine, {
+      options: {numberOfRecommendations: this.numberOfRecommendations},
+    });
 
     const resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
@@ -104,7 +111,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
-      getNumberOfPlaceholders: () => 5, // TODO
+      getNumberOfPlaceholders: () => this.numberOfRecommendations,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
@@ -131,7 +138,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       hasError: this.recommendationListState.error !== null,
       hasResults: this.recommendationListState.recommendations.length !== 0,
       results: this.recommendationListState.recommendations,
-      searchResponseId: 'TODO',
+      searchResponseId: this.recommendationListState.searchResponseId,
     };
   }
 
