@@ -25,6 +25,7 @@ import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware'
 import {logActionErrorMiddleware} from './logger-middlewares';
 import {analyticsMiddleware} from './analytics-middleware';
 import {SearchParametersState} from '../state/search-app-state';
+import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers> &
@@ -242,6 +243,7 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   );
 
   return [
+    instantlyCallableThunkActionMiddleware,
     renewTokenMiddleware,
     logActionErrorMiddleware(logger),
     analyticsMiddleware,

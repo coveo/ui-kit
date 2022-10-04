@@ -19,7 +19,9 @@ describe('NotifyTrigger', () => {
   }
 
   function getLogTriggerNotifyAction() {
-    return engine.actions.find((a) => a.type === logNotifyTrigger.pending.type);
+    return engine.actions.find(
+      (a) => a.type === logNotifyTrigger().pending.type
+    );
   }
 
   function registeredListeners() {

@@ -25,7 +25,7 @@ describe('ExecuteTrigger', () => {
 
   function getLogTriggerExecuteAction() {
     return engine.actions.find(
-      (a) => a.type === logTriggerExecute.pending.type
+      (a) => a.type === logTriggerExecute().pending.type
     );
   }
 
