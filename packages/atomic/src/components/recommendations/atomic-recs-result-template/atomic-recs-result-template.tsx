@@ -1,24 +1,28 @@
 import {Component, h, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
 import {
-  InsightResultTemplate,
-  InsightResultTemplateCondition,
-  InsightResultTemplatesHelpers,
+  RecsResultTemplateCondition,
+  RecsResultTemplate,
+  RecsResultTemplatesHelpers,
 } from '..';
 import {makeMatchConditions} from '../../common/result-templates/result-template-common';
 
 /**
- * @internal
+ * The `atomic-recs-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
+ *
+ * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
+ * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+ * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
  */
 @Component({
-  tag: 'atomic-insight-result-template',
+  tag: 'atomic-recs-result-template',
   shadow: true,
 })
-export class AtomicInsightResultTemplate {
+export class AtomicRecsResultTemplate {
   @State() public error!: Error;
 
   @Element() public host!: HTMLDivElement;
-  public matchConditions: InsightResultTemplateCondition[] = [];
+  public matchConditions: RecsResultTemplateCondition[] = [];
 
   /**
    * A function that must return true on results for the result template to apply.
@@ -26,7 +30,7 @@ export class AtomicInsightResultTemplate {
    * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
    * `[(result) => /singapore/i.test(result.title)]`
    */
-  @Prop() public conditions: InsightResultTemplateCondition[] = [];
+  @Prop() public conditions: RecsResultTemplateCondition[] = [];
 
   /**
    * The field that, when defined on a result item, would allow the template to be applied.
@@ -61,13 +65,13 @@ export class AtomicInsightResultTemplate {
     if (this.ifDefined) {
       const fieldNames = this.ifDefined.split(',');
       this.conditions.push(
-        InsightResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
+        RecsResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
       );
     }
     if (this.ifNotDefined) {
       const fieldNames = this.ifNotDefined.split(',');
       this.conditions.push(
-        InsightResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
+        RecsResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
       );
     }
     this.matchConditions.push(
@@ -79,7 +83,7 @@ export class AtomicInsightResultTemplate {
    * Gets the appropriate result template based on conditions applied.
    */
   @Method()
-  public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
+  public async getTemplate(): Promise<RecsResultTemplate<DocumentFragment> | null> {
     if (this.error) {
       return null;
     }

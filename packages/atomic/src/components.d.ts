@@ -20,7 +20,7 @@ import { NumericFacetDisplayValues } from "./components/common/facets/numeric-fa
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
-import { RecsResult } from "./components/recommendations";
+import { RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
@@ -1009,6 +1009,24 @@ export namespace Components {
           * Global state for Atomic.
          */
         "store"?: AtomicRecsStore;
+    }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": RecsResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<RecsResultTemplate<DocumentFragment> | null>;
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -2005,6 +2023,12 @@ declare global {
         prototype: HTMLAtomicRecsResultElement;
         new (): HTMLAtomicRecsResultElement;
     };
+    interface HTMLAtomicRecsResultTemplateElement extends Components.AtomicRecsResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultTemplateElement: {
+        prototype: HTMLAtomicRecsResultTemplateElement;
+        new (): HTMLAtomicRecsResultTemplateElement;
+    };
     interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicRefineModalElement: {
@@ -2376,6 +2400,7 @@ declare global {
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
         "atomic-recs-result": HTMLAtomicRecsResultElement;
+        "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
@@ -3383,6 +3408,20 @@ declare namespace LocalJSX {
          */
         "store"?: AtomicRecsStore;
     }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: RecsResultTemplateCondition[];
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
+    }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
@@ -4031,6 +4070,7 @@ declare namespace LocalJSX {
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
         "atomic-recs-result": AtomicRecsResult;
+        "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
@@ -4147,6 +4187,7 @@ declare module "@stencil/core" {
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
             "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
+            "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;

@@ -1,1 +1,6 @@
-export {Result as RecsResult} from '@coveo/headless/recommendation';
+export {
+  Result as RecsResult,
+  ResultTemplateCondition as RecsResultTemplateCondition,
+  ResultTemplate as RecsResultTemplate,
+  ResultTemplatesHelpers as RecsResultTemplatesHelpers,
+} from '@coveo/headless/recommendation';

@@ -96,7 +96,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     const resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
-        this.host.querySelectorAll('atomic-result-template')
+        this.host.querySelectorAll('atomic-recs-result-template')
       ),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
