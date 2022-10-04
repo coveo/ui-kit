@@ -632,6 +632,27 @@ export class AtomicRatingRangeFacet {
 }
 
 
+export declare interface AtomicRecsResult extends Components.AtomicRecsResult {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
+})
+@Component({
+  selector: 'atomic-recs-result',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
+})
+export class AtomicRecsResult {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicRefineModal extends Components.AtomicRefineModal {}
 
 @ProxyCmp({
@@ -1284,14 +1305,14 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery'],
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery']
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery']
 })
 export class AtomicSearchBoxInstantResults {
   protected el: HTMLElement;
