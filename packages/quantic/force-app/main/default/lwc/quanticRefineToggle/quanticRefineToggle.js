@@ -129,9 +129,9 @@ export default class QuanticRefineToggle extends LightningElement {
   };
 
   get refineButtonDisabled() {
-    return (
-      !(this.hasResults || this.activeFiltersCount) || this.isContentEmpty
-    );
+    const noResults = !this.hasResults;
+    const noFacetsSelected = !this.activeFiltersCount;
+    return (noResults && noFacetsSelected) || this.isContentEmpty;
   }
 
   get someFacetsRendered() {
