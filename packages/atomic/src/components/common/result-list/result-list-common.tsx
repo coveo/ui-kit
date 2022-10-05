@@ -74,7 +74,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
 
   public get listClasses() {
     const classes = getResultDisplayClasses(
-      this.props.getDisplay(),
+      this.props.getLayoutDisplay(),
       this.props.getDensity(),
       this.props.getImageSize()
     );
@@ -117,13 +117,13 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
         <div class={`list-wrapper ${this.listClasses}`}>
           <ResultDisplayWrapper
             listClasses={this.listClasses}
-            display={this.props.getDisplay()}
+            display={this.props.getLayoutDisplay()}
           >
             {this.displayPlaceholders && (
               <DisplayResultsPlaceholder
                 numberOfPlaceholders={this.props.getNumberOfPlaceholders()}
                 density={this.props.getDensity()}
-                display={this.props.getDisplay()}
+                display={this.props.getResultDisplay()}
                 imageSize={this.props.getImageSize()}
               />
             )}
@@ -175,7 +175,7 @@ const ResultListDisplay: FunctionalComponent<ResultListDisplayProps> = (
     return null;
   }
 
-  switch (props.getDisplay()) {
+  switch (props.getLayoutDisplay()) {
     case 'table':
       return <TableDisplayResults {...props} />;
     case 'grid':

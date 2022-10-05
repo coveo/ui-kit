@@ -134,17 +134,15 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
-      getDisplay: () => 'grid',
+      getLayoutDisplay: () => 'grid',
+      getResultDisplay: () => this.display,
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListCommonState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
       renderResult: (props) => (
-        <atomic-recs-result
-          {...props}
-          display={this.display}
-        ></atomic-recs-result>
+        <atomic-recs-result {...props}></atomic-recs-result>
       ),
     });
 

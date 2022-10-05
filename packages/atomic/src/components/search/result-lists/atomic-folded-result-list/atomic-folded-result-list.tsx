@@ -25,6 +25,7 @@ import {
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
+  ResultDisplayLayout,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
@@ -55,6 +56,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   private resultListCommon!: ResultListCommon;
   private resultRenderingFunction: ResultRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
+  private display: ResultDisplayLayout = 'list';
 
   @Element() public host!: HTMLDivElement;
 
@@ -162,7 +164,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
-      getDisplay: () => 'list',
+      getResultDisplay: () => this.display,
+      getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
