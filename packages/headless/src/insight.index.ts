@@ -29,6 +29,7 @@ export * from './features/recent-results/recent-results-actions-loader';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
+export * from './features/fields/fields-actions-loader';
 
 // Controllers
 export type {

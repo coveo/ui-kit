@@ -5,7 +5,6 @@ import {
   DisplayConfig,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
-import {ResultRenderingFunction} from '../../common/result-list/result-list-common';
 import {
   ResultLayout,
   ResultDisplayDensity,
@@ -16,6 +15,7 @@ import {
   AtomicCommonStore,
   AtomicCommonStoreData,
 } from '../../common/interface/store';
+import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -95,7 +95,7 @@ export class AtomicResult {
    *
    * @internal
    */
-  @Prop() renderingFunction?: ResultRenderingFunction;
+  @Prop() renderingFunction: ResultRenderingFunction;
 
   private resultRootRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;

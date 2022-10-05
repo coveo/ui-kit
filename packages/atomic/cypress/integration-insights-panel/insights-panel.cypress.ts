@@ -1,4 +1,4 @@
-import * as CommonAssertions from '../integration/common-assertions';
+import * as CommonAssertions from '../e2e/common-assertions';
 import {InsightPanelsSelectors} from './insight-panel-selectors';
 
 const host = 'http://localhost:3333/examples/insights.html';
@@ -56,12 +56,10 @@ describe('Insights panel test suites', () => {
         .shadow()
         .find('input')
         .should('exist')
-        .should('have.attr', 'placeholder', 'Search');
+        .should('have.attr', 'placeholder', 'Search...');
 
       InsightPanelsSelectors.searchbox()
         .shadow()
-        .find('button')
-        .should('exist')
         .find('atomic-icon')
         .should('have.attr', 'icon');
     });

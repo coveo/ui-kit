@@ -21,12 +21,17 @@
       <slot name="refine-title">
         <div class="slds-text-title_bold">{labels.sortAndFilters}</div>
       </slot>
-      <lightning-button class="slds-is-absolute slds-align_absolute-center slds-var-m-right_large refine-modal__action"
+      <lightning-button data-focusable="true" class="slds-is-absolute slds-align_absolute-center slds-var-m-right_large refine-modal__action"
         onclick={closeModal} variant="base" title="Close" icon-name="utility:close">
       </lightning-button>
     </div>
     <div class="slds-align_absolute-center" slot="content">
       <div class="refine-modal__content">
+        <template if:true={refineButtonDisabled}>
+          <div class="slds-align_absolute-center slds-text-color_weak refine-modal__empty-message">
+            {labels.noFilterForCurrentTab}
+          </div>
+        </template>
         <c-quantic-refine-modal-content engine-id={engineId} hide-sort={hideSort}></c-quantic-refine-modal-content>
       </div>
     </div>

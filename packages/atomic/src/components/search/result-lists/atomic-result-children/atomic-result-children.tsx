@@ -1,34 +1,39 @@
 import {
-  FoldedCollection,
   FoldedResult,
   FoldedResultList,
   FoldedResultListState,
-  Result,
-  ResultTemplatesManager,
 } from '@coveo/headless';
-import {Component, Element, State, h, Listen, Prop, Host} from '@stencil/core';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {
+  Component,
+  Element,
+  State,
+  h,
+  Listen,
+  Prop,
+  Host,
+  VNode,
+} from '@stencil/core';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
 import {
   ResultContext,
-  ChildTemplatesContext,
   ChildTemplatesContextEvent,
   ResultDisplayConfigContext,
   DisplayConfig,
+  ChildTemplatesContext,
 } from '../../result-template-components/result-template-decorators';
-import {
-  BaseResultList,
-  ResultListCommon,
-} from '../../../common/result-list/result-list-common';
-import {TemplateContent} from '../../../common/result-templates/result-template-common';
 import {
   FoldedResultListContext,
   FoldedResultListStateContext,
 } from '../result-list-decorators';
 import {ResultDisplayImageSize} from '../../../common/layout/display-options';
-import {ListDisplayResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
+import {ResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -39,40 +44,35 @@ const componentTag = 'atomic-result-children';
  * only when children exist.
  * @part no-result-root - The wrapper for the message when there are no results.
  * @part show-hide-button - The button that allows to collapse or show all child results.
+ * @slot before-children - Slot that allows rendering content before the list of children, only when children exist.
+ * @slot after-children - Slot that allows rendering content after the list of children, only when children exist.
  */
 @Component({
   tag: 'atomic-result-children',
   styleUrl: 'atomic-result-children.pcss',
   shadow: true,
 })
-export class AtomicResultChildren implements BaseResultList<Bindings> {
+export class AtomicResultChildren implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @ChildTemplatesContext()
-  public templatesManager!: ResultTemplatesManager<TemplateContent>;
+  public resultTemplateProvider?: ResultTemplateProvider;
+  @FoldedResultListContext()
+  private foldedResultList!: FoldedResultList;
   @ResultContext({folded: true})
   private result!: FoldedResult;
   @ResultDisplayConfigContext()
   private displayConfig!: DisplayConfig;
-
-  public resultListCommon!: ResultListCommon<Bindings>;
+  private initialChildren!: FoldedResult[];
 
   @Element() public host!: HTMLDivElement;
   @State() public error!: Error;
-  @State() public ready = false;
-  @State() public templateHasError = false;
-
-  @FoldedResultListContext()
-  private foldedResultList!: FoldedResultList;
-
+  @State() private resultTemplateRegistered = false;
+  @State() private templateHasError = false;
   @FoldedResultListStateContext()
   @State()
   private foldedResultListState!: FoldedResultListState;
-
   @State()
-  private hideResults = false;
-
-  @State()
-  private showAllResults = false;
+  private showInitialChildren = false;
 
   /**
    * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
@@ -83,74 +83,56 @@ export class AtomicResultChildren implements BaseResultList<Bindings> {
    */
   @Prop({reflect: true}) imageSize?: ResultDisplayImageSize;
   /**
-   * The copy for an empty result state.
-   *
-   * @defaultValue `No documents are related to this one.`
+   * The non-localized copy for an empty result state.
    */
-  @Prop() public noResultText = '';
-
-  private initialChildren!: FoldedResult[];
+  @Prop() public noResultText = 'no-documents-related';
 
   @Listen('atomic/resolveChildTemplates')
   public resolveChildTemplates(event: ChildTemplatesContextEvent) {
     event.preventDefault();
-    event.detail(this.resultListCommon?.resultTemplatesManager);
+    event.detail(this.resultTemplateProvider);
   }
 
-  public async initialize() {
+  public initialize() {
+    if (this.inheritTemplates) {
+      return;
+    }
+
     const childrenTemplates = Array.from(
       this.host.querySelectorAll(childTemplateComponent)
-    ).filter((template) => {
-      return !elementHasAncestorTag(template, childTemplateComponent);
-    });
-    if (!childrenTemplates.length && !this.inheritTemplates) {
+    ).filter(
+      (template) => !elementHasAncestorTag(template, childTemplateComponent)
+    );
+
+    if (!childrenTemplates.length) {
       this.error = new Error(
         `The "${componentTag}" component requires at least one "${childTemplateComponent}" component.`
       );
       return;
     }
 
-    this.resultListCommon = new ResultListCommon({
-      host: this.host,
-      bindings: this.bindings,
-      templateElements: this.host.querySelectorAll(childTemplateComponent),
+    this.resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: false,
-      onReady: () => {
-        this.ready = true;
+      templateElements: childrenTemplates,
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
       },
-      onError: () => {
-        this.templateHasError = true;
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
       },
+      bindings: this.bindings,
     });
   }
 
-  private selectInheritedTemplate(result: Result) {
-    const content = this.templatesManager?.selectTemplate(result);
+  private renderChild(child: FoldedResult, isLast: boolean) {
+    const content = this.resultTemplateProvider?.getTemplateContent(
+      child.result
+    );
+
     if (!content) {
       return;
-    }
-
-    const fragment = document.createDocumentFragment();
-    const children = Array.from(content.children).filter(
-      (el) =>
-        el.tagName.toLowerCase() !== componentTag &&
-        !el.querySelector(componentTag)
-    );
-    fragment.append(...children.map((c) => c.cloneNode(true)));
-    return fragment;
-  }
-
-  private getContent(result: Result) {
-    return (
-      this.resultListCommon!.resultTemplatesManager.selectTemplate(result) ||
-      this.selectInheritedTemplate(result)
-    );
-  }
-
-  private renderChild(child: FoldedResult, isLast: boolean) {
-    const content = this.getContent(child.result);
-    if (!content) {
-      return null;
     }
 
     const key =
@@ -170,120 +152,143 @@ export class AtomicResultChildren implements BaseResultList<Bindings> {
     );
   }
 
-  private getResult() {
+  private get collection() {
+    return this.foldedResultListState.results.find((r) => {
+      return r.result.uniqueId === this.result.result.uniqueId;
+    });
+  }
+
+  private get foldedResult(): FoldedResult {
+    return this.collection || this.result;
+  }
+
+  private get numberOfChildren() {
+    return this.foldedResult.children.length;
+  }
+
+  private get hasChildren() {
+    return !!this.numberOfChildren;
+  }
+
+  public componentWillRender() {
+    const collection = this.collection;
+    if (this.initialChildren || !collection) {
+      return;
+    }
+
+    this.initialChildren = collection.children;
+  }
+
+  private renderPlaceholder() {
     return (
-      this.foldedResultListState.results.find((r) => {
-        return r.result.uniqueId === this.result.result.uniqueId;
-      }) || (this.result as FoldedCollection)
+      <ResultsPlaceholder
+        numberOfPlaceholders={this.numberOfChildren || 2}
+        density={this.displayConfig.density}
+        imageSize={this.imageSize || this.displayConfig.imageSize}
+      />
     );
   }
 
-  private shouldShowChildrenWrapper() {
-    const result = this.getResult();
-    if (!this.initialChildren.length && this.hideResults) {
-      return false;
-    }
+  private renderNoResult() {
     return (
-      Boolean(result.children.length) ||
-      result.isLoadingMoreResults ||
-      this.showAllResults
+      <p part="no-result-root" class="no-result-root">
+        {this.bindings.i18n.t(this.noResultText)}
+      </p>
     );
-  }
-
-  public componentWillUpdate() {
-    if (this.getResult().children && !this.initialChildren) {
-      this.initialChildren = this.getResult().children;
-    }
-    if (this.getResult().isLoadingMoreResults && !this.showAllResults) {
-      this.showAllResults = true;
-    }
-  }
-
-  private get hasResults() {
-    return this.getResult().children.length !== 0;
-  }
-
-  private getComponents() {
-    const result = this.getResult();
-    if (result.isLoadingMoreResults) {
-      return (
-        <ListDisplayResultsPlaceholder
-          numberOfPlaceholders={result.children.length || 2}
-          density={this.displayConfig.density}
-          imageSize={this.imageSize || this.displayConfig.imageSize}
-          isChild
-        />
-      );
-    }
-    if (this.hasResults) {
-      const children = this.hideResults
-        ? this.initialChildren
-        : result.children;
-      return children.map((child, i) =>
-        this.renderChild(child, i === children.length - 1)
-      );
-    }
-    if (this.showAllResults) {
-      return (
-        <p part="no-result-root" class="no-result-root">
-          {this.noResultText || this.bindings.i18n.t('no-documents-related')}
-        </p>
-      );
-    }
-    return null;
   }
 
   private renderCollapseButton() {
-    const result = this.getResult();
-    if (
-      Boolean(result.children.length) &&
-      result.children.length !== this.initialChildren.length &&
-      !result.isLoadingMoreResults &&
-      !result.moreResultsAvailable
-    ) {
+    const collection = this.collection!;
+    if (!!collection.children.length && !collection.moreResultsAvailable) {
       return (
         <Button
           part="show-hide-button"
           class="show-hide-button"
           style="text-primary"
           onClick={() => {
-            if (this.hideResults) {
+            if (this.showInitialChildren) {
               this.foldedResultList.logShowMoreFoldedResults(
                 this.result.result
               );
             } else {
               this.foldedResultList.logShowLessFoldedResults();
             }
-            this.hideResults = !this.hideResults;
+            this.showInitialChildren = !this.showInitialChildren;
           }}
         >
           {this.bindings.i18n.t(
-            this.hideResults ? 'load-all-results' : 'collapse-results'
+            this.showInitialChildren ? 'load-all-results' : 'collapse-results'
           )}
         </Button>
       );
     }
-    return null;
+    return;
   }
 
-  public render() {
-    if (!this.ready) {
-      return null;
+  private renderChildrenWrapper(content: VNode | VNode[]) {
+    return (
+      <div part="children-root">
+        {this.hasChildren && <slot name="before-children"></slot>}
+        {content}
+        {this.hasChildren && <slot name="after-children"></slot>}
+      </div>
+    );
+  }
+
+  private renderChildren(children: FoldedResult[]) {
+    return this.renderChildrenWrapper(
+      children.map((child, i) =>
+        this.renderChild(child, i === children.length - 1)
+      )
+    );
+  }
+
+  private renderCollection() {
+    const collection = this.collection!;
+
+    if (collection.isLoadingMoreResults) {
+      return this.renderChildrenWrapper(this.renderPlaceholder());
     }
-    if (this.templateHasError) {
-      return <slot></slot>;
+
+    if (!collection.moreResultsAvailable && !this.hasChildren) {
+      return this.renderNoResult();
     }
+
+    if (!this.hasChildren) {
+      return;
+    }
+
+    const childrenToRender = this.showInitialChildren
+      ? this.initialChildren
+      : collection.children;
+
     return (
       <Host>
         {this.renderCollapseButton()}
-        {this.shouldShowChildrenWrapper() && (
-          <div part="children-root">
-            {this.hasResults && <slot name="before-children"></slot>}
-            {this.getComponents()}
-            {this.hasResults && <slot name="after-children"></slot>}
-          </div>
-        )}
+        {this.renderChildren(childrenToRender)}
       </Host>
     );
+  }
+
+  private renderFoldedResult() {
+    if (!this.hasChildren) {
+      return;
+    }
+
+    return this.renderChildren(this.foldedResult.children);
+  }
+
+  public render() {
+    if (!this.inheritTemplates && !this.resultTemplateRegistered) {
+      return;
+    }
+
+    if (!this.inheritTemplates && this.templateHasError) {
+      return <slot></slot>;
+    }
+
+    return this.collection
+      ? this.renderCollection()
+      : this.renderFoldedResult();
   }
 }

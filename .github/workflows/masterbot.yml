@@ -34,7 +34,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: ["cypress/integration/*", "cypress/integration/result-list/**/*", "cypress/integration/facets/**/*", "cypress/integration/search-box/**/*"]
+        spec: [
+            'cypress/e2e/*',
+            'cypress/e2e/result-list/**/*',
+            'cypress/e2e/facets/**/*',
+            'cypress/e2e/search-box/**/*',
+          ]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
@@ -75,7 +80,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-stencil
-
   e2e-atomic-react-test:
     name: 'Run e2e tests on Atomic React'
     needs: build
@@ -84,7 +88,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-react
-
+  e2e-atomic-react-nextjs-test:
+    name: 'Run e2e tests on Atomic React NextJS'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-atomic-next
   e2e-atomic-insights-panel-test:
     name: 'Run e2e tests on Atomic Insights Panel'
     needs: build
@@ -93,19 +104,46 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insights-panel
-
-  e2e-quantic-test:
-    name: 'Run e2e tests on Quantic'
+  e2e-quantic-setup:
+    name: 'Setup e2e tests on Quantic'
     needs: build
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/e2e-quantic-setup
+        with:
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+  e2e-quantic-test:
+    name: 'Run e2e tests on Quantic'
+    needs: e2e-quantic-setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        spec: [
+            'cypress/e2e/default-1/**/*',
+            'cypress/e2e/default-2/**/*',
+            'cypress/e2e/facets-1/**/*',
+            'cypress/e2e/facets-2/**/*',
+          ]
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-quantic
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
-          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          spec: ${{ matrix.spec }}
+  e2e-quantic-cleanup:
+    if: always()
+    needs: e2e-quantic-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
+        shell: bash
   bump-version:
     name: 'Bump version'
     needs:

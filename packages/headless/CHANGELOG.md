@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.106.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.105.2...@coveo/headless@1.106.0) (2022-10-05)
+
+
+### Features
+
+* **atomic:** fields to include refactor ([#2480](https://github.com/coveo/ui-kit/issues/2480)) ([c86cd92](https://github.com/coveo/ui-kit/commit/c86cd92d6b93feb3ab6f10e10d3ecb9fbe3c64e9))
+
+
+
+
+
+## [1.105.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.105.1...@coveo/headless@1.105.2) (2022-09-22)
+
+
+### Bug Fixes
+
+* **headless:** Handle product listings range facets responses ([#2459](https://github.com/coveo/ui-kit/issues/2459)) ([629f95e](https://github.com/coveo/ui-kit/commit/629f95e222a14812234fbf1f9ec2fe6eb4b7a456))
+
+
+
+
+
 ## [1.105.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.105.0...@coveo/headless@1.105.1) (2022-09-21)
 
 
