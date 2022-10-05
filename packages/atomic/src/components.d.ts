@@ -916,7 +916,7 @@ export namespace Components {
          */
         "engine"?: RecommendationEngine;
         /**
-          * TODO: implement fieldsToInclude
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude": string;
         /**
@@ -1161,7 +1161,6 @@ export namespace Components {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
-        "isChild": boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -3278,7 +3277,7 @@ declare namespace LocalJSX {
          */
         "engine"?: RecommendationEngine;
         /**
-          * TODO: implement fieldsToInclude
+          * A list of non-default fields to include in the query results, separated by commas.
          */
         "fieldsToInclude"?: string;
         /**
@@ -3505,7 +3504,6 @@ declare namespace LocalJSX {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
-        "isChild"?: boolean;
     }
     interface AtomicResultPrintableUri {
         /**
