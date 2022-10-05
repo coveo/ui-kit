@@ -10,13 +10,14 @@ import {SecurityIdentity} from './security-identity';
 import {ExecutionReport} from './execution-report';
 import {Trigger} from './../trigger';
 import {QuestionsAnswers} from './question-answering';
+import {FacetResponse} from '../../../features/facets/facet-set/interfaces/response';
 
 export interface SearchResponseSuccess {
   results: Result[];
   searchUid: string;
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
-  generateAutomaticFacets: {facets: AnyFacetResponse[]};
+  generateAutomaticFacets: {facets: FacetResponse[]};
   queryCorrections: QueryCorrection[];
   triggers: Trigger[];
   questionAnswer: QuestionsAnswers;

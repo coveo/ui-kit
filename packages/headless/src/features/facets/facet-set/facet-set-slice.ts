@@ -49,6 +49,10 @@ export const facetSetReducer = createReducer(
         state[facetId] = getFacetSetSliceInitialState(
           buildFacetRequest(action.payload)
         );
+
+        console.log(
+          getFacetSetSliceInitialState(buildFacetRequest(action.payload))
+        );
       })
       .addCase(change.fulfilled, (_, action) => {
         if (!action.payload) {
@@ -86,6 +90,7 @@ export const facetSetReducer = createReducer(
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId]?.request;
+        console.log(state[facetId].generated, state);
 
         if (!facetRequest) {
           return;
@@ -157,18 +162,26 @@ export const facetSetReducer = createReducer(
         const facets = action.payload.response.facets;
         const generatedFacets =
           action.payload.response.generateAutomaticFacets.facets;
-        facets.forEach((facetResponse) =>
+        facets.forEach((facetResponse) => {
           mutateStateFromFacetResponse(
             state[facetResponse.facetId]?.request,
             facetResponse
-          )
-        );
+          );
+        });
+
         generatedFacets.forEach((generatedFacet) => {
-          const facetId = generatedFacet.field;
+          const facetId = `generated_${generatedFacet.field}`;
           if (!state[facetId]) {
-            state[facetId] = buildFacetRequest(generatedFacet);
+            state[facetId] = {
+              request: {
+                ...buildFacetRequest({...generatedFacet, facetId}),
+                currentValues: generatedFacet.values,
+              },
+              hasBreadcrumbs: true,
+              generated: true,
+            };
           } else {
-            mutateStateFromFacetResponse(state[facetId], generatedFacet);
+            ///mutateStateFromFacetResponse(state[facetId]?.request);
           }
           state[facetId].generated = true;
         });

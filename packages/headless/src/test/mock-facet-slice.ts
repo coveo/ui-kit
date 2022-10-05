@@ -7,6 +7,7 @@ export function buildMockFacetSlice(
   return {
     request: buildMockFacetRequest(),
     hasBreadcrumbs: true,
+    generated: false,
     ...config,
   };
 }

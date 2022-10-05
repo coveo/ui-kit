@@ -67,7 +67,6 @@ export class AtomicFacetManager implements InitializableComponent {
     }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
-    console.log(sortedFacets);
     this.updateCollapsedState(sortedFacets);
     this.host.append(...sortedFacets);
   };
@@ -110,19 +109,21 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   public render() {
-    const dymamics = this.facetManagerState.dynamicFacets as FacetResponse[];
+    const dynamicFacets = this.facetManagerState.dynamicFacets.map(
+      (dynamic) => {
+        return (
+          <atomic-facet
+            facetId={`generated_${dynamic.field}`}
+            field={dynamic.field}
+          ></atomic-facet>
+        );
+      }
+    );
 
     return (
       <Fragment>
         <slot />
-        {dymamics.map((dynamic) => {
-          return (
-            <atomic-facet
-              field={dynamic.field}
-              label={dynamic.field}
-            ></atomic-facet>
-          );
-        })}
+        {dynamicFacets}
       </Fragment>
     );
   }
