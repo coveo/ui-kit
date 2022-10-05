@@ -1,13 +1,13 @@
 {
   "name": "@coveo/atomic-angular",
-  "version": "1.30.13",
+  "version": "1.30.17",
   "license": "Apache-2.0",
   "peerDependencies": {
     "@angular/common": "^13.1.0",
     "@angular/core": "^13.1.0"
   },
   "dependencies": {
-    "@coveo/atomic": "1.113.5",
+    "@coveo/atomic": "1.113.9",
     "tslib": "2.4.0"
   }
 }

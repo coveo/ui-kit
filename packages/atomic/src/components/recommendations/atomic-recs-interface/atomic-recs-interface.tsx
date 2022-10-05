@@ -1,5 +1,8 @@
-import {LogLevel} from '@coveo/headless';
-import {RecommendationEngine} from '@coveo/headless/recommendation';
+import {
+  RecommendationEngine,
+  LogLevel,
+  loadFieldActions,
+} from '@coveo/headless/recommendation';
 import {
   Component,
   Element,
@@ -37,6 +40,11 @@ export type RecsBindings = CommonBindings<
 export class AtomicRecsInterface
   implements BaseAtomicInterface<RecommendationEngine>
 {
+  private store = createAtomicRecsStore();
+  private commonInterfaceHelper: CommonAtomicInterfaceHelper<RecommendationEngine>;
+
+  @Element() public host!: HTMLAtomicRecsInterfaceElement;
+
   /**
    * The recommendation interface headless engine.
    */
@@ -60,6 +68,11 @@ export class AtomicRecsInterface
   @Prop({reflect: true}) public language = 'en';
 
   /**
+   * A list of non-default fields to include in the query results, separated by commas.
+   */
+  @Prop({reflect: true}) public fieldsToInclude = '';
+
+  /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
    *
    * @example /mypublicpath/languages
@@ -75,15 +88,20 @@ export class AtomicRecsInterface
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
 
-  @Element() public host!: HTMLAtomicRecsInterfaceElement;
-  private store = createAtomicRecsStore();
-  private commonInterfaceHelper: CommonAtomicInterfaceHelper<RecommendationEngine>;
-
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomicRecs'
     );
+  }
+
+  public get bindings(): RecsBindings {
+    return {
+      engine: this.engine!,
+      i18n: this.i18n,
+      store: this.store,
+      interfaceElement: this.host,
+    };
   }
 
   public connectedCallback() {
@@ -120,21 +138,22 @@ export class AtomicRecsInterface
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
-  render() {
-    return this.engine && <slot></slot>;
-  }
-
-  public get bindings(): RecsBindings {
-    return {
-      engine: this.engine!,
-      i18n: this.i18n,
-      store: this.store,
-      interfaceElement: this.host,
-    };
+  public registerFieldsToInclude() {
+    if (this.fieldsToInclude) {
+      this.engine!.dispatch(
+        loadFieldActions(this.engine!).registerFieldsToInclude(
+          this.fieldsToInclude.split(',').map((field) => field.trim())
+        )
+      );
+    }
   }
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
+  }
+
+  public render() {
+    return this.engine && <slot></slot>;
   }
 }

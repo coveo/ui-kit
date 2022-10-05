@@ -13,17 +13,15 @@ import {
 } from '../suggestions-common';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {
-  BaseResultList,
-  ResultListCommon,
-  ResultRenderingFunction,
-} from '../../../common/result-list/result-list-common';
-import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {getClassNameForButtonStyle} from '../../../common/button-style';
+import {InitializableComponent} from '../../../../utils/initialization-utils';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,
@@ -37,18 +35,17 @@ export type AriaLabelGenerator = (
   tag: 'atomic-search-box-instant-results',
   shadow: true,
 })
-export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
+export class AtomicSearchBoxInstantResults implements InitializableComponent {
   public bindings!: SearchBoxSuggestionsBindings;
+  private resultRenderingFunction: ResultRenderingFunction;
+  private results: Result[] = [];
+  private resultTemplateProvider!: ResultTemplateProvider;
+  private instantResults!: InstantResults;
 
   @Element() public host!: HTMLElement;
 
   @State() public error!: Error;
-  @State() public templateHasError = false;
-  private instantResults!: InstantResults;
-
-  private results: Result[] = [];
-  public resultListCommon!: ResultListCommon<Bindings>;
-  private renderingFunction?: ResultRenderingFunction | undefined;
+  @State() private templateHasError = false;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -56,28 +53,29 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
    *
    * Do not use this method if you integrate Atomic in a plain HTML deployment.
    *
-   * @param render
+   * @param resultRenderingFunction
    */
-  @Method() public async setRenderFunction(render: ResultRenderingFunction) {
-    this.renderingFunction = render;
+  @Method() public async setRenderFunction(
+    resultRenderingFunction: ResultRenderingFunction
+  ) {
+    this.resultRenderingFunction = resultRenderingFunction;
   }
   /**
    * The maximum number of results to show.
    */
-  @Prop({reflect: true}) maxResultsPerQuery = 4;
+  @Prop({reflect: true}) public maxResultsPerQuery = 4;
   /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
-  @Prop({reflect: true}) display: ResultDisplayLayout = 'list';
-
+  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */
-  @Prop({reflect: true}) density: ResultDisplayDensity = 'normal';
+  @Prop({reflect: true}) public density: ResultDisplayDensity = 'normal';
   /**
    * The expected size of the image displayed in the results.
    */
-  @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
+  @Prop({reflect: true}) public imageSize: ResultDisplayImageSize = 'icon';
   /**
    * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.
    *
@@ -85,7 +83,7 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
    */
   @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
 
-  componentWillLoad() {
+  public componentWillLoad() {
     try {
       dispatchSearchBoxSuggestionsEvent((bindings) => {
         this.bindings = bindings;
@@ -136,9 +134,9 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
             display={this.display}
             density={this.density}
             imageSize={this.imageSize}
-            content={this.resultListCommon.getContentOfResultTemplate(result)}
+            content={this.resultTemplateProvider.getTemplateContent(result)}
             stopPropagation={false}
-            renderingFunction={this.renderingFunction}
+            renderingFunction={this.resultRenderingFunction}
           ></atomic-result>
         ),
         ariaLabel: this.bindings.i18n.t('instant-results-suggestion-label', {
@@ -190,16 +188,21 @@ export class AtomicSearchBoxInstantResults implements BaseResultList<Bindings> {
       },
     });
 
-    this.resultListCommon = new ResultListCommon({
-      host: this.host,
-      bindings: this.bindings,
-      templateElements: this.host.querySelectorAll('atomic-result-template'),
-      onReady: () => {},
-      onError: () => {
-        this.templateHasError = true;
+    this.resultTemplateProvider = new ResultTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-result-template')
+      ),
+      getResultTemplateRegistered: () => true,
+      setResultTemplateRegistered: () => {},
+      getTemplateHasError: () => this.templateHasError,
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
       },
+      bindings: this.bindings,
     });
 
+    // TODO: remove v2
     buildResultList(this.bindings.engine, {
       options: {fieldsToInclude: this.bindings.store.state.fieldsToInclude},
     });

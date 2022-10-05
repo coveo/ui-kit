@@ -1,4 +1,4 @@
-import {FoldedResult, Result, ResultTemplatesManager} from '@coveo/headless';
+import {FoldedResult, Result} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/utils';
@@ -6,7 +6,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
-import {TemplateContent} from '../../common/result-templates/result-template-common';
+import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
 
 export class MissingResultParentError extends Error {
   constructor(elementName: string) {
@@ -119,38 +119,42 @@ function isFolded(result: Result | FoldedResult): result is FoldedResult {
 }
 
 type ChildTemplatesContextEventHandler = (
-  result: ResultTemplatesManager<TemplateContent> | undefined
+  resultTemplateProvider?: ResultTemplateProvider
 ) => void;
 export type ChildTemplatesContextEvent =
   CustomEvent<ChildTemplatesContextEventHandler>;
 const childTemplatesContextEventName = 'atomic/resolveChildTemplates';
 
 interface AtomicResultChildren {
-  resultListCommon?: {
-    resultTemplatesManager?: ResultTemplatesManager<TemplateContent>;
-  };
+  resultTemplateProvider?: ResultTemplateProvider;
 }
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for children result templates.
  * This allows the Stencil component to fetch children templates defined a level above.
  */
 export function ChildTemplatesContext() {
-  return (component: ComponentInterface, resultVariable: string) => {
+  return (
+    component: ComponentInterface,
+    resultTemplateProviderProp: string
+  ) => {
     const {componentWillRender} = component;
     component.componentWillRender = function () {
       const element = getElement(this);
       const event = buildCustomEvent(
         childTemplatesContextEventName,
-        (result: ResultTemplatesManager<TemplateContent> | undefined) => {
-          const resultListManager = (this as AtomicResultChildren)
-            .resultListCommon?.resultTemplatesManager;
-          this[resultVariable] = resultListManager !== result ? result : null;
+        (resultTemplateProvider?: ResultTemplateProvider) => {
+          const component = this as AtomicResultChildren;
+          if (component.resultTemplateProvider) {
+            return;
+          }
+
+          this[resultTemplateProviderProp] = resultTemplateProvider;
         }
       );
 
       const canceled = element.dispatchEvent(event);
       if (canceled) {
-        this[resultVariable] = null;
+        this[resultTemplateProviderProp] = null;
         return;
       }
       return componentWillRender && componentWillRender.call(this);

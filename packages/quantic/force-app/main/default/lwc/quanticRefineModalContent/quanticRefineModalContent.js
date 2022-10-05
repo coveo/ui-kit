@@ -59,9 +59,15 @@ export default class QuanticRefineModalContent extends LightningElement {
   hasActiveFilters = false;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {object} */
+  renderedFacets = {};
+  /** @type {boolean} */
+  someFacetsRendered = false;
+
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.addEventListener('renderFacet', this.handleRenderFacetEvent);
   }
 
   renderedCallback() {
@@ -71,6 +77,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeSearchStatus?.();
     this.unsubscribeBreadcrumbManager?.();
+    this.removeEventListener('renderFacet', this.handleRenderFacetEvent);
   }
 
   /**
@@ -237,4 +244,15 @@ export default class QuanticRefineModalContent extends LightningElement {
   get hasFacets() {
     return this.data && !!Object.keys(this.data).length;
   }
+
+  /**
+   * @param {CustomEvent} event
+   */
+  handleRenderFacetEvent = (event) => {
+    this.renderedFacets[event.detail.id] = event.detail.shouldRenderFacet;
+    this.someFacetsRendered = Object.values(this.renderedFacets).reduce(
+      (result, facetRendered) => result || facetRendered,
+      false
+    );
+  };
 }

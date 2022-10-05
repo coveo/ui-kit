@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {AnyBindings} from '../components/common/interface/bindings';
-import {InsightBindings} from '../components/insight/atomic-insight-interface/atomic-insight-interface';
 import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
@@ -55,7 +54,7 @@ export interface FocusTargetController {
 
 export function FocusTarget() {
   return (
-    component: InitializableComponent | InitializableComponent<InsightBindings>,
+    component: InitializableComponent<AnyBindings>,
     setterName: string
   ) => {
     const {componentWillLoad} = component;

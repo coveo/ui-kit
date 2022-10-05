@@ -5,12 +5,12 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
-import { ResultRenderingFunction } from "./components/common/result-list/result-list-common";
+import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
 import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
@@ -19,7 +19,7 @@ import { InsightInitializationOptions } from "./components/insight/atomic-insigh
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { RecommendationEngine } from "@coveo/headless/recommendation";
+import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
@@ -277,7 +277,6 @@ export namespace Components {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
-        "focusOnNextNewResult": () => Promise<void>;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -289,9 +288,8 @@ export namespace Components {
         "parentField"?: string;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param render
          */
-        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicFormatCurrency {
         /**
@@ -553,8 +551,9 @@ export namespace Components {
         "density": ResultDisplayDensity;
         /**
           * The headless search engine.
+          * @deprecated This property is currently un-used
          */
-        "engine": InsightEngine;
+        "engine"?: InsightEngine;
         /**
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
@@ -582,6 +581,11 @@ export namespace Components {
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -912,6 +916,10 @@ export namespace Components {
          */
         "engine"?: RecommendationEngine;
         /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude": string;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n": i18n;
@@ -939,6 +947,23 @@ export namespace Components {
         "logLevel"?: LogLevel;
     }
     interface AtomicRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -986,7 +1011,7 @@ export namespace Components {
         /**
           * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
          */
-        "renderingFunction"?: ResultRenderingFunction;
+        "renderingFunction": ResultRenderingFunction;
         /**
           * The result item.
          */
@@ -1094,7 +1119,6 @@ export namespace Components {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
-        "focusOnNextNewResult": () => Promise<void>;
         /**
           * @deprecated use `imageSize` instead.
          */
@@ -1105,9 +1129,9 @@ export namespace Components {
         "imageSize": ResultDisplayImageSize;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param render
+          * @param resultRenderingFunction
          */
-        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -1133,7 +1157,6 @@ export namespace Components {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
-        "isChild": boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -1265,9 +1288,9 @@ export namespace Components {
         "maxResultsPerQuery": number;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param render
+          * @param resultRenderingFunction
          */
-        "setRenderFunction": (render: ResultRenderingFunction) => Promise<void>;
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
     }
     interface AtomicSearchBoxQuerySuggestions {
         /**
@@ -1343,7 +1366,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -2871,8 +2894,9 @@ declare namespace LocalJSX {
         "density"?: ResultDisplayDensity;
         /**
           * The headless search engine.
+          * @deprecated This property is currently un-used
          */
-        "engine": InsightEngine;
+        "engine"?: InsightEngine;
         /**
           * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
          */
@@ -3228,6 +3252,10 @@ declare namespace LocalJSX {
          */
         "engine"?: RecommendationEngine;
         /**
+          * A list of non-default fields to include in the query results, separated by commas.
+         */
+        "fieldsToInclude"?: string;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n"?: i18n;
@@ -3251,6 +3279,18 @@ declare namespace LocalJSX {
         "logLevel"?: LogLevel;
     }
     interface AtomicRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
     }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
@@ -3435,7 +3475,6 @@ declare namespace LocalJSX {
         "density": ResultDisplayDensity;
         "display": ResultDisplayLayout;
         "imageSize"?: ResultDisplayImageSize;
-        "isChild"?: boolean;
     }
     interface AtomicResultPrintableUri {
         /**
@@ -3629,7 +3668,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: LogLevel1;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
