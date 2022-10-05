@@ -12,7 +12,7 @@ import {
   getOrganizationIdQueryParam,
 } from './search-api-params';
 import {buildMockFacetSearch} from '../../test/mock-facet-search';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-search';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {SearchAppState} from '../../state/search-app-state';
@@ -133,7 +133,7 @@ describe('search api client', () => {
           test: buildMockFacetSearch(),
         },
         facetSet: {
-          test: buildMockFacetRequest(),
+          test: buildMockFacetSlice(),
         },
       });
 
@@ -174,6 +174,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.query.q,
           debug: false,
@@ -245,6 +246,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }/plan?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.query.q,
           context: state.context.contextValues,
@@ -294,6 +296,7 @@ describe('search api client', () => {
           state.configuration.search.apiBaseUrl
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           q: state.querySet[id],
           count: state.querySuggest[id]!.count,
@@ -336,7 +339,7 @@ describe('search api client', () => {
       it('it calls Platform.call with the right options', async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
@@ -363,7 +366,7 @@ describe('search api client', () => {
       it('with an authentication provider it calls Platform.call with the right options', async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
@@ -386,7 +389,7 @@ describe('search api client', () => {
       it calls PlatformClient.call with the facet search params`, async () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
-        const facetState = buildMockFacetRequest();
+        const facetState = buildMockFacetSlice();
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
@@ -407,7 +410,7 @@ describe('search api client', () => {
             captions: facetSearchState.options.captions,
             numberOfValues: facetSearchState.options.numberOfValues,
             query: newQuery,
-            field: facetState.field,
+            field: facetState.request.field,
             ignoreValues: [],
             searchContext: {
               ...searchRequest,
@@ -497,6 +500,7 @@ describe('search api client', () => {
           recommendationState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           recommendation: recommendationState.recommendation.id,
           aq: recommendationState.advancedSearchQueries.aq,
@@ -574,6 +578,7 @@ describe('search api client', () => {
           productRecommendationsState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         logger,
+        origin: 'searchApiFetch',
         requestParams: {
           recommendation: productRecommendationsState.productRecommendations.id,
           context: productRecommendationsState.context.contextValues,

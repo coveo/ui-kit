@@ -41,7 +41,7 @@ export const buildFacetBaseMetadata = (
   facetId: string,
   state: SectionNeededForFacetMetadata
 ) => {
-  const facet = getFacet(state, facetId);
+  const facet = getFacetRequest(state, facetId);
 
   const facetField = facet ? facet.field : '';
   const facetTitle = `${facetField}_${facetId}`;
@@ -227,7 +227,7 @@ const mapFacetResponseToAnalytics = (
   };
 };
 
-const getFacet = (
+const getFacetRequest = (
   state: SectionNeededForFacetMetadata,
   facetId: string
 ):
@@ -237,10 +237,10 @@ const getFacet = (
   | NumericFacetRequest
   | undefined => {
   return (
-    state.facetSet[facetId] ||
+    state.facetSet[facetId]?.request ||
     state.categoryFacetSet[facetId]?.request ||
-    state.dateFacetSet[facetId] ||
-    state.numericFacetSet[facetId]
+    state.dateFacetSet[facetId]?.request ||
+    state.numericFacetSet[facetId]?.request
   );
 };
 
@@ -248,6 +248,6 @@ const getFacetType = (
   state: SectionNeededForFacetMetadata,
   facetId: string
 ) => {
-  const facet = getFacet(state, facetId);
+  const facet = getFacetRequest(state, facetId);
   return facet ? facet.type : 'specific';
 };

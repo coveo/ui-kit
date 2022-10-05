@@ -21,7 +21,10 @@ import {
   updateRangeValues,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
-import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
+import {
+  getNumericFacetSetInitialState,
+  getNumericFacetSetSliceInitialState,
+} from './numeric-facet-set-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
 import {disableFacet} from '../../../facet-options/facet-options-actions';
@@ -34,7 +37,7 @@ export const numericFacetSetReducer = createReducer(
       .addCase(registerNumericFacet, (state, action) => {
         const {payload} = action;
         const request = buildNumericFacetRequest(payload);
-        registerRangeFacet<NumericFacetRequest>(state, request);
+        registerRangeFacet(state, getNumericFacetSetSliceInitialState(request));
       })
       .addCase(
         change.fulfilled,
@@ -46,18 +49,14 @@ export const numericFacetSetReducer = createReducer(
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
-        toggleSelectRangeValue<NumericFacetRequest, NumericFacetValue>(
-          state,
-          facetId,
-          selection
-        );
+        toggleSelectRangeValue(state, facetId, selection);
       })
       .addCase(updateNumericFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
-        updateRangeValues<NumericFacetRequest>(state, facetId, values);
+        updateRangeValues(state, facetId, values);
       })
       .addCase(deselectAllNumericFacetValues, (state, action) => {
-        handleRangeFacetDeselectAll<NumericFacetRequest>(state, action.payload);
+        handleRangeFacetDeselectAll(state, action.payload);
       })
       .addCase(deselectAllBreadcrumbs, (state) => {
         Object.keys(state).forEach((facetId) => {
@@ -65,27 +64,16 @@ export const numericFacetSetReducer = createReducer(
         });
       })
       .addCase(updateNumericFacetSortCriterion, (state, action) => {
-        handleFacetSortCriterionUpdate<NumericFacetRequest>(
-          state,
-          action.payload
-        );
+        handleFacetSortCriterionUpdate(state, action.payload);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled<NumericFacetRequest, NumericFacetResponse>(
-          state,
-          facets,
-          convertToRangeRequests
-        );
+        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
         const facets = (action.payload.response?.facets?.results ||
           []) as NumericFacetResponse[];
-        onRangeFacetRequestFulfilled<NumericFacetRequest, NumericFacetResponse>(
-          state,
-          facets,
-          convertToRangeRequests
-        );
+        onRangeFacetRequestFulfilled(state, facets, convertToRangeRequests);
       })
       .addCase(disableFacet, (state, action) => {
         handleRangeFacetDeselectAll(state, action.payload);

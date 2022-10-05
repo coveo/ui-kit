@@ -16,9 +16,11 @@ import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-va
 import {NumericFacetValue} from '../numeric-facet-set/interfaces/response';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {RegisterNumericFacetActionCreatorPayload} from '../numeric-facet-set/numeric-facet-actions';
+import {NumericFacetSlice} from '../numeric-facet-set/numeric-facet-set-state';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
 
 describe('range facet reducers', () => {
-  let state: Record<string, NumericFacetRequest> = {};
+  let state: Record<string, NumericFacetSlice> = {};
 
   beforeEach(() => {
     state = {};
@@ -37,8 +39,10 @@ describe('range facet reducers', () => {
     }
 
     function register(options: RegisterNumericFacetActionCreatorPayload) {
-      const request = buildMockNumericFacetRequest(options);
-      registerRangeFacet<NumericFacetRequest>(state, request);
+      const slice = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest(options),
+      });
+      registerRangeFacet(state, slice);
     }
 
     it('when the id is unregistered, it registers a range facet', () => {
@@ -47,7 +51,7 @@ describe('range facet reducers', () => {
       const options = buildAutomaticRegistrationOptions({facetId});
       register(options);
 
-      expect(state[facetId]).toEqual({
+      expect(state[facetId]?.request).toEqual({
         currentValues: [],
         preventAutoSelect: false,
         filterFacetCount: false,
@@ -62,12 +66,14 @@ describe('range facet reducers', () => {
 
     it('when the id is registered, it does not overwrite', () => {
       const facetId = '1';
-      state[facetId] = buildMockNumericFacetRequest({facetId, field: 'a'});
+      state[facetId] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({facetId, field: 'a'}),
+      });
 
       const options = buildAutomaticRegistrationOptions({facetId, field: 'b'});
       register(options);
 
-      expect(state[facetId].field).toEqual('a');
+      expect(state[facetId]?.request.field).toEqual('a');
     });
 
     it(`when #generateAutomaticRanges is false, and the number of hard-coded ranges is not equal to the #numberOfValues,
@@ -83,7 +89,9 @@ describe('range facet reducers', () => {
 
       register(options);
 
-      expect(state[facetId].numberOfValues).toBe(options.currentValues?.length);
+      expect(state[facetId]?.request.numberOfValues).toBe(
+        options.currentValues?.length
+      );
     });
 
     it(`when #generateAutomaticRanges is true, and the number of hard-coded ranges is greater than the #numberOfValues,
@@ -98,7 +106,9 @@ describe('range facet reducers', () => {
       };
 
       register(options);
-      expect(state[facetId].numberOfValues).toBe(options.currentValues?.length);
+      expect(state[facetId]?.request.numberOfValues).toBe(
+        options.currentValues?.length
+      );
     });
   });
 
@@ -107,7 +117,9 @@ describe('range facet reducers', () => {
       const id = '1';
 
       const value = buildMockNumericFacetValue({state: 'idle'});
-      state[id] = buildMockNumericFacetRequest({currentValues: [value]});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: [value]}),
+      });
 
       toggleSelectRangeValue(state, id, value);
       expect(value.state).toBe('selected');
@@ -117,7 +129,9 @@ describe('range facet reducers', () => {
       const id = '1';
 
       const value = buildMockNumericFacetValue({state: 'selected'});
-      state[id] = buildMockNumericFacetRequest({currentValues: [value]});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: [value]}),
+      });
 
       toggleSelectRangeValue(state, id, value);
       expect(value.state).toBe('idle');
@@ -128,7 +142,9 @@ describe('range facet reducers', () => {
       const value = buildMockNumericFacetValue({start: 1});
       const candidate = buildMockNumericFacetValue({start: 2});
 
-      state[id] = buildMockNumericFacetRequest({currentValues: [value]});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: [value]}),
+      });
 
       toggleSelectRangeValue(state, id, candidate);
       expect(value.state).toBe('idle');
@@ -139,7 +155,9 @@ describe('range facet reducers', () => {
       const value = buildMockNumericFacetValue({end: 1});
       const candidate = buildMockNumericFacetValue({end: 2});
 
-      state[id] = buildMockNumericFacetRequest({currentValues: [value]});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: [value]}),
+      });
 
       toggleSelectRangeValue(state, id, candidate);
       expect(value.state).toBe('idle');
@@ -150,7 +168,9 @@ describe('range facet reducers', () => {
       const value = buildMockNumericFacetValue({endInclusive: true});
       const candidate = buildMockNumericFacetValue({endInclusive: false});
 
-      state[id] = buildMockNumericFacetRequest({currentValues: [value]});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: [value]}),
+      });
 
       toggleSelectRangeValue(state, id, candidate);
       expect(value.state).toBe('selected');
@@ -160,10 +180,12 @@ describe('range facet reducers', () => {
       const id = '1';
 
       const value = buildMockNumericFacetValue({state: 'selected'});
-      state[id] = buildMockNumericFacetRequest({currentValues: [value]});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({currentValues: [value]}),
+      });
 
       toggleSelectRangeValue(state, id, value);
-      expect(state[id].preventAutoSelect).toBe(true);
+      expect(state[id]?.request.preventAutoSelect).toBe(true);
     });
   });
 
@@ -179,7 +201,9 @@ describe('range facet reducers', () => {
       const id = '1';
       const value = buildMockNumericFacetValue({state: 'selected'});
       const state = {
-        [id]: buildMockNumericFacetRequest({currentValues: [value]}),
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({currentValues: [value]}),
+        }),
       };
 
       handleRangeFacetDeselectAll(state, id);
@@ -200,7 +224,11 @@ describe('range facet reducers', () => {
         state: 'idle',
       });
 
-      state = {[id]: buildMockNumericFacetRequest({currentValues: [value]})};
+      state = {
+        [id]: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({currentValues: [value]}),
+        }),
+      };
       const nf = {[id]: [value]};
 
       handleRangeFacetSearchParameterRestoration(state, nf);
@@ -214,7 +242,11 @@ describe('range facet reducers', () => {
         state: 'selected',
       });
 
-      state = {size: buildMockNumericFacetRequest({currentValues: [value]})};
+      state = {
+        size: buildMockNumericFacetSlice({
+          request: buildMockNumericFacetRequest({currentValues: [value]}),
+        }),
+      };
       const nf = {};
 
       handleRangeFacetSearchParameterRestoration(state, nf);
@@ -224,7 +256,7 @@ describe('range facet reducers', () => {
     it('when a range in the payload is not found, it adds it to #currentValues', () => {
       const id = 'size';
       const request = buildMockNumericFacetRequest({currentValues: []});
-      state = {[id]: request};
+      state = {[id]: buildMockNumericFacetSlice({request})};
 
       const value = buildMockNumericFacetValue();
       const nf = {[id]: [value]};
@@ -240,7 +272,7 @@ describe('range facet reducers', () => {
         currentValues: [],
         numberOfValues: 8,
       });
-      state = {[id]: request};
+      state = {[id]: buildMockNumericFacetSlice({request})};
       const nf = {[id]: [buildMockNumericFacetValue()]};
 
       handleRangeFacetSearchParameterRestoration(state, nf);
@@ -254,7 +286,7 @@ describe('range facet reducers', () => {
         currentValues: [],
         numberOfValues: 0,
       });
-      state = {[id]: request};
+      state = {[id]: buildMockNumericFacetSlice({request})};
       const nf = {[id]: [buildMockNumericFacetValue()]};
 
       handleRangeFacetSearchParameterRestoration(state, nf);
@@ -277,21 +309,25 @@ describe('range facet reducers', () => {
       const values = [buildMockNumericFacetValue()];
       const facet = buildMockNumericFacetResponse({facetId: id, values});
 
-      state[id] = buildMockNumericFacetRequest({facetId: id});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({facetId: id}),
+      });
       onRangeFacetRequestFulfilled(state, [facet], convertToRangeValueRequests);
 
       const expectedRanges = convertToRangeValueRequests(values);
-      expect(state[id].currentValues).toEqual(expectedRanges);
+      expect(state[id]?.request.currentValues).toEqual(expectedRanges);
     });
 
     it('sets #preventAutoSelect to false', () => {
       const id = '1';
-      state[id] = buildMockNumericFacetRequest({preventAutoSelect: true});
+      state[id] = buildMockNumericFacetSlice({
+        request: buildMockNumericFacetRequest({preventAutoSelect: true}),
+      });
 
       const facet = buildMockNumericFacetResponse({facetId: id});
       onRangeFacetRequestFulfilled(state, [facet], convertToRangeValueRequests);
 
-      expect(state[id].preventAutoSelect).toBe(false);
+      expect(state[id]?.request.preventAutoSelect).toBe(false);
     });
 
     it('response containing unregistered facet ids does not throw', () => {
@@ -319,11 +355,11 @@ describe('range facet reducers', () => {
     });
 
     it('when the id is registered, it updates the values', () => {
-      state[facetId] = buildMockNumericFacetRequest();
+      state[facetId] = buildMockNumericFacetSlice();
       updateRangeValues(state, facetId, values);
 
-      expect(state[facetId].currentValues).toEqual(values);
-      expect(state[facetId].numberOfValues).toBe(values.length);
+      expect(state[facetId]?.request.currentValues).toEqual(values);
+      expect(state[facetId]?.request.numberOfValues).toBe(values.length);
     });
   });
 });

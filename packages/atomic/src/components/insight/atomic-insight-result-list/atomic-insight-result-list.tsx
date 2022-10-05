@@ -1,37 +1,34 @@
-import {Component, h, Element, State, Prop, Host} from '@stencil/core';
-
+import {Component, h, Element, State, Prop, Method} from '@stencil/core';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {
   BindStateToController,
+  InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {
-  getResultDisplayClasses,
   ResultDisplayDensity,
   ResultDisplayImageSize,
+  ResultDisplayLayout,
 } from '../../common/layout/display-options';
 import {
-  insightBuildResultTemplatesManager,
   InsightResultList,
   InsightResultListState,
-  InsightResult,
-  InsightResultTemplate,
-  InsightResultTemplatesManager,
   buildInsightResultList,
+  InsightResult,
 } from '..';
 import {randomID} from '../../../utils/utils';
-import {ListDisplayResultsPlaceholder} from '../../common/atomic-result-placeholder/placeholders';
 import {
   buildResultsPerPage,
   ResultsPerPage,
   ResultsPerPageState,
 } from '@coveo/headless/insight';
-
-export type TemplateContent = DocumentFragment;
-
-interface TemplateElement extends HTMLElement {
-  getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null>;
-}
+import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
+import {ResultListCommon} from '../../common/result-list/result-list-common';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
+import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
 
 /**
  * @internal
@@ -41,27 +38,30 @@ interface TemplateElement extends HTMLElement {
   styleUrl: 'atomic-insight-result-list.pcss',
   shadow: true,
 })
-export class AtomicInsightResultList {
+export class AtomicInsightResultList
+  implements InitializableComponent<InsightBindings>
+{
   @InitializeBindings() public bindings!: InsightBindings;
   public resultList!: InsightResultList;
   public resultsPerPage!: ResultsPerPage;
-  private resultTemplatesManager!: InsightResultTemplatesManager<TemplateContent>;
-  @State() public ready = false;
+  private resultListCommon!: ResultListCommon;
+  private loadingFlag = randomID('firstInsightResultLoaded-');
+  private display: ResultDisplayLayout = 'list';
+  private resultRenderingFunction: ResultRenderingFunction;
+
   @Element() public host!: HTMLDivElement;
 
   @BindStateToController('resultsPerPage')
   @State()
-  public resultPerPageState!: ResultsPerPageState;
-
-  @State() public templateHasError = false;
-
+  public resultsPerPageState!: ResultsPerPageState;
   @BindStateToController('resultList')
   @State()
   public resultListState!: InsightResultListState;
-
+  @State() private templateHasError = false;
+  @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
 
-  private loadingFlag = randomID('firstInsightResultLoaded-');
+  @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -72,127 +72,63 @@ export class AtomicInsightResultList {
    */
   @Prop({reflect: true}) imageSize: ResultDisplayImageSize = 'icon';
 
+  /**
+   * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
+   * You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.
+   *
+   * Do not use this method if you integrate Atomic in a plain HTML deployment.
+   *
+   * @param resultRenderingFunction
+   */
+  @Method() public async setRenderFunction(
+    resultRenderingFunction: ResultRenderingFunction
+  ) {
+    this.resultRenderingFunction = resultRenderingFunction;
+  }
+
   public initialize() {
     this.resultList = buildInsightResultList(this.bindings.engine, {
       options: {
         fieldsToInclude: this.bindings.store.state.fieldsToInclude || undefined,
       },
     });
-    this.registerResultTemplates();
-    this.bindings.store.setLoadingFlag(this.loadingFlag);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
-    // TODO:
-    // this.bindings.store.registerResultList(this);
+
+    const resultTemplateProvider = new ResultTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.host.querySelectorAll('atomic-insight-result-template')
+      ),
+      getResultTemplateRegistered: () => this.resultTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.resultTemplateRegistered = value;
+      },
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+      bindings: this.bindings,
+    });
+
+    this.resultListCommon = new ResultListCommon<InsightResult>({
+      resultTemplateProvider,
+      getNumberOfPlaceholders: () => this.resultsPerPageState.numberOfResults,
+      host: this.host,
+      bindings: this.bindings,
+      getDensity: () => this.density,
+      getDisplay: () => this.display,
+      getImageSize: () => this.imageSize,
+      nextNewResultTarget: this.nextNewResultTarget,
+      loadingFlag: this.loadingFlag,
+      getResultListState: () => this.resultListState,
+      getResultRenderingFunction: () => this.resultRenderingFunction,
+      renderResult: (props) => (
+        <atomic-insight-result {...props}></atomic-insight-result>
+      ),
+    });
   }
 
-  public getTemplate(result: InsightResult) {
-    return this.resultTemplatesManager.selectTemplate(result);
-  }
-
-  private async registerResultTemplates() {
-    this.resultTemplatesManager = insightBuildResultTemplatesManager(
-      this.bindings.engine
-    );
-    const elements = this.host.querySelectorAll(
-      'atomic-insight-result-template'
-    ) as NodeListOf<TemplateElement>;
-    const customTemplates = await Promise.all(
-      Array.from(elements).map(async (resultTemplateElement) => {
-        const template = await resultTemplateElement.getTemplate();
-        if (!template) {
-          this.templateHasError = true;
-        }
-        return template;
-      })
-    );
-
-    const templates = [this.makeDefaultTemplate()].concat(
-      customTemplates.filter(
-        (template) => template
-      ) as InsightResultTemplate<DocumentFragment>[]
-    );
-
-    this.resultTemplatesManager.registerTemplates(...templates);
-    this.ready = true;
-  }
-
-  private makeDefaultTemplate(): InsightResultTemplate<DocumentFragment> {
-    const content = document.createDocumentFragment();
-    const linkEl = document.createElement('atomic-result-link');
-    content.appendChild(linkEl);
-    return {
-      content,
-      conditions: [],
-    };
-  }
-
-  private getContentOfResultTemplate(
-    result: InsightResult
-  ): HTMLElement | DocumentFragment {
-    return this.getTemplate(result)!;
-  }
-  private getClasses(): string {
-    const classes = getResultDisplayClasses(
-      'list',
-      this.density,
-      this.imageSize
-    );
-    if (
-      this.resultListState.firstSearchExecuted &&
-      this.resultListState.isLoading
-    ) {
-      classes.push('loading');
-    }
-    if (!this.bindings.store.isAppLoaded()) {
-      classes.push('placeholder');
-    }
-    return classes.join(' ');
-  }
-
-  render() {
-    if (!this.ready) {
-      return null;
-    }
-    if (this.resultListState.hasError) {
-      return null;
-    }
-    if (
-      this.resultListState.firstSearchExecuted &&
-      !this.resultListState.hasResults
-    ) {
-      return;
-    }
-    return (
-      <Host>
-        {this.templateHasError && <slot></slot>}
-        <div class={`list-wrapper ${this.getClasses()}`}>
-          <div class={`list-root  ${this.getClasses()}`} part="result-list">
-            {!this.bindings.store.isAppLoaded() && (
-              <ListDisplayResultsPlaceholder
-                numberOfPlaceholders={this.resultPerPageState.numberOfResults}
-                display="list"
-                density={this.density}
-                imageSize={this.imageSize}
-              />
-            )}
-            {this.resultListState.firstSearchExecuted &&
-              this.resultListState.results.map((result) => (
-                <atomic-insight-result
-                  key={result.uniqueId}
-                  part="divider"
-                  result={result}
-                  store={this.bindings.store}
-                  engine={this.bindings.engine}
-                  density={this.density}
-                  imageSize={this.imageSize}
-                  content={this.getContentOfResultTemplate(result)}
-                  classes={this.getClasses()}
-                  loadingFlag={this.loadingFlag}
-                />
-              ))}
-          </div>
-        </div>
-      </Host>
-    );
+  public render() {
+    return this.resultListCommon.render();
   }
 }

@@ -30,7 +30,7 @@ import {
   FoldedResultListStateContext,
 } from '../result-list-decorators';
 import {ResultDisplayImageSize} from '../../../common/layout/display-options';
-import {ListDisplayResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
+import {ResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
@@ -181,11 +181,10 @@ export class AtomicResultChildren implements InitializableComponent {
 
   private renderPlaceholder() {
     return (
-      <ListDisplayResultsPlaceholder
+      <ResultsPlaceholder
         numberOfPlaceholders={this.numberOfChildren || 2}
         density={this.displayConfig.density}
         imageSize={this.imageSize || this.displayConfig.imageSize}
-        isChild
       />
     );
   }

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Coveo Atomic: Instant Results example</title>
+    <title>Coveo Atomic: Recommendations example</title>
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
@@ -25,13 +25,44 @@
     </script>
   </head>
   <body>
-    <atomic-recs-interface search-hub="MainSearch">
-      <atomic-recs-list fields-to-include="ec_images">
+    <atomic-recs-interface search-hub="MainSearch" fields-to-include="ec_images,ec_rating,ec_price,cat_rating_count">
+      <atomic-recs-list>
         <atomic-result-template>
           <template>
+            <style>
+              div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+                height: 120px;
+              }
+              .rating-wrapper {
+                display: flex;
+                align-items: center;
+              }
+              .rating-wrapper span {
+                margin-left: 5px;
+                color: #8e959d;
+              }
+            </style>
+            <atomic-result-section-visual>
+              <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+            </atomic-result-section-visual>
             <atomic-result-section-title>
               <atomic-result-link></atomic-result-link>
             </atomic-result-section-title>
+            <atomic-result-section-title-metadata>
+              <div class="rating-wrapper">
+                <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                <atomic-field-condition class="field" if-defined="ec_rating">
+                  <span>
+                    <atomic-result-number field="cat_rating_count"></atomic-result-number>
+                  </span>
+                </atomic-field-condition>
+              </div>
+            </atomic-result-section-title-metadata>
+            <atomic-result-section-bottom-metadata>
+              <atomic-result-number field="ec_price">
+                <atomic-format-currency currency="USD"></atomic-format-currency>
+              </atomic-result-number>
+            </atomic-result-section-bottom-metadata>
           </template>
         </atomic-result-template>
       </atomic-recs-list>

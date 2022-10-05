@@ -7,7 +7,7 @@ import {
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
 } from './date-facet-actions';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../../../test/mock-date-facet-slice';
 import {change} from '../../../history/history-actions';
 import * as RangeFacetReducers from '../generic/range-facet-reducers';
 import * as FacetReducers from '../../generic/facet-reducer-helpers';
@@ -51,7 +51,7 @@ describe('date-facet-set slice', () => {
 
     const finalState = dateFacetSetReducer(state, registerDateFacet(options));
 
-    expect(finalState[facetId]).toEqual({
+    expect(finalState[facetId]?.request).toEqual({
       ...options,
       currentValues: [],
       filterFacetCount: true,
@@ -66,7 +66,7 @@ describe('date-facet-set slice', () => {
   });
 
   it('it restores the dateFacetSet on history change', () => {
-    const dateFacetSet = {'1': buildMockDateFacetRequest()};
+    const dateFacetSet = {'1': buildMockDateFacetSlice()};
     const payload = {
       ...getHistoryInitialState(),
       dateFacetSet,
@@ -87,7 +87,7 @@ describe('date-facet-set slice', () => {
     );
 
     const facetId = '1';
-    state[facetId] = buildMockDateFacetRequest();
+    state[facetId] = buildMockDateFacetSlice();
 
     const value = buildMockDateFacetValue();
     const df = {[facetId]: [value]};
@@ -95,7 +95,7 @@ describe('date-facet-set slice', () => {
     const action = restoreSearchParameters({df});
     const finalState = dateFacetSetReducer(state, action);
 
-    expect(finalState[facetId].currentValues).toContainEqual(value);
+    expect(finalState[facetId]?.request.currentValues).toContainEqual(value);
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
@@ -133,8 +133,8 @@ describe('date-facet-set slice', () => {
   it('dispatching #deselectAllBreadcrumbs calls #handleRangeFacetDeselectAll for every date facet', () => {
     jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll').mockReset();
 
-    state['1'] = buildMockDateFacetRequest();
-    state['2'] = buildMockDateFacetRequest();
+    state['1'] = buildMockDateFacetSlice();
+    state['2'] = buildMockDateFacetSlice();
     dateFacetSetReducer(state, deselectAllBreadcrumbs);
 
     expect(
