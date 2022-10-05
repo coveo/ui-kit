@@ -62,7 +62,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
   /**
    * How children results should be displayed. This does not affect the display of the list itself.
-   * To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variables.
+   * To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
   /**
@@ -77,7 +77,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
   /**
    * The number of recommendations to be fetched and displayed.
-   * This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variables.
+   * This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfRecommendations = 10;
 
