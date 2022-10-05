@@ -1,4 +1,8 @@
 import {LightningElement, api} from 'lwc';
+import {
+  getFirstFocusableElement,
+  getLastFocusableElement,
+} from 'c/quanticUtils';
 
 /**
  * The `QuanticModal` is a container component that displays slotted content in a modal. This component handles the animation logic, exposes methods to open and close the modal, offers the option to open the modal in full screen or just to cover the search interface, and exposes a set of slots to fully customize the modal content.
@@ -60,6 +64,11 @@ export default class QuanticModal extends LightningElement {
    */
   @api openModal() {
     this.isVisible = true;
+    // 500ms is the duration time of the animation to open the modal.
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
+    setTimeout(() => {
+      this.focusOnFirstElement();
+    }, 500);
   }
 
   /**
@@ -93,5 +102,42 @@ export default class QuanticModal extends LightningElement {
    */
   get tabindex() {
     return this.isVisible ? 0 : -1;
+  }
+
+  /** @return {Array} */
+  get allAssignedElements() {
+    /** @type {HTMLSlotElement} */
+    const headerSlot = this.template.querySelector('slot[name=header]');
+    /** @type {HTMLSlotElement} */
+    const contentSlot = this.template.querySelector('slot[name=content]');
+    /** @type {HTMLSlotElement} */
+    const footerSlot = this.template.querySelector('slot[name=footer]');
+
+    const allAssignedElements = [
+      ...headerSlot.assignedElements(),
+      ...contentSlot.assignedElements(),
+      ...footerSlot.assignedElements(),
+    ].map((element) => Array.from([element, ...element.childNodes]));
+    return allAssignedElements.flat();
+  }
+
+  focusOnLastElement() {
+    const focusableElement = this.allAssignedElements
+      .reverse()
+      .find((element) => !!getLastFocusableElement(element));
+    if (focusableElement) {
+      const lastFocusableElement = getLastFocusableElement(focusableElement);
+      lastFocusableElement.focus();
+    }
+  }
+
+  focusOnFirstElement() {
+    const focusableElement = this.allAssignedElements.find(
+      (element) => !!getFirstFocusableElement(element)
+    );
+    if (focusableElement) {
+      const firstFocusableElement = getFirstFocusableElement(focusableElement);
+      firstFocusableElement.focus();
+    }
   }
 }
