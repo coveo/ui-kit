@@ -3,8 +3,7 @@ import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once} from '../../../utils/utils';
 import {
-  GridDisplayResultsPlaceholder,
-  ListDisplayResultsPlaceholder,
+  ResultsPlaceholder,
   ResultPlaceholderProps,
   TableDisplayResultsPlaceholder,
 } from '../atomic-result-placeholder/placeholders';
@@ -119,7 +118,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
             display={this.props.getDisplay()}
           >
             {this.displayPlaceholders && (
-              <ResultsPlaceholder
+              <DisplayResultsPlaceholder
                 numberOfPlaceholders={this.props.getNumberOfPlaceholders()}
                 density={this.props.getDensity()}
                 display={this.props.getDisplay()}
@@ -156,16 +155,14 @@ const ResultDisplayWrapper: FunctionalComponent<{
   );
 };
 
-const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
+const DisplayResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   props
 ) => {
   switch (props.display) {
     case 'table':
       return <TableDisplayResultsPlaceholder {...props} />;
-    case 'grid':
-      return <GridDisplayResultsPlaceholder {...props} />;
     default:
-      return <ListDisplayResultsPlaceholder {...props} />;
+      return <ResultsPlaceholder {...props} />;
   }
 };
 

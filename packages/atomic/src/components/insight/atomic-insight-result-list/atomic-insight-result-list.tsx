@@ -61,7 +61,7 @@ export class AtomicInsightResultList
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
 
-  @FocusTarget<InsightBindings>() nextNewResultTarget!: FocusTargetController;
+  @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
