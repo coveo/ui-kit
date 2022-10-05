@@ -46,7 +46,7 @@ import {ResultTemplateProvider} from '../../../common/result-list/result-templat
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: '../../../common/result-list/result-list.pcss',
+  styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
 export class AtomicResultList implements InitializableComponent {

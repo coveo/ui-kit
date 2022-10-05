@@ -61,7 +61,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   private nextNewResultTarget!: FocusTargetController;
 
   /**
-   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+   * How children results should be displayed. This does not affect the display of the list itself.
+   * To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variables.
    */
   @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
   /**
@@ -72,10 +73,11 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * The expected size of the image displayed in the results.
    */
   @Prop({reflect: true})
-  public imageSize: ResultDisplayImageSize = 'icon';
+  public imageSize: ResultDisplayImageSize = 'small';
 
   /**
-   * The number of recommendations to return.
+   * The number of recommendations to be fetched and displayed.
+   * This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variables.
    */
   @Prop({reflect: true}) public numberOfRecommendations = 10;
 
@@ -120,14 +122,17 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
-      getDisplay: () => this.display,
+      getDisplay: () => 'grid',
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListCommonState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
       renderResult: (props) => (
-        <atomic-recs-result {...props}></atomic-recs-result>
+        <atomic-recs-result
+          {...props}
+          display={this.display}
+        ></atomic-recs-result>
       ),
     });
 

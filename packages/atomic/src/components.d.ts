@@ -954,7 +954,7 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * How children results should be displayed. This does not affect the display of the list itself. To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variables.
          */
         "display": ResultDisplayBasicLayout;
         /**
@@ -962,7 +962,7 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
-          * The number of recommendations to return.
+          * The number of recommendations to be fetched and displayed. This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variables.
          */
         "numberOfRecommendations": number;
         /**
@@ -3357,7 +3357,7 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * How children results should be displayed. This does not affect the display of the list itself. To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variables.
          */
         "display"?: ResultDisplayBasicLayout;
         /**
@@ -3365,7 +3365,7 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
-          * The number of recommendations to return.
+          * The number of recommendations to be fetched and displayed. This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variables.
          */
         "numberOfRecommendations"?: number;
     }

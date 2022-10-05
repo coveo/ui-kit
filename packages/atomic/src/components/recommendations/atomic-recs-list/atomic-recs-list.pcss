@@ -1,3 +1,13 @@
+@import '../../common/result-list/styles/mixins.pcss';
 @import '../../common/result-list/styles/placeholders.pcss';
-@import '../../common/result-list/styles/list-display.pcss';
-@import '../../common/result-list/styles/table-display.pcss';
+
+@mixin atomic-grid-clickable-elements;
+@mixin atomic-grid-display-common;
+
+/**
+ * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
+ */
+.list-root {
+  @mixin atomic-grid-with-cards;
+  grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
+}
