@@ -3,8 +3,7 @@ import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once} from '../../../utils/utils';
 import {
-  GridDisplayResultsPlaceholder,
-  ListDisplayResultsPlaceholder,
+  ResultsPlaceholder,
   ResultPlaceholderProps,
   TableDisplayResultsPlaceholder,
 } from '../atomic-result-placeholder/placeholders';
@@ -23,11 +22,13 @@ import {
 } from './result-list-common-interface';
 import {TableDisplayResults} from './table-display-results';
 
-export class ResultListCommon implements ResultListRenderer, ResultListInfo {
+export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
+  implements ResultListRenderer, ResultListInfo
+{
   private updateBreakpoints?: (host: HTMLElement) => void;
   private indexOfResultToFocus?: number;
 
-  constructor(private props: ResultListCommonProps) {
+  constructor(private props: ResultListCommonProps<SpecificResult>) {
     this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
     this.props.bindings.store.registerResultList(this);
     this.addUpdateBreakpointOnce();
@@ -117,7 +118,7 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
             display={this.props.getDisplay()}
           >
             {this.displayPlaceholders && (
-              <ResultsPlaceholder
+              <DisplayResultsPlaceholder
                 numberOfPlaceholders={this.props.getNumberOfPlaceholders()}
                 density={this.props.getDensity()}
                 display={this.props.getDisplay()}
@@ -154,16 +155,14 @@ const ResultDisplayWrapper: FunctionalComponent<{
   );
 };
 
-const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
+const DisplayResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   props
 ) => {
   switch (props.display) {
     case 'table':
       return <TableDisplayResultsPlaceholder {...props} />;
-    case 'grid':
-      return <GridDisplayResultsPlaceholder {...props} />;
     default:
-      return <ListDisplayResultsPlaceholder {...props} />;
+      return <ResultsPlaceholder {...props} />;
   }
 };
 

@@ -37,22 +37,19 @@ export const TableDisplayResults: FunctionalComponent<
             ref={(element) => props.setNewResultRef(element!, rowIndex)}
           >
             {fieldColumns.map((column) => {
+              const key =
+                column.getAttribute('label')! + props.getResultId(result);
               return (
-                <td
-                  key={
-                    column.getAttribute('label')! + props.getResultId(result)
-                  }
-                  part="result-table-cell"
-                >
-                  <atomic-result
-                    result={result}
-                    store={props.bindings.store}
-                    content={column}
-                    loadingFlag={props.loadingFlag}
-                    display={props.getDisplay()}
-                    density={props.getDensity()}
-                    image-size={props.getImageSize()}
-                  ></atomic-result>
+                <td key={key} part="result-table-cell">
+                  {props.renderResult({
+                    result: result,
+                    store: props.bindings.store,
+                    content: column,
+                    loadingFlag: props.loadingFlag,
+                    display: props.getDisplay(),
+                    density: props.getDensity(),
+                    imageSize: props.getImageSize(),
+                  })}
                 </td>
               );
             })}

@@ -28,6 +28,7 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   error?: Error;
 
   updateIconAssetsPath(): void;
+  registerFieldsToInclude(): void;
 }
 
 export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
@@ -91,6 +92,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     }
     this.atomicInterface.updateIconAssetsPath();
     initEngine();
+    this.atomicInterface.registerFieldsToInclude();
     loadDayjsLocale(this.atomicInterface.language);
     await this.i18nPromise;
     this.initComponents();

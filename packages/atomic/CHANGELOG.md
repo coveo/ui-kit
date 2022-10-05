@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.114.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.9...@coveo/atomic@1.114.0) (2022-10-05)
+
+
+### Features
+
+* **atomic:** fields to include refactor ([#2480](https://github.com/coveo/ui-kit/issues/2480)) ([c86cd92](https://github.com/coveo/ui-kit/commit/c86cd92d6b93feb3ab6f10e10d3ecb9fbe3c64e9))
+
+
+
+
+
+## [1.113.9](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.8...@coveo/atomic@1.113.9) (2022-10-03)
+
+
+### Bug Fixes
+
+* **atomic:** improve styling for the insight panel ([#2467](https://github.com/coveo/ui-kit/issues/2467)) ([19b2bcb](https://github.com/coveo/ui-kit/commit/19b2bcb08a204f846af79cef5c0f2d0588d41a66))
+
+
+
+
+
+## [1.113.8](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.7...@coveo/atomic@1.113.8) (2022-09-30)
+
+
+### Bug Fixes
+
+* **atomic:** flaky category focus tests ([#2478](https://github.com/coveo/ui-kit/issues/2478)) ([c0f24a4](https://github.com/coveo/ui-kit/commit/c0f24a42cb72a8145de31ef3b4cd06db46b0318c))
+
+
+
+
+
+## [1.113.7](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.6...@coveo/atomic@1.113.7) (2022-09-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.113.6](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.5...@coveo/atomic@1.113.6) (2022-09-29)
 
 **Note:** Version bump only for package @coveo/atomic
