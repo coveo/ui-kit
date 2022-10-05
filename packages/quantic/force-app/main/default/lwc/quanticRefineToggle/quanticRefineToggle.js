@@ -9,7 +9,7 @@ import LOCALE from '@salesforce/i18n/locale';
 import sortAndFilters from '@salesforce/label/c.quantic_SortAndFilters';
 import viewResults from '@salesforce/label/c.quantic_ViewResults';
 import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
-
+import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurrentTab';
 
 /**
  * @typedef {Object} QuanticModalElement
@@ -40,7 +40,8 @@ export default class QuanticRefineToggle extends LightningElement {
   labels = {
     sortAndFilters,
     viewResults,
-    noFiltersAvailableForThisQuery
+    noFiltersAvailableForThisQuery,
+    noFilterForCurrentTab,
   };
 
   /**
@@ -128,11 +129,16 @@ export default class QuanticRefineToggle extends LightningElement {
   };
 
   get refineButtonDisabled() {
-    const areFacetsRendered = Object.values(this.renderedFacets).reduce(
+    const noResults = !this.hasResults;
+    const noFacetsSelected = !this.activeFiltersCount;
+    return (noResults && noFacetsSelected) || this.isContentEmpty;
+  }
+
+  get someFacetsRendered() {
+    return Object.values(this.renderedFacets).reduce(
       (result, facetRendered) => result || facetRendered,
       false
     );
-    return !this.hasResults || (this.hideSort && !areFacetsRendered);
   }
 
   disconnectedCallback() {
@@ -140,6 +146,10 @@ export default class QuanticRefineToggle extends LightningElement {
     this.unsubscribeBreadcrumbManager?.();
     this.unsubscribeSearchStatus?.();
     this.removeEventListener('renderFacet', this.handleRenderFacetEvent);
+  }
+
+  get isContentEmpty() {
+    return this.hideSort && !this.someFacetsRendered;
   }
 
   /**
