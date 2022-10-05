@@ -1,3 +1,4 @@
 .tab-bar_list-container {
   display: flex;
+  overflow: hidden;
 }
