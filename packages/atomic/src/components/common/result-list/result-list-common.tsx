@@ -1,4 +1,4 @@
-import {Host, h, FunctionalComponent} from '@stencil/core';
+import {h, FunctionalComponent, Fragment} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once} from '../../../utils/utils';
@@ -112,7 +112,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
     }
 
     return (
-      <Host>
+      <Fragment>
         {this.props.resultTemplateProvider.hasError && <slot></slot>}
         <div class={`list-wrapper ${this.listClasses}`}>
           <ResultDisplayWrapper
@@ -137,7 +137,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
             )}
           </ResultDisplayWrapper>
         </div>
-      </Host>
+      </Fragment>
     );
   }
 }

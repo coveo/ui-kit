@@ -27,14 +27,16 @@ import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {Heading} from '../../common/heading';
 
 /**
  * @internal
  * The `atomic-recs-list` component is responsible for displaying recommendations by applying one or more result templates.
  *
- * @part result-list - The element containing every result of a result list
- * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it, when results are displayed as a grid
- * @part result-list-grid-clickable - The clickable link encompassing the result when results are displayed as a grid
+ * @part result-list - The element containing every result of the list of results.
+ * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it.
+ * @part result-list-grid-clickable - The clickable link encompassing the result.
+ * @part label - The label of the list of results.
  */
 @Component({
   tag: 'atomic-recs-list',
@@ -80,6 +82,16 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfRecommendations = 10;
+
+  /**
+   * The non-localized label for the list of recommendations.
+   */
+  @Prop({reflect: true}) public label?: string;
+
+  /**
+   * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+   */
+  @Prop({reflect: true}) public headingLevel = 0;
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -151,6 +163,13 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   public render() {
-    return this.resultListCommon.render();
+    return [
+      this.label && (
+        <Heading level={this.headingLevel} part="label">
+          {this.bindings.i18n.t(this.label)}
+        </Heading>
+      ),
+      this.resultListCommon.render(),
+    ];
   }
 }

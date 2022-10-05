@@ -958,9 +958,17 @@ export namespace Components {
          */
         "display": ResultDisplayBasicLayout;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
         /**
           * The number of recommendations to be fetched and displayed. This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variable.
          */
@@ -3361,9 +3369,17 @@ declare namespace LocalJSX {
          */
         "display"?: ResultDisplayBasicLayout;
         /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
         /**
           * The number of recommendations to be fetched and displayed. This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variable.
          */

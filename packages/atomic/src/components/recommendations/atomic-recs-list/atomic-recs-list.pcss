@@ -11,3 +11,11 @@
   @mixin atomic-grid-with-cards;
   grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
 }
+
+[part='label'] {
+  font-family: var(--atomic-font-family);
+  font-size: var(--atomic-text-2xl);
+  font-weight: var(--atomic-font-bold);
+  margin: 0;
+  margin-bottom: 8px;
+}
