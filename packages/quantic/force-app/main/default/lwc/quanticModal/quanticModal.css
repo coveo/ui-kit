@@ -5,13 +5,15 @@
   display: flex;
   flex-direction: column;
   overflow-y: hidden;
+  visibility: visible;
   opacity: 1;
   -webkit-clip-path: inset(0 0 0 0);
   clip-path: inset(0 0 0 0);
-  transition: .5s;
+  transition: 0.5s;
 }
 
 .modal_hidden {
+  visibility: hidden;
   opacity: 0;
 }
 
