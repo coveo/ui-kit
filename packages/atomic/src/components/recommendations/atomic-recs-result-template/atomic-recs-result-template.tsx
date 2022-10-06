@@ -1,4 +1,4 @@
-import {Component, h, Element, Prop, Method, State} from '@stencil/core';
+import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
 import {RecsResultTemplateCondition, RecsResultTemplate} from '..';
 import {
