@@ -9,20 +9,15 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {buildRecommendationEngine} from '/build/headless/recommendation/headless.esm.js';
-
       (async () => {
         await customElements.whenDefined('atomic-recs-interface');
         const recommendationInterface = document
           .querySelectorAll('atomic-recs-interface')
           .forEach((recommendationInterface) => {
-            const recommendationEngine = buildRecommendationEngine({
-              configuration: {
-                accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
-                organizationId: 'fashioncoveodemocomgzh7iep8',
-              },
+            recommendationInterface.initialize({
+              accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
+              organizationId: 'fashioncoveodemocomgzh7iep8',
             });
-            recommendationInterface.initializeWithRecommendationEngine(recommendationEngine);
           });
       })();
     </script>
@@ -108,7 +103,7 @@
       </atomic-recs-interface>
       <!-- Rows -->
       <atomic-recs-interface fields-to-include="cat_rating_count">
-        <atomic-recs-list class="rows" label="What about those?" number-of-recommendations="6">
+        <atomic-recs-list class="rows" label="What about those?" recommendation="Blog" number-of-recommendations="6">
           <atomic-recs-result-template>
             <template>
               <style>

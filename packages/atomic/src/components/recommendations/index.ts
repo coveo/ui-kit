@@ -1,4 +1,5 @@
 export {
+  RecommendationEngineConfiguration,
   Result as RecsResult,
   ResultTemplateCondition as RecsResultTemplateCondition,
   ResultTemplate as RecsResultTemplate,

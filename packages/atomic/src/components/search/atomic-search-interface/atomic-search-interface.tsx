@@ -73,6 +73,7 @@ export class AtomicSearchInterface
    * A list of non-default fields to include in the query results, separated by commas.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
+
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    */
@@ -239,7 +240,7 @@ export class AtomicSearchInterface
 
   /**
    * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
-   *
+   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   @Method() public initializeWithSearchEngine(engine: SearchEngine) {
     return this.internalInitialization(() => (this.engine = engine));

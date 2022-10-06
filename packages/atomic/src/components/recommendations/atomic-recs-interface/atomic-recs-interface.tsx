@@ -1,8 +1,10 @@
 import {
   RecommendationEngine,
+  RecommendationEngineConfiguration,
   LogLevel,
   loadFieldActions,
   EcommerceDefaultFieldsToInclude,
+  buildRecommendationEngine,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -12,6 +14,7 @@ import {
   Method,
   Prop,
   Watch,
+  State,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
@@ -20,9 +23,11 @@ import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
+import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicRecsStore, AtomicRecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
+export type RecsInitializationOptions = RecommendationEngineConfiguration;
 export type RecsBindings = CommonBindings<
   RecommendationEngine,
   AtomicRecsStore,
@@ -46,10 +51,27 @@ export class AtomicRecsInterface
 
   @Element() public host!: HTMLAtomicRecsInterfaceElement;
 
+  @State() public error?: Error;
+
+  /**
+   * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   */
+  @Prop({reflect: true}) public searchHub = 'default';
+
+  /**
+   * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
+   * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
+   *
+   * @example
+   * America/Montreal
+   */
+  @Prop({reflect: true}) public timezone?: string;
+
   /**
    * The recommendation interface headless engine.
    */
   @Prop({mutable: true}) public engine?: RecommendationEngine;
+
   /**
    * Whether analytics should be enabled.
    */
@@ -59,10 +81,12 @@ export class AtomicRecsInterface
    * The recommendation interface i18next instance.
    */
   @Prop() public i18n: i18n = i18next.createInstance();
+
   /**
    * The severity level of the messages to log in the console.
    */
   @Prop({reflect: true}) public logLevel?: LogLevel;
+
   /**
    * The search interface language.
    */
@@ -110,8 +134,15 @@ export class AtomicRecsInterface
   }
 
   /**
+   * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   */
+  @Method() public initialize(options: RecsInitializationOptions) {
+    return this.internalInitialization(() => this.initEngine(options));
+  }
+
+  /**
    * Initializes the connection with an already preconfigured headless recommendation engine.
-   *
+   * This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
    */
   @Method() public initializeWithRecommendationEngine(
     engine: RecommendationEngine
@@ -151,6 +182,27 @@ export class AtomicRecsInterface
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
+  }
+
+  private initEngine(options: RecsInitializationOptions) {
+    const analyticsConfig = getAnalyticsConfig(options, this.analytics);
+    try {
+      this.engine = buildRecommendationEngine({
+        configuration: {
+          searchHub: this.searchHub,
+          locale: this.language,
+          timezone: this.timezone,
+          ...options,
+          analytics: analyticsConfig,
+        },
+        loggerOptions: {
+          level: this.logLevel,
+        },
+      });
+    } catch (error) {
+      this.error = error as Error;
+      throw error;
+    }
   }
 
   public render() {

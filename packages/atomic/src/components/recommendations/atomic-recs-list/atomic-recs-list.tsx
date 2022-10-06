@@ -63,6 +63,12 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   private nextNewResultTarget!: FocusTargetController;
 
   /**
+   * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
+   * Make sure to set a different value for each atomic-recs-list in your page.
+   */
+  @Prop({reflect: true}) public recommendation = 'Recommendation';
+
+  /**
    * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
    * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
    */
@@ -108,8 +114,12 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   public initialize() {
+    this.validateRecommendationIdentifier();
     this.recommendationList = buildRecommendationList(this.bindings.engine, {
-      options: {numberOfRecommendations: this.numberOfRecommendations},
+      options: {
+        id: this.recommendation,
+        numberOfRecommendations: this.numberOfRecommendations,
+      },
     });
 
     const resultTemplateProvider = new ResultTemplateProvider({
@@ -147,6 +157,18 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     });
 
     this.recommendationList.refresh();
+  }
+
+  private validateRecommendationIdentifier() {
+    const recInterfacesWithSameId = document.querySelectorAll(
+      `atomic-recs-list[recommendation="${this.recommendation}"]`
+    );
+
+    if (recInterfacesWithSameId.length > 1) {
+      this.bindings.engine.logger.warn(
+        `There are multiple atomic-recs-list in this page with the same recommendation propery "${this.recommendation}". Make sure to set a different recommendation property for each.`
+      );
+    }
   }
 
   private get resultListCommonState(): ResultListCommonState<Result> {
