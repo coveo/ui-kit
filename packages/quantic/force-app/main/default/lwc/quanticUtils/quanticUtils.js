@@ -643,7 +643,9 @@ function getLastFocusableElementFromSlot(slotElement) {
  * @param {HTMLSlotElement | null} slotElement
  */
 function getFirstFocusableElementFromSlot(slotElement) {
-  if (!slotElement && slotElement.assignedElements) return null;
+  if (!slotElement && slotElement.assignedElements) {
+    return null;
+  }
   const focusableElements = Array.from(slotElement.assignedElements())
     .map((item) => getFirstFocusableElement(/** @type {HTMLElement} */(item)))
     .filter((item) => !!item);
