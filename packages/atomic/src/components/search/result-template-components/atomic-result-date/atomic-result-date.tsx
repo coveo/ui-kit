@@ -42,11 +42,11 @@ export class AtomicResultDate implements InitializableComponent {
   @Prop({reflect: true}) format = 'D/M/YYYY';
 
   /**
-   * Whether the date should display in the [calendar time format](https://day.js.org/docs/en/plugin/calendar). 
+   * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).
    *
-   * To modify the calendar time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+   * To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
    */
-  @Prop({reflect: true}) calendarTime?: boolean;
+  @Prop({reflect: true}) relativeTime?: boolean;
 
   private dateToRender: string | null = null;
 
@@ -70,7 +70,7 @@ export class AtomicResultDate implements InitializableComponent {
       return;
     }
 
-    if (this.calendarTime) {
+    if (this.relativeTime) {
       dayjs.updateLocale(this.bindings.interfaceElement.language, {
         calendar: {
           sameDay: this.bindings.i18n.t('calendar-same-day'),

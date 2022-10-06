@@ -33,17 +33,17 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
           tabIndex={-1}
           ariaHidden={true}
         />
-        <atomic-result
-          key={props.getResultId(result)}
-          result={result}
-          store={props.bindings.store}
-          content={props.resultTemplateProvider.getTemplateContent(result)}
-          loadingFlag={props.loadingFlag}
-          display={props.getDisplay()}
-          density={props.getDensity()}
-          image-size={props.getImageSize()}
-          renderingFunction={props.getResultRenderingFunction()}
-        ></atomic-result>
+        {props.renderResult({
+          key: props.getResultId(result),
+          result: result,
+          store: props.bindings.store,
+          content: props.resultTemplateProvider.getTemplateContent(result),
+          loadingFlag: props.loadingFlag,
+          display: props.getResultDisplay(),
+          density: props.getDensity(),
+          imageSize: props.getImageSize(),
+          renderingFunction: props.getResultRenderingFunction(),
+        })}
       </div>
     );
   });

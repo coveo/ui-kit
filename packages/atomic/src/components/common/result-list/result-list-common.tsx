@@ -1,10 +1,9 @@
-import {Host, h, FunctionalComponent} from '@stencil/core';
+import {h, FunctionalComponent, Fragment} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once} from '../../../utils/utils';
 import {
-  GridDisplayResultsPlaceholder,
-  ListDisplayResultsPlaceholder,
+  ResultsPlaceholder,
   ResultPlaceholderProps,
   TableDisplayResultsPlaceholder,
 } from '../atomic-result-placeholder/placeholders';
@@ -23,11 +22,15 @@ import {
 } from './result-list-common-interface';
 import {TableDisplayResults} from './table-display-results';
 
-export class ResultListCommon implements ResultListRenderer, ResultListInfo {
+export const resultComponentClass = 'result-component';
+
+export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
+  implements ResultListRenderer, ResultListInfo
+{
   private updateBreakpoints?: (host: HTMLElement) => void;
   private indexOfResultToFocus?: number;
 
-  constructor(private props: ResultListCommonProps) {
+  constructor(private props: ResultListCommonProps<SpecificResult>) {
     this.props.bindings.store.setLoadingFlag(this.props.loadingFlag);
     this.props.bindings.store.registerResultList(this);
     this.addUpdateBreakpointOnce();
@@ -71,7 +74,7 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
 
   public get listClasses() {
     const classes = getResultDisplayClasses(
-      this.props.getDisplay(),
+      this.props.getLayoutDisplay(),
       this.props.getDensity(),
       this.props.getImageSize()
     );
@@ -109,18 +112,18 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
     }
 
     return (
-      <Host>
+      <Fragment>
         {this.props.resultTemplateProvider.hasError && <slot></slot>}
         <div class={`list-wrapper ${this.listClasses}`}>
           <ResultDisplayWrapper
             listClasses={this.listClasses}
-            display={this.props.getDisplay()}
+            display={this.props.getLayoutDisplay()}
           >
             {this.displayPlaceholders && (
-              <ResultsPlaceholder
+              <DisplayResultsPlaceholder
                 numberOfPlaceholders={this.props.getNumberOfPlaceholders()}
                 density={this.props.getDensity()}
-                display={this.props.getDisplay()}
+                display={this.props.getResultDisplay()}
                 imageSize={this.props.getImageSize()}
               />
             )}
@@ -134,7 +137,7 @@ export class ResultListCommon implements ResultListRenderer, ResultListInfo {
             )}
           </ResultDisplayWrapper>
         </div>
-      </Host>
+      </Fragment>
     );
   }
 }
@@ -154,16 +157,14 @@ const ResultDisplayWrapper: FunctionalComponent<{
   );
 };
 
-const ResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
+const DisplayResultsPlaceholder: FunctionalComponent<ResultPlaceholderProps> = (
   props
 ) => {
   switch (props.display) {
     case 'table':
       return <TableDisplayResultsPlaceholder {...props} />;
-    case 'grid':
-      return <GridDisplayResultsPlaceholder {...props} />;
     default:
-      return <ListDisplayResultsPlaceholder {...props} />;
+      return <ResultsPlaceholder {...props} />;
   }
 };
 
@@ -174,7 +175,7 @@ const ResultListDisplay: FunctionalComponent<ResultListDisplayProps> = (
     return null;
   }
 
-  switch (props.getDisplay()) {
+  switch (props.getLayoutDisplay()) {
     case 'table':
       return <TableDisplayResults {...props} />;
     case 'grid':

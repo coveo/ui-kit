@@ -1,4 +1,9 @@
-import {RecommendationEngine, LogLevel} from '@coveo/headless/recommendation';
+import {
+  RecommendationEngine,
+  LogLevel,
+  loadFieldActions,
+  EcommerceDefaultFieldsToInclude,
+} from '@coveo/headless/recommendation';
 import {
   Component,
   Element,
@@ -64,7 +69,7 @@ export class AtomicRecsInterface
   @Prop({reflect: true}) public language = 'en';
 
   /**
-   * TODO: implement fieldsToInclude
+   * A list of non-default fields to include in the query results, separated by commas.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
 
@@ -132,6 +137,15 @@ export class AtomicRecsInterface
   @Watch('analytics')
   public toggleAnalytics() {
     this.commonInterfaceHelper.onAnalyticsChange();
+  }
+
+  public registerFieldsToInclude() {
+    const fields = EcommerceDefaultFieldsToInclude.concat(
+      this.fieldsToInclude.split(',').map((field) => field.trim())
+    );
+    this.engine!.dispatch(
+      loadFieldActions(this.engine!).registerFieldsToInclude(fields)
+    );
   }
 
   private async internalInitialization(initEngine: () => void) {

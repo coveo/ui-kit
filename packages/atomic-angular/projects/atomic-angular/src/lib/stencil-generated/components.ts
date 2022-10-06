@@ -782,13 +782,13 @@ export declare interface AtomicResultDate extends Components.AtomicResultDate {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['calendarTime', 'field', 'format']
+  inputs: ['field', 'format', 'relativeTime']
 })
 @Component({
   selector: 'atomic-result-date',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['calendarTime', 'field', 'format']
+  inputs: ['field', 'format', 'relativeTime']
 })
 export class AtomicResultDate {
   protected el: HTMLElement;
@@ -1305,14 +1305,14 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery'],
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery']
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery']
 })
 export class AtomicSearchBoxInstantResults {
   protected el: HTMLElement;

@@ -110,7 +110,6 @@ describe('Category Facet Test Suites', () => {
           false
         );
         CategoryFacetAssertions.assertPathInUrl(selectedPath);
-        CategoryFacetAssertions.assertFocusActiveParent();
 
         describe('when collapsing the facet', () => {
           before(() => {
@@ -125,6 +124,11 @@ describe('Category Facet Test Suites', () => {
             true
           );
         });
+      });
+
+      describe('test accessibility', () => {
+        beforeEach(setupGoDeeperOneLevel);
+        CategoryFacetAssertions.assertFocusActiveParent();
       });
 
       describe('verify analytics', () => {
@@ -244,6 +248,10 @@ describe('Category Facet Test Suites', () => {
           false
         );
         CategoryFacetAssertions.assertPathInUrl(canadaHierarchy);
+      });
+
+      describe('test accessibility', () => {
+        beforeEach(setupGoDeeperLastLevel);
         CategoryFacetAssertions.assertFocusActiveParent();
       });
 
@@ -280,7 +288,6 @@ describe('Category Facet Test Suites', () => {
 
         describe('test accessibility', () => {
           beforeEach(setupSelectFirstParent);
-
           CategoryFacetAssertions.assertFocusActiveParent();
         });
 
@@ -368,7 +375,7 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    describe('when selecting the "Show more" button, when there\'s no more "Show more" button', () => {
+    describe('when selecting the "Show more" button', () => {
       const numberOfValues = 3;
       function setupShowMore() {
         new TestFixture()
@@ -392,6 +399,10 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetSelectors,
           true
         );
+      });
+
+      describe('test accessibility', () => {
+        beforeEach(setupShowMore);
         CategoryFacetAssertions.assertFocusChildValue(numberOfValues);
       });
 
@@ -712,6 +723,10 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(1);
           CategoryFacetAssertions.assertNumberOfParentValues(2);
           CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
+        });
+
+        describe('test accessibility', () => {
+          beforeEach(setupSelectSearchResult);
           CategoryFacetAssertions.assertFocusActiveParent();
         });
       });

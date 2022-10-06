@@ -1,4 +1,4 @@
-import {Component, Element, State, Prop, Method} from '@stencil/core';
+import {Component, Element, State, Prop, Method, h} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -46,7 +46,7 @@ import {ResultTemplateProvider} from '../../../common/result-list/result-templat
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: '../../../common/result-list/result-list.pcss',
+  styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
 export class AtomicResultList implements InitializableComponent {
@@ -128,9 +128,12 @@ export class AtomicResultList implements InitializableComponent {
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
-    this.resultList = buildResultList(this.bindings.engine, {
-      options: {fieldsToInclude: this.mergedFieldsToInclude},
-    });
+    this.bindings.store.addFieldsToInclude(
+      this.fieldsToInclude
+        ? this.fieldsToInclude.split(',').map((field) => field.trim())
+        : []
+    );
+    this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     const resultTemplateProvider = new ResultTemplateProvider({
       includeDefaultTemplate: true,
@@ -154,22 +157,15 @@ export class AtomicResultList implements InitializableComponent {
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
-      getDisplay: () => this.display,
+      getResultDisplay: () => this.display,
+      getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
+      renderResult: (props) => <atomic-result {...props}></atomic-result>,
     });
-  }
-
-  private get mergedFieldsToInclude() {
-    const localFieldsToInclude = this.fieldsToInclude
-      ? this.fieldsToInclude.split(',').map((field) => field.trim())
-      : [];
-    return localFieldsToInclude.concat(
-      this.bindings.store.state.fieldsToInclude
-    );
   }
 
   public render() {
