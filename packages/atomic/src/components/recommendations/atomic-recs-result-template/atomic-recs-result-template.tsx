@@ -1,11 +1,10 @@
 import {Component, h, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
+import {RecsResultTemplateCondition, RecsResultTemplate} from '..';
 import {
-  RecsResultTemplateCondition,
-  RecsResultTemplate,
-  RecsResultTemplatesHelpers,
-} from '..';
-import {makeMatchConditions} from '../../common/result-templates/result-template-common';
+  makeMatchConditions,
+  ResultTemplateCommon,
+} from '../../common/result-templates/result-template-common';
 
 /**
  * The `atomic-recs-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-recs-result-template`, and an `atomic-recs-list` must be the parent of each `atomic-recs-result-template`.
@@ -13,12 +12,16 @@ import {makeMatchConditions} from '../../common/result-templates/result-template
  * Note: Any `<script>` tags defined inside of a `<template>` element will not be executed when results are being rendered.
  * @MapProp name: mustMatch;attr: must-match;docs: The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
  * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+ *
+ * @internal
  */
 @Component({
   tag: 'atomic-recs-result-template',
   shadow: true,
 })
 export class AtomicRecsResultTemplate {
+  private resultTemplateCommon: ResultTemplateCommon;
+
   @State() public error!: Error;
 
   @Element() public host!: HTMLDivElement;
@@ -61,21 +64,21 @@ export class AtomicRecsResultTemplate {
   @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
     {};
 
+  constructor() {
+    this.resultTemplateCommon = new ResultTemplateCommon({
+      host: this.host,
+      setError: (err) => {
+        this.error = err;
+      },
+      validParents: ['atomic-recs-list'],
+      allowEmpty: true,
+    });
+  }
+
   public componentWillLoad() {
-    if (this.ifDefined) {
-      const fieldNames = this.ifDefined.split(',');
-      this.conditions.push(
-        RecsResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
-      );
-    }
-    if (this.ifNotDefined) {
-      const fieldNames = this.ifNotDefined.split(',');
-      this.conditions.push(
-        RecsResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
-      );
-    }
-    this.matchConditions.push(
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch)
+    this.resultTemplateCommon.matchConditions = makeMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
     );
   }
 
@@ -84,25 +87,10 @@ export class AtomicRecsResultTemplate {
    */
   @Method()
   public async getTemplate(): Promise<RecsResultTemplate<DocumentFragment> | null> {
-    if (this.error) {
-      return null;
-    }
-
-    return {
-      conditions: this.conditions.concat(this.matchConditions),
-      content: this.host.querySelector('template')!.content!,
-      priority: 1,
-    };
+    return this.resultTemplateCommon.getTemplate(this.conditions, this.error);
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+    return this.resultTemplateCommon.renderIfError(this.error);
   }
 }
