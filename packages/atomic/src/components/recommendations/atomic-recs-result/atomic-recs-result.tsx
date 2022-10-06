@@ -16,6 +16,7 @@ import {ResultRenderingFunction} from '../../common/result-list/result-list-comm
 
 /**
  * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
+ * @internal
  */
 @Component({
   tag: 'atomic-recs-result',
