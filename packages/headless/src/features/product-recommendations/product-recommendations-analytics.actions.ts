@@ -1,7 +1,4 @@
-import {
-  ProductRecommendationAnalyticsProvider,
-  StateNeededByProductRecommendationsAnalyticsProvider,
-} from '../../api/analytics/product-recommendations-analytics';
+import {ProductRecommendationAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {
   PartialDocumentInformation,
@@ -22,10 +19,7 @@ export const logProductRecommendations = (): ProductRecommendationAction =>
     'analytics/productRecommendations/load',
     AnalyticsType.Search,
     (client) => client.makeRecommendationInterfaceLoad(),
-    (state) =>
-      new ProductRecommendationAnalyticsProvider(
-        state as StateNeededByProductRecommendationsAnalyticsProvider
-      )
+    (getState) => new ProductRecommendationAnalyticsProvider(getState)
   );
 
 const partialRecommendationInformation = (
@@ -113,8 +107,5 @@ export const logProductRecommendationOpen = (
         documentIdentifier(productRecommendation)
       );
     },
-    (s) =>
-      new ProductRecommendationAnalyticsProvider(
-        s as StateNeededByProductRecommendationsAnalyticsProvider
-      )
+    (getState) => new ProductRecommendationAnalyticsProvider(getState)
   );

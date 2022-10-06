@@ -35,13 +35,14 @@ export type StateNeededByInsightAnalyticsProvider = ConfigurationSection &
   >;
 
 export class InsightAnalyticsProvider
-  extends BaseAnalyticsProvider
+  extends BaseAnalyticsProvider<StateNeededByInsightAnalyticsProvider>
   implements InsightClientProvider
 {
   public getSearchUID(): string {
+    const newState = this.getState();
     return (
-      this.state.search?.searchResponseId ||
-      this.state.search?.response.searchUid ||
+      newState.search?.searchResponseId ||
+      newState.search?.response.searchUid ||
       getSearchInitialState().response.searchUid
     );
   }
@@ -60,9 +61,6 @@ export class InsightAnalyticsProvider
       results: this.mapResultsToAnalyticsDocument(),
       numberOfResults: this.numberOfResults,
     };
-  }
-  constructor(private state: StateNeededByInsightAnalyticsProvider) {
-    super(state);
   }
 
   public getFacetState() {
@@ -93,20 +91,21 @@ export class InsightAnalyticsProvider
 }
 
 interface ConfigureInsightAnalyticsOptions {
-  state: StateNeededByInsightAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
   provider?: InsightClientProvider;
+  getState(): StateNeededByInsightAnalyticsProvider;
 }
 
 export const configureInsightAnalytics = ({
   logger,
-  state,
+  getState,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
-  provider = new InsightAnalyticsProvider(state),
+  provider = new InsightAnalyticsProvider(getState),
 }: ConfigureInsightAnalyticsOptions) => {
+  const state = getState();
   const token = state.configuration.accessToken;
   const apiBaseUrl = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;

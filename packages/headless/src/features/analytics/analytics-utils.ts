@@ -44,7 +44,6 @@ import {
   configureCaseAssistAnalytics,
   StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics';
-import {InsightAppState} from '../../state/insight-app-state';
 import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
@@ -64,10 +63,10 @@ export enum AnalyticsType {
 export interface PreparableAnalyticsActionOptions<
   StateNeeded extends ConfigurationSection
 > {
-  state: StateNeeded;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   preprocessRequest: PreprocessRequest | undefined;
   logger: Logger;
+  getState(): StateNeeded;
 }
 
 type WrappedAnalyticsType<T extends AnalyticsType = AnalyticsType> = {
@@ -187,7 +186,7 @@ function makePreparableAnalyticsAction<
       {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
     ) => {
       return await buildEvent({
-        state: getState(),
+        getState,
         analyticsClientMiddleware,
         preprocessRequest,
         logger,
@@ -196,13 +195,13 @@ function makePreparableAnalyticsAction<
   );
 
   const prepare: PrepareAnalyticsFunction<EventType, StateNeeded> = ({
-    state,
+    getState,
     analyticsClientMiddleware,
     preprocessRequest,
     logger,
   }) => {
     const {description, log} = buildEvent({
-      state,
+      getState,
       analyticsClientMiddleware,
       preprocessRequest,
       logger,
@@ -229,24 +228,25 @@ export const makeAnalyticsAction = <EventType extends AnalyticsType>(
     client: CoveoSearchPageClient,
     state: StateNeededBySearchAnalyticsProvider
   ) => EventBuilder | null,
-  provider: (state: Partial<SearchAppState>) => SearchPageClientProvider = (
-    s
-  ) => new SearchAnalyticsProvider(s as StateNeededBySearchAnalyticsProvider)
+  provider: (
+    getState: () => StateNeededBySearchAnalyticsProvider
+  ) => SearchPageClientProvider = (getState) =>
+    new SearchAnalyticsProvider(getState)
 ): PreparableAnalyticsAction<
   WrappedAnalyticsType<EventType>,
   StateNeededBySearchAnalyticsProvider
 > => {
   return makePreparableAnalyticsAction(
     prefix,
-    ({state, analyticsClientMiddleware, preprocessRequest, logger}) => {
+    ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
       const client = configureAnalytics({
-        state,
+        getState,
         logger,
         analyticsClientMiddleware,
         preprocessRequest,
-        provider: provider(state),
+        provider: provider(getState),
       });
-      const builder = getBuilder(client, state);
+      const builder = getBuilder(client, getState());
       return {
         description: builder?.description,
         log: async () => {
@@ -278,16 +278,16 @@ export const makeCaseAssistAnalyticsAction = (
 ): PreparableAnalyticsAction<void, StateNeededByCaseAssistAnalytics> => {
   return makePreparableAnalyticsAction(
     prefix,
-    ({state, analyticsClientMiddleware, preprocessRequest, logger}) => {
+    ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
       const client = configureCaseAssistAnalytics({
-        state,
+        state: getState(),
         logger,
         analyticsClientMiddleware,
         preprocessRequest,
       });
       return {
         log: async () => {
-          const response = await log(client, state);
+          const response = await log(client, getState());
           logger.info(
             {client: client.coveoAnalyticsClient, response},
             'Analytics response'
@@ -305,26 +305,27 @@ export const makeInsightAnalyticsAction = <EventType extends AnalyticsType>(
     client: CoveoInsightClient,
     state: StateNeededByInsightAnalyticsProvider
   ) => Promise<void | SearchEventResponse> | void,
-  provider: (state: Partial<InsightAppState>) => InsightAnalyticsProvider = (
-    s
-  ) => new InsightAnalyticsProvider(s as StateNeededByInsightAnalyticsProvider)
+  provider: (
+    getState: () => StateNeededByInsightAnalyticsProvider
+  ) => InsightAnalyticsProvider = (getState) =>
+    new InsightAnalyticsProvider(getState)
 ): PreparableAnalyticsAction<
   WrappedAnalyticsType<EventType>,
   StateNeededBySearchAnalyticsProvider
 > => {
   return makePreparableAnalyticsAction(
     prefix,
-    ({state, analyticsClientMiddleware, preprocessRequest, logger}) => {
+    ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
       const client = configureInsightAnalytics({
-        state,
+        getState,
         logger,
         analyticsClientMiddleware,
         preprocessRequest,
-        provider: provider(state),
+        provider: provider(getState),
       });
       return {
         log: async () => {
-          const response = await log(client, state);
+          const response = await log(client, getState());
           logger.info(
             {client: client.coveoAnalyticsClient, response},
             'Analytics response'

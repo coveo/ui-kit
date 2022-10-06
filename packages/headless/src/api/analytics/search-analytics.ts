@@ -23,16 +23,15 @@ export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
 
 export class SearchAnalyticsProvider
-  extends BaseAnalyticsProvider
+  extends BaseAnalyticsProvider<StateNeededBySearchAnalyticsProvider>
   implements SearchPageClientProvider
 {
   private static fallbackPipelineName = 'default';
-  constructor(private state: StateNeededBySearchAnalyticsProvider) {
-    super(state);
-  }
 
   public getFacetState() {
-    return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.state));
+    return buildFacetStateMetadata(
+      getStateNeededForFacetMetadata(this.getState())
+    );
   }
 
   public getPipeline() {
@@ -56,9 +55,10 @@ export class SearchAnalyticsProvider
   }
 
   public getSearchUID(): string {
+    const newState = this.getState();
     return (
-      this.state.search?.searchResponseId ||
-      this.state.search?.response.searchUid ||
+      newState.search?.searchResponseId ||
+      newState.search?.response.searchUid ||
       getSearchInitialState().response.searchUid
     );
   }
@@ -101,20 +101,21 @@ export class SearchAnalyticsProvider
 }
 
 interface ConfigureAnalyticsOptions {
-  state: StateNeededBySearchAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   preprocessRequest?: PreprocessRequest;
   provider?: SearchPageClientProvider;
+  getState(): StateNeededBySearchAnalyticsProvider;
 }
 
 export const configureAnalytics = ({
   logger,
-  state,
+  getState,
   analyticsClientMiddleware = (_, p) => p,
   preprocessRequest,
-  provider = new SearchAnalyticsProvider(state),
+  provider = new SearchAnalyticsProvider(getState),
 }: ConfigureAnalyticsOptions) => {
+  const state = getState();
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;

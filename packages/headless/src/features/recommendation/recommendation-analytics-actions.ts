@@ -1,7 +1,4 @@
-import {
-  RecommendationAnalyticsProvider,
-  StateNeededByRecommendationAnalyticsProvider,
-} from '../../api/analytics/recommendations-analytics';
+import {RecommendationAnalyticsProvider} from '../../api/analytics/recommendations-analytics';
 import {Result} from '../../api/search/search/result';
 import {
   AnalyticsType,
@@ -18,10 +15,7 @@ export const logRecommendationUpdate = (): SearchAction =>
     'analytics/recommendation/update',
     AnalyticsType.Search,
     (client) => client.makeRecommendationInterfaceLoad(),
-    (s) =>
-      new RecommendationAnalyticsProvider(
-        s as StateNeededByRecommendationAnalyticsProvider
-      )
+    (getState) => new RecommendationAnalyticsProvider(getState)
   );
 
 export const logRecommendationOpen = (result: Result): ClickAction =>
@@ -35,8 +29,5 @@ export const logRecommendationOpen = (result: Result): ClickAction =>
         documentIdentifier(result)
       );
     },
-    (s) =>
-      new RecommendationAnalyticsProvider(
-        s as StateNeededByRecommendationAnalyticsProvider
-      )
+    (getState) => new RecommendationAnalyticsProvider(getState)
   );

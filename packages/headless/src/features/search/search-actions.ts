@@ -98,7 +98,7 @@ export const executeSearch = createAsyncThunk<
   const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
   const {description: eventDescription, action: analyticsAction} =
     searchAction.prepare({
-      state,
+      getState: () => config.getState(),
       analyticsClientMiddleware,
       preprocessRequest,
       logger,
