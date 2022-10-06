@@ -953,6 +953,10 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */
         "searchHub": string;
@@ -3376,6 +3380,10 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel;
+        /**
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */

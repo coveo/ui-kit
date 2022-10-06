@@ -73,6 +73,11 @@ export class AtomicRecsInterface
   @Prop({mutable: true}) public engine?: RecommendationEngine;
 
   /**
+   * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+   */
+  @Prop({reflect: true}) public pipeline?: string;
+
+  /**
    * Whether analytics should be enabled.
    */
   @Prop({reflect: true}) public analytics = true;
@@ -192,6 +197,7 @@ export class AtomicRecsInterface
           searchHub: this.searchHub,
           locale: this.language,
           timezone: this.timezone,
+          pipeline: this.pipeline,
           ...options,
           analytics: analyticsConfig,
         },
