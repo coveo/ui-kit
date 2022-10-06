@@ -954,7 +954,7 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * How children results should be displayed. This does not affect the display of the list itself. To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variable.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display": ResultDisplayBasicLayout;
         /**
@@ -970,7 +970,7 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * The number of recommendations to be fetched and displayed. This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variable.
+          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations": number;
         /**
@@ -3365,7 +3365,7 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * How children results should be displayed. This does not affect the display of the list itself. To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variable.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "display"?: ResultDisplayBasicLayout;
         /**
@@ -3381,7 +3381,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of recommendations to be fetched and displayed. This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variable.
+          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations"?: number;
     }
