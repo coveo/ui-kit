@@ -5,6 +5,7 @@ import {
   loadFieldActions,
   EcommerceDefaultFieldsToInclude,
   buildRecommendationEngine,
+  loadRecommendationActions,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -48,6 +49,7 @@ export class AtomicRecsInterface
 {
   private store = createAtomicRecsStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<RecommendationEngine>;
+  private initialized = false;
 
   @Element() public host!: HTMLAtomicRecsInterfaceElement;
 
@@ -155,6 +157,28 @@ export class AtomicRecsInterface
     return this.internalInitialization(() => (this.engine = engine));
   }
 
+  /**
+   *
+   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+   */
+  @Method() public async getRecommendations() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    if (!this.initialized) {
+      console.error(
+        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
+        this.host
+      );
+      return;
+    }
+
+    this.engine!.dispatch(
+      loadRecommendationActions(this.engine!).getRecommendations()
+    );
+  }
+
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
     this.store.set('iconAssetsPath', this.iconAssetsPath);
@@ -187,6 +211,7 @@ export class AtomicRecsInterface
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
+    this.initialized = true;
   }
 
   private initEngine(options: RecsInitializationOptions) {

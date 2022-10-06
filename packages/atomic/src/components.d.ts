@@ -923,6 +923,10 @@ export namespace Components {
          */
         "fieldsToInclude": string;
         /**
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+         */
+        "getRecommendations": () => Promise<void>;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n": i18n;

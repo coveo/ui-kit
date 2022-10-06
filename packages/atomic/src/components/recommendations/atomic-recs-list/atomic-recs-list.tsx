@@ -157,8 +157,6 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
         <atomic-recs-result {...props}></atomic-recs-result>
       ),
     });
-
-    this.recommendationList.refresh();
   }
 
   private validateRecommendationIdentifier() {
