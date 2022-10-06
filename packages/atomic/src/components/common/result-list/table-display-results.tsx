@@ -46,7 +46,7 @@ export const TableDisplayResults: FunctionalComponent<
                     store: props.bindings.store,
                     content: column,
                     loadingFlag: props.loadingFlag,
-                    display: props.getDisplay(),
+                    display: props.getResultDisplay(),
                     density: props.getDensity(),
                     imageSize: props.getImageSize(),
                   })}

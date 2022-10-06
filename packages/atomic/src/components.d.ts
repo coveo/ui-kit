@@ -9,7 +9,7 @@ import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLin
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
 import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
@@ -20,6 +20,8 @@ import { NumericFacetDisplayValues } from "./components/common/facets/numeric-fa
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
@@ -538,7 +540,7 @@ export namespace Components {
     }
     interface AtomicInsightResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes": string;
         /**
@@ -555,7 +557,7 @@ export namespace Components {
          */
         "engine"?: InsightEngine;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize": ResultDisplayImageSize;
         "loadingFlag"?: string;
@@ -564,11 +566,11 @@ export namespace Components {
          */
         "result": InsightResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
     }
@@ -952,18 +954,87 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display": ResultDisplayLayout;
+        "display": ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel": number;
         /**
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
         /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations": number;
+        /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicRecsResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize": ResultDisplayImageSize;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicRecsStore;
+    }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": RecsResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on the conditions applied.
+         */
+        "getTemplate": () => Promise<RecsResultTemplate<DocumentFragment> | null>;
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -979,7 +1050,7 @@ export namespace Components {
     }
     interface AtomicResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes": string;
         /**
@@ -1004,12 +1075,12 @@ export namespace Components {
          */
         "image": ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction": ResultRenderingFunction;
         /**
@@ -1017,11 +1088,11 @@ export namespace Components {
          */
         "result": Result | FoldedResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
@@ -1274,10 +1345,6 @@ export namespace Components {
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density": ResultDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display": ResultDisplayLayout;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -1958,6 +2025,18 @@ declare global {
         prototype: HTMLAtomicRecsListElement;
         new (): HTMLAtomicRecsListElement;
     };
+    interface HTMLAtomicRecsResultElement extends Components.AtomicRecsResult, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultElement: {
+        prototype: HTMLAtomicRecsResultElement;
+        new (): HTMLAtomicRecsResultElement;
+    };
+    interface HTMLAtomicRecsResultTemplateElement extends Components.AtomicRecsResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultTemplateElement: {
+        prototype: HTMLAtomicRecsResultTemplateElement;
+        new (): HTMLAtomicRecsResultTemplateElement;
+    };
     interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicRefineModalElement: {
@@ -2328,6 +2407,8 @@ declare global {
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
+        "atomic-recs-result": HTMLAtomicRecsResultElement;
+        "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
@@ -2881,7 +2962,7 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes"?: string;
         /**
@@ -2898,7 +2979,7 @@ declare namespace LocalJSX {
          */
         "engine"?: InsightEngine;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
@@ -2907,11 +2988,11 @@ declare namespace LocalJSX {
          */
         "result": InsightResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
     }
@@ -3284,13 +3365,78 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel"?: number;
         /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations"?: number;
+    }
+    interface AtomicRecsResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicRecsStore;
+    }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: RecsResultTemplateCondition[];
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
@@ -3306,7 +3452,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes"?: string;
         /**
@@ -3331,12 +3477,12 @@ declare namespace LocalJSX {
          */
         "image"?: ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction"?: ResultRenderingFunction;
         /**
@@ -3344,11 +3490,11 @@ declare namespace LocalJSX {
          */
         "result": Result | FoldedResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
@@ -3593,10 +3739,6 @@ declare namespace LocalJSX {
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density"?: ResultDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display"?: ResultDisplayLayout;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -3943,6 +4085,8 @@ declare namespace LocalJSX {
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
+        "atomic-recs-result": AtomicRecsResult;
+        "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
@@ -4058,6 +4202,8 @@ declare module "@stencil/core" {
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
+            "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
+            "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;

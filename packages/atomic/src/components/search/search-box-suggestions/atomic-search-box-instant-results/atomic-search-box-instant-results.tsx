@@ -41,6 +41,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
   private results: Result[] = [];
   private resultTemplateProvider!: ResultTemplateProvider;
   private instantResults!: InstantResults;
+  private display: ResultDisplayLayout = 'list';
 
   @Element() public host!: HTMLElement;
 
@@ -64,10 +65,6 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
    * The maximum number of results to show.
    */
   @Prop({reflect: true}) public maxResultsPerQuery = 4;
-  /**
-   * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-   */
-  @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
    */

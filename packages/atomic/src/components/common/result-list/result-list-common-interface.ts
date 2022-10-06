@@ -24,7 +24,8 @@ export interface ResultListCommonProps<
   loadingFlag: string;
   resultTemplateProvider: ResultTemplateProvider;
   nextNewResultTarget: FocusTargetController;
-  getDisplay(): ResultDisplayLayout;
+  getLayoutDisplay(): ResultDisplayLayout;
+  getResultDisplay(): ResultDisplayLayout;
   getDensity(): ResultDisplayDensity;
   getImageSize(): ResultDisplayImageSize;
   getResultListState(): ResultListCommonState<SpecificResult>;

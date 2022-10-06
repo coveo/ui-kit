@@ -1,6 +1,7 @@
 import {containsSections, resultSectionTags} from './sections';
 
-export type ResultDisplayLayout = 'list' | 'grid' | 'table';
+export type ResultDisplayBasicLayout = 'list' | 'grid';
+export type ResultDisplayLayout = ResultDisplayBasicLayout | 'table';
 export type ResultDisplayDensity = 'comfortable' | 'normal' | 'compact';
 export type ResultDisplayImageSize = 'large' | 'small' | 'icon' | 'none';
 

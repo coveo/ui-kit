@@ -1,57 +1,50 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
   ResultContextEvent,
-} from '../result-template-components/result-template-decorators';
+} from '../../search/result-template-components/result-template-decorators';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
-import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-} from '../../common/interface/store';
+import {RecsResult} from '..';
+import {AtomicRecsStore} from '../atomic-recs-interface/store';
 import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
 
 /**
- * The `atomic-result` component is used internally by the `atomic-result-list` component.
+ * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
+ * @internal
  */
 @Component({
-  tag: 'atomic-result',
+  tag: 'atomic-recs-result',
   styleUrl: '../../common/result/result.pcss',
   shadow: true,
 })
-export class AtomicResult {
+export class AtomicRecsResult {
   private layout!: ResultLayout;
-
+  private resultRootRef?: HTMLElement;
+  private executedRenderingFunctionOnce = false;
   @Element() host!: HTMLElement;
 
   /**
-   * Whether an atomic-result-link inside atomic-result should stop click event propagation.
+   * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
    */
   @Prop() stopPropagation?: boolean;
 
   /**
    * The result item.
    */
-  @Prop() result!: Result | FoldedResult;
-
-  /**
-   * The headless search engine.
-   * @deprecated This property is currently un-used
-   */
-  @Prop() engine?: SearchEngine;
+  @Prop() result!: RecsResult;
 
   /**
    * Global Atomic state.
    * @internal
    */
-  @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
+  @Prop() store?: AtomicRecsStore;
 
   /**
    * The result content to display.
@@ -59,12 +52,12 @@ export class AtomicResult {
   @Prop() content?: ParentNode;
 
   /**
-   * How results should be displayed.
+   * The layout to apply to display results.
    */
   @Prop() display: ResultDisplayLayout = 'list';
 
   /**
-   * How large or small results should be.
+   * The size of the results.
    */
   @Prop() density: ResultDisplayDensity = 'normal';
 
@@ -73,12 +66,7 @@ export class AtomicResult {
    *
    * This is overwritten by the image size defined in the result content, if it exists.
    */
-  @Prop() imageSize?: ResultDisplayImageSize;
-
-  /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop() image: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ResultDisplayImageSize = 'icon';
 
   /**
    * The classes to add to the result element.
@@ -98,11 +86,8 @@ export class AtomicResult {
    */
   @Prop() renderingFunction: ResultRenderingFunction;
 
-  private resultRootRef?: HTMLElement;
-  private executedRenderingFunctionOnce = false;
-
   @Listen('atomic/resolveResult')
-  public resolveResult(event: ResultContextEvent<FoldedResult | Result>) {
+  public resolveResult(event: ResultContextEvent<RecsResult>) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
@@ -128,18 +113,18 @@ export class AtomicResult {
       this.content!.children,
       this.display,
       this.density,
-      this.imageSize ?? this.image
+      this.imageSize
     );
-  }
-
-  private get isCustomRenderFunctionMode() {
-    return this.renderingFunction !== undefined;
   }
 
   private getContentHTML() {
     return Array.from(this.content!.children)
       .map((child) => child.outerHTML)
       .join('');
+  }
+
+  private get isCustomRenderFunctionMode() {
+    return this.renderingFunction !== undefined;
   }
 
   private shouldExecuteRenderFunction() {
