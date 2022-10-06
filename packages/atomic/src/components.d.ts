@@ -1135,11 +1135,11 @@ export namespace Components {
     }
     interface AtomicResultLocalizedText {
         /**
-          * The numerical field value that should be used to determine if the singular or plural value of a translation should be used
+          * The numerical field value used to determine whether to use the singular or plural value of a translation.
          */
         "fieldCount"?: string;
         /**
-          * The i18n translation key
+          * The i18n translation key.
          */
         "key": string;
     }
@@ -3470,11 +3470,11 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLocalizedText {
         /**
-          * The numerical field value that should be used to determine if the singular or plural value of a translation should be used
+          * The numerical field value used to determine whether to use the singular or plural value of a translation.
          */
         "fieldCount"?: string;
         /**
-          * The i18n translation key
+          * The i18n translation key.
          */
         "key": string;
     }

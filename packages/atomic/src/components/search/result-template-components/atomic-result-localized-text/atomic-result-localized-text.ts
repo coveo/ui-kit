@@ -10,21 +10,21 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 
 /**
- * The `atomic-result-localized-text` component renders a target i18n localized string using field values as parameter.
+ * The `atomic-result-localized-text` component renders a target i18n localized string using the values of a target field.
  *
  * Given this i18n configuration:
  * ```
  * searchInterface.i18n.addResourceBundle('en', 'translation', {
- *    foo: 'Hello world {{a_field_value}} !',
+ *    classic_book_advert: 'Classic book from {{name}}',
  * });
  * ```
  *
- * The component could be configured in such a way to replace `{{a_field_value}}` with a dynamic field value from the result:
+ * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
  * ```
- * <atomic-result-localized-text key="foo" field-value-myfield="a_field_value"></atomic-result-localized-text>
+ * <atomic-result-localized-text key="classic_book_advert" field-author="name"></atomic-result-localized-text>
  * ```
  *
- * @MapProp name: fieldValue;attr: field-value;docs: The field and values that define which result items to extract as an i18n parameter. For example, the following configuration extract the value of `filetype` from a result, and assign it to the i18n parameter `the_parameter`: `field-value-filetype="the_parameter"`;type: Record<string, string> ;default: {}
+ * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
  */
 @Component({
   tag: 'atomic-result-localized-text',
@@ -35,38 +35,31 @@ export class AtomicResultLocalizedText implements InitializableComponent {
 
   @ResultContext() private result!: Result;
   /**
-   * The i18n translation key
+   * The i18n translation key.
    */
   @Prop() key!: string;
   /**
    * The field value to dynamically evaluate.
    */
-  @MapProp() fieldValue: Record<string, string> = {};
+  @MapProp() field: Record<string, string> = {};
   /**
-   * The numerical field value that should be used to determine if the singular or plural value of a translation should be used
+   * The numerical field value used to determine whether to use the singular or plural value of a translation.
    * */
   @Prop() fieldCount?: string;
 
   render() {
-    const parsedFieldValue = this.parseFieldValue();
-    if (this.fieldCount) {
-      const count =
-        (ResultTemplatesHelpers.getResultProperty(
-          this.result,
-          this.fieldCount!
-        ) as number) ?? 1;
-      return this.bindings.i18n.t(this.key, {...parsedFieldValue, count});
-    }
-
-    return this.bindings.i18n.t(this.key, parsedFieldValue);
+    return this.bindings.i18n.t(this.key, {
+      ...this.parseFieldValues(),
+      ...this.parseFieldCount(),
+    });
   }
 
-  private parseFieldValue() {
+  private parseFieldValues() {
     const ret: Record<string, unknown> = {};
-    if (Object.keys(this.fieldValue).length === 0) {
+    if (Object.keys(this.field).length === 0) {
       return ret;
     }
-    Object.entries(this.fieldValue).forEach(([fieldName, i18nParameter]) => {
+    Object.entries(this.field).forEach(([fieldName, i18nParameter]) => {
       const fieldValueRaw = ResultTemplatesHelpers.getResultProperty(
         this.result,
         fieldName
@@ -77,5 +70,18 @@ export class AtomicResultLocalizedText implements InitializableComponent {
     });
 
     return ret;
+  }
+
+  private parseFieldCount() {
+    if (!this.fieldCount) {
+      return {};
+    }
+    return {
+      count:
+        (ResultTemplatesHelpers.getResultProperty(
+          this.result,
+          this.fieldCount!
+        ) as number) ?? 1,
+    };
   }
 }

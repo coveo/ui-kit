@@ -1,6 +1,5 @@
 import {
   generateComponentHTML,
-  SearchInterface,
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
@@ -65,7 +64,7 @@ describe('Result Localized Text Component', () => {
         .with(
           addResultLocalizedTextInResultList({
             key: 'foo',
-            'field-value-somefield': 'replace_me',
+            'field-somefield': 'replace_me',
             ...props,
           })
         )
