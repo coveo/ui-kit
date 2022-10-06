@@ -31,12 +31,12 @@ import {Heading} from '../../common/heading';
 
 /**
  * @internal
- * The `atomic-recs-list` component is responsible for displaying recommendations by applying one or more result templates.
+ * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
  *
- * @part result-list - The element containing every result of the list of results.
+ * @part result-list - The element containing the list of results.
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it.
  * @part result-list-grid-clickable - The clickable link encompassing the result.
- * @part label - The label of the list of results.
+ * @part label - The label of the result list.
  */
 @Component({
   tag: 'atomic-recs-list',
@@ -63,8 +63,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   private nextNewResultTarget!: FocusTargetController;
 
   /**
-   * How children results should be displayed. This does not affect the display of the list itself.
-   * To change the number of recommendations per column, change the -atomic-recs-number-of-columns CSS variable.
+   * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
+   * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public display: ResultDisplayBasicLayout = 'list';
   /**
@@ -78,8 +78,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   public imageSize: ResultDisplayImageSize = 'small';
 
   /**
-   * The number of recommendations to be fetched and displayed.
-   * This does not affect the number of recommendations per column. To do so, change the -atomic-recs-number-of-columns CSS variable.
+   * The number of recommendations to fetch and display.
+   * This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfRecommendations = 10;
 
