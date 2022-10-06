@@ -923,7 +923,7 @@ export namespace Components {
          */
         "fieldsToInclude": string;
         /**
-          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+          * Fetches new recommendations.
          */
         "getRecommendations": () => Promise<void>;
         /**
@@ -936,7 +936,7 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
         "initialize": (options: RecsInitializationOptions) => Promise<void>;
         /**
@@ -944,7 +944,7 @@ export namespace Components {
          */
         "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language": string;
         /**
@@ -957,11 +957,11 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline"?: string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
          */
         "searchHub": string;
         /**
@@ -3372,7 +3372,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language"?: string;
         /**
@@ -3385,11 +3385,11 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline"?: string;
         /**
-          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
          */
         "searchHub"?: string;
         /**

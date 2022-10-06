@@ -56,7 +56,7 @@ export class AtomicRecsInterface
   @State() public error?: Error;
 
   /**
-   * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
    */
   @Prop({reflect: true}) public searchHub = 'default';
 
@@ -75,7 +75,7 @@ export class AtomicRecsInterface
   @Prop({mutable: true}) public engine?: RecommendationEngine;
 
   /**
-   * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+   * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
    */
   @Prop({reflect: true}) public pipeline?: string;
 
@@ -95,7 +95,7 @@ export class AtomicRecsInterface
   @Prop({reflect: true}) public logLevel?: LogLevel;
 
   /**
-   * The search interface language.
+   * The recommendation interface language.
    */
   @Prop({reflect: true}) public language = 'en';
 
@@ -141,7 +141,7 @@ export class AtomicRecsInterface
   }
 
   /**
-   * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
   @Method() public initialize(options: RecsInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
@@ -159,7 +159,7 @@ export class AtomicRecsInterface
 
   /**
    *
-   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+   * Fetches new recommendations.
    */
   @Method() public async getRecommendations() {
     if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
