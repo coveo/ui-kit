@@ -160,14 +160,28 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     };
   }
 
+  private renderHeading() {
+    if (!this.label) {
+      return;
+    }
+
+    const shouldHide =
+      this.resultListCommonState.hasError ||
+      (this.resultListCommonState.firstSearchExecuted &&
+        !this.resultListCommonState.hasResults);
+
+    return (
+      <Heading
+        level={this.headingLevel}
+        part="label"
+        class={shouldHide ? 'hidden' : ''}
+      >
+        {this.bindings.i18n.t(this.label)}
+      </Heading>
+    );
+  }
+
   public render() {
-    return [
-      this.label && (
-        <Heading level={this.headingLevel} part="label">
-          {this.bindings.i18n.t(this.label)}
-        </Heading>
-      ),
-      this.resultListCommon.render(),
-    ];
+    return [this.renderHeading(), this.resultListCommon.render()];
   }
 }
