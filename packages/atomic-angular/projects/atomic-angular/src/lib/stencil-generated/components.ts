@@ -1287,14 +1287,14 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery'],
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery']
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery']
 })
 export class AtomicSearchBoxInstantResults {
   protected el: HTMLElement;

@@ -2,6 +2,7 @@ import {
   RecommendationEngine,
   LogLevel,
   loadFieldActions,
+  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -139,13 +140,12 @@ export class AtomicRecsInterface
   }
 
   public registerFieldsToInclude() {
-    if (this.fieldsToInclude) {
-      this.engine!.dispatch(
-        loadFieldActions(this.engine!).registerFieldsToInclude(
-          this.fieldsToInclude.split(',').map((field) => field.trim())
-        )
-      );
-    }
+    const fields = EcommerceDefaultFieldsToInclude.concat(
+      this.fieldsToInclude.split(',').map((field) => field.trim())
+    );
+    this.engine!.dispatch(
+      loadFieldActions(this.engine!).registerFieldsToInclude(fields)
+    );
   }
 
   private async internalInitialization(initEngine: () => void) {
