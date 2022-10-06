@@ -1,14 +1,13 @@
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockDateFacetResponse} from '../../../test/mock-date-facet-response';
+import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
+import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockDateFacetSlice} from '../../../test/mock-date-facet-slice';
 import {buildMockDateFacetValue} from '../../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
-import {buildMockNumericFacetResponse} from '../../../test/mock-numeric-facet-response';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetSlice} from '../../../test/mock-numeric-facet-slice';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
 import {createMockState} from '../../../test/mock-state';
@@ -24,68 +23,74 @@ describe('facet-set-analytics-action-utils', () => {
       const field = 'myfield';
       const getState = () => {
         const state = createMockState();
-        const facetResponse = buildMockFacetResponse({
+        const facetRequest = buildMockFacetRequest({
           facetId,
           field,
-          values: [
-            {numberOfResults: 1, value: 'should not appear', state: 'idle'},
-            {numberOfResults: 1, value: 'should appear', state: 'selected'},
+          currentValues: [
+            buildMockFacetValueRequest({
+              value: 'should not appear',
+              state: 'idle',
+            }),
+            buildMockFacetValueRequest({
+              value: 'should appear',
+              state: 'selected',
+            }),
           ],
         });
-        state.search.response.facets = [facetResponse];
+        state.search.response.facets = [];
         state.facetSet = {
-          [facetResponse.facetId]: buildMockFacetSlice({
-            request: buildMockFacetRequest({facetId, field}),
+          [facetRequest.facetId]: buildMockFacetSlice({
+            request: buildMockFacetRequest(facetRequest),
           }),
         };
-        return {state, facetResponse};
+        return {state, facetRequest};
       };
 
       it('includes #selected values in the facet state', () => {
-        const {state, facetResponse} = getState();
+        const {state, facetRequest} = getState();
         expect(buildFacetStateMetadata(state)).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              field: facetResponse.field,
-              id: facetResponse.facetId,
-              value: facetResponse.values[1].value,
+              field: facetRequest.field,
+              id: facetRequest.facetId,
+              value: facetRequest.currentValues[1].value,
               valuePosition: 2,
-              displayValue: facetResponse.values[1].value,
+              displayValue: facetRequest.currentValues[1].value,
               facetType: 'specific',
               state: 'selected',
               facetPosition: 1,
-              title: `${facetResponse.field}_${facetResponse.facetId}`,
+              title: `${facetRequest.field}_${facetRequest.facetId}`,
             }),
           ])
         );
       });
 
       it('does not include #idle values in the facet state', () => {
-        const {state, facetResponse} = getState();
+        const {state, facetRequest} = getState();
 
         expect(buildFacetStateMetadata(state)).not.toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              value: facetResponse.values[0].value,
+              value: facetRequest.currentValues[0].value,
             }),
           ])
         );
       });
 
       it('should include the correct metadata', () => {
-        const {state, facetResponse} = getState();
-        const facetValue = facetResponse.values[1].value;
+        const {state, facetRequest} = getState();
+        const facetValue = facetRequest.currentValues[1].value;
         expect(
           buildFacetSelectionChangeMetadata(
-            {facetId: facetResponse.facetId, facetValue},
+            {facetId: facetRequest.facetId, facetValue},
             state
           )
         ).toEqual(
           expect.objectContaining({
-            facetField: facetResponse.field,
-            facetId: facetResponse.facetId,
-            facetTitle: `${facetResponse.field}_${facetResponse.facetId}`,
-            facetValue: facetResponse.values[1].value,
+            facetField: facetRequest.field,
+            facetId: facetRequest.facetId,
+            facetTitle: `${facetRequest.field}_${facetRequest.facetId}`,
+            facetValue: facetRequest.currentValues[1].value,
           })
         );
       });
@@ -96,19 +101,19 @@ describe('facet-set-analytics-action-utils', () => {
         const facetId = 'myfacet';
         const field = 'myfield';
         const state = createMockState();
-        const facetResponse = buildMockCategoryFacetResponse({
+        const facetRequest = buildMockCategoryFacetRequest({
           facetId,
           field,
-          values: [
-            buildMockCategoryFacetValue({
+          currentValues: [
+            buildMockCategoryFacetValueRequest({
               state: 'selected',
               value: 'should appear',
               children: [
-                buildMockCategoryFacetValue({
+                buildMockCategoryFacetValueRequest({
                   state: 'selected',
                   value: 'should appear too',
                   children: [
-                    buildMockCategoryFacetValue({
+                    buildMockCategoryFacetValueRequest({
                       state: 'idle',
                       value: 'should not appear',
                     }),
@@ -118,47 +123,47 @@ describe('facet-set-analytics-action-utils', () => {
             }),
           ],
         });
-        state.search.response.facets = [facetResponse];
+        state.search.response.facets = [];
         state.categoryFacetSet = {
-          [facetResponse.facetId]: buildMockCategoryFacetSlice({
-            request: buildMockCategoryFacetRequest({facetId, field}),
+          [facetRequest.facetId]: buildMockCategoryFacetSlice({
+            request: buildMockCategoryFacetRequest(facetRequest),
           }),
         };
-        return {state, facetResponse};
+        return {state, facetRequest};
       };
 
       it('includes only #selected values', () => {
-        const {state, facetResponse} = getState();
-        const value = `${facetResponse.values[0].value};${facetResponse.values[0].children[0].value}`;
+        const {state, facetRequest} = getState();
+        const value = `${facetRequest.currentValues[0].value};${facetRequest.currentValues[0].children[0].value}`;
         expect(buildFacetStateMetadata(state)).toEqual([
           expect.objectContaining({
-            field: facetResponse.field,
-            id: facetResponse.facetId,
+            field: facetRequest.field,
+            id: facetRequest.facetId,
             value,
             valuePosition: 1,
             displayValue: value,
             facetType: 'hierarchical',
             state: 'selected',
             facetPosition: 1,
-            title: `${facetResponse.field}_${facetResponse.facetId}`,
+            title: `${facetRequest.field}_${facetRequest.facetId}`,
           }),
         ]);
       });
 
       it('should include the correct metadata', () => {
-        const {state, facetResponse} = getState();
-        const facetValue = facetResponse.values[0].value;
+        const {state, facetRequest} = getState();
+        const facetValue = facetRequest.currentValues[0].value;
         expect(
           buildFacetSelectionChangeMetadata(
-            {facetId: facetResponse.facetId, facetValue},
+            {facetId: facetRequest.facetId, facetValue},
             state
           )
         ).toEqual(
           expect.objectContaining({
-            facetField: facetResponse.field,
-            facetId: facetResponse.facetId,
-            facetTitle: `${facetResponse.field}_${facetResponse.facetId}`,
-            facetValue: `${facetResponse.values[0].value};${facetResponse.values[0].children[0].value}`,
+            facetField: facetRequest.field,
+            facetId: facetRequest.facetId,
+            facetTitle: `${facetRequest.field}_${facetRequest.facetId}`,
+            facetValue: `${facetRequest.currentValues[0].value};${facetRequest.currentValues[0].children[0].value}`,
           })
         );
       });
@@ -167,8 +172,8 @@ describe('facet-set-analytics-action-utils', () => {
     describe('#numerical facet', () => {
       const getState = () => {
         const state = createMockState();
-        const facetResponse = buildMockNumericFacetResponse({
-          values: [
+        const facetRequest = buildMockNumericFacetRequest({
+          currentValues: [
             buildMockNumericFacetValue({
               state: 'idle',
               start: 1,
@@ -183,39 +188,41 @@ describe('facet-set-analytics-action-utils', () => {
             }),
           ],
         });
-        state.search.response.facets = [facetResponse];
+        state.search.response.facets = [];
         state.numericFacetSet = {
-          [facetResponse.facetId]: buildMockNumericFacetSlice(),
+          [facetRequest.facetId]: buildMockNumericFacetSlice({
+            request: facetRequest,
+          }),
         };
-        return {state, facetResponse};
+        return {state, facetRequest};
       };
 
       it('includes #selected values', () => {
-        const {state, facetResponse} = getState();
+        const {state, facetRequest} = getState();
         expect(buildFacetStateMetadata(state)).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              field: facetResponse.field,
-              id: facetResponse.facetId,
-              value: `${facetResponse.values[1].start}..${facetResponse.values[1].end}`,
+              field: facetRequest.field,
+              id: facetRequest.facetId,
+              value: `${facetRequest.currentValues[1].start}..${facetRequest.currentValues[1].end}`,
               valuePosition: 2,
-              displayValue: `${facetResponse.values[1].start}..${facetResponse.values[1].end}`,
+              displayValue: `${facetRequest.currentValues[1].start}..${facetRequest.currentValues[1].end}`,
               facetType: 'numericalRange',
               state: 'selected',
               facetPosition: 1,
-              title: `${facetResponse.field}_${facetResponse.facetId}`,
+              title: `${facetRequest.field}_${facetRequest.facetId}`,
             }),
           ])
         );
       });
 
       it('does not include #idle values', () => {
-        const {state, facetResponse} = getState();
+        const {state, facetRequest} = getState();
 
         expect(buildFacetStateMetadata(state)).not.toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              value: `${facetResponse.values[0].start}..${facetResponse.values[0].end}`,
+              value: `${facetRequest.currentValues[0].start}..${facetRequest.currentValues[0].end}`,
             }),
           ])
         );
@@ -225,8 +232,8 @@ describe('facet-set-analytics-action-utils', () => {
     describe('#date facet', () => {
       const getState = () => {
         const state = createMockState();
-        const facetResponse = buildMockDateFacetResponse({
-          values: [
+        const facetRequest = buildMockDateFacetRequest({
+          currentValues: [
             buildMockDateFacetValue({
               state: 'idle',
               start: 'should not',
@@ -241,39 +248,41 @@ describe('facet-set-analytics-action-utils', () => {
             }),
           ],
         });
-        state.search.response.facets = [facetResponse];
+        state.search.response.facets = [];
         state.dateFacetSet = {
-          [facetResponse.facetId]: buildMockDateFacetSlice(),
+          [facetRequest.facetId]: buildMockDateFacetSlice({
+            request: facetRequest,
+          }),
         };
-        return {state, facetResponse};
+        return {state, facetRequest};
       };
 
       it('includes #selected values', () => {
-        const {state, facetResponse} = getState();
+        const {state, facetRequest} = getState();
         expect(buildFacetStateMetadata(state)).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              field: facetResponse.field,
-              id: facetResponse.facetId,
-              value: `${facetResponse.values[1].start}..${facetResponse.values[1].end}`,
+              field: facetRequest.field,
+              id: facetRequest.facetId,
+              value: `${facetRequest.currentValues[1].start}..${facetRequest.currentValues[1].end}`,
               valuePosition: 2,
-              displayValue: `${facetResponse.values[1].start}..${facetResponse.values[1].end}`,
+              displayValue: `${facetRequest.currentValues[1].start}..${facetRequest.currentValues[1].end}`,
               facetType: 'dateRange',
               state: 'selected',
               facetPosition: 1,
-              title: `${facetResponse.field}_${facetResponse.facetId}`,
+              title: `${facetRequest.field}_${facetRequest.facetId}`,
             }),
           ])
         );
       });
 
       it('does not include #idle values', () => {
-        const {state, facetResponse} = getState();
+        const {state, facetRequest} = getState();
 
         expect(buildFacetStateMetadata(state)).not.toEqual(
           expect.arrayContaining([
             expect.objectContaining({
-              value: `${facetResponse.values[0].start}..${facetResponse.values[0].end}`,
+              value: `${facetRequest.currentValues[0].start}..${facetRequest.currentValues[0].end}`,
             }),
           ])
         );

@@ -233,7 +233,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     }
 
     if (this.analyticsAction) {
-      await this.dispatch(this.analyticsAction());
+      await this.dispatch(this.analyticsAction);
     }
 
     const originalQuery = this.getCurrentQuery();

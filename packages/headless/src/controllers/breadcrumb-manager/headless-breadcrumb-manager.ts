@@ -9,7 +9,7 @@ import {
 } from '../../app/reducers';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
-import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
+import {categoryFacetResponseSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
@@ -129,7 +129,10 @@ export function buildBreadcrumbManager(
   };
 
   const buildCategoryFacetBreadcrumb = (facetId: string) => {
-    const path = categoryFacetSelectedValuesSelector(getState(), facetId);
+    const path = categoryFacetResponseSelectedValuesSelector(
+      getState(),
+      facetId
+    );
     return {
       facetId,
       field: getState().categoryFacetSet[facetId]!.request.field,

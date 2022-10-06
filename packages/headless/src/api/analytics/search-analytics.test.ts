@@ -8,6 +8,7 @@ import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {
@@ -125,7 +126,10 @@ describe('search analytics', () => {
       const state = getBaseState();
       state.facetSet = {
         the_facet: buildMockFacetSlice({
-          request: buildMockFacetRequest({field: 'foo'}),
+          request: buildMockFacetRequest({
+            field: 'foo',
+            currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+          }),
         }),
       };
       state.search = buildMockSearchState({});
