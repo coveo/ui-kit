@@ -922,6 +922,27 @@ export class AtomicResultList {
 }
 
 
+export declare interface AtomicResultLocalizedText extends Components.AtomicResultLocalizedText {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['fieldCount', 'key']
+})
+@Component({
+  selector: 'atomic-result-localized-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['fieldCount', 'key']
+})
+export class AtomicResultLocalizedText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicResultMultiValueText extends Components.AtomicResultMultiValueText {}
 
 @ProxyCmp({
