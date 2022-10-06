@@ -653,6 +653,28 @@ export class AtomicRecsResult {
 }
 
 
+export declare interface AtomicRecsResultTemplate extends Components.AtomicRecsResultTemplate {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['conditions', 'ifDefined', 'ifNotDefined'],
+  methods: ['getTemplate']
+})
+@Component({
+  selector: 'atomic-recs-result-template',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['conditions', 'ifDefined', 'ifNotDefined']
+})
+export class AtomicRecsResultTemplate {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicRefineModal extends Components.AtomicRefineModal {}
 
 @ProxyCmp({
