@@ -562,8 +562,12 @@ export function getLastFocusableElement(element) {
     return null;
   }
 
+  if (element.tagName === "SLOT" && /** @type {HTMLSlotElement} */(element).assignedElements().length) {
+    return getLastFocusableElementFromSlot(/** @type {HTMLSlotElement} */(element))
+  }
+
   const focusableElements = Array.from(element.childNodes)
-    .map((item) => this.getLastFocusableElement(item))
+    .map((item) => getLastFocusableElement(/** @type {HTMLElement} */ (item)))
     .filter((item) => !!item);
 
   if (focusableElements.length) {
@@ -590,8 +594,12 @@ export function getFirstFocusableElement(element) {
     return null;
   }
 
+  if (element.tagName === "SLOT" && /** @type {HTMLSlotElement} */(element).assignedElements().length) {
+    return getFirstFocusableElementFromSlot(/** @type {HTMLSlotElement} */(element))
+  }
+
   const focusableElements = Array.from(element.childNodes)
-    .map((item) => this.getFirstFocusableElement(item))
+    .map((item) => getFirstFocusableElement(/** @type {HTMLElement} */ (item)))
     .filter((item) => !!item);
 
   if (focusableElements.length) {
@@ -612,4 +620,34 @@ function isCustomElement(element) {
     return true;
   }
   return false;
+}
+
+/**
+ * @param {HTMLSlotElement | null} slotElement
+ */
+function getLastFocusableElementFromSlot(slotElement) {
+  if (!slotElement && slotElement.assignedElements) return null;
+  const focusableElements = Array.from(slotElement.assignedElements())
+    .map((item) => getLastFocusableElement(/** @type {HTMLElement} */(item)))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[focusableElements.length - 1];
+  }
+  return null;
+}
+
+/**
+ * @param {HTMLSlotElement | null} slotElement
+ */
+function getFirstFocusableElementFromSlot(slotElement) {
+  if (!slotElement && slotElement.assignedElements) return null;
+  const focusableElements = Array.from(slotElement.assignedElements())
+    .map((item) => getFirstFocusableElement(/** @type {HTMLElement} */(item)))
+    .filter((item) => !!item);
+
+  if (focusableElements.length) {
+    return focusableElements[0];
+  }
+  return null;
 }

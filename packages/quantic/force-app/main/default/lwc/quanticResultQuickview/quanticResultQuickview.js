@@ -204,6 +204,7 @@ export default class QuanticResultQuickview extends LightningElement {
     return !!this.previewButtonIcon;
   }
 
+  /** @type {HTMLElement} */
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }
@@ -279,14 +280,11 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get lastFocusableElementInFooterSlot() {
+    /** @type {HTMLSlotElement} */
     const footerSlot = this.template.querySelector('slot[name=footer]');
     if (footerSlot) {
-      // @ts-ignore
-      const assignedElements = footerSlot.assignedElements();
-      for (let i = assignedElements.length - 1; i >= 0; i--) {
-        const lastElement = getLastFocusableElement(assignedElements[i]);
+        const lastElement = getLastFocusableElement(footerSlot);
         if (lastElement) return lastElement;
-      }
     }
     return null;
   }
