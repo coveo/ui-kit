@@ -14,7 +14,7 @@ import {
 interface ResultDateProps {
   field?: string;
   format?: string;
-  'calendar-time'?: boolean;
+  'relative-time'?: boolean;
 }
 
 const addResultDateInResultList = (props: ResultDateProps = {}) =>
@@ -85,13 +85,13 @@ describe('Result Date Component', () => {
     CommonAssertions.assertAccessibility(ResultDateSelectors.firstInResult);
   });
 
-  describe('when using calendar time', () => {
+  describe('when using relative time', () => {
     const field = 'my-creation-date';
     const format = 'YYYY-MM-DD';
 
     const setup = (apiDate: string) => {
       new TestFixture()
-        .with(addResultDateInResultList({field, format, 'calendar-time': true}))
+        .with(addResultDateInResultList({field, format, 'relative-time': true}))
         .withCustomResponse((response) =>
           response.results.forEach((result) => (result.raw[field] = apiDate))
         )
