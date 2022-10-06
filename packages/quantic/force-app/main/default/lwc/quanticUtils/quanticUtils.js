@@ -623,6 +623,7 @@ function isCustomElement(element) {
 }
 
 /**
+ * Returns the last focusable element in an HTML slot.
  * @param {HTMLSlotElement | null} slotElement
  */
 function getLastFocusableElementFromSlot(slotElement) {
@@ -638,6 +639,7 @@ function getLastFocusableElementFromSlot(slotElement) {
 }
 
 /**
+ * Returns the first focusable element in an HTML slot.
  * @param {HTMLSlotElement | null} slotElement
  */
 function getFirstFocusableElementFromSlot(slotElement) {
