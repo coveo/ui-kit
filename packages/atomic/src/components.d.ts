@@ -430,8 +430,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -447,8 +446,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -926,8 +924,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -939,8 +936,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -1166,8 +1162,7 @@ export namespace Components {
     }
     interface AtomicResultLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
-          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
         /**
@@ -1419,8 +1414,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -1436,8 +1430,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -1461,8 +1454,7 @@ export namespace Components {
          */
         "searchHub": string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example America/Montreal
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
@@ -2876,8 +2868,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -2885,8 +2876,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -3358,8 +3348,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -3367,8 +3356,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -3581,8 +3569,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
-          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
         /**
@@ -3744,8 +3731,7 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
         /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
-          * @example ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
+          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
          */
         "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
         /**
@@ -3821,8 +3807,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -3830,8 +3815,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -3855,8 +3839,7 @@ declare namespace LocalJSX {
          */
         "searchHub"?: string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example America/Montreal
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
