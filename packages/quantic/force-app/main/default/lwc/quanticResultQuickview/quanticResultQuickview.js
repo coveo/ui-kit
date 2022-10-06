@@ -251,12 +251,12 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   setFocusToTop() {
+    /** @type {HTMLElement} */
     const focusTarget = this.template.querySelector(
       `.slds-button.slds-button_icon`
     );
 
     if (focusTarget) {
-      // @ts-ignore
       focusTarget.focus();
     }
   }
@@ -271,7 +271,6 @@ export default class QuanticResultQuickview extends LightningElement {
         this.lastFocusableElementInFooterSlot ||
         this.lastFocusableElementInQuickview;
       if (lastFocusableElement) {
-        // @ts-ignore
         lastFocusableElement.focus();
       } else {
         this.setFocusToHeader();
