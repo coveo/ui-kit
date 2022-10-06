@@ -31,7 +31,7 @@ export class AtomicResult {
   @Element() host!: HTMLElement;
 
   /**
-   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   * Whether an atomic-result-link inside atomic-result should stop click event propagation.
    */
   @Prop() stopPropagation?: boolean;
 
@@ -47,7 +47,7 @@ export class AtomicResult {
   @Prop() engine?: SearchEngine;
 
   /**
-   * Global state for Atomic.
+   * Global Atomic state.
    * @internal
    */
   @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
@@ -68,9 +68,9 @@ export class AtomicResult {
   @Prop() density: ResultDisplayDensity = 'normal';
 
   /**
-   * How large or small the visual section of results should be.
+   * The size of the visual section in result list items.
    *
-   * This may be overwritten if an image size is defined in the result content.
+   * This is overwritten by the image size defined in the result content, if it exists.
    */
   @Prop() imageSize?: ResultDisplayImageSize;
 
@@ -80,7 +80,7 @@ export class AtomicResult {
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   /**
-   * Classes that will be added to the result element.
+   * The classes to add to the result element.
    */
   @Prop() classes = '';
 
@@ -90,7 +90,7 @@ export class AtomicResult {
   @Prop() loadingFlag?: string;
 
   /**
-   * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system.
+   * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
    * @internal

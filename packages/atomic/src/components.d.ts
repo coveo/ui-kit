@@ -540,7 +540,7 @@ export namespace Components {
     }
     interface AtomicInsightResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes": string;
         /**
@@ -557,7 +557,7 @@ export namespace Components {
          */
         "engine"?: InsightEngine;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize": ResultDisplayImageSize;
         "loadingFlag"?: string;
@@ -566,11 +566,11 @@ export namespace Components {
          */
         "result": InsightResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
     }
@@ -973,7 +973,7 @@ export namespace Components {
     }
     interface AtomicRecsResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes": string;
         /**
@@ -981,20 +981,20 @@ export namespace Components {
          */
         "content"?: ParentNode;
         /**
-          * How large or small results should be.
+          * The size of the results.
          */
         "density": ResultDisplayDensity;
         /**
-          * How results should be displayed.
+          * The layout to apply to display results.
          */
         "display": ResultDisplayLayout;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize": ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-recs-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction": ResultRenderingFunction;
         /**
@@ -1002,11 +1002,11 @@ export namespace Components {
          */
         "result": RecsResult;
         /**
-          * Whether an atomic-result-link inside atomic-recs-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicRecsStore;
     }
@@ -1016,7 +1016,7 @@ export namespace Components {
          */
         "conditions": RecsResultTemplateCondition[];
         /**
-          * Gets the appropriate result template based on conditions applied.
+          * Gets the appropriate result template based on the conditions applied.
          */
         "getTemplate": () => Promise<RecsResultTemplate<DocumentFragment> | null>;
         /**
@@ -1042,7 +1042,7 @@ export namespace Components {
     }
     interface AtomicResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes": string;
         /**
@@ -1067,12 +1067,12 @@ export namespace Components {
          */
         "image": ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction": ResultRenderingFunction;
         /**
@@ -1080,11 +1080,11 @@ export namespace Components {
          */
         "result": Result | FoldedResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
@@ -2954,7 +2954,7 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes"?: string;
         /**
@@ -2971,7 +2971,7 @@ declare namespace LocalJSX {
          */
         "engine"?: InsightEngine;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
@@ -2980,11 +2980,11 @@ declare namespace LocalJSX {
          */
         "result": InsightResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
     }
@@ -3371,7 +3371,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRecsResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes"?: string;
         /**
@@ -3379,20 +3379,20 @@ declare namespace LocalJSX {
          */
         "content"?: ParentNode;
         /**
-          * How large or small results should be.
+          * The size of the results.
          */
         "density"?: ResultDisplayDensity;
         /**
-          * How results should be displayed.
+          * The layout to apply to display results.
          */
         "display"?: ResultDisplayLayout;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-recs-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction"?: ResultRenderingFunction;
         /**
@@ -3400,11 +3400,11 @@ declare namespace LocalJSX {
          */
         "result": RecsResult;
         /**
-          * Whether an atomic-result-link inside atomic-recs-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicRecsStore;
     }
@@ -3436,7 +3436,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes"?: string;
         /**
@@ -3461,12 +3461,12 @@ declare namespace LocalJSX {
          */
         "image"?: ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction"?: ResultRenderingFunction;
         /**
@@ -3474,11 +3474,11 @@ declare namespace LocalJSX {
          */
         "result": Result | FoldedResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
