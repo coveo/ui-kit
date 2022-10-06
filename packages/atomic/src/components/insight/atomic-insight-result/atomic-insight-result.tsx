@@ -1,4 +1,4 @@
-import {Component, h, Prop, Element, Listen} from '@stencil/core';
+import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {AtomicInsightStore} from '../atomic-insight-interface/store';
 import {
@@ -11,6 +11,7 @@ import {
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
 import {InsightResult, InsightEngine} from '..';
+import {resultComponentClass} from '../../common/result-list/result-list-common';
 
 /**
  * @internal
@@ -113,13 +114,15 @@ export class AtomicInsightResult {
   public render() {
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
-      <div
-        class={`result-root ${this.layout
-          .getClasses()
-          .concat(this.classes)
-          .join(' ')}`}
-        innerHTML={this.getContentHTML()}
-      ></div>
+      <Host class={resultComponentClass}>
+        <div
+          class={`result-root ${this.layout
+            .getClasses()
+            .concat(this.classes)
+            .join(' ')}`}
+          innerHTML={this.getContentHTML()}
+        ></div>
+      </Host>
     );
   }
 

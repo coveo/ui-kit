@@ -74,3 +74,9 @@ export type {
 export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {ResultTemplatesHelpers} from './features';
+
+export {
+  MinimumFieldsToInclude,
+  DefaultFieldsToInclude,
+  EcommerceDefaultFieldsToInclude,
+} from './features/fields/fields-state';
