@@ -1136,10 +1136,6 @@ export namespace Components {
     }
     interface AtomicResultDate {
         /**
-          * Whether the date should display in the [calendar time format](https://day.js.org/docs/en/plugin/calendar).   To modify the calendar time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "calendarTime"?: boolean;
-        /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
@@ -3562,10 +3558,6 @@ declare namespace LocalJSX {
         "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultDate {
-        /**
-          * Whether the date should display in the [calendar time format](https://day.js.org/docs/en/plugin/calendar).   To modify the calendar time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
-         */
-        "calendarTime"?: boolean;
         /**
           * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
