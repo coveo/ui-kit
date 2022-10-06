@@ -70,7 +70,7 @@ export interface RecommendationListState {
   recommendations: Result[];
 
   /**
-   * The unique identifier of the response where the recommendations were fetched.
+   * The unique identifier of the Search API response from which the recommendations were fetched.
    */
   searchResponseId: string;
 }

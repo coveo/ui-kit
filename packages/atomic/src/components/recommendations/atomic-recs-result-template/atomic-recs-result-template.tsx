@@ -83,7 +83,7 @@ export class AtomicRecsResultTemplate {
   }
 
   /**
-   * Gets the appropriate result template based on conditions applied.
+   * Gets the appropriate result template based on the conditions applied.
    */
   @Method()
   public async getTemplate(): Promise<RecsResultTemplate<DocumentFragment> | null> {
