@@ -3,6 +3,7 @@ import {
   RecommendationList,
   RecommendationListState,
   Result,
+  loadConfigurationActions,
 } from '@coveo/headless/recommendation';
 import {Component, State, Element, Prop, Method, h} from '@stencil/core';
 import {
@@ -115,6 +116,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
   public initialize() {
     this.validateRecommendationIdentifier();
+    this.updateOriginLevel2();
     this.recommendationList = buildRecommendationList(this.bindings.engine, {
       options: {
         id: this.recommendation,
@@ -160,14 +162,26 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private validateRecommendationIdentifier() {
-    const recInterfacesWithSameId = document.querySelectorAll(
+    const recListWithRecommendation = document.querySelectorAll(
       `atomic-recs-list[recommendation="${this.recommendation}"]`
     );
 
-    if (recInterfacesWithSameId.length > 1) {
+    if (recListWithRecommendation.length > 1) {
       this.bindings.engine.logger.warn(
         `There are multiple atomic-recs-list in this page with the same recommendation propery "${this.recommendation}". Make sure to set a different recommendation property for each.`
       );
+    }
+  }
+
+  private updateOriginLevel2() {
+    if (this.label) {
+      const action = loadConfigurationActions(
+        this.bindings.engine
+      ).setOriginLevel2({
+        originLevel2: this.label,
+      });
+
+      this.bindings.engine.dispatch(action);
     }
   }
 
