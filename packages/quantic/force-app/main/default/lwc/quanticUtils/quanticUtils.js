@@ -627,7 +627,9 @@ function isCustomElement(element) {
  * @param {HTMLSlotElement | null} slotElement
  */
 function getLastFocusableElementFromSlot(slotElement) {
-  if (!slotElement && slotElement.assignedElements) return null;
+  if (!slotElement && slotElement.assignedElements) {
+    return null;
+  }
   const focusableElements = Array.from(slotElement.assignedElements())
     .map((item) => getLastFocusableElement(/** @type {HTMLElement} */(item)))
     .filter((item) => !!item);
