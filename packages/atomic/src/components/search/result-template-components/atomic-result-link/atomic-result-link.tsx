@@ -1,5 +1,4 @@
 import {Component, h, Prop, Element} from '@stencil/core';
-import {InteractiveResult, Result} from '@coveo/headless';
 import {
   InteractiveResultContext,
   ResultContext,
@@ -15,6 +14,10 @@ import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {
+  AnyInteractiveResult,
+  AnyUnfoldedResult,
+} from '../../../common/interface/result';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -30,8 +33,8 @@ export class AtomicResultLink implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public error!: Error;
 
-  @ResultContext() private result!: Result;
-  @InteractiveResultContext() private interactiveResult!: InteractiveResult;
+  @ResultContext() private result!: AnyUnfoldedResult;
+  @InteractiveResultContext() private interactiveResult!: AnyInteractiveResult;
 
   @Element() private host!: HTMLElement;
 
