@@ -314,7 +314,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .filter(({facetId}) => this.bindings.store.state.facets[facetId])
       .map(({value, facetId, field}) => ({
         facetId,
-        label: this.bindings.store.state.facets[facetId]?.label,
+        label: this.bindings.store.state.facets[facetId]?.label(),
         deselect: value.deselect,
         formattedValue: [
           getFieldValueCaption(field, value.value.value, this.bindings.i18n),
@@ -326,7 +326,7 @@ export class AtomicBreadbox implements InitializableComponent {
     return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
       ({facetId, field, path, deselect}) => ({
         facetId,
-        label: this.bindings.store.state.categoryFacets[facetId].label,
+        label: this.bindings.store.state.categoryFacets[facetId].label(),
         deselect: deselect,
         formattedValue: path.map((pathValue) =>
           getFieldValueCaption(field, pathValue.value, this.bindings.i18n)
@@ -343,7 +343,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .flat()
       .map(({value, facetId}) => ({
         facetId,
-        label: this.bindings.store.state.numericFacets[facetId].label,
+        label: this.bindings.store.state.numericFacets[facetId].label(),
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.numericFacets[facetId].format(value.value),
@@ -362,7 +362,7 @@ export class AtomicBreadbox implements InitializableComponent {
       .flat()
       .map(({value, facetId}) => ({
         facetId,
-        label: this.bindings.store.state.dateFacets[facetId].label,
+        label: this.bindings.store.state.dateFacets[facetId].label(),
         deselect: value.deselect,
         formattedValue: [
           this.bindings.store.state.dateFacets[facetId].format(value.value),
