@@ -55,6 +55,7 @@ export interface ResultRendererProps<
   key?: string;
   part?: string;
   result: SpecificResult;
+  interactiveResult: InteractiveResult;
   content?: ParentNode;
   loadingFlag?: string;
   store: AtomicCommonStore<AtomicCommonStoreData>;

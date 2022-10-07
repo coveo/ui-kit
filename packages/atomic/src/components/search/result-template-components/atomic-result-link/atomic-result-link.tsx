@@ -1,10 +1,9 @@
 import {Component, h, Prop, Element} from '@stencil/core';
+import {InteractiveResult, Result} from '@coveo/headless';
 import {
-  buildInteractiveResult,
-  InteractiveResult,
-  Result,
-} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+  InteractiveResultContext,
+  ResultContext,
+} from '../result-template-decorators';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -32,6 +31,7 @@ export class AtomicResultLink implements InitializableComponent {
   public error!: Error;
 
   @ResultContext() private result!: Result;
+  @InteractiveResultContext() private interactiveResult!: InteractiveResult;
 
   @Element() private host!: HTMLElement;
 
@@ -62,15 +62,11 @@ export class AtomicResultLink implements InitializableComponent {
    */
   @Prop({reflect: true}) hrefTemplate?: string;
 
-  private interactiveResult!: InteractiveResult;
   private hasDefaultSlot!: boolean;
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
 
   public initialize() {
-    this.interactiveResult = buildInteractiveResult(this.bindings.engine, {
-      options: {result: this.result},
-    });
     this.host.dispatchEvent(
       buildCustomEvent(
         'atomic/resolveStopPropagation',

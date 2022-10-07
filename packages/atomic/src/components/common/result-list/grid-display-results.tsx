@@ -29,6 +29,7 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
         {props.renderResult({
           key: props.getResultId(result),
           result: result,
+          interactiveResult: props.getInteractiveResult(unfoldedResult),
           store: props.bindings.store,
           content: props.resultTemplateProvider.getTemplateContent(result),
           loadingFlag: props.loadingFlag,
