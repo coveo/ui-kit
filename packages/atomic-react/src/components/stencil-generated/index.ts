@@ -66,6 +66,7 @@ export const AtomicResultSectionTitle = /*@__PURE__*/createReactComponent<JSX.At
 export const AtomicResultSectionTitleMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionTitleMetadata, HTMLAtomicResultSectionTitleMetadataElement>('atomic-result-section-title-metadata');
 export const AtomicResultSectionVisual = /*@__PURE__*/createReactComponent<JSX.AtomicResultSectionVisual, HTMLAtomicResultSectionVisualElement>('atomic-result-section-visual');
 export const AtomicResultText = /*@__PURE__*/createReactComponent<JSX.AtomicResultText, HTMLAtomicResultTextElement>('atomic-result-text');
+export const AtomicResultTimespan = /*@__PURE__*/createReactComponent<JSX.AtomicResultTimespan, HTMLAtomicResultTimespanElement>('atomic-result-timespan');
 export const AtomicResultsPerPage = /*@__PURE__*/createReactComponent<JSX.AtomicResultsPerPage, HTMLAtomicResultsPerPageElement>('atomic-results-per-page');
 export const AtomicSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBox, HTMLAtomicSearchBoxElement>('atomic-search-box');
 export const AtomicSearchBoxInstantResults = /*@__PURE__*/createReactComponent<JSX.AtomicSearchBoxInstantResults, HTMLAtomicSearchBoxInstantResultsElement>('atomic-search-box-instant-results');
