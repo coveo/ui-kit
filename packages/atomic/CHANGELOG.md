@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.116.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.115.0...@coveo/atomic@1.116.0) (2022-10-07)
+
+
+### Features
+
+* **atomic:** add calendar time support + result-timespan component ([#2475](https://github.com/coveo/ui-kit/issues/2475)) ([59ff2a8](https://github.com/coveo/ui-kit/commit/59ff2a8ba0b52fd1afd9af0ba50521c42cdd1c76))
+
+
+
+
+
 # [1.115.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.114.0...@coveo/atomic@1.115.0) (2022-10-06)
 
 
