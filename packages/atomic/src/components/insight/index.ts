@@ -72,4 +72,5 @@ export {
   PagerState as InsightPagerState,
   buildPager as buildInsightPager,
   buildResultsPerPage as buildInsightResultsPerPage,
+  ResultTemplatesHelpers as InsightResultTemplatesHelpers,
 } from '@coveo/headless/insight';

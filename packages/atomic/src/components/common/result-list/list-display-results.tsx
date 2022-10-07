@@ -12,7 +12,7 @@ export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
       store: props.bindings.store,
       content: props.resultTemplateProvider.getTemplateContent(result),
       loadingFlag: props.loadingFlag,
-      display: props.getDisplay(),
+      display: props.getResultDisplay(),
       density: props.getDensity(),
       imageSize: props.getImageSize(),
       ref: (element) => props.setNewResultRef(element!, index),

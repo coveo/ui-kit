@@ -46,7 +46,7 @@ import {ResultTemplateProvider} from '../../../common/result-list/result-templat
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: '../../../common/result-list/result-list.pcss',
+  styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
 export class AtomicResultList implements InitializableComponent {
@@ -157,7 +157,8 @@ export class AtomicResultList implements InitializableComponent {
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
-      getDisplay: () => this.display,
+      getResultDisplay: () => this.display,
+      getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
