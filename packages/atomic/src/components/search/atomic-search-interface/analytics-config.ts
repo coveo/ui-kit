@@ -55,7 +55,7 @@ function augmentAnalyticsWithFacetTitles(
   const getAtomicFacetLabelOrOriginalTitle = (
     facetId: string,
     originalTitle: string
-  ) => (allFacets[facetId] ? allFacets[facetId].label : originalTitle);
+  ) => (allFacets[facetId] ? allFacets[facetId].label() : originalTitle);
 
   if (payload.facetState) {
     payload.facetState = payload.facetState.map(
