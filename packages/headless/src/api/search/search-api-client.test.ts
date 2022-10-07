@@ -516,6 +516,7 @@ describe('search api client', () => {
           tab: originLevel2,
           referrer: originLevel3,
           visitorId: expect.any(String),
+          numberOfResults: recommendationState.pagination.numberOfResults,
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'recommendations'},

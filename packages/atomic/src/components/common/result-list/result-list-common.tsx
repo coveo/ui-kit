@@ -1,4 +1,4 @@
-import {Host, h, FunctionalComponent} from '@stencil/core';
+import {h, FunctionalComponent, Fragment} from '@stencil/core';
 import {getFirstFocusableDescendant} from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {once} from '../../../utils/utils';
@@ -21,6 +21,8 @@ import {
   ResultListRenderer,
 } from './result-list-common-interface';
 import {TableDisplayResults} from './table-display-results';
+
+export const resultComponentClass = 'result-component';
 
 export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
   implements ResultListRenderer, ResultListInfo
@@ -72,7 +74,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
 
   public get listClasses() {
     const classes = getResultDisplayClasses(
-      this.props.getDisplay(),
+      this.props.getLayoutDisplay(),
       this.props.getDensity(),
       this.props.getImageSize()
     );
@@ -110,18 +112,18 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
     }
 
     return (
-      <Host>
+      <Fragment>
         {this.props.resultTemplateProvider.hasError && <slot></slot>}
         <div class={`list-wrapper ${this.listClasses}`}>
           <ResultDisplayWrapper
             listClasses={this.listClasses}
-            display={this.props.getDisplay()}
+            display={this.props.getLayoutDisplay()}
           >
             {this.displayPlaceholders && (
               <DisplayResultsPlaceholder
                 numberOfPlaceholders={this.props.getNumberOfPlaceholders()}
                 density={this.props.getDensity()}
-                display={this.props.getDisplay()}
+                display={this.props.getResultDisplay()}
                 imageSize={this.props.getImageSize()}
               />
             )}
@@ -135,7 +137,7 @@ export class ResultListCommon<SpecificResult extends AnyResult = AnyResult>
             )}
           </ResultDisplayWrapper>
         </div>
-      </Host>
+      </Fragment>
     );
   }
 }
@@ -173,7 +175,7 @@ const ResultListDisplay: FunctionalComponent<ResultListDisplayProps> = (
     return null;
   }
 
-  switch (props.getDisplay()) {
+  switch (props.getLayoutDisplay()) {
     case 'table':
       return <TableDisplayResults {...props} />;
     case 'grid':

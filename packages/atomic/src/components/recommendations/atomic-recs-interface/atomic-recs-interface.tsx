@@ -2,6 +2,7 @@ import {
   RecommendationEngine,
   LogLevel,
   loadFieldActions,
+  EcommerceDefaultFieldsToInclude,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -75,7 +76,7 @@ export class AtomicRecsInterface
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
    *
-   * @example /mypublicpath/languages
+   * Example: "/mypublicpath/languages"
    *
    */
   @Prop({reflect: true}) public languageAssetsPath = './lang';
@@ -83,7 +84,7 @@ export class AtomicRecsInterface
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
    *
-   * @example /mypublicpath/icons
+   * Example: "/mypublicpath/icons"
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
@@ -139,13 +140,12 @@ export class AtomicRecsInterface
   }
 
   public registerFieldsToInclude() {
-    if (this.fieldsToInclude) {
-      this.engine!.dispatch(
-        loadFieldActions(this.engine!).registerFieldsToInclude(
-          this.fieldsToInclude.split(',').map((field) => field.trim())
-        )
-      );
-    }
+    const fields = EcommerceDefaultFieldsToInclude.concat(
+      this.fieldsToInclude.split(',').map((field) => field.trim())
+    );
+    this.engine!.dispatch(
+      loadFieldActions(this.engine!).registerFieldsToInclude(fields)
+    );
   }
 
   private async internalInitialization(initEngine: () => void) {

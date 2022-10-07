@@ -922,6 +922,27 @@ export class AtomicResultList {
 }
 
 
+export declare interface AtomicResultLocalizedText extends Components.AtomicResultLocalizedText {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['fieldCount', 'key']
+})
+@Component({
+  selector: 'atomic-result-localized-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['fieldCount', 'key']
+})
+export class AtomicResultLocalizedText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicResultMultiValueText extends Components.AtomicResultMultiValueText {}
 
 @ProxyCmp({
@@ -1245,7 +1266,10 @@ export class AtomicResultsPerPage {
 import type { RedirectionPayload as IAtomicSearchBoxRedirectionPayload } from '@coveo/atomic';
 export declare interface AtomicSearchBox extends Components.AtomicSearchBox {
   /**
-   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event. @example ```html
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+
+Example:
+```html
 <script>
   document.querySelector('atomic-search-box').addEventListener((e) => {
     e.preventDefault();
@@ -1254,7 +1278,7 @@ export declare interface AtomicSearchBox extends Components.AtomicSearchBox {
 </script>
 ...
 <atomic-search-box redirection-url="/search"></atomic-search-box>
-```
+``` 
    */
   'redirect': EventEmitter<CustomEvent<IAtomicSearchBoxRedirectionPayload>>;
 
@@ -1284,14 +1308,14 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery'],
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery']
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery']
 })
 export class AtomicSearchBoxInstantResults {
   protected el: HTMLElement;

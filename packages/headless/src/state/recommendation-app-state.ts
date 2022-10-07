@@ -9,6 +9,7 @@ import {
   RecommendationSection,
   SearchHubSection,
   VersionSection,
+  PaginationSection,
 } from './state-sections';
 
 export type RecommendationAppState = ConfigurationSection &
@@ -20,4 +21,5 @@ export type RecommendationAppState = ConfigurationSection &
   SearchHubSection &
   DebugSection &
   RecommendationSection &
-  VersionSection;
+  VersionSection &
+  PaginationSection;

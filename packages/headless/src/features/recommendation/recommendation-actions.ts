@@ -115,4 +115,7 @@ export const buildRecommendationRequest = async (
   ...(s.configuration.search.authenticationProviders.length && {
     authentication: s.configuration.search.authenticationProviders.join(','),
   }),
+  ...(s.pagination && {
+    numberOfResults: s.pagination.numberOfResults,
+  }),
 });
