@@ -926,13 +926,13 @@ export declare interface AtomicResultLocalizedText extends Components.AtomicResu
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['fieldCount', 'key']
+  inputs: ['fieldCount', 'i18nKey']
 })
 @Component({
   selector: 'atomic-result-localized-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['fieldCount', 'key']
+  inputs: ['fieldCount', 'i18nKey']
 })
 export class AtomicResultLocalizedText {
   protected el: HTMLElement;

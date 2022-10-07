@@ -21,7 +21,7 @@ import {ResultContext} from '../result-template-decorators';
  *
  * The component could be configured in such a way to replace `{{name}}` with the `author` field value from the result item:
  * ```
- * <atomic-result-localized-text key="classic_book_advert" field-author="name"></atomic-result-localized-text>
+ * <atomic-result-localized-text i18n-key="classic_book_advert" field-author="name"></atomic-result-localized-text>
  * ```
  *
  * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
@@ -37,7 +37,7 @@ export class AtomicResultLocalizedText implements InitializableComponent {
   /**
    * The i18n translation key.
    */
-  @Prop() key!: string;
+  @Prop() i18nKey!: string;
   /**
    * The field value to dynamically evaluate.
    */
@@ -48,7 +48,7 @@ export class AtomicResultLocalizedText implements InitializableComponent {
   @Prop() fieldCount?: string;
 
   render() {
-    return this.bindings.i18n.t(this.key, {
+    return this.bindings.i18n.t(this.i18nKey, {
       ...this.parseFieldValues(),
       ...this.parseFieldCount(),
     });
