@@ -55,9 +55,10 @@ export class AtomicResultLink implements InitializableComponent {
    *
    * The template literal can reference any number of result properties from the parent result. It can also reference the window object.
    *
-   * @example
-   * The following markup generates an `href` value such as `http://uri.com?id=itemTitle`:
+   * For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`.
+   * ```html
    * <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+   * ```
    */
   @Prop({reflect: true}) hrefTemplate?: string;
 
