@@ -3,6 +3,7 @@ import {
   RecommendationList,
   RecommendationListState,
   Result,
+  loadConfigurationActions,
 } from '@coveo/headless/recommendation';
 import {Component, State, Element, Prop, Method, h} from '@stencil/core';
 import {
@@ -63,6 +64,12 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   private nextNewResultTarget!: FocusTargetController;
 
   /**
+   * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
+   * Make sure to set a different value for each atomic-recs-list in your page.
+   */
+  @Prop({reflect: true}) public recommendation = 'Recommendation';
+
+  /**
    * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself.
    * To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
    */
@@ -108,8 +115,13 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   public initialize() {
+    this.validateRecommendationIdentifier();
+    this.updateOriginLevel2();
     this.recommendationList = buildRecommendationList(this.bindings.engine, {
-      options: {numberOfRecommendations: this.numberOfRecommendations},
+      options: {
+        id: this.recommendation,
+        numberOfRecommendations: this.numberOfRecommendations,
+      },
     });
 
     const resultTemplateProvider = new ResultTemplateProvider({
@@ -145,8 +157,30 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
         <atomic-recs-result {...props}></atomic-recs-result>
       ),
     });
+  }
 
-    this.recommendationList.refresh();
+  private validateRecommendationIdentifier() {
+    const recListWithRecommendation = document.querySelectorAll(
+      `atomic-recs-list[recommendation="${this.recommendation}"]`
+    );
+
+    if (recListWithRecommendation.length > 1) {
+      this.bindings.engine.logger.warn(
+        `There are multiple atomic-recs-list in this page with the same recommendation propery "${this.recommendation}". Make sure to set a different recommendation property for each.`
+      );
+    }
+  }
+
+  private updateOriginLevel2() {
+    if (this.label) {
+      const action = loadConfigurationActions(
+        this.bindings.engine
+      ).setOriginLevel2({
+        originLevel2: this.label,
+      });
+
+      this.bindings.engine.dispatch(action);
+    }
   }
 
   private get resultListCommonState(): ResultListCommonState<Result> {

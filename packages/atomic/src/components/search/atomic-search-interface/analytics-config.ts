@@ -2,6 +2,7 @@ import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
+  augmentAnalyticsConfigWithDocument,
 } from '../../common/interface/analytics-config';
 import {
   AnalyticsConfiguration,
@@ -22,8 +23,7 @@ export function getAnalyticsConfig(
   const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
     enabled,
-    documentLocation: document.location.href,
-    ...(document.referrer && {originLevel3: document.referrer}),
+    ...augmentAnalyticsConfigWithDocument(),
   };
 
   if (searchEngineConfig.analytics) {
