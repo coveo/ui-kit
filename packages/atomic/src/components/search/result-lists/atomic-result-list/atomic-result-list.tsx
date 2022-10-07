@@ -6,6 +6,8 @@ import {
   ResultsPerPageState,
   ResultsPerPage,
   buildResultsPerPage,
+  Result,
+  buildInteractiveResult,
 } from '@coveo/headless';
 import {
   BindStateToController,
@@ -164,7 +166,13 @@ export class AtomicResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.resultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => <atomic-result {...props}></atomic-result>,
+      renderResult: (props) => (
+        <atomic-result {...props} engine={this.bindings.engine}></atomic-result>
+      ),
+      getInteractiveResult: (result: Result) =>
+        buildInteractiveResult(this.bindings.engine, {
+          options: {result},
+        }),
     });
   }
 

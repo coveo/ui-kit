@@ -9,6 +9,7 @@ import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {ResultTemplateProvider} from './result-template-provider';
 import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
 import {VNode} from '@stencil/core';
+import {InteractiveResult} from '@coveo/headless';
 
 export interface ResultListRenderer {
   getResultId(result: AnyResult): string;
@@ -32,6 +33,7 @@ export interface ResultListCommonProps<
   getNumberOfPlaceholders(): number;
   getResultRenderingFunction(): ResultRenderingFunction;
   renderResult(props: ResultRendererProps<SpecificResult>): VNode;
+  getInteractiveResult(result: AnyResult): InteractiveResult;
 }
 
 export interface ResultListCommonState<SpecificResult extends AnyResult> {
