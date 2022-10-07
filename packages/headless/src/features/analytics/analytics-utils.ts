@@ -239,6 +239,9 @@ export const makeAnalyticsAction = <EventType extends AnalyticsType>(
   return makePreparableAnalyticsAction(
     prefix,
     ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+      if (!getState().configuration.analytics.enabled) {
+        return {log: async () => ({analyticsType})};
+      }
       const client = configureAnalytics({
         getState,
         logger,
@@ -279,6 +282,9 @@ export const makeCaseAssistAnalyticsAction = (
   return makePreparableAnalyticsAction(
     prefix,
     ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+      if (!getState().configuration.analytics.enabled) {
+        return {log: async () => {}};
+      }
       const client = configureCaseAssistAnalytics({
         state: getState(),
         logger,
@@ -316,6 +322,9 @@ export const makeInsightAnalyticsAction = <EventType extends AnalyticsType>(
   return makePreparableAnalyticsAction(
     prefix,
     ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+      if (!getState().configuration.analytics.enabled) {
+        return {log: async () => ({analyticsType})};
+      }
       const client = configureInsightAnalytics({
         getState,
         logger,
