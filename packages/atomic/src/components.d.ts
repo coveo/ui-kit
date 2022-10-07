@@ -20,6 +20,7 @@ import { NumericFacetDisplayValues } from "./components/common/facets/numeric-fa
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
@@ -920,6 +921,10 @@ export namespace Components {
          */
         "fieldsToInclude": string;
         /**
+          * Fetches new recommendations.
+         */
+        "getRecommendations": () => Promise<void>;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n": i18n;
@@ -928,11 +933,15 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with an already preconfigured headless recommendation engine.
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: RecsInitializationOptions) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless recommendation engine. This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
          */
         "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language": string;
         /**
@@ -943,6 +952,18 @@ export namespace Components {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub": string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
     }
     interface AtomicRecsList {
         /**
@@ -969,6 +990,10 @@ export namespace Components {
           * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations": number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation": string;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
@@ -1440,7 +1465,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
+          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -3377,7 +3402,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language"?: string;
         /**
@@ -3388,6 +3413,18 @@ declare namespace LocalJSX {
           * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub"?: string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
     }
     interface AtomicRecsList {
         /**
@@ -3414,6 +3451,10 @@ declare namespace LocalJSX {
           * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations"?: number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation"?: string;
     }
     interface AtomicRecsResult {
         /**

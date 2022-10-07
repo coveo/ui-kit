@@ -9,21 +9,38 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {buildRecommendationEngine} from '/build/headless/recommendation/headless.esm.js';
+      import {loadContextActions} from '/build/headless/recommendation/headless.esm.js';
 
       (async () => {
         await customElements.whenDefined('atomic-recs-interface');
-        const recommendationInterface = document
-          .querySelectorAll('atomic-recs-interface')
-          .forEach((recommendationInterface) => {
-            const recommendationEngine = buildRecommendationEngine({
-              configuration: {
-                accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
-                organizationId: 'fashioncoveodemocomgzh7iep8',
-              },
-            });
-            recommendationInterface.initializeWithRecommendationEngine(recommendationEngine);
-          });
+        const recsInterfaces = Array.from(document.querySelectorAll('atomic-recs-interface'));
+        await Promise.all(
+          recsInterfaces.map((recommendationInterface) =>
+            recommendationInterface.initialize({
+              accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
+              organizationId: 'fashioncoveodemocomgzh7iep8',
+            })
+          )
+        );
+
+        const context = {
+          cat_categories: ['Women', 'Shorts'],
+          ec_brand: '40Weft',
+          ec_category: ['Women', 'Women|Shorts'],
+          ec_item_group_id: '4196',
+          ec_product_id: '038692601_W2096',
+          permanentid: '038692601_W2096',
+          category1: 'Women',
+          category2: 'Women|Shorts',
+        };
+
+        recsInterfaces.forEach((recInterface) => {
+          const engine = recInterface.engine;
+          const contextAction = loadContextActions(engine).setContext(context);
+          engine.dispatch(loadContextActions(engine).setContext(context));
+
+          recInterface.getRecommendations();
+        });
       })();
     </script>
     <style>
@@ -108,7 +125,12 @@
       </atomic-recs-interface>
       <!-- Rows -->
       <atomic-recs-interface fields-to-include="cat_rating_count">
-        <atomic-recs-list class="rows" label="What about those?" number-of-recommendations="6">
+        <atomic-recs-list
+          class="rows"
+          label="Frequently viewed"
+          recommendation="frequentViewed"
+          number-of-recommendations="6"
+        >
           <atomic-recs-result-template>
             <template>
               <style>
