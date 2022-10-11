@@ -1248,7 +1248,7 @@ export namespace Components {
         /**
           * The i18n translation key.
          */
-        "key": string;
+        "localeKey": string;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -3703,7 +3703,7 @@ declare namespace LocalJSX {
         /**
           * The i18n translation key.
          */
-        "key": string;
+        "localeKey": string;
     }
     interface AtomicResultMultiValueText {
         /**
