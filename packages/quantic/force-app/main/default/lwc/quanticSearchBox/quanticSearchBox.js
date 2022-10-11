@@ -70,6 +70,8 @@ export default class QuanticSearchBox extends LightningElement {
   unsubscribe;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {Array} */
+  suggestions = [];
 
   /**
    * @param {SearchEngine} engine
@@ -92,6 +94,10 @@ export default class QuanticSearchBox extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.addEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   renderedCallback() {
@@ -100,6 +106,10 @@ export default class QuanticSearchBox extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.removeEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   updateState() {
@@ -107,20 +117,16 @@ export default class QuanticSearchBox extends LightningElement {
       this.input.value = this.searchBox.state.value;
     }
     this.state = this.searchBox.state;
+    this.suggestions =
+      this.searchBox?.state?.suggestions?.map((s, index) => ({
+        key: index,
+        rawValue: s.rawValue,
+        value: s.highlightedValue,
+      })) ?? [];
   }
 
   get hasSuggestions() {
     return this.state?.suggestions?.length;
-  }
-
-  get suggestions() {
-    return (
-      this.searchBox?.state.suggestions.map((s, index) => ({
-        key: index,
-        rawValue: s.rawValue,
-        value: s.highlightedValue,
-      })) ?? []
-    );
   }
 
   /**
@@ -244,4 +250,9 @@ export default class QuanticSearchBox extends LightningElement {
     this.searchBox.selectSuggestion(textValue);
     this.input.blur();
   }
+
+  handleSuggestionListEvent = (event) => {
+    const id = event.detail;
+    this.input.setAttribute('aria-controls', id);
+  };
 }
