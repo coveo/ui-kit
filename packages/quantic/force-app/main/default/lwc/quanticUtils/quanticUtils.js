@@ -562,12 +562,8 @@ export function getLastFocusableElement(element) {
     return null;
   }
 
-  if (element.tagName === "SLOT" && /** @type {HTMLSlotElement} */(element).assignedElements().length) {
-    return getLastFocusableElementFromSlot(/** @type {HTMLSlotElement} */(element))
-  }
-
   const focusableElements = Array.from(element.childNodes)
-    .map((item) => getLastFocusableElement(/** @type {HTMLElement} */ (item)))
+    .map((item) => this.getLastFocusableElement(item))
     .filter((item) => !!item);
 
   if (focusableElements.length) {
@@ -594,12 +590,8 @@ export function getFirstFocusableElement(element) {
     return null;
   }
 
-  if (element.tagName === "SLOT" && /** @type {HTMLSlotElement} */(element).assignedElements().length) {
-    return getFirstFocusableElementFromSlot(/** @type {HTMLSlotElement} */(element))
-  }
-
   const focusableElements = Array.from(element.childNodes)
-    .map((item) => getFirstFocusableElement(/** @type {HTMLElement} */ (item)))
+    .map((item) => this.getFirstFocusableElement(item))
     .filter((item) => !!item);
 
   if (focusableElements.length) {
@@ -622,34 +614,3 @@ export function isCustomElement(element) {
   return false;
 }
 
-/**
- * Returns the last focusable element in an HTML slot.
- * @param {HTMLSlotElement | null} slotElement
- */
-function getLastFocusableElementFromSlot(slotElement) {
-  if (!slotElement && slotElement.assignedElements) return null;
-  const focusableElements = Array.from(slotElement.assignedElements())
-    .map((item) => getLastFocusableElement(/** @type {HTMLElement} */(item)))
-    .filter((item) => !!item);
-
-  if (focusableElements.length) {
-    return focusableElements[focusableElements.length - 1];
-  }
-  return null;
-}
-
-/**
- * Returns the first focusable element in an HTML slot.
- * @param {HTMLSlotElement | null} slotElement
- */
-function getFirstFocusableElementFromSlot(slotElement) {
-  if (!slotElement && slotElement.assignedElements) return null;
-  const focusableElements = Array.from(slotElement.assignedElements())
-    .map((item) => getFirstFocusableElement(/** @type {HTMLElement} */(item)))
-    .filter((item) => !!item);
-
-  if (focusableElements.length) {
-    return focusableElements[0];
-  }
-  return null;
-}
