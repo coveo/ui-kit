@@ -16,5 +16,5 @@
 }
 
 .empty-list-message {
-  color: #8e959d;
+  color: var(--lwc-colorTextIconDefault, #747474);
 }
