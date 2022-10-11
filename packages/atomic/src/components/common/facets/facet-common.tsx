@@ -305,7 +305,7 @@ export class FacetCommon {
     this.validateProps();
 
     const facetInfo: FacetInfo = {
-      label: this.label,
+      label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
     };

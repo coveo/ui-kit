@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {extractUnfoldedResult} from '../interface/result';
 import {ResultListDisplayProps} from './result-list-common-interface';
 
 export const TableDisplayResults: FunctionalComponent<
@@ -43,10 +44,13 @@ export const TableDisplayResults: FunctionalComponent<
                 <td key={key} part="result-table-cell">
                   {props.renderResult({
                     result: result,
+                    interactiveResult: props.getInteractiveResult(
+                      extractUnfoldedResult(result)
+                    ),
                     store: props.bindings.store,
                     content: column,
                     loadingFlag: props.loadingFlag,
-                    display: props.getDisplay(),
+                    display: props.getResultDisplay(),
                     density: props.getDensity(),
                     imageSize: props.getImageSize(),
                   })}

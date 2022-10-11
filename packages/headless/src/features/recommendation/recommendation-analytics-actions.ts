@@ -21,7 +21,7 @@ export const logRecommendationUpdate = makeAnalyticsAction(
     )
 );
 
-export const logRecommendationOpen = (result: Result) =>
+export const logRecommendationOpenThunk = (result: Result) =>
   makeAnalyticsAction(
     'analytics/recommendation/open',
     AnalyticsType.Click,
@@ -36,4 +36,7 @@ export const logRecommendationOpen = (result: Result) =>
       new RecommendationAnalyticsProvider(
         s as StateNeededByRecommendationAnalyticsProvider
       )
-  )();
+  );
+
+export const logRecommendationOpen = (result: Result) =>
+  logRecommendationOpenThunk(result)();
