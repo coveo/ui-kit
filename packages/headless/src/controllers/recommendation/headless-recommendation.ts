@@ -3,20 +3,22 @@ import {
   setRecommendationId,
 } from '../../features/recommendation/recommendation-actions';
 import {buildController, Controller} from '../controller/headless-controller';
-import {Schema, StringValue} from '@coveo/bueno';
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
 import {Result} from '../../api/search/search/result';
 import {ErrorPayload} from '../controller/error-payload';
 import {configuration, recommendation} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
+import {loadPaginationActions} from '../../features';
 
-const optionsSchema = new Schema({
+const optionsSchema = new Schema<RecommendationListOptions>({
   id: new StringValue<string>({
     emptyAllowed: true,
     required: false,
     default: '',
   }),
+  numberOfRecommendations: new NumberValue({min: 0}),
 });
 
 export interface RecommendationListOptions {
@@ -26,6 +28,10 @@ export interface RecommendationListOptions {
    * @defaultValue `Recommendation`
    */
   id?: string;
+  /**
+   * The number of recommendations to return.
+   */
+  numberOfRecommendations?: number;
 }
 
 export interface RecommendationListProps {
@@ -62,6 +68,11 @@ export interface RecommendationListState {
    * The recommendations based on the last executed query.
    * */
   recommendations: Result[];
+
+  /**
+   * The unique identifier of the Search API response from which the recommendations were fetched.
+   */
+  searchResponseId: string;
 }
 
 /**
@@ -94,6 +105,14 @@ export function buildRecommendationList(
     dispatch(setRecommendationId({id: options.id}));
   }
 
+  if (options.numberOfRecommendations) {
+    dispatch(
+      loadPaginationActions(engine).updateNumberOfResults(
+        options.numberOfRecommendations
+      )
+    );
+  }
+
   return {
     ...controller,
 
@@ -108,6 +127,7 @@ export function buildRecommendationList(
         recommendations: state.recommendation.recommendations,
         error: state.recommendation.error,
         isLoading: state.recommendation.isLoading,
+        searchResponseId: state.recommendation.searchUid,
       };
     },
   };

@@ -25,6 +25,7 @@ import {
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
+  ResultDisplayLayout,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {FoldedResultListStateContextEvent} from '../result-list-decorators';
@@ -45,7 +46,7 @@ import {ResultTemplateProvider} from '../../../common/result-list/result-templat
  */
 @Component({
   tag: 'atomic-folded-result-list',
-  styleUrl: '../../../common/result-list/result-list.pcss',
+  styleUrl: 'atomic-folded-result-list.pcss',
   shadow: true,
 })
 export class AtomicFoldedResultList implements InitializableComponent {
@@ -55,6 +56,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   private resultListCommon!: ResultListCommon;
   private resultRenderingFunction: ResultRenderingFunction;
   private loadingFlag = randomID('firstResultLoaded-');
+  private display: ResultDisplayLayout = 'list';
 
   @Element() public host!: HTMLDivElement;
 
@@ -130,14 +132,12 @@ export class AtomicFoldedResultList implements InitializableComponent {
 
   public initialize() {
     try {
-      const localFieldsToInclude = this.fieldsToInclude
-        ? this.fieldsToInclude.split(',').map((field) => field.trim())
-        : [];
-      const fieldsToInclude = localFieldsToInclude.concat(
-        this.bindings.store.state.fieldsToInclude
+      this.bindings.store.addFieldsToInclude(
+        this.fieldsToInclude
+          ? this.fieldsToInclude.split(',').map((field) => field.trim())
+          : []
       );
-
-      this.foldedResultList = this.initFolding({options: {fieldsToInclude}});
+      this.foldedResultList = this.initFolding();
       this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     } catch (e) {
       this.error = e as Error;
@@ -164,7 +164,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
-      getDisplay: () => 'list',
+      getResultDisplay: () => this.display,
+      getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,

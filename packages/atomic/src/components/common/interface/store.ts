@@ -40,6 +40,7 @@ export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
     data: StoreData[T][U] & {facetId: U; element: HTMLElement}
   ): void;
   registerResultList(data: ResultListInfo): void;
+  addFieldsToInclude(fields: string[]): void;
 }
 
 export const isRefineModalFacet = 'is-refine-modal';
@@ -99,6 +100,13 @@ export function createAtomicCommonStore<
 
     registerResultList(data: ResultListInfo) {
       stencilStore.set('resultList', data);
+    },
+
+    addFieldsToInclude(fields) {
+      stencilStore.set('fieldsToInclude', [
+        ...stencilStore.get('fieldsToInclude'),
+        ...fields,
+      ]);
     },
 
     waitUntilAppLoaded(callback: () => void) {

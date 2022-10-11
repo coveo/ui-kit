@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.46.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.46.0...@coveo/quantic@1.46.1) (2022-10-06)
+
+
+### Bug Fixes
+
+* **quantic:**  overflow hidden added to prevent horizontal scroll in the QuanticTabBar ([#2486](https://github.com/coveo/ui-kit/issues/2486)) ([4101554](https://github.com/coveo/ui-kit/commit/410155488b17cca2360a452fe294bfe9178c5e89))
+
+
+
+
+
+# [1.46.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.45.1...@coveo/quantic@1.46.0) (2022-10-05)
+
+
+### Bug Fixes
+
+* **quantic:** logic added to avoid having an empty refine modal ([#2469](https://github.com/coveo/ui-kit/issues/2469)) ([73dc1f8](https://github.com/coveo/ui-kit/commit/73dc1f823d9cafac9dd391d4c7e23341c1ad9218))
+
+
+### Features
+
+* **quantic:** Quantic Modal made more accessible ([#2479](https://github.com/coveo/ui-kit/issues/2479)) ([9259b82](https://github.com/coveo/ui-kit/commit/9259b82d5d62398ca692f0e8411aebf2aae712a3))
+
+
+
+
+
+## [1.45.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.45.0...@coveo/quantic@1.45.1) (2022-10-03)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [1.45.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.44.13...@coveo/quantic@1.45.0) (2022-09-30)
 
 
