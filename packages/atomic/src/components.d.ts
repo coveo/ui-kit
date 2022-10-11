@@ -991,7 +991,11 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+          * The number of pages up to which the user can view recommendations.
+         */
+        "numberOfPages": number;
+        /**
+          * The number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations": number;
         /**
@@ -3464,7 +3468,11 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+          * The number of pages up to which the user can view recommendations.
+         */
+        "numberOfPages"?: number;
+        /**
+          * The number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations"?: number;
         /**

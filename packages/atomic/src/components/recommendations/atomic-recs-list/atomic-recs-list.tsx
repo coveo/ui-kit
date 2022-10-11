@@ -29,6 +29,8 @@ import {
 } from '../../../utils/accessibility-utils';
 import {Heading} from '../../common/heading';
 import {buildRecsInteractiveResult, RecsResult} from '..';
+import ArrowRight from '../../../images/arrow-right.svg';
+import {Button} from '../../common/button';
 
 /**
  * @internal
@@ -85,10 +87,15 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   public imageSize: ResultDisplayImageSize = 'small';
 
   /**
-   * The number of recommendations to fetch and display.
+   * The number of recommendations to display.
    * This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfRecommendations = 10;
+
+  /**
+   * The number of pages up to which the user can view recommendations.
+   */
+  @Prop({reflect: true}) public numberOfPages = 3;
 
   /**
    * The non-localized label for the list of recommendations.
@@ -120,7 +127,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     this.recommendationList = buildRecommendationList(this.bindings.engine, {
       options: {
         id: this.recommendation,
-        numberOfRecommendations: this.numberOfRecommendations,
+        numberOfRecommendations:
+          this.numberOfRecommendations * this.numberOfPages,
       },
     });
 
@@ -187,15 +195,24 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     }
   }
 
+  private get subsetRecommendations() {
+    // TODO: subset
+    return this.recommendationListState.recommendations;
+  }
+
   private get resultListCommonState(): ResultListCommonState<RecsResult> {
     return {
       firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
       isLoading: this.recommendationListState.isLoading,
       hasError: this.recommendationListState.error !== null,
       hasResults: this.recommendationListState.recommendations.length !== 0,
-      results: this.recommendationListState.recommendations,
+      results: this.subsetRecommendations,
       searchResponseId: this.recommendationListState.searchResponseId,
     };
+  }
+
+  private get hasPagination() {
+    return this.numberOfPages > 1;
   }
 
   private renderHeading() {
@@ -219,7 +236,66 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     );
   }
 
+  private get commonPaginationClasses() {
+    return 'p-1 min-w-[2.5rem] min-h-[2.5rem] absolute top-[50%] -translate-y-1/2 z-1';
+  }
+
+  private get shouldRenderPagination() {
+    return this.hasPagination && this.resultListCommonState.hasResults;
+  }
+
+  private renderPreviousButton() {
+    if (!this.shouldRenderPagination) {
+      return;
+    }
+
+    return (
+      <Button
+        style="outline-primary"
+        ariaLabel={this.bindings.i18n.t('previous')}
+        onClick={() => {
+          // TODO: previous
+        }}
+        part="previous-button"
+        class={`${this.commonPaginationClasses} -translate-x-1/2`}
+      >
+        <atomic-icon
+          icon={ArrowRight}
+          class="w-5 align-middle rotate-180"
+        ></atomic-icon>
+      </Button>
+    );
+  }
+
+  private renderNextButton() {
+    if (!this.shouldRenderPagination) {
+      return;
+    }
+
+    return (
+      <Button
+        style="outline-primary"
+        ariaLabel={this.bindings.i18n.t('next')}
+        onClick={() => {
+          // TODO: next
+        }}
+        part="next-button"
+        class={`${this.commonPaginationClasses} right-0 translate-x-1/2`}
+      >
+        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
+      </Button>
+    );
+  }
+
   public render() {
-    return [this.renderHeading(), this.resultListCommon.render()];
+    return (
+      <div class="relative">
+        {this.renderHeading()}
+        {this.renderPreviousButton()}
+        {this.resultListCommon.render()}
+        {this.renderNextButton()}
+        {/* TODO: add indications */}
+      </div>
+    );
   }
 }
