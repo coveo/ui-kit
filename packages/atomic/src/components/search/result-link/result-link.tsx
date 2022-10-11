@@ -40,11 +40,15 @@ export const bindAnalyticsToLink = (
         stopPropagationAndProcess(e, onSelect)
       )
   );
-  link.addEventListener('touchstart', (e) =>
-    stopPropagationAndProcess(e, onBeginDelayedSelect)
+  link.addEventListener(
+    'touchstart',
+    (e) => stopPropagationAndProcess(e, onBeginDelayedSelect),
+    {passive: true}
   );
-  link.addEventListener('touchend', (e) =>
-    stopPropagationAndProcess(e, onCancelPendingSelect)
+  link.addEventListener(
+    'touchend',
+    (e) => stopPropagationAndProcess(e, onCancelPendingSelect),
+    {passive: true}
   );
 };
 

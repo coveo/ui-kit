@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.26.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.25.0...@coveo/atomic-react@1.26.0) (2022-10-07)
+
+
+### Features
+
+* **atomic:** add calendar time support + result-timespan component ([#2475](https://github.com/coveo/ui-kit/issues/2475)) ([59ff2a8](https://github.com/coveo/ui-kit/commit/59ff2a8ba0b52fd1afd9af0ba50521c42cdd1c76))
+
+
+
+
+
+# [1.25.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.24.19...@coveo/atomic-react@1.25.0) (2022-10-06)
+
+
+### Features
+
+* **atomic:** add atomic-result-localized-text component ([#2483](https://github.com/coveo/ui-kit/issues/2483)) ([662dc14](https://github.com/coveo/ui-kit/commit/662dc14e1164e62ed2ae3c8356c610f90d0b8969))
+
+
+
+
+
 ## [1.24.19](https://github.com/coveo/ui-kit/compare/@coveo/atomic-react@1.24.18...@coveo/atomic-react@1.24.19) (2022-10-05)
 
 **Note:** Version bump only for package @coveo/atomic-react
