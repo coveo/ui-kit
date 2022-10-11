@@ -1,6 +1,3 @@
-import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-analytics-actions';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {Result} from '../../../api/search/search/result';
 import {
   buildInteractiveResultCore,
@@ -8,8 +5,10 @@ import {
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
 } from '../../core/interactive-result/headless-core-interactive-result';
+import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
+import {RecommendationEngine} from '../../../app/recommendation-engine/recommendation-engine';
 
-export interface InsightInteractiveResultOptions
+export interface RecommendationInteractiveResultOptions
   extends InteractiveResultCoreOptions {
   /**
    * The query result.
@@ -17,12 +16,12 @@ export interface InsightInteractiveResultOptions
   result: Result;
 }
 
-export interface InsightInteractiveResultProps
+export interface RecommendationInteractiveResultProps
   extends InteractiveResultCoreProps {
   /**
    * The options for the `InteractiveResult` controller.
    */
-  options: InsightInteractiveResultOptions;
+  options: RecommendationInteractiveResultOptions;
 }
 
 /**
@@ -31,15 +30,15 @@ export interface InsightInteractiveResultProps
 export interface InteractiveResult extends InteractiveResultCore {}
 
 /**
- * Creates an insight `InteractiveResult` controller instance.
+ * Creates an recommendation `InteractiveResult` controller instance.
  *
- * @param engine - The insight engine.
+ * @param engine - The recommendation engine.
  * @param props - The configurable `InteractiveResult` properties.
  * @returns An `InteractiveResult` controller instance.
  */
 export function buildInteractiveResult(
-  engine: InsightEngine,
-  props: InsightInteractiveResultProps
+  engine: RecommendationEngine,
+  props: RecommendationInteractiveResultProps
 ): InteractiveResult {
   let wasOpened = false;
 
@@ -48,12 +47,11 @@ export function buildInteractiveResult(
       return;
     }
     wasOpened = true;
-    engine.dispatch(logDocumentOpen(props.options.result));
+    engine.dispatch(logRecommendationOpen(props.options.result));
   };
 
   const action = () => {
     logAnalyticsIfNeverOpened();
-    engine.dispatch(pushRecentResult(props.options.result));
   };
 
   return buildInteractiveResultCore(engine, props, action);
