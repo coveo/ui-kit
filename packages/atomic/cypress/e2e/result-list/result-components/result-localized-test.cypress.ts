@@ -39,7 +39,7 @@ describe('Result Localized Text Component', () => {
       new TestFixture()
         .with(
           addResultLocalizedTextInResultList({
-            'i18n-key': 'this_does_not_exist',
+            'locale-key': 'this_does_not_exist',
           })
         )
         .init();
@@ -67,7 +67,7 @@ describe('Result Localized Text Component', () => {
         })
         .with(
           addResultLocalizedTextInResultList({
-            'i18n-key': 'foo',
+            'locale-key': 'foo',
             'field-somefield': 'replace_me',
             ...props,
           })
