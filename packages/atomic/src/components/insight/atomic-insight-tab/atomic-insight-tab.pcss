@@ -1,8 +1,6 @@
 @import '../../../global/global.pcss';
 
-.active {
-  &::after {
-    @apply block absolute rounded w-full bg-primary bottom-0 h-1;
-    content: '';
-  }
+[part='tab'].active::after {
+  @apply block absolute rounded w-full bg-primary bottom-0 h-1;
+  content: '';
 }
