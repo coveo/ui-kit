@@ -125,10 +125,6 @@ export default class QuanticSearchBox extends LightningElement {
       })) ?? [];
   }
 
-  get hasSuggestions() {
-    return this.state?.suggestions?.length;
-  }
-
   /**
    * @returns {quanticSearchBoxSuggestionsList}
    */
