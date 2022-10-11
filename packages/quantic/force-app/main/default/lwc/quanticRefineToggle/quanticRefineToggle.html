@@ -1,5 +1,5 @@
 <template>
-  <button class="slds-button slds-button_neutral refine-button slds-is-relative" onclick={openModal}
+  <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral refine-button slds-is-relative" onclick={openModal}
     title={buttonTitle} disabled={refineButtonDisabled}>
     <slot name="button-content">
       {labels.sortAndFilters}

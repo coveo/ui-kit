@@ -33,6 +33,11 @@ export default class QuanticResult extends LightningElement {
    * @type {ResultTemplatesManager}
    */
   @api resultTemplatesManager;
+  /**
+   * @api
+   * @type {string}
+   */
+  @api openPreviewId;
 
   @track resultHasPreview = true;
 
@@ -70,5 +75,20 @@ export default class QuanticResult extends LightningElement {
       return template;
     }
     return defaultTemplate;
+  }
+
+  get resultPreviewShouldNotBeAccessible() {
+    if (!this.openPreviewId) {
+      return false;
+    }
+    if (this.result.uniqueId !== this.openPreviewId) return true;
+    return false;
+  }
+
+  get isAnyPreviewOpen() {
+    if (!this.openPreviewId) {
+      return false;
+    }
+    return true;
   }
 }

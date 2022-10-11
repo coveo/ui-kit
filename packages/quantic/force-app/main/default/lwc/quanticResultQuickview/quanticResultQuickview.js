@@ -146,6 +146,7 @@ export default class QuanticResultQuickview extends LightningElement {
     if (!isHeadlessBundle(this.engineId, HeadlessBundleNames.caseAssist)) {
       this.addRecentResult();
     }
+    this.sendResultPreviewEvent(true);
   }
 
   addRecentResult() {
@@ -160,6 +161,7 @@ export default class QuanticResultQuickview extends LightningElement {
   closeQuickview() {
     this.isQuickviewOpen = false;
     this.isFirstPreviewRender = true;
+    this.sendResultPreviewEvent(false);
   }
 
   stopPropagation(evt) {
@@ -295,5 +297,21 @@ export default class QuanticResultQuickview extends LightningElement {
       return lastElement;
     }
     return null;
+  }
+
+  /**
+   * Sends the "quantic__resultpreviewtoggle" event.
+   * @param {boolean} isOpen
+   */
+  sendResultPreviewEvent(isOpen) {
+    const resultPreviewEvent = new CustomEvent('quantic__resultpreviewtoggle', {
+      composed: true,
+      bubbles: true,
+      detail: {
+        isOpen,
+        ...(isOpen) && {resultId: this.result.uniqueId}
+      },
+    });
+    this.dispatchEvent(resultPreviewEvent);
   }
 }

@@ -9,7 +9,10 @@ import {
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
 import LOCALE from '@salesforce/i18n/locale';
 import TIMEZONE from '@salesforce/i18n/timeZone';
-import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
+import {
+  STANDALONE_SEARCH_BOX_STORAGE_KEY,
+  isCustomElement,
+} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchEngineOptions} SearchEngineOptions */
@@ -82,6 +85,9 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {boolean} */
   hasRendered = false;
 
+  /** @type {Array<HTMLElement>} */
+  nonAccessibleElements = [];
+
   connectedCallback() {
     loadDependencies(this).then(() => {
       if (!getHeadlessBindings(this.engineId)?.engine) {
@@ -112,6 +118,90 @@ export default class QuanticSearchInterface extends LightningElement {
         setInitializedCallback(this.initialize, this.engineId);
       }
     });
+
+    this.template.addEventListener(
+      'quantic__resultpreviewtoggle',
+      this.handleResultPreviewToggle
+    );
+    this.template.addEventListener(
+      'quantic__refinemodaltoggle',
+      this.handleRefineModalToggle
+    );
+  }
+
+  handleResultPreviewToggle = (event) => {
+    if (event.detail.isOpen) {
+      /** @type {HTMLSlotElement} */
+      const slot = this.template.querySelector('slot');
+      /** @type {Array} */
+      const children = Array.from(slot.assignedElements());
+
+      children.forEach((child) => {
+        this.removeElementsFromAccessibilityTree(child, 'C-QUANTIC-RESULT-LIST');
+      });
+    } else {
+      this.nonAccessibleElements.forEach(element => {
+        element.setAttribute('aria-hidden', 'false');
+      })
+      this.nonAccessibleElements = [];
+    }
+  };
+
+  handleRefineModalToggle = (event) => {
+    if (event.detail.isOpen) {
+      /** @type {HTMLSlotElement} */
+      const slot = this.template.querySelector('slot');
+      /** @type {Array} */
+      const children = Array.from(slot.assignedElements());
+
+      children.forEach((child) => {
+        this.removeElementsFromAccessibilityTree(child, 'C-QUANTIC-REFINE-TOGGLE');
+      });
+    } else {
+      this.nonAccessibleElements.forEach(element => {
+        element.setAttribute('aria-hidden', 'false');
+      })
+      this.nonAccessibleElements = [];
+    }
+  };
+
+  /**
+   * Checks whether an element is indeed the targetElement or one of its parents.
+   * @param {HTMLElement} element
+   * @param {string} targetElement
+   */
+  isParentOf(element, targetElement) {
+    if (isCustomElement(element)) {
+      if (element.tagName === targetElement) {
+        return true;
+      }
+      return false;
+    }
+    /** @type {Array} */
+    const childNodes = Array.from(element.childNodes);
+    if (childNodes.length === 0) return false;
+    return childNodes.reduce(
+      (acc, val) => acc || this.isParentOf(val, targetElement),
+      false
+    );
+  }
+
+  /**
+   * Removes all HTML elements from the accessibility tree except for elements whose tag name is the excludedTagName, these elements remain accessible.
+   * @param {HTMLElement} element
+   * @param {string} excludedTagName
+   */
+  removeElementsFromAccessibilityTree(element, excludedTagName) {
+    /** @type {Array} */
+    const childNodes = Array.from(element.childNodes);
+    if (!this.isParentOf(element, excludedTagName)) {
+      element.setAttribute('aria-hidden', 'true');
+      this.nonAccessibleElements.push(element);
+    } else if (childNodes.length > 0) {
+      childNodes.forEach((child) =>
+        this.removeElementsFromAccessibilityTree(child, excludedTagName)
+      );
+    }
   }
 
   renderedCallback() {
@@ -124,6 +214,8 @@ export default class QuanticSearchInterface extends LightningElement {
   disconnectedCallback() {
     this.unsubscribeUrlManager?.();
     window.removeEventListener('hashchange', this.onHashChange);
+    this.template.removeEventListener('quantic__resultpreviewtoggle', this.handleResultPreviewToggle);
+    this.template.removeEventListener('quantic__refinemodaltoggle', this.handleRefineModalToggle);
   }
 
   /**

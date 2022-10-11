@@ -615,7 +615,7 @@ export function getFirstFocusableElement(element) {
  * @param {HTMLElement | null} element
  * @returns {boolean}
  */
-function isCustomElement(element) {
+export function isCustomElement(element) {
   if (element && element.tagName.includes('-')) {
     return true;
   }

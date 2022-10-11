@@ -1,4 +1,4 @@
-import {LightningElement} from 'lwc';
+import {LightningElement, api} from 'lwc';
 
 /**
  * The `QuanticResultTemplate` component is used to construct result templates using predefined and formatted [slots](https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.create_components_slots).
@@ -19,6 +19,18 @@ import {LightningElement} from 'lwc';
  * </c-quantic-result-template>
  */
 export default class QuanticResultTemplate extends LightningElement {
+  /**
+   * @api
+   * @type {boolean}
+   */
+  @api isAnyPreviewOpen = false;
+
+  /**
+   * @api
+   * @type {boolean}
+   */
+  @api resultPreviewShouldNotBeAccessible = false;
+  
   /** @type {boolean} */
   isHeaderEmpty = true;
   /** @type {boolean} */
