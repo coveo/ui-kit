@@ -1,7 +1,8 @@
-import {FoldedResult, Result} from '@coveo/headless';
+import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/utils';
+import {AnyResult} from '../../common/interface/result';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -80,11 +81,32 @@ export function ResultContext(opts: {folded: boolean} = {folded: false}) {
   };
 }
 
+export function InteractiveResultContext() {
+  return (component: ComponentInterface, interactiveResultVariable: string) => {
+    const {connectedCallback} = component;
+    component.connectedCallback = function () {
+      const element = getElement(this);
+      const event = buildCustomEvent(
+        interactiveResultContextEventName,
+        (result: AnyResult) => {
+          this[interactiveResultVariable] = result;
+        }
+      );
+      element.dispatchEvent(event);
+      return connectedCallback && connectedCallback.call(this);
+    };
+  };
+}
+
 type ResultContextEventHandler<T = Result> = (result: T) => void;
 export type ResultContextEvent<T = Result> = CustomEvent<
   ResultContextEventHandler<T>
 >;
 const resultContextEventName = 'atomic/resolveResult';
+export type InteractiveResultContextEvent = CustomEvent<
+  (interactiveResult: InteractiveResult) => void
+>;
+const interactiveResultContextEventName = 'atomic/resolveInteractiveResult';
 
 /**
  * Retrieves `Result` on a rendered `atomic-result`.

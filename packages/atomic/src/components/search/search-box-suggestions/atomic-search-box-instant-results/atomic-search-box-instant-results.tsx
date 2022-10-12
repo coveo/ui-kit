@@ -1,6 +1,7 @@
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {
   buildInstantResults,
+  buildInteractiveResult,
   buildResultList,
   InstantResults,
   Result,
@@ -127,6 +128,9 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
             key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
             part="outline"
             result={result}
+            interactiveResult={buildInteractiveResult(this.bindings.engine, {
+              options: {result},
+            })}
             engine={this.bindings.engine}
             display={this.display}
             density={this.density}
