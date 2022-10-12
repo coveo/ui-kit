@@ -7,7 +7,7 @@ const links = [
   {href: '/examples/standalone.html', label: 'Standalone'},
   {href: '/examples/modal.html', label: 'Modal'},
   {href: '/examples/suggestions.html', label: 'Custom Query Suggestions'},
-  {href: '/examples/instantResults.html', label: 'Instant Results'},
+  {href: '/examples/fashion.html', label: 'Fashion (Instant results + Recs)'},
   {href: '/examples/insights.html', label: 'Insights Panel'},
   {
     href: '/examples/recommendations.html',

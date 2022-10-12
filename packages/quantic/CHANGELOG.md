@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.46.1...@coveo/quantic@1.46.2) (2022-10-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.46.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.46.0...@coveo/quantic@1.46.1) (2022-10-06)
+
+
+### Bug Fixes
+
+* **quantic:**  overflow hidden added to prevent horizontal scroll in the QuanticTabBar ([#2486](https://github.com/coveo/ui-kit/issues/2486)) ([4101554](https://github.com/coveo/ui-kit/commit/410155488b17cca2360a452fe294bfe9178c5e89))
+
+
+
+
+
 # [1.46.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.45.1...@coveo/quantic@1.46.0) (2022-10-05)
 
 

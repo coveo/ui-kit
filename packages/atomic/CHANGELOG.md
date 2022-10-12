@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.117.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.116.0...@coveo/atomic@1.117.0) (2022-10-11)
+
+
+### Bug Fixes
+
+* **atomic:** change facet store label to function that returns i18n translated value ([#2492](https://github.com/coveo/ui-kit/issues/2492)) ([d5c8940](https://github.com/coveo/ui-kit/commit/d5c8940c6e27bb4aea1e2842faf984ef3dfa623c))
+* **atomic:** modify result-localized-text key property ([#2493](https://github.com/coveo/ui-kit/issues/2493)) ([a6eb820](https://github.com/coveo/ui-kit/commit/a6eb82036547527507e8a90c1e69b89797daf18e))
+
+
+### Features
+
+* **atomic,headless:** use different InteractiveResult per engine/interface ([#2494](https://github.com/coveo/ui-kit/issues/2494)) ([ce4ab2b](https://github.com/coveo/ui-kit/commit/ce4ab2ba182ecaecda8a0f4e98d208827859fed4))
+* **atomic:** improve recs interface initialization to be on par with search ([#2491](https://github.com/coveo/ui-kit/issues/2491)) ([d4386f5](https://github.com/coveo/ui-kit/commit/d4386f5dc40a8d1e89c8dae2d1481026978eb1e0))
+
+
+
+
+
+# [1.116.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.115.0...@coveo/atomic@1.116.0) (2022-10-07)
+
+
+### Features
+
+* **atomic:** add calendar time support + result-timespan component ([#2475](https://github.com/coveo/ui-kit/issues/2475)) ([59ff2a8](https://github.com/coveo/ui-kit/commit/59ff2a8ba0b52fd1afd9af0ba50521c42cdd1c76))
+
+
+
+
+
+# [1.115.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.114.0...@coveo/atomic@1.115.0) (2022-10-06)
+
+
+### Features
+
+* **atomic,headless:** add rec result & template components, add missing rec state, add recommendations list styling & layout ([#2484](https://github.com/coveo/ui-kit/issues/2484)) ([c3fb9eb](https://github.com/coveo/ui-kit/commit/c3fb9ebab3181da7b55a3c8152822455399fbfa1))
+* **atomic:** add atomic-result-localized-text component ([#2483](https://github.com/coveo/ui-kit/issues/2483)) ([662dc14](https://github.com/coveo/ui-kit/commit/662dc14e1164e62ed2ae3c8356c610f90d0b8969))
+
+
+
+
+
 # [1.114.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.113.9...@coveo/atomic@1.114.0) (2022-10-05)
 
 

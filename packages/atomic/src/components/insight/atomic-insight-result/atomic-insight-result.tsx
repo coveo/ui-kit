@@ -1,8 +1,9 @@
-import {Component, h, Prop, Element, Listen} from '@stencil/core';
+import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {AtomicInsightStore} from '../atomic-insight-interface/store';
 import {
   DisplayConfig,
+  InteractiveResultContextEvent,
   ResultContextEvent,
 } from '../../search/result-template-components/result-template-decorators';
 import {
@@ -10,7 +11,8 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
-import {InsightResult, InsightEngine} from '..';
+import {InsightResult, InsightEngine, InsightInteractiveResult} from '..';
+import {resultComponentClass} from '../../common/result-list/result-list-common';
 
 /**
  * @internal
@@ -25,7 +27,7 @@ export class AtomicInsightResult {
   @Element() host!: HTMLElement;
 
   /**
-   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
    */
   @Prop() stopPropagation?: boolean;
 
@@ -41,7 +43,14 @@ export class AtomicInsightResult {
   @Prop() engine?: InsightEngine;
 
   /**
-   * Global state for Atomic.
+   * The InteractiveResult item.
+   * TODO: v2 make required
+   * @internal
+   */
+  @Prop() interactiveResult?: InsightInteractiveResult;
+
+  /**
+   * Global Atomic state.
    * @internal
    */
   @Prop() store?: AtomicInsightStore;
@@ -57,14 +66,14 @@ export class AtomicInsightResult {
   @Prop() density: ResultDisplayDensity = 'normal';
 
   /**
-   * How large or small the visual section of results should be.
+   * The size of the visual section in result list items.
    *
-   * This may be overwritten if an image size is defined in the result content.
+   * This is overwritten by the image size defined in the result content, if it exists.
    */
   @Prop() imageSize: ResultDisplayImageSize = 'icon';
 
   /**
-   * Classes that will be added to the result element.
+   * The classes to add to the result element.
    */
   @Prop() classes = '';
 
@@ -78,6 +87,15 @@ export class AtomicInsightResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveInteractiveResult')
+  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.interactiveResult) {
+      event.detail(this.interactiveResult);
+    }
   }
 
   @Listen('atomic/resolveStopPropagation')
@@ -113,13 +131,15 @@ export class AtomicInsightResult {
   public render() {
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
-      <div
-        class={`result-root ${this.layout
-          .getClasses()
-          .concat(this.classes)
-          .join(' ')}`}
-        innerHTML={this.getContentHTML()}
-      ></div>
+      <Host class={resultComponentClass}>
+        <div
+          class={`result-root ${this.layout
+            .getClasses()
+            .concat(this.classes)
+            .join(' ')}`}
+          innerHTML={this.getContentHTML()}
+        ></div>
+      </Host>
     );
   }
 

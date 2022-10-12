@@ -206,7 +206,7 @@ export class AtomicRatingFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
     const facetInfo: FacetInfo = {
-      label: this.label,
+      label: () => this.bindings.i18n.t(this.label),
       facetId: this.facetId!,
       element: this.host,
     };

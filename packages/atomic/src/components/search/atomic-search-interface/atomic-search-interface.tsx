@@ -73,6 +73,7 @@ export class AtomicSearchInterface
    * A list of non-default fields to include in the query results, separated by commas.
    */
   @Prop({reflect: true}) public fieldsToInclude = '';
+
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    */
@@ -92,8 +93,7 @@ export class AtomicSearchInterface
    * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items.
    * By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
    *
-   * @example
-   * America/Montreal
+   * Example: "America/Montreal"
    */
   @Prop({reflect: true}) public timezone?: string;
 
@@ -130,7 +130,7 @@ export class AtomicSearchInterface
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
    *
-   * @example /mypublicpath/languages
+   * Example: "/mypublicpath/languages"
    *
    */
   @Prop({reflect: true}) public languageAssetsPath = './lang';
@@ -138,7 +138,7 @@ export class AtomicSearchInterface
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
    *
-   * @example /mypublicpath/icons
+   * Example: "/mypublicpath/icons"
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
@@ -239,7 +239,7 @@ export class AtomicSearchInterface
 
   /**
    * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
-   *
+   * This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
    */
   @Method() public initializeWithSearchEngine(engine: SearchEngine) {
     return this.internalInitialization(() => (this.engine = engine));
