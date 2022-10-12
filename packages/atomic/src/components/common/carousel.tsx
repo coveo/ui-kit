@@ -8,7 +8,7 @@ export interface CarouselProps {
   bindings: AnyBindings;
   previousPage(): void;
   nextPage(): void;
-  numberOfAvailablePages: number;
+  numberOfPages: number;
   currentPage: number;
 }
 
@@ -54,9 +54,8 @@ export const Carousel: FunctionalComponent<
   function renderIndicators() {
     return (
       <ul part="indicators" class="flex gap-2 justify-center mt-6">
-        {Array.from({length: props.numberOfAvailablePages}, (_, index) => {
-          const isActive =
-            index === props.currentPage % props.numberOfAvailablePages;
+        {Array.from({length: props.numberOfPages}, (_, index) => {
+          const isActive = index === props.currentPage % props.numberOfPages;
           return (
             <li
               part={`indicator ${isActive ? 'active-indicator' : ''}`}

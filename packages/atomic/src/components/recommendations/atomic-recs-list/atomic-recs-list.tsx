@@ -148,16 +148,14 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    */
   @Method() public async previousPage() {
     this.currentPage =
-      this.currentPage - 1 < 0
-        ? this.numberOfAvailablePages - 1
-        : this.currentPage - 1;
+      this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
   }
 
   /**
    * Moves to the next page, when the carousel is activated.
    */
   @Method() public async nextPage() {
-    this.currentPage = (this.currentPage + 1) % this.numberOfAvailablePages;
+    this.currentPage = (this.currentPage + 1) % this.numberOfPages;
   }
 
   public initialize() {
@@ -300,7 +298,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     );
   }
 
-  private get numberOfAvailablePages() {
+  private get numberOfPages() {
     return Math.ceil(
       this.recommendationListState.recommendations.length /
         this.numberOfRecommendationsPerPage!
@@ -316,27 +314,22 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   public render() {
-    if (this.shouldRenderPagination) {
-      return (
-        <Fragment>
-          {this.renderHeading()}
+    return (
+      <Fragment>
+        {this.renderHeading()}
+        {this.shouldRenderPagination ? (
           <Carousel
             bindings={this.bindings}
             currentPage={this.currentPage}
             nextPage={() => this.nextPage()}
             previousPage={() => this.previousPage()}
-            numberOfAvailablePages={this.numberOfAvailablePages}
+            numberOfPages={this.numberOfPages}
           >
             {this.resultListCommon.render()}
           </Carousel>
-        </Fragment>
-      );
-    }
-
-    return (
-      <Fragment>
-        {this.renderHeading()}
-        {this.resultListCommon.render()}
+        ) : (
+          this.resultListCommon.render()
+        )}
       </Fragment>
     );
   }
