@@ -3,7 +3,6 @@ import {
   RecommendationList,
   RecommendationListState,
   loadConfigurationActions,
-  loadPaginationActions,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -41,6 +40,7 @@ import {Heading} from '../../common/heading';
 import {buildRecsInteractiveResult, RecsResult} from '..';
 import ArrowRight from '../../../images/arrow-right.svg';
 import {Button} from '../../common/button';
+import {NumberValue} from '@coveo/bueno';
 
 /**
  * @internal
@@ -103,17 +103,17 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   public imageSize: ResultDisplayImageSize = 'small';
 
   /**
-   * The number of recommendations to display.
+   * The total number of recommendations to display.
    * This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfRecommendations = 10;
 
   /**
-   * The number of pages of recommendations.
-   * Setting a value greater than 1 activates the carousel.
+   * The number of recommendations to display, per page.
+   * Setting a value greater than and lower than the numberOfRecommendations value activates the carousel.
    * This does not affect the display of the list itself, only the number of recommendation pages.
    */
-  @Prop({reflect: true}) public numberOfPages = 1;
+  @Prop({reflect: true}) public numberOfRecommendationsPerPage?: number;
 
   /**
    * The non-localized label for the list of recommendations.
@@ -125,19 +125,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    */
   @Prop({reflect: true}) public headingLevel = 0;
 
-  @Watch('numberOfPages')
-  async pageChanged() {
-    if (!this.bindings) {
-      return;
-    }
-
+  @Watch('numberOfRecommendationsPerPage')
+  public async watchNumberOfRecommendationsPerPage() {
     this.currentPage = 0;
-    this.bindings.engine.dispatch(
-      loadPaginationActions(this.bindings.engine).updateNumberOfResults(
-        this.numberOfPages * this.numberOfRecommendations
-      )
-    );
-    this.recommendationList.refresh();
   }
 
   /**
@@ -172,13 +162,13 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   public initialize() {
+    this.validateNumberOfRecommendationsPerPage();
     this.validateRecommendationIdentifier();
     this.updateOriginLevel2();
     this.recommendationList = buildRecommendationList(this.bindings.engine, {
       options: {
         id: this.recommendation,
-        numberOfRecommendations:
-          this.numberOfRecommendations * this.numberOfPages,
+        numberOfRecommendations: this.numberOfRecommendations,
       },
     });
 
@@ -200,7 +190,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
-      getNumberOfPlaceholders: () => this.numberOfRecommendations,
+      getNumberOfPlaceholders: () =>
+        this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
@@ -230,6 +221,19 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       results: this.subsetRecommendations,
       searchResponseId: this.recommendationListState.searchResponseId,
     };
+  }
+
+  private validateNumberOfRecommendationsPerPage() {
+    const msg = new NumberValue({
+      min: 1,
+      max: this.numberOfRecommendations - 1,
+    }).validate(this.numberOfRecommendationsPerPage!);
+
+    if (msg) {
+      this.error = new Error(
+        `The "numberOfRecommendationsPerPage" is invalid: ${msg}`
+      );
+    }
   }
 
   private validateRecommendationIdentifier() {
@@ -281,26 +285,31 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
   private get currentIndex() {
     return Math.abs(
-      (this.currentPage * this.numberOfRecommendations) %
+      (this.currentPage * this.numberOfRecommendationsPerPage!) %
         this.recommendationListState.recommendations.length
     );
   }
 
   private get subsetRecommendations() {
+    if (!this.numberOfRecommendationsPerPage) {
+      return this.recommendationListState.recommendations;
+    }
+
     return this.recommendationListState.recommendations.slice(
       this.currentIndex,
-      this.currentIndex + this.numberOfRecommendations
+      this.currentIndex + this.numberOfRecommendationsPerPage
     );
   }
 
   private get numberOfAvailablePages() {
     return Math.ceil(
-      this.recommendationListState.recommendations.length / this.numberOfPages
+      this.recommendationListState.recommendations.length /
+        this.numberOfRecommendationsPerPage!
     );
   }
 
   private get hasPagination() {
-    return this.numberOfPages > 1;
+    return !!this.numberOfRecommendationsPerPage;
   }
 
   private get commonPaginationClasses() {
