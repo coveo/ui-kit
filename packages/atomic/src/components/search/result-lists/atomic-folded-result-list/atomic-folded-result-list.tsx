@@ -16,6 +16,8 @@ import {
   buildResultsPerPage,
   ResultListProps,
   FoldedCollection,
+  Result,
+  buildInteractiveResult,
 } from '@coveo/headless';
 import {
   BindStateToController,
@@ -171,7 +173,13 @@ export class AtomicFoldedResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       getResultListState: () => this.foldedResultListState,
       getResultRenderingFunction: () => this.resultRenderingFunction,
-      renderResult: (props) => <atomic-result {...props}></atomic-result>,
+      renderResult: (props) => (
+        <atomic-result {...props} engine={this.bindings.engine}></atomic-result>
+      ),
+      getInteractiveResult: (result: Result) =>
+        buildInteractiveResult(this.bindings.engine, {
+          options: {result},
+        }),
     });
   }
 

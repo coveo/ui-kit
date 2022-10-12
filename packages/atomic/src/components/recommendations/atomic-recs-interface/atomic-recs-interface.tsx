@@ -1,7 +1,6 @@
 import {
   RecommendationEngine,
   RecommendationEngineConfiguration,
-  LogLevel,
   loadFieldActions,
   EcommerceDefaultFieldsToInclude,
   buildRecommendationEngine,
@@ -18,6 +17,7 @@ import {
   State,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
+import {RecsLogLevel} from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {CommonBindings} from '../../common/interface/bindings';
 import {
@@ -91,7 +91,7 @@ export class AtomicRecsInterface
   /**
    * The severity level of the messages to log in the console.
    */
-  @Prop({reflect: true}) public logLevel?: LogLevel;
+  @Prop({reflect: true}) public logLevel?: RecsLogLevel;
 
   /**
    * The recommendation interface language.
