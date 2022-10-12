@@ -1,8 +1,14 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
+import {
+  FoldedResult,
+  InteractiveResult,
+  Result,
+  SearchEngine,
+} from '@coveo/headless';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
+  InteractiveResultContextEvent,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
 import {
@@ -40,6 +46,13 @@ export class AtomicResult {
    * The result item.
    */
   @Prop() result!: Result | FoldedResult;
+
+  /**
+   * The InteractiveResult item.
+   * TODO: v2 make required
+   * @internal
+   */
+  @Prop() interactiveResult?: InteractiveResult;
 
   /**
    * The headless search engine.
@@ -106,6 +119,15 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveInteractiveResult')
+  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.interactiveResult) {
+      event.detail(this.interactiveResult);
+    }
   }
 
   @Listen('atomic/resolveStopPropagation')

@@ -2,6 +2,7 @@ import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
+  InteractiveResultContextEvent,
   ResultContextEvent,
 } from '../../search/result-template-components/result-template-decorators';
 import {
@@ -10,7 +11,7 @@ import {
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
-import {RecsResult} from '..';
+import {RecsInteractiveResult, RecsResult} from '..';
 import {AtomicRecsStore} from '../atomic-recs-interface/store';
 import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
@@ -39,6 +40,12 @@ export class AtomicRecsResult {
    * The result item.
    */
   @Prop() result!: RecsResult;
+
+  /**
+   * The InteractiveResult item.
+   * @internal
+   */
+  @Prop() interactiveResult!: RecsInteractiveResult;
 
   /**
    * Global Atomic state.
@@ -91,6 +98,13 @@ export class AtomicRecsResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveInteractiveResult')
+  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.detail(this.interactiveResult);
   }
 
   @Listen('atomic/resolveStopPropagation')

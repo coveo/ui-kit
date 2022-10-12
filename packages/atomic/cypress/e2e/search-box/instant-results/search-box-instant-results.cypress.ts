@@ -27,8 +27,8 @@ const setInstantResults = (count: number) => (fixture: TestFixture) => {
       buildMockResult({
         title: `Instant Result ${i}`,
         uniqueId: `instant_result_${i}`,
-        uri: `/${i}`,
-        clickUri: `/${i}`,
+        uri: `https://example.com/${i}`,
+        clickUri: `https://example.com/${i}`,
       })
     );
   });
@@ -199,7 +199,7 @@ describe('Instant Results Test Suites', () => {
       });
       it('redirects to new page', () => {
         cy.window().then((win) => {
-          expect(win.location.href).to.equal(`${win.location.origin}/0`);
+          expect(win.location.href).to.equal('https://example.com/0');
         });
       });
     });
@@ -292,20 +292,22 @@ describe('Instant Results Test Suites', () => {
         InstantResultsAssertions.assertNoResultIsSelected();
         SearchBoxAssertions.assertSuggestionIsSelected(1);
       });
-      describe('when clicking a result', () => {
-        before(() => {
-          setupWithSuggestionsAndRecentQueries();
-          SearchBoxSelectors.inputBox().type('{downarrow}', {
-            delay: 200,
-            force: true,
-          });
-          cy.wait(TestFixture.interceptAliases.Search);
-          InstantResultsSelectors.results().eq(1).click();
+    });
+
+    describe('when clicking a result', () => {
+      before(() => {
+        setupWithSuggestionsAndRecentQueries();
+        SearchBoxSelectors.inputBox().type('{downarrow}', {
+          delay: 200,
+          force: true,
         });
-        it('redirects to new page', () => {
-          cy.window().then((win) => {
-            expect(win.location.href).to.equal(`${win.location.origin}/1`);
-          });
+        cy.wait(TestFixture.interceptAliases.Search);
+        InstantResultsSelectors.results().eq(1).click();
+      });
+
+      it('redirects to new page', () => {
+        cy.window().then((win) => {
+          expect(win.location.href).to.equal('https://example.com/1');
         });
       });
     });

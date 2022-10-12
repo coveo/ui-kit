@@ -1,4 +1,3 @@
-import {buildInteractiveResult, SearchEngine} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {LinkWithResultAnalytics} from '../../search/result-link/result-link';
 import {ResultListDisplayProps} from './result-list-common-interface';
@@ -9,13 +8,7 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
 ) =>
   props.getResultListState().results.map((result, index) => {
     const unfoldedResult = extractUnfoldedResult(result);
-    // TODO: support any engine in buildInteractiveResult
-    const interactiveResult = buildInteractiveResult(
-      props.bindings.engine as SearchEngine,
-      {
-        options: {result: unfoldedResult},
-      }
-    );
+    const interactiveResult = props.getInteractiveResult(unfoldedResult);
 
     return (
       <div
@@ -36,6 +29,7 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
         {props.renderResult({
           key: props.getResultId(result),
           result: result,
+          interactiveResult: props.getInteractiveResult(unfoldedResult),
           store: props.bindings.store,
           content: props.resultTemplateProvider.getTemplateContent(result),
           loadingFlag: props.loadingFlag,

@@ -3,6 +3,7 @@ import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {AtomicInsightStore} from '../atomic-insight-interface/store';
 import {
   DisplayConfig,
+  InteractiveResultContextEvent,
   ResultContextEvent,
 } from '../../search/result-template-components/result-template-decorators';
 import {
@@ -10,7 +11,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
-import {InsightResult, InsightEngine} from '..';
+import {InsightResult, InsightEngine, InsightInteractiveResult} from '..';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
 
 /**
@@ -40,6 +41,13 @@ export class AtomicInsightResult {
    * @deprecated This property is currently un-used
    */
   @Prop() engine?: InsightEngine;
+
+  /**
+   * The InteractiveResult item.
+   * TODO: v2 make required
+   * @internal
+   */
+  @Prop() interactiveResult?: InsightInteractiveResult;
 
   /**
    * Global Atomic state.
@@ -79,6 +87,15 @@ export class AtomicInsightResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveInteractiveResult')
+  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.interactiveResult) {
+      event.detail(this.interactiveResult);
+    }
   }
 
   @Listen('atomic/resolveStopPropagation')
