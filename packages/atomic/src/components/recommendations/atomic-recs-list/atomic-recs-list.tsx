@@ -168,7 +168,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * Moves to the next page, when the carousel is activated.
    */
   @Method() public async nextPage() {
-    this.currentPage = this.currentPage + (1 % this.numberOfAvailablePages);
+    this.currentPage = (this.currentPage + 1) % this.numberOfAvailablePages;
   }
 
   public initialize() {
