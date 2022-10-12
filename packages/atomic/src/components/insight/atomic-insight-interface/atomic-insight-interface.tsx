@@ -74,7 +74,7 @@ export class AtomicInsightInterface
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
    *
-   * @example /mypublicpath/languages
+   * Example: "/mypublicpath/languages"
    *
    */
   @Prop({reflect: true}) public languageAssetsPath = './lang';
@@ -82,7 +82,7 @@ export class AtomicInsightInterface
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
    *
-   * @example /mypublicpath/icons
+   * Example: "/mypublicpath/icons"
    *
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';

@@ -264,18 +264,38 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   /**
-   * Sends the "quantic__resultpreviewtoggle" event.
-   * @param {boolean} isOpen
+   * @param {KeyboardEvent} evt
    */
-  sendResultPreviewEvent(isOpen) {
-    const resultPreviewEvent = new CustomEvent('quantic__resultpreviewtoggle', {
-      composed: true,
-      bubbles: true,
-      detail: {
-        isOpen,
-        ...(isOpen) && {resultId: this.result.uniqueId}
-      },
-    });
-    this.dispatchEvent(resultPreviewEvent);
+  onCloseKeyDown(evt) {
+    if (evt.shiftKey && evt.code === 'Tab') {
+      evt.preventDefault();
+      const lastFocusableElement =
+        this.lastFocusableElementInFooterSlot ||
+        this.lastFocusableElementInQuickview;
+      if (lastFocusableElement) {
+        lastFocusableElement.focus();
+      } else {
+        this.setFocusToHeader();
+      }
+    }
+  }
+
+  get lastFocusableElementInFooterSlot() {
+    /** @type {HTMLElement} */
+    const footerSlot = this.template.querySelector('slot[name=footer]');
+    if (footerSlot) {
+      const lastElement = getLastFocusableElement(footerSlot);
+      if (lastElement) return lastElement;
+    }
+    return null;
+  }
+
+  get lastFocusableElementInQuickview() {
+    const element = this.contentContainer;
+    if (element) {
+      const lastElement = getLastFocusableElement(element);
+      return lastElement;
+    }
+    return null;
   }
 }

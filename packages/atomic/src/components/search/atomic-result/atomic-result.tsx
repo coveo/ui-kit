@@ -1,8 +1,14 @@
-import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {FoldedResult, Result, SearchEngine} from '@coveo/headless';
+import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
+import {
+  FoldedResult,
+  InteractiveResult,
+  Result,
+  SearchEngine,
+} from '@coveo/headless';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
+  InteractiveResultContextEvent,
   ResultContextEvent,
 } from '../result-template-components/result-template-decorators';
 import {
@@ -16,6 +22,7 @@ import {
   AtomicCommonStoreData,
 } from '../../common/interface/store';
 import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {resultComponentClass} from '../../common/result-list/result-list-common';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.
@@ -31,7 +38,7 @@ export class AtomicResult {
   @Element() host!: HTMLElement;
 
   /**
-   * Whether an atomic-result-link inside atomic-result should stop propagation.
+   * Whether an atomic-result-link inside atomic-result should stop click event propagation.
    */
   @Prop() stopPropagation?: boolean;
 
@@ -41,13 +48,20 @@ export class AtomicResult {
   @Prop() result!: Result | FoldedResult;
 
   /**
+   * The InteractiveResult item.
+   * TODO: v2 make required
+   * @internal
+   */
+  @Prop() interactiveResult?: InteractiveResult;
+
+  /**
    * The headless search engine.
    * @deprecated This property is currently un-used
    */
   @Prop() engine?: SearchEngine;
 
   /**
-   * Global state for Atomic.
+   * Global Atomic state.
    * @internal
    */
   @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
@@ -68,9 +82,9 @@ export class AtomicResult {
   @Prop() density: ResultDisplayDensity = 'normal';
 
   /**
-   * How large or small the visual section of results should be.
+   * The size of the visual section in result list items.
    *
-   * This may be overwritten if an image size is defined in the result content.
+   * This is overwritten by the image size defined in the result content, if it exists.
    */
   @Prop() imageSize?: ResultDisplayImageSize;
 
@@ -80,7 +94,7 @@ export class AtomicResult {
   @Prop() image: ResultDisplayImageSize = 'icon';
 
   /**
-   * Classes that will be added to the result element.
+   * The classes to add to the result element.
    */
   @Prop() classes = '';
 
@@ -90,7 +104,7 @@ export class AtomicResult {
   @Prop() loadingFlag?: string;
 
   /**
-   * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system.
+   * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
    * @internal
@@ -105,6 +119,15 @@ export class AtomicResult {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);
+  }
+
+  @Listen('atomic/resolveInteractiveResult')
+  public resolveInteractiveResult(event: InteractiveResultContextEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.interactiveResult) {
+      event.detail(this.interactiveResult);
+    }
   }
 
   @Listen('atomic/resolveStopPropagation')
@@ -152,21 +175,25 @@ export class AtomicResult {
   public render() {
     if (this.isCustomRenderFunctionMode) {
       return (
-        <div
-          class="result-root"
-          ref={(ref) => (this.resultRootRef = ref)}
-        ></div>
+        <Host class={resultComponentClass}>
+          <div
+            class="result-root"
+            ref={(ref) => (this.resultRootRef = ref)}
+          ></div>
+        </Host>
       );
     }
     return (
       // deepcode ignore ReactSetInnerHtml: This is not React code
-      <div
-        class={`result-root ${this.layout
-          .getClasses()
-          .concat(this.classes)
-          .join(' ')}`}
-        innerHTML={this.getContentHTML()}
-      ></div>
+      <Host class={resultComponentClass}>
+        <div
+          class={`result-root ${this.layout
+            .getClasses()
+            .concat(this.classes)
+            .join(' ')}`}
+          innerHTML={this.getContentHTML()}
+        ></div>
+      </Host>
     );
   }
 

@@ -47,6 +47,13 @@ export type {
 export {buildRecommendationList} from './controllers/recommendation/headless-recommendation';
 
 export type {
+  RecommendationInteractiveResultOptions,
+  RecommendationInteractiveResultProps,
+  InteractiveResult,
+} from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
+export {buildInteractiveResult} from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
+
+export type {
   Context,
   ContextState,
   ContextValue,
@@ -65,3 +72,18 @@ export {buildDictionaryFieldContext} from './controllers/dictionary-field-contex
 export type {Result} from './api/search/search/result';
 export type {HighlightKeyword} from './utils/highlight';
 export type {Raw} from './api/search/search/raw';
+
+// Features
+export type {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
+export type {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {ResultTemplatesHelpers} from './features';
+
+export {
+  MinimumFieldsToInclude,
+  DefaultFieldsToInclude,
+  EcommerceDefaultFieldsToInclude,
+} from './features/fields/fields-state';
