@@ -118,7 +118,7 @@ export default class QuanticSearchBox extends LightningElement {
     }
     this.state = this.searchBox.state;
     this.suggestions =
-      this.searchBox?.state?.suggestions?.map((s, index) => ({
+      this.state?.suggestions?.map((s, index) => ({
         key: index,
         rawValue: s.rawValue,
         value: s.highlightedValue,
@@ -248,6 +248,7 @@ export default class QuanticSearchBox extends LightningElement {
   }
 
   handleSuggestionListEvent = (event) => {
+    event.stopPropagation();
     const id = event.detail;
     this.input.setAttribute('aria-controls', id);
   };
