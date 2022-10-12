@@ -38,9 +38,8 @@ import {
 } from '../../../utils/accessibility-utils';
 import {Heading} from '../../common/heading';
 import {buildRecsInteractiveResult, RecsResult} from '..';
-import ArrowRight from '../../../images/arrow-right.svg';
-import {Button} from '../../common/button';
 import {NumberValue} from '@coveo/bueno';
+import {Carousel} from '../../common/carousel';
 
 /**
  * @internal
@@ -312,93 +311,32 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     return !!this.numberOfRecommendationsPerPage;
   }
 
-  private get commonPaginationClasses() {
-    return 'w-10 h-10 grid justify-center items-center absolute top-[50%] -translate-y-1/2 z-1 shadow-lg group';
-  }
-
-  private get commonArrowClasses() {
-    return 'w-3.5 align-middle text-on-background group-hover:text-primary group-focus:text-primary-light';
-  }
-
   private get shouldRenderPagination() {
     return this.hasPagination && this.resultListCommonState.hasResults;
   }
 
-  private renderPreviousButton() {
-    if (!this.shouldRenderPagination) {
-      return;
-    }
-
-    return (
-      <Button
-        style="outline-primary"
-        ariaLabel={this.bindings.i18n.t('previous')}
-        onClick={() => this.previousPage()}
-        part="previous-button"
-        class={`${this.commonPaginationClasses} -translate-x-1/2`}
-      >
-        <atomic-icon
-          icon={ArrowRight}
-          class={`${this.commonArrowClasses} rotate-180`}
-        ></atomic-icon>
-      </Button>
-    );
-  }
-
-  private renderNextButton() {
-    if (!this.shouldRenderPagination) {
-      return;
-    }
-
-    return (
-      <Button
-        style="outline-primary"
-        ariaLabel={this.bindings.i18n.t('next')}
-        onClick={() => this.nextPage()}
-        part="next-button"
-        class={`${this.commonPaginationClasses} right-0 translate-x-1/2`}
-      >
-        <atomic-icon
-          icon={ArrowRight}
-          class={this.commonArrowClasses}
-        ></atomic-icon>
-      </Button>
-    );
-  }
-
-  private renderIndicators() {
-    if (!this.shouldRenderPagination) {
-      return;
-    }
-
-    return (
-      <ul part="indicators" class="flex gap-2 justify-center mt-6">
-        {Array.from({length: this.numberOfAvailablePages}, (_, index) => {
-          const isActive =
-            index === this.currentPage % this.numberOfAvailablePages;
-          return (
-            <li
-              part={`indicator ${isActive ? 'active-indicator' : ''}`}
-              class={`rounded-md h-1 w-12 ${
-                isActive ? 'bg-primary' : 'bg-neutral'
-              } `}
-            ></li>
-          );
-        })}
-      </ul>
-    );
-  }
-
   public render() {
+    if (this.shouldRenderPagination) {
+      return (
+        <Fragment>
+          {this.renderHeading()}
+          <Carousel
+            bindings={this.bindings}
+            currentPage={this.currentPage}
+            nextPage={() => this.nextPage()}
+            previousPage={() => this.previousPage()}
+            numberOfAvailablePages={this.numberOfAvailablePages}
+          >
+            {this.resultListCommon.render()}
+          </Carousel>
+        </Fragment>
+      );
+    }
+
     return (
       <Fragment>
         {this.renderHeading()}
-        <div class="relative">
-          {this.renderPreviousButton()}
-          {this.resultListCommon.render()}
-          {this.renderNextButton()}
-        </div>
-        {this.renderIndicators()}
+        {this.resultListCommon.render()}
       </Fragment>
     );
   }
