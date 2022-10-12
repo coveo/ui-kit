@@ -991,11 +991,11 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * Switches to the previous page, when the carousel is activated.
+          * Moves to the next page, when the carousel is activated.
          */
         "nextPage": () => Promise<void>;
         /**
-          * Setting a value higher than 1 activates the carousel and allows the user to view more recommendations. This does not affect the display of the list itself, only the number of recommendations displayed at once.
+          * The number of pages of recommendations. Setting a value greater than 1 activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
          */
         "numberOfPages": number;
         /**
@@ -1003,7 +1003,7 @@ export namespace Components {
          */
         "numberOfRecommendations": number;
         /**
-          * Switches to the next page, when the carousel is activated.
+          * Moves to the previous page, when the carousel is activated.
          */
         "previousPage": () => Promise<void>;
         /**
@@ -3476,7 +3476,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * Setting a value higher than 1 activates the carousel and allows the user to view more recommendations. This does not affect the display of the list itself, only the number of recommendations displayed at once.
+          * The number of pages of recommendations. Setting a value greater than 1 activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
          */
         "numberOfPages"?: number;
         /**
