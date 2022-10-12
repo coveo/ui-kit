@@ -47,6 +47,13 @@ export type {
 export {buildRecommendationList} from './controllers/recommendation/headless-recommendation';
 
 export type {
+  RecommendationInteractiveResultOptions,
+  RecommendationInteractiveResultProps,
+  InteractiveResult,
+} from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
+export {buildInteractiveResult} from './controllers/recommendation/result-list/headless-recommendation-interactive-result';
+
+export type {
   Context,
   ContextState,
   ContextValue,

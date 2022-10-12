@@ -2,7 +2,6 @@ import {
   buildRecommendationList,
   RecommendationList,
   RecommendationListState,
-  Result,
   loadConfigurationActions,
 } from '@coveo/headless/recommendation';
 import {Component, State, Element, Prop, Method, h} from '@stencil/core';
@@ -29,6 +28,7 @@ import {
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
 import {Heading} from '../../common/heading';
+import {buildRecsInteractiveResult, RecsResult} from '..';
 
 /**
  * @internal
@@ -156,6 +156,10 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       renderResult: (props) => (
         <atomic-recs-result {...props}></atomic-recs-result>
       ),
+      getInteractiveResult: (result: RecsResult) =>
+        buildRecsInteractiveResult(this.bindings.engine, {
+          options: {result},
+        }),
     });
   }
 
@@ -183,7 +187,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     }
   }
 
-  private get resultListCommonState(): ResultListCommonState<Result> {
+  private get resultListCommonState(): ResultListCommonState<RecsResult> {
     return {
       firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
       isLoading: this.recommendationListState.isLoading,
