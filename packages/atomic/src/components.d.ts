@@ -5,21 +5,24 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
-import { ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
-import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
+import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
+import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
@@ -428,8 +431,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -445,8 +447,7 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
@@ -538,7 +539,7 @@ export namespace Components {
     }
     interface AtomicInsightResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes": string;
         /**
@@ -555,20 +556,24 @@ export namespace Components {
          */
         "engine"?: InsightEngine;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InsightInteractiveResult;
         "loadingFlag"?: string;
         /**
           * The result item.
          */
         "result": InsightResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
     }
@@ -920,31 +925,49 @@ export namespace Components {
          */
         "fieldsToInclude": string;
         /**
+          * Fetches new recommendations.
+         */
+        "getRecommendations": () => Promise<void>;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with an already preconfigured headless recommendation engine.
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: RecsInitializationOptions) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless recommendation engine. This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
          */
         "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: RecsLogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub": string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
     }
     interface AtomicRecsList {
         /**
@@ -952,18 +975,95 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display": ResultDisplayLayout;
+        "display": ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel": number;
         /**
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
         /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations": number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation": string;
+        /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicRecsResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": RecsInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicRecsStore;
+    }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": RecsResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on the conditions applied.
+         */
+        "getTemplate": () => Promise<RecsResultTemplate<DocumentFragment> | null>;
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
         "isOpen": boolean;
@@ -979,7 +1079,7 @@ export namespace Components {
     }
     interface AtomicResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes": string;
         /**
@@ -1004,12 +1104,16 @@ export namespace Components {
          */
         "image": ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InteractiveResult;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction": ResultRenderingFunction;
         /**
@@ -1017,11 +1121,11 @@ export namespace Components {
          */
         "result": Result | FoldedResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
@@ -1072,6 +1176,10 @@ export namespace Components {
           * Available formats: https://day.js.org/docs/en/display/format
          */
         "format": string;
+        /**
+          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+         */
+        "relativeTime"?: boolean;
     }
     interface AtomicResultFieldsList {
     }
@@ -1095,8 +1203,7 @@ export namespace Components {
     }
     interface AtomicResultLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
-          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
         /**
@@ -1132,6 +1239,16 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicResultLocalizedText {
+        /**
+          * The numerical field value used to determine whether to use the singular or plural value of a translation.
+         */
+        "fieldCount"?: string;
+        /**
+          * The i18n translation key.
+         */
+        "localeKey": string;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -1233,6 +1350,20 @@ export namespace Components {
          */
         "shouldHighlight": boolean;
     }
+    interface AtomicResultTimespan {
+        /**
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format"?: string;
+        /**
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit": string;
+    }
     interface AtomicResultsPerPage {
         /**
           * A list of choices for the number of results to display per page, separated by commas.
@@ -1274,10 +1405,6 @@ export namespace Components {
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density": ResultDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display": ResultDisplayLayout;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -1342,8 +1469,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath": string;
         /**
@@ -1351,7 +1477,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
+          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -1359,14 +1485,13 @@ export namespace Components {
          */
         "language": string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath": string;
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -1384,8 +1509,7 @@ export namespace Components {
          */
         "searchHub": string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example America/Montreal
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
@@ -1958,6 +2082,18 @@ declare global {
         prototype: HTMLAtomicRecsListElement;
         new (): HTMLAtomicRecsListElement;
     };
+    interface HTMLAtomicRecsResultElement extends Components.AtomicRecsResult, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultElement: {
+        prototype: HTMLAtomicRecsResultElement;
+        new (): HTMLAtomicRecsResultElement;
+    };
+    interface HTMLAtomicRecsResultTemplateElement extends Components.AtomicRecsResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultTemplateElement: {
+        prototype: HTMLAtomicRecsResultTemplateElement;
+        new (): HTMLAtomicRecsResultTemplateElement;
+    };
     interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
     }
     var HTMLAtomicRefineModalElement: {
@@ -2041,6 +2177,12 @@ declare global {
     var HTMLAtomicResultListElement: {
         prototype: HTMLAtomicResultListElement;
         new (): HTMLAtomicResultListElement;
+    };
+    interface HTMLAtomicResultLocalizedTextElement extends Components.AtomicResultLocalizedText, HTMLStencilElement {
+    }
+    var HTMLAtomicResultLocalizedTextElement: {
+        prototype: HTMLAtomicResultLocalizedTextElement;
+        new (): HTMLAtomicResultLocalizedTextElement;
     };
     interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
     }
@@ -2143,6 +2285,12 @@ declare global {
     var HTMLAtomicResultTextElement: {
         prototype: HTMLAtomicResultTextElement;
         new (): HTMLAtomicResultTextElement;
+    };
+    interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTimespanElement: {
+        prototype: HTMLAtomicResultTimespanElement;
+        new (): HTMLAtomicResultTimespanElement;
     };
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
     }
@@ -2328,6 +2476,8 @@ declare global {
         "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
         "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
         "atomic-recs-list": HTMLAtomicRecsListElement;
+        "atomic-recs-result": HTMLAtomicRecsResultElement;
+        "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
         "atomic-refine-modal": HTMLAtomicRefineModalElement;
         "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
@@ -2342,6 +2492,7 @@ declare global {
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
+        "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
         "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
         "atomic-result-number": HTMLAtomicResultNumberElement;
         "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
@@ -2359,6 +2510,7 @@ declare global {
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
+        "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
@@ -2778,8 +2930,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -2787,8 +2938,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
@@ -2881,7 +3031,7 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes"?: string;
         /**
@@ -2898,20 +3048,24 @@ declare namespace LocalJSX {
          */
         "engine"?: InsightEngine;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InsightInteractiveResult;
         "loadingFlag"?: string;
         /**
           * The result item.
          */
         "result": InsightResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicInsightStore;
     }
@@ -3260,23 +3414,33 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: RecsLogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub"?: string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
     }
     interface AtomicRecsList {
         /**
@@ -3284,13 +3448,86 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
          */
-        "display"?: ResultDisplayLayout;
+        "display"?: ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel"?: number;
         /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations"?: number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation"?: string;
+    }
+    interface AtomicRecsResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": RecsInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicRecsStore;
+    }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: RecsResultTemplateCondition[];
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
     }
     interface AtomicRefineModal {
         "isOpen"?: boolean;
@@ -3306,7 +3543,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResult {
         /**
-          * Classes that will be added to the result element.
+          * The classes to add to the result element.
          */
         "classes"?: string;
         /**
@@ -3331,12 +3568,16 @@ declare namespace LocalJSX {
          */
         "image"?: ResultDisplayImageSize;
         /**
-          * How large or small the visual section of results should be.  This may be overwritten if an image size is defined in the result content.
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InteractiveResult;
         "loadingFlag"?: string;
         /**
-          * Internal function used by atomic-result-list in advanced setup, that allows to bypass the standard HTML template system. Particularly useful for Atomic React
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
          */
         "renderingFunction"?: ResultRenderingFunction;
         /**
@@ -3344,11 +3585,11 @@ declare namespace LocalJSX {
          */
         "result": Result | FoldedResult;
         /**
-          * Whether an atomic-result-link inside atomic-result should stop propagation.
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
          */
         "stopPropagation"?: boolean;
         /**
-          * Global state for Atomic.
+          * Global Atomic state.
          */
         "store"?: AtomicCommonStore<AtomicCommonStoreData>;
     }
@@ -3395,6 +3636,10 @@ declare namespace LocalJSX {
           * Available formats: https://day.js.org/docs/en/display/format
          */
         "format"?: string;
+        /**
+          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+         */
+        "relativeTime"?: boolean;
     }
     interface AtomicResultFieldsList {
     }
@@ -3418,8 +3663,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultLink {
         /**
-          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.
-          * @example The following markup generates an `href` value such as `http://uri.com?id=itemTitle`: <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link>
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
         /**
@@ -3450,6 +3694,16 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicResultLocalizedText {
+        /**
+          * The numerical field value used to determine whether to use the singular or plural value of a translation.
+         */
+        "fieldCount"?: string;
+        /**
+          * The i18n translation key.
+         */
+        "localeKey": string;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -3547,6 +3801,20 @@ declare namespace LocalJSX {
          */
         "shouldHighlight"?: boolean;
     }
+    interface AtomicResultTimespan {
+        /**
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format"?: string;
+        /**
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit"?: string;
+    }
     interface AtomicResultsPerPage {
         /**
           * A list of choices for the number of results to display per page, separated by commas.
@@ -3571,8 +3839,7 @@ declare namespace LocalJSX {
          */
         "numberOfQueries"?: number;
         /**
-          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
-          * @example ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
+          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
          */
         "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
         /**
@@ -3593,10 +3860,6 @@ declare namespace LocalJSX {
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
         "density"?: ResultDisplayDensity;
-        /**
-          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
-         */
-        "display"?: ResultDisplayLayout;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -3652,8 +3915,7 @@ declare namespace LocalJSX {
          */
         "i18n"?: i18n;
         /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
-          * @example /mypublicpath/icons
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
          */
         "iconAssetsPath"?: string;
         /**
@@ -3661,14 +3923,13 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.
-          * @example /mypublicpath/languages
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
          */
         "languageAssetsPath"?: string;
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -3686,8 +3947,7 @@ declare namespace LocalJSX {
          */
         "searchHub"?: string;
         /**
-          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).
-          * @example America/Montreal
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
          */
         "timezone"?: string;
     }
@@ -3943,6 +4203,8 @@ declare namespace LocalJSX {
         "atomic-rating-range-facet": AtomicRatingRangeFacet;
         "atomic-recs-interface": AtomicRecsInterface;
         "atomic-recs-list": AtomicRecsList;
+        "atomic-recs-result": AtomicRecsResult;
+        "atomic-recs-result-template": AtomicRecsResultTemplate;
         "atomic-refine-modal": AtomicRefineModal;
         "atomic-refine-toggle": AtomicRefineToggle;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
@@ -3957,6 +4219,7 @@ declare namespace LocalJSX {
         "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
+        "atomic-result-localized-text": AtomicResultLocalizedText;
         "atomic-result-multi-value-text": AtomicResultMultiValueText;
         "atomic-result-number": AtomicResultNumber;
         "atomic-result-placeholder": AtomicResultPlaceholder;
@@ -3974,6 +4237,7 @@ declare namespace LocalJSX {
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
+        "atomic-result-timespan": AtomicResultTimespan;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
@@ -4058,6 +4322,8 @@ declare module "@stencil/core" {
             "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
             "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
             "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
+            "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
+            "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
             "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
             "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
@@ -4072,6 +4338,7 @@ declare module "@stencil/core" {
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
+            "atomic-result-localized-text": LocalJSX.AtomicResultLocalizedText & JSXBase.HTMLAttributes<HTMLAtomicResultLocalizedTextElement>;
             "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
             "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
             "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
@@ -4089,6 +4356,7 @@ declare module "@stencil/core" {
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
+            "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;

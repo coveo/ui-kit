@@ -2,6 +2,7 @@ import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
+  augmentAnalyticsConfigWithDocument,
 } from '../../common/interface/analytics-config';
 import {
   AnalyticsConfiguration,
@@ -22,8 +23,7 @@ export function getAnalyticsConfig(
   const defaultConfiguration: AnalyticsConfiguration = {
     analyticsClientMiddleware,
     enabled,
-    documentLocation: document.location.href,
-    ...(document.referrer && {originLevel3: document.referrer}),
+    ...augmentAnalyticsConfigWithDocument(),
   };
 
   if (searchEngineConfig.analytics) {
@@ -55,7 +55,7 @@ function augmentAnalyticsWithFacetTitles(
   const getAtomicFacetLabelOrOriginalTitle = (
     facetId: string,
     originalTitle: string
-  ) => (allFacets[facetId] ? allFacets[facetId].label : originalTitle);
+  ) => (allFacets[facetId] ? allFacets[facetId].label() : originalTitle);
 
   if (payload.facetState) {
     payload.facetState = payload.facetState.map(
