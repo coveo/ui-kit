@@ -549,7 +549,7 @@ export function isFocusable(element) {
 /**
  * Returns the last focusable element of for an HTML element.
  * This function would NOT work with shadow root.
- * @param {HTMLElement | null} element
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement>} | null} element
  * @returns {HTMLElement | null}
  */
 export function getLastFocusableElement(element) {
@@ -562,12 +562,14 @@ export function getLastFocusableElement(element) {
     return null;
   }
 
-  if (element.tagName === "SLOT" && /** @type {HTMLSlotElement} */(element).assignedElements().length) {
-    return getLastFocusableElementFromSlot(/** @type {HTMLSlotElement} */(element))
+  if (element.tagName === 'SLOT' && element.assignedElements().length) {
+    return getLastFocusableElementFromSlot(element);
   }
 
-  const focusableElements = Array.from(element.childNodes)
-    .map((item) => getLastFocusableElement(/** @type {HTMLElement} */ (item)))
+  /** @type {Array} */
+  const childNodes = Array.from(element.childNodes)
+  const focusableElements = childNodes
+    .map((item) => getLastFocusableElement(item))
     .filter((item) => !!item);
 
   if (focusableElements.length) {
@@ -581,7 +583,7 @@ export function getLastFocusableElement(element) {
 /**
  * Returns the First focusable element of for an HTML element.
  * This function would NOT work with shadow root.
- * @param {HTMLElement | null} element
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement>} | null} element
  * @returns {HTMLElement | null}
  */
 export function getFirstFocusableElement(element) {
@@ -594,12 +596,14 @@ export function getFirstFocusableElement(element) {
     return null;
   }
 
-  if (element.tagName === "SLOT" && /** @type {HTMLSlotElement} */(element).assignedElements().length) {
-    return getFirstFocusableElementFromSlot(/** @type {HTMLSlotElement} */(element))
+  if (element.tagName === 'SLOT' && element.assignedElements().length) {
+    return getFirstFocusableElementFromSlot(element);
   }
 
-  const focusableElements = Array.from(element.childNodes)
-    .map((item) => getFirstFocusableElement(/** @type {HTMLElement} */ (item)))
+  /** @type {Array} */
+  const childNodes = Array.from(element.childNodes)
+  const focusableElements = childNodes
+    .map((item) => getFirstFocusableElement(item))
     .filter((item) => !!item);
 
   if (focusableElements.length) {
@@ -624,12 +628,13 @@ function isCustomElement(element) {
 
 /**
  * Returns the last focusable element in an HTML slot.
- * @param {HTMLSlotElement | null} slotElement
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
  */
 function getLastFocusableElementFromSlot(slotElement) {
   if (!slotElement && slotElement.assignedElements) return null;
-  const focusableElements = Array.from(slotElement.assignedElements())
-    .map((item) => getLastFocusableElement(/** @type {HTMLElement} */(item)))
+  const assignedElements = Array.from(slotElement.assignedElements());
+  const focusableElements = assignedElements
+    .map((item) => getLastFocusableElement(item))
     .filter((item) => !!item);
 
   if (focusableElements.length) {
@@ -640,12 +645,13 @@ function getLastFocusableElementFromSlot(slotElement) {
 
 /**
  * Returns the first focusable element in an HTML slot.
- * @param {HTMLSlotElement | null} slotElement
+ * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
  */
 function getFirstFocusableElementFromSlot(slotElement) {
   if (!slotElement && slotElement.assignedElements) return null;
-  const focusableElements = Array.from(slotElement.assignedElements())
-    .map((item) => getFirstFocusableElement(/** @type {HTMLElement} */(item)))
+  const assignedElements = Array.from(slotElement.assignedElements());
+  const focusableElements = assignedElements
+    .map((item) => getFirstFocusableElement(item))
     .filter((item) => !!item);
 
   if (focusableElements.length) {

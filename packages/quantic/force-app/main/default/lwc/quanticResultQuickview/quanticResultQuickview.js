@@ -279,11 +279,11 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   get lastFocusableElementInFooterSlot() {
-    /** @type {HTMLSlotElement} */
+    /** @type {HTMLElement} */
     const footerSlot = this.template.querySelector('slot[name=footer]');
     if (footerSlot) {
-        const lastElement = getLastFocusableElement(footerSlot);
-        if (lastElement) return lastElement;
+      const lastElement = getLastFocusableElement(footerSlot);
+      if (lastElement) return lastElement;
     }
     return null;
   }
