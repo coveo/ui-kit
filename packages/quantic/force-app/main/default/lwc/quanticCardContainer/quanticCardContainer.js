@@ -1,7 +1,5 @@
 import {LightningElement, api} from 'lwc';
 
-/** @typedef {Element & {setFocusOnHeader: function}} CardContainerElement */
-
 /**
  * The `QuanticCardContainer` component is used internally as a styling container.
  * @category Utility

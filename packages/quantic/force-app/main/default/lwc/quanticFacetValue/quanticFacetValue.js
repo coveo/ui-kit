@@ -6,7 +6,6 @@ import LOCALE from '@salesforce/i18n/locale';
  * @property {string} value
  * @property {number} numberOfResults
  */
-/** @typedef {Element & {setFocus: function}} FacetValueElement */
 
 /**
  * The `QuanticFacetValue` component is used by a facet component to display a formatted facet value and the number of results with that value.

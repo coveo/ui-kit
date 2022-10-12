@@ -24,8 +24,6 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
-/** @typedef {import('../quanticCategoryFacetValue/quanticCategoryFacetValue').CategoryFacetValueElement} CategoryFacetValueElement */
-/** @typedef {import('../quanticCardContainer/quanticCardContainer').CardContainerElement} CardContainerElement */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -492,11 +490,11 @@ export default class QuanticCategoryFacet extends LightningElement {
    * Sets the focus on the first facet value.
    */
   setFocusOnFirstFacetValue() {
-    /** @type {CategoryFacetValueElement} */
     const focusTarget = this.template.querySelector(
       '.facet__value > c-quantic-category-facet-value'
     );
     if (focusTarget) {
+      // @ts-ignore
       focusTarget.setFocus();
     }
   }
@@ -505,12 +503,12 @@ export default class QuanticCategoryFacet extends LightningElement {
    * Sets the focus on the last non-active parent.
    */
   setFocusOnLastNonActiveParent() {
-    /** @type {NodeListOf<CategoryFacetValueElement>} */
     const nonActiveParents = this.template.querySelectorAll(
       '.facet__non-active-parent > c-quantic-category-facet-value'
     );
     const lastNonActiveParent = nonActiveParents[nonActiveParents.length - 1];
     if (lastNonActiveParent) {
+      // @ts-ignore
       lastNonActiveParent.setFocus();
     }
   }
@@ -519,9 +517,9 @@ export default class QuanticCategoryFacet extends LightningElement {
    * Sets the focus on the facet header.
    */
   setFocusOnHeader() {
-    /** @type {CardContainerElement} */
     const focusTarget = this.template.querySelector('c-quantic-card-container');
     if (focusTarget) {
+      // @ts-ignore
       focusTarget.setFocusOnHeader();
     }
   }

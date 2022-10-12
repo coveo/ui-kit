@@ -30,8 +30,6 @@ import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRa
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
-/** @typedef {import('../quanticFacetValue/quanticFacetValue').FacetValueElement} FacetValueElement */
-/** @typedef {import('../quanticCardContainer/quanticCardContainer').CardContainerElement} CardContainerElement */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -563,10 +561,10 @@ export default class QuanticNumericFacet extends LightningElement {
    * Sets the focus on the target facet value.
    */
   setFocusOnFacetValue() {
-    /** @type {NodeListOf<FacetValueElement>} */
     const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
     const focusTarget = facetValues[this.focusTarget.index];
     if (focusTarget) {
+      // @ts-ignore
       focusTarget.setFocus();
     }
   }
@@ -575,9 +573,9 @@ export default class QuanticNumericFacet extends LightningElement {
    * Sets the focus on the facet header.
    */
   setFocusOnHeader() {
-    /** @type {CardContainerElement} */
     const focusTarget = this.template.querySelector('c-quantic-card-container');
     if (focusTarget) {
+      // @ts-ignore
       focusTarget.setFocusOnHeader();
     }
   }
@@ -586,11 +584,11 @@ export default class QuanticNumericFacet extends LightningElement {
    * Sets the focus on the apply button.
    */
   setFocusOnApplyButton() {
-    /** @type {Element & {focus: function}} */
     const focusTarget = this.template.querySelector(
       '.facet__search-form lightning-button'
     );
     if (focusTarget) {
+      // @ts-ignore
       focusTarget.focus();
     }
   }
