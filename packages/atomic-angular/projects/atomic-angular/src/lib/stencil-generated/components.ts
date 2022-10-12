@@ -782,13 +782,13 @@ export declare interface AtomicResultDate extends Components.AtomicResultDate {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['field', 'format']
+  inputs: ['field', 'format', 'relativeTime']
 })
 @Component({
   selector: 'atomic-result-date',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['field', 'format']
+  inputs: ['field', 'format', 'relativeTime']
 })
 export class AtomicResultDate {
   protected el: HTMLElement;
@@ -914,6 +914,27 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
   inputs: ['density', 'display', 'fieldsToInclude', 'image', 'imageSize']
 })
 export class AtomicResultList {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultLocalizedText extends Components.AtomicResultLocalizedText {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['fieldCount', 'localeKey']
+})
+@Component({
+  selector: 'atomic-result-localized-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['fieldCount', 'localeKey']
+})
+export class AtomicResultLocalizedText {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -1222,6 +1243,27 @@ export class AtomicResultText {
 }
 
 
+export declare interface AtomicResultTimespan extends Components.AtomicResultTimespan {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['field', 'format', 'unit']
+})
+@Component({
+  selector: 'atomic-result-timespan',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['field', 'format', 'unit']
+})
+export class AtomicResultTimespan {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicResultsPerPage extends Components.AtomicResultsPerPage {}
 
 @ProxyCmp({
@@ -1245,7 +1287,10 @@ export class AtomicResultsPerPage {
 import type { RedirectionPayload as IAtomicSearchBoxRedirectionPayload } from '@coveo/atomic';
 export declare interface AtomicSearchBox extends Components.AtomicSearchBox {
   /**
-   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event. @example ```html
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+
+Example:
+```html
 <script>
   document.querySelector('atomic-search-box').addEventListener((e) => {
     e.preventDefault();
@@ -1254,7 +1299,7 @@ export declare interface AtomicSearchBox extends Components.AtomicSearchBox {
 </script>
 ...
 <atomic-search-box redirection-url="/search"></atomic-search-box>
-```
+``` 
    */
   'redirect': EventEmitter<CustomEvent<IAtomicSearchBoxRedirectionPayload>>;
 
@@ -1284,14 +1329,14 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery'],
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['ariaLabelGenerator', 'density', 'display', 'imageSize', 'maxResultsPerQuery']
+  inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery']
 })
 export class AtomicSearchBoxInstantResults {
   protected el: HTMLElement;

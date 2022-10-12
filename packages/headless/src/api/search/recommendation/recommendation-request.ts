@@ -2,6 +2,7 @@ import {
   BaseParam,
   ContextParam,
   LocaleParam,
+  NumberOfResultsParam,
   VisitorIDParam,
 } from '../../platform-service-params';
 import {
@@ -34,4 +35,5 @@ export type RecommendationRequest = BaseParam &
   TimezoneParam &
   VisitorIDParam &
   AnalyticsParam &
-  AuthenticationParam;
+  AuthenticationParam &
+  NumberOfResultsParam;

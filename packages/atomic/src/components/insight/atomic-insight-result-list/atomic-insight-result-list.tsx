@@ -15,6 +15,7 @@ import {
   InsightResultListState,
   buildInsightResultList,
   InsightResult,
+  buildInsightInteractiveResult,
 } from '..';
 import {randomID} from '../../../utils/utils';
 import {
@@ -116,7 +117,8 @@ export class AtomicInsightResultList
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
-      getDisplay: () => this.display,
+      getResultDisplay: () => this.display,
+      getLayoutDisplay: () => this.display,
       getImageSize: () => this.imageSize,
       nextNewResultTarget: this.nextNewResultTarget,
       loadingFlag: this.loadingFlag,
@@ -125,6 +127,10 @@ export class AtomicInsightResultList
       renderResult: (props) => (
         <atomic-insight-result {...props}></atomic-insight-result>
       ),
+      getInteractiveResult: (result: InsightResult) =>
+        buildInsightInteractiveResult(this.bindings.engine, {
+          options: {result},
+        }),
     });
   }
 

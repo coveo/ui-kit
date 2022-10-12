@@ -13,6 +13,7 @@ import {
 } from '../../features/recommendation/recommendation-actions';
 import {configuration} from '../../app/reducers';
 import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
+import {updateNumberOfResults} from '../../features/pagination/pagination-actions';
 
 describe('headless recommendation', () => {
   let recommendation: RecommendationList;
@@ -47,6 +48,18 @@ describe('headless recommendation', () => {
 
   it('when #options.id is set to an empty value, it does not dispatches #setRecommendationId', () => {
     recommendation = buildRecommendationList(engine, {options: {id: ''}});
+    expectDoesNotContainAction(setRecommendationId);
+  });
+
+  it('when #options.numberOfRecommendations is set, it dispatches #updateNumberOfResults', () => {
+    recommendation = buildRecommendationList(engine, {
+      options: {numberOfRecommendations: 20},
+    });
+    expectContainAction(updateNumberOfResults);
+  });
+
+  it('when #options.numberOfRecommendations is not set, it does not dispatches #updateNumberOfResults', () => {
+    recommendation = buildRecommendationList(engine);
     expectDoesNotContainAction(setRecommendationId);
   });
 

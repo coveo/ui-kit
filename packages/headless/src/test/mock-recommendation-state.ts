@@ -8,6 +8,7 @@ import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 import {getRecommendationInitialState} from '../features/recommendation/recommendation-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
 import {getDictionaryFieldContextInitialState} from '../features/dictionary-field-context/dictionary-field-context-state';
+import {getPaginationInitialState} from '../features/pagination/pagination-state';
 
 export function createMockRecommendationState(
   config: Partial<RecommendationAppState> = {}
@@ -23,6 +24,7 @@ export function createMockRecommendationState(
     recommendation: getRecommendationInitialState(),
     debug: getDebugInitialState(),
     version: 'unit-testing-version',
+    pagination: getPaginationInitialState(),
     ...config,
   };
 }

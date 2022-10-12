@@ -72,7 +72,7 @@ describe('analyticsConfig', () => {
     ).forEach((typeOfFacet) => {
       store.registerFacet(typeOfFacet, {
         facetId: 'some_id',
-        label: 'This is a label',
+        label: () => 'This is a label',
         element: document.createElement('div'),
       });
 

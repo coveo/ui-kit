@@ -1,4 +1,5 @@
 import {
+  buildInteractiveResult,
   FoldedResult,
   FoldedResultList,
   FoldedResultListState,
@@ -34,6 +35,7 @@ import {ResultsPlaceholder} from '../../../common/atomic-result-placeholder/plac
 import {Button} from '../../../common/button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+import {extractUnfoldedResult} from '../../../common/interface/result';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -143,6 +145,9 @@ export class AtomicResultChildren implements InitializableComponent {
         key={key}
         content={content}
         result={child}
+        interactiveResult={buildInteractiveResult(this.bindings.engine, {
+          options: {result: extractUnfoldedResult(child)},
+        })}
         engine={this.bindings.engine}
         store={this.bindings.store}
         density={this.displayConfig.density}
