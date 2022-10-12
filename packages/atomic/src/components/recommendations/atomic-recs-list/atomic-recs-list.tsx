@@ -52,7 +52,7 @@ import {Button} from '../../common/button';
  * @part label - The label of the result list.
  * @part previous-button - The previous button.
  * @part next-button - The next button.
- * @part indicators - List of indicators.
+ * @part indicators - The list of indicators.
  * @part indicator - A single indicator.
  * @part active-indicator - The active indicator.
  */
@@ -109,8 +109,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @Prop({reflect: true}) public numberOfRecommendations = 10;
 
   /**
-   * Setting a value higher than 1 activates the carousel and allows the user to view more recommendations.
-   * This does not affect the display of the list itself, only the number of recommendations displayed at once.
+   * The number of pages of recommendations.
+   * Setting a value greater than 1 activates the carousel.
+   * This does not affect the display of the list itself, only the number of recommendation pages.
    */
   @Prop({reflect: true}) public numberOfPages = 1;
 
@@ -154,7 +155,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   /**
-   * Switches to the next page, when the carousel is activated.
+   * Moves to the previous page, when the carousel is activated.
    */
   @Method() public async previousPage() {
     this.currentPage =
@@ -164,7 +165,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   /**
-   * Switches to the previous page, when the carousel is activated.
+   * Moves to the next page, when the carousel is activated.
    */
   @Method() public async nextPage() {
     this.currentPage = this.currentPage + (1 % this.numberOfAvailablePages);
