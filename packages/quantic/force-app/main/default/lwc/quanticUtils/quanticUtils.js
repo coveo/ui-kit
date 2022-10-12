@@ -631,7 +631,9 @@ function isCustomElement(element) {
  * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
  */
 function getLastFocusableElementFromSlot(slotElement) {
-  if (!slotElement && slotElement.assignedElements) return null;
+  if (!slotElement && slotElement.assignedElements) {
+    return null;
+  }
   const assignedElements = Array.from(slotElement.assignedElements());
   const focusableElements = assignedElements
     .map((item) => getLastFocusableElement(item))
@@ -648,7 +650,9 @@ function getLastFocusableElementFromSlot(slotElement) {
  * @param {HTMLElement & {assignedElements?: () => Array<HTMLElement> | null}} slotElement
  */
 function getFirstFocusableElementFromSlot(slotElement) {
-  if (!slotElement && slotElement.assignedElements) return null;
+  if (!slotElement && slotElement.assignedElements) {
+    return null;
+  }
   const assignedElements = Array.from(slotElement.assignedElements());
   const focusableElements = assignedElements
     .map((item) => getFirstFocusableElement(item))
