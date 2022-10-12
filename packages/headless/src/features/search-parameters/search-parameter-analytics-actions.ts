@@ -12,11 +12,12 @@ import {
   logPageNumber,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
+import {SearchAction} from '../analytics/analytics-utils';
 
 export function logParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
-) {
+): SearchAction {
   if (previousParameters.q !== newParameters.q) {
     return logSearchboxSubmit();
   }
@@ -88,7 +89,7 @@ function parseRangeFacetParams(facetsParams: RangeFacetParameters) {
 function logFacetAnalyticsAction(
   previousFacets: FacetParameters = {},
   newFacets: FacetParameters = {}
-) {
+): SearchAction {
   const previousIds = Object.keys(previousFacets);
   const newIds = Object.keys(newFacets);
 
@@ -149,7 +150,7 @@ function logFacetAnalyticsAction(
 function logRangeFacetAnalyticsAction(
   previousFacets: RangeFacetParameters = {},
   newFacets: RangeFacetParameters = {}
-) {
+): SearchAction {
   return logFacetAnalyticsAction(
     parseRangeFacetParams(previousFacets),
     parseRangeFacetParams(newFacets)

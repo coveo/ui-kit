@@ -5,6 +5,7 @@ import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockResult} from '../../test/mock-result';
@@ -21,8 +22,8 @@ describe('insight analytics', () => {
   it('should be enabled by default', () => {
     const state = buildMockInsightState();
     expect(
-      configureInsightAnalytics({state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureInsightAnalytics({getState: () => state, logger})
+        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -31,8 +32,8 @@ describe('insight analytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureInsightAnalytics({state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureInsightAnalytics({getState: () => state, logger})
+        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -41,8 +42,8 @@ describe('insight analytics', () => {
     state.configuration.analytics.enabled = false;
 
     expect(
-      configureInsightAnalytics({state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureInsightAnalytics({getState: () => state, logger})
+        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(false);
   });
 
@@ -54,7 +55,9 @@ describe('insight analytics', () => {
     it('should properly return the pipeline from the state', () => {
       const state = getBaseState();
       state.pipeline = 'foo';
-      expect(new InsightAnalyticsProvider(state).getPipeline()).toBe('foo');
+      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe(
+        'foo'
+      );
     });
 
     it('should properly return the pipeline from the reponse if not available directly from state', () => {
@@ -62,21 +65,28 @@ describe('insight analytics', () => {
       state.pipeline = undefined;
       state.search = buildMockSearchState({});
       state.search.response.pipeline = 'foo';
-      expect(new InsightAnalyticsProvider(state).getPipeline()).toBe('foo');
+      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe(
+        'foo'
+      );
     });
 
     it('should return "default" if the pipeline is not available', () => {
       const state = getBaseState();
       state.pipeline = undefined;
       state.search = undefined;
-      expect(new InsightAnalyticsProvider(state).getPipeline()).toBe('default');
+      expect(new InsightAnalyticsProvider(() => state).getPipeline()).toBe(
+        'default'
+      );
     });
 
     it('should properly return facet state', () => {
       const state = getBaseState();
       state.facetSet = {
         the_facet: buildMockFacetSlice({
-          request: buildMockFacetRequest({field: 'foo'}),
+          request: buildMockFacetRequest({
+            field: 'foo',
+            currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+          }),
         }),
       };
       state.search = buildMockSearchState({});
@@ -87,12 +97,12 @@ describe('insight analytics', () => {
         }),
       ];
 
-      expect(new InsightAnalyticsProvider(state).getFacetState().length).toBe(
-        1
-      );
-      expect(new InsightAnalyticsProvider(state).getFacetState()[0].field).toBe(
-        'foo'
-      );
+      expect(
+        new InsightAnalyticsProvider(() => state).getFacetState().length
+      ).toBe(1);
+      expect(
+        new InsightAnalyticsProvider(() => state).getFacetState()[0].field
+      ).toBe('foo');
     });
 
     it('should properly return getSearchEventRequestPayload', () => {
@@ -105,7 +115,7 @@ describe('insight analytics', () => {
       ];
       state.query = buildMockQueryState({q: 'foo'});
       expect(
-        new InsightAnalyticsProvider(state).getSearchEventRequestPayload()
+        new InsightAnalyticsProvider(() => state).getSearchEventRequestPayload()
       ).toMatchObject({
         queryText: 'foo',
         responseTime: 0,
@@ -118,7 +128,7 @@ describe('insight analytics', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({searchResponseId: 'the_id'});
       state.search.response.searchUid = 'another_id';
-      expect(new InsightAnalyticsProvider(state).getSearchUID()).toEqual(
+      expect(new InsightAnalyticsProvider(() => state).getSearchUID()).toEqual(
         'the_id'
       );
     });
@@ -127,7 +137,7 @@ describe('insight analytics', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({});
       state.search.response.searchUid = 'another_id';
-      expect(new InsightAnalyticsProvider(state).getSearchUID()).toEqual(
+      expect(new InsightAnalyticsProvider(() => state).getSearchUID()).toEqual(
         'another_id'
       );
     });

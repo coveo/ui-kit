@@ -1,6 +1,6 @@
 import {configuration, resultPreview} from '../../app/reducers';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
-import {buildQuickviewDocumentSuggestionClickThunk} from '../../features/case-assist/case-assist-analytics-actions';
+import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
 import {buildMockResult} from '../../test';
 import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
@@ -65,7 +65,7 @@ describe('CaseAssistQuickview', () => {
 
     it('dispatches a quickview document suggestion click event', () => {
       const result = buildMockResult();
-      const thunk = buildQuickviewDocumentSuggestionClickThunk(result.uniqueId);
+      const thunk = logQuickviewDocumentSuggestionClick(result.uniqueId);
       const action = engine.findAsyncAction(thunk.pending);
       expect(action).toBeTruthy();
     });

@@ -38,6 +38,7 @@ import {buildMockInsightAPIClient} from './mock-insight-api-client';
 import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {InsightAPIClient} from '../api/service/insight/insight-api-client';
+import {instantlyCallableThunkActionMiddleware} from '../app/instantly-callable-middleware';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -238,6 +239,7 @@ const configureMockStore = (logger: Logger) => {
   };
   return {
     store: configureStore<AppState, DispatchExts>([
+      instantlyCallableThunkActionMiddleware,
       logActionErrorMiddleware(logger),
       analyticsMiddleware,
       thunk.withExtraArgument(thunkExtraArguments),
@@ -259,6 +261,7 @@ const configureInsightMockStore = (logger: Logger) => {
   };
   return {
     store: configureStore<AppState, DispatchExts>([
+      instantlyCallableThunkActionMiddleware,
       logActionErrorMiddleware(logger),
       analyticsMiddleware,
       thunk.withExtraArgument(thunkExtraArguments),

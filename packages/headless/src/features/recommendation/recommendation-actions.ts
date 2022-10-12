@@ -15,7 +15,7 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
-import {SearchAction} from '../analytics/analytics-utils';
+import {AnalyticsAsyncThunk, AnalyticsType} from '../analytics/analytics-utils';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
 
@@ -25,7 +25,7 @@ export type StateNeededByGetRecommendations = ConfigurationSection &
 
 export interface GetRecommendationsThunkReturn {
   recommendations: Result[];
-  analyticsAction: SearchAction;
+  analyticsAction: AnalyticsAsyncThunk<{analyticsType: AnalyticsType.Search}>;
   searchUid: string;
   duration: number;
   splitTestRun: string;

@@ -8,6 +8,7 @@ import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {Value} from '@coveo/bueno';
 import {
   AnalyticsType,
+  InsightAction,
   makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
 import {
@@ -18,7 +19,7 @@ import {
 import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
 import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
 
-export const logFacetShowMore = (facetId: string) =>
+export const logFacetShowMore = (facetId: string): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/showMore',
     AnalyticsType.Search,
@@ -33,9 +34,9 @@ export const logFacetShowMore = (facetId: string) =>
       };
       return client.logFacetShowMore(metadata);
     }
-  )();
+  );
 
-export const logFacetShowLess = (facetId: string) =>
+export const logFacetShowLess = (facetId: string): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/showLess',
     AnalyticsType.Search,
@@ -51,7 +52,7 @@ export const logFacetShowLess = (facetId: string) =>
 
       return client.logFacetShowLess(metadata);
     }
-  )();
+  );
 
 export interface LogFacetUpdateSortActionCreatorPayload {
   /**
@@ -67,7 +68,7 @@ export interface LogFacetUpdateSortActionCreatorPayload {
 
 export const logFacetUpdateSort = (
   payload: LogFacetUpdateSortActionCreatorPayload
-) =>
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/sortChange',
     AnalyticsType.Search,
@@ -91,9 +92,9 @@ export const logFacetUpdateSort = (
 
       return client.logFacetUpdateSort(metadata);
     }
-  )();
+  );
 
-export const logFacetClearAll = (facetId: string) =>
+export const logFacetClearAll = (facetId: string): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/reset',
     AnalyticsType.Search,
@@ -108,7 +109,7 @@ export const logFacetClearAll = (facetId: string) =>
 
       return client.logFacetClearAll(metadata);
     }
-  )();
+  );
 
 export interface LogFacetSelectActionCreatorPayload {
   /**
@@ -122,7 +123,9 @@ export interface LogFacetSelectActionCreatorPayload {
   facetValue: string;
 }
 
-export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
+export const logFacetSelect = (
+  payload: LogFacetSelectActionCreatorPayload
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/select',
     AnalyticsType.Search,
@@ -139,7 +142,7 @@ export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
 
       return client.logFacetSelect(metadata);
     }
-  )();
+  );
 
 export interface LogFacetDeselectActionCreatorPayload {
   /**
@@ -155,7 +158,7 @@ export interface LogFacetDeselectActionCreatorPayload {
 
 export const logFacetDeselect = (
   payload: LogFacetDeselectActionCreatorPayload
-) =>
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/deselect',
     AnalyticsType.Search,
@@ -172,11 +175,11 @@ export const logFacetDeselect = (
 
       return client.logFacetDeselect(metadata);
     }
-  )();
+  );
 
 export const logFacetBreadcrumb = (
   payload: LogFacetBreadcrumbActionCreatorPayload
-) =>
+): InsightAction =>
   makeInsightAnalyticsAction(
     'analytics/facet/breadcrumb',
     AnalyticsType.Search,
@@ -195,4 +198,4 @@ export const logFacetBreadcrumb = (
 
       return client.logBreadcrumbFacet(metadata);
     }
-  )();
+  );

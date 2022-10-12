@@ -1,5 +1,3 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
@@ -13,7 +11,7 @@ import {
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../question-answering/question-answering-document-id';
 import {logDocumentOpen} from '../result/result-analytics-actions';
-import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
+import {ClickAction} from './analytics-utils';
 
 /**
  * The click analytics action creators.
@@ -25,25 +23,13 @@ export interface ClickAnalyticsActionCreators {
    * @param result - The selected result.
    * @returns A dispatchable action.
    */
-  logDocumentOpen(result: Result): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logDocumentOpen(result: Result): ClickAction;
   /**
    * The event to log when the source of a smart snippet is clicked.
    *
    * @returns A dispatchable action.
    */
-  logOpenSmartSnippetSource(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logOpenSmartSnippetSource(): ClickAction;
   /**
    * The event to log when the source of a smart snippet suggestion, or related question, is clicked.
    *
@@ -52,13 +38,7 @@ export interface ClickAnalyticsActionCreators {
    */
   logOpenSmartSnippetSuggestionSource(
     identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): ClickAction;
   /**
    * The event to log when a link inside the snippet of a smart snippet is clicked.
    *
@@ -67,13 +47,7 @@ export interface ClickAnalyticsActionCreators {
    */
   logOpenSmartSnippetInlineLink(
     payload: QuestionAnsweringInlineLinkActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): ClickAction;
   /**
    * The event to log when the source of a smart snippet suggestion, or related question, is clicked.
    *
@@ -84,13 +58,7 @@ export interface ClickAnalyticsActionCreators {
   logOpenSmartSnippetSuggestionInlineLink(
     identifier: QuestionAnsweringUniqueIdentifierActionCreatorPayload,
     link: QuestionAnsweringInlineLinkActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): ClickAction;
 }
 
 /**

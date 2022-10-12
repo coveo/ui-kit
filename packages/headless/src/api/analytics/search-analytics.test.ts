@@ -8,6 +8,7 @@ import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockFacetValue} from '../../test/mock-facet-value';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockSearchState} from '../../test/mock-search-state';
 import {
@@ -36,8 +37,8 @@ describe('search analytics', () => {
   it('should be enabled by default', () => {
     const state = createMockState();
     expect(
-      configureAnalytics({state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureAnalytics({getState: () => state, logger})
+        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -46,8 +47,8 @@ describe('search analytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureAnalytics({state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureAnalytics({getState: () => state, logger})
+        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(true);
   });
 
@@ -55,8 +56,8 @@ describe('search analytics', () => {
     const state = createMockState();
     state.configuration.analytics.enabled = false;
     expect(
-      configureAnalytics({state, logger}).coveoAnalyticsClient instanceof
-        CoveoAnalyticsClient
+      configureAnalytics({getState: () => state, logger})
+        .coveoAnalyticsClient instanceof CoveoAnalyticsClient
     ).toBe(false);
   });
 
@@ -110,7 +111,9 @@ describe('search analytics', () => {
     it('should properly return the pipeline from the state', () => {
       const state = getBaseState();
       state.pipeline = 'foo';
-      expect(new SearchAnalyticsProvider(state).getPipeline()).toBe('foo');
+      expect(new SearchAnalyticsProvider(() => state).getPipeline()).toBe(
+        'foo'
+      );
     });
 
     it('should properly return the pipeline from the reponse if not available directly from state', () => {
@@ -118,14 +121,19 @@ describe('search analytics', () => {
       state.pipeline = undefined;
       state.search = buildMockSearchState({});
       state.search.response.pipeline = 'foo';
-      expect(new SearchAnalyticsProvider(state).getPipeline()).toBe('foo');
+      expect(new SearchAnalyticsProvider(() => state).getPipeline()).toBe(
+        'foo'
+      );
     });
 
     it('should properly return facet state', () => {
       const state = getBaseState();
       state.facetSet = {
         the_facet: buildMockFacetSlice({
-          request: buildMockFacetRequest({field: 'foo'}),
+          request: buildMockFacetRequest({
+            field: 'foo',
+            currentValues: [buildMockFacetValueRequest({state: 'selected'})],
+          }),
         }),
       };
       state.search = buildMockSearchState({});
@@ -136,9 +144,9 @@ describe('search analytics', () => {
         }),
       ];
 
-      expect(new SearchAnalyticsProvider(state).getFacetState()[0].field).toBe(
-        'foo'
-      );
+      expect(
+        new SearchAnalyticsProvider(() => state).getFacetState()[0].field
+      ).toBe('foo');
     });
 
     it('should properly return getSearchEventRequestPayload', () => {
@@ -151,7 +159,7 @@ describe('search analytics', () => {
       ];
       state.query = buildMockQueryState({q: 'foo'});
       expect(
-        new SearchAnalyticsProvider(state).getSearchEventRequestPayload()
+        new SearchAnalyticsProvider(() => state).getSearchEventRequestPayload()
       ).toMatchObject({
         queryText: 'foo',
         responseTime: 0,
@@ -164,7 +172,7 @@ describe('search analytics', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({searchResponseId: 'the_id'});
       state.search.response.searchUid = 'another_id';
-      expect(new SearchAnalyticsProvider(state).getSearchUID()).toEqual(
+      expect(new SearchAnalyticsProvider(() => state).getSearchUID()).toEqual(
         'the_id'
       );
     });
@@ -173,7 +181,7 @@ describe('search analytics', () => {
       const state = getBaseState();
       state.search = buildMockSearchState({});
       state.search.response.searchUid = 'another_id';
-      expect(new SearchAnalyticsProvider(state).getSearchUID()).toEqual(
+      expect(new SearchAnalyticsProvider(() => state).getSearchUID()).toEqual(
         'another_id'
       );
     });
@@ -183,7 +191,7 @@ describe('search analytics', () => {
       state.search = buildMockSearchState({});
       state.search.response.splitTestRun = '';
       expect(
-        new SearchAnalyticsProvider(state).getSplitTestRunVersion()
+        new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
       ).toBeUndefined();
     });
 
@@ -193,9 +201,9 @@ describe('search analytics', () => {
       state.search.response.splitTestRun = 'foo';
       state.search.response.pipeline = 'pipeline-from-response';
       state.pipeline = 'pipeline-from-state';
-      expect(new SearchAnalyticsProvider(state).getSplitTestRunVersion()).toBe(
-        'pipeline-from-response'
-      );
+      expect(
+        new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
+      ).toBe('pipeline-from-response');
     });
 
     it('should return getSplitTestRunVersion from the pipeline state value if there is no pipeline available in the search response', () => {
@@ -204,9 +212,9 @@ describe('search analytics', () => {
       state.search.response.splitTestRun = 'foo';
       state.search.response.pipeline = '';
       state.pipeline = 'pipeline-from-state';
-      expect(new SearchAnalyticsProvider(state).getSplitTestRunVersion()).toBe(
-        'pipeline-from-state'
-      );
+      expect(
+        new SearchAnalyticsProvider(() => state).getSplitTestRunVersion()
+      ).toBe('pipeline-from-state');
     });
   });
 });

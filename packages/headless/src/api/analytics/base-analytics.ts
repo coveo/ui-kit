@@ -21,12 +21,14 @@ export const getLanguage = (state: ConfigurationSection) => {
 export type StateNeededByBaseAnalyticsProvider = ConfigurationSection &
   Partial<SearchHubSection & PipelineSection & QuerySection & ContextSection>;
 
-export abstract class BaseAnalyticsProvider
-  implements SearchPageClientProvider
+export abstract class BaseAnalyticsProvider<
+  T extends StateNeededByBaseAnalyticsProvider
+> implements SearchPageClientProvider
 {
-  constructor(
-    private stateNeededByBaseAnalyticsProvider: StateNeededByBaseAnalyticsProvider
-  ) {}
+  protected readonly state: T;
+  constructor(protected getState: () => T) {
+    this.state = getState();
+  }
 
   public abstract getSearchUID(): string;
   public abstract getPipeline(): string;
@@ -36,11 +38,11 @@ export abstract class BaseAnalyticsProvider
   >;
 
   public getLanguage() {
-    return getLanguage(this.stateNeededByBaseAnalyticsProvider);
+    return getLanguage(this.state);
   }
 
   public getBaseMetadata() {
-    const {context} = this.stateNeededByBaseAnalyticsProvider;
+    const {context} = this.state;
     const contextValues = context?.contextValues || {};
     const formattedObject: Record<string, string | string[]> = {};
     for (const [key, value] of Object.entries(contextValues)) {
@@ -52,29 +54,22 @@ export abstract class BaseAnalyticsProvider
   }
 
   public getOriginContext() {
-    return this.stateNeededByBaseAnalyticsProvider.configuration.analytics
-      .originContext;
+    return this.state.configuration.analytics.originContext;
   }
 
   public getOriginLevel1() {
-    return (
-      this.stateNeededByBaseAnalyticsProvider.searchHub ||
-      getSearchHubInitialState()
-    );
+    return this.state.searchHub || getSearchHubInitialState();
   }
 
   public getOriginLevel2() {
-    return this.stateNeededByBaseAnalyticsProvider.configuration.analytics
-      .originLevel2;
+    return this.state.configuration.analytics.originLevel2;
   }
 
   public getOriginLevel3() {
-    return this.stateNeededByBaseAnalyticsProvider.configuration.analytics
-      .originLevel3;
+    return this.state.configuration.analytics.originLevel3;
   }
 
   public getIsAnonymous() {
-    return this.stateNeededByBaseAnalyticsProvider.configuration.analytics
-      .anonymous;
+    return this.state.configuration.analytics.anonymous;
   }
 }

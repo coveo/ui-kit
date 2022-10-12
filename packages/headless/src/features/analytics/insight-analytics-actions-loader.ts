@@ -1,5 +1,3 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
 import {InsightEngine} from '../../insight.index';
 import {LogCategoryFacetBreadcrumbActionCreatorPayload} from '../facets/category-facet-set/category-facet-set-analytics-actions';
 import {logCategoryFacetBreadcrumb} from '../facets/category-facet-set/category-facet-set-insight-analytics-actions';
@@ -38,10 +36,7 @@ import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
 } from './insight-analytics-actions';
-import {
-  AnalyticsType,
-  AsyncThunkInsightAnalyticsOptions,
-} from './analytics-utils';
+import {InsightAction} from './analytics-utils';
 
 export type {
   LogStaticFilterToggleValueActionCreatorPayload,
@@ -64,37 +59,21 @@ export interface InsightAnalyticsActionCreators {
    *
    * @returns A dispatchable action.
    */
-  logClearBreadcrumbs(): AsyncThunkAction<
-    {analyticsType: AnalyticsType.Search},
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logClearBreadcrumbs(): InsightAction;
 
   /**
    * The event to log when a insight interface loads for the first time.
    *
    * @returns A dispatchable action.
    */
-  logInterfaceLoad(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logInterfaceLoad(): InsightAction;
 
   /**
    * The event to log when a tab is selected.
    *
    * @returns A dispatchable action.
    */
-  logInterfaceChange(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logInterfaceChange(): InsightAction;
 
   /**
    * The event to log when a category facet breadcrumb is deselected.
@@ -104,13 +83,7 @@ export interface InsightAnalyticsActionCreators {
    */
   logCategoryFacetBreadcrumb(
     payload: LogCategoryFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction;
 
   /**
    * The event to log when a facet breadcrumb is deselected.
@@ -120,13 +93,7 @@ export interface InsightAnalyticsActionCreators {
    */
   logFacetBreadcrumb(
     payload: LogFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction;
 
   /**
    * The event to log when all selected values in a facet are deselected.
@@ -134,13 +101,7 @@ export interface InsightAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetClearAll(facetId: string): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logFacetClearAll(facetId: string): InsightAction;
 
   /**
    * The event to log when a selected facet value is deselected.
@@ -150,13 +111,7 @@ export interface InsightAnalyticsActionCreators {
    */
   logFacetDeselect(
     payload: LogFacetDeselectActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction;
 
   /**
    * The event to log when an idle facet value is selected.
@@ -164,13 +119,7 @@ export interface InsightAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetSelect(payload: LogFacetSelectActionCreatorPayload): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logFacetSelect(payload: LogFacetSelectActionCreatorPayload): InsightAction;
 
   /**
    * The event to log when shrinking a facet to show fewer values.
@@ -178,13 +127,7 @@ export interface InsightAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowLess(facetId: string): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logFacetShowLess(facetId: string): InsightAction;
 
   /**
    * The event to log when expanding a facet to show more values.
@@ -192,13 +135,7 @@ export interface InsightAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowMore(facetId: string): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logFacetShowMore(facetId: string): InsightAction;
 
   /**
    * The event to log when the facet sort criterion is changed.
@@ -208,13 +145,7 @@ export interface InsightAnalyticsActionCreators {
    */
   logFacetUpdateSort(
     payload: LogFacetUpdateSortActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction;
 
   /**
    * The event to log when a date facet breadcrumb is deselected.
@@ -224,13 +155,7 @@ export interface InsightAnalyticsActionCreators {
    */
   logDateFacetBreadcrumb(
     payload: LogDateFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction;
 
   /**
    * The event to log when a numeric facet breadcrumb is deselected.
@@ -240,65 +165,35 @@ export interface InsightAnalyticsActionCreators {
    */
   logNumericFacetBreadcrumb(
     payload: LogNumericFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction;
 
   /**
    * The event to log when navigating to the next page of results.
    *
    * @returns A dispatchable action.
    */
-  logPageNext(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logPageNext(): InsightAction;
 
   /**
    * The event to log when selecting a page in the pager.
    *
    * @returns A dispatchable action.
    */
-  logPageNumber(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logPageNumber(): InsightAction;
 
   /**
    * The event to log when navigating to the previous page of results.
    *
    * @returns A dispatchable action.
    */
-  logPagePrevious(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logPagePrevious(): InsightAction;
 
   /**
    * The event to log when the results sort criterion is changed.
    *
    * @returns A dispatchable action.
    */
-  logResultsSort(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  logResultsSort(): InsightAction;
 
   /**
    * The event to log when a static filter value is deselected.
@@ -308,13 +203,7 @@ export interface InsightAnalyticsActionCreators {
    */
   logStaticFilterDeselect(
     payload: LogStaticFilterToggleValueActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
+  ): InsightAction;
 }
 
 /**

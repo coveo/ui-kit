@@ -1,5 +1,3 @@
-import {AsyncThunkAction} from '@reduxjs/toolkit';
-import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
 import {
   logInterfaceChange,
@@ -7,11 +5,7 @@ import {
   logSearchFromLink,
   logOmniboxFromLink,
 } from './analytics-actions';
-import {
-  AnalyticsType,
-  AsyncThunkAnalyticsOptions,
-  AsyncThunkInsightAnalyticsOptions,
-} from './analytics-utils';
+import {CustomAction, SearchAction} from './analytics-utils';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
 import {
   logCategoryFacetBreadcrumb,
@@ -118,37 +112,21 @@ export interface SearchAnalyticsActionCreators {
    *
    * @returns A dispatchable action.
    */
-  logClearBreadcrumbs(): AsyncThunkAction<
-    {analyticsType: AnalyticsType.Search},
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logClearBreadcrumbs(): SearchAction;
 
   /**
    * The event to log when a search interface loads for the first time.
    *
    * @returns A dispatchable action.
    */
-  logInterfaceLoad(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logInterfaceLoad(): SearchAction;
 
   /**
    * The event to log when a search interface loads for the first time, for a user who performed a search using a standalone search box.
    *
    * @returns A dispatchable action.
    */
-  logSearchFromLink(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logSearchFromLink(): SearchAction;
 
   /**
    * The event to log when a search interface loads for the first time, for a user who selected a query suggestion from a standalone search box.
@@ -156,39 +134,21 @@ export interface SearchAnalyticsActionCreators {
    * @param metadata - The metadata of the clicked query suggestion that triggered the redirect.
    * @returns A dispatchable action.
    */
-  logOmniboxFromLink(metadata: OmniboxSuggestionMetadata): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logOmniboxFromLink(metadata: OmniboxSuggestionMetadata): SearchAction;
 
   /**
    * The event to log when a tab is selected.
    *
    * @returns A dispatchable action.
    */
-  logInterfaceChange(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logInterfaceChange(): SearchAction;
 
   /**
    * The event to log when a user triggers a search by clicking on a did-you-mean suggestion.
    *
    * @returns A dispatchable action.
    */
-  logDidYouMeanClick(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logDidYouMeanClick(): SearchAction;
 
   /**
    * The event to log when a category facet breadcrumb is deselected.
@@ -198,13 +158,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logCategoryFacetBreadcrumb(
     payload: LogCategoryFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when a facet breadcrumb is deselected.
@@ -214,13 +168,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logFacetBreadcrumb(
     payload: LogFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when all selected values in a facet are deselected.
@@ -228,13 +176,7 @@ export interface SearchAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetClearAll(facetId: string): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logFacetClearAll(facetId: string): SearchAction;
 
   /**
    * The event to log when a selected facet value is deselected.
@@ -242,15 +184,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetDeselect(
-    payload: LogFacetDeselectActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logFacetDeselect(payload: LogFacetDeselectActionCreatorPayload): SearchAction;
 
   /**
    * The event to log when an idle facet value is selected.
@@ -258,13 +192,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
-  logFacetSelect(payload: LogFacetSelectActionCreatorPayload): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logFacetSelect(payload: LogFacetSelectActionCreatorPayload): SearchAction;
 
   /**
    * The event to log when shrinking a facet to show fewer values.
@@ -272,13 +200,7 @@ export interface SearchAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowLess(facetId: string): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logFacetShowLess(facetId: string): SearchAction;
 
   /**
    * The event to log when expanding a facet to show more values.
@@ -286,13 +208,7 @@ export interface SearchAnalyticsActionCreators {
    * @param facetId - The facet id.
    * @returns A dispatchable action.
    */
-  logFacetShowMore(facetId: string): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logFacetShowMore(facetId: string): SearchAction;
 
   /**
    * The event to log when the facet sort criterion is changed.
@@ -302,13 +218,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logFacetUpdateSort(
     payload: LogFacetUpdateSortActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when a date facet breadcrumb is deselected.
@@ -318,13 +228,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logDateFacetBreadcrumb(
     payload: LogDateFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when a numeric facet breadcrumb is deselected.
@@ -334,104 +238,56 @@ export interface SearchAnalyticsActionCreators {
    */
   logNumericFacetBreadcrumb(
     payload: LogNumericFacetBreadcrumbActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when going to the previous state of the search interface.
    *
    * @returns A dispatchable action.
    */
-  logNavigateBackward(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logNavigateBackward(): SearchAction;
 
   /**
    * The event to log when going to the next state of the search interface.
    *
    * @returns A dispatchable action.
    */
-  logNavigateForward(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logNavigateForward(): SearchAction;
 
   /**
    * The event to log when navigating to the next page of results.
    *
    * @returns A dispatchable action.
    */
-  logPageNext(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logPageNext(): SearchAction;
 
   /**
    * The event to log when selecting a page in the pager.
    *
    * @returns A dispatchable action.
    */
-  logPageNumber(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logPageNumber(): SearchAction;
 
   /**
    * The event to log when navigating to the previous page of results.
    *
    * @returns A dispatchable action.
    */
-  logPagePrevious(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logPagePrevious(): SearchAction;
 
   /**
    * The event to log when changing the number of results per page.
    *
    * @returns A dispatchable action.
    */
-  logPagerResize(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logPagerResize(): SearchAction;
 
   /**
    * The event to log when performing a search using a search box.
    *
    * @returns A dispatchable action.
    */
-  logSearchboxSubmit(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logSearchboxSubmit(): SearchAction;
 
   /**
    * The event to log when a query suggestion is selected.
@@ -441,104 +297,56 @@ export interface SearchAnalyticsActionCreators {
    */
   logQuerySuggestionClick(
     payload: LogQuerySuggestionClickActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when the results sort criterion is changed.
    *
    * @returns A dispatchable action.
    */
-  logResultsSort(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logResultsSort(): SearchAction;
 
   /**
    * The event to log when a smart snippet is collapsed.
    *
    * @returns A dispatchable action.
    */
-  logCollapseSmartSnippet(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logCollapseSmartSnippet(): CustomAction;
 
   /**
    * The event to log when a smart snippet is expanded.
    *
    * @returns A dispatchable action.
    */
-  logExpandSmartSnippet(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logExpandSmartSnippet(): CustomAction;
 
   /**
    * The event to log when a user provides negative feedback for a given smart snippet answer.
    *
    * @returns A dispatchable action.
    */
-  logDislikeSmartSnippet(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logDislikeSmartSnippet(): CustomAction;
 
   /**
    * The event to log when a user provides positive feedback for a given smart snippet answer.
    *
    * @returns A dispatchable action.
    */
-  logLikeSmartSnippet(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logLikeSmartSnippet(): CustomAction;
 
   /**
    * The event to log when a user wishes to provide feedback about why the smart snippet answer wasn't relevant.
    *
    * @returns A dispatchable action.
    */
-  logOpenSmartSnippetFeedbackModal(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logOpenSmartSnippetFeedbackModal(): CustomAction;
 
   /**
    * The event to log when a user no longer wishes to provide feedback about why the smart snippet answer wasn't relevant.
    *
    * @returns A dispatchable action.
    */
-  logCloseSmartSnippetFeedbackModal(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logCloseSmartSnippetFeedbackModal(): CustomAction;
 
   /**
    * The event to log when a user provides feedback about why the smart snippet answer wasn't relevant.
@@ -546,13 +354,7 @@ export interface SearchAnalyticsActionCreators {
    * @param feedback - The generic feedback that the end user wishes to send.
    * @returns A dispatchable action.
    */
-  logSmartSnippetFeedback(feedback: SmartSnippetFeedback): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logSmartSnippetFeedback(feedback: SmartSnippetFeedback): CustomAction;
 
   /**
    * The event to log when a user provides detailed feedback about why the smart snippet answer wasn't relevant.
@@ -560,13 +362,7 @@ export interface SearchAnalyticsActionCreators {
    * @param details - A personalized message from the end user about the relevance of the answer.
    * @returns A dispatchable action.
    */
-  logSmartSnippetDetailedFeedback(details: string): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logSmartSnippetDetailedFeedback(details: string): CustomAction;
 
   /**
    * The event to log when a query suggestion is selected.
@@ -576,13 +372,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logExpandSmartSnippetSuggestion(
     payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): CustomAction;
 
   /**
    * The event to log when a smart snippet suggestion, or related question, is collapsed.
@@ -592,13 +382,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logCollapseSmartSnippetSuggestion(
     payload: QuestionAnsweringUniqueIdentifierActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): CustomAction;
 
   /**
    * The event to log when no results is shown and the end users cancel last action.
@@ -606,13 +390,7 @@ export interface SearchAnalyticsActionCreators {
    * @param payload - The action creation payload.
    * @returns A dispatchable action.
    */
-  logNoResultsBack(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logNoResultsBack(): SearchAction;
 
   /**
    * The event to log when a static filter value is selected.
@@ -622,13 +400,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logStaticFilterSelect(
     payload: LogStaticFilterToggleValueActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when a static filter value is deselected.
@@ -638,13 +410,7 @@ export interface SearchAnalyticsActionCreators {
    */
   logStaticFilterDeselect(
     payload: LogStaticFilterToggleValueActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when all selected values of a static filter are deselected.
@@ -654,24 +420,14 @@ export interface SearchAnalyticsActionCreators {
    */
   logStaticFilterClearAll(
     payload: LogStaticFilterClearAllActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when a user action triggers a new query set in the effective query pipeline on the search page.
    *
    * @returns A dispatchable action.
    */
-  logTriggerQuery(): AsyncThunkAction<
-    {analyticsType: AnalyticsType.Search},
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logTriggerQuery(): SearchAction;
 
   /**
    * The event to log when a user undoes a query set in the effective query pipeline on the search page.
@@ -681,44 +437,28 @@ export interface SearchAnalyticsActionCreators {
    */
   logUndoTriggerQuery(
     payload: LogUndoTriggerQueryActionCreatorPayload
-  ): AsyncThunkAction<
-    {analyticsType: AnalyticsType.Search},
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  ): SearchAction;
 
   /**
    * The event to log when a user action triggers a notification set in the effective query pipeline on the search page.
    *
    * @returns A dispatchable action.
    */
-  logNotifyTrigger(): AsyncThunkAction<
-    {analyticsType: AnalyticsType.Search},
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logNotifyTrigger(): SearchAction;
 
   /**
    * The event to log when a user action redirects them to a URL set in the effective query pipeline on the search page.
    *
    * @returns A dispatchable action.
    */
-  logTriggerRedirect(): AsyncThunkAction<
-    {analyticsType: AnalyticsType.Search},
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logTriggerRedirect(): SearchAction;
 
   /**
    * The event to log when a user action executes a JavaScript function set in the effective query pipeline on the search page.
    *
    * @returns A dispatchable action.
    */
-  logTriggerExecute(): AsyncThunkAction<
-    {analyticsType: AnalyticsType.Search},
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
+  logTriggerExecute(): SearchAction;
 }
 
 /**

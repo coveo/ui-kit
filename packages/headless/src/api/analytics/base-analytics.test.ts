@@ -7,10 +7,7 @@ import {getSearchHubInitialState} from '../../features/search-hub/search-hub-sta
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 
-class TestProvider extends BaseAnalyticsProvider {
-  constructor(state: StateNeededByBaseAnalyticsProvider) {
-    super(state);
-  }
+class TestProvider extends BaseAnalyticsProvider<StateNeededByBaseAnalyticsProvider> {
   public getPipeline(): string {
     return '';
   }
@@ -37,7 +34,7 @@ describe('base analytics provider', () => {
   };
 
   it('when context is not provided, #getBaseMetadata returns an object with version', () => {
-    const provider = new TestProvider(baseState);
+    const provider = new TestProvider(() => baseState);
     expect(provider.getBaseMetadata()).toEqual({
       coveoHeadlessVersion: expect.any(String),
     });
@@ -52,7 +49,7 @@ describe('base analytics provider', () => {
         },
       },
     };
-    const provider = new TestProvider(state);
+    const provider = new TestProvider(() => state);
     expect(provider.getBaseMetadata()).toEqual({
       context_test: 'value',
       coveoHeadlessVersion: expect.any(String),
@@ -60,7 +57,7 @@ describe('base analytics provider', () => {
   });
 
   it('when a searchHub is not provided, #getOriginLevel1 returns the default searchHub', () => {
-    const provider = new TestProvider(baseState);
+    const provider = new TestProvider(() => baseState);
     expect(provider.getOriginLevel1()).toEqual(getSearchHubInitialState());
   });
 
@@ -70,7 +67,7 @@ describe('base analytics provider', () => {
       ...baseState,
       searchHub,
     };
-    const provider = new TestProvider(state);
+    const provider = new TestProvider(() => state);
     expect(provider.getOriginLevel1()).toEqual(searchHub);
   });
 
@@ -79,7 +76,7 @@ describe('base analytics provider', () => {
       const state: StateNeededByBaseAnalyticsProvider = {
         configuration: getConfigurationInitialState(),
       };
-      const provider = new TestProvider(state);
+      const provider = new TestProvider(() => state);
 
       expect(provider.getOriginContext()).toBe('Search');
     });
@@ -93,7 +90,7 @@ describe('base analytics provider', () => {
         },
       };
 
-      const provider = new TestProvider(state);
+      const provider = new TestProvider(() => state);
 
       expect(provider.getOriginContext()).toBe(originContext);
     });
@@ -104,7 +101,7 @@ describe('base analytics provider', () => {
       const state: StateNeededByBaseAnalyticsProvider = {
         configuration: getConfigurationInitialState(),
       };
-      const provider = new TestProvider(state);
+      const provider = new TestProvider(() => state);
 
       expect(provider.getOriginLevel2()).toBe('default');
     });
@@ -118,7 +115,7 @@ describe('base analytics provider', () => {
         },
       };
 
-      const provider = new TestProvider(state);
+      const provider = new TestProvider(() => state);
 
       expect(provider.getOriginLevel2()).toBe(originLevel2);
     });
@@ -133,7 +130,7 @@ describe('base analytics provider', () => {
         search: {...getConfigurationInitialState().search, locale},
       },
     };
-    const provider = new TestProvider(state);
+    const provider = new TestProvider(() => state);
     expect(provider.getLanguage()).toEqual('fr');
   });
 
@@ -146,7 +143,7 @@ describe('base analytics provider', () => {
         search: {...getConfigurationInitialState().search, locale},
       },
     };
-    const provider = new TestProvider(state);
+    const provider = new TestProvider(() => state);
     expect(provider.getLanguage()).toEqual('en');
   });
 });
