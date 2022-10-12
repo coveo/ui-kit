@@ -3,8 +3,18 @@ import {
   RecommendationList,
   RecommendationListState,
   loadConfigurationActions,
+  loadPaginationActions,
 } from '@coveo/headless/recommendation';
-import {Component, State, Element, Prop, Method, h} from '@stencil/core';
+import {
+  Component,
+  State,
+  Element,
+  Prop,
+  Method,
+  h,
+  Fragment,
+  Watch,
+} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -40,6 +50,11 @@ import {Button} from '../../common/button';
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it.
  * @part result-list-grid-clickable - The clickable link encompassing the result.
  * @part label - The label of the result list.
+ * @part previous-button - The previous button.
+ * @part next-button - The next button.
+ * @part indicators - List of indicators.
+ * @part indicator - A single indicator.
+ * @part active-indicator - The active indicator.
  */
 @Component({
   tag: 'atomic-recs-list',
@@ -58,6 +73,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @State() public error!: Error;
   @State() private resultTemplateRegistered = false;
   @State() private templateHasError = false;
+  @State() private currentPage = 0;
   @BindStateToController('recommendationList')
   @State()
   public recommendationListState!: RecommendationListState;
@@ -93,9 +109,10 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @Prop({reflect: true}) public numberOfRecommendations = 10;
 
   /**
-   * The number of pages up to which the user can view recommendations.
+   * Setting a value higher than 1 activates the carousel and allows the user to view more recommendations.
+   * This does not affect the display of the list itself, only the number of recommendations displayed at once.
    */
-  @Prop({reflect: true}) public numberOfPages = 3;
+  @Prop({reflect: true}) public numberOfPages = 1;
 
   /**
    * The non-localized label for the list of recommendations.
@@ -106,6 +123,21 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
    */
   @Prop({reflect: true}) public headingLevel = 0;
+
+  @Watch('numberOfPages')
+  async pageChanged() {
+    if (!this.bindings) {
+      return;
+    }
+
+    this.currentPage = 0;
+    this.bindings.engine.dispatch(
+      loadPaginationActions(this.bindings.engine).updateNumberOfResults(
+        this.numberOfPages * this.numberOfRecommendations
+      )
+    );
+    this.recommendationList.refresh();
+  }
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -119,6 +151,23 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     resultRenderingFunction: ResultRenderingFunction
   ) {
     this.resultRenderingFunction = resultRenderingFunction;
+  }
+
+  /**
+   * Switches to the next page, when the carousel is activated.
+   */
+  @Method() public async previousPage() {
+    this.currentPage =
+      this.currentPage - 1 < 0
+        ? this.numberOfAvailablePages - 1
+        : this.currentPage - 1;
+  }
+
+  /**
+   * Switches to the previous page, when the carousel is activated.
+   */
+  @Method() public async nextPage() {
+    this.currentPage = this.currentPage + (1 % this.numberOfAvailablePages);
   }
 
   public initialize() {
@@ -171,6 +220,17 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     });
   }
 
+  private get resultListCommonState(): ResultListCommonState<RecsResult> {
+    return {
+      firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
+      isLoading: this.recommendationListState.isLoading,
+      hasError: this.recommendationListState.error !== null,
+      hasResults: this.recommendationListState.recommendations.length !== 0,
+      results: this.subsetRecommendations,
+      searchResponseId: this.recommendationListState.searchResponseId,
+    };
+  }
+
   private validateRecommendationIdentifier() {
     const recListWithRecommendation = document.querySelectorAll(
       `atomic-recs-list[recommendation="${this.recommendation}"]`
@@ -195,49 +255,59 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     }
   }
 
-  private get subsetRecommendations() {
-    // TODO: subset
-    return this.recommendationListState.recommendations;
+  private renderHeading() {
+    if (!this.label) {
+      return;
+    }
+
+    if (this.resultListCommonState.hasError) {
+      return;
+    }
+
+    if (
+      this.resultListCommonState.firstSearchExecuted &&
+      !this.resultListCommonState.hasResults
+    ) {
+      return;
+    }
+
+    return (
+      <Heading level={this.headingLevel} part="label" class="m-0 mb-2">
+        {this.bindings.i18n.t(this.label)}
+      </Heading>
+    );
   }
 
-  private get resultListCommonState(): ResultListCommonState<RecsResult> {
-    return {
-      firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
-      isLoading: this.recommendationListState.isLoading,
-      hasError: this.recommendationListState.error !== null,
-      hasResults: this.recommendationListState.recommendations.length !== 0,
-      results: this.subsetRecommendations,
-      searchResponseId: this.recommendationListState.searchResponseId,
-    };
+  private get currentIndex() {
+    return Math.abs(
+      (this.currentPage * this.numberOfRecommendations) %
+        this.recommendationListState.recommendations.length
+    );
+  }
+
+  private get subsetRecommendations() {
+    return this.recommendationListState.recommendations.slice(
+      this.currentIndex,
+      this.currentIndex + this.numberOfRecommendations
+    );
+  }
+
+  private get numberOfAvailablePages() {
+    return Math.ceil(
+      this.recommendationListState.recommendations.length / this.numberOfPages
+    );
   }
 
   private get hasPagination() {
     return this.numberOfPages > 1;
   }
 
-  private renderHeading() {
-    if (!this.label) {
-      return;
-    }
-
-    const shouldHide =
-      this.resultListCommonState.hasError ||
-      (this.resultListCommonState.firstSearchExecuted &&
-        !this.resultListCommonState.hasResults);
-
-    return (
-      <Heading
-        level={this.headingLevel}
-        part="label"
-        class={shouldHide ? 'hidden' : ''}
-      >
-        {this.bindings.i18n.t(this.label)}
-      </Heading>
-    );
+  private get commonPaginationClasses() {
+    return 'w-10 h-10 grid justify-center items-center absolute top-[50%] -translate-y-1/2 z-1 shadow-lg group';
   }
 
-  private get commonPaginationClasses() {
-    return 'p-1 min-w-[2.5rem] min-h-[2.5rem] absolute top-[50%] -translate-y-1/2 z-1';
+  private get commonArrowClasses() {
+    return 'w-3.5 align-middle text-on-background group-hover:text-primary group-focus:text-primary-light';
   }
 
   private get shouldRenderPagination() {
@@ -253,15 +323,13 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       <Button
         style="outline-primary"
         ariaLabel={this.bindings.i18n.t('previous')}
-        onClick={() => {
-          // TODO: previous
-        }}
+        onClick={() => this.previousPage()}
         part="previous-button"
         class={`${this.commonPaginationClasses} -translate-x-1/2`}
       >
         <atomic-icon
           icon={ArrowRight}
-          class="w-5 align-middle rotate-180"
+          class={`${this.commonArrowClasses} rotate-180`}
         ></atomic-icon>
       </Button>
     );
@@ -276,26 +344,52 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       <Button
         style="outline-primary"
         ariaLabel={this.bindings.i18n.t('next')}
-        onClick={() => {
-          // TODO: next
-        }}
+        onClick={() => this.nextPage()}
         part="next-button"
         class={`${this.commonPaginationClasses} right-0 translate-x-1/2`}
       >
-        <atomic-icon icon={ArrowRight} class="w-5 align-middle"></atomic-icon>
+        <atomic-icon
+          icon={ArrowRight}
+          class={this.commonArrowClasses}
+        ></atomic-icon>
       </Button>
+    );
+  }
+
+  private renderIndicators() {
+    if (!this.shouldRenderPagination) {
+      return;
+    }
+
+    return (
+      <ul part="indicators" class="flex gap-2 justify-center mt-6">
+        {Array.from({length: this.numberOfAvailablePages}, (_, index) => {
+          const isActive =
+            index === this.currentPage % this.numberOfAvailablePages;
+          return (
+            <li
+              part={`indicator ${isActive ? 'active-indicator' : ''}`}
+              class={`rounded-md h-1 w-12 ${
+                isActive ? 'bg-primary' : 'bg-neutral'
+              } `}
+            ></li>
+          );
+        })}
+      </ul>
     );
   }
 
   public render() {
     return (
-      <div class="relative">
+      <Fragment>
         {this.renderHeading()}
-        {this.renderPreviousButton()}
-        {this.resultListCommon.render()}
-        {this.renderNextButton()}
-        {/* TODO: add indications */}
-      </div>
+        <div class="relative">
+          {this.renderPreviousButton()}
+          {this.resultListCommon.render()}
+          {this.renderNextButton()}
+        </div>
+        {this.renderIndicators()}
+      </Fragment>
     );
   }
 }

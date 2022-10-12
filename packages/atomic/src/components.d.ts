@@ -991,13 +991,21 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * The number of pages up to which the user can view recommendations.
+          * Switches to the previous page, when the carousel is activated.
+         */
+        "nextPage": () => Promise<void>;
+        /**
+          * Setting a value higher than 1 activates the carousel and allows the user to view more recommendations. This does not affect the display of the list itself, only the number of recommendations displayed at once.
          */
         "numberOfPages": number;
         /**
           * The number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations": number;
+        /**
+          * Switches to the next page, when the carousel is activated.
+         */
+        "previousPage": () => Promise<void>;
         /**
           * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
          */
@@ -3468,7 +3476,7 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of pages up to which the user can view recommendations.
+          * Setting a value higher than 1 activates the carousel and allows the user to view more recommendations. This does not affect the display of the list itself, only the number of recommendations displayed at once.
          */
         "numberOfPages"?: number;
         /**
