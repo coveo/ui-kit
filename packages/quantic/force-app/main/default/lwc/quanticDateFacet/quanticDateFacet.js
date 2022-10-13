@@ -19,6 +19,13 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * The `QuanticDateFacet` component displays facet values as date ranges.
@@ -105,6 +112,10 @@ export default class QuanticDateFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {FocusTarget} */
+  focusTarget;
+  /** @type {boolean} */
+  focusShouldBeInFacet = false;
 
   labels = {
     clearFilter,
@@ -120,6 +131,10 @@ export default class QuanticDateFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
+    }
   }
 
   /**
@@ -162,10 +177,13 @@ export default class QuanticDateFacet extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted;
 
     const renderFacetEvent = new CustomEvent('renderFacet', {
-      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.hasValues},
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.hasValues,
+      },
       bubbles: true,
       composed: true,
-    })
+    });
     this.dispatchEvent(renderFacetEvent);
   }
 
@@ -235,10 +253,20 @@ export default class QuanticDateFacet extends LightningElement {
       (value) => this.formattingFunction(value) === evt.detail.value
     );
     this.facet.toggleSelect(item);
+
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      value: evt.detail.value,
+    };
   }
 
   clearSelections() {
     this.facet.deselectAll();
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetHeader',
+    };
   }
 
   toggleFacetVisibility() {
@@ -247,5 +275,49 @@ export default class QuanticDateFacet extends LightningElement {
 
   preventDefault(evt) {
     evt.preventDefault();
+  }
+
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.focusTarget.value) {
+        const facetValueIndex = this.values.findIndex(
+          (value) => this.formattingFunction(value) === this.focusTarget.value
+        );
+        this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+        this.setFocusOnFacetValue();
+      }
+    }
+  }
+
+  /**
+   * Sets the focus on the target facet value.
+   */
+  setFocusOnFacetValue() {
+    const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
+    const focusTarget = facetValues[this.focusTarget.index];
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocusOnHeader();
+    }
   }
 }

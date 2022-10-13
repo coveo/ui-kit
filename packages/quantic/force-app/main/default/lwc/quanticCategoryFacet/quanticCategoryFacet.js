@@ -24,6 +24,11 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader'} type
+ */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
@@ -158,8 +163,10 @@ export default class QuanticCategoryFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {FocusTarget} */
+  focusTarget;
   /** @type {boolean} */
-  facetContentChanged;
+  focusShouldBeInFacet = false;
 
   labels = {
     clear,
@@ -182,9 +189,9 @@ export default class QuanticCategoryFacet extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
-    if (this.facetContentChanged) {
-      this.facetContentChanged = false;
-      this.setFocusToFirstFacetValue();
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
     }
   }
 
@@ -234,9 +241,12 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.searchStatus?.state?.isLoading &&
       !this.searchStatus?.state?.hasError &&
       !this.searchStatus?.state?.firstSearchExecuted;
-    
+
     const renderFacetEvent = new CustomEvent('renderFacet', {
-      detail: {id: this.facetId ?? this.field, shouldRenderFacet: !!this.hasParentsOrValues},
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: !!this.hasParentsOrValues,
+      },
       bubbles: true,
       composed: true,
     });
@@ -363,6 +373,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       this.facet.toggleSelect(item);
     }
     this.clearInput();
+    this.keepFocusInFacet('facetValue');
   }
 
   getItemFromValue(value) {
@@ -380,16 +391,17 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   showMore() {
     this.facet.showMoreValues();
-    this.facetContentChanged = true;
+    this.keepFocusInFacet('facetValue');
   }
 
   showLess() {
     this.facet.showLessValues();
-    this.facetContentChanged = true;
+    this.keepFocusInFacet('facetValue');
   }
 
   reset() {
     this.facet.deselectAll();
+    this.keepFocusInFacet('facetHeader');
   }
 
   /**
@@ -399,6 +411,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     if (evt.code === 'Enter' || evt.code === 'Space') {
       evt.preventDefault();
       this.facet.deselectAll();
+      this.keepFocusInFacet('facetHeader');
     }
   }
 
@@ -444,14 +457,70 @@ export default class QuanticCategoryFacet extends LightningElement {
     return path.join('/');
   }
 
-  setFocusToFirstFacetValue() {
-    const focusTarget = this.template.querySelector(
-      'c-quantic-category-facet-value'
-    );
+  /**
+   * @param {"facetValue" | "facetHeader"} type
+   */
+  keepFocusInFacet(type) {
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type,
+    };
+  }
 
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.values.length) {
+        this.setFocusOnFirstFacetValue();
+      } else {
+        this.setFocusOnLastNonActiveParent();
+      }
+    }
+  }
+
+  /**
+   * Sets the focus on the first facet value.
+   */
+  setFocusOnFirstFacetValue() {
+    const focusTarget = this.template.querySelector(
+      '.facet__value > c-quantic-category-facet-value'
+    );
     if (focusTarget) {
       // @ts-ignore
       focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the last non-active parent.
+   */
+  setFocusOnLastNonActiveParent() {
+    const nonActiveParents = this.template.querySelectorAll(
+      '.facet__non-active-parent > c-quantic-category-facet-value'
+    );
+    const lastNonActiveParent = nonActiveParents[nonActiveParents.length - 1];
+    if (lastNonActiveParent) {
+      // @ts-ignore
+      lastNonActiveParent.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocusOnHeader();
     }
   }
 }
