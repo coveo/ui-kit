@@ -1,6 +1,13 @@
 import {LightningElement} from 'lwc';
 import {isCustomElement} from 'c/quanticUtils';
 
+/**
+ * The `QuanticA11yHandler` component handles the accessibility of the Quantic interfaces. It makes the necessary changes to the accessibility tree each time a QuanticResultQuickview or a QuanticRefineModal is opened.
+ * @category Search
+ * @category Insight Panel
+ * @example
+ * <c-quantic-a11y-handler></c-quantic-a11y-handler>
+ */
 export default class QuanticA11yHandler extends LightningElement {
   /** @type {Array<HTMLElement>} */
   nonAccessibleElements = [];
@@ -36,7 +43,8 @@ export default class QuanticA11yHandler extends LightningElement {
   };
 
   /**
-   * Removes all HTML elements from the accessibility tree except for elements whose tag name is the excludedTagName, these elements remain accessible.
+   * Makes the necessary changes to the accessibility tree of the Quantic interface.
+   * @param {CustomEvent} event
    * @param {string} excludedTagName
    */
   manageInterfaceA11y(event, excludedTagName) {
