@@ -9,11 +9,11 @@ import * as CommonAssertions from '../common-assertions';
 import * as SearchBoxAssertions from './search-box-assertions';
 import {addQuerySummary} from '../query-summary-actions';
 import * as QuerySummaryAssertions from '../query-summary-assertions';
-import {RouteAlias} from '../../utils/setupComponent';
 import {addFacet, field} from '../facets/facet/facet-actions';
 import {FacetSelectors} from '../facets/facet/facet-selectors';
 import {selectIdleCheckboxValueAt} from '../facets/facet-common-actions';
 import * as FacetCommonAssertions from '../facets/facet-common-assertions';
+import {RouteAlias} from '../../fixtures/fixture-common';
 
 const setSuggestions = (count: number) => () => {
   cy.intercept(
@@ -250,7 +250,7 @@ describe('Search Box Test Suites', () => {
         .init();
       SearchBoxSelectors.inputBox().click();
       SearchBoxSelectors.inputBox().type('test{enter}', {force: true});
-      cy.wait(RouteAlias.analytics);
+      cy.wait(RouteAlias.UA);
     });
 
     CommonAssertions.assertConsoleError(false);
