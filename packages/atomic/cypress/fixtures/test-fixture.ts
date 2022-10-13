@@ -18,6 +18,7 @@ import {
   TestFeature,
   configureI18n,
   interceptAnalytics,
+  TagProps as CommonTagProps,
 } from './fixture-common';
 
 interface ResultWithFolding extends Result {
@@ -41,7 +42,7 @@ export type SearchInterface = HTMLElement & {
   i18n: i18n;
 };
 
-export type TagProps = Record<string, string | number>;
+export type TagProps = CommonTagProps;
 
 export class TestFixture {
   private aliases: TestFeature<TestFixture>[] = [];
