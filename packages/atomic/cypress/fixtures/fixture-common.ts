@@ -1,4 +1,22 @@
 import {CyHttpMessages} from 'cypress/types/net-stubbing';
+import {i18n} from 'i18next';
+import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
+import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
+
+export type SearchResponseModifierPredicate = (
+  response: SearchResponseSuccess
+) => SearchResponseSuccess | void;
+
+export interface SearchResponseModifier {
+  predicate: SearchResponseModifierPredicate;
+  times: number;
+}
+
+export type FieldCaptions = {field: string; captions: Record<string, string>}[];
+
+export type Translations = Record<string, string>;
+
+export type TestFeature<T> = (e: T) => void | Promise<void>;
 
 export const RouteAlias = {
   UA: '@coveoAnalytics',
@@ -65,4 +83,86 @@ export function getUABody() {
 export async function getUACustomData() {
   const {request} = await getUABody();
   return request.body.customData as {[key: string]: string | string[]};
+}
+
+export function interceptSearchAndReturnError() {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: '**/rest/search/v2?*',
+    },
+    (request) =>
+      request.reply((response) =>
+        response.send(418, {
+          exception: {code: 'Something very weird just happened'},
+        })
+      )
+  ).as(RouteAlias.Search.substring(1));
+}
+
+export function interceptSearchResponse(
+  modifier: SearchResponseModifierPredicate,
+  times = 9999
+) {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: '**/rest/search/v2?*',
+      times,
+    },
+    (request) => {
+      request.reply((response) => {
+        let newResponse = response.body;
+        const returnedResponse = modifier(newResponse);
+        if (returnedResponse) {
+          newResponse = returnedResponse;
+        }
+        response.send(200, newResponse);
+      });
+    }
+  ).as(RouteAlias.Search.substring(1));
+}
+
+export function modifySearchResponses(
+  responseModifiers: SearchResponseModifier[]
+) {
+  interceptSearchResponse((response) => {
+    let combinedResponse = response;
+    responseModifiers.forEach((modifier) => {
+      if (modifier.times <= 0) {
+        return;
+      }
+      combinedResponse =
+        modifier.predicate(combinedResponse) || combinedResponse;
+      modifier.times--;
+    });
+    return combinedResponse;
+  });
+}
+
+export const sampleConfig = {
+  accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+  organizationId: 'searchuisamples',
+};
+
+export function configureI18n(
+  i18n: i18n,
+  translations: Translations,
+  fieldCaptions: FieldCaptions
+) {
+  fieldCaptions.forEach(({field, captions}) =>
+    i18n.addResourceBundle('en', `caption-${field}`, captions)
+  );
+  i18n.addResourceBundle('en', 'translation', translations);
+}
+
+export function interceptAnalytics() {
+  AnalyticsTracker.reset();
+  cy.intercept(
+    {
+      method: 'POST',
+      url: '**/rest/ua/v15/analytics/*',
+    },
+    (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
+  );
 }

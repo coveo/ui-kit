@@ -1,4 +1,4 @@
-import {setupIntercept} from '../fixtures/fixture-common';
+import {sampleConfig, setupIntercept} from '../fixtures/fixture-common';
 
 export const buildTestUrl = (hash = '') => `test.html#${hash}`;
 
@@ -11,10 +11,7 @@ export function injectComponent(
     document.body.innerHTML = `<${searchInterfaceTag}>${componentHtml}</${searchInterfaceTag}>`;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const searchInterface: any = document.querySelector(searchInterfaceTag);
-    await searchInterface.initialize({
-      accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-      organizationId: 'searchuisamples',
-    });
+    await searchInterface.initialize(sampleConfig);
     executeFirstSearch && searchInterface.executeFirstSearch();
   });
 }

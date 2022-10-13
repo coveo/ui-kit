@@ -1,8 +1,4 @@
-import {
-  generateComponentHTML,
-  interceptSearchResponse,
-  TestFixture,
-} from '../fixtures/test-fixture';
+import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import {
   smartSnippetSuggestionsComponent,
   SmartSnippetSuggestionsSelectors,
@@ -18,6 +14,7 @@ import {
 } from './smart-snippet-suggestions-actions';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
 import {InlineLink} from '@coveo/headless';
+import {interceptSearchResponse} from '../fixtures/fixture-common';
 
 const {remSize, relatedQuestions: defaultRelatedQuestions} =
   addSmartSnippetSuggestionsDefaultOptions;

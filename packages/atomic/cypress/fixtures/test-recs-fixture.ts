@@ -1,20 +1,21 @@
-import {
-  TestFeature,
-  SearchResponseModifier,
-  SearchResponseModifierPredicate,
-  interceptSearchResponse,
-} from './test-fixture';
 import {i18n} from 'i18next';
 import {buildTestUrl} from '../utils/setupComponent';
-import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {
   ConsoleAliases,
   getUABody,
   getUACustomData,
+  interceptSearchAndReturnError,
+  modifySearchResponses,
   RouteAlias,
+  sampleConfig,
   setupIntercept,
   stubConsole,
   UrlParts,
+  TestFeature,
+  SearchResponseModifier,
+  SearchResponseModifierPredicate,
+  configureI18n,
+  interceptAnalytics,
 } from './fixture-common';
 
 export type RecsInterface = HTMLElement & {
@@ -159,72 +160,31 @@ export class TestRecsFixture {
       if (this.disabledAnalytics) {
         recsInterfaceComponent.setAttribute('analytics', 'false');
       } else {
-        AnalyticsTracker.reset();
-        cy.intercept(
-          {
-            method: 'POST',
-            url: '**/rest/ua/v15/analytics/*',
-          },
-          (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
-        );
+        interceptAnalytics();
       }
 
       if (this.responseModifiers.length) {
-        interceptSearchResponse((response) => {
-          let combinedResponse = response;
-          this.responseModifiers.forEach((modifier) => {
-            if (modifier.times <= 0) {
-              return;
-            }
-            combinedResponse =
-              modifier.predicate(combinedResponse) || combinedResponse;
-            modifier.times--;
-          });
-          return combinedResponse;
-        });
+        modifySearchResponses(this.responseModifiers);
       }
 
       if (this.returnError) {
-        cy.intercept(
-          {
-            method: 'POST',
-            url: '**/rest/search/v2?*',
-          },
-          (request) =>
-            request.reply((response) =>
-              response.send(418, {
-                exception: {code: 'Something very weird just happened'},
-              })
-            )
-        ).as(TestRecsFixture.interceptAliases.Search.substring(1));
+        interceptSearchAndReturnError();
       }
 
       if (!this.initializeInterface) {
         return;
       }
 
-      recsInterfaceComponent
-        .initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-        })
-        .then(() => {
-          this.fieldCaptions.forEach(({field, captions}) =>
-            recsInterfaceComponent.i18n.addResourceBundle(
-              'en',
-              `caption-${field}`,
-              captions
-            )
-          );
-          recsInterfaceComponent.i18n.addResourceBundle(
-            'en',
-            'translation',
-            this.translations
-          );
-          if (this.getRecs) {
-            recsInterfaceComponent.getRecommendations();
-          }
-        });
+      recsInterfaceComponent.initialize(sampleConfig).then(() => {
+        configureI18n(
+          recsInterfaceComponent.i18n,
+          this.translations,
+          this.fieldCaptions
+        );
+        if (this.getRecs) {
+          recsInterfaceComponent.getRecommendations();
+        }
+      });
     });
 
     if (this.getRecs && this.firstIntercept) {
