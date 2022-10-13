@@ -5,6 +5,7 @@ import {
   EcommerceDefaultFieldsToInclude,
   buildRecommendationEngine,
   loadRecommendationActions,
+  loadSearchConfigurationActions,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -194,7 +195,14 @@ export class AtomicRecsInterface
       return;
     }
 
-    // TODO: update engine config...
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine
+    );
+    this.engine.dispatch(
+      updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
     this.commonInterfaceHelper.onLanguageChange();
   }
 

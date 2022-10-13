@@ -21,6 +21,7 @@ export type {LogLevel} from './app/logger';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader';
+export * from './features/configuration/search-configuration-actions-loader';
 export * from './features/advanced-search-queries/advanced-search-queries-actions-loader';
 export * from './features/context/context-actions-loader';
 export * from './features/dictionary-field-context/dictionary-field-context-actions-loader';

@@ -38,14 +38,10 @@ describe('Recs Interface Component', () => {
     assertConsoleError(false);
   });
 
-  describe('without an automatic search', () => {
-    beforeEach(() => {
-      new TestRecsFixture().withLanguage('fr').withoutFirstIntercept().init();
-    });
-
+  function verifyLanguageIntercepts(language: string) {
     it('should set locale for search request', (done) => {
       cy.wait(TestRecsFixture.interceptAliases.Search).then((intercept) => {
-        expect(intercept.request.body.locale).to.be.eq('fr');
+        expect(intercept.request.body.locale).to.be.eq(language);
         done();
       });
     });
@@ -53,10 +49,33 @@ describe('Recs Interface Component', () => {
     it('should set language for analytics request', (done) => {
       cy.wait(TestRecsFixture.interceptAliases.UA).then((intercept) => {
         const analyticsBody = intercept.request.body;
-        expect(analyticsBody).to.have.property('language', 'fr');
+        expect(analyticsBody).to.have.property('language', language);
         done();
       });
     });
+  }
+
+  describe('initially setting language', () => {
+    const language = 'fr';
+    beforeEach(() => {
+      new TestRecsFixture()
+        .withLanguage(language)
+        .withoutFirstIntercept()
+        .init();
+    });
+
+    verifyLanguageIntercepts(language);
+  });
+
+  describe('updating the language after initialization', () => {
+    const language = 'fr';
+    beforeEach(() => {
+      new TestRecsFixture().init();
+      setLanguage('fr');
+      getRecommendations();
+    });
+
+    verifyLanguageIntercepts(language);
   });
 
   describe('without analytics', () => {
