@@ -5,7 +5,7 @@ import {
   HeadlessBundleNames,
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils} from 'c/quanticUtils';
+import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
 
 import close from '@salesforce/label/c.quantic_Close';
 import openPreview from '@salesforce/label/c.quantic_OpenPreview';
@@ -204,6 +204,7 @@ export default class QuanticResultQuickview extends LightningElement {
     return !!this.previewButtonIcon;
   }
 
+  /** @type {HTMLElement} */
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }
@@ -250,13 +251,49 @@ export default class QuanticResultQuickview extends LightningElement {
   }
 
   setFocusToTop() {
+    /** @type {HTMLElement} */
     const focusTarget = this.template.querySelector(
       `.slds-button.slds-button_icon`
     );
 
     if (focusTarget) {
-      // @ts-ignore
       focusTarget.focus();
     }
+  }
+
+  /**
+   * @param {KeyboardEvent} evt
+   */
+  onCloseKeyDown(evt) {
+    if (evt.shiftKey && evt.code === 'Tab') {
+      evt.preventDefault();
+      const lastFocusableElement =
+        this.lastFocusableElementInFooterSlot ||
+        this.lastFocusableElementInQuickview;
+      if (lastFocusableElement) {
+        lastFocusableElement.focus();
+      } else {
+        this.setFocusToHeader();
+      }
+    }
+  }
+
+  get lastFocusableElementInFooterSlot() {
+    /** @type {HTMLElement} */
+    const footerSlot = this.template.querySelector('slot[name=footer]');
+    if (footerSlot) {
+      const lastElement = getLastFocusableElement(footerSlot);
+      if (lastElement) return lastElement;
+    }
+    return null;
+  }
+
+  get lastFocusableElementInQuickview() {
+    const element = this.contentContainer;
+    if (element) {
+      const lastElement = getLastFocusableElement(element);
+      return lastElement;
+    }
+    return null;
   }
 }
