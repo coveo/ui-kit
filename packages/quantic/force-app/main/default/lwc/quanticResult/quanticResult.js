@@ -34,7 +34,6 @@ export default class QuanticResult extends LightningElement {
    */
   @api resultTemplatesManager;
   /**
-   * @api
    * @type {string}
    */
   @api openPreviewId;
