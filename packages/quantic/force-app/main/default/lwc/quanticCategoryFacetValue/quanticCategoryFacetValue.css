@@ -8,10 +8,6 @@
   float: left;
 }
 
-.facet__number-of-results {
-  color: var(--sds-c-color-gray-8, #8E959D);
-}
-
 .facet__search-results{
   display: flex;
   align-items: baseline;
