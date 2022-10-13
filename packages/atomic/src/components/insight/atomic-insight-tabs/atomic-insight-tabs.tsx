@@ -24,6 +24,10 @@ export class AtomicInsightTabs {
   }
 
   public render() {
-    return <slot></slot>;
+    return (
+      <div class="flex">
+        <slot></slot>
+      </div>
+    );
   }
 }
