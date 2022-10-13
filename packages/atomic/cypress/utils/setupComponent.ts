@@ -1,3 +1,5 @@
+import {setupIntercept} from '../fixtures/fixture-common';
+
 export const buildTestUrl = (hash = '') => `test.html#${hash}`;
 
 const searchInterfaceTag = 'atomic-search-interface';
@@ -19,35 +21,6 @@ export function injectComponent(
 
 export const searchEndpoint =
   'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples';
-
-export const RouteAlias = {
-  analytics: '@coveoAnalytics',
-  querySuggest: '@coveoQuerySuggest',
-  search: '@coveoSearch',
-  facetSearch: '@coveoFacetSearch',
-};
-
-export function setupIntercept() {
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/ua/v15/analytics/*',
-  }).as(RouteAlias.analytics.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/search/v2/querySuggest?*',
-  }).as(RouteAlias.querySuggest.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    path: '**/rest/search/v2/facet?*',
-  }).as(RouteAlias.facetSearch.substring(1));
-
-  cy.intercept({
-    method: 'POST',
-    url: searchEndpoint,
-  }).as(RouteAlias.search.substring(1));
-}
 
 // TODO: rename to setupPage (typo)
 // TODO: add options object for arguments (with urlHash, wait options)

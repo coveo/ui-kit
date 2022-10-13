@@ -3,11 +3,19 @@ import {
   SearchResponseModifier,
   SearchResponseModifierPredicate,
   interceptSearchResponse,
-  TestFixture,
 } from './test-fixture';
 import {i18n} from 'i18next';
 import {buildTestUrl} from '../utils/setupComponent';
 import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
+import {
+  ConsoleAliases,
+  getUABody,
+  getUACustomData,
+  RouteAlias,
+  setupIntercept,
+  stubConsole,
+  UrlParts,
+} from './fixture-common';
 
 export type RecsInterface = HTMLElement & {
   initialize: (opts: {
@@ -35,6 +43,12 @@ export class TestRecsFixture {
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifier[] = [];
   private returnError = false;
+
+  public static interceptAliases = RouteAlias;
+  public static urlParts = UrlParts;
+  public static consoleAliases = ConsoleAliases;
+  public static getUABody = getUABody;
+  public static getUACustomData = getUACustomData;
 
   public with(feat: TestFeature<TestRecsFixture>) {
     feat(this);
@@ -127,8 +141,8 @@ export class TestRecsFixture {
   public init() {
     cy.visit(buildTestUrl());
     cy.injectAxe();
-    this.intercept();
-    this.stubConsole();
+    setupIntercept();
+    stubConsole();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
@@ -223,40 +237,5 @@ export class TestRecsFixture {
     this.aliases.forEach((alias) => alias(this));
 
     return this;
-  }
-
-  public static interceptAliases = TestFixture.interceptAliases;
-  public static consoleAliases = TestFixture.consoleAliases;
-  public static urlParts = TestFixture.urlParts;
-
-  private intercept() {
-    cy.intercept({
-      method: 'POST',
-      path: '**/rest/ua/v15/analytics/*',
-    }).as(TestRecsFixture.interceptAliases.UA.substring(1));
-
-    cy.intercept({
-      method: 'POST',
-      url: '**/rest/search/v2?*',
-    }).as(TestRecsFixture.interceptAliases.Search.substring(1));
-
-    cy.intercept({
-      method: 'GET',
-      path: '/build/lang/**.json',
-    }).as(TestRecsFixture.interceptAliases.Locale.substring(1));
-  }
-
-  private stubConsole() {
-    cy.window().then((win) => {
-      cy.stub(win.console, 'error').as(
-        TestRecsFixture.consoleAliases.error.substring(1)
-      );
-      cy.stub(win.console, 'warn').as(
-        TestRecsFixture.consoleAliases.warn.substring(1)
-      );
-      cy.stub(win.console, 'log').as(
-        TestRecsFixture.consoleAliases.log.substring(1)
-      );
-    });
   }
 }

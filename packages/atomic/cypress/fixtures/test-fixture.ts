@@ -1,9 +1,17 @@
 import {Result} from '@coveo/headless';
-import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
+import {
+  ConsoleAliases,
+  getUABody,
+  getUACustomData,
+  RouteAlias,
+  setupIntercept,
+  stubConsole,
+  UrlParts,
+} from './fixture-common';
 
 interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
@@ -58,6 +66,12 @@ export class TestFixture {
   private returnError = false;
   private reflectStateInUrl = true;
   private redirected = false;
+
+  public static interceptAliases = RouteAlias;
+  public static urlParts = UrlParts;
+  public static consoleAliases = ConsoleAliases;
+  public static getUABody = getUABody;
+  public static getUACustomData = getUACustomData;
 
   public with(feat: TestFeature<TestFixture>) {
     feat(this);
@@ -166,8 +180,8 @@ export class TestFixture {
   public init() {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
-    this.intercept();
-    this.stubConsole();
+    setupIntercept();
+    stubConsole();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
@@ -269,92 +283,10 @@ export class TestFixture {
     return this;
   }
 
-  public static get interceptAliases() {
-    return {
-      UA: '@coveoAnalytics',
-      QuerySuggestions: '@coveoQuerySuggest',
-      Search: '@coveoSearch',
-      FacetSearch: '@coveoFacetSearch',
-      Locale: '@locale',
-    };
-  }
-
-  public static get urlParts() {
-    return {
-      UA: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics',
-      Search: 'https://cloud.coveo.com/rest/search/v2',
-      UAClick: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/click',
-      UASearch:
-        'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/search',
-    };
-  }
-
   public get elementAliases() {
     return {
       SearchInterface: 'searchInterface',
     };
-  }
-
-  public static get consoleAliases() {
-    return {
-      error: '@consoleError',
-      warn: '@consoleWarn',
-      log: '@consoleLog',
-    };
-  }
-
-  public static getUABody() {
-    return cy.get(TestFixture.interceptAliases.UA) as unknown as Promise<{
-      request: CyHttpMessages.IncomingHttpRequest;
-    }>;
-  }
-
-  public static getUACustomData() {
-    return TestFixture.getUABody().then(
-      ({request}) =>
-        request.body.customData as {[key: string]: string | string[]}
-    );
-  }
-
-  private intercept() {
-    cy.intercept({
-      method: 'POST',
-      path: '**/rest/ua/v15/analytics/*',
-    }).as(TestFixture.interceptAliases.UA.substring(1));
-
-    cy.intercept({
-      method: 'POST',
-      path: '**/rest/search/v2/querySuggest?*',
-    }).as(TestFixture.interceptAliases.QuerySuggestions.substring(1));
-
-    cy.intercept({
-      method: 'POST',
-      url: '**/rest/search/v2?*',
-    }).as(TestFixture.interceptAliases.Search.substring(1));
-
-    cy.intercept({
-      method: 'POST',
-      path: '**/rest/search/v2/facet?*',
-    }).as(TestFixture.interceptAliases.FacetSearch.substring(1));
-
-    cy.intercept({
-      method: 'GET',
-      path: '/build/lang/**.json',
-    }).as(TestFixture.interceptAliases.Locale.substring(1));
-  }
-
-  private stubConsole() {
-    cy.window().then((win) => {
-      cy.stub(win.console, 'error').as(
-        TestFixture.consoleAliases.error.substring(1)
-      );
-      cy.stub(win.console, 'warn').as(
-        TestFixture.consoleAliases.warn.substring(1)
-      );
-      cy.stub(win.console, 'log').as(
-        TestFixture.consoleAliases.log.substring(1)
-      );
-    });
   }
 }
 
