@@ -1,4 +1,4 @@
-import {TestFixture} from '../fixtures/test-fixture';
+import {TagProps, TestFixture} from '../fixtures/test-fixture';
 import {
   addColorFacet,
   colorFacetField,
@@ -44,29 +44,48 @@ import {TimeframeFacetSelectors} from './facets/timeframe-facet/timeframe-facet-
 import {NumericFacetSelectors} from './facets/numeric-facet/numeric-facet-selectors';
 
 describe('Breadbox Test Suites', () => {
-  function setupBreadboxWithMultipleFacets() {
+  function setupBreadboxWithMultipleFacets(props: TagProps = {}) {
     new TestFixture()
+      .withTranslation({'a.translated.label': 'This is a translated label'})
       .with(addBreadbox())
-      .with(addFacet({field, label}))
+      .with(addFacet({field, label, ...props}))
       .with(
         addNumericFacet({field: numericFacetField, label: numericFacetLabel})
       )
       .with(addTimeframeFacet({label: timeframeFacetLabel}, unitFrames))
       .with(addColorFacet({field: colorFacetField, label: colorFacetLabel}))
       .with(addCategoryFacet())
+
       .init();
   }
 
   describe('when selecting a standard facet and a numeric facet', () => {
     const selectionIndex = 1;
-    function setupBreadboxWithSelectedFacetAndNumericFacet() {
-      setupBreadboxWithMultipleFacets();
+    function setupBreadboxWithSelectedFacetAndNumericFacet(
+      props: TagProps = {}
+    ) {
+      setupBreadboxWithMultipleFacets(props);
       selectIdleCheckboxValueAt(NumericFacetSelectors, selectionIndex);
       selectIdleCheckboxValueAt(FacetSelectors, selectionIndex);
     }
 
+    describe('with i18n translated labels', () => {
+      before(() =>
+        setupBreadboxWithSelectedFacetAndNumericFacet({
+          label: 'a.translated.label',
+        })
+      );
+
+      it('should have the proper button label', () => {
+        BreadboxSelectors.breadcrumbButton().should(
+          'contain.text',
+          'This is a translated label'
+        );
+      });
+    });
+
     describe('verify rendering', () => {
-      before(setupBreadboxWithSelectedFacetAndNumericFacet);
+      before(() => setupBreadboxWithSelectedFacetAndNumericFacet());
       BreadboxAssertions.assertDisplayBreadcrumb(true);
       CommonAssertions.assertAccessibility(breadboxComponent);
       BreadboxAssertions.assertDisplayBreadcrumbClearAllButton(true);

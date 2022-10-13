@@ -18,6 +18,8 @@ import {
   shadow: true,
 })
 export class AtomicResultTemplate {
+  private resultTemplateCommon: ResultTemplateCommon;
+
   @State() public error!: Error;
 
   @Element() public host!: HTMLDivElement;
@@ -35,15 +37,6 @@ export class AtomicResultTemplate {
   @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
     {};
 
-  public resultTemplateCommon: ResultTemplateCommon;
-
-  public componentWillLoad() {
-    this.resultTemplateCommon.matchConditions = makeMatchConditions(
-      this.mustMatch,
-      this.mustNotMatch
-    );
-  }
-
   constructor() {
     this.resultTemplateCommon = new ResultTemplateCommon({
       host: this.host,
@@ -52,13 +45,18 @@ export class AtomicResultTemplate {
       },
       validParents: [
         'atomic-result-list',
-        // TODO: move in new atomic-recs-result-template
-        'atomic-recs-list',
         'atomic-folded-result-list',
         'atomic-search-box-instant-results',
       ],
       allowEmpty: true,
     });
+  }
+
+  public componentWillLoad() {
+    this.resultTemplateCommon.matchConditions = makeMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
+    );
   }
 
   /**

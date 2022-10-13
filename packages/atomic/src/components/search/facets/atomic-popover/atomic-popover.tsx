@@ -98,7 +98,7 @@ export class AtomicPopover implements InitializableComponent {
   }
 
   private get label() {
-    return this.bindings.i18n.t(this.childFacet!.label);
+    return this.childFacet!.label();
   }
 
   private togglePopover() {

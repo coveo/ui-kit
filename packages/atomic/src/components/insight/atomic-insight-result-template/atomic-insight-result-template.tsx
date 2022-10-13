@@ -1,8 +1,10 @@
-import {Component, h, Element, Prop, Method, State} from '@stencil/core';
+import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
 import {InsightResultTemplate, InsightResultTemplateCondition} from '..';
-import {ResultTemplatesHelpers} from '@coveo/headless';
-import {makeMatchConditions} from '../../common/result-templates/result-template-common';
+import {
+  makeMatchConditions,
+  ResultTemplateCommon,
+} from '../../common/result-templates/result-template-common';
 
 /**
  * @internal
@@ -12,6 +14,8 @@ import {makeMatchConditions} from '../../common/result-templates/result-template
   shadow: true,
 })
 export class AtomicInsightResultTemplate {
+  private resultTemplateCommon: ResultTemplateCommon;
+
   @State() public error!: Error;
 
   @Element() public host!: HTMLDivElement;
@@ -54,21 +58,21 @@ export class AtomicInsightResultTemplate {
   @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
     {};
 
+  constructor() {
+    this.resultTemplateCommon = new ResultTemplateCommon({
+      host: this.host,
+      setError: (err) => {
+        this.error = err;
+      },
+      validParents: ['atomic-insight-result-list'],
+      allowEmpty: true,
+    });
+  }
+
   public componentWillLoad() {
-    if (this.ifDefined) {
-      const fieldNames = this.ifDefined.split(',');
-      this.conditions.push(
-        ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
-      );
-    }
-    if (this.ifNotDefined) {
-      const fieldNames = this.ifNotDefined.split(',');
-      this.conditions.push(
-        ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
-      );
-    }
-    this.matchConditions.push(
-      ...makeMatchConditions(this.mustMatch, this.mustNotMatch)
+    this.resultTemplateCommon.matchConditions = makeMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
     );
   }
 
@@ -77,25 +81,10 @@ export class AtomicInsightResultTemplate {
    */
   @Method()
   public async getTemplate(): Promise<InsightResultTemplate<DocumentFragment> | null> {
-    if (this.error) {
-      return null;
-    }
-
-    return {
-      conditions: this.conditions.concat(this.matchConditions),
-      content: this.host.querySelector('template')!.content!,
-      priority: 1,
-    };
+    return this.resultTemplateCommon.getTemplate(this.conditions, this.error);
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+    return this.resultTemplateCommon.renderIfError(this.error);
   }
 }
