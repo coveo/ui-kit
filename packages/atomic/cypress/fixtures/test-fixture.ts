@@ -21,7 +21,7 @@ export type SearchResponseModifierPredicate = (
   response: SearchResponseSuccess
 ) => SearchResponseSuccess | void;
 
-interface SearchResponseModifier {
+export interface SearchResponseModifier {
   predicate: SearchResponseModifierPredicate;
   times: number;
 }
@@ -35,13 +35,14 @@ export type SearchInterface = HTMLElement & {
   i18n: i18n;
 };
 
-export type TestFeature = (e: TestFixture) => void | Promise<void>;
+export type TestFeature<T> = (e: T) => void | Promise<void>;
 
 export type TagProps = Record<string, string | number>;
 
 export class TestFixture {
-  private aliases: TestFeature[] = [];
+  private aliases: TestFeature<TestFixture>[] = [];
   private execFirstSearch = true;
+  private firstIntercept = true;
   private initializeInterface = true;
   private searchInterface = document.createElement(
     'atomic-search-interface'
@@ -58,7 +59,7 @@ export class TestFixture {
   private reflectStateInUrl = true;
   private redirected = false;
 
-  public with(feat: TestFeature) {
+  public with(feat: TestFeature<TestFixture>) {
     feat(this);
     return this;
   }
@@ -71,6 +72,11 @@ export class TestFixture {
 
   public withoutFirstAutomaticSearch() {
     this.execFirstSearch = false;
+    return this;
+  }
+
+  public withoutFirstIntercept() {
+    this.firstIntercept = false;
     return this;
   }
 
@@ -89,7 +95,7 @@ export class TestFixture {
     return this;
   }
 
-  public withAlias(aliasFn: TestFeature) {
+  public withAlias(aliasFn: TestFeature<TestFixture>) {
     this.aliases.push(aliasFn);
     return this;
   }
@@ -251,7 +257,7 @@ export class TestFixture {
         });
     });
 
-    if (this.execFirstSearch) {
+    if (this.execFirstSearch && this.firstIntercept) {
       cy.wait(TestFixture.interceptAliases.Search);
       if (!this.disabledAnalytics) {
         cy.wait(TestFixture.interceptAliases.UA);

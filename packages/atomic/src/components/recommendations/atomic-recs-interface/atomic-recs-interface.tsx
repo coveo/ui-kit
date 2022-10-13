@@ -190,17 +190,29 @@ export class AtomicRecsInterface
 
   @Watch('language')
   public updateLanguage() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    // TODO: update engine config...
     this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('analytics')
   public toggleAnalytics() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
   public registerFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(
-      this.fieldsToInclude.split(',').map((field) => field.trim())
+      this.fieldsToInclude
+        .split(',')
+        .map((field) => field.trim())
+        .filter((field) => !!field)
     );
     this.engine!.dispatch(
       loadFieldActions(this.engine!).registerFieldsToInclude(fields)
