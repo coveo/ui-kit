@@ -76,11 +76,7 @@ export default class QuanticResultList extends LightningElement {
   }
 
   handleResultPreviewToggle = (event) => {
-    if (event.detail.isOpen) {
-      this.openPreviewId = event.detail.resultId;
-    } else {
-      this.openPreviewId = null;
-    }
+    this.openPreviewId = event.detail.isOpen ? event.detail.resultId : null;
   };
 
   renderedCallback() {
