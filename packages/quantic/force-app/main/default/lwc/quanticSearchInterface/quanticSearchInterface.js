@@ -9,9 +9,7 @@ import {
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
 import LOCALE from '@salesforce/i18n/locale';
 import TIMEZONE from '@salesforce/i18n/timeZone';
-import {
-  STANDALONE_SEARCH_BOX_STORAGE_KEY,
-} from 'c/quanticUtils';
+import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").SearchEngineOptions} SearchEngineOptions */
