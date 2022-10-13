@@ -20,7 +20,6 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticResultTemplate extends LightningElement {
   /**
-   * @api
    * @type {boolean}
    */
   @api isAnyPreviewOpen = false;
