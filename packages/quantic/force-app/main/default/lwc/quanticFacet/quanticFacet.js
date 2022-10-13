@@ -25,6 +25,13 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 /** @typedef {import("coveo").FacetValue} FacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criterion (e.g., number of occurrences).
@@ -154,8 +161,10 @@ export default class QuanticFacet extends LightningElement {
   input;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {FocusTarget} */
+  focusTarget;
   /** @type {boolean} */
-  facetContentChanged;
+  focusShouldBeInFacet = false;
 
   labels = {
     showMore,
@@ -179,9 +188,9 @@ export default class QuanticFacet extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     this.input = this.template.querySelector('.facet__searchbox-input');
-    if (this.facetContentChanged) {
-      this.facetContentChanged = false;
-      this.setFocusToFirstFacetValue();
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
     }
   }
 
@@ -410,21 +419,38 @@ export default class QuanticFacet extends LightningElement {
       this.onSelectClickHandler(item);
     }
     this.clearInput();
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      value: item.value,
+    };
   }
 
   showMore() {
     this.facet.showMoreValues();
-    this.facetContentChanged = true;
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      index: 0,
+    };
   }
 
   showLess() {
     this.facet.showLessValues();
-    this.facetContentChanged = true;
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      index: 0,
+    };
   }
 
   clearSelections() {
     this.facet.deselectAll();
     this.clearInput();
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetHeader',
+    };
   }
 
   toggleFacetVisibility() {
@@ -463,12 +489,47 @@ export default class QuanticFacet extends LightningElement {
     );
   }
 
-  setFocusToFirstFacetValue() {
-    const focusTarget = this.template.querySelector('c-quantic-facet-value');
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.focusTarget.value) {
+        const facetValueIndex = this.values.findIndex(
+          (item) => item.value === this.focusTarget.value
+        );
+        this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+      }
+      this.setFocusOnFacetValue();
+    }
+  }
 
+  /**
+   * Sets the focus on the target facet value.
+   */
+  setFocusOnFacetValue() {
+    const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
+    const focusTarget = facetValues[this.focusTarget.index];
     if (focusTarget) {
       // @ts-ignore
       focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocusOnHeader();
     }
   }
 }
