@@ -4,7 +4,7 @@ import {
   getSampleRecommendationEngineConfiguration,
   buildRecommendationEngine
 } from '@coveo/atomic/headless/recommendation';
-import {AtomicRecsInterface} from './stencil-generated/index';
+import {AtomicRecsInterface} from '../stencil-generated/index';
 
 type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
 /**
