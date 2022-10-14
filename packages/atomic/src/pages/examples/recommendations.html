@@ -45,17 +45,23 @@
     </script>
     <style>
       .layout {
+        padding: 20px;
         display: grid;
         grid-template-columns: 2fr 1fr;
         gap: 30px;
       }
 
-      atomic-recs-list.tiles {
+      .tiles {
         --atomic-recs-number-of-columns: 5;
       }
 
+      .carousel {
+        grid-column: 1 / span 2;
+        --atomic-recs-number-of-columns: 3;
+      }
+
       @media only screen and (max-width: 1600px) {
-        atomic-recs-list.tiles {
+        .tiles {
           --atomic-recs-number-of-columns: 3;
         }
       }
@@ -65,7 +71,7 @@
           grid-template-columns: 1fr 1fr;
         }
 
-        atomic-recs-list.tiles {
+        .tiles {
           --atomic-recs-number-of-columns: 2;
         }
       }
@@ -80,8 +86,8 @@
   <body>
     <div class="layout">
       <!-- Tiles -->
-      <atomic-recs-interface fields-to-include="cat_rating_count">
-        <atomic-recs-list class="tiles" label="Top clothing for you" display="grid" number-of-recommendations="10">
+      <atomic-recs-interface class="tiles" fields-to-include="cat_rating_count">
+        <atomic-recs-list label="Top clothing for you" display="grid" number-of-recommendations="10">
           <atomic-recs-result-template>
             <template>
               <style>
@@ -124,12 +130,56 @@
         </atomic-recs-list>
       </atomic-recs-interface>
       <!-- Rows -->
-      <atomic-recs-interface fields-to-include="cat_rating_count">
+      <atomic-recs-interface class="rows" fields-to-include="cat_rating_count">
+        <atomic-recs-list label="Frequently viewed" recommendation="frequentViewed" number-of-recommendations="6">
+          <atomic-recs-result-template>
+            <template>
+              <style>
+                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+                  height: 120px;
+                }
+                .rating-wrapper {
+                  display: flex;
+                  align-items: center;
+                }
+                .rating-wrapper span {
+                  margin-left: 5px;
+                  color: #8e959d;
+                }
+              </style>
+              <atomic-result-section-visual>
+                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+              </atomic-result-section-visual>
+              <atomic-result-section-title>
+                <atomic-result-link></atomic-result-link>
+              </atomic-result-section-title>
+              <atomic-result-section-title-metadata>
+                <div class="rating-wrapper">
+                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                  <atomic-field-condition class="field" if-defined="ec_rating">
+                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
+                  </atomic-field-condition>
+                </div>
+              </atomic-result-section-title-metadata>
+              <atomic-result-section-emphasized>
+                <atomic-result-number field="ec_price">
+                  <atomic-format-currency currency="USD"></atomic-format-currency>
+                </atomic-result-number>
+              </atomic-result-section-emphasized>
+              <atomic-result-section-excerpt
+                ><atomic-result-text field="excerpt"></atomic-result-text
+              ></atomic-result-section-excerpt>
+            </template>
+          </atomic-recs-result-template>
+        </atomic-recs-list>
+      </atomic-recs-interface>
+      <!-- Carousel -->
+      <atomic-recs-interface class="carousel" fields-to-include="cat_rating_count">
         <atomic-recs-list
-          class="rows"
-          label="Frequently viewed"
-          recommendation="frequentViewed"
-          number-of-recommendations="6"
+          display="grid"
+          label="Carousel"
+          number-of-recommendations="9"
+          number-of-recommendations-per-page="3"
         >
           <atomic-recs-result-template>
             <template>

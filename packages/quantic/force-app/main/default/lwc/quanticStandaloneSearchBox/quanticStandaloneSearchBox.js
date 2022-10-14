@@ -112,15 +112,8 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   unsubscribe;
   /** @type {boolean} */
   isInitialized;
-
   /** @type {Suggestion[]} */
-  get suggestions() {
-    return this.state.suggestions.map((s, index) => ({
-      key: index,
-      rawValue: s.rawValue,
-      value: s.highlightedValue,
-    }));
-  }
+  suggestions = [];
 
   /** @type {string} */
   get standaloneEngineId() {
@@ -129,6 +122,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   connectedCallback() {
     registerComponentForInit(this, this.standaloneEngineId);
+    this.addEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   renderedCallback() {
@@ -174,6 +171,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.removeEventListener(
+      'suggestionlistrender',
+      this.handleSuggestionListEvent
+    );
   }
 
   updateStandaloneState() {
@@ -181,6 +182,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
       this.input.value = this.standaloneSearchBox.state.value;
     }
     this.state = this.standaloneSearchBox.state;
+    this.suggestions =
+      this.state?.suggestions?.map((s, index) => ({
+        key: index,
+        rawValue: s.rawValue,
+        value: s.highlightedValue,
+      })) ?? [];
 
     // Check for redirect
     const {redirectTo, value, analytics} = this.standaloneSearchBox.state;
@@ -347,4 +354,10 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
   get suggestionsOpen() {
     return this.combobox?.classList.contains('slds-is-open');
   }
+
+  handleSuggestionListEvent = (event) => {
+    event.stopPropagation();
+    const id = event.detail;
+    this.input.setAttribute('aria-controls', id);
+  };
 }

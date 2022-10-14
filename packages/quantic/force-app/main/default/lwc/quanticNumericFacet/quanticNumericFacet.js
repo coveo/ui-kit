@@ -30,6 +30,13 @@ import messageWhenRangeUnderflow from '@salesforce/label/c.quantic_MessageWhenRa
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/**
+ * @typedef FocusTarget
+ * @type {object}
+ * @property {'facetValue' | 'facetHeader' | 'applyButton'} type
+ * @property {string} [value]
+ * @property {number} [index]
+ */
 
 /**
  * The `QuanticNumericFacet` component displays facet values as numeric ranges.
@@ -160,6 +167,10 @@ export default class QuanticNumericFacet extends LightningElement {
   unsubscribeSearchStatus;
   /** @type {AnyHeadless} */
   headless;
+  /** @type {FocusTarget} */
+  focusTarget;
+  /** @type {boolean} */
+  focusShouldBeInFacet = false;
 
   /** @type {string} */
   start;
@@ -192,6 +203,10 @@ export default class QuanticNumericFacet extends LightningElement {
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
+    if (this.focusShouldBeInFacet && !this.facet?.state?.isLoading) {
+      this.setFocusOnTarget();
+      this.focusTarget = null;
+    }
   }
 
   /**
@@ -270,10 +285,13 @@ export default class QuanticNumericFacet extends LightningElement {
       !this.searchStatus?.state?.firstSearchExecuted;
 
     const renderFacetEvent = new CustomEvent('renderFacet', {
-      detail: {id: this.facetId ?? this.field, shouldRenderFacet: this.shouldRenderFacet},
+      detail: {
+        id: this.facetId ?? this.field,
+        shouldRenderFacet: this.shouldRenderFacet,
+      },
       bubbles: true,
       composed: true,
-    })
+    });
     this.dispatchEvent(renderFacetEvent);
   }
 
@@ -400,6 +418,11 @@ export default class QuanticNumericFacet extends LightningElement {
       (value) => this.formattingFunction(value) === evt.detail.value
     );
     this.facet.toggleSelect(item);
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetValue',
+      value: evt.detail.value,
+    };
   }
 
   clearSelections() {
@@ -417,6 +440,10 @@ export default class QuanticNumericFacet extends LightningElement {
         input.reportValidity();
       });
     }
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'facetHeader',
+    };
   }
 
   toggleFacetVisibility() {
@@ -458,6 +485,11 @@ export default class QuanticNumericFacet extends LightningElement {
       start: this.inputMin ? Number(this.inputMin.value) : undefined,
       end: this.inputMax ? Number(this.inputMax.value) : undefined,
     });
+
+    this.focusShouldBeInFacet = true;
+    this.focusTarget = {
+      type: 'applyButton',
+    };
   }
 
   onChangeMin(evt) {
@@ -499,5 +531,65 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get customMessageUnderflow() {
     return I18nUtils.format(this.labels.messageWhenRangeUnderflow, this.min);
+  }
+
+  /**
+   * Sets the focus on the target element.
+   */
+  setFocusOnTarget() {
+    this.focusShouldBeInFacet = false;
+    if (!this.focusTarget) {
+      return;
+    }
+
+    if (this.focusTarget.type === 'facetHeader') {
+      this.setFocusOnHeader();
+    } else if (this.focusTarget.type === 'applyButton') {
+      this.setFocusOnApplyButton();
+    } else if (this.focusTarget.type === 'facetValue') {
+      if (this.focusTarget.value) {
+        const facetValueIndex = this.values.findIndex(
+          (value) => this.formattingFunction(value) === this.focusTarget.value
+        );
+        this.focusTarget.index = facetValueIndex >= 0 ? facetValueIndex : 0;
+        this.setFocusOnFacetValue();
+      }
+    }
+  }
+
+  /**
+   * Sets the focus on the target facet value.
+   */
+  setFocusOnFacetValue() {
+    const facetValues = this.template.querySelectorAll('c-quantic-facet-value');
+    const focusTarget = facetValues[this.focusTarget.index];
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocus();
+    }
+  }
+
+  /**
+   * Sets the focus on the facet header.
+   */
+  setFocusOnHeader() {
+    const focusTarget = this.template.querySelector('c-quantic-card-container');
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.setFocusOnHeader();
+    }
+  }
+
+  /**
+   * Sets the focus on the apply button.
+   */
+  setFocusOnApplyButton() {
+    const focusTarget = this.template.querySelector(
+      '.facet__search-form lightning-button'
+    );
+    if (focusTarget) {
+      // @ts-ignore
+      focusTarget.focus();
+    }
   }
 }
