@@ -1,28 +1,28 @@
 import {h} from '@stencil/core';
 import {Args} from '@storybook/api';
 import {DocsPage} from '@storybook/addon-docs';
-import {initializeInterfaceDebounced} from './default-init';
+import {initializeInterfaceDebounced as defaultInitializeInterfaceDebounced} from './default-init';
 import sharedDefaultStory, {
   DefaultStoryAdvancedConfig,
   renderAdditionalMarkup,
   renderArgsToHTMLString,
   renderShadowPartsToStyleString,
 } from './default-story-shared';
+import {SearchEngineConfiguration} from '@coveo/headless';
+import {DebouncedFunc} from 'lodash';
 
-export default function defaultStory(
+export default function defaultStory<Config = SearchEngineConfiguration>(
   title: string,
   componentTag: string,
   defaultArgs: Args,
-  advancedConfig: DefaultStoryAdvancedConfig = {}
+  advancedConfig: DefaultStoryAdvancedConfig<Config> = {},
+  initializeInterfaceDebounced: (
+    renderComponentFunction: () => string,
+    engineConfig?: Partial<SearchEngineConfiguration>
+  ) => DebouncedFunc<() => Promise<void>> = defaultInitializeInterfaceDebounced
 ) {
   const {defaultModuleExport, exportedStory, getArgs, updateCurrentArgs} =
-    sharedDefaultStory(
-      title,
-      componentTag,
-      defaultArgs,
-      false,
-      advancedConfig
-    );
+    sharedDefaultStory(title, componentTag, defaultArgs, false, advancedConfig);
 
   const defaultLoader = initializeInterfaceDebounced(() => {
     const argsToHTMLString = renderArgsToHTMLString(
@@ -33,7 +33,7 @@ export default function defaultStory(
     const additionalMarkupString = advancedConfig.additionalMarkup
       ? renderAdditionalMarkup(advancedConfig.additionalMarkup)
       : '';
-
+  
     return argsToHTMLString + additionalMarkupString;
   }, advancedConfig.engineConfig);
 
