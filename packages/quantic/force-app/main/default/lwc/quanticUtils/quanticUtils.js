@@ -567,7 +567,7 @@ export function getLastFocusableElement(element) {
   }
 
   /** @type {Array} */
-  const childNodes = Array.from(element.childNodes)
+  const childNodes = Array.from(element.childNodes);
   const focusableElements = childNodes
     .map((item) => getLastFocusableElement(item))
     .filter((item) => !!item);
@@ -601,7 +601,7 @@ export function getFirstFocusableElement(element) {
   }
 
   /** @type {Array} */
-  const childNodes = Array.from(element.childNodes)
+  const childNodes = Array.from(element.childNodes);
   const focusableElements = childNodes
     .map((item) => getFirstFocusableElement(item))
     .filter((item) => !!item);
@@ -662,4 +662,25 @@ function getFirstFocusableElementFromSlot(slotElement) {
     return focusableElements[0];
   }
   return null;
+}
+
+/**
+ * Checks whether an element is indeed the targetElement or one of its parents.
+ * @param {HTMLElement} element
+ * @param {string} targetElement
+ */
+export function isParentOf(element, targetElement) {
+  if (isCustomElement(element)) {
+    if (element.tagName === targetElement) {
+      return true;
+    }
+    return false;
+  }
+  /** @type {Array} */
+  const childNodes = Array.from(element.childNodes);
+  if (childNodes.length === 0) return false;
+  return childNodes.reduce(
+    (acc, val) => acc || isParentOf(val, targetElement),
+    false
+  );
 }

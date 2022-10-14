@@ -1,5 +1,5 @@
 import {LightningElement} from 'lwc';
-import {isCustomElement} from 'c/quanticUtils';
+import {isParentOf} from 'c/quanticUtils';
 
 /**
  * The `QuanticA11yHandler` component handles the accessibility of the Quantic interfaces. It makes the necessary changes to the accessibility tree each time a QuanticResultQuickview or a QuanticRefineModal is opened.
@@ -67,27 +67,6 @@ export default class QuanticA11yHandler extends LightningElement {
   }
 
   /**
-   * Checks whether an element is indeed the targetElement or one of its parents.
-   * @param {HTMLElement} element
-   * @param {string} targetElement
-   */
-  isParentOf(element, targetElement) {
-    if (isCustomElement(element)) {
-      if (element.tagName === targetElement) {
-        return true;
-      }
-      return false;
-    }
-    /** @type {Array} */
-    const childNodes = Array.from(element.childNodes);
-    if (childNodes.length === 0) return false;
-    return childNodes.reduce(
-      (acc, val) => acc || this.isParentOf(val, targetElement),
-      false
-    );
-  }
-
-  /**
    * Removes all HTML elements from the accessibility tree except for elements whose tag name is the excludedTagName, these elements remain accessible.
    * @param {HTMLElement} element
    * @param {string} excludedTagName
@@ -95,7 +74,7 @@ export default class QuanticA11yHandler extends LightningElement {
   removeElementsFromA11yTree(element, excludedTagName) {
     /** @type {Array} */
     const childNodes = Array.from(element.childNodes);
-    if (!this.isParentOf(element, excludedTagName)) {
+    if (!isParentOf(element, excludedTagName)) {
       element.setAttribute('aria-hidden', 'true');
       this.nonAccessibleElements.push(element);
     } else if (childNodes.length > 0) {
