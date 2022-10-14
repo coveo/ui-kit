@@ -77,17 +77,10 @@ export default class QuanticResult extends LightningElement {
   }
 
   get resultPreviewShouldNotBeAccessible() {
-    if (!this.openPreviewId) {
-      return false;
-    }
-    if (this.result.uniqueId !== this.openPreviewId) return true;
-    return false;
+    return !!this.openPreviewId && this.result.uniqueId !== this.openPreviewId;
   }
 
   get isAnyPreviewOpen() {
-    if (!this.openPreviewId) {
-      return false;
-    }
-    return true;
+    return !!this.openPreviewId;
   }
 }
