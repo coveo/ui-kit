@@ -1,7 +1,14 @@
+.facet__search-results_no-match {
+  color: var(--lwc-colorTextLabel, #696969);
+  background-color: var(--sds-c-color-gray-3, #F6F7F9);
+  font-size: 12px;
+  border-radius: 4px;
+}
+
 .facet__show-less {
   font-size: 12px;
   background-color: white;
-  color: #8e959d;
+  color: var(--lwc-colorTextIconDefault, #747474);
   border: none;
   margin-bottom: 5px;
 }
@@ -37,4 +44,8 @@
 
 .facet__clear-filter {
   line-height: inherit;
+}
+
+.facet__number-of-results {
+  color: var(--lwc-colorTextIconDefault, #747474);
 }

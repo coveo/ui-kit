@@ -22,7 +22,6 @@ import {
   assertRendersWholeCollection,
 } from './folded-result-list-assertions';
 import * as CommonAssertions from '../common-assertions';
-import {RouteAlias} from '../../utils/setupComponent';
 
 const setSourceAndSortCriteria = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {
@@ -150,7 +149,7 @@ describe('Folded Result List Component', () => {
         .init();
 
       FoldedResultListSelectors.loadMoreChildren().click();
-      cy.wait(RouteAlias.analytics);
+      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     before(() => {

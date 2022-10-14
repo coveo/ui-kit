@@ -1,6 +1,4 @@
-import {Result} from '@coveo/headless';
 import {i18n} from 'i18next';
-import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {buildTestUrl} from '../utils/setupComponent';
 import {
   ConsoleAliases,
@@ -10,48 +8,34 @@ import {
   modifySearchResponses,
   RouteAlias,
   sampleConfig,
-  SearchResponseModifier,
-  SearchResponseModifierPredicate,
   setupIntercept,
   stubConsole,
   UrlParts,
   TestFeature,
+  SearchResponseModifier,
+  SearchResponseModifierPredicate,
   configureI18n,
   interceptAnalytics,
 } from './fixture-common';
 
-interface ResultWithFolding extends Result {
-  parentResult: ResultWithFolding | null;
-  childResults: ResultWithFolding[];
-}
-
-export type SearchFoldedResponseSuccess = Omit<
-  SearchResponseSuccess,
-  'results'
-> & {
-  results: ResultWithFolding[];
-};
-
-export type SearchInterface = HTMLElement & {
+export type RecsInterface = HTMLElement & {
   initialize: (opts: {
     accessToken: string;
     organizationId: string;
   }) => Promise<void>;
-  executeFirstSearch: () => void;
+  getRecommendations: () => void;
   i18n: i18n;
+  language: string;
 };
 
-export type TagProps = Record<string, string | number>;
-
-export class TestFixture {
-  private aliases: TestFeature<TestFixture>[] = [];
-  private execFirstSearch = true;
+export class TestRecsFixture {
+  private aliases: TestFeature<TestRecsFixture>[] = [];
   private firstIntercept = true;
+  private getRecs = true;
   private initializeInterface = true;
-  private searchInterface = document.createElement(
-    'atomic-search-interface'
-  ) as SearchInterface;
-  private hash = '';
+  private recsInterface = document.createElement(
+    'atomic-recs-interface'
+  ) as RecsInterface;
   private style = document.createElement('style');
   private language?: string;
   private disabledAnalytics = false;
@@ -60,8 +44,6 @@ export class TestFixture {
   private translations: Record<string, string> = {};
   private responseModifiers: SearchResponseModifier[] = [];
   private returnError = false;
-  private reflectStateInUrl = true;
-  private redirected = false;
 
   public static interceptAliases = RouteAlias;
   public static urlParts = UrlParts;
@@ -69,43 +51,32 @@ export class TestFixture {
   public static getUABody = getUABody;
   public static getUACustomData = getUACustomData;
 
-  public with(feat: TestFeature<TestFixture>) {
+  public with(feat: TestFeature<TestRecsFixture>) {
     feat(this);
     return this;
   }
 
   public withoutInterfaceInitialization() {
-    this.withoutFirstAutomaticSearch();
+    this.withoutGetRecommendations();
     this.initializeInterface = false;
     return this;
   }
 
-  public withoutFirstAutomaticSearch() {
-    this.execFirstSearch = false;
+  public withoutGetRecommendations() {
+    this.getRecs = false;
     return this;
   }
-
   public withoutFirstIntercept() {
     this.firstIntercept = false;
     return this;
   }
 
-  public withoutStateInUrl() {
-    this.reflectStateInUrl = false;
-    return this;
-  }
-
-  public withHash(hash: string) {
-    this.hash = hash;
-    return this;
-  }
-
   public withElement(e: HTMLElement) {
-    this.searchInterface.append(e);
+    this.recsInterface.append(e);
     return this;
   }
 
-  public withAlias(aliasFn: TestFeature<TestFixture>) {
+  public withAlias(aliasFn: TestFeature<TestRecsFixture>) {
     this.aliases.push(aliasFn);
     return this;
   }
@@ -122,11 +93,6 @@ export class TestFixture {
 
   public withoutAnalytics() {
     this.disabledAnalytics = true;
-    return this;
-  }
-
-  public withRedirection() {
-    this.redirected = true;
     return this;
   }
 
@@ -151,7 +117,7 @@ export class TestFixture {
     return this;
   }
 
-  public withNoResults() {
+  public withNoRecs() {
     return this.withCustomResponse((r) => {
       r.results = [];
       r.totalCountFiltered = 0;
@@ -173,37 +139,26 @@ export class TestFixture {
     return this.withViewport('iphone-x');
   }
 
-  public get elementAliases() {
-    return {
-      SearchInterface: 'searchInterface',
-    };
-  }
-
   public init() {
-    !this.redirected && cy.visit(buildTestUrl(this.hash));
+    cy.visit(buildTestUrl());
     cy.injectAxe();
     setupIntercept();
     stubConsole();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
-      doc.body.appendChild(this.searchInterface);
-      cy.get('atomic-search-interface').as(this.elementAliases.SearchInterface);
+      doc.body.appendChild(this.recsInterface);
     });
 
-    cy.get(`@${this.elementAliases.SearchInterface}`).then(($si) => {
-      const searchInterfaceComponent = $si.get()[0] as SearchInterface;
-      searchInterfaceComponent.setAttribute(
-        'reflect-state-in-url',
-        `${this.reflectStateInUrl}`
-      );
+    cy.get('atomic-recs-interface').then(($si) => {
+      const recsInterfaceComponent = $si.get()[0] as RecsInterface;
 
       if (this.language) {
-        searchInterfaceComponent.setAttribute('language', this.language);
+        recsInterfaceComponent.setAttribute('language', this.language);
       }
 
       if (this.disabledAnalytics) {
-        searchInterfaceComponent.setAttribute('analytics', 'false');
+        recsInterfaceComponent.setAttribute('analytics', 'false');
       } else {
         interceptAnalytics();
       }
@@ -220,22 +175,22 @@ export class TestFixture {
         return;
       }
 
-      searchInterfaceComponent.initialize(sampleConfig).then(() => {
+      recsInterfaceComponent.initialize(sampleConfig).then(() => {
         configureI18n(
-          searchInterfaceComponent.i18n,
+          recsInterfaceComponent.i18n,
           this.translations,
           this.fieldCaptions
         );
-        if (this.execFirstSearch) {
-          searchInterfaceComponent.executeFirstSearch();
+        if (this.getRecs) {
+          recsInterfaceComponent.getRecommendations();
         }
       });
     });
 
-    if (this.execFirstSearch && this.firstIntercept) {
-      cy.wait(TestFixture.interceptAliases.Search);
+    if (this.getRecs && this.firstIntercept) {
+      cy.wait(TestRecsFixture.interceptAliases.Search);
       if (!this.disabledAnalytics) {
-        cy.wait(TestFixture.interceptAliases.UA);
+        cy.wait(TestRecsFixture.interceptAliases.UA);
       }
     }
 
@@ -244,16 +199,3 @@ export class TestFixture {
     return this;
   }
 }
-
-export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
-  const e = generateComponentHTML(tag, props);
-  env.withElement(e);
-};
-
-export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
-  const e = document.createElement(tag);
-  for (const [k, v] of Object.entries(props)) {
-    e.setAttribute(k, v.toString());
-  }
-  return e;
-};

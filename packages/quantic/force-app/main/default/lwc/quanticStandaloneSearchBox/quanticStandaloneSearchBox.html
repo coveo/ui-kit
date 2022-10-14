@@ -28,7 +28,6 @@
                     onfocus={onFocus}
                     onblur={onBlur}
                     aria-autocomplete="list"
-                    aria-controls="listbox-id"
                     autocomplete="off"
                     role="textbox"
                   />
@@ -54,13 +53,11 @@
                 </template>
               </div>
 
-              <template if:true={state.suggestions.length}>
-                <c-quantic-search-box-suggestions-list
-                  suggestions={suggestions}
-                  onhighlightchange={handleHighlightChange}
-                  onsuggestionselected={handleSuggestionSelection}
-                ></c-quantic-search-box-suggestions-list>
-              </template>
+              <c-quantic-search-box-suggestions-list
+                suggestions={suggestions}
+                onhighlightchange={handleHighlightChange}
+                onsuggestionselected={handleSuggestionSelection}
+              ></c-quantic-search-box-suggestions-list>
             </div>
           </div>
         </div>
