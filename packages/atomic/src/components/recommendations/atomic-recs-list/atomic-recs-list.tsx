@@ -42,7 +42,6 @@ import {NumberValue} from '@coveo/bueno';
 import {Carousel} from '../../common/carousel';
 
 /**
- * @internal
  * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
  *
  * @part result-list - The element containing the list of results.
