@@ -167,7 +167,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
               .should('have.class', `density-${density}`);
           });
         },
-        {folded: componentTag === 'atomic-folded-result-list'}
+        {componentTag}
       );
     });
 
@@ -205,7 +205,7 @@ configs.forEach(({componentSelectors, componentTag, addResultFn, title}) => {
         {
           densities: ['normal'],
           imageSizes: ['icon', 'small'],
-          folded: componentTag === 'atomic-folded-result-list',
+          componentTag,
         }
       );
     });
