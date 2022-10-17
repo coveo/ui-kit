@@ -17,21 +17,14 @@
         await Promise.all(
           recsInterfaces.map((recommendationInterface) =>
             recommendationInterface.initialize({
-              accessToken: 'xx149e3ec9-786f-4c6c-b64f-49a403b930de',
-              organizationId: 'fashioncoveodemocomgzh7iep8',
+              accessToken: 'xx507bcdd6-eeae-4b5c-8d55-d2994ee89585',
+              organizationId: 'barcagroupproductionkwvdy6lp',
             })
           )
         );
 
         const context = {
-          cat_categories: ['Women', 'Shorts'],
-          ec_brand: '40Weft',
-          ec_category: ['Women', 'Women|Shorts'],
-          ec_item_group_id: '4196',
-          ec_product_id: '038692601_W2096',
-          permanentid: '038692601_W2096',
-          category1: 'Women',
-          category2: 'Women|Shorts',
+          website: 'support',
         };
 
         recsInterfaces.forEach((recInterface) => {
@@ -47,36 +40,31 @@
       .layout {
         padding: 20px;
         display: grid;
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr minmax(0, 600px);
         gap: 30px;
       }
 
       .tiles {
-        --atomic-recs-number-of-columns: 5;
-      }
-
-      .carousel {
-        grid-column: 1 / span 2;
         --atomic-recs-number-of-columns: 3;
       }
 
-      @media only screen and (max-width: 1600px) {
-        .tiles {
-          --atomic-recs-number-of-columns: 3;
-        }
-      }
-
-      @media only screen and (max-width: 1280px) {
-        .layout {
-          grid-template-columns: 1fr 1fr;
-        }
-
+      @media only screen and (max-width: 1800px) {
         .tiles {
           --atomic-recs-number-of-columns: 2;
         }
       }
 
-      @media only screen and (max-width: 720px) {
+      @media only screen and (max-width: 1300px) {
+        .tiles {
+          --atomic-recs-number-of-columns: 1;
+        }
+
+        .layout {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media only screen and (max-width: 1000px) {
         .layout {
           grid-template-columns: 1fr;
         }
@@ -86,138 +74,98 @@
   <body>
     <div class="layout">
       <!-- Tiles -->
-      <atomic-recs-interface class="tiles" fields-to-include="cat_rating_count">
-        <atomic-recs-list label="Top clothing for you" display="grid" number-of-recommendations="10">
+      <atomic-recs-interface
+        class="tiles"
+        pipeline="Support Recommendations"
+        search-hub="REC - Home - Left"
+        fields-to-include="barca_brand"
+      >
+        <atomic-recs-list
+          label="Trending articles"
+          recommendation="Recommendation_1"
+          number-of-recommendations="6"
+          image-size="icon"
+        >
           <atomic-recs-result-template>
             <template>
               <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
-                  height: 120px;
-                }
-                .rating-wrapper {
-                  display: flex;
+                .field {
+                  display: inline-flex;
                   align-items: center;
                 }
-                .rating-wrapper span {
-                  margin-left: 5px;
-                  color: #8e959d;
+
+                .field-label {
+                  margin-right: 0.25rem;
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                <atomic-result-icon></atomic-result-icon>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
-              <atomic-result-section-title-metadata>
-                <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                  <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
-                  </atomic-field-condition>
-                </div>
-              </atomic-result-section-title-metadata>
-              <atomic-result-section-emphasized>
-                <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
-                </atomic-result-number>
-              </atomic-result-section-emphasized>
               <atomic-result-section-excerpt
                 ><atomic-result-text field="excerpt"></atomic-result-text
               ></atomic-result-section-excerpt>
-            </template>
-          </atomic-recs-result-template>
-        </atomic-recs-list>
-      </atomic-recs-interface>
-      <!-- Rows -->
-      <atomic-recs-interface class="rows" fields-to-include="cat_rating_count">
-        <atomic-recs-list label="Frequently viewed" recommendation="frequentViewed" number-of-recommendations="6">
-          <atomic-recs-result-template>
-            <template>
-              <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
-                  height: 120px;
-                }
-                .rating-wrapper {
-                  display: flex;
-                  align-items: center;
-                }
-                .rating-wrapper span {
-                  margin-left: 5px;
-                  color: #8e959d;
-                }
-              </style>
-              <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
-              </atomic-result-section-visual>
-              <atomic-result-section-title>
-                <atomic-result-link></atomic-result-link>
-              </atomic-result-section-title>
-              <atomic-result-section-title-metadata>
-                <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                  <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
+              <atomic-result-section-bottom-metadata>
+                <atomic-result-fields-list>
+                  <span class="field">
+                    <b class="field-label">Released</b>
+                    <atomic-result-date format="ddd MMM D YYYY"></atomic-result-date>
+                  </span>
+
+                  <atomic-field-condition class="field" if-defined="barca_brand">
+                    <b class="field-label">Brand</b>
+                    <atomic-result-text field="barca_brand"></atomic-result-text>
                   </atomic-field-condition>
-                </div>
-              </atomic-result-section-title-metadata>
-              <atomic-result-section-emphasized>
-                <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
-                </atomic-result-number>
-              </atomic-result-section-emphasized>
-              <atomic-result-section-excerpt
-                ><atomic-result-text field="excerpt"></atomic-result-text
-              ></atomic-result-section-excerpt>
+                </atomic-result-fields-list>
+              </atomic-result-section-bottom-metadata>
             </template>
           </atomic-recs-result-template>
         </atomic-recs-list>
       </atomic-recs-interface>
       <!-- Carousel -->
-      <atomic-recs-interface class="carousel" fields-to-include="cat_rating_count">
+      <atomic-recs-interface
+        class="carousel"
+        pipeline="Support Recommendations"
+        search-hub="REC - Home - Bottom"
+        fields-to-include="ytthumbnailurl,ytvideoduration"
+      >
         <atomic-recs-list
           display="grid"
-          label="Carousel"
-          number-of-recommendations="9"
-          number-of-recommendations-per-page="3"
+          label="Popular videos"
+          number-of-recommendations="3"
+          number-of-recommendations-per-page="1"
+          recommendation="Recommendation_2"
         >
           <atomic-recs-result-template>
             <template>
               <style>
-                div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
-                  height: 120px;
-                }
-                .rating-wrapper {
-                  display: flex;
-                  align-items: center;
-                }
-                .rating-wrapper span {
-                  margin-left: 5px;
-                  color: #8e959d;
+                atomic-result-section-visual {
+                  aspect-ratio: auto !important;
                 }
               </style>
               <atomic-result-section-visual>
-                <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+                <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
               </atomic-result-section-visual>
               <atomic-result-section-title>
                 <atomic-result-link></atomic-result-link>
               </atomic-result-section-title>
-              <atomic-result-section-title-metadata>
-                <div class="rating-wrapper">
-                  <atomic-result-rating field="ec_rating"></atomic-result-rating>
-                  <atomic-field-condition class="field" if-defined="ec_rating">
-                    <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
-                  </atomic-field-condition>
-                </div>
-              </atomic-result-section-title-metadata>
-              <atomic-result-section-emphasized>
-                <atomic-result-number field="ec_price">
-                  <atomic-format-currency currency="USD"></atomic-format-currency>
-                </atomic-result-number>
-              </atomic-result-section-emphasized>
               <atomic-result-section-excerpt
                 ><atomic-result-text field="excerpt"></atomic-result-text
               ></atomic-result-section-excerpt>
+              <atomic-result-section-bottom-metadata>
+                <atomic-result-fields-list>
+                  <span class="field">
+                    <b class="field-label">Duration</b>
+                    <atomic-result-text field="ytvideoduration"></atomic-result-text>
+                  </span>
+                  <span class="field">
+                    <b class="field-label">Released</b>
+                    <atomic-result-date format="YYYY"></atomic-result-date>
+                  </span>
+                </atomic-result-fields-list>
+              </atomic-result-section-bottom-metadata>
             </template>
           </atomic-recs-result-template>
         </atomic-recs-list>
