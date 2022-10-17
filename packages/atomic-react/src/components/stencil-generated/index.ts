@@ -40,7 +40,6 @@ export const AtomicRatingRangeFacet = /*@__PURE__*/createReactComponent<JSX.Atom
 export const AtomicRecsInterface = /*@__PURE__*/createReactComponent<JSX.AtomicRecsInterface, HTMLAtomicRecsInterfaceElement>('atomic-recs-interface');
 export const AtomicRecsList = /*@__PURE__*/createReactComponent<JSX.AtomicRecsList, HTMLAtomicRecsListElement>('atomic-recs-list');
 export const AtomicRecsResult = /*@__PURE__*/createReactComponent<JSX.AtomicRecsResult, HTMLAtomicRecsResultElement>('atomic-recs-result');
-export const AtomicRecsResultTemplate = /*@__PURE__*/createReactComponent<JSX.AtomicRecsResultTemplate, HTMLAtomicRecsResultTemplateElement>('atomic-recs-result-template');
 export const AtomicRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicRefineModal, HTMLAtomicRefineModalElement>('atomic-refine-modal');
 export const AtomicRefineToggle = /*@__PURE__*/createReactComponent<JSX.AtomicRefineToggle, HTMLAtomicRefineToggleElement>('atomic-refine-toggle');
 export const AtomicRelevanceInspector = /*@__PURE__*/createReactComponent<JSX.AtomicRelevanceInspector, HTMLAtomicRelevanceInspectorElement>('atomic-relevance-inspector');
