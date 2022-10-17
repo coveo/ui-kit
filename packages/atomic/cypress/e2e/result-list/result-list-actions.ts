@@ -14,9 +14,10 @@ import {foldedResultListComponent} from './folded-result-list-selectors';
 
 export function buildTemplateWithoutSections(
   elements: HTMLElement | HTMLElement[],
-  props: TagProps = {}
+  props: TagProps = {},
+  templateComponent = resultTemplateComponent
 ) {
-  const resultTemplate = generateComponentHTML(resultTemplateComponent, props);
+  const resultTemplate = generateComponentHTML(templateComponent, props);
   const template = generateComponentHTML('template') as HTMLTemplateElement;
   resultTemplate.appendChild(template);
   toArray(elements).forEach((element) => template.content.appendChild(element));
@@ -25,7 +26,8 @@ export function buildTemplateWithoutSections(
 
 export function buildTemplateWithSections(
   sections: Partial<Record<ResultSection, HTMLElement | HTMLElement[]>>,
-  props: TagProps = {}
+  props: TagProps = {},
+  templateComponent = resultTemplateComponent
 ) {
   const sectionPairs = Object.entries(sections) as [
     ResultSection,
@@ -37,7 +39,7 @@ export function buildTemplateWithSections(
     toArray(elements).forEach((e) => sectionEl.appendChild(e));
     sectionsEls.push(sectionEl);
   }
-  return buildTemplateWithoutSections(sectionsEls, props);
+  return buildTemplateWithoutSections(sectionsEls, props, templateComponent);
 }
 
 export const addFieldValueInResponse =

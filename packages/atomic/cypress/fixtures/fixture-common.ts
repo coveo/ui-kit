@@ -18,6 +18,8 @@ export type Translations = Record<string, string>;
 
 export type TestFeature<T> = (e: T) => void | Promise<void>;
 
+export type TagProps = Record<string, string | number>;
+
 export const RouteAlias = {
   UA: '@coveoAnalytics',
   QuerySuggestions: '@coveoQuerySuggest',
@@ -166,3 +168,20 @@ export function interceptAnalytics() {
     (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
   );
 }
+
+export const addTag = (
+  env: {withElement(e: HTMLElement): void},
+  tag: string,
+  props: TagProps
+) => {
+  const e = generateComponentHTML(tag, props);
+  env.withElement(e);
+};
+
+export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    e.setAttribute(k, v.toString());
+  }
+  return e;
+};

@@ -20,3 +20,8 @@ header ul {
   font-weight: var(--atomic-font-bold);
   font-family: var(--atomic-font-family);
 }
+
+atomic-recs-list {
+  margin: 24px;
+  --atomic-recs-number-of-columns: 3;
+}
