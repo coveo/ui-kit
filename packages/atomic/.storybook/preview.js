@@ -9,6 +9,8 @@ const rootElement = document.getElementById('root');
 const storyRoot = document.createElement('div');
 const searchInterface = document.createElement('atomic-search-interface');
 storyRoot.appendChild(searchInterface);
+const recsInterface = document.createElement('atomic-recs-interface');
+storyRoot.appendChild(recsInterface);
 rootElement.parentElement.appendChild(storyRoot);
 
 registerHost(storyRoot, {$flags$: 0, $tagName$: 'story-root'});

@@ -67,7 +67,11 @@ export const config: Config = {
       componentCorePackage: '@coveo/atomic',
       proxiesFile: '../atomic-react/src/components/stencil-generated/index.ts',
       includeDefineCustomElements: true,
-      excludeComponents: ['atomic-result-template', 'atomic-field-condition'],
+      excludeComponents: [
+        'atomic-result-template',
+        'atomic-recs-result-template',
+        'atomic-field-condition',
+      ],
     }),
     angular({
       componentCorePackage: '@coveo/atomic',

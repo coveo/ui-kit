@@ -6,8 +6,8 @@ import {mapPropsToArgTypes} from './map-props-to-args';
 import {resultComponentArgTypes} from './map-result-list-props-to-args';
 
 export const ADDON_PARAMETER_KEY = 'shadowParts';
-export interface DefaultStoryAdvancedConfig {
-  engineConfig?: Partial<SearchEngineConfiguration>;
+export interface DefaultStoryAdvancedConfig<Config = SearchEngineConfiguration> {
+  engineConfig?: Partial<Config>;
   additionalMarkup?: () => TemplateResult;
   additionalChildMarkup?: () => TemplateResult;
   parentElement?: () => HTMLElement;
