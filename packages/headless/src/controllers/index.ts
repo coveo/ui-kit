@@ -380,6 +380,8 @@ export type {
 export {buildCoreFacetConditionsManager as buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
 
 export type {
+  FieldSuggestionsValue,
+  FieldSuggestionsState,
   FieldSuggestions,
   FieldSuggestionsOptions,
   FieldSuggestionsProps,

@@ -120,6 +120,7 @@ describe('field suggestions', () => {
       });
     });
   });
+
   describe('initialized without a facet', () => {
     let fieldSuggestions: FieldSuggestions;
     beforeEach(() => {
