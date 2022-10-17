@@ -3,16 +3,12 @@ import {
   RecommendationEngineConfiguration,
 } from '@coveo/headless/recommendation';
 import {debounce} from 'lodash';
-import {addons} from '@storybook/addons';
-import {A11Y_EXTENSION_EVENTS} from '../register';
-import CoreEvents from '@storybook/core-events';
+import {dispatchAddons} from '../dispatch-addons';
 
-interface SearchInterface extends HTMLElement {
+interface RecsInterface extends HTMLElement {
   initialize: (cfg: RecommendationEngineConfiguration) => Promise<void>;
   getRecommendations: () => Promise<void>;
 }
-
-const orgIdentifier = getSampleRecommendationEngineConfiguration();
 
 export const initializeInterfaceDebounced = (
   renderComponentFunction: () => string,
@@ -20,23 +16,19 @@ export const initializeInterfaceDebounced = (
 ) => {
   return debounce(
     async () => {
-      const searchInterface = document.querySelector(
+      const recsInterface = document.querySelector(
         'atomic-recs-interface'
       ) as HTMLElement;
-      const clone = searchInterface.cloneNode() as SearchInterface;
-      const childComponent = renderComponentFunction();
-      clone.innerHTML = childComponent;
-      searchInterface.replaceWith(clone);
+      const clone = recsInterface.cloneNode() as RecsInterface;
+      clone.innerHTML = renderComponentFunction();
+      recsInterface.replaceWith(clone);
       await clone.initialize({
-        ...orgIdentifier,
+        ...getSampleRecommendationEngineConfiguration(),
         ...engineConfig,
       });
 
       await clone.getRecommendations();
-      addons.getChannel().emit(A11Y_EXTENSION_EVENTS.SEARCH_EXECUTED);
-      addons.getChannel().on(CoreEvents.DOCS_RENDERED, () => {
-        clone.innerHTML = '';
-      });
+      dispatchAddons(clone);
     },
     1000,
     {trailing: true}
