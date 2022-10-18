@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.109.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.108.0...@coveo/headless@1.109.0) (2022-10-18)
+
+
+### Features
+
+* **atomic:** add pagination to recommendations ([#2499](https://github.com/coveo/ui-kit/issues/2499)) ([4569412](https://github.com/coveo/ui-kit/commit/45694121bf252e7aa59dab7d0acb5d27a8423b55))
+
+
+
+
+
+# [1.108.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.107.0...@coveo/headless@1.108.0) (2022-10-11)
+
+
+### Features
+
+* **atomic,headless:** use different InteractiveResult per engine/interface ([#2494](https://github.com/coveo/ui-kit/issues/2494)) ([ce4ab2b](https://github.com/coveo/ui-kit/commit/ce4ab2ba182ecaecda8a0f4e98d208827859fed4))
+
+
+
+
+
 # [1.107.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.106.0...@coveo/headless@1.107.0) (2022-10-06)
 
 

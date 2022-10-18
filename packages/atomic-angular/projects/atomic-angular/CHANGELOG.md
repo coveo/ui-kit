@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.32.1...@coveo/atomic-angular@1.33.0) (2022-10-18)
+
+
+### Features
+
+* **atomic:** release recommendations & add to atomic-react ([#2503](https://github.com/coveo/ui-kit/issues/2503)) ([70a5f00](https://github.com/coveo/ui-kit/commit/70a5f00225923d94bf41e133dbbe3bee6b7e0eb2))
+
+
+
+
+
+## [1.32.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.32.0...@coveo/atomic-angular@1.32.1) (2022-10-11)
+
+
+### Bug Fixes
+
+* **atomic:** modify result-localized-text key property ([#2493](https://github.com/coveo/ui-kit/issues/2493)) ([a6eb820](https://github.com/coveo/ui-kit/commit/a6eb82036547527507e8a90c1e69b89797daf18e))
+
+
+
+
+
+# [1.32.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.31.0...@coveo/atomic-angular@1.32.0) (2022-10-07)
+
+
+### Features
+
+* **atomic:** add calendar time support + result-timespan component ([#2475](https://github.com/coveo/ui-kit/issues/2475)) ([59ff2a8](https://github.com/coveo/ui-kit/commit/59ff2a8ba0b52fd1afd9af0ba50521c42cdd1c76))
+
+
+
+
+
 # [1.31.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.30.18...@coveo/atomic-angular@1.31.0) (2022-10-06)
 
 

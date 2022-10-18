@@ -39,6 +39,7 @@ jobs:
             'cypress/e2e/result-list/**/*',
             'cypress/e2e/facets/**/*',
             'cypress/e2e/search-box/**/*',
+            'cypress/e2e/recommendations/**/*',
           ]
     steps:
       - uses: actions/checkout@v3

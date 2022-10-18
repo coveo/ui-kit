@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.47.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.46.2...@coveo/quantic@1.47.0) (2022-10-18)
+
+
+### Bug Fixes
+
+* **quantic:** event name updated to respect LWC standards ([#2502](https://github.com/coveo/ui-kit/issues/2502)) ([485bb42](https://github.com/coveo/ui-kit/commit/485bb4264df4c0e750efdd62d2e09016c8f0bed7))
+
+
+### Features
+
+* **quantic:** accessibility of the Quantic facets improved ([#2408](https://github.com/coveo/ui-kit/issues/2408)) ([4c7a88e](https://github.com/coveo/ui-kit/commit/4c7a88e66b9cae0d5ea06f739ef2ed86926ae571))
+* **quantic:** add focus trap to preview modal ([#2425](https://github.com/coveo/ui-kit/issues/2425)) ([f4334db](https://github.com/coveo/ui-kit/commit/f4334db3414ea8b196bc351eedd9d0174a2fe075))
+* **quantic:** aria-controls correctly set in the QuanticSearchBox ([#2498](https://github.com/coveo/ui-kit/issues/2498)) ([3b71eb1](https://github.com/coveo/ui-kit/commit/3b71eb1239e3f9624429911f18c9b4407dcf1c0e))
+* **quantic:** Contrast of several elements have been fixed to respect a11y standards ([#2497](https://github.com/coveo/ui-kit/issues/2497)) ([af726a6](https://github.com/coveo/ui-kit/commit/af726a6da5876e0593eda489ff282b66698807f0))
+
+
+
+
+
+## [1.46.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.46.1...@coveo/quantic@1.46.2) (2022-10-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.46.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.46.0...@coveo/quantic@1.46.1) (2022-10-06)
 
 

@@ -68,15 +68,27 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   /** @type {number} */
   @track selectionIndex = -1;
+  /** @type {boolean} */
+  initialRender = true;
 
   renderedCallback() {
     if (this.selectionIndex > -1) {
       this.emitSuggestionHighlighted();
     }
+    if (this.initialRender) {
+      const listboxId = this.template.querySelector('div').getAttribute('id');
+      const suggestionListEvent = new CustomEvent('suggestionlistrender', {
+        detail: listboxId,
+        bubbles: true,
+        composed: true,
+      });
+      this.dispatchEvent(suggestionListEvent);
+      this.initialRender = false;
+    }
   }
 
   get suggestionsToRender() {
-    return this.suggestions.map((s, i) => ({
+    return this.suggestions?.map((s, i) => ({
       ...s,
       isSelected: this.selectionIndex === i,
     }));
@@ -105,5 +117,11 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
 
   preventDefault(event) {
     event.preventDefault();
+  }
+
+  get listboxCssClass() {
+    return `slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid ${
+      this.suggestions?.length ? '' : 'slds-hidden'
+    }`;
   }
 }

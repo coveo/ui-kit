@@ -1,18 +1,18 @@
-import {RouteAlias, setupIntercept} from '../utils/setupComponent';
+import {RouteAlias, setupIntercept} from '../fixtures/fixture-common';
 
 describe('External Test Suite', () => {
   describe('when modifying state of a component (search box) that is a child of an atomic-external component', () => {
     before(() => {
       setupIntercept();
       cy.visit('examples/external.html');
-      cy.wait(RouteAlias.analytics);
-      cy.wait(RouteAlias.analytics);
+      cy.wait(RouteAlias.UA);
+      cy.wait(RouteAlias.UA);
 
       cy.get('atomic-external > atomic-search-box')
         .shadow()
         .find('input')
         .type('hello{enter}');
-      cy.wait(RouteAlias.analytics);
+      cy.wait(RouteAlias.UA);
     });
 
     it("other components' state under the same atomic-external should be affected", () => {

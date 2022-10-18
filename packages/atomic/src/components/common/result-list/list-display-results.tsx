@@ -1,4 +1,5 @@
 import {FunctionalComponent} from '@stencil/core';
+import {extractUnfoldedResult} from '../interface/result';
 import {ResultListDisplayProps} from './result-list-common-interface';
 
 export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
@@ -9,6 +10,9 @@ export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
       key: props.getResultId(result),
       part: 'outline',
       result: result,
+      interactiveResult: props.getInteractiveResult(
+        extractUnfoldedResult(result)
+      ),
       store: props.bindings.store,
       content: props.resultTemplateProvider.getTemplateContent(result),
       loadingFlag: props.loadingFlag,

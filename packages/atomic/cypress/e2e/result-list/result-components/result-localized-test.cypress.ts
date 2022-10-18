@@ -37,7 +37,11 @@ describe('Result Localized Text Component', () => {
   describe('when the i18n resource does not exist', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(addResultLocalizedTextInResultList({key: 'this_does_not_exist'}))
+        .with(
+          addResultLocalizedTextInResultList({
+            'locale-key': 'this_does_not_exist',
+          })
+        )
         .init();
     });
 
@@ -63,7 +67,7 @@ describe('Result Localized Text Component', () => {
         })
         .with(
           addResultLocalizedTextInResultList({
-            key: 'foo',
+            'locale-key': 'foo',
             'field-somefield': 'replace_me',
             ...props,
           })

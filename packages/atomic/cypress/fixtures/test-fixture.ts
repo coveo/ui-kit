@@ -1,9 +1,25 @@
 import {Result} from '@coveo/headless';
-import {CyHttpMessages} from 'cypress/types/net-stubbing';
 import {i18n} from 'i18next';
 import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
-import {AnalyticsTracker, AnyEventRequest} from '../utils/analyticsUtils';
 import {buildTestUrl} from '../utils/setupComponent';
+import {
+  ConsoleAliases,
+  getUABody,
+  getUACustomData,
+  interceptSearchAndReturnError,
+  modifySearchResponses,
+  RouteAlias,
+  sampleConfig,
+  SearchResponseModifier,
+  SearchResponseModifierPredicate,
+  setupIntercept,
+  stubConsole,
+  UrlParts,
+  TestFeature,
+  configureI18n,
+  interceptAnalytics,
+  TagProps as CommonTagProps,
+} from './fixture-common';
 
 interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
@@ -17,15 +33,6 @@ export type SearchFoldedResponseSuccess = Omit<
   results: ResultWithFolding[];
 };
 
-export type SearchResponseModifierPredicate = (
-  response: SearchResponseSuccess
-) => SearchResponseSuccess | void;
-
-interface SearchResponseModifier {
-  predicate: SearchResponseModifierPredicate;
-  times: number;
-}
-
 export type SearchInterface = HTMLElement & {
   initialize: (opts: {
     accessToken: string;
@@ -35,13 +42,12 @@ export type SearchInterface = HTMLElement & {
   i18n: i18n;
 };
 
-export type TestFeature = (e: TestFixture) => void | Promise<void>;
-
-export type TagProps = Record<string, string | number>;
+export type TagProps = CommonTagProps;
 
 export class TestFixture {
-  private aliases: TestFeature[] = [];
+  private aliases: TestFeature<TestFixture>[] = [];
   private execFirstSearch = true;
+  private firstIntercept = true;
   private initializeInterface = true;
   private searchInterface = document.createElement(
     'atomic-search-interface'
@@ -58,7 +64,13 @@ export class TestFixture {
   private reflectStateInUrl = true;
   private redirected = false;
 
-  public with(feat: TestFeature) {
+  public static interceptAliases = RouteAlias;
+  public static urlParts = UrlParts;
+  public static consoleAliases = ConsoleAliases;
+  public static getUABody = getUABody;
+  public static getUACustomData = getUACustomData;
+
+  public with(feat: TestFeature<TestFixture>) {
     feat(this);
     return this;
   }
@@ -71,6 +83,11 @@ export class TestFixture {
 
   public withoutFirstAutomaticSearch() {
     this.execFirstSearch = false;
+    return this;
+  }
+
+  public withoutFirstIntercept() {
+    this.firstIntercept = false;
     return this;
   }
 
@@ -89,7 +106,7 @@ export class TestFixture {
     return this;
   }
 
-  public withAlias(aliasFn: TestFeature) {
+  public withAlias(aliasFn: TestFeature<TestFixture>) {
     this.aliases.push(aliasFn);
     return this;
   }
@@ -157,11 +174,17 @@ export class TestFixture {
     return this.withViewport('iphone-x');
   }
 
+  public get elementAliases() {
+    return {
+      SearchInterface: 'searchInterface',
+    };
+  }
+
   public init() {
     !this.redirected && cy.visit(buildTestUrl(this.hash));
     cy.injectAxe();
-    this.intercept();
-    this.stubConsole();
+    setupIntercept();
+    stubConsole();
 
     cy.document().then((doc) => {
       doc.head.appendChild(this.style);
@@ -183,75 +206,34 @@ export class TestFixture {
       if (this.disabledAnalytics) {
         searchInterfaceComponent.setAttribute('analytics', 'false');
       } else {
-        AnalyticsTracker.reset();
-        cy.intercept(
-          {
-            method: 'POST',
-            url: '**/rest/ua/v15/analytics/*',
-          },
-          (request) => AnalyticsTracker.push(request.body as AnyEventRequest)
-        );
+        interceptAnalytics();
       }
 
       if (this.responseModifiers.length) {
-        interceptSearchResponse((response) => {
-          let combinedResponse = response;
-          this.responseModifiers.forEach((modifier) => {
-            if (modifier.times <= 0) {
-              return;
-            }
-            combinedResponse =
-              modifier.predicate(combinedResponse) || combinedResponse;
-            modifier.times--;
-          });
-          return combinedResponse;
-        });
+        modifySearchResponses(this.responseModifiers);
       }
 
       if (this.returnError) {
-        cy.intercept(
-          {
-            method: 'POST',
-            url: '**/rest/search/v2?*',
-          },
-          (request) =>
-            request.reply((response) =>
-              response.send(418, {
-                exception: {code: 'Something very weird just happened'},
-              })
-            )
-        ).as(TestFixture.interceptAliases.Search.substring(1));
+        interceptSearchAndReturnError();
       }
 
       if (!this.initializeInterface) {
         return;
       }
 
-      searchInterfaceComponent
-        .initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-        })
-        .then(() => {
-          this.fieldCaptions.forEach(({field, captions}) =>
-            searchInterfaceComponent.i18n.addResourceBundle(
-              'en',
-              `caption-${field}`,
-              captions
-            )
-          );
-          searchInterfaceComponent.i18n.addResourceBundle(
-            'en',
-            'translation',
-            this.translations
-          );
-          if (this.execFirstSearch) {
-            searchInterfaceComponent.executeFirstSearch();
-          }
-        });
+      searchInterfaceComponent.initialize(sampleConfig).then(() => {
+        configureI18n(
+          searchInterfaceComponent.i18n,
+          this.translations,
+          this.fieldCaptions
+        );
+        if (this.execFirstSearch) {
+          searchInterfaceComponent.executeFirstSearch();
+        }
+      });
     });
 
-    if (this.execFirstSearch) {
+    if (this.execFirstSearch && this.firstIntercept) {
       cy.wait(TestFixture.interceptAliases.Search);
       if (!this.disabledAnalytics) {
         cy.wait(TestFixture.interceptAliases.UA);
@@ -261,94 +243,6 @@ export class TestFixture {
     this.aliases.forEach((alias) => alias(this));
 
     return this;
-  }
-
-  public static get interceptAliases() {
-    return {
-      UA: '@coveoAnalytics',
-      QuerySuggestions: '@coveoQuerySuggest',
-      Search: '@coveoSearch',
-      FacetSearch: '@coveoFacetSearch',
-      Locale: '@locale',
-    };
-  }
-
-  public static get urlParts() {
-    return {
-      UA: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics',
-      Search: 'https://cloud.coveo.com/rest/search/v2',
-      UAClick: 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/click',
-      UASearch:
-        'https://analytics.cloud.coveo.com/rest/ua/v15/analytics/search',
-    };
-  }
-
-  public get elementAliases() {
-    return {
-      SearchInterface: 'searchInterface',
-    };
-  }
-
-  public static get consoleAliases() {
-    return {
-      error: '@consoleError',
-      warn: '@consoleWarn',
-      log: '@consoleLog',
-    };
-  }
-
-  public static getUABody() {
-    return cy.get(TestFixture.interceptAliases.UA) as unknown as Promise<{
-      request: CyHttpMessages.IncomingHttpRequest;
-    }>;
-  }
-
-  public static getUACustomData() {
-    return TestFixture.getUABody().then(
-      ({request}) =>
-        request.body.customData as {[key: string]: string | string[]}
-    );
-  }
-
-  private intercept() {
-    cy.intercept({
-      method: 'POST',
-      path: '**/rest/ua/v15/analytics/*',
-    }).as(TestFixture.interceptAliases.UA.substring(1));
-
-    cy.intercept({
-      method: 'POST',
-      path: '**/rest/search/v2/querySuggest?*',
-    }).as(TestFixture.interceptAliases.QuerySuggestions.substring(1));
-
-    cy.intercept({
-      method: 'POST',
-      url: '**/rest/search/v2?*',
-    }).as(TestFixture.interceptAliases.Search.substring(1));
-
-    cy.intercept({
-      method: 'POST',
-      path: '**/rest/search/v2/facet?*',
-    }).as(TestFixture.interceptAliases.FacetSearch.substring(1));
-
-    cy.intercept({
-      method: 'GET',
-      path: '/build/lang/**.json',
-    }).as(TestFixture.interceptAliases.Locale.substring(1));
-  }
-
-  private stubConsole() {
-    cy.window().then((win) => {
-      cy.stub(win.console, 'error').as(
-        TestFixture.consoleAliases.error.substring(1)
-      );
-      cy.stub(win.console, 'warn').as(
-        TestFixture.consoleAliases.warn.substring(1)
-      );
-      cy.stub(win.console, 'log').as(
-        TestFixture.consoleAliases.log.substring(1)
-      );
-    });
   }
 }
 
@@ -364,26 +258,3 @@ export const generateComponentHTML = (tag: string, props: TagProps = {}) => {
   }
   return e;
 };
-
-export function interceptSearchResponse(
-  modifier: SearchResponseModifierPredicate,
-  times = 9999
-) {
-  cy.intercept(
-    {
-      method: 'POST',
-      url: '**/rest/search/v2?*',
-      times,
-    },
-    (request) => {
-      request.reply((response) => {
-        let newResponse = response.body;
-        const returnedResponse = modifier(newResponse);
-        if (returnedResponse) {
-          newResponse = returnedResponse;
-        }
-        response.send(200, newResponse);
-      });
-    }
-  ).as(TestFixture.interceptAliases.Search.substring(1));
-}

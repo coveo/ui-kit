@@ -5,22 +5,23 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
 import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
 import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
 import { VNode } from "@stencil/core";
-import { InsightEngine, InsightFacetSortCriterion, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
+import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
 import { FacetDisplayValues } from "./components/common/facets/facet-common";
 import { i18n } from "i18next";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { LogLevel, RecommendationEngine } from "@coveo/headless/recommendation";
-import { RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
@@ -558,6 +559,10 @@ export namespace Components {
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InsightInteractiveResult;
         "loadingFlag"?: string;
         /**
           * The result item.
@@ -920,6 +925,10 @@ export namespace Components {
          */
         "fieldsToInclude": string;
         /**
+          * Fetches new recommendations.
+         */
+        "getRecommendations": () => Promise<void>;
+        /**
           * The recommendation interface i18next instance.
          */
         "i18n": i18n;
@@ -928,11 +937,15 @@ export namespace Components {
          */
         "iconAssetsPath": string;
         /**
-          * Initializes the connection with an already preconfigured headless recommendation engine.
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: RecsInitializationOptions) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless recommendation engine. This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
          */
         "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language": string;
         /**
@@ -942,7 +955,19 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: RecsLogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub": string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
     }
     interface AtomicRecsList {
         /**
@@ -966,9 +991,25 @@ export namespace Components {
          */
         "label"?: string;
         /**
-          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+          * Moves to the next page, when the carousel is activated.
+         */
+        "nextPage": () => Promise<void>;
+        /**
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations": number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * Moves to the previous page, when the carousel is activated.
+         */
+        "previousPage": () => Promise<void>;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation": string;
         /**
           * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
           * @param resultRenderingFunction
@@ -996,6 +1037,10 @@ export namespace Components {
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": RecsInteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -1074,6 +1119,10 @@ export namespace Components {
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -1139,6 +1188,10 @@ export namespace Components {
           * Available formats: https://day.js.org/docs/en/display/format
          */
         "format": string;
+        /**
+          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+         */
+        "relativeTime"?: boolean;
     }
     interface AtomicResultFieldsList {
     }
@@ -1207,7 +1260,7 @@ export namespace Components {
         /**
           * The i18n translation key.
          */
-        "key": string;
+        "localeKey": string;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -1308,6 +1361,20 @@ export namespace Components {
           * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight": boolean;
+    }
+    interface AtomicResultTimespan {
+        /**
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format"?: string;
+        /**
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit": string;
     }
     interface AtomicResultsPerPage {
         /**
@@ -1422,7 +1489,7 @@ export namespace Components {
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
-          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance.
+          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
          */
         "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
         /**
@@ -1436,7 +1503,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -2231,6 +2298,12 @@ declare global {
         prototype: HTMLAtomicResultTextElement;
         new (): HTMLAtomicResultTextElement;
     };
+    interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTimespanElement: {
+        prototype: HTMLAtomicResultTimespanElement;
+        new (): HTMLAtomicResultTimespanElement;
+    };
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
     }
     var HTMLAtomicResultsPerPageElement: {
@@ -2449,6 +2522,7 @@ declare global {
         "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-text": HTMLAtomicResultTextElement;
+        "atomic-result-timespan": HTMLAtomicResultTimespanElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
@@ -2989,6 +3063,10 @@ declare namespace LocalJSX {
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InsightInteractiveResult;
         "loadingFlag"?: string;
         /**
           * The result item.
@@ -3352,7 +3430,7 @@ declare namespace LocalJSX {
          */
         "iconAssetsPath"?: string;
         /**
-          * The search interface language.
+          * The recommendation interface language.
          */
         "language"?: string;
         /**
@@ -3362,7 +3440,19 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel;
+        "logLevel"?: RecsLogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub"?: string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
     }
     interface AtomicRecsList {
         /**
@@ -3386,9 +3476,17 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The number of recommendations to fetch and display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
          */
         "numberOfRecommendations"?: number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation"?: string;
     }
     interface AtomicRecsResult {
         /**
@@ -3411,6 +3509,10 @@ declare namespace LocalJSX {
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": RecsInteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -3485,6 +3587,10 @@ declare namespace LocalJSX {
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item. TODO: v2 make required
+         */
+        "interactiveResult"?: InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -3546,6 +3652,10 @@ declare namespace LocalJSX {
           * Available formats: https://day.js.org/docs/en/display/format
          */
         "format"?: string;
+        /**
+          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+         */
+        "relativeTime"?: boolean;
     }
     interface AtomicResultFieldsList {
     }
@@ -3609,7 +3719,7 @@ declare namespace LocalJSX {
         /**
           * The i18n translation key.
          */
-        "key": string;
+        "localeKey": string;
     }
     interface AtomicResultMultiValueText {
         /**
@@ -3706,6 +3816,20 @@ declare namespace LocalJSX {
           * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight"?: boolean;
+    }
+    interface AtomicResultTimespan {
+        /**
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format"?: string;
+        /**
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit"?: string;
     }
     interface AtomicResultsPerPage {
         /**
@@ -3821,7 +3945,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
@@ -4129,6 +4253,7 @@ declare namespace LocalJSX {
         "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-text": AtomicResultText;
+        "atomic-result-timespan": AtomicResultTimespan;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
@@ -4247,6 +4372,7 @@ declare module "@stencil/core" {
             "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
+            "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;

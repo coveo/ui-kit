@@ -1,10 +1,8 @@
 import {Component, h, Prop, Element} from '@stencil/core';
 import {
-  buildInteractiveResult,
-  InteractiveResult,
-  Result,
-} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+  InteractiveResultContext,
+  ResultContext,
+} from '../result-template-decorators';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -16,6 +14,10 @@ import {buildStringTemplateFromResult} from '../../../../utils/result-utils';
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {
+  AnyInteractiveResult,
+  AnyUnfoldedResult,
+} from '../../../common/interface/result';
 
 /**
  * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
@@ -31,7 +33,8 @@ export class AtomicResultLink implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public error!: Error;
 
-  @ResultContext() private result!: Result;
+  @ResultContext() private result!: AnyUnfoldedResult;
+  @InteractiveResultContext() private interactiveResult!: AnyInteractiveResult;
 
   @Element() private host!: HTMLElement;
 
@@ -62,15 +65,11 @@ export class AtomicResultLink implements InitializableComponent {
    */
   @Prop({reflect: true}) hrefTemplate?: string;
 
-  private interactiveResult!: InteractiveResult;
   private hasDefaultSlot!: boolean;
   private linkAttributes?: Attr[];
   private stopPropagation?: boolean;
 
   public initialize() {
-    this.interactiveResult = buildInteractiveResult(this.bindings.engine, {
-      options: {result: this.result},
-    });
     this.host.dispatchEvent(
       buildCustomEvent(
         'atomic/resolveStopPropagation',

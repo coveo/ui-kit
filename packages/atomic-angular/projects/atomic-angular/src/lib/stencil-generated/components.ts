@@ -632,6 +632,93 @@ export class AtomicRatingRangeFacet {
 }
 
 
+export declare interface AtomicRecsInterface extends Components.AtomicRecsInterface {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
+  methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations']
+})
+@Component({
+  selector: 'atomic-recs-interface',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone']
+})
+export class AtomicRecsInterface {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicRecsList extends Components.AtomicRecsList {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
+  methods: ['setRenderFunction', 'previousPage', 'nextPage']
+})
+@Component({
+  selector: 'atomic-recs-list',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation']
+})
+export class AtomicRecsList {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicRecsResult extends Components.AtomicRecsResult {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
+})
+@Component({
+  selector: 'atomic-recs-result',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
+})
+export class AtomicRecsResult {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicRecsResultTemplate extends Components.AtomicRecsResultTemplate {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['conditions', 'ifDefined', 'ifNotDefined'],
+  methods: ['getTemplate']
+})
+@Component({
+  selector: 'atomic-recs-result-template',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['conditions', 'ifDefined', 'ifNotDefined']
+})
+export class AtomicRecsResultTemplate {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
 export declare interface AtomicRefineModal extends Components.AtomicRefineModal {}
 
 @ProxyCmp({
@@ -782,13 +869,13 @@ export declare interface AtomicResultDate extends Components.AtomicResultDate {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['field', 'format']
+  inputs: ['field', 'format', 'relativeTime']
 })
 @Component({
   selector: 'atomic-result-date',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['field', 'format']
+  inputs: ['field', 'format', 'relativeTime']
 })
 export class AtomicResultDate {
   protected el: HTMLElement;
@@ -926,13 +1013,13 @@ export declare interface AtomicResultLocalizedText extends Components.AtomicResu
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['fieldCount', 'key']
+  inputs: ['fieldCount', 'localeKey']
 })
 @Component({
   selector: 'atomic-result-localized-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['fieldCount', 'key']
+  inputs: ['fieldCount', 'localeKey']
 })
 export class AtomicResultLocalizedText {
   protected el: HTMLElement;
@@ -1235,6 +1322,27 @@ export declare interface AtomicResultText extends Components.AtomicResultText {}
   inputs: ['default', 'field', 'shouldHighlight']
 })
 export class AtomicResultText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicResultTimespan extends Components.AtomicResultTimespan {}
+
+@ProxyCmp({
+  defineCustomElementFn: undefined,
+  inputs: ['field', 'format', 'unit']
+})
+@Component({
+  selector: 'atomic-result-timespan',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  inputs: ['field', 'format', 'unit']
+})
+export class AtomicResultTimespan {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
