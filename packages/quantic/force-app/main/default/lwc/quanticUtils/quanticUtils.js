@@ -670,6 +670,10 @@ function getFirstFocusableElementFromSlot(slotElement) {
  * @param {string} targetElement
  */
 export function isParentOf(element, targetElement) {
+  if (!element || element.nodeType === Node.TEXT_NODE) {
+    return false;
+  }
+
   if (isCustomElement(element)) {
     if (element.tagName === targetElement) {
       return true;

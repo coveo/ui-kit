@@ -51,8 +51,12 @@ export default class QuanticModalA11yHandler extends LightningElement {
     if (event.detail.isOpen) {
       /** @type {HTMLSlotElement} */
       const slot = this.template.querySelector('slot');
-      const interfaceSlot = slot.assignedElements()[0];
-      // @ts-ignore
+      let interfaceSlot = slot;
+      if (interfaceSlot.assignedElements()[0].tagName === 'SLOT') {
+        // @ts-ignore
+        interfaceSlot = slot.assignedElements()[0];
+      }
+      /** @type {Array} */
       const children = Array.from(interfaceSlot.assignedElements());
 
       children.forEach((child) => {
@@ -81,6 +85,9 @@ export default class QuanticModalA11yHandler extends LightningElement {
       childNodes.forEach((child) =>
         this.removeElementsFromA11yTree(child, excludedTagName)
       );
+    } else {
+      element.setAttribute('aria-hidden', 'true');
+      this.nonAccessibleElements.push(element);
     }
   }
 }
