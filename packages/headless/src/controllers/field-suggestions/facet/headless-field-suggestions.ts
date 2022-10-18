@@ -29,9 +29,19 @@ import {registerFacet} from '../../../features/facets/facet-set/facet-set-action
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 
 export interface FieldSuggestionsValue {
-  count: number;
+  /**
+   * The custom field suggestion display name, as specified in the `captions` argument.
+   */
   displayValue: string;
+  /**
+   * The original field value, as retrieved from the field in the index.
+   */
   rawValue: string;
+  /**
+   * An estimate number of result items matching both the current query and
+   * the filter expression that would get generated if the field suggestion were selected.
+   */
+  count: number;
 }
 
 export interface FieldSuggestionsState {
