@@ -16,7 +16,11 @@ import {
 } from '../../test/mock-engine';
 import {PlatformClient} from '../../api/platform-client';
 import {createMockState} from '../../test/mock-state';
-import {getSearchInitialState, SearchState} from './search-state';
+import {
+  emptyQuestionAnswer,
+  getSearchInitialState,
+  SearchState,
+} from './search-state';
 import {Result} from '../../api/search/search/result';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
@@ -25,6 +29,7 @@ import {buildMockSearchState} from '../../test/mock-search-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
 import {logPageNext} from '../pagination/pagination-analytics-actions';
+import {buildMockQuestionsAnswers} from '../../test/mock-question-answer';
 
 jest.mock('../../api/platform-client');
 
@@ -48,68 +53,70 @@ describe('search-slice', () => {
     expect(state.isLoading).toBe(false);
   });
 
-  it('when a executeSearch fulfilled is received, it updates the state to the received payload', () => {
-    const result = buildMockResult();
-    const response = buildMockSearchResponse({results: [result]});
-    const searchState = buildMockSearch({
-      response,
-      duration: 123,
-      queryExecuted: 'foo',
+  describe('with no existing result (first search)', () => {
+    it('when a executeSearch fulfilled is received, it updates the state to the received payload', () => {
+      const result = buildMockResult();
+      const response = buildMockSearchResponse({results: [result]});
+      const searchState = buildMockSearch({
+        response,
+        duration: 123,
+        queryExecuted: 'foo',
+      });
+
+      const action = executeSearch.fulfilled(
+        searchState,
+        '',
+        logSearchboxSubmit()
+      );
+      const finalState = searchReducer(state, action);
+
+      expect(finalState.response).toEqual(response);
+      expect(finalState.duration).toEqual(123);
+      expect(finalState.queryExecuted).toEqual('foo');
+      expect(finalState.isLoading).toBe(false);
     });
 
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
-    const finalState = searchReducer(state, action);
+    it('when a fetchMoreResults fulfilled is received, it updates the state to the received payload', () => {
+      state.searchResponseId = 'the_initial_id';
+      const result = buildMockResult();
+      const response = buildMockSearchResponse({results: [result]});
+      const searchState = buildMockSearch({
+        response,
+        duration: 123,
+        queryExecuted: 'foo',
+        searchResponseId: 'a_new_id',
+      });
 
-    expect(finalState.response).toEqual(response);
-    expect(finalState.duration).toEqual(123);
-    expect(finalState.queryExecuted).toEqual('foo');
-    expect(finalState.isLoading).toBe(false);
-  });
+      const action = fetchMoreResults.fulfilled(searchState, '');
+      const finalState = searchReducer(state, action);
 
-  it('when a fetchMoreResults fulfilled is received, it updates the state to the received payload', () => {
-    state.searchResponseId = 'the_initial_id';
-    const result = buildMockResult();
-    const response = buildMockSearchResponse({results: [result]});
-    const searchState = buildMockSearch({
-      response,
-      duration: 123,
-      queryExecuted: 'foo',
-      searchResponseId: 'a_new_id',
+      expect(finalState.response).toEqual(response);
+      expect(finalState.duration).toEqual(123);
+      expect(finalState.queryExecuted).toEqual('foo');
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.searchResponseId).toBe('the_initial_id');
     });
 
-    const action = fetchMoreResults.fulfilled(searchState, '');
-    const finalState = searchReducer(state, action);
+    it('when a fetchPage fulfilled is received, it updates the state to the received payload', () => {
+      state.searchResponseId = 'the_initial_id';
+      const result = buildMockResult();
+      const response = buildMockSearchResponse({results: [result]});
+      const searchState = buildMockSearch({
+        response,
+        duration: 123,
+        queryExecuted: 'foo',
+        searchResponseId: 'a_new_id',
+      });
 
-    expect(finalState.response).toEqual(response);
-    expect(finalState.duration).toEqual(123);
-    expect(finalState.queryExecuted).toEqual('foo');
-    expect(finalState.isLoading).toBe(false);
-    expect(finalState.searchResponseId).toBe('the_initial_id');
-  });
+      const action = fetchPage.fulfilled(searchState, '', logPageNext());
+      const finalState = searchReducer(state, action);
 
-  it('when a fetchPage fulfilled is received, it updates the state to the received payload', () => {
-    state.searchResponseId = 'the_initial_id';
-    const result = buildMockResult();
-    const response = buildMockSearchResponse({results: [result]});
-    const searchState = buildMockSearch({
-      response,
-      duration: 123,
-      queryExecuted: 'foo',
-      searchResponseId: 'a_new_id',
+      expect(finalState.response).toEqual(response);
+      expect(finalState.duration).toEqual(123);
+      expect(finalState.queryExecuted).toEqual('foo');
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.searchResponseId).toBe('the_initial_id');
     });
-
-    const action = fetchPage.fulfilled(searchState, '', logPageNext());
-    const finalState = searchReducer(state, action);
-
-    expect(finalState.response).toEqual(response);
-    expect(finalState.duration).toEqual(123);
-    expect(finalState.queryExecuted).toEqual('foo');
-    expect(finalState.isLoading).toBe(false);
-    expect(finalState.searchResponseId).toBe('the_initial_id');
   });
 
   describe('with an existing result', () => {
@@ -152,6 +159,28 @@ describe('search-slice', () => {
       expect(finalState.searchResponseId).toBe('a_new_id');
     });
 
+    it('when a executeSearch fulfilled is received, it overwrites the #questionAnswer', () => {
+      state.questionAnswer = buildMockQuestionsAnswers({
+        question: 'When?',
+      });
+      const response = buildMockSearchResponse({
+        results: [newResult],
+        questionAnswer: buildMockQuestionsAnswers({
+          question: 'Who?',
+        }),
+      });
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        executeSearch.fulfilled(search, '', logSearchboxSubmit())
+      );
+
+      expect(finalState.questionAnswer).toEqual(response.questionAnswer);
+    });
+
     it('when a fetchMoreResults fulfilled is received, it appends the new search results', () => {
       const finalState = searchReducer(
         state,
@@ -181,17 +210,53 @@ describe('search-slice', () => {
 
       expect(finalState.searchResponseId).toBe('an_initial_id');
     });
+
+    it('when a fetchMoreResults fulfilled is received, keeps the previous #questionAnswer', () => {
+      const originalQuestionAnswers = buildMockQuestionsAnswers({
+        question: 'Why?',
+      });
+      state.questionAnswer = originalQuestionAnswers;
+      const search = buildMockSearch({
+        response: buildMockSearchResponse({results: [newResult]}),
+      });
+
+      const finalState = searchReducer(
+        state,
+        fetchMoreResults.fulfilled(search, '')
+      );
+
+      expect(finalState.questionAnswer).toEqual(originalQuestionAnswers);
+    });
   });
 
   describe('handles rejected searches correctly', () => {
     const results = [buildMockResult()];
+    const questionAnswer = buildMockQuestionsAnswers({question: 'What?'});
     const initialMockState = () =>
       buildMockSearchState({
         results,
-        response: buildMockSearchResponse({results}),
+        response: buildMockSearchResponse({results, questionAnswer}),
+        questionAnswer,
       });
 
     beforeEach(() => (state = initialMockState()));
+
+    function expectStateResets(finalState: SearchState) {
+      expect(finalState.response).toEqual(getSearchInitialState().response);
+      expect(finalState.results).toEqual([]);
+      expect(finalState.questionAnswer).toEqual(emptyQuestionAnswer());
+      expect(finalState.isLoading).toBe(false);
+    }
+
+    function expectStatePreserved(finalState: SearchState) {
+      expect(finalState.response).toEqual(initialMockState().response);
+      expect(finalState.results).toEqual(initialMockState().results);
+      expect(finalState.questionAnswer).toEqual(
+        initialMockState().questionAnswer
+      );
+      expect(finalState.isLoading).toBe(false);
+      expect(finalState.error).toEqual(null);
+    }
 
     it('when a executeSearch rejected is received with an error', () => {
       const err = {
@@ -202,9 +267,7 @@ describe('search-slice', () => {
       const action = {type: 'search/executeSearch/rejected', payload: err};
       const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(getSearchInitialState().response);
-      expect(finalState.results).toEqual([]);
-      expect(finalState.isLoading).toBe(false);
+      expectStateResets(finalState);
       expect(finalState.error).toEqual(err);
     });
 
@@ -217,9 +280,7 @@ describe('search-slice', () => {
       const action = {type: 'search/fetchMoreResults/rejected', payload: err};
       const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(getSearchInitialState().response);
-      expect(finalState.results).toEqual([]);
-      expect(finalState.isLoading).toBe(false);
+      expectStateResets(finalState);
       expect(finalState.error).toEqual(err);
     });
 
@@ -232,9 +293,7 @@ describe('search-slice', () => {
       const action = {type: 'search/fetchPage/rejected', payload: err};
       const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(getSearchInitialState().response);
-      expect(finalState.results).toEqual([]);
-      expect(finalState.isLoading).toBe(false);
+      expectStateResets(finalState);
       expect(finalState.error).toEqual(err);
     });
 
@@ -242,9 +301,7 @@ describe('search-slice', () => {
       const action = {type: 'search/executeSearch/rejected', payload: null};
       const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(initialMockState().response);
-      expect(finalState.results).toEqual(initialMockState().results);
-      expect(finalState.isLoading).toBe(false);
+      expectStatePreserved(finalState);
       expect(finalState.error).toEqual(null);
     });
 
@@ -252,9 +309,7 @@ describe('search-slice', () => {
       const action = {type: 'search/fetchMoreResults/rejected', payload: null};
       const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(initialMockState().response);
-      expect(finalState.results).toEqual(initialMockState().results);
-      expect(finalState.isLoading).toBe(false);
+      expectStatePreserved(finalState);
       expect(finalState.error).toEqual(null);
     });
 
@@ -262,9 +317,7 @@ describe('search-slice', () => {
       const action = {type: 'search/fetchPage/rejected', payload: null};
       const finalState = searchReducer(state, action);
 
-      expect(finalState.response).toEqual(initialMockState().response);
-      expect(finalState.results).toEqual(initialMockState().results);
-      expect(finalState.isLoading).toBe(false);
+      expectStatePreserved(finalState);
       expect(finalState.error).toEqual(null);
     });
   });
