@@ -47,26 +47,35 @@ describe('Search Box Test Suites', () => {
     const maxSuggestionsWithoutQuery = numOfSuggestions - 1;
     const maxRecentQueriesWithoutQuery = numOfRecentQueries - 1;
 
+    function setupSearchbox() {
+      return addSearchBox({
+        suggestions: {
+          maxWithoutQuery: maxSuggestionsWithoutQuery,
+          maxWithQuery: numOfSuggestions,
+        },
+        recentQueries: {
+          maxWithoutQuery: maxRecentQueriesWithoutQuery,
+          maxWithQuery: numOfRecentQueries,
+        },
+        props: {
+          'number-of-queries': numOfSuggestions + numOfRecentQueries,
+          'suggestion-timeout': 2000,
+        },
+      });
+    }
+
     function setupWithSuggestionsAndRecentQueries() {
       new TestFixture()
         .with(setSuggestions(numOfSuggestions))
         .with(setRecentQueries(numOfRecentQueries))
-        .with(
-          addSearchBox({
-            suggestions: {
-              maxWithoutQuery: maxSuggestionsWithoutQuery,
-              maxWithQuery: numOfSuggestions,
-            },
-            recentQueries: {
-              maxWithoutQuery: maxRecentQueriesWithoutQuery,
-              maxWithQuery: numOfRecentQueries,
-            },
-            props: {
-              'number-of-queries': numOfSuggestions + numOfRecentQueries,
-              'suggestion-timeout': 2000,
-            },
-          })
-        )
+        .with(setupSearchbox())
+        .init();
+    }
+
+    function setupWithRecentQueries() {
+      new TestFixture()
+        .with(setRecentQueries(numOfRecentQueries))
+        .with(setupSearchbox())
         .init();
     }
 
@@ -113,7 +122,7 @@ describe('Search Box Test Suites', () => {
       const expectedSum = numOfSuggestions + numOfRecentQueries;
 
       function setInputText() {
-        SearchBoxSelectors.inputBox().type('Rec');
+        SearchBoxSelectors.inputBox().type('Rec', {delay: 100});
       }
 
       describe('verify rendering', () => {
@@ -131,7 +140,7 @@ describe('Search Box Test Suites', () => {
 
       describe('after selecting a suggestion with the mouse', () => {
         before(() => {
-          setupWithSuggestionsAndRecentQueries();
+          setupWithRecentQueries();
           setInputText();
           SearchBoxSelectors.querySuggestions().eq(1).click();
         });
