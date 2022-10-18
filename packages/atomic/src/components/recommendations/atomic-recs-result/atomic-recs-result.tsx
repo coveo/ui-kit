@@ -18,7 +18,6 @@ import {resultComponentClass} from '../../common/result-list/result-list-common'
 
 /**
  * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
- * @internal
  */
 @Component({
   tag: 'atomic-recs-result',

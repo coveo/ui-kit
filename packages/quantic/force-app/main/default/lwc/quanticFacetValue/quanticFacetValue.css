@@ -1,13 +1,13 @@
 @import 'c/quanticFacetStyles';
 
+:host {
+  width: 100%;
+}
+
 li {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.facet__number-of-results {
-  color: #8e959d;
 }
 
 .facet__value_selected{

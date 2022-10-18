@@ -16,7 +16,7 @@
     <section onclick={closeQuickview} role="dialog" tabindex="-1" aria-labelledby="quickview-modal-heading" aria-modal="true" aria-describedby="quickview__content-container" class="slds-modal slds-modal_medium slds-fade-in-open">
       <div class="slds-modal__container">
         <header class="slds-modal__header" onclick={stopPropagation}>
-          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview}>
+          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={closeQuickview} onkeydown={onCloseKeyDown}>
             <lightning-icon class="slds-current-color slds-m-right_xx-small" icon-name="utility:close" alternative-text={labels.close}></lightning-icon>
           </button>
           <div id="quickview-modal-heading" class="slds-modal__title slds-truncate slds-grid slds-grid_vertical-align-center">

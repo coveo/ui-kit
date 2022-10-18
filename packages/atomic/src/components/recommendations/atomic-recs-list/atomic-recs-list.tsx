@@ -4,7 +4,16 @@ import {
   RecommendationListState,
   loadConfigurationActions,
 } from '@coveo/headless/recommendation';
-import {Component, State, Element, Prop, Method, h} from '@stencil/core';
+import {
+  Component,
+  State,
+  Element,
+  Prop,
+  Method,
+  h,
+  Fragment,
+  Watch,
+} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -29,15 +38,21 @@ import {
 } from '../../../utils/accessibility-utils';
 import {Heading} from '../../common/heading';
 import {buildRecsInteractiveResult, RecsResult} from '..';
+import {NumberValue} from '@coveo/bueno';
+import {Carousel} from '../../common/carousel';
 
 /**
- * @internal
  * The `atomic-recs-list` component displays recommendations by applying one or more result templates.
  *
  * @part result-list - The element containing the list of results.
  * @part result-list-grid-clickable-container - The parent of the result & the clickable link encompassing it.
  * @part result-list-grid-clickable - The clickable link encompassing the result.
  * @part label - The label of the result list.
+ * @part previous-button - The previous button.
+ * @part next-button - The next button.
+ * @part indicators - The list of indicators.
+ * @part indicator - A single indicator.
+ * @part active-indicator - The active indicator.
  */
 @Component({
   tag: 'atomic-recs-list',
@@ -56,6 +71,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @State() public error!: Error;
   @State() private resultTemplateRegistered = false;
   @State() private templateHasError = false;
+  @State() private currentPage = 0;
   @BindStateToController('recommendationList')
   @State()
   public recommendationListState!: RecommendationListState;
@@ -85,10 +101,17 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   public imageSize: ResultDisplayImageSize = 'small';
 
   /**
-   * The number of recommendations to fetch and display.
+   * The total number of recommendations to display.
    * This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
    */
   @Prop({reflect: true}) public numberOfRecommendations = 10;
+
+  /**
+   * The number of recommendations to display, per page.
+   * Setting a value greater than and lower than the numberOfRecommendations value activates the carousel.
+   * This does not affect the display of the list itself, only the number of recommendation pages.
+   */
+  @Prop({reflect: true}) public numberOfRecommendationsPerPage?: number;
 
   /**
    * The non-localized label for the list of recommendations.
@@ -99,6 +122,11 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
    */
   @Prop({reflect: true}) public headingLevel = 0;
+
+  @Watch('numberOfRecommendationsPerPage')
+  public async watchNumberOfRecommendationsPerPage() {
+    this.currentPage = 0;
+  }
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -114,7 +142,23 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     this.resultRenderingFunction = resultRenderingFunction;
   }
 
+  /**
+   * Moves to the previous page, when the carousel is activated.
+   */
+  @Method() public async previousPage() {
+    this.currentPage =
+      this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
+  }
+
+  /**
+   * Moves to the next page, when the carousel is activated.
+   */
+  @Method() public async nextPage() {
+    this.currentPage = (this.currentPage + 1) % this.numberOfPages;
+  }
+
   public initialize() {
+    this.validateNumberOfRecommendationsPerPage();
     this.validateRecommendationIdentifier();
     this.updateOriginLevel2();
     this.recommendationList = buildRecommendationList(this.bindings.engine, {
@@ -142,7 +186,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
 
     this.resultListCommon = new ResultListCommon({
       resultTemplateProvider,
-      getNumberOfPlaceholders: () => this.numberOfRecommendations,
+      getNumberOfPlaceholders: () =>
+        this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations,
       host: this.host,
       bindings: this.bindings,
       getDensity: () => this.density,
@@ -161,6 +206,30 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
           options: {result},
         }),
     });
+  }
+
+  private get resultListCommonState(): ResultListCommonState<RecsResult> {
+    return {
+      firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
+      isLoading: this.recommendationListState.isLoading,
+      hasError: this.recommendationListState.error !== null,
+      hasResults: this.recommendationListState.recommendations.length !== 0,
+      results: this.subsetRecommendations,
+      searchResponseId: this.recommendationListState.searchResponseId,
+    };
+  }
+
+  private validateNumberOfRecommendationsPerPage() {
+    const msg = new NumberValue({
+      min: 1,
+      max: this.numberOfRecommendations - 1,
+    }).validate(this.numberOfRecommendationsPerPage!);
+
+    if (msg) {
+      this.error = new Error(
+        `The "numberOfRecommendationsPerPage" is invalid: ${msg}`
+      );
+    }
   }
 
   private validateRecommendationIdentifier() {
@@ -187,39 +256,80 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
     }
   }
 
-  private get resultListCommonState(): ResultListCommonState<RecsResult> {
-    return {
-      firstSearchExecuted: this.recommendationListState.searchResponseId !== '',
-      isLoading: this.recommendationListState.isLoading,
-      hasError: this.recommendationListState.error !== null,
-      hasResults: this.recommendationListState.recommendations.length !== 0,
-      results: this.recommendationListState.recommendations,
-      searchResponseId: this.recommendationListState.searchResponseId,
-    };
-  }
-
   private renderHeading() {
     if (!this.label) {
       return;
     }
 
-    const shouldHide =
-      this.resultListCommonState.hasError ||
-      (this.resultListCommonState.firstSearchExecuted &&
-        !this.resultListCommonState.hasResults);
+    if (this.resultListCommonState.hasError) {
+      return;
+    }
+
+    if (
+      this.resultListCommonState.firstSearchExecuted &&
+      !this.resultListCommonState.hasResults
+    ) {
+      return;
+    }
 
     return (
-      <Heading
-        level={this.headingLevel}
-        part="label"
-        class={shouldHide ? 'hidden' : ''}
-      >
+      <Heading level={this.headingLevel} part="label" class="m-0 mb-2">
         {this.bindings.i18n.t(this.label)}
       </Heading>
     );
   }
 
+  private get currentIndex() {
+    return Math.abs(
+      (this.currentPage * this.numberOfRecommendationsPerPage!) %
+        this.recommendationListState.recommendations.length
+    );
+  }
+
+  private get subsetRecommendations() {
+    if (!this.numberOfRecommendationsPerPage) {
+      return this.recommendationListState.recommendations;
+    }
+
+    return this.recommendationListState.recommendations.slice(
+      this.currentIndex,
+      this.currentIndex + this.numberOfRecommendationsPerPage
+    );
+  }
+
+  private get numberOfPages() {
+    return Math.ceil(
+      this.recommendationListState.recommendations.length /
+        this.numberOfRecommendationsPerPage!
+    );
+  }
+
+  private get hasPagination() {
+    return !!this.numberOfRecommendationsPerPage;
+  }
+
+  private get shouldRenderPagination() {
+    return this.hasPagination && this.resultListCommonState.hasResults;
+  }
+
   public render() {
-    return [this.renderHeading(), this.resultListCommon.render()];
+    return (
+      <Fragment>
+        {this.renderHeading()}
+        {this.shouldRenderPagination ? (
+          <Carousel
+            bindings={this.bindings}
+            currentPage={this.currentPage}
+            nextPage={() => this.nextPage()}
+            previousPage={() => this.previousPage()}
+            numberOfPages={this.numberOfPages}
+          >
+            {this.resultListCommon.render()}
+          </Carousel>
+        ) : (
+          this.resultListCommon.render()
+        )}
+      </Fragment>
+    );
   }
 }

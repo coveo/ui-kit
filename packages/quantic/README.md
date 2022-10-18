@@ -48,12 +48,28 @@
 
 ### Start the Local Development Server
 
+Before starting the Local Development Server, you need to comment the Styling Hooks override because they are not supported.
+In the file force-app/main/default/lwc/exampleSearch/exampleSearch.css
+
+Remove or comment out the overrides under the `:host` property:
+
+```
+:host {
+  --slds-c-checkbox-color-border: var(--lwc-colorTextIconDefault, #747474);
+}
+```
+
+Otherwise you will get an error similar to this:
+
+`CssSyntaxError: LWC1009: postcss-plugin-lwc: 2:3: Invalid definition of custom property "--slds-c-checkbox-color-border".`
+
 Start the server.
 
 - Run `npm run start`
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3334/.
 
+The Local Development Server should be used to speed up development process, but is not a replacement to deploying your code to an actual Salesforce community to try it out. (There exists some variations of functionality and styling).
 
 ## Testing
 

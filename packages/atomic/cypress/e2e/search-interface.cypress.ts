@@ -113,24 +113,23 @@ describe('Search Interface Component', () => {
     beforeEach(() => {
       new TestFixture()
         .with(addQuerySummary())
-        .withoutFirstAutomaticSearch()
+        .withLanguage('fr')
+        .withoutFirstIntercept()
         .init();
     });
 
-    it('should set locale for search request', async () => {
-      setLanguage('fr');
-      execSearch();
+    it('should set locale for search request', (done) => {
       cy.wait(TestFixture.interceptAliases.Search).then((intercept) => {
         expect(intercept.request.body.locale).to.be.eq('fr');
+        done();
       });
     });
 
-    it('should set language for analytics request', async () => {
-      setLanguage('fr');
-      execSearch();
+    it('should set language for analytics request', (done) => {
       cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
         const analyticsBody = intercept.request.body;
         expect(analyticsBody).to.have.property('language', 'fr');
+        done();
       });
     });
   });

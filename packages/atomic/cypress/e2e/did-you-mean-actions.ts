@@ -1,9 +1,5 @@
-import {
-  addTag,
-  interceptSearchResponse,
-  TagProps,
-  TestFixture,
-} from '../fixtures/test-fixture';
+import {interceptSearchResponse} from '../fixtures/fixture-common';
+import {addTag, TagProps, TestFixture} from '../fixtures/test-fixture';
 import {didYouMeanComponent} from './did-you-mean-selectors';
 
 export const addDidYouMean =

@@ -5,6 +5,7 @@ import {
   EcommerceDefaultFieldsToInclude,
   buildRecommendationEngine,
   loadRecommendationActions,
+  loadSearchConfigurationActions,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -37,8 +38,6 @@ export type RecsBindings = CommonBindings<
 
 /**
  * The `atomic-recs-interface` component is the parent to all other atomic components in a recommendation interface. It handles the headless recommendation engine and localization configurations.
- *
- * @internal
  */
 @Component({
   tag: 'atomic-recs-interface',
@@ -190,17 +189,36 @@ export class AtomicRecsInterface
 
   @Watch('language')
   public updateLanguage() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine
+    );
+    this.engine.dispatch(
+      updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
     this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('analytics')
   public toggleAnalytics() {
+    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
+      return;
+    }
+
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
   public registerFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(
-      this.fieldsToInclude.split(',').map((field) => field.trim())
+      this.fieldsToInclude
+        .split(',')
+        .map((field) => field.trim())
+        .filter((field) => !!field)
     );
     this.engine!.dispatch(
       loadFieldActions(this.engine!).registerFieldsToInclude(fields)
