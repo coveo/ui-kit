@@ -15,6 +15,7 @@ import {CoreEngine} from '../../../../../app/engine';
 export interface FacetSearchProps {
   options: FacetSearchOptions;
   select: (value: SpecificFacetSearchResult) => void;
+  includeSearchContext: boolean;
 }
 
 export type FacetSearch = ReturnType<typeof buildFacetSearch>;
@@ -24,7 +25,7 @@ export function buildFacetSearch(
   props: FacetSearchProps
 ) {
   const {dispatch} = engine;
-  const {options, select} = props;
+  const {options, select, includeSearchContext} = props;
   const {facetId} = options;
   const getFacetSearch = () => engine.state.facetSearchSet[facetId];
 
@@ -33,6 +34,7 @@ export function buildFacetSearch(
   const genericFacetSearch = buildGenericFacetSearch(engine, {
     options,
     getFacetSearch,
+    includeSearchContext,
   });
 
   return {

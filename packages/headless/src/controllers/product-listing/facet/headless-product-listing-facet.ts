@@ -81,6 +81,7 @@ export function buildFacet(
           logFacetSelect({facetId: getFacetId(), facetValue: value.rawValue})
         );
       },
+      includeSearchContext: true,
     });
   };
 

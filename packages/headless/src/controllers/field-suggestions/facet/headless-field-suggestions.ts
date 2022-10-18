@@ -227,6 +227,7 @@ export function buildFieldSuggestions(
         executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
       );
     },
+    includeSearchContext: false,
   });
   const controller = buildController(engine);
   return {

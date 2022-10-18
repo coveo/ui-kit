@@ -8,19 +8,24 @@ import {
   buildFacet,
   Facet,
   FieldSuggestionsValue,
+  CoreEngine,
 } from '..';
 
-function waitForNextStateChange<T extends Controller>(
-  controller: T,
+function isEngine(obj: object): obj is CoreEngine {
+  return 'dispatch' in obj;
+}
+
+function waitForNextStateChange(
+  target: Controller | CoreEngine,
   options: {action?: () => void; expectedSubscriberCalls?: number} = {}
 ) {
   return new Promise<void>((resolve) => {
-    let wasInitialListenerCalled = false;
+    let skipFirstCall = !isEngine(target);
     let subscriberCalls = 0;
     let unsubscribe = () => {};
-    unsubscribe = controller.subscribe(() => {
-      if (!wasInitialListenerCalled) {
-        wasInitialListenerCalled = true;
+    unsubscribe = target.subscribe(() => {
+      if (skipFirstCall) {
+        skipFirstCall = false;
         return;
       }
       if (++subscriberCalls < (options?.expectedSubscriberCalls ?? 1)) {
@@ -36,6 +41,7 @@ function waitForNextStateChange<T extends Controller>(
 describe('field suggestions', () => {
   let engine: SearchEngine;
   const field = 'filetype';
+  const facetField = 'author';
   beforeEach(() => {
     engine = buildSearchEngine({
       configuration: {
@@ -56,18 +62,25 @@ describe('field suggestions', () => {
         .map(({value}) => value);
     }
 
-    beforeEach(() => {
-      facet = buildFacet(engine, {options: {field}});
-      fieldSuggestions = buildFieldSuggestions(engine, {
-        options: {field, facetId: facet.state.facetId},
+    beforeEach(async () => {
+      await waitForNextStateChange(engine, {
+        action: () => (facet = buildFacet(engine, {options: {field}})),
+        expectedSubscriberCalls: 4,
+      });
+      await waitForNextStateChange(engine, {
+        action: () =>
+          (fieldSuggestions = buildFieldSuggestions(engine, {
+            options: {field, facetId: facet.state.facetId},
+          })),
+        expectedSubscriberCalls: 2,
       });
     });
 
     describe('after calling #search', () => {
       beforeEach(async () => {
         await waitForNextStateChange(fieldSuggestions, {
-          action: () => fieldSuggestions.search(),
-          expectedSubscriberCalls: 2,
+          action: () => fieldSuggestions.updateText('doc'),
+          expectedSubscriberCalls: 3,
         });
       });
 
@@ -108,23 +121,20 @@ describe('field suggestions', () => {
           );
           expect(getSelectedValues()).toEqual(expectedValues);
         });
-
-        it('after calling #search again, ignores the current search context', async () => {
-          const initialSuggestions = fieldSuggestions.state.values;
-          await waitForNextStateChange(fieldSuggestions, {
-            action: () => fieldSuggestions.search(),
-            expectedSubscriberCalls: 2,
-          });
-          expect(fieldSuggestions.state.values).toEqual(initialSuggestions);
-        });
       });
     });
   });
 
   describe('initialized without a facet', () => {
     let fieldSuggestions: FieldSuggestions;
-    beforeEach(() => {
-      fieldSuggestions = buildFieldSuggestions(engine, {options: {field}});
+    beforeEach(async () => {
+      await waitForNextStateChange(engine, {
+        action: () =>
+          (fieldSuggestions = buildFieldSuggestions(engine, {
+            options: {field},
+          })),
+        expectedSubscriberCalls: 3,
+      });
     });
 
     it('has the correct initial state', () => {
@@ -159,6 +169,33 @@ describe('field suggestions', () => {
           numberOfValues
         );
       });
+    });
+
+    it('is unaffected by the current search context', async () => {
+      let facet!: Facet;
+      await waitForNextStateChange(engine, {
+        action: () =>
+          (facet = buildFacet(engine, {options: {field: facetField}})),
+        expectedSubscriberCalls: 3,
+      });
+      await waitForNextStateChange(facet, {
+        action: () => engine.executeFirstSearch(),
+        expectedSubscriberCalls: 2,
+      });
+      await waitForNextStateChange(fieldSuggestions, {
+        action: () => fieldSuggestions.search(),
+        expectedSubscriberCalls: 2,
+      });
+      const initialSuggestions = fieldSuggestions.state.values;
+      await waitForNextStateChange(facet, {
+        action: () => facet.toggleSelect(facet.state.values[0]),
+        expectedSubscriberCalls: 2,
+      });
+      await waitForNextStateChange(fieldSuggestions, {
+        action: () => fieldSuggestions.search(),
+        expectedSubscriberCalls: 2,
+      });
+      expect(fieldSuggestions.state.values).toEqual(initialSuggestions);
     });
 
     it('set isLoading when calling #search', async () => {
