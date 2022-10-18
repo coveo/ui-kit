@@ -85,9 +85,6 @@ export default class QuanticModalA11yHandler extends LightningElement {
       childNodes.forEach((child) =>
         this.removeElementsFromA11yTree(child, excludedTagName)
       );
-    } else {
-      element.setAttribute('aria-hidden', 'true');
-      this.nonAccessibleElements.push(element);
     }
   }
 }
