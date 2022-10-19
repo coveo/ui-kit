@@ -4,6 +4,7 @@
   "headMarkup" : null,
   "id" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "isRelaxedCSPLevel" : true,
+  "isLockerServiceEnabled": false,
   "label" : "main",
   "templateName" : "Starter Template",
   "type" : "appPage"

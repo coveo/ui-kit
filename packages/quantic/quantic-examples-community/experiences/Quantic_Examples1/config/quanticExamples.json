@@ -7,6 +7,5 @@
   "mainAppPageId" : "2199ef25-89a9-44a1-ad69-7cb8bd918245",
   "preferredDomain" : "none",
   "selfRegistrationRouteId" : "c6e4cec3-bb19-46ac-8316-4459d79c1d72",
-  "type" : "site",
-  "isLockerServiceEnabled": false
+  "type" : "site"
 }
