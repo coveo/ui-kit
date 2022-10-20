@@ -54,9 +54,6 @@ export const baseFacetActions = (selector: BaseFacetSelector) => {
     clickExpandButton: () => {
       selector.expandButton().click();
     },
-    selectFirstFacetValueWithKeyboardTab: () => {
-      selector.searchInput().tab().type('{Enter}', {force: true});
-    },
   };
 };
 

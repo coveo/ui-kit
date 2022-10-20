@@ -193,13 +193,13 @@ describe('quantic-numeric-facet', () => {
             cy.wait(InterceptAliases.UA.Facet.ClearAll);
 
             Actions.submitManualRange();
-            Expect.displayInputWarning(1);
+            Expect.displayInputMinWarning(true);
             Expect.inputWarningContains();
 
             Actions.inputMinValue(100);
             Actions.submitManualRange();
 
-            Expect.displayInputWarning(1);
+            Expect.displayInputMaxWarning(true);
             Expect.inputWarningContains();
             Expect.displayValues(true);
           });
@@ -427,19 +427,6 @@ describe('quantic-numeric-facet', () => {
           );
         });
       });
-    });
-  });
-
-  describe('with default numeric facet testing accessibility', () => {
-    beforeEach(() => {
-      visitNumericFacetPage(defaultSettings);
-    });
-
-    it('should be accessible through keyboard', () => {
-      Actions.selectFirstNumericFacetValueWithKeyboardTab();
-      Expect.numberOfSelectedCheckboxValues(1);
-      Actions.selectFirstNumericFacetValueWithKeyboardEnter();
-      Expect.numberOfSelectedCheckboxValues(0);
     });
   });
 });

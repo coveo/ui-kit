@@ -13,6 +13,8 @@ export interface NumericFacetSelector extends ComponentSelector {
   searchForm: () => CypressSelector;
   inputInvalid: () => CypressSelector;
   helpMessage: () => CypressSelector;
+  inputMinWarning: () => CypressSelector;
+  inputMaxWarning: () => CypressSelector;
 }
 
 export type AllFacetSelectors = BaseFacetSelector &
@@ -55,4 +57,12 @@ export const NumericFacetSelectors: AllFacetSelectors = {
     NumericFacetSelectors.searchForm().find('input[aria-invalid="true"]'),
   helpMessage: () =>
     NumericFacetSelectors.searchForm().find('div.slds-form-element__help'),
+  inputMinWarning: () =>
+    NumericFacetSelectors.get().find(
+      '.numeric__input-min div.slds-form-element__help'
+    ),
+  inputMaxWarning: () =>
+    NumericFacetSelectors.get().find(
+      '.numeric__input-max div.slds-form-element__help'
+    ),
 };
