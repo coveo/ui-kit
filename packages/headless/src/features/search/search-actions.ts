@@ -194,7 +194,11 @@ export const fetchInstantResults = createAsyncThunk<
       maxResultsPerQuery
     );
 
-    const fetched = await processor.fetchFromAPI(request, 'instantResults');
+    const fetched = await processor.fetchFromAPI(
+      request,
+      'instantResults',
+      true
+    );
     const processed = await processor.process(fetched);
     if ('response' in processed) {
       return {

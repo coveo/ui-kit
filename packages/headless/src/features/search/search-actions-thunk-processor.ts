@@ -121,11 +121,12 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   public async fetchFromAPI(
     {mappings, request}: MappedSearchRequest,
-    origin: SearchOrigin
+    origin: SearchOrigin,
+    disableAbortWarning?: boolean
   ) {
     const startedAt = new Date().getTime();
     const response = mapSearchResponse(
-      await this.extra.apiClient.search(request, {origin}),
+      await this.extra.apiClient.search(request, {origin, disableAbortWarning}),
       mappings
     );
     const duration = new Date().getTime() - startedAt;

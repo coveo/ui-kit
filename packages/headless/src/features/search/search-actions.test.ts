@@ -74,6 +74,7 @@ describe('search actions', () => {
         req,
         expect.objectContaining({
           origin: 'instantResults',
+          disableAbortWarning: true,
         })
       );
     });
