@@ -429,4 +429,17 @@ describe('quantic-numeric-facet', () => {
       });
     });
   });
+
+  describe.skip('with default numeric facet testing accessibility', () => {
+    beforeEach(() => {
+      visitNumericFacetPage(defaultSettings);
+    });
+
+    it('should be accessible through keyboard', () => {
+      Actions.selectFirstNumericFacetValueWithKeyboardTab();
+      Expect.numberOfSelectedCheckboxValues(1);
+      Actions.selectFirstNumericFacetValueWithKeyboardEnter();
+      Expect.numberOfSelectedCheckboxValues(0);
+    });
+  });
 });
