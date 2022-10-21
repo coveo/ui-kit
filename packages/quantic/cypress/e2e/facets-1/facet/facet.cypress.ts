@@ -865,7 +865,7 @@ describe('Facet Test Suite', () => {
     });
   });
 
-  describe('with values testing accessibility', () => {
+  describe.skip('with values testing accessibility', () => {
     beforeEach(() => {
       visitFacetPage(
         {

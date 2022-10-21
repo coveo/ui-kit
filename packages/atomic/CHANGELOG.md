@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.118.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.117.0...@coveo/atomic@1.118.0) (2022-10-18)
+
+
+### Features
+
+* **atomic:** add pagination to recommendations ([#2499](https://github.com/coveo/ui-kit/issues/2499)) ([4569412](https://github.com/coveo/ui-kit/commit/45694121bf252e7aa59dab7d0acb5d27a8423b55))
+* **atomic:** release recommendations & add to atomic-react ([#2503](https://github.com/coveo/ui-kit/issues/2503)) ([70a5f00](https://github.com/coveo/ui-kit/commit/70a5f00225923d94bf41e133dbbe3bee6b7e0eb2))
+
+
+
+
+
 # [1.117.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.116.0...@coveo/atomic@1.117.0) (2022-10-11)
 
 

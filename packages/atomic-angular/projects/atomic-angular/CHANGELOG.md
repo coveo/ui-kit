@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.33.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.32.1...@coveo/atomic-angular@1.33.0) (2022-10-18)
+
+
+### Features
+
+* **atomic:** release recommendations & add to atomic-react ([#2503](https://github.com/coveo/ui-kit/issues/2503)) ([70a5f00](https://github.com/coveo/ui-kit/commit/70a5f00225923d94bf41e133dbbe3bee6b7e0eb2))
+
+
+
+
+
 ## [1.32.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.32.0...@coveo/atomic-angular@1.32.1) (2022-10-11)
 
 

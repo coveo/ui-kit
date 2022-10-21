@@ -62,6 +62,22 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
           'should display the correct warning when user click Apply button'
         );
     },
+    displayInputMinWarning: (display: boolean) => {
+      selector
+        .inputMinWarning()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(
+          'should display a warning under the min input when user clicks Apply button'
+        );
+    },
+    displayInputMaxWarning: (display: boolean) => {
+      selector
+        .inputMaxWarning()
+        .should(display ? 'exist' : 'not.exist')
+        .logDetail(
+          'should display a warning under the max input when user clicks Apply button'
+        );
+    },
     inputWarningContains: (message?: string) => {
       selector
         .helpMessage()
