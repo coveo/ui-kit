@@ -60,6 +60,8 @@ export default class QuanticResultList extends LightningElement {
   headless;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   loadingAriaLiveMessage;
+  /** @type {string} */
+  openPreviewId;
 
   labels = {
     loadingResults
@@ -67,7 +69,15 @@ export default class QuanticResultList extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+    this.template.addEventListener(
+      'quantic__resultpreviewtoggle',
+      this.handleResultPreviewToggle
+    );
   }
+
+  handleResultPreviewToggle = (event) => {
+    this.openPreviewId = event.detail.isOpen ? event.detail.resultId : null;
+  };
 
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
@@ -113,6 +123,7 @@ export default class QuanticResultList extends LightningElement {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeResultsPerPage?.();
+    this.template.removeEventListener('quantic__resultpreviewtoggle', this.handleResultPreviewToggle);
   }
 
   updateState() {
