@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.47.0...@coveo/quantic@1.48.0) (2022-10-21)
+
+
+### Features
+
+* **quantic:** Accessibility of the Quickview and the Quantic Modal improved ([#2495](https://github.com/coveo/ui-kit/issues/2495)) ([1892617](https://github.com/coveo/ui-kit/commit/18926178d38b98da1e75167571d14fb275d864f3))
+
+
+
+
+
 # [1.47.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.46.2...@coveo/quantic@1.47.0) (2022-10-18)
 
 
