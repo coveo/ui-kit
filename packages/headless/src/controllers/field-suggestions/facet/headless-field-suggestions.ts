@@ -30,7 +30,7 @@ import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/
 
 export interface FieldSuggestionsValue {
   /**
-   * The custom field suggestion display name, as specified in the `captions` argument.
+   * The custom field suggestion display name, as specified in the `captions` argument of the `FieldSuggestion` controller.
    */
   displayValue: string;
   /**
@@ -38,8 +38,8 @@ export interface FieldSuggestionsValue {
    */
   rawValue: string;
   /**
-   * An estimate number of result items matching both the current query and
-   * the filter expression that would get generated if the field suggestion were selected.
+   * An estimated number of result items matching both the current query and
+   * the filter expression that would get generated if this field suggestion was selected.
    */
   count: number;
 }
@@ -51,7 +51,7 @@ export interface FieldSuggestionsState {
   values: FieldSuggestionsValue[];
 
   /**
-   * `true` if the field suggestions search is in progress and `false` otherwise.
+   * Whether the request for field suggestions is in progress.
    */
   isLoading: boolean;
 
@@ -111,7 +111,7 @@ export interface FieldSuggestions extends Subscribable {
   clear(): void;
 
   /**
-   * Updates the field suggestions captions.
+   * Updates the captions of field suggestions.
    *
    * @param captions - A dictionary that maps field values to field suggestion display names.
    */
@@ -128,14 +128,14 @@ export interface FieldSuggestionsFacetSearchOptions {
   captions?: Record<string, string>;
 
   /**
-   * The maximum number of suggestions to fetch.
+   * The maximum number of suggestions to request.
    *
    * @defaultValue `10`
    */
   numberOfValues?: number;
 
   /**
-   * The query to search the field suggestions with.
+   * The query with which to request field suggestions.
    */
   query?: string;
 }
@@ -154,7 +154,7 @@ export interface FieldSuggestionsOptions {
   /**
    * A unique identifier for the controller. By default, a random unique identifier is generated.
    *
-   * If a facet shares the same id, then its values are going to be selectable with `select` and `singleSelect`. However, you must make sure to build the field suggestions controller after the facet's controller.
+   * If a facet shares the same id, then its values are going to be selectable with `select` and `singleSelect`. However, you must make sure to build the field suggestion controller after the facet controller.
    */
   facetId?: string;
 
@@ -182,7 +182,7 @@ export interface FieldSuggestionsOptions {
 
   /**
    * The criterion to use for sorting returned field suggestions.
-   * Learn more about `sortCriteria` values and the default behavior of specific facets in the [Search API documentation](https://docs.coveo.com/en/1461/build-a-search-ui/query-parameters#RestFacetRequest-sortCriteria).
+   * Learn more about `sortCriteria` values and the default behavior of specific facets in the [Search API documentation](https://docs.coveo.com/en/1461/#RestFacetRequest-sortCriteria).
    *
    * @defaultValue `automatic`
    */
