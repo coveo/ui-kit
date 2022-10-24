@@ -5,7 +5,7 @@ import {StateNeededForSpecificFacetSearch} from '../generic/generic-facet-search
 export const buildSpecificFacetSearchRequest = async (
   id: string,
   state: StateNeededForSpecificFacetSearch,
-  includeSearchContext: boolean
+  isFieldSuggestionsRequest: boolean
 ): Promise<SpecificFacetSearchRequest> => {
   const {captions, query, numberOfValues} = state.facetSearchSet[id].options;
   const {field, currentValues, filterFacetCount} = state.facetSet[id];
@@ -29,8 +29,8 @@ export const buildSpecificFacetSearchRequest = async (
     ignoreValues,
     filterFacetCount,
     type: 'specific',
-    ...(includeSearchContext
-      ? {searchContext: (await buildSearchRequest(state)).request}
-      : {}),
+    ...(isFieldSuggestionsRequest
+      ? {}
+      : {searchContext: (await buildSearchRequest(state)).request}),
   };
 };

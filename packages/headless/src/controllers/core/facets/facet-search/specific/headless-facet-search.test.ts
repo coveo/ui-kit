@@ -35,7 +35,7 @@ describe('FacetSearch', () => {
     props = {
       options: {facetId},
       select: jest.fn(),
-      includeSearchContext: true,
+      isForFieldSuggestions: false,
     };
 
     initEngine();

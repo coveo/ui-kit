@@ -35,7 +35,7 @@ type ExecuteFacetSearchThunkApiConfig = AsyncThunkOptions<
 
 const getExecuteFacetSearchThunkPayloadCreator =
   (
-    includeSearchContext: boolean
+    isFieldSuggestionsRequest: boolean
   ): AsyncThunkPayloadCreator<
     ExecuteFacetSearchThunkReturn,
     ExecuteFacetSearchThunkArg,
@@ -52,7 +52,7 @@ const getExecuteFacetSearchThunkPayloadCreator =
       req = await buildSpecificFacetSearchRequest(
         facetId,
         state,
-        includeSearchContext
+        isFieldSuggestionsRequest
       );
     } else {
       req = await buildCategoryFacetSearchRequest(
@@ -62,7 +62,9 @@ const getExecuteFacetSearchThunkPayloadCreator =
     }
 
     const response = await apiClient.facetSearch(req);
-    dispatch(logFacetSearch(facetId));
+    if (!isFieldSuggestionsRequest) {
+      dispatch(logFacetSearch(facetId));
+    }
 
     return {facetId, response};
   };
@@ -74,16 +76,16 @@ export const executeFacetSearch = createAsyncThunk<
     StateNeededForFacetSearch,
     ClientThunkExtraArguments<FacetSearchAPIClient>
   >
->('facetSearch/executeSearch', getExecuteFacetSearchThunkPayloadCreator(true));
+>('facetSearch/executeSearch', getExecuteFacetSearchThunkPayloadCreator(false));
 
-export const executeFacetSearchWithoutSearchContext = createAsyncThunk<
+export const executeFieldSuggest = createAsyncThunk<
   {facetId: string; response: FacetSearchResponse},
   string,
   AsyncThunkOptions<
     StateNeededForFacetSearch,
     ClientThunkExtraArguments<FacetSearchAPIClient>
   >
->('facetSearch/executeSearch', getExecuteFacetSearchThunkPayloadCreator(false));
+>('facetSearch/executeSearch', getExecuteFacetSearchThunkPayloadCreator(true)); // We use the same action type because this action is meant to be handled by reducers the same way.
 
 export const clearFacetSearch = createAction(
   'facetSearch/clearResults',

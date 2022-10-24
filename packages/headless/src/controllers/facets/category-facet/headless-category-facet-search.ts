@@ -39,7 +39,7 @@ export function buildCategoryFacetSearch(
   const genericFacetSearch = buildGenericFacetSearch(engine, {
     options,
     getFacetSearch,
-    includeSearchContext: true,
+    isForFieldSuggestions: false,
   });
 
   return {
