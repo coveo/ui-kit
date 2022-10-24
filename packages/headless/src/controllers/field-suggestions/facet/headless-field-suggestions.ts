@@ -181,7 +181,7 @@ export interface FieldSuggestionsOptions {
   numberOfValues?: number;
 
   /**
-   * The criterion to use for sorting returned field suggestions.
+   * The criterion to use to sort returned field suggestions.
    * Learn more about `sortCriteria` values and the default behavior of specific facets in the [Search API documentation](https://docs.coveo.com/en/1461/#RestFacetRequest-sortCriteria).
    *
    * @defaultValue `automatic`
