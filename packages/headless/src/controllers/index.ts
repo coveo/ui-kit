@@ -383,6 +383,7 @@ export type {
   FieldSuggestionsValue,
   FieldSuggestionsState,
   FieldSuggestions,
+  FieldSuggestionsFacetSearchOptions,
   FieldSuggestionsOptions,
   FieldSuggestionsProps,
 } from './field-suggestions/facet/headless-field-suggestions';
