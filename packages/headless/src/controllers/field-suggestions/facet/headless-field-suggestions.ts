@@ -61,7 +61,7 @@ export interface FieldSuggestionsState {
   moreValuesAvailable: boolean;
 
   /**
-   * The field suggestions query.
+   * The query used to request field suggestions.
    */
   query: string;
 }
@@ -75,7 +75,7 @@ export interface FieldSuggestionsState {
  */
 export interface FieldSuggestions extends Subscribable {
   /**
-   * Performs a field suggestions search with a query.
+   * Requests field suggestions based on a query.
    *
    * @param text - The query to search.
    */
@@ -87,7 +87,7 @@ export interface FieldSuggestions extends Subscribable {
   showMoreResults(): void;
 
   /**
-   * Performs a field suggestions search with the current query.
+   * Requests field suggestions based on a query.
    */
   search(): void;
 
