@@ -32,6 +32,7 @@ export function buildCategoryFacetSearch(
     options: {
       ...options,
     },
+    isForFieldSuggestions: false,
   });
 
   dispatch(registerCategoryFacetSearch(options));
