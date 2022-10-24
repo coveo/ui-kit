@@ -26,21 +26,19 @@ describe('category field suggestions', () => {
     });
   });
 
-  describe('with a matching categoryFacet', () => {
+  describe('with a matching category facet', () => {
     let categoryFacet: CategoryFacet;
     let categoryFieldSuggestions: CategoryFieldSuggestions;
 
-    function getSelectedValues() {
-      return categoryFacet.state.values
-        .filter((value) => value.state === 'selected')
-        .map(({path}) => path);
+    function getSelectedValue() {
+      return categoryFacet.state.parents.slice(-1)[0];
     }
 
     beforeEach(async () => {
       await waitForNextStateChange(engine, {
         action: () =>
           (categoryFacet = buildCategoryFacet(engine, {options: {field}})),
-        expectedSubscriberCalls: 4,
+        expectedSubscriberCalls: 5,
       });
       await waitForNextStateChange(engine, {
         action: () =>
@@ -62,24 +60,25 @@ describe('category field suggestions', () => {
         });
       });
 
-      it('can select categoryFacet values', async () => {
+      it('can select category facet values', async () => {
         const firstToggledValue = categoryFieldSuggestions.state.values[0];
         const secondToggledValue = categoryFieldSuggestions.state.values[1];
         await waitForNextStateChange(categoryFacet, {
           action: () => categoryFieldSuggestions.select(firstToggledValue),
           expectedSubscriberCalls: 2,
         });
-        expect(getSelectedValues()).toEqual([firstToggledValue.path]);
+        console.log(categoryFacet.state.values);
+        expect(getSelectedValue().value).toEqual(firstToggledValue.rawValue);
         await waitForNextStateChange(categoryFacet, {
           action: () => categoryFieldSuggestions.select(secondToggledValue),
           expectedSubscriberCalls: 2,
         });
-        expect(getSelectedValues()).toEqual([secondToggledValue.path]);
+        expect(getSelectedValue().value).toEqual(secondToggledValue.rawValue);
       });
     });
   });
 
-  describe('initialized without a categoryFacet', () => {
+  describe('initialized without a category facet', () => {
     let categoryFieldSuggestions: CategoryFieldSuggestions;
     beforeEach(async () => {
       await waitForNextStateChange(engine, {
@@ -175,7 +174,7 @@ describe('category field suggestions', () => {
     });
 
     it('can search with a query', async () => {
-      const query = 'doc';
+      const query = 'king';
       await waitForNextStateChange(categoryFieldSuggestions, {
         action: () => categoryFieldSuggestions.updateText(query),
         expectedSubscriberCalls: 3,
@@ -184,15 +183,15 @@ describe('category field suggestions', () => {
       expect(categoryFieldSuggestions.state.values.length).toBeGreaterThan(0);
       const valuesThatDontContainQuery =
         categoryFieldSuggestions.state.values.filter(
-          (value) => !value.displayValue.includes(query)
+          (value) => !value.displayValue.toLowerCase().includes(query)
         );
       expect(valuesThatDontContainQuery.length).toEqual(0);
     });
 
     it('can update captions', async () => {
-      const rawValue = 'pdf';
-      const displayValue = 'Portable Document Format';
-      const query = 'doc';
+      const rawValue = 'United Kingdom';
+      const displayValue = 'Britain';
+      const query = 'king';
       categoryFieldSuggestions.updateCaptions({
         [rawValue]: displayValue,
       });

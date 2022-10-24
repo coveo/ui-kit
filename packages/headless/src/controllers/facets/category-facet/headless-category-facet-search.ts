@@ -32,7 +32,7 @@ export function buildCategoryFacetSearch(
     options: {
       ...options,
     },
-    isForFieldSuggestions: false,
+    isForFieldSuggestions: props.isForFieldSuggestions,
   });
 
   dispatch(registerCategoryFacetSearch(options));
@@ -40,7 +40,7 @@ export function buildCategoryFacetSearch(
   const genericFacetSearch = buildGenericFacetSearch(engine, {
     options,
     getFacetSearch,
-    isForFieldSuggestions: false,
+    isForFieldSuggestions: props.isForFieldSuggestions,
   });
 
   return {
