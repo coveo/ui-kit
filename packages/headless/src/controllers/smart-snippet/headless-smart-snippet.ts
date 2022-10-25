@@ -238,11 +238,11 @@ export function buildSmartSnippet(
     get state() {
       const state = getState();
       return {
-        question: state.search.response.questionAnswer.question,
-        answer: state.search.response.questionAnswer.answerSnippet,
-        documentId: state.search.response.questionAnswer.documentId,
+        question: state.search.questionAnswer.question,
+        answer: state.search.questionAnswer.answerSnippet,
+        documentId: state.search.questionAnswer.documentId,
         expanded: state.questionAnswering.expanded,
-        answerFound: state.search.response.questionAnswer.answerSnippet !== '',
+        answerFound: state.search.questionAnswer.answerSnippet !== '',
         liked: state.questionAnswering.liked,
         disliked: state.questionAnswering.disliked,
         feedbackModalOpen: state.questionAnswering.feedbackModalOpen,

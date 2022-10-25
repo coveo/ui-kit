@@ -375,9 +375,7 @@ export class FacetCommon {
   }
 
   private renderSearchInput() {
-    const shouldDisplaySearch =
-      this.withSearch && this.facet.state.canShowMoreValues;
-    if (!shouldDisplaySearch) {
+    if (!this.withSearch) {
       return;
     }
 
