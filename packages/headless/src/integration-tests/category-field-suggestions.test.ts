@@ -219,4 +219,27 @@ describe('category field suggestions', () => {
       expect(categoryFieldSuggestions.state.values.length).toEqual(0);
     });
   });
+
+  it('can filter by base path', async () => {
+    const basePath: string[] = ['North America'];
+    const query = 'queb';
+    const expectedResult = 'Quebec';
+    const expectedPath = ['Canada'];
+    let categoryFieldSuggestions!: CategoryFieldSuggestions;
+    await waitForNextStateChange(engine, {
+      action: () =>
+        (categoryFieldSuggestions = buildCategoryFieldSuggestions(engine, {
+          options: {field, basePath},
+        })),
+      expectedSubscriberCalls: 3,
+    });
+    await waitForNextStateChange(categoryFieldSuggestions, {
+      action: () => categoryFieldSuggestions.updateText(query),
+      expectedSubscriberCalls: 3,
+    });
+    const queriedResult = categoryFieldSuggestions.state.values.find(
+      (value) => value.rawValue === expectedResult
+    );
+    expect(queriedResult?.path).toEqual(expectedPath);
+  });
 });
