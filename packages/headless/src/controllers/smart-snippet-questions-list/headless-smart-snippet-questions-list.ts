@@ -204,7 +204,7 @@ export function buildSmartSnippetQuestionsList(
       const state = getState();
 
       return {
-        questions: state.search.response.questionAnswer.relatedQuestions.map(
+        questions: state.search.questionAnswer.relatedQuestions.map(
           (relatedQuestion, i) => ({
             question: relatedQuestion.question,
             answer: relatedQuestion.answerSnippet,

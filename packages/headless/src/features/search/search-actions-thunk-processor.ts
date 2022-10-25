@@ -111,6 +111,11 @@ export interface AsyncThunkConfig {
 
 type QueryCorrectionCallback = (modification: string) => void;
 
+export interface FetchFromAPIOptions {
+  origin: SearchOrigin;
+  disableAbortWarning?: boolean;
+}
+
 export class AsyncSearchThunkProcessor<RejectionType> {
   constructor(
     private config: AsyncThunkConfig,
@@ -123,11 +128,11 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
   public async fetchFromAPI(
     {mappings, request}: MappedSearchRequest,
-    origin: SearchOrigin
+    options: FetchFromAPIOptions
   ) {
     const startedAt = new Date().getTime();
     const response = mapSearchResponse(
-      await this.extra.apiClient.search(request, {origin}),
+      await this.extra.apiClient.search(request, options),
       mappings
     );
     const duration = new Date().getTime() - startedAt;
@@ -282,7 +287,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     this.onUpdateQueryForCorrection(correction);
     const fetched = await this.fetchFromAPI(
       await buildSearchRequest(this.getState()),
-      'mainSearch'
+      {origin: 'mainSearch'}
     );
     this.dispatch(applyDidYouMeanCorrection(correction));
     return fetched;
@@ -300,7 +305,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI(
       await buildSearchRequest(this.getState()),
-      'mainSearch'
+      {origin: 'mainSearch'}
     );
 
     return fetched;
