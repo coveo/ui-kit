@@ -2,7 +2,10 @@ import {
   SearchEngine,
   buildSearchEngine,
 } from '../app/search-engine/search-engine';
-import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine-configuration';
+import {
+  getSampleSearchEngineConfiguration,
+  SearchEngineConfiguration,
+} from '../app/search-engine/search-engine-configuration';
 import {
   CategoryFacet,
   Facet,
@@ -29,7 +32,7 @@ import {
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-const configuration = getSampleSearchEngineConfiguration();
+let configuration: SearchEngineConfiguration;
 let engine: SearchEngine;
 let searchBox: SearchBox;
 let resultList: ResultList;
@@ -37,9 +40,13 @@ let facet: Facet;
 let categoryFacet: CategoryFacet;
 let sort: Sort;
 
+beforeAll(() => {
+  configuration = getSampleSearchEngineConfiguration();
+});
+
 function initEngine() {
   engine = buildSearchEngine({
-    configuration: getSampleSearchEngineConfiguration(),
+    configuration,
     loggerOptions: {level: 'silent'},
   });
 }
