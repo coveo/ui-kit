@@ -84,6 +84,8 @@ export default class QuanticRefineToggle extends LightningElement {
   headless;
   /** @type {boolean} */
   hasResults;
+  /** @type {boolean} */
+  modalIsOpen = false;
 
   renderedFacets = {};
 
@@ -248,6 +250,8 @@ export default class QuanticRefineToggle extends LightningElement {
     /** @type {QuanticModalElement} */
     const modal = this.getModal();
     modal.openModal();
+    this.sendRefineModalEvent(true);
+    this.modalIsOpen = true;
   }
 
   /**
@@ -258,6 +262,8 @@ export default class QuanticRefineToggle extends LightningElement {
     /** @type {QuanticModalElement} */
     const modal = this.getModal();
     modal.closeModal();
+    this.sendRefineModalEvent(false);
+    this.modalIsOpen = false;
   }
 
   /**
@@ -278,5 +284,18 @@ export default class QuanticRefineToggle extends LightningElement {
     return this.refineButtonDisabled
       ? this.labels.noFiltersAvailableForThisQuery
       : this.title;
+  }
+
+  /**
+   * Sends the "quantic__refinemodaltoggle" event.
+   * @param {boolean} isOpen
+   */
+  sendRefineModalEvent(isOpen) {
+    const refineModalEvent = new CustomEvent('quantic__refinemodaltoggle', {
+      composed: true,
+      bubbles: true,
+      detail: {isOpen},
+    });
+    this.dispatchEvent(refineModalEvent);
   }
 }

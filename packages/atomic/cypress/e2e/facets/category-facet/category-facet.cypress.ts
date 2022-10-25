@@ -126,11 +126,6 @@ describe('Category Facet Test Suites', () => {
         });
       });
 
-      describe('test accessibility', () => {
-        beforeEach(setupGoDeeperOneLevel);
-        CategoryFacetAssertions.assertFocusActiveParent();
-      });
-
       describe('verify analytics', () => {
         before(setupGoDeeperOneLevel);
         CategoryFacetAssertions.assertLogFacetSelect(selectedPath);
@@ -193,7 +188,6 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoPathInUrl();
-          CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
         });
 
         describe('verify analytics', () => {
@@ -213,7 +207,6 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
           CategoryFacetAssertions.assertNumberOfParentValues(0);
           CategoryFacetAssertions.assertNoPathInUrl();
-          CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
         });
 
         describe('verify analytics', () => {
@@ -250,11 +243,6 @@ describe('Category Facet Test Suites', () => {
         CategoryFacetAssertions.assertPathInUrl(canadaHierarchy);
       });
 
-      describe('test accessibility', () => {
-        beforeEach(setupGoDeeperLastLevel);
-        CategoryFacetAssertions.assertFocusActiveParent();
-      });
-
       describe('verify analytics', () => {
         before(setupGoDeeperLastLevel);
         CategoryFacetAssertions.assertLogFacetSelect(canadaHierarchy);
@@ -284,11 +272,6 @@ describe('Category Facet Test Suites', () => {
             false
           );
           CategoryFacetAssertions.assertPathInUrl(selectedPath);
-        });
-
-        describe('test accessibility', () => {
-          beforeEach(setupSelectFirstParent);
-          CategoryFacetAssertions.assertFocusActiveParent();
         });
 
         describe('verify analytics', () => {
@@ -362,7 +345,6 @@ describe('Category Facet Test Suites', () => {
                 CategoryFacetSelectors,
                 false
               );
-              CommonFacetAssertions.assertFocusHeader(CategoryFacetSelectors);
             });
 
             describe('verify analytics', () => {
@@ -399,11 +381,6 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetSelectors,
           true
         );
-      });
-
-      describe('test accessibility', () => {
-        beforeEach(setupShowMore);
-        CategoryFacetAssertions.assertFocusChildValue(numberOfValues);
       });
 
       describe('verify analytics', () => {
@@ -723,11 +700,6 @@ describe('Category Facet Test Suites', () => {
           CategoryFacetAssertions.assertNumberOfChildValues(1);
           CategoryFacetAssertions.assertNumberOfParentValues(2);
           CommonFacetAssertions.assertSearchInputEmpty(CategoryFacetSelectors);
-        });
-
-        describe('test accessibility', () => {
-          beforeEach(setupSelectSearchResult);
-          CategoryFacetAssertions.assertFocusActiveParent();
         });
       });
 

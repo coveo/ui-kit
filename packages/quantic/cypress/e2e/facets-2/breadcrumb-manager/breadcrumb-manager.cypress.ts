@@ -105,7 +105,7 @@ describe('quantic-breadcrumb-manager', () => {
           scope('when selecting values in time frame facet', () => {
             const dateFacetName = 'Date';
             const timeframeLabel1 = 'Past 6 months';
-            const timeframeLabel2 = 'Past 10 years';
+            const timeframeLabel2 = 'Past decade';
             Expect.dateFacetBreadcrumb.displayBreadcrumb(false);
 
             Actions.timeframeFacet.selectValue(timeframeLabel1);
