@@ -5,6 +5,7 @@ import {
   NumberValue,
   Schema,
   SchemaValidationError,
+  Value,
 } from '@coveo/bueno';
 import {registerFieldsToInclude} from '../fields/fields-actions';
 import {fields} from '../../app/reducers';
@@ -13,7 +14,9 @@ import {FieldsSection} from '../../state/state-sections';
 import {CoreEngine} from '../../app/engine';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
 
-const prioritySchema = new Schema({
+const resultTemplateSchema = new Schema<ResultTemplate>({
+  content: new Value({required: true}),
+  conditions: new Value({required: true}),
   priority: new NumberValue({required: false, default: 0, min: 0}),
   fields: new ArrayValue({
     required: false,
@@ -51,7 +54,7 @@ export function buildResultTemplatesManager<Content = unknown>(
   const templates: Required<ResultTemplate<Content>>[] = [];
   const validateTemplates = (templates: ResultTemplate<Content>[]) => {
     templates.forEach((template) => {
-      prioritySchema.validate(
+      resultTemplateSchema.validate(
         template,
         'Check the arguments of registerTemplates'
       );
@@ -70,13 +73,7 @@ export function buildResultTemplatesManager<Content = unknown>(
   return {
     registerTemplates(...newTemplates: ResultTemplate<Content>[]) {
       const fields: string[] = [];
-
-      try {
-        validateTemplates(newTemplates);
-      } catch (error) {
-        engine.logger.error(error as Error, 'Result template manager error');
-        return;
-      }
+      validateTemplates(newTemplates);
 
       newTemplates.forEach((template) => {
         const templatesWithDefault = {
