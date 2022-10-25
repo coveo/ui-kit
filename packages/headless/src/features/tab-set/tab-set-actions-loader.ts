@@ -15,7 +15,7 @@ export type {RegisterTabActionCreatorPayload};
 export interface TabSetActionCreators {
   /**
    * Registers a tab.
-   * @param payload - The action creator payload
+   * @param payload - The action creator payload.
    * @returns A dispatchable action.
    */
   registerTab(
@@ -23,7 +23,7 @@ export interface TabSetActionCreators {
   ): PayloadAction<RegisterTabActionCreatorPayload>;
   /**
    * Updates the active tab, deselecting other tabs.
-   * @param id - The unique identifier of the tab (e.g., `"abc"`).
+   * @param id - The unique identifier of the target tab (e.g., `"abc"`).
    * @returns A dispatchable action.
    */
   updateActiveTab(id: string): PayloadAction<string>;
