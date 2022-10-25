@@ -433,7 +433,7 @@ describe('search api client', () => {
           request: categoryFacet,
         });
 
-        const req = await buildCategoryFacetSearchRequest(id, state);
+        const req = await buildCategoryFacetSearchRequest(id, state, false);
 
         searchAPIClient.facetSearch(req);
 
