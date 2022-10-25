@@ -54,10 +54,7 @@ export function buildResultTemplatesManager<Content = unknown>(
   const templates: Required<ResultTemplate<Content>>[] = [];
   const validateTemplates = (templates: ResultTemplate<Content>[]) => {
     templates.forEach((template) => {
-      resultTemplateSchema.validate(
-        template,
-        'Check the arguments of registerTemplates'
-      );
+      resultTemplateSchema.validate(template);
       const areConditionsValid = template.conditions.every(
         (condition) => condition instanceof Function
       );
