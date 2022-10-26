@@ -48,7 +48,7 @@ describe('RecommendationInteractiveResult', () => {
   function expectLogRecommendationActionPending() {
     const action = findLogRecommendationAction();
     expect(action).toEqual(
-      logRecommendationOpenThunk(mockResult).pending(action!.meta.requestId)
+      logRecommendationOpen(mockResult).pending(action!.meta.requestId)
     );
   }
 
