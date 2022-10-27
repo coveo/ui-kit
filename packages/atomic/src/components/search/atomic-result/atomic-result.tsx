@@ -55,12 +55,6 @@ export class AtomicResult {
   @Prop() interactiveResult?: InteractiveResult;
 
   /**
-   * The headless search engine.
-   * @deprecated This property is currently un-used
-   */
-  @Prop() engine?: SearchEngine;
-
-  /**
    * Global Atomic state.
    * @internal
    */

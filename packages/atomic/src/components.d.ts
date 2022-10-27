@@ -551,11 +551,6 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * The headless search engine.
-          * @deprecated This property is currently un-used
-         */
-        "engine"?: InsightEngine;
-        /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize": ResultDisplayImageSize;
@@ -1101,11 +1096,6 @@ export namespace Components {
           * How results should be displayed.
          */
         "display": ResultDisplayLayout;
-        /**
-          * The headless search engine.
-          * @deprecated This property is currently un-used
-         */
-        "engine"?: SearchEngine;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
@@ -3042,11 +3032,6 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * The headless search engine.
-          * @deprecated This property is currently un-used
-         */
-        "engine"?: InsightEngine;
-        /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -3556,11 +3541,6 @@ declare namespace LocalJSX {
           * How results should be displayed.
          */
         "display"?: ResultDisplayLayout;
-        /**
-          * The headless search engine.
-          * @deprecated This property is currently un-used
-         */
-        "engine"?: SearchEngine;
         /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */

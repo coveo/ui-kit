@@ -37,12 +37,6 @@ export class AtomicInsightResult {
   @Prop() result!: InsightResult;
 
   /**
-   * The headless search engine.
-   * @deprecated This property is currently un-used
-   */
-  @Prop() engine?: InsightEngine;
-
-  /**
    * The InteractiveResult item.
    * TODO: v2 make required
    * @internal
