@@ -86,12 +86,7 @@ export class AtomicResult {
    *
    * This is overwritten by the image size defined in the result content, if it exists.
    */
-  @Prop() imageSize?: ResultDisplayImageSize;
-
-  /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop() image: ResultDisplayImageSize = 'icon';
+  @Prop() imageSize: ResultDisplayImageSize = 'icon';
 
   /**
    * The classes to add to the result element.
@@ -150,7 +145,7 @@ export class AtomicResult {
       this.content!.children,
       this.display,
       this.density,
-      this.imageSize ?? this.image
+      this.imageSize
     );
   }
 

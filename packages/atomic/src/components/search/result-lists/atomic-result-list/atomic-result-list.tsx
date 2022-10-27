@@ -91,10 +91,6 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop({reflect: true, mutable: true})
   public imageSize: ResultDisplayImageSize = 'icon';
-  /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop({reflect: true}) public image: ResultDisplayImageSize = 'icon';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -108,20 +104,6 @@ export class AtomicResultList implements InitializableComponent {
     resultRenderingFunction: ResultRenderingFunction
   ) {
     this.resultRenderingFunction = resultRenderingFunction;
-  }
-
-  public connectedCallback() {
-    this.settleImageSize();
-  }
-
-  // TODO: remove v2 when `image` prop is removed;
-  private settleImageSize() {
-    if (this.host.hasAttribute('image-size')) {
-      return;
-    }
-    if (this.host.hasAttribute('image')) {
-      this.imageSize = this.image;
-    }
   }
 
   public initialize() {

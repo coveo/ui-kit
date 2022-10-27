@@ -784,13 +784,13 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'stopPropagation']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'imageSize', 'result', 'stopPropagation']
 })
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['classes', 'content', 'density', 'display', 'engine', 'image', 'imageSize', 'result', 'stopPropagation']
+  inputs: ['classes', 'content', 'density', 'display', 'engine', 'imageSize', 'result', 'stopPropagation']
 })
 export class AtomicResult {
   protected el: HTMLElement;
@@ -991,14 +991,14 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'fieldsToInclude', 'image', 'imageSize'],
+  inputs: ['density', 'display', 'fieldsToInclude', 'imageSize'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'fieldsToInclude', 'image', 'imageSize']
+  inputs: ['density', 'display', 'fieldsToInclude', 'imageSize']
 })
 export class AtomicResultList {
   protected el: HTMLElement;

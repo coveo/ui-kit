@@ -1112,13 +1112,9 @@ export namespace Components {
          */
         "engine"?: SearchEngine;
         /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image": ResultDisplayImageSize;
-        /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
-        "imageSize"?: ResultDisplayImageSize;
+        "imageSize": ResultDisplayImageSize;
         /**
           * The InteractiveResult item. TODO: v2 make required
          */
@@ -1238,10 +1234,6 @@ export namespace Components {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude": string;
-        /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image": ResultDisplayImageSize;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -3580,10 +3572,6 @@ declare namespace LocalJSX {
          */
         "engine"?: SearchEngine;
         /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image"?: ResultDisplayImageSize;
-        /**
           * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -3702,10 +3690,6 @@ declare namespace LocalJSX {
           * @deprecated add it to atomic-search-interface instead
          */
         "fieldsToInclude"?: string;
-        /**
-          * @deprecated use `imageSize` instead.
-         */
-        "image"?: ResultDisplayImageSize;
         /**
           * The expected size of the image displayed in the results.
          */
