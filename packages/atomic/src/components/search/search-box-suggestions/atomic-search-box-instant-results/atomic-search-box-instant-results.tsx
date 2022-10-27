@@ -131,7 +131,6 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
             interactiveResult={buildInteractiveResult(this.bindings.engine, {
               options: {result},
             })}
-            engine={this.bindings.engine}
             display={this.display}
             density={this.density}
             imageSize={this.imageSize}

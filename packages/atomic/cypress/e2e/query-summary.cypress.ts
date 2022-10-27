@@ -1,6 +1,9 @@
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import {addQuerySummary} from './query-summary-actions';
-import {QuerySummarySelectors} from './query-summary-selectors';
+import {
+  querySummaryComponent,
+  QuerySummarySelectors,
+} from './query-summary-selectors';
 import * as CommonAssertions from './common-assertions';
 import {addSearchBox} from './search-box/search-box-actions';
 import * as QuerySummaryAssertions from './query-summary-assertions';
@@ -82,13 +85,28 @@ describe('Query Summary Test Suites', () => {
     });
   });
 
-  // TODO: remove v2, deprecated prop
-  it('when "enableDuration" is false, should not show duration', () => {
+  it('by default, should not show duration', () => {
     new TestFixture()
       .with(addQuerySummary())
       .with(addSearchBox())
       .withHash('q=test')
       .init();
     QuerySummarySelectors.duration().should('not.be.visible');
+  });
+
+  it('when the part is shown, should show duration', () => {
+    new TestFixture()
+      .with(addQuerySummary())
+      .with(addSearchBox())
+      .withStyle(
+        `
+          ${querySummaryComponent}::part(duration) {
+            display: inline-block;
+          }
+        `
+      )
+      .withHash('q=test')
+      .init();
+    QuerySummarySelectors.duration().should('be.visible');
   });
 });

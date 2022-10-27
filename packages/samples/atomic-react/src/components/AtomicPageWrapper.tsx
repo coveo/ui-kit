@@ -143,7 +143,7 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
         <AtomicLayoutSection section="main">
           <AtomicLayoutSection section="status">
             <AtomicBreadbox />
-            <AtomicQuerySummary enableDuration={false} />
+            <AtomicQuerySummary />
             <AtomicRefineToggle />
             <AtomicSortDropdown>
               <AtomicSortExpression label="relevance" expression="relevancy" />

@@ -11,7 +11,7 @@ import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
-import {InsightResult, InsightEngine, InsightInteractiveResult} from '..';
+import {InsightResult, InsightInteractiveResult} from '..';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
 
 /**

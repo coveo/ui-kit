@@ -1,10 +1,5 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {
-  FoldedResult,
-  InteractiveResult,
-  Result,
-  SearchEngine,
-} from '@coveo/headless';
+import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,

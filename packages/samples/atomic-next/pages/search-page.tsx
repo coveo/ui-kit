@@ -119,7 +119,7 @@ const SearchPage: NextPage = () => {
         <AtomicLayoutSection section="main">
           <AtomicLayoutSection section="status">
             <AtomicBreadbox />
-            <AtomicQuerySummary enableDuration={false} />
+            <AtomicQuerySummary />
             <AtomicRefineToggle />
             <AtomicSortDropdown>
               <AtomicSortExpression label="relevance" expression="relevancy" />
