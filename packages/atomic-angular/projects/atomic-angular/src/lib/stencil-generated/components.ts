@@ -572,14 +572,12 @@ export class AtomicQueryError {
 export declare interface AtomicQuerySummary extends Components.AtomicQuerySummary {}
 
 @ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['enableDuration']
+  defineCustomElementFn: undefined
 })
 @Component({
   selector: 'atomic-query-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['enableDuration']
+  template: '<ng-content></ng-content>'
 })
 export class AtomicQuerySummary {
   protected el: HTMLElement;

@@ -46,7 +46,7 @@ export class AtomicQuerySummary
           <QuerySummaryCommon
             setAriaLive={(msg) => (this.ariaMessage = msg)}
             bindings={this.bindings}
-            enableDuration={false}
+            withDuration={false}
             querySummaryState={this.querySummaryState}
           />
         </div>

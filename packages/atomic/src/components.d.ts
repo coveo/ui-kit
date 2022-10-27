@@ -801,11 +801,6 @@ export namespace Components {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
-        /**
-          * Whether to display the duration of the last query execution.
-          * @deprecated Use the `duration` part.
-         */
-        "enableDuration": boolean;
     }
     interface AtomicRatingFacet {
         /**
@@ -3290,11 +3285,6 @@ declare namespace LocalJSX {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
-        /**
-          * Whether to display the duration of the last query execution.
-          * @deprecated Use the `duration` part.
-         */
-        "enableDuration"?: boolean;
     }
     interface AtomicRatingFacet {
         /**
