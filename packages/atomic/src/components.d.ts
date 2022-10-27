@@ -276,11 +276,6 @@ export namespace Components {
          */
         "density": ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
-          * @deprecated add it to atomic-search-interface instead
-         */
-        "fieldsToInclude": string;
-        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize": ResultDisplayImageSize;
@@ -1214,11 +1209,6 @@ export namespace Components {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display": ResultDisplayLayout;
-        /**
-          * A list of non-default fields to include in the query results, separated by commas.
-          * @deprecated add it to atomic-search-interface instead
-         */
-        "fieldsToInclude": string;
         /**
           * The expected size of the image displayed in the results.
          */
@@ -2772,11 +2762,6 @@ declare namespace LocalJSX {
          */
         "density"?: ResultDisplayDensity;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
-          * @deprecated add it to atomic-search-interface instead
-         */
-        "fieldsToInclude"?: string;
-        /**
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ResultDisplayImageSize;
@@ -3655,11 +3640,6 @@ declare namespace LocalJSX {
           * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
          */
         "display"?: ResultDisplayLayout;
-        /**
-          * A list of non-default fields to include in the query results, separated by commas.
-          * @deprecated add it to atomic-search-interface instead
-         */
-        "fieldsToInclude"?: string;
         /**
           * The expected size of the image displayed in the results.
          */

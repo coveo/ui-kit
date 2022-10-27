@@ -25,7 +25,6 @@ export const TableResultListPage: FunctionComponent = () => {
       organizationId="electronicscoveodemocomo0n2fu8v"
     >
       <AtomicResultList
-        fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
         display="table"
         imageSize="large"
         template={MyTemplate}

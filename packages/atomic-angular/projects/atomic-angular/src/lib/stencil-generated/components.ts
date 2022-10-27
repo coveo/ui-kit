@@ -216,14 +216,14 @@ export declare interface AtomicFoldedResultList extends Components.AtomicFoldedR
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['childField', 'collectionField', 'density', 'fieldsToInclude', 'imageSize', 'parentField'],
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-folded-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['childField', 'collectionField', 'density', 'fieldsToInclude', 'imageSize', 'parentField']
+  inputs: ['childField', 'collectionField', 'density', 'imageSize', 'parentField']
 })
 export class AtomicFoldedResultList {
   protected el: HTMLElement;
@@ -989,14 +989,14 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['density', 'display', 'fieldsToInclude', 'imageSize'],
+  inputs: ['density', 'display', 'imageSize'],
   methods: ['setRenderFunction']
 })
 @Component({
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['density', 'display', 'fieldsToInclude', 'imageSize']
+  inputs: ['density', 'display', 'imageSize']
 })
 export class AtomicResultList {
   protected el: HTMLElement;
