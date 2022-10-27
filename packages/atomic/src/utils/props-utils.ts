@@ -7,12 +7,6 @@ interface MapPropOptions {
   splitValues?: boolean;
 }
 
-interface ArrayPropOptions {
-  // @deprecated
-  // TODO v2: remove deprecation warning and change to a strict error only
-  deprecationWarning: boolean;
-}
-
 export function MapProp(opts?: MapPropOptions) {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
@@ -38,15 +32,7 @@ export function MapProp(opts?: MapPropOptions) {
   };
 }
 
-export function ArrayProp(opts: ArrayPropOptions) {
-  const logWithDeprecation = (msg: string, ...other: unknown[]) =>
-    opts.deprecationWarning
-      ? console.warn(
-          `${msg} This will be enforced in the next major version`,
-          other
-        )
-      : console.error(msg, other);
-
+export function ArrayProp() {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
     const attributeWithBackets = camelToKebab(variableName);
@@ -71,13 +57,13 @@ export function ArrayProp(opts: ArrayPropOptions) {
         if (isArray(valueAsArray)) {
           this[variableName] = valueAsArray;
         } else {
-          logWithDeprecation(
+          console.error(
             `Property ${attributeWithBackets} should be an array`,
             getElement(this)
           );
         }
       } catch (e) {
-        logWithDeprecation(
+        console.error(
           `Error while parsing attribute ${attributeWithBackets} as array`,
           e
         );

@@ -27,7 +27,6 @@ import {
   FacetCommon,
   parseDependsOn,
 } from '../../../common/facets/facet-common';
-import {isArray} from '@coveo/bueno';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -183,9 +182,9 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    *
    * Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
    */
-  @ArrayProp({deprecationWarning: true})
+  @ArrayProp()
   @Prop({mutable: true})
-  public allowedValues?: string | string[];
+  public allowedValues?: string[];
 
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
@@ -205,7 +204,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.processAllowedValues(),
+      allowedValues: this.allowedValues,
     };
 
     this.facet = buildFacet(this.bindings.engine, {options});
@@ -270,19 +269,5 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       showMoreFocus: this.showMoreFocus,
       onToggleCollapse: () => (this.isCollapsed = !this.isCollapsed),
     });
-  }
-
-  private processAllowedValues() {
-    // @deprecated
-    // TODO, V2:
-    // basePath should only support JSON string representation.
-    // deprecate comma delimited string
-    if (isArray(this.allowedValues)) {
-      return this.allowedValues;
-    }
-    if (this.allowedValues) {
-      return this.allowedValues?.trim().split(',');
-    }
-    return undefined;
   }
 }

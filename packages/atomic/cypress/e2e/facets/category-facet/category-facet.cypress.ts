@@ -495,7 +495,7 @@ describe('Category Facet Test Suites', () => {
       new TestFixture()
         .with(
           addCategoryFacet(
-            {'base-path': togoHierarchy.slice(0, 2).join(',')},
+            {'base-path': JSON.stringify(togoHierarchy.slice(0, 2))},
             true
           )
         )
@@ -506,34 +506,6 @@ describe('Category Facet Test Suites', () => {
     CategoryFacetAssertions.assertFirstChildContains(togoHierarchy[2]);
     CategoryFacetAssertions.assertDisplayAllCategoriesButton(false);
     CategoryFacetAssertions.assertNumberOfParentValues(0);
-  });
-
-  describe('with #basePath using a JSON string representation', () => {
-    let test: TestFixture;
-    before(() => {
-      test = new TestFixture().with(
-        addCategoryFacet(
-          {
-            'base-path': '["some value with a, comma","another value"]',
-          },
-          true
-        )
-      );
-    });
-
-    it('should send the proper base path split on the delitiming character', () => {
-      cy.intercept({
-        method: 'POST',
-        url: '**/rest/search/v2?*',
-      }).as('searchRequest');
-
-      test.init();
-      cy.wait('@searchRequest').then(({request}) => {
-        const basePathRequested = request.body.facets[0].basePath;
-        cy.wrap(basePathRequested[0]).should('eq', 'some value with a, comma');
-        cy.wrap(basePathRequested[1]).should('eq', 'another value');
-      });
-    });
   });
 
   describe('with #basePath using incorrect JSON array', () => {
@@ -549,7 +521,7 @@ describe('Category Facet Test Suites', () => {
         )
         .init();
     });
-    CommonAssertions.assertConsoleWarningMessage(
+    CommonAssertions.assertConsoleErrorMessage(
       'Error while parsing attribute base-path'
     );
   });
@@ -560,7 +532,7 @@ describe('Category Facet Test Suites', () => {
         .with(
           addCategoryFacet(
             {
-              'base-path': togoHierarchy.slice(0, 2).join(','),
+              'base-path': JSON.stringify(togoHierarchy.slice(0, 2)),
               'filter-by-base-path': 'false',
             },
             true
