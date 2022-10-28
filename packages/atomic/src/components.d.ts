@@ -38,7 +38,7 @@ export namespace Components {
     }
     interface AtomicCategoryFacet {
         /**
-          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```  Specifying the property as a comma separated string is deprecated.
+          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```
          */
         "basePath"?: string[];
         /**
@@ -158,7 +158,7 @@ export namespace Components {
     }
     interface AtomicFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  Specifying the property as a comma separated string is deprecated.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues"?: string[];
         /**
@@ -418,9 +418,9 @@ export namespace Components {
          */
         "executeFirstSearch": () => Promise<void>;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface> ```
          */
-        "fieldsToInclude": string;
+        "fieldsToInclude": string[];
         /**
           * The service insight interface i18next instance.
          */
@@ -906,9 +906,9 @@ export namespace Components {
          */
         "engine"?: RecommendationEngine;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
-        "fieldsToInclude": string;
+        "fieldsToInclude": string[];
         /**
           * Fetches new recommendations.
          */
@@ -1440,9 +1440,9 @@ export namespace Components {
          */
         "executeFirstSearch": () => Promise<void>;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
          */
-        "fieldsToInclude": string;
+        "fieldsToInclude": string[];
         /**
           * The search interface i18next instance.
          */
@@ -2520,7 +2520,7 @@ declare namespace LocalJSX {
     }
     interface AtomicCategoryFacet {
         /**
-          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```  Specifying the property as a comma separated string is deprecated.
+          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```
          */
         "basePath"?: string[];
         /**
@@ -2640,7 +2640,7 @@ declare namespace LocalJSX {
     }
     interface AtomicFacet {
         /**
-          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  Specifying the property as a comma separated string is deprecated.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
          */
         "allowedValues"?: string[];
         /**
@@ -2896,9 +2896,9 @@ declare namespace LocalJSX {
          */
         "engine"?: InsightEngine;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface> ```
          */
-        "fieldsToInclude"?: string;
+        "fieldsToInclude"?: string[];
         /**
           * The service insight interface i18next instance.
          */
@@ -3370,9 +3370,9 @@ declare namespace LocalJSX {
          */
         "engine"?: RecommendationEngine;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
          */
-        "fieldsToInclude"?: string;
+        "fieldsToInclude"?: string[];
         /**
           * The recommendation interface i18next instance.
          */
@@ -3857,9 +3857,9 @@ declare namespace LocalJSX {
          */
         "engine"?: SearchEngine;
         /**
-          * A list of non-default fields to include in the query results, separated by commas.
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
          */
-        "fieldsToInclude"?: string;
+        "fieldsToInclude"?: string[];
         /**
           * The search interface i18next instance.
          */

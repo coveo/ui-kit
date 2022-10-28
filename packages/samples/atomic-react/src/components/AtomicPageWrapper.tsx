@@ -67,7 +67,17 @@ export const AtomicPageWrapper: FunctionComponent<Props> = ({
       engine={engine}
       pipeline="Search"
       searchHub="MainSearch"
-      fieldsToInclude="ec_price,ec_rating,ec_images,ec_brand,cat_platform,cat_condition,cat_categories,cat_review_count,cat_color"
+      fieldsToInclude={[
+        'ec_price',
+        'ec_rating',
+        'ec_images',
+        'ec_brand',
+        'cat_platform',
+        'cat_condition',
+        'cat_categories',
+        'cat_review_count',
+        'cat_color',
+      ]}
       localization={(i18n) => {
         i18n.addResourceBundle('en', 'translation', {
           'no-ratings-available': 'No ratings available',

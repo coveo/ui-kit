@@ -295,7 +295,7 @@ describe('Instant Results Test Suites', () => {
     });
 
     describe('when clicking a result', () => {
-      before(() => {
+      beforeEach(() => {
         setupWithSuggestionsAndRecentQueries();
         SearchBoxSelectors.inputBox().type('{downarrow}', {
           delay: 200,

@@ -163,8 +163,6 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
   /**
    * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.
    *
-   * Specifying the property as a comma separated string is deprecated.
-   *
    * If you specify a list of values for this option, the facet uses only these values (if they are available in
    * the current result set).
    *

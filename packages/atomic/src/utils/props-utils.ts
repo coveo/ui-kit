@@ -37,18 +37,11 @@ export function ArrayProp() {
     const {componentWillLoad} = component;
     const attributeWithBackets = camelToKebab(variableName);
 
-    if (!componentWillLoad) {
-      console.error(
-        'The "componentWillLoad" lifecycle method has to be defined for the ArrayProp decorator to work.'
-      );
-      return;
-    }
-
     component.componentWillLoad = function () {
       const attr =
         getElement(this).attributes.getNamedItem(attributeWithBackets);
       if (!attr) {
-        componentWillLoad.call(this);
+        componentWillLoad?.call(this);
         return;
       }
 
@@ -69,7 +62,7 @@ export function ArrayProp() {
         );
       }
 
-      componentWillLoad.call(this);
+      componentWillLoad?.call(this);
     };
   };
 }

@@ -155,8 +155,6 @@ export class AtomicCategoryFacet
    * ```html
    *  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet>
    * ```
-   *
-   * Specifying the property as a comma separated string is deprecated.
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
