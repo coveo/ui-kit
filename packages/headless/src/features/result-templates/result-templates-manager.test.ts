@@ -8,6 +8,7 @@ import {
   MockSearchEngine,
 } from '../../test/mock-engine';
 import {fields} from '../../app/reducers';
+import {ResultTemplate} from './result-templates';
 
 describe('result template manager', () => {
   let resultTemplateManager: ResultTemplatesManager<string>;
@@ -85,6 +86,24 @@ describe('result template manager', () => {
       expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe(
         '{{title1}}'
       );
+    });
+
+    it('validates the template', () => {
+      expect(() =>
+        resultTemplateManager.registerTemplates(
+          undefined as unknown as ResultTemplate<string>
+        )
+      ).toThrow();
+      expect(() =>
+        resultTemplateManager.registerTemplates({
+          content: 'abc',
+        } as unknown as ResultTemplate<string>)
+      ).toThrow();
+      expect(() =>
+        resultTemplateManager.registerTemplates({
+          conditions: [() => true],
+        } as unknown as ResultTemplate<string>)
+      ).toThrow();
     });
   });
 });
