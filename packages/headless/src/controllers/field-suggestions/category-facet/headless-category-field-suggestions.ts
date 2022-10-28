@@ -41,6 +41,9 @@ export interface CategoryFieldSuggestionsValue {
   count: number;
   /**
    * The hierarchical path to the value.
+   *
+   * @example
+   * ["Electronics", "Smartphones", "Android phones"]
    */
   path: string[];
 }
@@ -78,7 +81,7 @@ export interface CategoryFieldSuggestions extends Subscribable {
   /**
    * Requests field suggestions based on a query.
    *
-   * @param text - The query to search.
+   * @param text - The query with which to request field suggestions.
    */
   updateText(text: string): void;
 
@@ -93,9 +96,11 @@ export interface CategoryFieldSuggestions extends Subscribable {
   search(): void;
 
   /**
-   * If a facet exists with the configured `facetId`, selects a facet value.
+   * Filters the search using the specified value.
    *
-   * @param value - The field suggestion for which to select the matching facet value.
+   * If a facet exists with the configured `facetId`, selects the corresponding facet value.
+   *
+   * @param value - The field suggestion to select.
    */
   select(value: CategoryFieldSuggestionsValue): void;
 
