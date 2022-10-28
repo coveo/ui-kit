@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.119.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.118.1...@coveo/atomic@1.119.0) (2022-10-28)
+
+
+### Features
+
+* **atomic:** always show facet search when enabled ([#2513](https://github.com/coveo/ui-kit/issues/2513)) ([0d3b55a](https://github.com/coveo/ui-kit/commit/0d3b55a8438bbe95ea58669200418355b8a01dfd))
+
+
+
+
+
 ## [1.118.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.118.0...@coveo/atomic@1.118.1) (2022-10-21)
 
 **Note:** Version bump only for package @coveo/atomic

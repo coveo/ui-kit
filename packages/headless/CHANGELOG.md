@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.109.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.109.0...@coveo/headless@1.109.1) (2022-10-28)
+
+
+### Bug Fixes
+
+* **headless:** extract answerQuestion from ever changing response ([#2507](https://github.com/coveo/ui-kit/issues/2507)) ([164e4e2](https://github.com/coveo/ui-kit/commit/164e4e21f24573562b0b4de8d4e8530577350ca3))
+* **headless:** instant results should disable abort warning ([#2512](https://github.com/coveo/ui-kit/issues/2512)) ([22fd8b1](https://github.com/coveo/ui-kit/commit/22fd8b1c205f22fc6855248a77abb9fcab7db3ac))
+* **headless:** made category field suggestions not inherit the search context ([#2514](https://github.com/coveo/ui-kit/issues/2514)) ([9197fd5](https://github.com/coveo/ui-kit/commit/9197fd53b9d7621267c5d837bf9667d383f4f31d))
+* **headless:** made field suggestions not inherit the search context ([#2508](https://github.com/coveo/ui-kit/issues/2508)) ([a49da55](https://github.com/coveo/ui-kit/commit/a49da55fc796c91678388029a372d44d6edbe23e))
+
+
+
+
+
 # [1.109.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.108.0...@coveo/headless@1.109.0) (2022-10-18)
 
 
