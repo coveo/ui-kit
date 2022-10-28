@@ -68,8 +68,8 @@ export default class QuanticQueryError extends LightningElement {
    */
   initialize = (engine) => {
     this.queryError = CoveoHeadless.buildQueryError(engine);
-    this.unsubscribe = this.queryError.subscribe(() => this.updateState());
     this.errorAriaMessage = AriaLiveRegion('queryerror', this);
+    this.unsubscribe = this.queryError.subscribe(() => this.updateState());
   }
 
   disconnectedCallback() {

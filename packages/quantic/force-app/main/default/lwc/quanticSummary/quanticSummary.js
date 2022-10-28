@@ -69,8 +69,8 @@ export default class QuanticSummary extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.querySummary = this.headless.buildQuerySummary(engine);
-    this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
     this.summaryAriaMessage = AriaLiveRegion('summary', this);
+    this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   };
 
   disconnectedCallback() {
