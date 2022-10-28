@@ -50,7 +50,7 @@ type ResultAction =
   | 'sendAsEmail'
   | 'sendToFeed';
 
-type FacetType = 'standard' | 'numeric' | 'timeframe';
+type InsightFacetType = 'standard' | 'numeric' | 'timeframe';
 
 interface InsightOption {
   enabled: boolean;
@@ -71,7 +71,7 @@ interface Facet {
   field: string;
   label?: string;
   displayValueAs?: string;
-  facetTypes?: FacetType;
+  facetTypes?: InsightFacetType;
 }
 
 interface Tab {
