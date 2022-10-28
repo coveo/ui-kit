@@ -550,9 +550,9 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
-          * The InteractiveResult item. TODO: v2 make required
+          * The InteractiveResult item.
          */
-        "interactiveResult"?: InsightInteractiveResult;
+        "interactiveResult": InsightInteractiveResult;
         "loadingFlag"?: string;
         /**
           * The result item.
@@ -1096,9 +1096,9 @@ export namespace Components {
          */
         "imageSize": ResultDisplayImageSize;
         /**
-          * The InteractiveResult item. TODO: v2 make required
+          * The InteractiveResult item.
          */
-        "interactiveResult"?: InteractiveResult;
+        "interactiveResult": InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -3016,9 +3016,9 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
-          * The InteractiveResult item. TODO: v2 make required
+          * The InteractiveResult item.
          */
-        "interactiveResult"?: InsightInteractiveResult;
+        "interactiveResult": InsightInteractiveResult;
         "loadingFlag"?: string;
         /**
           * The result item.
@@ -3526,9 +3526,9 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ResultDisplayImageSize;
         /**
-          * The InteractiveResult item. TODO: v2 make required
+          * The InteractiveResult item.
          */
-        "interactiveResult"?: InteractiveResult;
+        "interactiveResult": InteractiveResult;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React

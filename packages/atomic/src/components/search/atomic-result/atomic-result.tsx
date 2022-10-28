@@ -44,10 +44,9 @@ export class AtomicResult {
 
   /**
    * The InteractiveResult item.
-   * TODO: v2 make required
    * @internal
    */
-  @Prop() interactiveResult?: InteractiveResult;
+  @Prop() interactiveResult!: InteractiveResult;
 
   /**
    * Global Atomic state.
