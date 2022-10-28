@@ -80,6 +80,7 @@ export function buildCategoryFacet(
       facetId: getFacetId(),
       ...props.options.facetSearch,
     },
+    isForFieldSuggestions: false,
   });
 
   const {state, ...restOfFacetSearch} = facetSearch;

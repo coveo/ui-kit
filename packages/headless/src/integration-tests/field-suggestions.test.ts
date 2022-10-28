@@ -5,39 +5,11 @@ import {
   SearchEngine,
   buildFieldSuggestions,
   FieldSuggestions,
-  Controller,
   buildFacet,
   Facet,
   FieldSuggestionsValue,
-  CoreEngine,
 } from '..';
-
-function isEngine(obj: object): obj is CoreEngine {
-  return 'dispatch' in obj;
-}
-
-function waitForNextStateChange(
-  target: Controller | CoreEngine,
-  options: {action?: () => void; expectedSubscriberCalls?: number} = {}
-) {
-  return new Promise<void>((resolve) => {
-    let skipFirstCall = !isEngine(target);
-    let subscriberCalls = 0;
-    let unsubscribe = () => {};
-    unsubscribe = target.subscribe(() => {
-      if (skipFirstCall) {
-        skipFirstCall = false;
-        return;
-      }
-      if (++subscriberCalls < (options?.expectedSubscriberCalls ?? 1)) {
-        return;
-      }
-      unsubscribe();
-      resolve();
-    });
-    options.action?.();
-  });
-}
+import {waitForNextStateChange} from '../test/functional-test-utils';
 
 describe('field suggestions', () => {
   let engine: SearchEngine;
@@ -80,8 +52,8 @@ describe('field suggestions', () => {
     describe('after calling #search', () => {
       beforeEach(async () => {
         await waitForNextStateChange(fieldSuggestions, {
-          action: () => fieldSuggestions.updateText('doc'),
-          expectedSubscriberCalls: 3,
+          action: () => fieldSuggestions.search(),
+          expectedSubscriberCalls: 2,
         });
       });
 

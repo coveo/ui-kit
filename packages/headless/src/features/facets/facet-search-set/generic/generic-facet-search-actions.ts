@@ -57,7 +57,8 @@ const getExecuteFacetSearchThunkPayloadCreator =
     } else {
       req = await buildCategoryFacetSearchRequest(
         facetId,
-        state as StateNeededForCategoryFacetSearch
+        state as StateNeededForCategoryFacetSearch,
+        isFieldSuggestionsRequest
       );
     }
 
