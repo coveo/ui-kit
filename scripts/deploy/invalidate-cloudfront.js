@@ -9,9 +9,7 @@ async function getMajorVersion(dir) {
 
 async function main() {
   const pathsToInvalidate = [
-    '/atomic/latest/*',
     `/atomic/v${await getMajorVersion('atomic')}/*`,
-    '/headless/latest/*',
     `/headless/v${await getMajorVersion('headless')}/*`,
   ];
 
