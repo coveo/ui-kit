@@ -138,11 +138,24 @@ npm install coveo.analytics isomorphic-fetch
 ```
 
 ```js
-import fetch from 'isomorphic-fetch'; // isomorphic-fetch modifies the global environment
-import coveoanalytics from 'coveo.analytics';
+import {CoveoAnalyticsClient} from 'coveo.analytics';
 
 // Create an API client
-const client = new coveoanalytics.analytics.Client({token: 'YOUR_API_KEY'});
+const client = new CoveoAnalyticsClient({token: 'YOUR_API_KEY'});
+// Send your event
+client.sendCustomEvent({
+    eventType: 'dog',
+    eventValue: 'Hello! Yes! This is Dog!',
+});
+```
+
+## Using React Native
+
+```js
+import {CoveoAnalyticsClient, ReactNativeRuntime} from 'coveo.analytics/react-native';
+
+// Create an API client
+const client = new CoveoAnalyticsClient({runtimeEnvironment: ReactNativeRuntime({})});
 // Send your event
 client.sendCustomEvent({
     eventType: 'dog',

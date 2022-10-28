@@ -2,16 +2,31 @@ import {WebStorage} from '../storage';
 import {AnalyticsFetchClient} from '../client/analyticsFetchClient';
 import {ReactNativeStorage} from './react-native-storage';
 import {IRuntimeEnvironment} from '../client/runtimeEnvironment';
-import {IAnalyticsClientOptions} from '../client/analyticsRequestClient';
+import {PreprocessAnalyticsRequest} from '../client/analyticsRequestClient';
+import {uuidv4} from '../client/crypto';
+import {buildBaseUrl} from '../client/analytics';
+
+export interface ReactNativeRuntimeOptions {
+    visitorIdKey?: string;
+    token?: string;
+    version?: string;
+    endpoint?: string;
+    preprocessRequest?: PreprocessAnalyticsRequest;
+}
 
 export class ReactNativeRuntime implements IRuntimeEnvironment {
-    public storage: WebStorage;
     public client: AnalyticsFetchClient;
 
-    // TODO: v3 switch to ClientOptions type, add default options
-    // TODO: v3 reuse own ReactNativeStorage to implement VisitorIdProvider's getCurrentVisitorId, setCurrentVisitorId
-    constructor(clientOptions: IAnalyticsClientOptions) {
-        this.storage = new ReactNativeStorage();
-        this.client = new AnalyticsFetchClient(clientOptions);
+    constructor(options: ReactNativeRuntimeOptions, public storage: WebStorage = new ReactNativeStorage()) {
+        const visitorIdKey = options.visitorIdKey ?? 'visitorIdKey';
+        this.client = new AnalyticsFetchClient({
+            preprocessRequest: options.preprocessRequest,
+            token: options.token,
+            baseUrl: buildBaseUrl(options.endpoint, options.version),
+            visitorIdProvider: {
+                getCurrentVisitorId: async () => (await this.storage.getItem(visitorIdKey)) || uuidv4(),
+                setCurrentVisitorId: (visitorId: string) => this.storage.setItem(visitorIdKey, visitorId),
+            },
+        });
     }
 }

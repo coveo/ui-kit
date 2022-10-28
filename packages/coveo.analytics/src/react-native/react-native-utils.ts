@@ -3,12 +3,12 @@ export const ReactNativeRuntimeWarning = `
         for an optimal experience please install @react-native-async-storage/async-storage and instantiate 
         your analytics client as follows:
         
-        import {ReactNativeRuntime} from 'coveo.analytics/src/react-native';
+        import {CoveoAnalyticsClient, ReactNativeRuntime} from 'coveo.analytics/react-native';
         
         const analytics = new CoveoAnalyticsClient({
             ...your options,
             runtimeEnvironment: new ReactNativeRuntime({
-                baseUrl: '...',
+                ...runtime options
             });
         })
     `;

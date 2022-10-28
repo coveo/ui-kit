@@ -87,6 +87,11 @@ export interface BufferedRequest {
 type ProcessPayloadStep = (currentPayload: any) => any;
 type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
 
+export function buildBaseUrl(endpoint = Endpoints.default, apiVersion = Version) {
+    const endpointIsCoveoProxy = endpoint.indexOf('.cloud.coveo.com') !== -1;
+    return `${endpoint}${endpointIsCoveoProxy ? '' : '/rest'}/${apiVersion}`;
+}
+
 export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
     private get defaultOptions(): ClientOptions {
         return {
@@ -469,9 +474,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private get baseUrl(): string {
-        const {version, endpoint} = this.options;
-        const endpointIsCoveoProxy = endpoint.indexOf('.cloud.coveo.com') !== -1;
-        return `${endpoint}${endpointIsCoveoProxy ? '' : '/rest'}/${version}`;
+        return buildBaseUrl(this.options.version, this.options.version);
     }
 }
 
