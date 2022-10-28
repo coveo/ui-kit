@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import type {JSX, i18n} from '@coveo/atomic';
 import {
   getSampleRecommendationEngineConfiguration,
-  buildRecommendationEngine
+  buildRecommendationEngine,
 } from '@coveo/atomic/headless/recommendation';
 import {AtomicRecsInterface} from '../stencil-generated/index';
 
@@ -18,13 +18,6 @@ interface WrapperProps extends Omit<JSX.AtomicRecsInterface, 'i18n'> {
    */
   onReady?: (getRecommendations: GetRecommendations) => Promise<void>;
   /**
-   * @deprecated
-   *
-   * Read more about theming and visual customization here : https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/
-   *
-   */
-  theme?: string | 'none';
-  /**
    * An optional callback that lets you control the interface localization.
    *
    * The function receives the search interface 18n instance, which you can then modify (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
@@ -33,13 +26,10 @@ interface WrapperProps extends Omit<JSX.AtomicRecsInterface, 'i18n'> {
   localization?: (i18n: i18n) => void;
 }
 
-const DefaultProps: Required<
-  Pick<WrapperProps, 'onReady' | 'theme' | 'localization'>
-> = {
+const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
   onReady: (getRecommendations) => {
     return getRecommendations();
   },
-  theme: 'coveo',
   localization: () => {},
 };
 
@@ -64,7 +54,8 @@ export const RecsInterfaceWrapper = (
   useEffect(() => {
     const recsInterfaceAtomic = recsInterfaceRef.current!;
     if (!initialization) {
-      initialization = recsInterfaceAtomic.initializeWithRecommendationEngine(engine);
+      initialization =
+        recsInterfaceAtomic.initializeWithRecommendationEngine(engine);
       initialization.then(() => {
         localization(recsInterfaceAtomic.i18n);
         onReady(

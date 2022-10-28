@@ -58,7 +58,6 @@ const SearchPage: NextPage = () => {
       engine={engine}
       pipeline="Search"
       searchHub="MainSearch"
-      theme="none"
       fieldsToInclude={[
         'ec_price',
         'ec_rating',
