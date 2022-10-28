@@ -92,14 +92,18 @@ export interface FieldSuggestions extends Subscribable {
   search(): void;
 
   /**
-   * If a facet exists with the configured `facetId`, selects a facet value.
+   * Filters the search using the specified value.
+   *
+   * If a facet exists with the configured `facetId`, selects the corresponding facet value.
    *
    * @param value - The field suggestion for which to select the matching facet value.
    */
   select(value: FieldSuggestionsValue): void;
 
   /**
-   * If a facet exists with the configured `facetId`, selects a facet value while deselecting other facet values.
+   * Filters the search using the specified value, deselecting others.
+   *
+   * If a facet exists with the configured `facetId`, selects the corresponding facet value while deselecting other facet values.
    *
    * @param value - The field suggestion for which to select the matching facet value.
    */
@@ -154,7 +158,7 @@ export interface FieldSuggestionsOptions {
   /**
    * A unique identifier for the controller. By default, a random unique identifier is generated.
    *
-   * If a facet shares the same id, then its values are going to be selectable with `select` and `singleSelect`. However, you must make sure to build the field suggestion controller after the facet controller.
+   * If a facet shares the same id, then its values are going to be selectable with `select` and `singleSelect`.
    */
   facetId?: string;
 
