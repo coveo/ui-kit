@@ -671,8 +671,6 @@ describe('InsightClient', () => {
             const expectedMetadata = {
                 ...fakeDocID,
                 ...expectedBaseCaseMetadata,
-                context_Case_Subject: 'test subject',
-                context_Case_Description: 'test description',
             };
             await client.logDocumentOpen(fakeDocInfo, fakeDocID, metadata);
             expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, expectedMetadata);

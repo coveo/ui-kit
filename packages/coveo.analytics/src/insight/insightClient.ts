@@ -221,7 +221,7 @@ export class CoveoInsightClient {
 
     public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
         if (metadata) {
-            const metadataToSend = generateMetadataToSend(metadata);
+            const metadataToSend = generateMetadataToSend(metadata, false);
             return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier, metadataToSend);
         }
         return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier);
