@@ -1194,11 +1194,6 @@ export namespace Components {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
-        /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
-          * @deprecated Use the "attributes" slot instead to pass down attributes to the link.
-         */
-        "target": string;
     }
     interface AtomicResultList {
         /**
@@ -3625,11 +3620,6 @@ declare namespace LocalJSX {
           * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
          */
         "hrefTemplate"?: string;
-        /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
-          * @deprecated Use the "attributes" slot instead to pass down attributes to the link.
-         */
-        "target"?: string;
     }
     interface AtomicResultList {
         /**

@@ -968,13 +968,13 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['hrefTemplate', 'target']
+  inputs: ['hrefTemplate']
 })
 @Component({
   selector: 'atomic-result-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['hrefTemplate', 'target']
+  inputs: ['hrefTemplate']
 })
 export class AtomicResultLink {
   protected el: HTMLElement;

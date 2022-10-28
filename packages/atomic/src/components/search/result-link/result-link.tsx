@@ -10,7 +10,7 @@ export interface ResultLinkEventProps {
 
 export interface ResultLinkProps extends ResultLinkEventProps {
   href: string;
-  target: string;
+  target?: string;
   className?: string;
   part?: string;
   title?: string;
