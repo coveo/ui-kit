@@ -1,7 +1,12 @@
 import {mockFetch} from '../../tests/fetchMock';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
-import {CustomEventsTypes, SearchPageEvents, StaticFilterToggleValueMetadata} from '../searchPage/searchPageEvents';
+import {
+    CustomEventsTypes,
+    PartialDocumentInformation,
+    SearchPageEvents,
+    StaticFilterToggleValueMetadata,
+} from '../searchPage/searchPageEvents';
 import {CoveoInsightClient, InsightClientProvider} from './insightClient';
 import doNotTrack from '../donottrack';
 import {InsightEvents, InsightStaticFilterToggleValueMetadata} from './insightEvents';
@@ -99,6 +104,37 @@ describe('InsightClient', () => {
             clientId: 'visitor-id',
             ...expectOrigins(),
         });
+    };
+
+    const expectMatchDocumentPayload = (actionCause: SearchPageEvents, doc: PartialDocumentInformation, meta = {}) => {
+        const [, {body}] = fetchMock.lastCall();
+        const customData = {foo: 'bar', ...meta};
+        expect(JSON.parse(body.toString())).toMatchObject({
+            actionCause,
+            customData,
+            language: 'en',
+            clientId: 'visitor-id',
+            ...doc,
+            ...expectOrigins(),
+        });
+    };
+
+    const fakeDocInfo = {
+        collectionName: 'collection',
+        documentAuthor: 'author',
+        documentPosition: 1,
+        documentTitle: 'title',
+        documentUri: 'uri',
+        documentUriHash: 'hash',
+        documentUrl: 'url',
+        queryPipeline: 'my-pipeline',
+        rankingModifier: 'modifier',
+        sourceName: 'source',
+    };
+
+    const fakeDocID = {
+        contentIDKey: 'permanentID',
+        contentIDValue: 'the-permanent-id',
     };
 
     beforeEach(() => {
@@ -276,6 +312,11 @@ describe('InsightClient', () => {
         it('should send proper payload for #searchboxSubmit', async () => {
             await client.logSearchboxSubmit();
             expectMatchPayload(SearchPageEvents.searchboxSubmit);
+        });
+
+        it('should send proper payload for #documentOpen', async () => {
+            await client.logDocumentOpen(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
         });
     });
 
@@ -622,6 +663,19 @@ describe('InsightClient', () => {
             };
             await client.logSearchboxSubmit(metadata);
             expectMatchPayload(SearchPageEvents.searchboxSubmit, expectedMetadata);
+        });
+
+        it('should send proper payload for #documentOpen', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+                context_Case_Subject: 'test subject',
+                context_Case_Description: 'test description',
+            };
+            await client.logDocumentOpen(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, expectedMetadata);
         });
     });
 

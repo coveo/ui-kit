@@ -1,8 +1,14 @@
 import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import doNotTrack from '../donottrack';
-import {CustomEventRequest, SearchEventRequest} from '../events';
-import {CustomEventsTypes, FacetStateMetadata, SearchPageEvents} from '../searchPage/searchPageEvents';
+import {ClickEventRequest, CustomEventRequest, SearchEventRequest} from '../events';
+import {
+    CustomEventsTypes,
+    DocumentIdentifier,
+    FacetStateMetadata,
+    PartialDocumentInformation,
+    SearchPageEvents,
+} from '../searchPage/searchPageEvents';
 import {
     ExpandToFullUIMetadata,
     InsightEvents,
@@ -213,6 +219,14 @@ export class CoveoInsightClient {
         return this.logCustomEvent(InsightEvents.expandToFullUI, metadataToSend);
     }
 
+    public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
+        if (metadata) {
+            const metadataToSend = generateMetadataToSend(metadata);
+            return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier, metadataToSend);
+        }
+        return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier);
+    }
+
     public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
@@ -227,6 +241,23 @@ export class CoveoInsightClient {
 
     public async logSearchEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         return this.coveoAnalyticsClient.sendSearchEvent(await this.getBaseSearchEventRequest(event, metadata));
+    }
+
+    public async logClickEvent(
+        event: SearchPageEvents,
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: Record<string, any>
+    ) {
+        const payload: ClickEventRequest = {
+            ...info,
+            ...(await this.getBaseEventRequest({...identifier, ...metadata})),
+            searchQueryUid: this.provider.getSearchUID(),
+            queryPipeline: this.provider.getPipeline(),
+            actionCause: event,
+        };
+
+        return this.coveoAnalyticsClient.sendClickEvent(payload);
     }
 
     private async getBaseCustomEventRequest(metadata?: Record<string, any>) {
