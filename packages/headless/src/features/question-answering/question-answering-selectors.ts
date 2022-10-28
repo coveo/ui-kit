@@ -10,7 +10,7 @@ export function answerSourceSelector(
   documentIdentifier?: QuestionAnswerDocumentIdentifier
 ) {
   const documentId =
-    documentIdentifier ?? state.search?.response?.questionAnswer?.documentId;
+    documentIdentifier ?? state.search?.questionAnswer?.documentId;
   return (
     documentId &&
     state.search &&
@@ -34,6 +34,6 @@ export function relatedQuestionSelector(
     return null;
   }
   const searchQuestionState =
-    state.search?.response?.questionAnswer?.relatedQuestions?.[index];
+    state.search?.questionAnswer?.relatedQuestions?.[index];
   return searchQuestionState ?? null;
 }

@@ -8,7 +8,7 @@ import {
 
 export interface RegisterTabActionCreatorPayload {
   /**
-   * A unique identifier for the tab
+   * A unique identifier for the tab (e.g., `"abc"`).
    */
   id: string;
 

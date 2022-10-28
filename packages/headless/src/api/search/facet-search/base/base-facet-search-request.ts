@@ -19,7 +19,7 @@ export interface BaseFacetSearchRequest
     VisitorIDParam,
     AuthenticationParam {
   field: string;
-  searchContext: SearchRequest;
+  searchContext?: SearchRequest;
   filterFacetCount: boolean;
 }
 

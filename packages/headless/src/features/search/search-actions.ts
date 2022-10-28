@@ -98,7 +98,7 @@ export const executeSearch = createAsyncThunk<
   >({...config, analyticsAction});
 
   const request = await buildSearchRequest(state);
-  const fetched = await processor.fetchFromAPI(request, 'mainSearch');
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
 });
@@ -119,7 +119,7 @@ export const fetchPage = createAsyncThunk<
   });
 
   const request = await buildSearchRequest(state);
-  const fetched = await processor.fetchFromAPI(request, 'mainSearch');
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
 });
@@ -139,7 +139,7 @@ export const fetchMoreResults = createAsyncThunk<
   });
 
   const request = await buildFetchMoreRequest(state);
-  const fetched = await processor.fetchFromAPI(request, 'mainSearch');
+  const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
 });
@@ -156,7 +156,9 @@ export const fetchFacetValues = createAsyncThunk<
   >({...config, analyticsAction});
 
   const request = await buildFetchFacetValuesRequest(state);
-  const fetched = await processor.fetchFromAPI(request, 'facetValues');
+  const fetched = await processor.fetchFromAPI(request, {
+    origin: 'facetValues',
+  });
 
   return await processor.process(fetched);
 });
@@ -194,7 +196,10 @@ export const fetchInstantResults = createAsyncThunk<
       maxResultsPerQuery
     );
 
-    const fetched = await processor.fetchFromAPI(request, 'instantResults');
+    const fetched = await processor.fetchFromAPI(request, {
+      origin: 'instantResults',
+      disableAbortWarning: true,
+    });
     const processed = await processor.process(fetched);
     if ('response' in processed) {
       return {

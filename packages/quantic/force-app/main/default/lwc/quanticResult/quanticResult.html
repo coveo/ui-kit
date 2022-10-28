@@ -1,5 +1,5 @@
 <template>
-  <c-quantic-result-template>
+  <c-quantic-result-template is-any-preview-open={isAnyPreviewOpen} result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}>
     <c-quantic-result-label slot="label" result={result}></c-quantic-result-label>
     <div slot="badges" class="slds-grid slds-grid_vertical-align-center slds-m-vertical_xx-small slds-m-right_small">
       <div class="slds-m-right_xx-small">
