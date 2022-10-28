@@ -1,5 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
-import {uglify} from 'rollup-plugin-uglify';
+import {terser} from 'rollup-plugin-terser';
 import serve from 'rollup-plugin-serve';
 import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
@@ -41,7 +41,7 @@ const browserUMD = {
     plugins: [
         browserFetch(),
         tsPlugin(),
-        uglify(),
+        terser({format: {comments: false}}),
         process.env.SERVE
             ? serve({
                   contentBase: ['dist', 'public'],
