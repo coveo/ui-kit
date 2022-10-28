@@ -39,6 +39,7 @@ export function buildCategoryFacetSearch(
   const genericFacetSearch = buildGenericFacetSearch(engine, {
     options,
     getFacetSearch,
+    isForFieldSuggestions: false,
   });
 
   return {
