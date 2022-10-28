@@ -50,7 +50,7 @@ type ResultAction =
   | 'sendAsEmail'
   | 'sendToFeed';
 
-type InsightFacetType = 'standard' | 'numeric' | 'timeframe';
+export type InsightFacetType = 'standard' | 'numeric' | 'timeframe';
 
 interface InsightOption {
   enabled: boolean;
