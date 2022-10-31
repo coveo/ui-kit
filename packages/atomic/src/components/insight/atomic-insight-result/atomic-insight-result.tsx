@@ -123,8 +123,8 @@ export class AtomicInsightResult {
 
   public render() {
     return (
-      // deepcode ignore ReactSetInnerHtml: This is not React code
       <Host class={resultComponentClass}>
+        {/* deepcode ignore ReactSetInnerHtml: This is not React code */}
         <div
           class={`result-root ${this.layout
             .getClasses()
