@@ -1,3 +1,2 @@
-export {ReactNativeRuntime, ReactNativeRuntimeOptions} from './react-native-runtime';
-export {ReactNativeStorage} from './react-native-storage';
+export {ReactNativeRuntime, ReactNativeRuntimeOptions, ReactNativeStorage} from './react-native-runtime';
 export * from '../coveoua/headless';
