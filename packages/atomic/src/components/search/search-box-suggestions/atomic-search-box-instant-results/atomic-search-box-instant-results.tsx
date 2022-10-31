@@ -31,6 +31,8 @@ export type AriaLabelGenerator = (
 
 /**
  * The `atomic-search-box-instant-results` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+ *
+ * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/atomic/latest/usage/accessibility/#instant-results-accessibility).
  */
 @Component({
   tag: 'atomic-search-box-instant-results',
