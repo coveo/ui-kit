@@ -1,4 +1,8 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {
+  AsyncThunkPayloadCreator,
+  createAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
 import {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response';
 import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request';
@@ -19,15 +23,24 @@ import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
 import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
 
-export const executeFacetSearch = createAsyncThunk<
-  {facetId: string; response: FacetSearchResponse},
-  string,
-  AsyncThunkOptions<
-    StateNeededForFacetSearch,
-    ClientThunkExtraArguments<FacetSearchAPIClient>
-  >
->(
-  'facetSearch/executeSearch',
+type ExecuteFacetSearchThunkReturn = {
+  facetId: string;
+  response: FacetSearchResponse;
+};
+type ExecuteFacetSearchThunkArg = string;
+type ExecuteFacetSearchThunkApiConfig = AsyncThunkOptions<
+  StateNeededForFacetSearch,
+  ClientThunkExtraArguments<FacetSearchAPIClient>
+>;
+
+const getExecuteFacetSearchThunkPayloadCreator =
+  (
+    isFieldSuggestionsRequest: boolean
+  ): AsyncThunkPayloadCreator<
+    ExecuteFacetSearchThunkReturn,
+    ExecuteFacetSearchThunkArg,
+    ExecuteFacetSearchThunkApiConfig
+  > =>
   async (
     facetId: string,
     {dispatch, getState, extra: {apiClient, validatePayload}}
@@ -36,20 +49,44 @@ export const executeFacetSearch = createAsyncThunk<
     let req: SpecificFacetSearchRequest | CategoryFacetSearchRequest;
     validatePayload(facetId, requiredNonEmptyString);
     if (isSpecificFacetSearchState(state, facetId)) {
-      req = await buildSpecificFacetSearchRequest(facetId, state);
+      req = await buildSpecificFacetSearchRequest(
+        facetId,
+        state,
+        isFieldSuggestionsRequest
+      );
     } else {
       req = await buildCategoryFacetSearchRequest(
         facetId,
-        state as StateNeededForCategoryFacetSearch
+        state as StateNeededForCategoryFacetSearch,
+        isFieldSuggestionsRequest
       );
     }
 
     const response = await apiClient.facetSearch(req);
-    dispatch(logFacetSearch(facetId));
+    if (!isFieldSuggestionsRequest) {
+      dispatch(logFacetSearch(facetId));
+    }
 
     return {facetId, response};
-  }
-);
+  };
+
+export const executeFacetSearch = createAsyncThunk<
+  ExecuteFacetSearchThunkReturn,
+  string,
+  AsyncThunkOptions<
+    StateNeededForFacetSearch,
+    ClientThunkExtraArguments<FacetSearchAPIClient>
+  >
+>('facetSearch/executeSearch', getExecuteFacetSearchThunkPayloadCreator(false));
+
+export const executeFieldSuggest = createAsyncThunk<
+  {facetId: string; response: FacetSearchResponse},
+  string,
+  AsyncThunkOptions<
+    StateNeededForFacetSearch,
+    ClientThunkExtraArguments<FacetSearchAPIClient>
+  >
+>('facetSearch/executeSearch', getExecuteFacetSearchThunkPayloadCreator(true)); // We use the same action type because this action is meant to be handled by reducers the same way.
 
 export const clearFacetSearch = createAction(
   'facetSearch/clearResults',

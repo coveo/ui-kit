@@ -88,6 +88,7 @@ export default class QuanticNoResults extends LightningElement {
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.querySummary = this.headless.buildQuerySummary(engine);
     this.breadcrumbManager = this.headless.buildBreadcrumbManager(engine);
+    this.noResultAriaMessage = AriaLiveRegion('noresult', this);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() => this.updateState());
     this.unsubscribeQuerySummary = this.querySummary.subscribe(() => this.updateState());
     this.unsubscribeBreadcrumbsManager = this.breadcrumbManager.subscribe(() => this.updateState());
@@ -95,7 +96,6 @@ export default class QuanticNoResults extends LightningElement {
       this.historyManager = this.headless.buildHistoryManager(engine);
       this.unsubscribeHistoryManager = this.historyManager.subscribe(() => this.updateState());
     }
-    this.noResultAriaMessage = AriaLiveRegion('noresult', this);
   }
 
   disconnectedCallback() {

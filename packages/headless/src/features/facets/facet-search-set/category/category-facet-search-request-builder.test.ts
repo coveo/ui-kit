@@ -18,7 +18,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
   }
 
   function buildParams() {
-    return buildCategoryFacetSearchRequest(id, state);
+    return buildCategoryFacetSearchRequest(id, state, false);
   }
 
   beforeEach(() => setupState());

@@ -42,6 +42,7 @@ describe('FacetSearch', () => {
     props = {
       options: {facetId},
       getFacetSearch,
+      isForFieldSuggestions: false,
     };
 
     engine = buildMockSearchAppEngine();

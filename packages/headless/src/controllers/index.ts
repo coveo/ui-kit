@@ -374,14 +374,20 @@ export type {
 export {buildCoreFacetConditionsManager as buildFacetConditionsManager} from './core/facets/facet-conditions-manager/headless-facet-conditions-manager';
 
 export type {
+  FieldSuggestionsValue,
+  FieldSuggestionsState,
   FieldSuggestions,
+  FieldSuggestionsFacetSearchOptions,
   FieldSuggestionsOptions,
   FieldSuggestionsProps,
 } from './field-suggestions/facet/headless-field-suggestions';
 export {buildFieldSuggestions} from './field-suggestions/facet/headless-field-suggestions';
 
 export type {
+  CategoryFieldSuggestionsValue,
+  CategoryFieldSuggestionsState,
   CategoryFieldSuggestions,
+  CategoryFieldSuggestionsFacetSearchOptions,
   CategoryFieldSuggestionsOptions,
   CategoryFieldSuggestionsProps,
 } from './field-suggestions/category-facet/headless-category-field-suggestions';

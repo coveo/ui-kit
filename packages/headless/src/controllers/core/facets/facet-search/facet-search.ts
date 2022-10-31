@@ -5,6 +5,7 @@ import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/f
 import {
   clearFacetSearch,
   executeFacetSearch,
+  executeFieldSuggest,
 } from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {
   CategoryFacetSearchSection,
@@ -20,6 +21,7 @@ type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 export interface GenericFacetSearchProps<T extends FacetSearchState> {
   options: FacetSearchOptions;
   getFacetSearch: () => T;
+  isForFieldSuggestions: boolean;
 }
 
 export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
@@ -58,12 +60,20 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
           numberOfValues: options.numberOfValues + initialNumberOfValues,
         })
       );
-      dispatch(executeFacetSearch(facetId));
+      dispatch(
+        props.isForFieldSuggestions
+          ? executeFieldSuggest(facetId)
+          : executeFacetSearch(facetId)
+      );
     },
 
     /** Executes a facet search to update the values.*/
     search() {
-      dispatch(executeFacetSearch(facetId));
+      dispatch(
+        props.isForFieldSuggestions
+          ? executeFieldSuggest(facetId)
+          : executeFacetSearch(facetId)
+      );
     },
 
     /** Resets the query and empties the values. */

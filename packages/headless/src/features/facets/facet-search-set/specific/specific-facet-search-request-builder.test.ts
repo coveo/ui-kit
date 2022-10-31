@@ -17,7 +17,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
   }
 
   function buildParams() {
-    return buildSpecificFacetSearchRequest(id, state);
+    return buildSpecificFacetSearchRequest(id, state, false);
   }
 
   beforeEach(() => setupState());
