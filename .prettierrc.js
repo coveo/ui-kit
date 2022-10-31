@@ -12,5 +12,5 @@ module.exports = {
     'jsx',
     JSON.stringify(['decorators', {decoratorsBeforeExport: true}]),
   ],
-  importOrder: ['^[./]', '^\\/', '^\\.\\.\\/', '\\.\\/'],
+  importOrder: ['^[./]', '^\\/', '^\\.\\.\\/', '^\\.\\/'],
 };
