@@ -110,6 +110,7 @@ export function buildFacet(
           )
         );
       },
+      isForFieldSuggestions: false,
     });
   };
 

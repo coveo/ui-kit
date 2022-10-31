@@ -15,9 +15,12 @@ import {
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
+import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 
 describe('fieldSuggestions', () => {
-  const facetId = 'id';
+  const field = 'author';
+  const facetId = 'test';
   let state: SearchAppState;
   let engine: MockSearchEngine;
   let fieldSuggestions: FieldSuggestions;
@@ -47,6 +50,21 @@ describe('fieldSuggestions', () => {
     setFacetRequest();
 
     initFacet();
+  });
+
+  it('should dispatch an #registerFacet action when initialized', () => {
+    expect(engine.actions).toEqual(
+      expect.arrayContaining([
+        <ReturnType<typeof registerFacet>>{
+          type: registerFacet.type,
+          payload: {
+            ...defaultFacetOptions,
+            facetId,
+            field,
+          },
+        },
+      ])
+    );
   });
 
   it('should dispatch an #updateFacetSearch and #executeFacetSearch action on #updateText', () => {

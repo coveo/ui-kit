@@ -148,7 +148,7 @@ describe('search api client', () => {
           };
         },
       });
-      const req = await buildSpecificFacetSearchRequest('test', state);
+      const req = await buildSpecificFacetSearchRequest('test', state, false);
       const res = await searchAPIClient.facetSearch(req);
       expect(res.moreValuesAvailable).toEqual(true);
     });
@@ -344,7 +344,7 @@ describe('search api client', () => {
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
 
-        const req = await buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state, false);
         searchAPIClient.facetSearch(req);
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
@@ -372,7 +372,7 @@ describe('search api client', () => {
         state.facetSet[id] = facetState;
         state.configuration.search.authenticationProviders = ['foo'];
 
-        const req = await buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state, false);
         searchAPIClient.facetSearch(req);
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
@@ -393,7 +393,7 @@ describe('search api client', () => {
 
         state.facetSearchSet[id] = facetSearchState;
         state.facetSet[id] = facetState;
-        const req = await buildSpecificFacetSearchRequest(id, state);
+        const req = await buildSpecificFacetSearchRequest(id, state, false);
 
         searchAPIClient.facetSearch(req);
 
@@ -436,7 +436,7 @@ describe('search api client', () => {
           request: categoryFacet,
         });
 
-        const req = await buildCategoryFacetSearchRequest(id, state);
+        const req = await buildCategoryFacetSearchRequest(id, state, false);
 
         searchAPIClient.facetSearch(req);
 
