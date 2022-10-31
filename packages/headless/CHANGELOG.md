@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.110.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.109.1...@coveo/headless@1.110.0) (2022-10-31)
+
+
+### Features
+
+* **headless:** updated insight interface with facet type ([#2519](https://github.com/coveo/ui-kit/issues/2519)) ([b9ca9ff](https://github.com/coveo/ui-kit/commit/b9ca9ff0d7698cb51d8da425d13d49ed0892f88e))
+
+
+
+
+
 ## [1.109.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.109.0...@coveo/headless@1.109.1) (2022-10-28)
 
 
