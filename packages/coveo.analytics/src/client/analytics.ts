@@ -474,7 +474,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private get baseUrl(): string {
-        return buildBaseUrl(this.options.version, this.options.version);
+        return buildBaseUrl(this.options.endpoint, this.options.version);
     }
 }
 
