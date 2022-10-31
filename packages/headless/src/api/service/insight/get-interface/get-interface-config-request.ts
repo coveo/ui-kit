@@ -7,7 +7,12 @@ export const buildGetInsightInterfaceConfigRequest = (
   req: GetInsightInterfaceConfigRequest
 ) => {
   return {
-    ...baseInsightRequest(req, 'GET', 'application/json', '/interface'),
+    ...baseInsightRequest(
+      req,
+      'GET',
+      'application/json',
+      '/interface?detailed=true'
+    ),
     requestParams: {},
   };
 };
