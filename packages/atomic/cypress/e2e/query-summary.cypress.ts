@@ -91,6 +91,7 @@ describe('Query Summary Test Suites', () => {
       .with(addSearchBox())
       .withHash('q=test')
       .init();
+    QuerySummarySelectors.query().should('be.visible');
     QuerySummarySelectors.duration().should('not.be.visible');
   });
 
