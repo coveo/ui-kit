@@ -11,7 +11,7 @@ export interface ReactNativeRuntimeOptions {
     /**
      * Mandatory Storage implementation.
      *
-     * It is recommended to use AsyncStorage from the "@react-native-async-storage/async-storage"
+     * We recommend using AsyncStorage from the "@react-native-async-storage/async-storage"
      * community package or the deprecated AsyncStorage from "react-native".
      * If you are using expo, you can also explore the "expo-secure-store" package.
      */

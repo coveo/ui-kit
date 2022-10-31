@@ -152,8 +152,8 @@ client.sendCustomEvent({
 
 ## Using React Native
 
-Since React Native is not running inside a browser, it cannot use cookies or the local/session storage that modern browsers provide.
-It is necessary to provide your own Storage implementation. Thankfully there exist multiple packages to store data:
+Since React Native does not run inside a browser, it cannot use cookies or the local/session storage that modern browsers provide.
+You must provide your own Storage implementation. Thankfully, there exist multiple packages to store data:
 
 -   [React native community AsyncStorage](https://github.com/react-native-async-storage/async-storage) (recommended)
 -   [React native AsyncStorage](https://reactnative.dev/docs/asyncstorage) (deprecated)
