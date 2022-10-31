@@ -7,8 +7,11 @@ describe('ReactNativeRuntime', () => {
 
     beforeEach(() => {
         runtimeEnvironment = new ReactNativeRuntime({
-            baseUrl: 'https://www.coveo.com',
-            visitorIdProvider: {getCurrentVisitorId: jest.fn(), setCurrentVisitorId: jest.fn()},
+            storage: {
+                getItem: jest.fn(),
+                setItem: jest.fn(),
+                removeItem: jest.fn(),
+            },
         });
         client = new CoveoAnalyticsClient({runtimeEnvironment});
     });

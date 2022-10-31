@@ -138,15 +138,58 @@ npm install coveo.analytics isomorphic-fetch
 ```
 
 ```js
-import fetch from 'isomorphic-fetch'; // isomorphic-fetch modifies the global environment
-import coveoanalytics from 'coveo.analytics';
+import {CoveoAnalyticsClient} from 'coveo.analytics';
 
 // Create an API client
-const client = new coveoanalytics.analytics.Client({token: 'YOUR_API_KEY'});
+const client = new CoveoAnalyticsClient({token: 'YOUR_API_KEY'});
 // Send your event
 client.sendCustomEvent({
     eventType: 'dog',
     eventValue: 'Hello! Yes! This is Dog!',
+    language: 'en',
+});
+```
+
+## Using React Native
+
+Since React Native does not run inside a browser, it cannot use cookies or the local/session storage that modern browsers provide.
+You must provide your own Storage implementation. Thankfully, there exist multiple packages to store data:
+
+-   [React native community AsyncStorage](https://github.com/react-native-async-storage/async-storage) (recommended)
+-   [React native AsyncStorage](https://reactnative.dev/docs/asyncstorage) (deprecated)
+-   [Expo Secure Store](https://docs.expo.dev/versions/latest/sdk/securestore/)
+
+```js
+import {CoveoAnalyticsClient, ReactNativeRuntime} from 'coveo.analytics/react-native';
+// Use any React native storage library or implement your own.
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Sample storage class
+class ReactNativeStorage implements WebStorage {
+    async getItem(key: string) {
+        return AsyncStorage.getItem(key);
+    }
+    async setItem(key: string, data: string) {
+        return AsyncStorage.setItem(key, data);
+    }
+    async removeItem(key: string) {
+        AsyncStorage.removeItem(key);
+    }
+}
+
+// Create an API client
+const client = new CoveoAnalyticsClient({
+    token: 'YOUR_API_KEY'
+    runtimeEnvironment: ReactNativeRuntime({
+        token: 'YOUR_API_KEY'
+        storage: new ReactNativeStorage(),
+    }),
+});
+// Send your event
+client.sendCustomEvent({
+    eventType: 'dog',
+    eventValue: 'Hello! Yes! This is Dog!',
+    language: 'en'
 });
 ```
 
