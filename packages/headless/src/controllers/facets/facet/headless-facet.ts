@@ -1,7 +1,14 @@
+import {CoreEngine} from '../../..';
 import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../features/search/search-actions';
+  facetSet,
+  configuration,
+  facetSearchSet,
+  search,
+} from '../../../app/reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -9,14 +16,20 @@ import {
   logFacetShowLess,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {
-  FacetOptions,
-  FacetSearchOptions,
-  facetOptionsSchema,
-} from './headless-facet-options';
-import {FacetValueState} from '../../../features/facets/facet-api/value';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
+import {
+  FacetSection,
+  ConfigurationSection,
+  FacetSearchSection,
+  SearchSection,
+} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
+import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
 import {
   buildCoreFacet,
   Facet,
@@ -29,24 +42,11 @@ import {
   CoreFacet,
   CoreFacetState,
 } from '../../core/facets/facet/headless-core-facet';
-import {CoreEngine} from '../../..';
 import {
-  facetSet,
-  configuration,
-  facetSearchSet,
-  search,
-} from '../../../app/reducers';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
-import {
-  FacetSection,
-  ConfigurationSection,
-  FacetSearchSection,
-  SearchSection,
-} from '../../../state/state-sections';
-import {loadReducerError} from '../../../utils/errors';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
-import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+  FacetOptions,
+  FacetSearchOptions,
+  facetOptionsSchema,
+} from './headless-facet-options';
 
 export type {
   FacetOptions,

@@ -1,3 +1,6 @@
+import {Logger} from 'pino';
+import {StateFromReducersMapObject} from 'redux';
+import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
@@ -5,36 +8,33 @@ import {
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
 import {
+  logInterfaceLoad,
+  logOmniboxFromLink,
+  logSearchFromLink,
+} from '../../features/analytics/analytics-actions';
+import {SearchAction} from '../../features/analytics/analytics-utils';
+import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {executeSearch} from '../../features/search/search-actions';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
+import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
+import {SearchAppState} from '../../state/search-app-state';
+import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
-import {Logger} from 'pino';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {debug, pipeline, search, searchHub} from '../reducers';
-import {StateFromReducersMapObject} from 'redux';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments';
+import {jwtReducer} from './jwt-reducer';
 import {
   SearchEngineConfiguration,
   SearchConfigurationOptions,
   searchEngineConfigurationSchema,
   getSampleSearchEngineConfiguration,
 } from './search-engine-configuration';
-import {executeSearch} from '../../features/search/search-actions';
-import {
-  logInterfaceLoad,
-  logOmniboxFromLink,
-  logSearchFromLink,
-} from '../../features/analytics/analytics-actions';
-import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
-import {SearchAppState} from '../../state/search-app-state';
-import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
-import {SearchAction} from '../../features/analytics/analytics-utils';
-import {StandaloneSearchBoxAnalytics} from '../../features/standalone-search-box-set/standalone-search-box-set-state';
-import {jwtReducer} from './jwt-reducer';
 
 export type {SearchEngineConfiguration, SearchConfigurationOptions};
 export {getSampleSearchEngineConfiguration};

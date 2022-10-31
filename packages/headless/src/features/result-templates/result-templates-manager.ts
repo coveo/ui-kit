@@ -1,17 +1,17 @@
-import {ResultTemplate} from './result-templates';
-import {Result} from '../../api/search/search/result';
 import {
   ArrayValue,
   NumberValue,
   Schema,
   SchemaValidationError,
 } from '@coveo/bueno';
-import {registerFieldsToInclude} from '../fields/fields-actions';
-import {fields} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {FieldsSection} from '../../state/state-sections';
+import {Result} from '../../api/search/search/result';
 import {CoreEngine} from '../../app/engine';
+import {fields} from '../../app/reducers';
+import {FieldsSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {registerFieldsToInclude} from '../fields/fields-actions';
+import {ResultTemplate} from './result-templates';
 
 const prioritySchema = new Schema({
   priority: new NumberValue({required: false, default: 0, min: 0}),

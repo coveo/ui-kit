@@ -1,25 +1,5 @@
-import {
-  defaultSearchBoxOptions,
-  SearchBoxOptions,
-  searchBoxOptionsSchema,
-} from './headless-core-search-box-options';
-import {
-  SuggestionHighlightingOptions,
-  Delimiters,
-  getHighlightedSuggestion,
-} from '../../../utils/highlight';
-import {
-  buildController,
-  Controller,
-} from '../../controller/headless-controller';
+import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../..';
-import {
-  ConfigurationSection,
-  QuerySection,
-  QuerySetSection,
-  QuerySuggestionSection,
-  SearchSection,
-} from '../../../state/state-sections';
 import {
   configuration,
   query,
@@ -27,9 +7,10 @@ import {
   querySuggest,
   search,
 } from '../../../app/reducers';
-import {loadReducerError} from '../../../utils/errors';
-import {randomID} from '../../../utils/utils';
-import {validateOptions} from '../../../utils/validate-payload';
+import {
+  InsightAction,
+  SearchAction,
+} from '../../../features/analytics/analytics-utils';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -40,15 +21,34 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../../features/query-suggest/query-suggest-actions';
-import {
-  InsightAction,
-  SearchAction,
-} from '../../../features/analytics/analytics-utils';
-import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
 import {logQuerySuggestionClick} from '../../../features/query-suggest/query-suggest-analytics-actions';
-import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
 import {QuerySuggestState} from '../../../features/query-suggest/query-suggest-state';
-import {AsyncThunkAction} from '@reduxjs/toolkit';
+import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
+import {prepareForSearchWithQuery} from '../../../features/search/search-actions';
+import {
+  ConfigurationSection,
+  QuerySection,
+  QuerySetSection,
+  QuerySuggestionSection,
+  SearchSection,
+} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
+import {
+  SuggestionHighlightingOptions,
+  Delimiters,
+  getHighlightedSuggestion,
+} from '../../../utils/highlight';
+import {randomID} from '../../../utils/utils';
+import {validateOptions} from '../../../utils/validate-payload';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
+import {
+  defaultSearchBoxOptions,
+  SearchBoxOptions,
+  searchBoxOptionsSchema,
+} from './headless-core-search-box-options';
 
 export type {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 

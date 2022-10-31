@@ -1,4 +1,8 @@
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {SearchParameters} from '../../../features/search-parameters/search-parameter-actions';
+import {logParametersChange} from '../../../features/search-parameters/search-parameter-insight-analytics-actions';
+import {InsightEngine} from '../../../insight.index';
+import {deepEqualAnyOrder} from '../../../utils/compare-utils';
 import {
   buildCoreSearchParameterManager,
   enrichParameters,
@@ -8,10 +12,6 @@ import {
   SearchParameterManagerProps,
   SearchParameterManagerState,
 } from '../../core/search-parameter-manager/headless-core-search-parameter-manager';
-import {InsightEngine} from '../../../insight.index';
-import {deepEqualAnyOrder} from '../../../utils/compare-utils';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {logParametersChange} from '../../../features/search-parameters/search-parameter-insight-analytics-actions';
 
 export type {
   SearchParameters,

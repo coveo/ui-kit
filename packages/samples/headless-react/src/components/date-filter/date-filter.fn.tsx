@@ -1,8 +1,8 @@
-import {useEffect, useState, FunctionComponent, Fragment} from 'react';
 import {
   buildDateRange,
   DateFilter as HeadlessDateFilter,
 } from '@coveo/headless';
+import {useEffect, useState, FunctionComponent, Fragment} from 'react';
 import {parseDate} from '../date-facet/date-utils';
 
 interface DateFilterProps {

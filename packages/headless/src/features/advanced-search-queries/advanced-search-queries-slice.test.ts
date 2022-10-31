@@ -1,16 +1,16 @@
-import {advancedSearchQueriesReducer} from './advanced-search-queries-slice';
+import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
+import {change} from '../history/history-actions';
+import {getHistoryInitialState} from '../history/history-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 import {
   registerAdvancedSearchQueries,
   updateAdvancedSearchQueries,
 } from './advanced-search-queries-actions';
-import {change} from '../history/history-actions';
+import {advancedSearchQueriesReducer} from './advanced-search-queries-slice';
 import {
   AdvancedSearchQueriesState,
   getAdvancedSearchQueriesInitialState,
 } from './advanced-search-queries-state';
-import {getHistoryInitialState} from '../history/history-state';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 
 describe('advanced search parameters', () => {
   const defaultCq = 'mock-default-cq';

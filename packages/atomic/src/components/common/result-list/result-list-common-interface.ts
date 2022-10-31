@@ -1,15 +1,15 @@
+import {InteractiveResult} from '@coveo/headless';
+import {VNode} from '@stencil/core';
+import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {AnyBindings} from '../interface/bindings';
+import {AnyResult} from '../interface/result';
+import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../layout/display-options';
-import {AnyResult} from '../interface/result';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {ResultTemplateProvider} from './result-template-provider';
-import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
-import {VNode} from '@stencil/core';
-import {InteractiveResult} from '@coveo/headless';
 
 export interface ResultListRenderer {
   getResultId(result: AnyResult): string;

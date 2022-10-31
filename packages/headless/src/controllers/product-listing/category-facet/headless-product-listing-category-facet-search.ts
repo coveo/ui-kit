@@ -1,21 +1,21 @@
-import {
-  buildCoreCategoryFacetSearch,
-  CategoryFacetSearchProps,
-} from '../../core/facets/facet-search/category/headless-category-facet-search';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {CategoryFacetSearchResult} from '../../core/facets/category-facet/headless-core-category-facet';
 import {CoreEngine} from '../../../app/engine';
+import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
+import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
   ProductListingSection,
 } from '../../../state/state-sections';
-import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {registerCategoryFacetSearch} from '../../../features/facets/facet-search-set/category/category-facet-search-actions';
+import {CategoryFacetSearchResult} from '../../core/facets/category-facet/headless-core-category-facet';
+import {
+  buildCoreCategoryFacetSearch,
+  CategoryFacetSearchProps,
+} from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {buildGenericFacetSearch} from '../../core/facets/facet-search/facet-search';
-import {ProductListingThunkExtraArguments} from '../../../app/product-listing-thunk-extra-arguments';
 
 export function buildCategoryFacetSearch(
   engine: CoreEngine<

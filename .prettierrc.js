@@ -7,4 +7,10 @@ module.exports = {
   overrides: [
     {files: '**/*.{scss,css,pcss,html,mdx}', options: {printWidth: 120}},
   ],
+  importOrderParserPlugins: [
+    'typescript',
+    'jsx',
+    JSON.stringify(['decorators', {decoratorsBeforeExport: true}]),
+  ],
+  importOrder: ['^[./]', '^\\/', '^\\.\\.\\/', '\\.\\/'],
 };

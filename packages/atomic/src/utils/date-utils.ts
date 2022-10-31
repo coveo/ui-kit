@@ -1,6 +1,7 @@
 import {API_DATE_FORMAT} from '@coveo/headless';
 import dayjs, {ConfigType} from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+
 dayjs.extend(customParseFormat);
 
 export function parseDate(date: ConfigType, format?: string) {

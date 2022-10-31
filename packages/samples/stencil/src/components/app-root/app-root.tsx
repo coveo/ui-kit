@@ -1,9 +1,9 @@
-import {Component, h} from '@stencil/core';
-import {createRouter, Route} from 'stencil-router-v2';
 import {
   getSampleSearchEngineConfiguration,
   SearchEngine,
 } from '@coveo/atomic/headless';
+import {Component, h} from '@stencil/core';
+import {createRouter, Route} from 'stencil-router-v2';
 import {Header, homePath, searchPath} from '../header/header';
 
 const Router = createRouter();

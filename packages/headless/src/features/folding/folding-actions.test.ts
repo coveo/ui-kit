@@ -1,7 +1,7 @@
-import {createMockState} from '../../test/mock-state';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
-import {loadCollection} from './folding-actions';
+import {createMockState} from '../../test/mock-state';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
+import {loadCollection} from './folding-actions';
 
 describe('folding actions', () => {
   let e: MockSearchEngine;

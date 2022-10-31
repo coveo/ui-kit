@@ -1,11 +1,11 @@
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {
   BaseAnalyticsProvider,
   StateNeededByBaseAnalyticsProvider,
 } from './base-analytics';
-import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 
 class TestProvider extends BaseAnalyticsProvider {
   constructor(state: StateNeededByBaseAnalyticsProvider) {

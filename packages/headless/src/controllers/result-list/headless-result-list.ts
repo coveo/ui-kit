@@ -1,5 +1,5 @@
-import {fetchMoreResults} from '../../features/search/search-actions';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {fetchMoreResults} from '../../features/search/search-actions';
 import {
   buildCoreResultList,
   ResultList,

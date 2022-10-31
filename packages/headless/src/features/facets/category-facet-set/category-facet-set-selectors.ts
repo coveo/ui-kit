@@ -3,9 +3,9 @@ import {
   baseFacetResponseSelector,
   FacetResponseSection,
 } from '../facet-set/facet-set-selectors';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {partitionIntoParentsAndValues} from './category-facet-utils';
 import {CategoryFacetResponse} from './interfaces/response';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
 function isCategoryFacetResponse(
   state: CategoryFacetSection,

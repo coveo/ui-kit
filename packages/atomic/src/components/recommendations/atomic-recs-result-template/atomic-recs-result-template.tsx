@@ -1,6 +1,6 @@
 import {Component, Element, Prop, Method, State} from '@stencil/core';
-import {MapProp} from '../../../utils/props-utils';
 import {RecsResultTemplateCondition, RecsResultTemplate} from '..';
+import {MapProp} from '../../../utils/props-utils';
 import {
   makeMatchConditions,
   ResultTemplateCommon,

@@ -1,13 +1,13 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {Result} from '../../api/search/search/result';
 import {recentResults} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   RegisterRecentResultsCreatorPayload,
   registerRecentResults,
   clearRecentResults,
   pushRecentResult,
 } from './recent-results-actions';
-import {Result} from '../../api/search/search/result';
 
 /**
  * The RecentResults action creators

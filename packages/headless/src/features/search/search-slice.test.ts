@@ -1,7 +1,22 @@
-import {searchReducer} from './search-slice';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {Response} from 'cross-fetch';
+import {PlatformClient} from '../../api/platform-client';
+import {Result} from '../../api/search/search/result';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
+import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {buildMockQuestionsAnswers} from '../../test/mock-question-answer';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {buildMockSearchState} from '../../test/mock-search-state';
+import {createMockState} from '../../test/mock-state';
+import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
+import {logPageNext} from '../pagination/pagination-analytics-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
   executeSearch,
   ExecuteSearchThunkReturn,
@@ -9,27 +24,12 @@ import {
   fetchMoreResults,
   fetchPage,
 } from './search-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
-import {PlatformClient} from '../../api/platform-client';
-import {createMockState} from '../../test/mock-state';
+import {searchReducer} from './search-slice';
 import {
   emptyQuestionAnswer,
   getSearchInitialState,
   SearchState,
 } from './search-state';
-import {Result} from '../../api/search/search/result';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
-import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
-import {Response} from 'cross-fetch';
-import {buildMockSearchState} from '../../test/mock-search-state';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {logFacetShowMore} from '../facets/facet-set/facet-set-analytics-actions';
-import {logPageNext} from '../pagination/pagination-analytics-actions';
-import {buildMockQuestionsAnswers} from '../../test/mock-question-answer';
 
 jest.mock('../../api/platform-client');
 

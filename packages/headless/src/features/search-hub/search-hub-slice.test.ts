@@ -1,9 +1,9 @@
-import {searchHubReducer} from './search-hub-slice';
-import {setSearchHub} from './search-hub-actions';
-import {change} from '../history/history-actions';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
-import {getSearchHubInitialState} from './search-hub-state';
+import {change} from '../history/history-actions';
 import {getHistoryInitialState} from '../history/history-state';
+import {setSearchHub} from './search-hub-actions';
+import {searchHubReducer} from './search-hub-slice';
+import {getSearchHubInitialState} from './search-hub-state';
 
 describe('search hub slice', () => {
   it('should have initial state', () => {

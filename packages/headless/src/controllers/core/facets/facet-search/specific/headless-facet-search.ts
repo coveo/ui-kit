@@ -1,16 +1,16 @@
+import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {CoreEngine} from '../../../../../app/engine';
+import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
 import {
   registerFacetSearch,
   selectFacetSearchResult,
 } from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {buildGenericFacetSearch} from '../facet-search';
-import {FacetSearchOptions} from '../../../../../features/facets/facet-search-set/facet-search-request-options';
-import {SpecificFacetSearchResult} from '../../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
 import {
   ConfigurationSection,
   FacetSearchSection,
 } from '../../../../../state/state-sections';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {CoreEngine} from '../../../../../app/engine';
+import {buildGenericFacetSearch} from '../facet-search';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;

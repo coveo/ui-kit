@@ -1,14 +1,14 @@
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {updateNumberOfResults} from '../../../features/pagination/pagination-actions';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../../test/mock-engine';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   buildResultsPerPage,
 } from './headless-insight-results-per-page';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../../test/mock-engine';
-import {updateNumberOfResults} from '../../../features/pagination/pagination-actions';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 
 describe('InsightResultsPerPage', () => {
   let engine: MockInsightEngine;

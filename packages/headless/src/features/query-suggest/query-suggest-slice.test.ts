@@ -1,20 +1,20 @@
-import {querySuggestReducer} from './query-suggest-slice';
 import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
+import {buildMockSearch} from '../../test/mock-search';
+import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
+import {updateQuerySetQuery} from '../query-set/query-set-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {executeSearch} from '../search/search-actions';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
   registerQuerySuggest,
   selectQuerySuggestion,
 } from './query-suggest-actions';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {updateQuerySetQuery} from '../query-set/query-set-actions';
+import {querySuggestReducer} from './query-suggest-slice';
 import {QuerySuggestSet} from './query-suggest-state';
-import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
-import {executeSearch} from '../search/search-actions';
-import {buildMockSearch} from '../../test/mock-search';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
 
 describe('querySuggest slice', () => {
   let state: QuerySuggestSet;

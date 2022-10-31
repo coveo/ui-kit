@@ -1,13 +1,13 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {getFieldsInitialState} from './fields-state';
+import {registerFolding} from '../folding/folding-actions';
+import {getFoldingInitialState} from '../folding/folding-state';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
   registerFieldsToInclude,
 } from './fields-actions';
-import {registerFolding} from '../folding/folding-actions';
-import {getFoldingInitialState} from '../folding/folding-state';
+import {getFieldsInitialState} from './fields-state';
 
 export const fieldsReducer = createReducer(getFieldsInitialState(), (builder) =>
   builder

@@ -1,5 +1,4 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
-
 import {
   buildCoreQuerySummary,
   QuerySummary,

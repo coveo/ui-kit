@@ -1,12 +1,15 @@
 import {RecordValue, Schema} from '@coveo/bueno';
+import {CoreEngine} from '../../../app/engine';
 import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {getQueryInitialState} from '../../../features/query/query-state';
 import {
   restoreSearchParameters,
   SearchParameters,
 } from '../../../features/search-parameters/search-parameter-actions';
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema';
+import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
 import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state';
 import {SearchParametersState} from '../../../state/search-app-state';
 import {validateInitialState} from '../../../utils/validate-payload';
@@ -14,9 +17,6 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {RangeValueRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors';
-import {CoreEngine} from '../../../app/engine';
 
 export type {SearchParameters};
 

@@ -1,3 +1,4 @@
+import {Result} from '../../api/search/search/result';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {logSearchEvent} from '../analytics/analytics-actions';
@@ -11,7 +12,6 @@ import {
   getRecentQueriesInitialState,
   RecentQueriesState,
 } from './recent-queries-state';
-import {Result} from '../../api/search/search/result';
 
 function withResult(rest = {}) {
   return {

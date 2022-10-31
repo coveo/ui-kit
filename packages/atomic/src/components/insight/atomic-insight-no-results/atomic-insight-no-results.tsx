@@ -7,14 +7,14 @@ import {
   buildQuerySummary,
 } from '@coveo/headless/insight';
 import {Component, State, h} from '@stencil/core';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 import {NoResultsCommon} from '../../common/no-results/no-results-common';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

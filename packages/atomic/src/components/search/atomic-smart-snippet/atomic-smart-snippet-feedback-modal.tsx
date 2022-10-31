@@ -1,4 +1,9 @@
 import {
+  buildSmartSnippet,
+  SmartSnippet,
+  SmartSnippetFeedback,
+} from '@coveo/headless';
+import {
   Component,
   h,
   State,
@@ -12,14 +17,9 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {
-  buildSmartSnippet,
-  SmartSnippet,
-  SmartSnippetFeedback,
-} from '@coveo/headless';
-import {Button} from '../../common/button';
-import {once, randomID} from '../../../utils/utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {once, randomID} from '../../../utils/utils';
+import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

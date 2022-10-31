@@ -1,22 +1,22 @@
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {ProductListingAppState} from '../../../state/product-listing-app-state';
+import {
+  buildMockProductListingEngine,
+  MockProductListingEngine,
+} from '../../../test/mock-engine';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
+import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
 import {
   buildFacet,
   Facet,
   FacetOptions,
 } from './headless-product-listing-facet';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test/mock-engine';
-import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
-import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import * as FacetSearch from '../../core/facets/facet-search/specific/headless-facet-search';
 
 describe('facet', () => {
   const facetId = '1';

@@ -1,15 +1,15 @@
-import {Component, h, State} from '@stencil/core';
 import {
   QueryError,
   QueryErrorState,
   buildQueryError,
 } from '@coveo/headless/insight';
+import {Component, h, State} from '@stencil/core';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {QueryErrorCommon} from '../../common/query-error/query-error-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 

@@ -1,35 +1,35 @@
 import {
-  DateFacet,
-  buildDateFacet,
-  DateFacetOptions,
-  buildDateRange,
-} from './headless-date-facet';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../../test/mock-engine';
-import {createMockState} from '../../../../test/mock-state';
-import {executeSearch} from '../../../../features/search/search-actions';
-import {
-  deselectAllDateFacetValues,
-  registerDateFacet,
-  toggleSelectDateFacetValue,
-} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
-import {SearchAppState} from '../../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {
   configuration,
   dateFacetSet,
   search,
   facetOptions,
 } from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {
+  deselectAllDateFacetValues,
+  registerDateFacet,
+  toggleSelectDateFacetValue,
+} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {updateRangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/range-facet-actions';
+import {executeSearch} from '../../../../features/search/search-actions';
+import {SearchAppState} from '../../../../state/search-app-state';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../../test/mock-engine';
+import {createMockState} from '../../../../test/mock-state';
+import * as FacetIdDeterminor from '../../../core/facets/_common/facet-id-determinor';
+import {
+  DateFacet,
+  buildDateFacet,
+  DateFacetOptions,
+  buildDateRange,
+} from './headless-date-facet';
 
 describe('date facet', () => {
   const facetId = '1';

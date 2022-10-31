@@ -1,11 +1,5 @@
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
-import {
   InsightFacetManager,
   buildInsightFacetManager,
   InsightQuerySummary,
@@ -15,13 +9,19 @@ import {
   InsightBreadcrumbManagerState,
   buildInsightBreadcrumbManager,
 } from '..';
+import {rectEquals} from '../../../utils/dom-utils';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {Button} from '../../common/button';
+import {Hidden} from '../../common/hidden';
 import {
   getClonedFacetElements,
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
-import {Hidden} from '../../common/hidden';
-import {Button} from '../../common/button';
-import {rectEquals} from '../../../utils/dom-utils';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

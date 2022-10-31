@@ -1,3 +1,4 @@
+import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
   documentIdentifier,
@@ -5,7 +6,6 @@ import {
   makeAnalyticsAction,
   AnalyticsType,
 } from '../analytics/analytics-utils';
-import {Result} from '../../api/search/search/result';
 
 export const logDocumentOpenThunk = (result: Result) =>
   makeAnalyticsAction(

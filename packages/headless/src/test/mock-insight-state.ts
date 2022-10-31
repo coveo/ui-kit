@@ -1,11 +1,13 @@
 import {getCaseContextInitialState} from '../features/case-context/case-context-state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-state';
+import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-state';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-state';
-import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state';
+import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
+import {getFieldsInitialState} from '../features/fields/fields-state';
 import {getInsightConfigurationInitialState} from '../features/insight-configuration/insight-configuration-state';
 import {getInsightInterfaceInitialState} from '../features/insight-interface/insight-interface-state';
 import {getPaginationInitialState} from '../features/pagination/pagination-state';
@@ -16,11 +18,9 @@ import {getResultPreviewInitialState} from '../features/result-preview/result-pr
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 import {getSearchInitialState} from '../features/search/search-state';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-state';
-import {InsightAppState} from '../state/insight-app-state';
-import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-state';
 import {getStaticFilterSetInitialState} from '../features/static-filter-set/static-filter-set-state';
 import {getTabSetInitialState} from '../features/tab-set/tab-set-state';
-import {getFieldsInitialState} from '../features/fields/fields-state';
+import {InsightAppState} from '../state/insight-app-state';
 
 export function buildMockInsightState(
   config: Partial<InsightAppState> = {}

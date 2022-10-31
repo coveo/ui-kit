@@ -1,8 +1,8 @@
+import {executeSearch} from '../../features/search/search-actions';
 import {
   MockSearchEngine,
   buildMockSearchAppEngine,
 } from '../../test/mock-engine';
-import {executeSearch} from '../../features/search/search-actions';
 import {buildTab, Tab, TabProps} from './headless-tab';
 
 describe('Tab', () => {

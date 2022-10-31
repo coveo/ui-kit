@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {Result} from '../../case-assist.index';
 import {InstantResultSection} from '../../state/state-sections';
 import {
   validatePayload,
@@ -6,7 +7,7 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
 import {StateNeededByExecuteSearch} from '../search/search-actions';
-import {Result} from '../../case-assist.index';
+
 export interface RegisterInstantResultActionCreatorPayload {
   /**
    * The search box ID.

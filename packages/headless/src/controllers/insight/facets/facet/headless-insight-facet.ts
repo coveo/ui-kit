@@ -1,14 +1,30 @@
+import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
+import {
+  facetSet,
+  configuration,
+  facetSearchSet,
+  search,
+} from '../../../../app/reducers';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {
+  logFacetClearAll,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils';
+import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
 import {
-  FacetOptions,
-  FacetSearchOptions,
-  facetOptionsSchema,
-} from './headless-insight-facet-options';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
+  FacetSection,
+  ConfigurationSection,
+  FacetSearchSection,
+  SearchSection,
+} from '../../../../state/state-sections';
+import {loadReducerError} from '../../../../utils/errors';
 import {
   buildCoreFacet,
   CoreFacet,
@@ -22,26 +38,10 @@ import {
   SpecificFacetSearchResult,
 } from '../../../core/facets/facet/headless-core-facet';
 import {
-  facetSet,
-  configuration,
-  facetSearchSet,
-  search,
-} from '../../../../app/reducers';
-import {
-  FacetSection,
-  ConfigurationSection,
-  FacetSearchSection,
-  SearchSection,
-} from '../../../../state/state-sections';
-import {loadReducerError} from '../../../../utils/errors';
-import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
-import {
-  logFacetClearAll,
-  logFacetShowLess,
-  logFacetShowMore,
-  logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {getInsightAnalyticsActionForToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-insight-utils';
+  FacetOptions,
+  FacetSearchOptions,
+  facetOptionsSchema,
+} from './headless-insight-facet-options';
 
 export type {
   FacetOptions,

@@ -1,21 +1,21 @@
 import {
+  clearFacetSearch,
+  executeFacetSearch,
+} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../../../test/mock-engine';
-import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSearchRequestOptions} from '../../../../test/mock-facet-search-request-options';
+import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
 import {
   buildGenericFacetSearch,
   GenericFacetSearch,
   GenericFacetSearchProps,
 } from './facet-search';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
-import {
-  clearFacetSearch,
-  executeFacetSearch,
-} from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 
 describe('FacetSearch', () => {
   const facetId = '1';

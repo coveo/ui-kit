@@ -1,7 +1,7 @@
-import {debugReducer} from './debug-slice';
-import {enableDebug, disableDebug} from './debug-actions';
-import {getDebugInitialState} from './debug-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {enableDebug, disableDebug} from './debug-actions';
+import {debugReducer} from './debug-slice';
+import {getDebugInitialState} from './debug-state';
 
 describe('debug slice', () => {
   it('should have initial state', () => {

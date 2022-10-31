@@ -6,7 +6,9 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
+import {CoreEngine} from '../../../../../app/engine';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value';
+import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {
   rangeFacetRangeAlgorithm,
@@ -15,6 +17,12 @@ import {
   RangeFacetSortCriterion,
 } from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {
+  ConfigurationSection,
+  DateFacetSection,
+  SearchSection,
+} from '../../../../../state/state-sections';
+import {validateOptions} from '../../../../../utils/validate-payload';
+import {
   field,
   facetId,
   generateAutomaticRanges,
@@ -22,14 +30,6 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../../../core/facets/_common/facet-option-definitions';
-import {validateOptions} from '../../../../../utils/validate-payload';
-import {
-  ConfigurationSection,
-  DateFacetSection,
-  SearchSection,
-} from '../../../../../state/state-sections';
-import {validateManualDateRanges} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {CoreEngine} from '../../../../../app/engine';
 
 export interface DateFacetOptions {
   /**

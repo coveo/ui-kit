@@ -1,11 +1,11 @@
+import {PayloadAction} from '@reduxjs/toolkit';
+import {SearchEngine} from '../..';
+import {tabSet} from '../../app/reducers';
 import {
   registerTab,
   RegisterTabActionCreatorPayload,
   updateActiveTab,
 } from './tab-set-actions';
-import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../..';
-import {tabSet} from '../../app/reducers';
 
 export type {RegisterTabActionCreatorPayload};
 

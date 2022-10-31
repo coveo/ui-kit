@@ -1,20 +1,20 @@
-import {
-  buildController,
-  Controller,
-} from '../../controller/headless-controller';
-import {
-  ContextPayload,
-  ContextValue,
-} from '../../../features/context/context-state';
+import {CoreEngine} from '../../../app/engine';
+import {context} from '../../../app/reducers';
 import {
   setContext,
   addContext,
   removeContext,
 } from '../../../features/context/context-actions';
+import {
+  ContextPayload,
+  ContextValue,
+} from '../../../features/context/context-state';
 import {ContextSection} from '../../../state/state-sections';
-import {context} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
-import {CoreEngine} from '../../../app/engine';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 
 export type {ContextPayload, ContextValue};
 

@@ -1,4 +1,11 @@
+import {ArrayValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {getVisitorID} from '../../api/analytics/search-analytics';
+import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client';
+import {
+  ProductListingRequest,
+  ProductListingSuccessResponse,
+} from '../../api/commerce/product-listings/product-listing-request';
 import {isErrorResponse} from '../../api/search/search-api-client';
 import {
   CategoryFacetSection,
@@ -13,20 +20,13 @@ import {
   ProductListingSection,
   StructuredSortSection,
 } from '../../state/state-sections';
-import {getVisitorID} from '../../api/analytics/search-analytics';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {sortFacets} from '../../utils/facet-utils';
-import {AsyncThunkProductListingOptions} from '../../api/commerce/product-listings/product-listing-api-client';
-import {
-  ProductListingRequest,
-  ProductListingSuccessResponse,
-} from '../../api/commerce/product-listings/product-listing-request';
 import {validatePayload} from '../../utils/validate-payload';
-import {ArrayValue, StringValue} from '@coveo/bueno';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
+import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
+import {logQueryError} from '../search/search-analytics-actions';
 import {SortBy} from '../sort/sort';
 import {ProductListingState} from './product-listing-state';
-import {logQueryError} from '../search/search-analytics-actions';
 
 export interface SetProductListingUrlPayload {
   /**

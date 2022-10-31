@@ -1,18 +1,18 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
+import {InsightResult, InsightEngine, InsightInteractiveResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
-import {AtomicInsightStore} from '../atomic-insight-interface/store';
-import {
-  DisplayConfig,
-  InteractiveResultContextEvent,
-  ResultContextEvent,
-} from '../../search/result-template-components/result-template-decorators';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
 } from '../../common/layout/display-options';
-import {InsightResult, InsightEngine, InsightInteractiveResult} from '..';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
+import {
+  DisplayConfig,
+  InteractiveResultContextEvent,
+  ResultContextEvent,
+} from '../../search/result-template-components/result-template-decorators';
+import {AtomicInsightStore} from '../atomic-insight-interface/store';
 
 /**
  * @internal

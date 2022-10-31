@@ -5,7 +5,9 @@ import {
   FacetSection,
   NumericFacetSection,
 } from '../../../state/state-sections';
+import {getProductListingInitialState} from '../../product-listing/product-listing-state';
 import {getSearchInitialState} from '../../search/search-state';
+import {categoryFacetSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
 import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
 import {FacetType} from '../facet-api/request';
@@ -19,12 +21,10 @@ import {DateFacetValue} from '../range-facets/date-facet-set/interfaces/response
 import {NumericFacetRequest} from '../range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../range-facets/numeric-facet-set/interfaces/response';
 import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
+import {FacetResponseSection} from './facet-set-selectors';
 import {getFacetSetInitialState} from './facet-set-state';
 import {FacetRequest} from './interfaces/request';
 import {FacetValue} from './interfaces/response';
-import {categoryFacetSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
-import {getProductListingInitialState} from '../../product-listing/product-listing-state';
-import {FacetResponseSection} from './facet-set-selectors';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &

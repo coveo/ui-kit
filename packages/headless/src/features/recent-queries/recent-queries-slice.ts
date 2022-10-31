@@ -1,9 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {executeSearch} from '../search/search-actions';
 import {
   registerRecentQueries,
   clearRecentQueries,
 } from './recent-queries-actions';
-import {executeSearch} from '../search/search-actions';
 import {getRecentQueriesInitialState} from './recent-queries-state';
 
 export const recentQueriesReducer = createReducer(

@@ -2,7 +2,6 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
-
 import {
   AnalyticsType,
   AsyncThunkAnalyticsOptions,

@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   FieldSuggestions as HeadlessFieldSuggestions,
   FieldSuggestionsOptions,
@@ -6,6 +5,7 @@ import {
   buildFieldSuggestions,
   FacetSearchState,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../../context/engine';
 
 interface FieldSuggestionsProps extends FieldSuggestionsOptions {

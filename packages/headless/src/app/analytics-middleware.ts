@@ -1,7 +1,7 @@
 import {Middleware} from 'redux';
+import {getProductRecommendations} from '../features/product-recommendations/product-recommendations-actions';
 import {getRecommendations} from '../features/recommendation/recommendation-actions';
 import {executeSearch} from '../features/search/search-actions';
-import {getProductRecommendations} from '../features/product-recommendations/product-recommendations-actions';
 
 export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
   // Why all these shenanigans ?

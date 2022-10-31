@@ -1,20 +1,20 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
+import {RecsInteractiveResult, RecsResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
-import {
-  DisplayConfig,
-  InteractiveResultContextEvent,
-  ResultContextEvent,
-} from '../../search/result-template-components/result-template-decorators';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
-import {RecsInteractiveResult, RecsResult} from '..';
-import {AtomicRecsStore} from '../atomic-recs-interface/store';
-import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
+import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {
+  DisplayConfig,
+  InteractiveResultContextEvent,
+  ResultContextEvent,
+} from '../../search/result-template-components/result-template-decorators';
+import {AtomicRecsStore} from '../atomic-recs-interface/store';
 
 /**
  * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.

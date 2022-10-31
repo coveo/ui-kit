@@ -1,23 +1,23 @@
 import {
-  CaseInput,
-  CaseInputOptions,
-  buildCaseInput,
-} from './headless-case-input';
-import {
-  buildMockCaseAssistEngine,
-  MockCaseAssistEngine,
-} from '../../test/mock-engine';
-import {
   caseAssistConfiguration,
   caseField,
   caseInput,
   configuration,
   documentSuggestion,
 } from '../../app/reducers';
-import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
+import {updateCaseInput} from '../../features/case-input/case-input-actions';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
 import {buildMockCaseAssistState} from '../../test/mock-case-assist-state';
+import {
+  buildMockCaseAssistEngine,
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
+import {
+  CaseInput,
+  CaseInputOptions,
+  buildCaseInput,
+} from './headless-case-input';
 
 describe('Case Input', () => {
   let engine: MockCaseAssistEngine;

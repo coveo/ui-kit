@@ -1,3 +1,13 @@
+import {Action} from 'redux';
+import {configuration} from '../../app/reducers';
+import {
+  getProductRecommendations,
+  setProductRecommendationsAdditionalFields,
+  setProductRecommendationsMaxNumberOfRecommendations,
+  setProductRecommendationsRecommenderId,
+  setProductRecommendationsSkus,
+} from '../../features/product-recommendations/product-recommendations-actions';
+import {productRecommendationsReducer} from '../../features/product-recommendations/product-recommendations-slice';
 import {
   buildMockProductRecommendationsAppEngine,
   MockProductRecommendationEngine,
@@ -7,16 +17,6 @@ import {
   ProductRecommendationsList,
   ProductRecommendationsListOptions,
 } from './headless-base-product-recommendations';
-import {Action} from 'redux';
-import {
-  getProductRecommendations,
-  setProductRecommendationsAdditionalFields,
-  setProductRecommendationsMaxNumberOfRecommendations,
-  setProductRecommendationsRecommenderId,
-  setProductRecommendationsSkus,
-} from '../../features/product-recommendations/product-recommendations-actions';
-import {configuration} from '../../app/reducers';
-import {productRecommendationsReducer} from '../../features/product-recommendations/product-recommendations-slice';
 
 describe('headless product-recommendations', () => {
   let productRecommendations: ProductRecommendationsList;

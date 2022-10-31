@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent, useRef} from 'react';
 import {SmartSnippet as HeadlessSmartSnippet} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent, useRef} from 'react';
 import {filterProtocol} from '../../utils/filter-protocol';
 
 interface SmartSnippetProps {

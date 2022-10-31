@@ -1,8 +1,8 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {
   SearchBox as HeadlessSearchBox,
   InstantResults as HeadlessInstantResults,
 } from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface InstantResultsProps {
   controllerSearchbox: HeadlessSearchBox;
