@@ -89,7 +89,7 @@ export const QuerySummaryCommon: FunctionalComponent<
             count={params.count}
           />
           {props.withDuration && props.querySummaryState.hasDuration && (
-            <span part="duration">
+            <span class="hidden" part="duration">
               &nbsp;
               <LocalizedString
                 key="in-seconds"
