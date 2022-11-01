@@ -220,11 +220,11 @@ export class CoveoInsightClient {
     }
 
     public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
-        if (metadata) {
-            const metadataToSend = generateMetadataToSend(metadata, false);
-            return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier, metadataToSend);
-        }
-        return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier);
+        return this.logClickEvent(
+          SearchPageEvents.documentOpen,
+          info,
+          identifier,
+          metadata ? generateMetadataToSend(metadata, false) : undefined);
     }
 
     public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
