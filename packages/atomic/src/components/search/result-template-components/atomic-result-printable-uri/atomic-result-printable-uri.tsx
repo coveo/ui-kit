@@ -20,7 +20,8 @@ import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
  *
- * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to link elements, overriding other attributes, to be used exclusively with an "a" tag such as `<a slot="attributes" target="_blank" download></a>`.
+ * @slot attributes - Lets you pass [attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attributes) down to anchor elements, overriding other attributes. 
+ * To be used exclusively in anchor elements, such as: `<a slot="attributes" target="_blank" download></a>`.
  */
 @Component({
   tag: 'atomic-result-printable-uri',
