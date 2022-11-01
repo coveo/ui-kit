@@ -71,7 +71,7 @@ interface Facet {
   field: string;
   label?: string;
   displayValueAs?: string;
-  facetTypes?: InsightFacetType;
+  facetType?: InsightFacetType;
 }
 
 interface Tab {
