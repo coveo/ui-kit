@@ -142,7 +142,6 @@ export class AtomicResultPrintableUri {
       <LinkWithResultAnalytics
         href={uri}
         title={typeof content === 'string' ? content : undefined}
-        target={this.target}
         onSelect={() => this.interactiveResult.select()}
         onBeginDelayedSelect={() => this.interactiveResult.beginDelayedSelect()}
         onCancelPendingSelect={() =>
