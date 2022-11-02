@@ -20,7 +20,7 @@
     <template if:false={nonActiveParent}>
       <template if:false={isSearchResult}>
         <div
-          class="nowrap slds-grid slds-grid_vertical-align-center slds-text-color_default facet__child-value-option facet__value-option slds-size_1-of-1 slds-p-around_x-small"
+          class="slds-grid slds-grid_vertical-align-center slds-text-color_default facet__child-value-option facet__value-option slds-size_1-of-1 slds-p-around_x-small"
         >
           <span class="slds-truncate" title={item.value}>{item.value}</span>
           <span class="facet__number-of-results slds-var-m-left_xx-small">({item.numberOfResults})</span>
@@ -40,7 +40,7 @@
               <span class="facet__number-of-results slds-var-m-left_xx-small">({item.numberOfResults})</span>
             </div>
             <div class="slds-col slds-p-left_none">
-              <span class="facet__path slds-truncate">{labels.inLabel} {item.localizedPath}</span>
+              <span class="facet__path slds-truncate" title={pathLabel}>{pathLabel}</span>
             </div>
           </div>
         </div>
