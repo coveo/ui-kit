@@ -8,9 +8,9 @@ import {
 import {Result} from '../../api/search/search/result';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
-export const logDocumentOpen = (result: Result) =>
+export const logDocumentOpenThunk = (result: Result) =>
   makeInsightAnalyticsAction(
-    'analytics/result/open',
+    'analytics/insight/result/open',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
@@ -23,4 +23,7 @@ export const logDocumentOpen = (result: Result) =>
         metadata
       );
     }
-  )();
+  );
+
+export const logDocumentOpen = (result: Result) =>
+  logDocumentOpenThunk(result)();
