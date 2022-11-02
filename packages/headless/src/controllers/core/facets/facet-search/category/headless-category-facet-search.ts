@@ -14,6 +14,7 @@ import {CoreEngine} from '../../../../../app/engine';
 
 export interface CategoryFacetSearchProps {
   options: FacetSearchOptions;
+  isForFieldSuggestions: boolean;
 }
 
 export type CategoryFacetSearch = ReturnType<
@@ -34,7 +35,7 @@ export function buildCoreCategoryFacetSearch(
   const genericFacetSearch = buildGenericFacetSearch(engine, {
     options,
     getFacetSearch,
-    isForFieldSuggestions: false,
+    isForFieldSuggestions: props.isForFieldSuggestions,
   });
 
   return {

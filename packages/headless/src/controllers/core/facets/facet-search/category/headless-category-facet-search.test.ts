@@ -37,6 +37,7 @@ describe('CategoryFacetSearch', () => {
         ...defaultFacetSearchOptions,
         facetId,
       },
+      isForFieldSuggestions: false,
     };
 
     initEngine();

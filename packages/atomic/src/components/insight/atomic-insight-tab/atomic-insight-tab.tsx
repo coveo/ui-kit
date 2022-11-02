@@ -15,6 +15,7 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
 @Component({
   tag: 'atomic-insight-tab',
   styleUrl: './atomic-insight-tab.pcss',
+  shadow: true,
 })
 export class AtomicInsightTab
   implements InitializableComponent<InsightBindings>

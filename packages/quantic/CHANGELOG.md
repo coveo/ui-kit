@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.48.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.2...@coveo/quantic@1.48.3) (2022-11-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.48.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.1...@coveo/quantic@1.48.2) (2022-10-31)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.48.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.0...@coveo/quantic@1.48.1) (2022-10-28)
+
+
+### Bug Fixes
+
+* **quantic:**  AriaLiveRegion created before calling its methods in the Quantic summary ([#2515](https://github.com/coveo/ui-kit/issues/2515)) ([fc72655](https://github.com/coveo/ui-kit/commit/fc72655e3524e76c6d7409e94e6e388457e60312))
+
+
+
+
+
 # [1.48.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.47.0...@coveo/quantic@1.48.0) (2022-10-21)
 
 
