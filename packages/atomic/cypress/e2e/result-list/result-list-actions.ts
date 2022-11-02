@@ -3,14 +3,14 @@ import {
   generateComponentHTML,
   TagProps,
 } from '../../fixtures/test-fixture';
-import {resultTemplateComponent} from './result-template-selectors';
+import {toArray} from '../../utils/arrayUtils';
+import {foldedResultListComponent} from './folded-result-list-selectors';
 import {
   resultListComponent,
   ResultSection,
   resultSectionTags,
 } from './result-list-selectors';
-import {toArray} from '../../utils/arrayUtils';
-import {foldedResultListComponent} from './folded-result-list-selectors';
+import {resultTemplateComponent} from './result-template-selectors';
 
 export function buildTemplateWithoutSections(
   elements: HTMLElement | HTMLElement[],

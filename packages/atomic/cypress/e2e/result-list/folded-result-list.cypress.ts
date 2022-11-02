@@ -1,14 +1,15 @@
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
-import {
-  addFoldedResultList,
-  buildTemplateWithoutSections,
-  buildTemplateWithSections,
-} from './result-list-actions';
+import * as CommonAssertions from '../common-assertions';
 import {
   buildLoadMoreChildren,
   buildResultChildren,
   buildResultTopChild,
 } from './folded-result-list-actions';
+import {
+  ExpectedHierarchy,
+  assertRendersGrandchildren,
+  assertRendersWholeCollection,
+} from './folded-result-list-assertions';
 import {
   FoldedResultListSelectors,
   beforeChildrenSlotName,
@@ -17,11 +18,10 @@ import {
 } from './folded-result-list-selectors';
 import {resultLinkComponent} from './result-components/result-link-selectors';
 import {
-  ExpectedHierarchy,
-  assertRendersGrandchildren,
-  assertRendersWholeCollection,
-} from './folded-result-list-assertions';
-import * as CommonAssertions from '../common-assertions';
+  addFoldedResultList,
+  buildTemplateWithoutSections,
+  buildTemplateWithSections,
+} from './result-list-actions';
 
 const setSourceAndSortCriteria = () => {
   cy.intercept({method: 'POST', path: '**/rest/search/v2**'}, (request) => {

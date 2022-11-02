@@ -1,6 +1,6 @@
+import {Socket} from 'net';
 import {platform} from 'os';
 import * as path from 'path';
-import {Socket} from 'net';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

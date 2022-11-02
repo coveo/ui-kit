@@ -1,5 +1,5 @@
-import {TSDocParser} from '@microsoft/tsdoc';
 import {ApiFunction} from '@microsoft/api-extractor-model';
+import {TSDocParser} from '@microsoft/tsdoc';
 
 export function buildMockApiDocComment(comment: string) {
   const parser = new TSDocParser();

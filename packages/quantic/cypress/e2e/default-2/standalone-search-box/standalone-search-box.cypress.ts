@@ -5,9 +5,9 @@ import {
   interceptSearch,
   routeMatchers,
 } from '../../../page-objects/search';
-import {StandaloneSearchBoxExpectations as Expect} from './standalone-search-box-expectations';
-import {StandaloneSearchBoxActions as Actions} from './standalone-search-box-actions';
 import {scope} from '../../../reporters/detailed-collector';
+import {StandaloneSearchBoxActions as Actions} from './standalone-search-box-actions';
+import {StandaloneSearchBoxExpectations as Expect} from './standalone-search-box-expectations';
 
 interface StandaloneSearchBoxOptions {
   placeholder: string;

@@ -1,15 +1,15 @@
+import {pickBy} from 'lodash';
 import {
   generateComponentHTML,
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultLinkComponent,
   ResultLinkSelectors,
 } from './result-link-selectors';
-import * as CommonAssertions from '../../common-assertions';
-import {pickBy} from 'lodash';
 
 interface ResultLinkOptions {
   target?: '_self' | '_blank' | '_parent' | '_top';

@@ -1,3 +1,4 @@
+import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
 import {getAnalyticsAt} from '../utils/network';
 import {
   setUpPage,
@@ -5,9 +6,8 @@ import {
   shouldRenderErrorComponent,
   buildTestUrl,
 } from '../utils/setupComponent';
-import {pagerComponent, PagerSelectors} from './pager-selectors';
 import * as PagerAssertions from './pager-assertions';
-import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
+import {pagerComponent, PagerSelectors} from './pager-selectors';
 
 describe('Pager Test Suites', () => {
   function setupPager(attributes = '') {

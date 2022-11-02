@@ -1,17 +1,15 @@
-import path from 'path';
-import fs from 'fs';
-
-import express from 'express';
-import escape from 'escape-html';
-import ReactDOMServer from 'react-dom/server';
-
-import App from '../src/App';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
   buildSearchStatus,
   SearchEngine,
 } from '@coveo/headless';
+import escape from 'escape-html';
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import ReactDOMServer from 'react-dom/server';
+import App from '../src/App';
 
 const PORT = 3000;
 const app = express();

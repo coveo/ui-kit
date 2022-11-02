@@ -1,9 +1,7 @@
+import {InlineLink} from '@coveo/headless';
+import {interceptSearchResponse} from '../fixtures/fixture-common';
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {
-  smartSnippetSuggestionsComponent,
-  SmartSnippetSuggestionsSelectors,
-} from './smart-snippet-suggestions-selectors';
-import * as SmartSnippetSuggestionsAssertions from './smart-snippet-suggestions-assertions';
+import {AnalyticsTracker} from '../utils/analyticsUtils';
 import * as CommonAssertions from './common-assertions';
 import {addSearchBox} from './search-box/search-box-actions';
 import {SearchBoxSelectors} from './search-box/search-box-selectors';
@@ -12,9 +10,11 @@ import {
   addSmartSnippetSuggestionsDefaultOptions,
   getResponseModifierWithSmartSnippetSuggestions,
 } from './smart-snippet-suggestions-actions';
-import {AnalyticsTracker} from '../utils/analyticsUtils';
-import {InlineLink} from '@coveo/headless';
-import {interceptSearchResponse} from '../fixtures/fixture-common';
+import * as SmartSnippetSuggestionsAssertions from './smart-snippet-suggestions-assertions';
+import {
+  smartSnippetSuggestionsComponent,
+  SmartSnippetSuggestionsSelectors,
+} from './smart-snippet-suggestions-selectors';
 
 const {remSize, relatedQuestions: defaultRelatedQuestions} =
   addSmartSnippetSuggestionsDefaultOptions;

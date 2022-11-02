@@ -1,5 +1,5 @@
-import {getSvg} from './icon-utils';
 import {sanitize} from 'dompurify';
+import {getSvg} from './icon-utils';
 
 function getSortedClone(element: Element) {
   const sortedAttributes = Array.from(element.attributes).sort((a, b) =>

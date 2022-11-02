@@ -1,8 +1,9 @@
+import {
+  addFacets,
+  addFacetsWithoutInputs,
+} from '../../../page-objects/actions/action-add-facets';
+import {selectTab} from '../../../page-objects/actions/action-select-tab';
 import {configure} from '../../../page-objects/configurator';
-
-import {RefineToggleExpectations as Expect} from './refine-toggle-expectations';
-import {RefineToggleActions as Actions} from './refine-toggle-actions';
-import {scope} from '../../../reporters/detailed-collector';
 import {
   InterceptAliases,
   interceptSearch,
@@ -10,12 +11,9 @@ import {
   mockSearchWithoutAnyFacetValues,
   mockSearchWithResults,
 } from '../../../page-objects/search';
-import {
-  addFacets,
-  addFacetsWithoutInputs,
-} from '../../../page-objects/actions/action-add-facets';
-
-import {selectTab} from '../../../page-objects/actions/action-select-tab';
+import {scope} from '../../../reporters/detailed-collector';
+import {RefineToggleActions as Actions} from './refine-toggle-actions';
+import {RefineToggleExpectations as Expect} from './refine-toggle-expectations';
 
 interface RefineToggleOptions {
   fullScreen: boolean;
