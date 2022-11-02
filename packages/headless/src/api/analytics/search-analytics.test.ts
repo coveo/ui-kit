@@ -23,7 +23,7 @@ jest.mock('coveo.analytics', () => {
     history: {
       HistoryStore: jest.fn().mockImplementation(() => {
         return {
-          getHistory: mockGetHistory,
+          getHistory: () => mockGetHistory(),
         };
       }),
     },
