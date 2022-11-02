@@ -1,5 +1,9 @@
 @import 'c/quanticFacetStyles';
 
+:host {
+  width: 100%;
+}
+
 .facet__path {
   overflow: hidden;
   text-overflow: ellipsis;
