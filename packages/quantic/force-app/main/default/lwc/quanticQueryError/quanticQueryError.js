@@ -19,6 +19,7 @@ import { errorMap, genericError } from './errorLabels.js';
  * When the error is known, it displays a link to relevant documentation for debugging purposes.
  * When the error is unknown, it displays a small text area with the JSON content of the error.
  * @category Search
+ * @category Insight Panel
  * @example
  * <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
  */
