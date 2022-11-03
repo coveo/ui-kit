@@ -43,6 +43,8 @@ export default class QuanticQueryError extends LightningElement {
   unsubscribe;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   errorAriaMessage;
+  /** @type {AnyHeadless} */
+  headless;
 
   showMoreInfo = false;
 
