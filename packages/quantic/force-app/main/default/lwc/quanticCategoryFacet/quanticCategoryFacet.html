@@ -34,13 +34,13 @@
               <li class="facet__value-option slds-size_1-of-1 slds-p-around_x-small">
                 <div
                   role="button"
-                  class="facet__allCategories slds-grid slds-grid_vertical-align-center"
+                  class="facet__allCategories slds-grid slds-size_1-of-1 slds-grid_vertical-align-center"
                   tabindex="0"
                   onclick={reset}
                   onkeydown={onKeyDownReset}
                 >
                   <lightning-icon class="slds-m-right_xxx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
-                  <span class="nowrap">{labels.allCategories}</span>
+                  <span class="slds-truncate" title={labels.allCategories}>{labels.allCategories}</span>
                 </div>
               </li>
             </template>
@@ -57,11 +57,11 @@
               <li class="facet__active-parent slds-grid slds-grid_vertical-align-center slds-p-around_x-small slds-m-left_medium">
                 <div
                   role="button"
-                  class="slds-size_1-of-1 facet__value-container"
+                  class="slds-size_1-of-1 slds-grid facet__value-container"
                   aria-pressed="true"
                   tabindex="0"
                 >
-                  <span class="nowrap parent-text__bold">{activeParent.value}</span>
+                  <span class="slds-truncate parent-text__bold" title={activeParent.value}>{activeParent.value}</span>
                   <span class="facet__number-of-results parent-text__bold slds-var-m-left_xx-small">({activeParent.numberOfResults})</span>
                 </div>
               </li>

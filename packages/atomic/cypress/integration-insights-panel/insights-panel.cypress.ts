@@ -151,11 +151,10 @@ describe('Insights panel test suites', () => {
         .find('atomic-insight-tab')
         .should('have.length.at.least', 1)
         .eq(1)
-        .click();
-
-      InsightPanelsSelectors.tabs()
+        .click()
+        .shadow()
         .find('button[aria-pressed="true"]')
-        .should('have.text', 'PDF');
+        .should('have.text', 'Youtube');
     });
 
     CommonAssertions.assertAccessibility(InsightPanelsSelectors.searchbox);

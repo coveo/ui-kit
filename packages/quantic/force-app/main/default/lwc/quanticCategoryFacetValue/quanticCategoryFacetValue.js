@@ -73,6 +73,11 @@ export default class QuanticCategoryFacetValue extends LightningElement {
     return this.item?.state === 'selected' ? 'true' : 'false';
   }
 
+  get pathLabel() {
+    // @ts-ignore
+    return `${this.labels.inLabel} ${this.item.localizedPath}`;
+  }
+
   /**
    * @param {Event} evt
    */

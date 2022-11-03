@@ -18,13 +18,6 @@ interface WrapperProps extends Omit<JSX.AtomicSearchInterface, 'i18n'> {
    */
   onReady?: (executeFirstSearch: ExecuteSearch) => Promise<void>;
   /**
-   * @deprecated
-   *
-   * Read more about theming and visual customization here : https://docs.coveo.com/en/atomic/latest/usage/themes-and-visual-customization/
-   *
-   */
-  theme?: string | 'none';
-  /**
    * An optional callback that lets you control the interface localization.
    *
    * The function receives the search interface 18n instance, which you can then modify (see [Localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/)).
@@ -33,13 +26,10 @@ interface WrapperProps extends Omit<JSX.AtomicSearchInterface, 'i18n'> {
   localization?: (i18n: i18n) => void;
 }
 
-const DefaultProps: Required<
-  Pick<WrapperProps, 'onReady' | 'theme' | 'localization'>
-> = {
+const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
   onReady: (executeFirstSearch) => {
     return executeFirstSearch();
   },
-  theme: 'coveo',
   localization: () => {},
 };
 

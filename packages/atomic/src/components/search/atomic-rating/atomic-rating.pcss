@@ -2,8 +2,7 @@
  * @prop --atomic-rating-icon-active-color: Color of the icon when active.
  */
 .icon-active {
-  /* TODO: Remove "facet" variable in v2. */
-  color: var(--atomic-rating-icon-active-color, var(--atomic-rating-facet-icon-active-color, #f6ce3c));
+  color: var(--atomic-rating-icon-active-color, #f6ce3c);
 }
 
 /**
@@ -11,10 +10,7 @@
  */
 .icon-inactive {
   /* TODO: Remove "facet" variable in v2. */
-  color: var(
-    --atomic-rating-icon-inactive-color,
-    var(--atomic-rating-facet-icon-inactive-color, var(--atomic-neutral))
-  );
+  color: var(--atomic-rating-icon-inactive-color, var(--atomic-neutral));
 }
 
 /**

@@ -74,11 +74,6 @@ export class AtomicResultList implements InitializableComponent {
   @FocusTarget() nextNewResultTarget!: FocusTargetController;
 
   /**
-   * A list of non-default fields to include in the query results, separated by commas.
-   * @deprecated add it to atomic-search-interface instead
-   */
-  @Prop({reflect: true}) public fieldsToInclude = '';
-  /**
    * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
    */
   @Prop({reflect: true}) public display: ResultDisplayLayout = 'list';
@@ -91,10 +86,6 @@ export class AtomicResultList implements InitializableComponent {
    */
   @Prop({reflect: true, mutable: true})
   public imageSize: ResultDisplayImageSize = 'icon';
-  /**
-   * @deprecated use `imageSize` instead.
-   */
-  @Prop({reflect: true}) public image: ResultDisplayImageSize = 'icon';
 
   /**
    * Sets a rendering function to bypass the standard HTML template mechanism for rendering results.
@@ -110,31 +101,12 @@ export class AtomicResultList implements InitializableComponent {
     this.resultRenderingFunction = resultRenderingFunction;
   }
 
-  public connectedCallback() {
-    this.settleImageSize();
-  }
-
-  // TODO: remove v2 when `image` prop is removed;
-  private settleImageSize() {
-    if (this.host.hasAttribute('image-size')) {
-      return;
-    }
-    if (this.host.hasAttribute('image')) {
-      this.imageSize = this.image;
-    }
-  }
-
   public initialize() {
     if (this.host.innerHTML.includes('<atomic-result-children')) {
       console.warn(
         'Folded results will not render any children for the "atomic-result-list". Please use "atomic-folded-result-list" instead.'
       );
     }
-    this.bindings.store.addFieldsToInclude(
-      this.fieldsToInclude
-        ? this.fieldsToInclude.split(',').map((field) => field.trim())
-        : []
-    );
     this.resultList = buildResultList(this.bindings.engine);
     this.resultsPerPage = buildResultsPerPage(this.bindings.engine);
     const resultTemplateProvider = new ResultTemplateProvider({
