@@ -17,8 +17,7 @@ const links = [
   {
     href: '/accessibility/commerce-full.html',
     label: 'Accessible Commerce Full',
-  },
-  {href: '/examples/slack-source.html', label: 'Slack source'},
+  }
 ];
 
 const header = document.createElement('header');
