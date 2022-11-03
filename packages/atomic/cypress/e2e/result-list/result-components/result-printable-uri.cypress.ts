@@ -122,8 +122,7 @@ describe('Result Printable Uri Component', () => {
 
       ResultPrintableUriSelectors.links()
         .should('exist')
-        .should('have.attr', 'href', 'https://coveo.com')
-        .should('have.attr', 'target', '_self');
+        .should('have.attr', 'href', 'https://coveo.com');
     });
   });
 
