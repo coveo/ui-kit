@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.119.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.2...@coveo/atomic@1.119.3) (2022-11-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.119.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.1...@coveo/atomic@1.119.2) (2022-11-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.119.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.0...@coveo/atomic@1.119.1) (2022-10-31)
+
+
+### Bug Fixes
+
+* **atomic-insight:** Fix tab styling ([#2496](https://github.com/coveo/ui-kit/issues/2496)) ([e6c3f1a](https://github.com/coveo/ui-kit/commit/e6c3f1a90236c62207950e82cecbc10b24192277))
+
+
+
+
+
 # [1.119.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.118.1...@coveo/atomic@1.119.0) (2022-10-28)
 
 
