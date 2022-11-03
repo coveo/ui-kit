@@ -1,7 +1,7 @@
 import {Result} from '../../../api/search/search/result';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-analytics-actions';
+import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
