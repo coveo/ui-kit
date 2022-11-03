@@ -18,7 +18,7 @@ export class Cookie {
             expires = '';
         }
 
-        host = location.hostname;
+        host = window.location.hostname;
         if (host.indexOf('.') === -1) {
             // no "." in a domain - it's localhost or something similar
             document.cookie = name + '=' + value + expires + '; path=/';
