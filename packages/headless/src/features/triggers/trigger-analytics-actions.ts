@@ -56,7 +56,7 @@ export const logNotifyTrigger = (): SearchAction =>
         return null;
       }
       return client.makeTriggerNotify({
-        notification: state.triggers.notifications[0],
+        notifications: state.triggers.notifications,
       });
     }
   );
@@ -87,7 +87,7 @@ export const logTriggerExecute = (): SearchAction =>
         return null;
       }
       return client.makeTriggerExecute({
-        executed: state.triggers.executions[0].functionName,
+        executions: state.triggers.executions,
       });
     }
   );
