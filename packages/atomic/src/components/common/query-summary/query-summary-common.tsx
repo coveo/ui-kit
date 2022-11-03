@@ -4,7 +4,6 @@ import {AnyBindings} from '../interface/bindings';
 
 interface QuerySummaryCommonProps {
   bindings: AnyBindings;
-  withDuration: boolean;
   querySummaryState: {
     hasDuration: boolean;
     durationInSeconds: number;
@@ -88,7 +87,7 @@ export const QuerySummaryCommon: FunctionalComponent<
             params={paramsWithHighlights}
             count={params.count}
           />
-          {props.withDuration && props.querySummaryState.hasDuration && (
+          {props.querySummaryState.hasDuration && (
             <span class="hidden" part="duration">
               &nbsp;
               <LocalizedString

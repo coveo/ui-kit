@@ -48,7 +48,6 @@ export class AtomicQuerySummary implements InitializableComponent {
     return (
       <QuerySummaryCommon
         bindings={this.bindings}
-        withDuration={true}
         querySummaryState={this.querySummaryState}
         setAriaLive={(msg) => (this.ariaMessage = msg)}
       />
