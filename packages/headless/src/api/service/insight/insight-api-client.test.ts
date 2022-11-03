@@ -1,10 +1,7 @@
 import pino from 'pino';
 import {PlatformClient} from '../../platform-client';
 import {NoopPreprocessRequest} from '../../preprocess-request';
-import {
-  InsightAPIClient,
-  InsightAPIErrorStatusResponse,
-} from './insight-api-client';
+import {InsightAPIClient} from './insight-api-client';
 
 describe('insight api client', () => {
   const insightRequest = {
@@ -16,10 +13,7 @@ describe('insight api client', () => {
 
   let client: InsightAPIClient;
 
-  const setupCallMock = (
-    success: boolean,
-    response: string | InsightAPIErrorStatusResponse
-  ) => {
+  const setupCallMock = (success: boolean, response: unknown) => {
     return jest.spyOn(PlatformClient, 'call').mockResolvedValue({
       ok: success,
       json: () => Promise.resolve(response),
@@ -127,6 +121,64 @@ describe('insight api client', () => {
       setupCallMock(false, expectedError);
 
       const response = await client.query(queryRequest);
+
+      expect(response).toMatchObject({error: expectedError});
+    });
+  });
+
+  describe('querySuggest', () => {
+    const querySuggestRequest = {
+      ...insightRequest,
+      caseContext: {
+        subject: 'some subject',
+        description: 'some description',
+      },
+      q: 'some agent query',
+      timezone: 'UTC',
+      count: 5,
+    };
+
+    it('should call the platform endpoint with the correct arguments', async () => {
+      const callSpy = setupCallMock(true, {completions: []});
+
+      await client.querySuggest(querySuggestRequest);
+
+      expect(callSpy).toHaveBeenCalled();
+      const mockRequest = callSpy.mock.calls[0][0];
+      expect(mockRequest).toMatchObject({
+        accessToken: insightRequest.accessToken,
+        method: 'POST',
+        contentType: 'application/json',
+        url: `${querySuggestRequest.url}/rest/organizations/${querySuggestRequest.organizationId}/insight/v1/configs/${querySuggestRequest.insightId}/querysuggest`,
+        requestParams: {
+          caseContext: querySuggestRequest.caseContext,
+          q: querySuggestRequest.q,
+          timezone: querySuggestRequest.timezone,
+          count: querySuggestRequest.count,
+        },
+      });
+    });
+
+    it('should return success response on success', async () => {
+      setupCallMock(true, {
+        completions: [],
+      });
+
+      const response = await client.querySuggest(querySuggestRequest);
+
+      expect(response).toMatchObject({success: {completions: []}});
+    });
+
+    it('should return error response on failure', async () => {
+      const expectedError = {
+        statusCode: 401,
+        message: 'Unauthorized',
+        type: 'authorization',
+      };
+
+      setupCallMock(false, expectedError);
+
+      const response = await client.querySuggest(querySuggestRequest);
 
       expect(response).toMatchObject({error: expectedError});
     });
