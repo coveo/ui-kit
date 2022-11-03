@@ -1,3 +1,8 @@
+const decoratorPlugin = JSON.stringify([
+  'decorators',
+  {decoratorsBeforeExport: true},
+]);
+
 /** @type {import('prettier').Config} */
 module.exports = {
   bracketSpacing: false,
@@ -6,11 +11,13 @@ module.exports = {
   endOfLine: 'auto',
   overrides: [
     {files: '**/*.{scss,css,pcss,html,mdx}', options: {printWidth: 120}},
+    {
+      files: '**/*.tsx',
+      options: {
+        importOrderParserPlugins: ['typescript', 'jsx', decoratorPlugin],
+      },
+    },
   ],
-  importOrderParserPlugins: [
-    'typescript',
-    'jsx',
-    JSON.stringify(['decorators', {decoratorsBeforeExport: true}]),
-  ],
+  importOrderParserPlugins: ['typescript', decoratorPlugin],
   importOrder: ['^[./]', '^\\/', '^\\.\\.\\/', '^\\.\\/'],
 };

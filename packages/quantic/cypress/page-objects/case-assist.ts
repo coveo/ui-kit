@@ -45,7 +45,7 @@ export function interceptClassificationsIndefinitely(): {
 export function mockDocumentSuggestion(value: Array<object>) {
   cy.intercept(routeMatchers.documentSuggestion, (req) => {
     req.continue((res) => {
-      res.body?.documents = value;
+      res.body!.documents = value;
       res.send();
     });
   }).as(InterceptAliases.DocumentSuggestion.substring(1));
@@ -68,9 +68,9 @@ export function mockSfPicklistValues(field: string, values: Array<object>) {
     },
     (req) => {
       req.continue((res) => {
-        res.body?.actions?.[0]?.returnValue?.picklistFieldValues?.[
+        res.body!.actions![0]!.returnValue!.picklistFieldValues![
           field
-        ]?.values = values.map((value) => {
+        ]!.values = values.map((value) => {
           return {...value, attributes: null};
         });
         res.send();
