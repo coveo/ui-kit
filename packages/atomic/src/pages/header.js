@@ -17,7 +17,7 @@ const links = [
   {
     href: '/accessibility/commerce-full.html',
     label: 'Accessible Commerce Full',
-  }
+  },
 ];
 
 const header = document.createElement('header');
