@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { registerComponentForInit, initializeWithHeadless } from 'c/quanticHeadlessLoader';
+import { registerComponentForInit, initializeWithHeadless, getHeadlessBundle } from 'c/quanticHeadlessLoader';
 import { AriaLiveRegion, I18nUtils } from 'c/quanticUtils';
 
 import coveoOnlineHelpLink from '@salesforce/label/c.quantic_CoveoOnlineHelpLink';
@@ -43,6 +43,8 @@ export default class QuanticQueryError extends LightningElement {
   unsubscribe;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   errorAriaMessage;
+  /** @type {AnyHeadless} */
+  headless;
 
   showMoreInfo = false;
 
@@ -67,7 +69,8 @@ export default class QuanticQueryError extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.queryError = CoveoHeadless.buildQueryError(engine);
+    this.headless = getHeadlessBundle(this.engineId);
+    this.queryError = this.headless.buildQueryError(engine);
     this.errorAriaMessage = AriaLiveRegion('queryerror', this);
     this.unsubscribe = this.queryError.subscribe(() => this.updateState());
   }
