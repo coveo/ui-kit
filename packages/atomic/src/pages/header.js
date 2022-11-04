@@ -18,6 +18,7 @@ const links = [
     href: '/accessibility/commerce-full.html',
     label: 'Accessible Commerce Full',
   },
+  {href: '/examples/ipx.html', label: 'IPX'},
 ];
 
 const header = document.createElement('header');
