@@ -49,7 +49,7 @@ describe('insight api client', () => {
         accessToken: insightRequest.accessToken,
         method: 'GET',
         contentType: 'application/json',
-        url: `${insightRequest.url}/rest/organizations/${insightRequest.organizationId}/insight/v1/configs/${insightRequest.insightId}/interface?detailed=true`,
+        url: `${insightRequest.url}/rest/organizations/${insightRequest.organizationId}/insight/v1/configs/${insightRequest.insightId}/interface`,
       });
     });
 

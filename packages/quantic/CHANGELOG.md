@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.49.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.5...@coveo/quantic@1.49.0) (2022-11-03)
+
+
+### Features
+
+* **quantic:** QuanticQueryError updated to support the insight use case ([#2530](https://github.com/coveo/ui-kit/issues/2530)) ([8295192](https://github.com/coveo/ui-kit/commit/82951929f5e0d0c2e74c13cb9dfc8e05ef3ecc73))
+
+
+
+
+
+## [1.48.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.4...@coveo/quantic@1.48.5) (2022-11-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.48.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.3...@coveo/quantic@1.48.4) (2022-11-02)
+
+
+### Bug Fixes
+
+* **quantic:** fixed facet value overflow ([#2528](https://github.com/coveo/ui-kit/issues/2528)) ([5b0c5e2](https://github.com/coveo/ui-kit/commit/5b0c5e2464e7e50ac3d4cb8a14ed7bc35009d9bc))
+
+
+
+
+
+## [1.48.3](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.2...@coveo/quantic@1.48.3) (2022-11-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.48.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.1...@coveo/quantic@1.48.2) (2022-10-31)
 
 **Note:** Version bump only for package @coveo/quantic

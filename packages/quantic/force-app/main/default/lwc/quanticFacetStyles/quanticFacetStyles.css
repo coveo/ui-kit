@@ -5,6 +5,10 @@
   border-radius: 4px;
 }
 
+fieldset {
+  min-width: 0;
+}
+
 .facet__show-less {
   font-size: 12px;
   background-color: white;
