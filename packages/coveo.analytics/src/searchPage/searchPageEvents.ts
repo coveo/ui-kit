@@ -368,11 +368,16 @@ export interface ResultsSortMetadata {
 }
 
 export interface TriggerNotifyMetadata {
-    notification: string;
+    notifications: string[];
+}
+
+export interface TriggerExecution {
+    functionName: string;
+    params: (string | number | boolean)[];
 }
 
 export interface TriggerExecuteMetadata {
-    executed: string;
+    executions: TriggerExecution[];
 }
 
 export interface UndoTriggerRedirectMetadata {

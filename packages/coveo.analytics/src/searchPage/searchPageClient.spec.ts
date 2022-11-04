@@ -389,7 +389,7 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #logTriggerNotify', async () => {
         const meta = {
-            notification: 'foo',
+            notifications: ['foo', 'bar'],
         };
         await client.logTriggerNotify(meta);
         expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, meta);
@@ -397,7 +397,7 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #makeTriggerNotify', async () => {
         const meta = {
-            notification: 'foo',
+            notifications: ['foo', 'bar'],
         };
         const built = client.makeTriggerNotify(meta);
         await built.log();
@@ -407,7 +407,10 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #logTriggerExecute', async () => {
         const meta = {
-            executed: 'foo',
+            executions: [
+                {functionName: 'foo', params: [true, 3, 'hello']},
+                {functionName: 'world', params: []},
+            ],
         };
         await client.logTriggerExecute(meta);
         expectMatchCustomEventPayload(SearchPageEvents.triggerExecute, meta);
@@ -415,7 +418,10 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #makeTriggerExecute', async () => {
         const meta = {
-            executed: 'foo',
+            executions: [
+                {functionName: 'foo', params: [true, 3, 'hello']},
+                {functionName: 'world', params: []},
+            ],
         };
         const built = client.makeTriggerExecute(meta);
         await built.log();
