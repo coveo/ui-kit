@@ -48,7 +48,6 @@ export function buildIPXLayout(element: HTMLElement) {
     ${sectionSelector('pagination')} ${pagerSelector} {
       background: var(--atomic-neutral-light);
       height: 100%;
-      padding: 1rem 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
