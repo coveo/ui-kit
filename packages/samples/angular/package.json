@@ -4,7 +4,6 @@
   "scripts": {
     "ng": "ng",
     "dev": "npm run copy:assets && ng serve",
-    "link:angular": "node scripts/link-hoisted-dependencies.js",
     "watch": "ng build --watch --configuration development",
     "copy:assets": "ncp ../../atomic-angular/projects/atomic-angular/dist/assets src/assets && ncp ../../atomic-angular/projects/atomic-angular/dist/lang src/lang"
   },
@@ -24,8 +23,8 @@
     "zone.js": "0.11.8"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "13.3.5",
-    "@angular/cli": "13.3.5",
+    "@angular-devkit/build-angular": "13.3.0",
+    "@angular/cli": "13.3.0",
     "@angular/compiler-cli": "13.3.0",
     "@types/jasmine": "3.10.6",
     "@types/node": "12.20.55",

@@ -1,0 +1,33 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": []
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "npm:publish:alpha": {
+      "dependsOn": [
+        "^npm:publish:alpha"
+      ]
+    },
+    "doc:generate": {
+      "dependsOn": [
+        "^doc:generate"
+      ]
+    },
+    "cypress:test": {
+      "dependsOn": [
+        "^cypress:test"
+      ]
+    }
+  },
+  "defaultBase": "master"
+}

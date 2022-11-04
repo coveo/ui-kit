@@ -2,26 +2,26 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install & patch-package && npm run link:angular -w angular",
-    "start": "lerna run --parallel start",
+    "postinstall": "husky install & patch-package",
+    "start": "nx run-many --all --target start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
-    "build": "lerna run clean && lerna run build",
-    "test": "lerna run --parallel test",
-    "test:watch": "lerna run --parallel test:watch --no-prefix",
+    "build": "nx run-many --all --target clean && nx run-many --all --target build",
+    "test": "nx run-many --all --target test",
+    "test:watch": "nx run-many --all --target test:watch",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
     "pr:report": "node ./scripts/reports/pr-report.js",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
-    "cypress:test": "lerna run cypress:test",
+    "cypress:test": "nx run-many --all --target cypress:test",
     "commit": "git-cz",
     "setup:snyk": "node ./scripts/snyk/remove-samples-workspace.js",
     "bump:version": "node ./scripts/deploy/bump-version.js",
-    "npm:publish:alpha": "lerna run --stream npm:publish:alpha",
+    "npm:publish:alpha": "nx run-many --all --target npm:publish:alpha",
     "npm:tag": "node ./scripts/deploy/update-npm-tag.js",
     "npm:tag:beta": "npm run npm:tag -- beta",
     "npm:tag:latest": "npm run npm:tag -- latest",
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.js",
-    "doc:generate": "lerna run doc:generate"
+    "doc:generate": "nx run-many --all --target doc:generate"
   },
   "dependencies": {
     "patch-package": "6.4.7"
@@ -57,7 +57,8 @@
     "rimraf": "3.0.2",
     "semver": "7.3.7",
     "ts-jest": "27.1.5",
-    "typescript": "4.6.4"
+    "typescript": "4.6.4",
+    "nx": "15.0.9"
   },
   "workspaces": [
     "packages/bueno",
@@ -66,6 +67,7 @@
     "packages/atomic",
     "packages/quantic",
     "packages/atomic-react",
+    "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
     "packages/samples/*"
   ],
