@@ -14,10 +14,13 @@ import {
 } from '..';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {
+  SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from '../../search/search-box-suggestions/suggestions-common';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
+import {loadQuerySetActions, QuerySetActionCreators} from '@coveo/headless';
 
 /**
  * @internal
@@ -29,13 +32,21 @@ import {
 })
 export class AtomicInsightSearchBox {
   @InitializeBindings() public bindings!: InsightBindings;
-  @State() public error!: Error;
 
   private id!: string;
   private searchBox!: InsightSearchBox;
   private inputRef!: HTMLInputElement;
+  private panelRef: HTMLElement | undefined;
+  private querySetActions!: QuerySetActionCreators;
   private suggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
+
+  @State() private searchBoxState!: InsightSearchBoxState;
+  @State() public error!: Error;
+  @State() private isExpanded = false;
+  @State() private suggestionElements: SearchBoxSuggestionElement[] = [];
+  @State() private activeDescendant = '';
+  @State() private previousActiveDescendantElement: HTMLElement | null = null;
 
   /**
    * Whether to prevent the user from triggering a search from the component.
@@ -48,11 +59,15 @@ export class AtomicInsightSearchBox {
   @Prop({reflect: true}) public numberOfSuggestions = 5;
 
   @BindStateToController('searchBox')
-  @State()
-  private searchBoxState!: InsightSearchBoxState;
+  @AriaLiveRegion('search-box')
+  protected searchBoxAriaMessage!: string;
+
+  @AriaLiveRegion('search-suggestions', true)
+  protected suggestionsAriaMessage!: string;
 
   public initialize() {
     this.id = randomID('atomic-search-box-');
+    this.querySetActions = loadQuerySetActions(this.bindings.engine);
 
     const searchBoxOptions = {
       id: this.id,
@@ -88,6 +103,22 @@ export class AtomicInsightSearchBox {
     }
   }
 
+  private get hasActiveDescendant() {
+    return this.activeDescendant !== '';
+  }
+
+  private get hasSuggestions() {
+    return !!this.suggestionElements.length;
+  }
+
+  private get activeDescendantElement(): HTMLElement | null {
+    if (!this.hasActiveDescendant) {
+      return null;
+    }
+
+    return this.panelRef?.querySelector(`#${this.activeDescendant}`) || null;
+  }
+
   private get suggestionBindings(): SearchBoxSuggestionsBindings {
     return {
       ...this.bindings,
@@ -104,6 +135,66 @@ export class AtomicInsightSearchBox {
     };
   }
 
+  private updateActiveDescendant(activeDescendant = '') {
+    this.activeDescendant = activeDescendant;
+  }
+
+  private clearSuggestionElements() {
+    this.suggestionElements = [];
+    this.searchBoxAriaMessage = '';
+  }
+
+  private clearSuggestions() {
+    this.isExpanded = false;
+    this.updateActiveDescendant();
+    this.clearSuggestionElements();
+  }
+
+  private onSubmit() {
+    if (this.activeDescendantElement) {
+      this.activeDescendantElement.click();
+      this.updateActiveDescendant();
+      return;
+    }
+
+    this.searchBox.submit();
+    this.updateActiveDescendant();
+    this.clearSuggestions();
+  }
+
+  private updateQuery(query: string) {
+    this.bindings.engine.dispatch(
+      this.querySetActions.updateQuerySetQuery({
+        id: this.id,
+        query,
+      })
+    );
+  }
+
+  private updateQueryFromSuggestion() {
+    const suggestedQuery =
+      this.activeDescendantElement?.getAttribute(queryDataAttribute);
+    if (suggestedQuery && this.searchBoxState.value !== suggestedQuery) {
+      this.updateQuery(suggestedQuery);
+      this.updateSuggestedQuery(suggestedQuery);
+    }
+  }
+
+  private focusValue(value: HTMLElement) {
+    this.updateActiveDescendant(value.id);
+    this.scrollActiveDescendantIntoView();
+    this.updateQueryFromSuggestion();
+    this.updateAriaLiveActiveDescendant(value);
+  }
+
+  private focusNextValue() {
+    if (!this.hasSuggestions || !this.nextOrFirstValue) {
+      return;
+    }
+
+    this.focusValue(this.nextOrFirstValue as HTMLElement);
+  }
+
   private onKeyDown(e: KeyboardEvent) {
     if (this.disableSearch) {
       return;
@@ -111,7 +202,25 @@ export class AtomicInsightSearchBox {
 
     switch (e.key) {
       case 'Enter':
-        this.searchBox.submit();
+        this.onSubmit();
+        break;
+      case 'Escape':
+        this.clearSuggestions();
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        this.focusNextValue();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (this.firstValue === this.activeDescendantElement) {
+          this.updateActiveDescendant();
+        } else {
+          this.focusPreviousValue();
+        }
+        break;
+      case 'Tab':
+        this.clearSuggestions();
         break;
     }
   }
