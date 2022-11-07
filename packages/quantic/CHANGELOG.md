@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.49.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.49.0...@coveo/quantic@1.49.1) (2022-11-04)
+
+
+### Bug Fixes
+
+* **quantic:** display of QuerySummary adjusted in the example search page ([#2532](https://github.com/coveo/ui-kit/issues/2532)) ([1b54d47](https://github.com/coveo/ui-kit/commit/1b54d47c3c2dd8802f48754760d60a88f1a47645))
+* **quantic:** padding of the QuanticSort component fixed ([#2537](https://github.com/coveo/ui-kit/issues/2537)) ([28f2b31](https://github.com/coveo/ui-kit/commit/28f2b31c4a098dd8cc4c70bc872249abd634cde6))
+
+
+
+
+
+# [1.49.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.5...@coveo/quantic@1.49.0) (2022-11-03)
+
+
+### Features
+
+* **quantic:** QuanticQueryError updated to support the insight use case ([#2530](https://github.com/coveo/ui-kit/issues/2530)) ([8295192](https://github.com/coveo/ui-kit/commit/82951929f5e0d0c2e74c13cb9dfc8e05ef3ecc73))
+
+
+
+
+
+## [1.48.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.4...@coveo/quantic@1.48.5) (2022-11-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 ## [1.48.4](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.3...@coveo/quantic@1.48.4) (2022-11-02)
 
 

@@ -18,6 +18,8 @@ import {
   StateNeededByQuerySuggest,
 } from './insight-search-actions';
 
+export type {FetchQuerySuggestionsActionCreatorPayload};
+
 export interface InsightSearchActionCreators {
   /**
    * Creates an action that executes a search query.

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.120.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.3...@coveo/atomic@1.120.0) (2022-11-04)
+
+
+### Features
+
+* **atomic:** add slack custom result templates ([#2531](https://github.com/coveo/ui-kit/issues/2531)) ([db37aba](https://github.com/coveo/ui-kit/commit/db37abab0cd1eb329ea34d3d18d53e76a63591b4))
+
+
+
+
+
+## [1.119.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.2...@coveo/atomic@1.119.3) (2022-11-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.119.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.1...@coveo/atomic@1.119.2) (2022-11-01)
 
 **Note:** Version bump only for package @coveo/atomic

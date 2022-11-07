@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.110.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.110.2...@coveo/headless@1.110.3) (2022-11-04)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [1.110.2](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.110.1...@coveo/headless@1.110.2) (2022-11-02)
+
+
+### Bug Fixes
+
+* **headless:**  Case Metadata added to the payload of logDocumentOpen action ([#2522](https://github.com/coveo/ui-kit/issues/2522)) ([cd284f7](https://github.com/coveo/ui-kit/commit/cd284f7314c647712ddb274b817245ca1f34652d))
+
+
+
+
+
 ## [1.110.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.110.0...@coveo/headless@1.110.1) (2022-11-01)
 
 
