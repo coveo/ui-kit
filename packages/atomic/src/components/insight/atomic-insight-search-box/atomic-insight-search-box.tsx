@@ -16,6 +16,7 @@ import {
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {
   elementHasNoQuery,
+  elementHasQuery,
   SearchBoxSuggestionElement,
 } from '../../search/search-box-suggestions/suggestions-common';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
@@ -269,6 +270,28 @@ export class AtomicInsightSearchBox {
     }
   }
 
+  private updateAriaMessage() {
+    const elsLength = this.suggestionElements.filter(elementHasQuery).length;
+    this.searchBoxAriaMessage = elsLength
+      ? this.bindings.i18n.t('query-suggestions-available', {
+          count: elsLength,
+        })
+      : this.bindings.i18n.t('query-suggestions-unavailable');
+  }
+
+  private async triggerSuggestions() {
+    const defaultSuggestedQuery =
+      this.suggestionElements.find(elementHasQuery)?.query || '';
+
+    this.updateSuggestedQuery(defaultSuggestedQuery);
+    this.updateAriaMessage();
+  }
+
+  private onFocus() {
+    this.isExpanded = true;
+    this.triggerSuggestions();
+  }
+
   private async updateSuggestedQuery(suggestedQuery: string) {
     this.suggestedQuery = suggestedQuery;
     this.updateSuggestionElements();
@@ -421,6 +444,7 @@ export class AtomicInsightSearchBox {
             value={this.searchBoxState.value}
             ariaLabel={this.bindings.i18n.t('search-box')}
             placeholder={this.bindings.i18n.t('search-ellipsis')}
+            onFocus={() => this.onFocus()}
             onKeyDown={(e) => this.onKeyDown(e)}
             onClear={() => this.searchBox.clear()}
             onInput={(e) => {
