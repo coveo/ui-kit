@@ -1,7 +1,7 @@
 import {Result} from '../../../api/search/search/result';
 import {configuration} from '../../../app/reducers';
 import {pushRecentResult} from '../../../features/recent-results/recent-results-actions';
-import {logDocumentOpen} from '../../../features/result/result-analytics-actions';
+import {logDocumentOpen} from '../../../features/result/result-insight-analytics-actions';
 import {buildMockResult} from '../../../test';
 import {
   buildMockInsightEngine,
