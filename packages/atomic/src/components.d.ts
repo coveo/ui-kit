@@ -615,6 +615,10 @@ export namespace Components {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch": boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions": number;
     }
     interface AtomicInsightTab {
         /**
@@ -3110,6 +3114,10 @@ declare namespace LocalJSX {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch"?: boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions"?: number;
     }
     interface AtomicInsightTab {
         /**
