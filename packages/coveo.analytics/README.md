@@ -179,9 +179,9 @@ class ReactNativeStorage implements WebStorage {
 
 // Create an API client
 const client = new CoveoAnalyticsClient({
-    token: 'YOUR_API_KEY'
-    runtimeEnvironment: ReactNativeRuntime({
-        token: 'YOUR_API_KEY'
+    token: 'YOUR_API_KEY',
+    runtimeEnvironment: new ReactNativeRuntime({
+        token: 'YOUR_API_KEY',
         storage: new ReactNativeStorage(),
     }),
 });
@@ -189,7 +189,7 @@ const client = new CoveoAnalyticsClient({
 client.sendCustomEvent({
     eventType: 'dog',
     eventValue: 'Hello! Yes! This is Dog!',
-    language: 'en'
+    language: 'en',
 });
 ```
 
