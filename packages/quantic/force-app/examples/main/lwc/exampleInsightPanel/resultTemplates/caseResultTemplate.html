@@ -12,9 +12,6 @@
       </div>
       <c-quantic-result-badge variant="featured" result={result}></c-quantic-result-badge>
     </div>
-    <template if:true={resultHasPreview}>
-      <c-quantic-result-quickview slot="actions" engine-id={engineId} result={result}></c-quantic-result-quickview>
-    </template>
     <p slot="date" class="slds-size_xx-small">
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>

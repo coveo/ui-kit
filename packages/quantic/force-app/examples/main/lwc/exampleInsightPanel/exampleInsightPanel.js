@@ -4,6 +4,9 @@ import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 import caseTemplate from './resultTemplates/caseResultTemplate.html';
 // @ts-ignore
 import chatterTemplate from './resultTemplates/chatterResultTemplate.html';
+// @ts-ignore
+import defaultTemplate from './resultTemplates/defaultResultTemplate.html';
+
 import {LightningElement, api} from 'lwc';
 import {
   getHeadlessBundle,
@@ -18,6 +21,13 @@ export default class ExampleInsightPanel extends LightningElement {
 
   connectedCallback() {
     this.template.addEventListener(
+      'quantic__insightinterfaceinitialized',
+      this.handleInterfaceLoad
+    );
+  }
+
+  disconnectedCallback() {
+    this.template.removeEventListener(
       'quantic__insightinterfaceinitialized',
       this.handleInterfaceLoad
     );
@@ -64,6 +74,10 @@ export default class ExampleInsightPanel extends LightningElement {
         content: chatterTemplate,
         conditions: [isChatter],
         fields: ['sfcreatedbyname'],
+      },
+      {
+        content: defaultTemplate,
+        conditions: [],
       }
     );
   }
