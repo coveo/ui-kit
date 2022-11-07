@@ -7,6 +7,5 @@
 .sort__header {
     color: var(--lwc-colorTextActionLabel, darkslategray);
     padding-top: 6px;
-    padding-right: 4px;
     white-space: nowrap;
 }
