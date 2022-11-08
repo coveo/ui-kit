@@ -10,11 +10,7 @@
         <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
-        <targetConfig targets="lightningCommunity__Default">
-            <property name="engineId" type="String" default="example-search" label="Enter Coveo Headless engine ID"/>
-            <property name="insightId" type="String" default="default" label="The insight panel config ID"/>
-        </targetConfig>
-        <targetConfig targets="lightning__AppPage, lightning__RecordPage, lightning__HomePage">
+        <targetConfig targets="lightningCommunity__Default, lightning__AppPage, lightning__RecordPage, lightning__HomePage">
             <property name="engineId" type="String" default="example-search" label="Enter Coveo Headless engine ID"/>
             <property name="insightId" type="String" default="default" label="The insight panel config ID"/>
         </targetConfig>
