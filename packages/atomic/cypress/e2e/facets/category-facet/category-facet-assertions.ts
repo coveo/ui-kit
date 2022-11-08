@@ -7,6 +7,27 @@ import {CategoryFacetSelectors} from './category-facet-selectors';
 import {hierarchicalField} from './category-facet-actions';
 import {should} from '../../common-assertions';
 
+export type ExpectedHierarchyValues = {type: 'values'; valueLabels: string[]};
+export type ExpectedHierarchyActiveValue = {
+  type: 'active-value';
+  valueLabel: string;
+  children: ExpectedHierarchy;
+};
+export type ExpectedHierarchySubParent = {
+  type: 'sub-parent';
+  valueLabel: string;
+  children: ExpectedHierarchy;
+};
+export type ExpectedHierarchyRoot = {
+  type: 'hierarchy-root';
+  children: ExpectedHierarchy;
+};
+export type ExpectedHierarchy =
+  | ExpectedHierarchySubParent
+  | ExpectedHierarchyActiveValue
+  | ExpectedHierarchyValues
+  | ExpectedHierarchyRoot;
+
 export function assertNumberOfChildValues(value: number) {
   it(`should display ${value} number of idle link values`, () => {
     if (value > 0) {
@@ -177,6 +198,127 @@ export function assertDisplayAllCategoriesButton(display: boolean) {
   it(`${should(display)} display an "All Categories" button`, () => {
     CategoryFacetSelectors.allCategoriesButton().should(
       display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertHierarchy(expectedHierarchy: ExpectedHierarchy) {
+  function expectMatchHierarchy(
+    containerElement: HTMLUListElement,
+    hierarchy: ExpectedHierarchy
+  ) {
+    const buttons = Array.from(
+      containerElement.children as HTMLCollectionOf<HTMLLIElement>
+    ).map((el) => Array.from(el.children)[0] as HTMLButtonElement);
+    const nextContainer = containerElement.querySelector('ul');
+
+    const getValueLabel = (button: HTMLButtonElement) =>
+      button.querySelector<HTMLElement>('[part~="value-label"]')!.innerText;
+
+    switch (hierarchy.type) {
+      case 'hierarchy-root':
+        expect(Array.from(containerElement.part)).to.contain(
+          'parents',
+          'the root container must have the correct part'
+        );
+        expect(buttons).to.have.lengthOf(
+          1,
+          'the root container must only contain one button'
+        );
+        expect(Array.from(buttons[0].part)).to.contain(
+          'all-categories-button',
+          'the root button must contain the correct part'
+        );
+        if (hierarchy.children) {
+          expect(nextContainer).not.to.equal(
+            null,
+            'the root container must contain another container'
+          );
+          expectMatchHierarchy(nextContainer!, hierarchy.children);
+        }
+        break;
+      case 'sub-parent':
+        expect(Array.from(containerElement.part)).to.contain(
+          'sub-parents',
+          'a sub-parents container must contain the correct part'
+        );
+        expect(buttons).to.have.lengthOf(
+          1,
+          'a sub-parents container must only contain one button'
+        );
+        expect(Array.from(buttons[0].part)).to.contain(
+          'parent-button',
+          'a sub-parents button must contain the correct part'
+        );
+        expect(buttons[0].innerText).to.contain(
+          hierarchy.valueLabel,
+          'a sub-parents button must contain the correct text'
+        );
+        if (hierarchy.children) {
+          expect(nextContainer).not.to.equal(
+            null,
+            'a sub-parents container must contain another container'
+          );
+          expectMatchHierarchy(nextContainer!, hierarchy.children);
+        }
+        break;
+      case 'active-value':
+        expect(Array.from(containerElement.part)).to.contain(
+          'sub-parents',
+          'a active value container must contain the correct part'
+        );
+        expect(buttons).to.have.lengthOf(
+          1,
+          'a active value container must only contain one button'
+        );
+        expect(Array.from(buttons[0].part)).to.contain(
+          'active-parent',
+          'a active value button must contain the correct part'
+        );
+        expect(getValueLabel(buttons[0])).to.equal(
+          hierarchy.valueLabel,
+          'a active value button must contain the correct text'
+        );
+        if (hierarchy.children) {
+          expect(nextContainer).not.to.equal(
+            null,
+            'a active value container must contain another container'
+          );
+          expectMatchHierarchy(nextContainer!, hierarchy.children);
+        }
+        break;
+      case 'values':
+        expect(Array.from(containerElement.part)).to.contain(
+          'values',
+          'a values container must contain the correct part'
+        );
+        expect(buttons.length).to.be.gte(
+          hierarchy.valueLabels.length,
+          `this values container must contain at-least ${hierarchy.valueLabels.length} buttons`
+        );
+        buttons.forEach((button) => {
+          expect(Array.from(button.part)).to.contain(
+            'value-link',
+            'a values container button must contain the correct part'
+          );
+        });
+        hierarchy.valueLabels.forEach((valueLabel) => {
+          expect(buttons.map(getValueLabel)).to.contain(
+            valueLabel,
+            `this values container must contain a button with the text "${valueLabel}"`
+          );
+        });
+        expect(nextContainer).to.equal(
+          null,
+          'a values container must not contain another container'
+        );
+        break;
+    }
+  }
+
+  it('should have the correct hierarchy', () => {
+    CategoryFacetSelectors.wrapper().should(([wrapper]) =>
+      expectMatchHierarchy(wrapper!.querySelector('ul')!, expectedHierarchy)
     );
   });
 }

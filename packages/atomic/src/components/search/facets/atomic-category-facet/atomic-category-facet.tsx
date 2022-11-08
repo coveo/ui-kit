@@ -74,18 +74,18 @@ import {initializePopover} from '../atomic-popover/popover-type';
  * @part search-result-path - The search result path.
  * @part search-highlight - The highlighted query inside the facet values.
  *
- * @part parents - The parent values container.
- * @part all-categories-button - The "View all" button displayed first along the parents.
- * @part parent-button - The clickable parent button.
- * @part active-parent - The non-clickable active parent.
+ * @part parents - The container surrounding the whole hierarchy of values.
+ * @part sub-parents - The container surrounding a part of the hierarchy of values.
+ * @part values - The container surrounding either the children of the active value or the values at the base.
+ * @part all-categories-button - The "View all" button displayed first within the parents.
+ * @part parent-button - The clickable parent button displayed first within sub-parents.
+ * @part active-parent - The clickable active parent displayed first within the last sub-parents.
+ * @part value-link - The clickable value displayed first within values.
  * @part back-arrow - The back arrow displayed before the clickable parents.
- *
- * @part values - The facet values child container.
- * @part value-link - The child facet value.
- * @part value-label - The facet value label.
- * @part value-count - The facet value count.
- * @part leaf-value - A facet value with no child value
- * @part node-value - A facet value with children values
+ * @part value-label - The facet value label within a value button.
+ * @part value-count - The facet value count within a value button.
+ * @part leaf-value - A facet value with no child value.
+ * @part node-value - A facet value with children values.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -345,7 +345,6 @@ export class AtomicCategoryFacet
       <Button
         style="text-neutral"
         part="all-categories-button"
-        class="parent-button"
         onClick={() => {
           this.activeValueFocus.focusAfterSearch();
           this.facet.deselectAll();
@@ -355,7 +354,6 @@ export class AtomicCategoryFacet
           aria-hidden="true"
           icon={LeftArrow}
           part="back-arrow"
-          class="back-arrow"
         ></atomic-icon>
         <span class="truncate">{allCategories}</span>
       </Button>
@@ -377,7 +375,6 @@ export class AtomicCategoryFacet
       <Button
         style="text-neutral"
         part="parent-button"
-        class="parent-button"
         ariaPressed="false"
         onClick={() => {
           this.activeValueFocus.focusAfterSearch();
@@ -405,7 +402,7 @@ export class AtomicCategoryFacet
       return (
         <li class="contents">
           {this.renderAllCategoriesButton()}
-          <ul class="contents">{this.renderValuesTree(parents, false)}</ul>
+          <ul part="sub-parents">{this.renderValuesTree(parents, false)}</ul>
         </li>
       );
     }
@@ -414,7 +411,7 @@ export class AtomicCategoryFacet
       return (
         <li class="contents">
           {this.renderParentButton(parents[0])}
-          <ul class="contents">
+          <ul part="sub-parents">
             {this.renderValuesTree(parents.slice(1), false)}
           </ul>
         </li>
@@ -440,13 +437,9 @@ export class AtomicCategoryFacet
         }}
         searchQuery={this.facetState.facetSearch.query}
         part={`active-parent ${this.getIsLeafOrNodePart(activeParent)}`}
-        class="parent-active"
+        class="contents"
         buttonRef={this.activeValueFocus.setTarget}
-        subList={
-          <ul part="values" class="pl-2">
-            {this.renderChildren()}
-          </ul>
-        }
+        subList={<ul part="values">{this.renderChildren()}</ul>}
       >
         <FacetValueLabelHighlight
           displayValue={activeParentDisplayValue}
