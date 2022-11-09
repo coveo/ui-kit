@@ -3,6 +3,7 @@ const links = [
   {href: '/examples/custom.html', label: 'Custom'},
   {href: '/examples/external.html', label: 'External'},
   {href: '/examples/folding.html', label: 'Folding'},
+  {href: '/examples/slack.html', label: 'Slack'},
   {href: '/examples/headless.html', label: 'Headless'},
   {href: '/examples/standalone.html', label: 'Standalone'},
   {href: '/examples/modal.html', label: 'Modal'},
