@@ -47,9 +47,6 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {void}
    */
   updateTabsDisplay = () => {
-    console.log('content width: ', this.slotContentWidth)
-    console.log('container width: ', this.containerWidth)
-    console.log('about to get called : ', this.isOverflow);
     this.updateMoreButtonVisibility(this.isOverflow);
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
