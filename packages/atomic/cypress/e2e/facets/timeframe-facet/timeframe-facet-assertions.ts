@@ -52,7 +52,7 @@ export function assertRangeHash(
 
   it(`should set the date range in the hash to ${expectedRange}`, () => {
     cy.window().should((win) =>
-      expect(getHash(win)).to.have.property('df[date_input]', expectedRange)
+      expect(getHash(win)).to.have.property('df-date_input', expectedRange)
     );
   });
 }
