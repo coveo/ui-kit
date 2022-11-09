@@ -39,8 +39,8 @@ import {encodeForDomAttribute} from '../../../utils/string-utils';
 export class AtomicInsightSearchBox {
   @InitializeBindings() public bindings!: InsightBindings;
 
-  private id!: string;
   private searchBox!: InsightSearchBox;
+  private id!: string;
   private inputRef!: HTMLInputElement;
   private panelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
@@ -75,7 +75,7 @@ export class AtomicInsightSearchBox {
 
     const searchBoxOptions = {
       id: this.id,
-      numberOfSuggestions: 0,
+      numberOfSuggestions: this.numberOfSuggestions,
       highlightOptions: {
         notMatchDelimiters: {
           open: '<span class="font-bold">',
@@ -224,7 +224,7 @@ export class AtomicInsightSearchBox {
 
   private getSuggestionElements(suggestions: Suggestion[]) {
     const elements = suggestions.map((suggestion) =>
-      this.renderSuggestionItme(suggestion)
+      this.renderSuggestionItem(suggestion)
     );
     const max =
       this.numberOfSuggestions + elements.filter(elementHasNoQuery).length;
@@ -333,7 +333,7 @@ export class AtomicInsightSearchBox {
     );
   }
 
-  private renderSuggestionItme(
+  private renderSuggestionItem(
     suggestion: Suggestion
   ): SearchBoxSuggestionElement {
     const hasQuery = this.searchBox.state.value !== '';
@@ -428,7 +428,7 @@ export class AtomicInsightSearchBox {
   }
 
   public render() {
-    return [
+    return (
       <SearchBoxWrapper disabled={this.disableSearch}>
         <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
           <atomic-icon
@@ -453,12 +453,7 @@ export class AtomicInsightSearchBox {
           />
           {this.renderSuggestions()}
         </atomic-focus-detector>
-      </SearchBoxWrapper>,
-      !this.suggestions.length && (
-        <slot>
-          <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
-        </slot>
-      ),
-    ];
+      </SearchBoxWrapper>
+    );
   }
 }
