@@ -1,4 +1,4 @@
-import {LightningElement} from 'lwc';
+import {LightningElement, api} from 'lwc';
 
 import more from '@salesforce/label/c.quantic_More';
 
@@ -7,7 +7,7 @@ import more from '@salesforce/label/c.quantic_More';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-tab-bar>
+ * <c-quantic-tab-bar light-theme>
  *   <c-quantic-tab engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
  *   <c-quantic-tab engine-id={engineId} label="Tab 2" expression={expressionTwo}></c-quantic-tab>
  *   <c-quantic-tab engine-id={engineId} label="Tab 3" expression={expressionThree}></c-quantic-tab>
@@ -17,6 +17,13 @@ export default class QuanticTabBar extends LightningElement {
   labels = {
     more,
   };
+
+  /**
+   * Whether to apply the light theme styles on this component. 
+   * @api
+   * @type {boolean}
+   */
+  @api lightTheme = false;
 
   /** @type {boolean} */
   hasRendered = false;
@@ -293,6 +300,16 @@ export default class QuanticTabBar extends LightningElement {
       this.lastVisibleTab.getBoundingClientRect().right -
       this.tabBarListContainer.getBoundingClientRect().left
     );
+  }
+
+  /**
+   * Returns the CSS classes of the tab bar container.
+   * @returns {string}
+   */
+  get tabBarContainerClasses() {
+    return `tab-bar_container slds-size_1-of-1 ${
+      this.lightTheme ? '' : 'slds-theme_shade'
+    }`;
   }
 
   /**
