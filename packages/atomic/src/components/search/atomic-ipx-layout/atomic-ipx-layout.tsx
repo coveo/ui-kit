@@ -6,7 +6,7 @@ import {randomID} from '../../../utils/utils';
  */
 @Component({
   tag: 'atomic-ipx-layout',
-  styles: 'atomic-ipx-layout.pcss',
+  styleUrl: 'atomic-ipx-layout.pcss',
   shadow: false,
 })
 export class AtomicIPXLayout {
