@@ -45,7 +45,9 @@ export class AtomicInsightSearchBox {
   private panelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
 
-  @State() private searchBoxState!: InsightSearchBoxState;
+  @BindStateToController('searchBox')
+  @State()
+  private searchBoxState!: InsightSearchBoxState;
   @State() public error!: Error;
   @State() private suggestedQuery = '';
   @State() private isExpanded = false;
@@ -62,7 +64,6 @@ export class AtomicInsightSearchBox {
    */
   @Prop({reflect: true}) public numberOfSuggestions = 5;
 
-  @BindStateToController('searchBox')
   @AriaLiveRegion('search-box')
   protected searchBoxAriaMessage!: string;
 
