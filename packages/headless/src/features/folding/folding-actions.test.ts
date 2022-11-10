@@ -22,7 +22,7 @@ describe('folding actions', () => {
       const req = {
         ...(await buildSearchAndFoldingLoadCollectionRequest(e.state)),
         enableQuerySyntax: true,
-        cq: `@${e.state.folding.fields.collection}=${collectionId}`,
+        cq: `@${e.state.folding.fields.collection}="${collectionId}"`,
         filterField: e.state.folding.fields.collection,
         childField: e.state.folding.fields.parent,
         parentField: e.state.folding.fields.child,

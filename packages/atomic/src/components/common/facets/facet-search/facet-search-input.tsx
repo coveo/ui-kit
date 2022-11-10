@@ -16,7 +16,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
   props
 ) => {
   const label = props.i18n.t(props.label);
-  const search = props.i18n.t('search');
+  const search = props.i18n.t('facet-search-input');
   const facetSearch = props.i18n.t('facet-search', {label});
   const clear = props.i18n.t('clear');
   let inputRef: HTMLInputElement | undefined;
