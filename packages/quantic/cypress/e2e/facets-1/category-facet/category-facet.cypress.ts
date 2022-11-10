@@ -262,7 +262,7 @@ describe('quantic-category-facet', () => {
                   label: defaultLabel,
                   numberOfValues: defaultNumberOfValues,
                 },
-                `cf[geographicalhierarchy]=${path}`
+                `cf-geographicalhierarchy=${path}`
               );
 
               Expect.logFacetLoad();

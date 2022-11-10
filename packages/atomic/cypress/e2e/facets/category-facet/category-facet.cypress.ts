@@ -480,7 +480,7 @@ describe('Category Facet Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addCategoryFacet({}, true))
-        .withHash('cf[geographicalhierarchy]=Africa,Togo')
+        .withHash('cf-geographicalhierarchy=Africa,Togo')
         .init();
     });
 

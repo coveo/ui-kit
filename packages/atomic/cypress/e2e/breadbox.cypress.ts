@@ -188,7 +188,7 @@ describe('Breadbox Test Suites', () => {
       new TestFixture()
         .with(addBreadbox())
         .with(addFacet({field, label}))
-        .withHash(`f[${field}]=${activeValues.join(',')}`)
+        .withHash(`f-${field}=${activeValues.join(',')}`)
         .init();
       BreadboxSelectors.breadcrumbButton().then((buttons) =>
         cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')

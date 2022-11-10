@@ -900,7 +900,7 @@ describe('Facet v1 Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addFacet({field, label}))
-        .withHash(`f[${field}]=Cervantes`)
+        .withHash(`f-${field}=Cervantes`)
         .init();
     });
 
