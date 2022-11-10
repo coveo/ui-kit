@@ -99,7 +99,7 @@ export class AtomicInsightSearchBox {
   }
 
   private get suggestions() {
-    return this.searchBoxState.suggestions;
+    return this.searchBoxState?.suggestions ?? [];
   }
 
   private get firstValue() {
@@ -178,6 +178,13 @@ export class AtomicInsightSearchBox {
     this.searchBox.submit();
     this.updateActiveDescendant();
     this.clearSuggestions();
+  }
+
+  private onSuggestionMouseOver(item: SearchBoxSuggestionElement, id: string) {
+    this.updateActiveDescendant(id);
+    if (item.query) {
+      this.updateSuggestedQuery(item.query);
+    }
   }
 
   private updateQuery(query: string) {
@@ -281,22 +288,19 @@ export class AtomicInsightSearchBox {
   }
 
   private async triggerSuggestions() {
-    const defaultSuggestedQuery =
-      this.suggestionElements.find(elementHasQuery)?.query || '';
-
-    this.updateSuggestedQuery(defaultSuggestedQuery);
+    this.updateSuggestedQuery('');
     this.updateAriaMessage();
   }
 
   private onInput(value: string) {
     this.isExpanded = true;
     this.searchBox.updateText(value);
-    this.updateActiveDescendant();
     this.triggerSuggestions();
   }
 
   private onFocus() {
     this.isExpanded = true;
+    this.updateActiveDescendant();
     this.searchBox.showSuggestions();
     this.triggerSuggestions();
   }
@@ -336,6 +340,9 @@ export class AtomicInsightSearchBox {
         isDoubleList={false}
         onClick={(e: Event) => {
           this.onSuggestionClick(item, e);
+        }}
+        onMouseOver={() => {
+          this.onSuggestionMouseOver(item, id);
         }}
       ></ButtonSearchSuggestion>
     );
@@ -410,6 +417,8 @@ export class AtomicInsightSearchBox {
 
   private renderSuggestions() {
     if (!this.hasSuggestions) {
+      this.updateSuggestedQuery('');
+      this.updateActiveDescendant();
       return null;
     }
 
@@ -438,7 +447,6 @@ export class AtomicInsightSearchBox {
   }
 
   public render() {
-    console.log(this.searchBox.state.value);
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
         <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
