@@ -19,7 +19,7 @@ export default class QuanticTabBar extends LightningElement {
   };
 
   /**
-   * Whether to apply the light theme styles on this component. 
+   * Whether to apply the light theme styles on this component. This properety has an impact only in a SF console.
    * @api
    * @type {boolean}
    */
