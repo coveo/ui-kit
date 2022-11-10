@@ -135,7 +135,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {boolean}
    */
   get isOverflow() {
-    return this.slotContentWidth >= this.containerWidth;
+    return this.slotContentWidth > this.containerWidth;
   }
 
   /**

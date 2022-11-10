@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.122.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.121.2...@coveo/atomic@1.122.0) (2022-11-10)
+
+
+### Features
+
+* **atomic:** add ipx layout ([#2535](https://github.com/coveo/ui-kit/issues/2535)) ([3c032bf](https://github.com/coveo/ui-kit/commit/3c032bf666572f8f3e9e5a6ec29123220f6444ab))
+
+
+
+
+
+## [1.121.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.121.1...@coveo/atomic@1.121.2) (2022-11-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 ## [1.121.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.121.0...@coveo/atomic@1.121.1) (2022-11-10)
 
 **Note:** Version bump only for package @coveo/atomic

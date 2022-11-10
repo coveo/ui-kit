@@ -4,7 +4,8 @@ import {
   loadDependencies,
   setEngineOptions,
   HeadlessBundleNames,
-  destroyEngine
+  destroyEngine,
+  setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
 
 // @ts-ignore
@@ -16,17 +17,20 @@ import getHeadlessConfiguration from '@salesforce/apex/InsightController.getHead
 /**
  * The `QuanticInsightInterface` component handles the headless insight engine configuration.
  * A single instance should be used for each instance of the Coveo Headless insight engine.
+ * @fires CustomEvent#quantic__insightinterfaceinitialized
  * @category Insight Panel
  * @example
  * <c-quantic-insight-interface engine-id={engineId} insight-id={insightId}></c-quantic-insight-interface>
  */
 export default class QuanticInsightInterface extends LightningElement {
   /**
+   * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
    */
   @api engineId;
   /**
+   * The ID of the Insight Panel configuration to use.
    * @api
    * @type {string}
    */
@@ -34,8 +38,10 @@ export default class QuanticInsightInterface extends LightningElement {
 
   /** @type {InsightEngineOptions} */
   engineOptions;
+  /** @type {boolean} */
+  initialized;
 
-  disconnectedCallback(){
+  disconnectedCallback() {
     destroyEngine(this.engineId);
   }
 
@@ -58,16 +64,34 @@ export default class QuanticInsightInterface extends LightningElement {
               CoveoHeadlessInsight
             );
             this.input.setAttribute('is-initialized', 'true');
+            setInitializedCallback(this.initialize, this.engineId);
           }
         });
       }
     });
   }
 
+  initialize = () => {
+    if (this.initialized) {
+      return;
+    }
+    this.dispatchEvent(
+      new CustomEvent(`quantic__insightinterfaceinitialized`, {
+        detail: {
+          engineId: this.engineId,
+          insightId: this.insightId,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
+    this.initialized = true;
+  };
+
   /**
    * @returns {HTMLInputElement}
    */
-   get input() {
+  get input() {
     return this.template.querySelector('input');
   }
 }
