@@ -21,7 +21,7 @@ export const buildInsightQuerySuggestRequest = async (
     url: s.configuration.platformUrl,
     count: s.querySuggest![id]!.count,
     insightId: s.insightConfiguration.insightId,
-    q: s.query?.q,
+    q: s.querySet?.[id],
     timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled
       ? historyStore.getHistory()
