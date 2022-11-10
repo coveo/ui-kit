@@ -13,6 +13,7 @@ import {
   InsightParam,
   pickNonInsightParams,
 } from '../insight-params';
+import {InsightQuerySuggestRequest} from '../query-suggest/query-suggest-request';
 
 export type InsightQueryRequest = InsightParam &
   CaseContextParam &
@@ -32,6 +33,15 @@ interface CaseContextParam {
 export const buildInsightQueryRequest = (req: InsightQueryRequest) => {
   return {
     ...baseInsightRequest(req, 'POST', 'application/json', '/search'),
+    requestParams: pickNonInsightParams(req),
+  };
+};
+
+export const buildInsightQuerySuggestRequest = (
+  req: InsightQuerySuggestRequest
+) => {
+  return {
+    ...baseInsightRequest(req, 'POST', 'application/json', '/querysuggest'),
     requestParams: pickNonInsightParams(req),
   };
 };
