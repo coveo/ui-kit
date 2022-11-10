@@ -46,9 +46,9 @@ export const logNotifyTrigger = makeAnalyticsAction(
   'analytics/trigger/notify',
   AnalyticsType.Search,
   (client, state) => {
-    if (state.triggers?.notification) {
+    if (state.triggers?.notifications.length) {
       return client.logTriggerNotify({
-        notification: state.triggers.notification,
+        notifications: state.triggers.notifications,
       });
     }
     return;
@@ -75,9 +75,9 @@ export const logTriggerExecute = makeAnalyticsAction(
   'analytics/trigger/execute',
   AnalyticsType.Search,
   (client, state) => {
-    if (state.triggers?.execute) {
+    if (state.triggers?.executions.length) {
       return client.logTriggerExecute({
-        executed: state.triggers.execute.functionName,
+        executions: state.triggers.executions,
       });
     }
     return;
