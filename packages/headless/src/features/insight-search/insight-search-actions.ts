@@ -23,6 +23,8 @@ import {
   NumericFacetSection,
   PaginationSection,
   QuerySection,
+  QuerySetSection,
+  QuerySuggestionSection,
   SearchSection,
   SortSection,
   TabSection,
@@ -34,10 +36,8 @@ import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-insight-analy
 import {snapshot} from '../history/history-actions';
 import {extractHistory} from '../history/history-state';
 import {
-  buildQuerySuggestRequest,
   FetchQuerySuggestionsActionCreatorPayload,
   FetchQuerySuggestionsThunkReturn,
-  StateNeededByQuerySuggest,
 } from '../query-suggest/query-suggest-actions';
 import {updateQuery} from '../query/query-actions';
 import {getQueryInitialState} from '../query/query-state';
@@ -48,6 +48,7 @@ import {
   SuccessResponse,
 } from '../search/search-mappings';
 import {getSearchInitialState} from '../search/search-state';
+import {buildInsightQuerySuggestRequest} from './insight-query-suggest-request';
 import {
   logFetchMoreResults,
   logQueryError,
@@ -270,27 +271,40 @@ export const fetchFacetValues = createAsyncThunk<
   }
 );
 
+export type StateNeededByQuerySuggest = ConfigurationSection &
+  InsightConfigurationSection &
+  Partial<
+    ConfigurationSection &
+      QuerySuggestionSection &
+      QuerySetSection &
+      InsightCaseContextSection
+  >;
+
 export const fetchQuerySuggestions = createAsyncThunk<
   FetchQuerySuggestionsThunkReturn,
   FetchQuerySuggestionsActionCreatorPayload,
   AsyncThunkInsightOptions<StateNeededByQuerySuggest>
 >(
   'querySuggest/fetch',
-
-  async (payload: {id: string}, {getState, extra: {validatePayload}}) => {
+  async (
+    payload: {id: string},
+    {getState, rejectWithValue, extra: {apiClient, validatePayload}}
+  ) => {
     validatePayload(payload, {
       id: requiredNonEmptyString,
     });
     const id = payload.id;
-    const request = await buildQuerySuggestRequest(id, getState());
+    const request = await buildInsightQuerySuggestRequest(id, getState());
+    const response = await apiClient.querySuggest(request);
 
-    // TODO: Fetch query suggestions from the platform when the back-end supports it.
+    if (isErrorResponse(response)) {
+      return rejectWithValue(response.error);
+    }
 
     return {
       id,
       q: request.q,
-      completions: [],
-      responseId: '',
+      ...response.success,
     };
   }
 );
