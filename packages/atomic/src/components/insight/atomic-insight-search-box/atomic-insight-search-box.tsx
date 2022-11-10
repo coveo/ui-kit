@@ -27,6 +27,7 @@ import {
 } from '../../search/atomic-search-box/search-suggestion';
 import {isMacOS} from '../../../utils/device-utils';
 import {encodeForDomAttribute} from '../../../utils/string-utils';
+import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 
 /**
  * @internal
@@ -44,6 +45,7 @@ export class AtomicInsightSearchBox {
   private inputRef!: HTMLInputElement;
   private panelRef: HTMLElement | undefined;
   private querySetActions!: QuerySetActionCreators;
+  private searchBoxCommon!: SearchBoxCommon;
 
   @BindStateToController('searchBox')
   @State()
@@ -92,59 +94,32 @@ export class AtomicInsightSearchBox {
     this.searchBox = buildInsightSearchBox(this.bindings.engine, {
       options: searchBoxOptions,
     });
-  }
 
-  private get popupId() {
-    return `${this.id}-popup`;
+    this.searchBoxCommon = new SearchBoxCommon({
+      id: this.id,
+      disableSearch: this.disableSearch,
+      bindings: this.bindings,
+      querySetActions: this.querySetActions,
+      focusValue: this.focusValue,
+      clearSuggestions: this.clearSuggestions,
+      getIsExpanded: () => this.isExpanded,
+      getPanelInFocus: () => this.panelRef,
+      getActiveDescendant: () => this.activeDescendant,
+      getActiveDescendantElement: () => this.activeDescendantElement,
+      getSuggestionElements: () => this.suggestionElements,
+    });
   }
 
   private get suggestions() {
     return this.searchBoxState?.suggestions ?? [];
   }
 
-  private get firstValue() {
-    return this.panelRef?.firstElementChild;
-  }
-
-  private get lastValue() {
-    return this.panelRef?.lastElementChild;
-  }
-
-  private get nextOrFirstValue() {
-    if (!this.hasActiveDescendant) {
-      return this.firstValue;
-    }
-
-    return this.activeDescendantElement?.nextElementSibling || this.firstValue;
-  }
-
-  private get hasActiveDescendant() {
-    return this.activeDescendant !== '';
-  }
-
-  private get hasSuggestions() {
-    return !!this.suggestionElements.length;
-  }
-
   private get activeDescendantElement(): HTMLElement | null {
-    if (!this.hasActiveDescendant) {
+    if (!this.searchBoxCommon.hasActiveDescendant) {
       return null;
     }
 
     return this.panelRef?.querySelector(`#${this.activeDescendant}`) || null;
-  }
-
-  private get previousOrLastValue() {
-    if (!this.hasActiveDescendant) {
-      return this.lastValue;
-    }
-
-    return (
-      this.activeDescendantElement?.previousElementSibling || this.lastValue
-    );
-  }
-  private get showSuggestions() {
-    return this.hasSuggestions && this.isExpanded && !this.disableSearch;
   }
 
   private updateActiveDescendant(activeDescendant = '') {
@@ -187,20 +162,11 @@ export class AtomicInsightSearchBox {
     }
   }
 
-  private updateQuery(query: string) {
-    this.bindings.engine.dispatch(
-      this.querySetActions.updateQuerySetQuery({
-        id: this.id,
-        query,
-      })
-    );
-  }
-
   private updateQueryFromSuggestion() {
     const suggestedQuery =
       this.activeDescendantElement?.getAttribute(queryDataAttribute);
     if (suggestedQuery && this.searchBoxState.value !== suggestedQuery) {
-      this.updateQuery(suggestedQuery);
+      this.searchBoxCommon.updateQuery(suggestedQuery);
       this.updateSuggestedQuery(suggestedQuery);
     }
   }
@@ -209,14 +175,6 @@ export class AtomicInsightSearchBox {
     if (isMacOS()) {
       this.suggestionsAriaMessage = value.ariaLabel!;
     }
-  }
-
-  private focusPreviousValue() {
-    if (!this.hasSuggestions || !this.previousOrLastValue) {
-      return;
-    }
-
-    this.focusValue(this.previousOrLastValue as HTMLElement);
   }
 
   private focusValue(value: HTMLElement) {
@@ -240,14 +198,6 @@ export class AtomicInsightSearchBox {
     return elements.slice(0, max);
   }
 
-  private focusNextValue() {
-    if (!this.hasSuggestions || !this.nextOrFirstValue) {
-      return;
-    }
-
-    this.focusValue(this.nextOrFirstValue as HTMLElement);
-  }
-
   private onKeyDown(e: KeyboardEvent) {
     if (this.disableSearch) {
       return;
@@ -262,14 +212,14 @@ export class AtomicInsightSearchBox {
         break;
       case 'ArrowDown':
         e.preventDefault();
-        this.focusNextValue();
+        this.searchBoxCommon.focusNextValue();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        if (this.firstValue === this.activeDescendantElement) {
+        if (this.searchBoxCommon.firstValue === this.activeDescendantElement) {
           this.updateActiveDescendant();
         } else {
-          this.focusPreviousValue();
+          this.searchBoxCommon.focusPreviousValue();
         }
         break;
       case 'Tab':
@@ -309,11 +259,6 @@ export class AtomicInsightSearchBox {
     this.suggestedQuery = suggestedQuery;
   }
 
-  private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
-    item.onSelect && item.onSelect(e);
-    item.query && this.clearSuggestions();
-  }
-
   private renderSuggestion(
     item: SearchBoxSuggestionElement,
     index: number,
@@ -339,7 +284,7 @@ export class AtomicInsightSearchBox {
         lastIndex={lastIndex}
         isDoubleList={false}
         onClick={(e: Event) => {
-          this.onSuggestionClick(item, e);
+          this.searchBoxCommon.onSuggestionClick(item, e);
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, id);
@@ -416,7 +361,7 @@ export class AtomicInsightSearchBox {
   }
 
   private renderSuggestions() {
-    if (!this.hasSuggestions) {
+    if (!this.searchBoxCommon.hasSuggestions) {
       this.updateSuggestedQuery('');
       this.updateActiveDescendant();
       return null;
@@ -424,10 +369,10 @@ export class AtomicInsightSearchBox {
 
     return (
       <div
-        id={this.popupId}
+        id={this.searchBoxCommon.popupId}
         part="suggestions-wrapper"
         class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
-          this.showSuggestions ? '' : 'hidden'
+          this.searchBoxCommon.showSuggestions ? '' : 'hidden'
         }`}
         role="application"
         aria-label={this.bindings.i18n.t('search-suggestions-single-list')}
@@ -461,7 +406,7 @@ export class AtomicInsightSearchBox {
             ref={(el) => (this.inputRef = el as HTMLInputElement)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
-            ariaLabel={this.bindings.i18n.t('search-box')}
+            ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
             placeholder={this.bindings.i18n.t('search-ellipsis')}
             onFocus={() => this.onFocus()}
             onKeyDown={(e) => this.onKeyDown(e)}
