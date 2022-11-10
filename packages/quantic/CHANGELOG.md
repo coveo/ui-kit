@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.49.2...@coveo/quantic@1.50.0) (2022-11-10)
+
+
+### Features
+
+* **quantic:** possibility to have a white background in the QuanticTabBar component added ([#2547](https://github.com/coveo/ui-kit/issues/2547)) ([9b56de7](https://github.com/coveo/ui-kit/commit/9b56de754a4e7cc5edec89a9012d1d461c2ab8e9))
+
+
+
+
+
 ## [1.49.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.49.1...@coveo/quantic@1.49.2) (2022-11-08)
 
 **Note:** Version bump only for package @coveo/quantic
