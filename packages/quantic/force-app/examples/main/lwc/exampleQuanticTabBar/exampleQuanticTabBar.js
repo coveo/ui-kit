@@ -11,6 +11,13 @@ export default class ExampleQuanticTabBar extends LightningElement {
 
   options = [
     {
+      attribute: 'lightTheme',
+      label: 'Light Theme',
+      description:
+        'Whether to apply the light theme styles on this component.',
+      defaultValue: false,
+    },
+    {
       attribute: 'useCase',
       label: 'Use Case',
       description:
