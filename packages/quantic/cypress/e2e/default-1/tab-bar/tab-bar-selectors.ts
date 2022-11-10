@@ -11,6 +11,7 @@ export interface TabBarSelector extends ComponentSelector {
   moreButtonIcon: () => CypressSelector;
   dropdown: () => CypressSelector;
   allDropdownOptions: () => CypressSelector;
+  tabBarContainer: () => CypressSelector;
 }
 
 export const TabBarSelectors: TabBarSelector = {
@@ -26,4 +27,5 @@ export const TabBarSelectors: TabBarSelector = {
   dropdown: () => TabBarSelectors.get().find('.slds-dropdown-trigger'),
   allDropdownOptions: () =>
     TabBarSelectors.dropdown().find('.slds-dropdown__item'),
+  tabBarContainer: () => TabBarSelectors.get().find('.tab-bar_container'),
 };

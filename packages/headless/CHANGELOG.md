@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.111.1](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.111.0...@coveo/headless@1.111.1) (2022-11-10)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [1.111.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.110.4...@coveo/headless@1.111.0) (2022-11-10)
+
+
+### Features
+
+* **headless:** added insight query suggest support ([#2536](https://github.com/coveo/ui-kit/issues/2536)) ([01f936b](https://github.com/coveo/ui-kit/commit/01f936bc214edf7bd724f241b18ecfb3148b8108))
+
+
+
+
+
 ## [1.110.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.110.3...@coveo/headless@1.110.4) (2022-11-08)
 
 
