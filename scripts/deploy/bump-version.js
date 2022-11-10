@@ -1,26 +1,23 @@
 const {promisify} = require('util');
 const exec = promisify(require('child_process').exec);
-
-async function getHeadCommitHash() {
-  const {stdout} = await exec('git rev-parse HEAD');
-  return stdout;
-}
-
-async function getHeadCommitTag() {
-  const {stdout} = await exec('git tag --points-at HEAD');
-  return stdout;
-}
-
-async function checkoutLatestMaster() {
-  await exec('git checkout master');
-  await exec('git pull origin master');
-}
+const {
+  isOnReleaseBranch,
+  getHowManyCommitsBehind,
+  getHeadCommitTag,
+} = require('../git');
 
 async function bumpVersionAndPush() {
   try {
-    await exec(
-      `npx --no-install lerna version --conventional-commits --conventional-graduate --no-private --yes --exact`
-    );
+    const flags = [
+      '--conventional-commits',
+      (await isOnReleaseBranch())
+        ? '--conventional-graduate'
+        : '--conventional-prerelease',
+      '--no-private',
+      '--yes',
+      '--exact',
+    ];
+    await exec(`npx --no-install lerna version ${flags.join(' ')}`);
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',
@@ -32,13 +29,9 @@ async function bumpVersionAndPush() {
 
 async function main() {
   try {
-    const buildCommitHash = await getHeadCommitHash();
-    await checkoutLatestMaster();
-    const masterCommitHash = await getHeadCommitHash();
-
-    if (buildCommitHash !== masterCommitHash) {
+    if ((await getHowManyCommitsBehind()) !== 0) {
       console.log(
-        'Build commit does not match latest master commit. Skipping version bump.'
+        'Build commit does not match latest commit. Skipping version bump.'
       );
       return;
     }

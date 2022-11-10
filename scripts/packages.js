@@ -5,13 +5,9 @@ const packageDirsNpmTag = [
   'headless',
   'atomic-react',
   'atomic-angular/projects/atomic-angular',
-  'quantic'
+  'quantic',
 ];
 
-const packageDirsSnyk = [
-  'headless',
-  'atomic',
-];
+const packageDirsSnyk = ['headless', 'atomic'];
 
-exports.packageDirsNpmTag = packageDirsNpmTag;
-exports.packageDirsSnyk = packageDirsSnyk;
+module.exports = {packageDirsNpmTag, packageDirsSnyk};
