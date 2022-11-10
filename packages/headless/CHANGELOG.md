@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.110.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.110.3...@coveo/headless@1.110.4) (2022-11-08)
+
+
+### Bug Fixes
+
+* **headless:** folding cq should support spaces ([#2527](https://github.com/coveo/ui-kit/issues/2527)) ([28d0392](https://github.com/coveo/ui-kit/commit/28d0392a8fae5a97dd53aa70215e061605f61dfc))
+
+
+
+
+
 ## [1.110.3](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.110.2...@coveo/headless@1.110.3) (2022-11-04)
 
 **Note:** Version bump only for package @coveo/headless
