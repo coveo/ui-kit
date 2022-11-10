@@ -288,14 +288,21 @@ export class AtomicInsightSearchBox {
     this.updateAriaMessage();
   }
 
+  private onInput(value: string) {
+    this.isExpanded = true;
+    this.searchBox.updateText(value);
+    this.updateActiveDescendant();
+    this.triggerSuggestions();
+  }
+
   private onFocus() {
     this.isExpanded = true;
+    this.searchBox.showSuggestions();
     this.triggerSuggestions();
   }
 
   private async updateSuggestedQuery(suggestedQuery: string) {
     this.suggestedQuery = suggestedQuery;
-    this.updateSuggestionElements();
   }
 
   private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
@@ -342,13 +349,11 @@ export class AtomicInsightSearchBox {
       part: 'query-suggestion-item',
       content: (
         <div part="query-suggestion-content" class="flex items-center">
-          {this.suggestions.length > 1 && (
-            <atomic-icon
-              part="query-suggestion-icon"
-              icon={SearchIcon}
-              class="w-4 h-4 mr-2 shrink-0"
-            ></atomic-icon>
-          )}
+          <atomic-icon
+            part="query-suggestion-icon"
+            icon={SearchIcon}
+            class="w-4 h-4 mr-2 shrink-0"
+          ></atomic-icon>
           {hasQuery ? (
             // deepcode ignore ReactSetInnerHtml: This is not React code, deepcode ignore DOMXSS: Value escaped in upstream code.
             <span
@@ -428,7 +433,12 @@ export class AtomicInsightSearchBox {
     );
   }
 
+  componentWillRender() {
+    this.updateSuggestionElements();
+  }
+
   public render() {
+    console.log(this.searchBox.state.value);
     return (
       <SearchBoxWrapper disabled={this.disableSearch}>
         <atomic-focus-detector onFocusExit={() => this.clearSuggestions()}>
@@ -448,9 +458,7 @@ export class AtomicInsightSearchBox {
             onFocus={() => this.onFocus()}
             onKeyDown={(e) => this.onKeyDown(e)}
             onClear={() => this.searchBox.clear()}
-            onInput={(e) => {
-              this.searchBox.updateText((e.target as HTMLInputElement).value);
-            }}
+            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
           />
           {this.renderSuggestions()}
         </atomic-focus-detector>
