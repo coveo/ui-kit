@@ -72,7 +72,7 @@ node('heavy && linux && docker') {
         --resolve ATOMIC_REACT_MAJOR_VERSION=${atomicReactMajor} \
         --resolve ATOMIC_REACT_MINOR_VERSION=${atomicReactMinor} \
         --resolve ATOMIC_REACT_PATCH_VERSION=${atomicReactPatch} \
-        --resolve STOP_AT_DEV=${!isOnReleaseBranch}
+        --resolve STOP_AT_DEV=${!isOnReleaseBranch} \
         || true"
       }
     }
