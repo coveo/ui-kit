@@ -75,7 +75,7 @@ import {initializePopover} from '../atomic-popover/popover-type';
  * @part search-highlight - The highlighted query inside the facet values.
  *
  * @part parents - The container surrounding the whole hierarchy of values.
- * @part sub-parents - The container surrounding a part of the hierarchy of values.
+ * @part sub-parents - The container surrounding a sub-hierarchy of values.
  * @part values - The container surrounding either the children of the active value or the values at the base.
  * @part all-categories-button - The "View all" button displayed first within the parents.
  * @part parent-button - The clickable parent button displayed first within sub-parents.
@@ -85,7 +85,7 @@ import {initializePopover} from '../atomic-popover/popover-type';
  * @part value-label - The facet value label within a value button.
  * @part value-count - The facet value count within a value button.
  * @part leaf-value - A facet value with no child value.
- * @part node-value - A facet value with children values.
+ * @part node-value - A facet value with child values.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
