@@ -1,8 +1,5 @@
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
-import {
-  elementHasQuery,
-  SearchBoxSuggestionElement,
-} from '../../search/search-box-suggestions/suggestions-common';
+import {SearchBoxSuggestionElement} from '../../search/search-box-suggestions/suggestions-common';
 import {SearchBoxCommonProps} from './search-box-common-interface';
 
 export class SearchBoxCommon {
