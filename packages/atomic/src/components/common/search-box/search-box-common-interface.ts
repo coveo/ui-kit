@@ -14,5 +14,5 @@ export interface SearchBoxCommonProps {
   getPanelInFocus: () => HTMLElement | undefined;
   getActiveDescendant: () => string;
   getActiveDescendantElement: () => HTMLElement | null;
-  getSuggestionElements: () => SearchBoxSuggestionElement[];
+  getAllSuggestionElements: () => SearchBoxSuggestionElement[];
 }

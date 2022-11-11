@@ -106,7 +106,7 @@ export class AtomicInsightSearchBox {
       getPanelInFocus: () => this.panelRef,
       getActiveDescendant: () => this.activeDescendant,
       getActiveDescendantElement: () => this.activeDescendantElement,
-      getSuggestionElements: () => this.suggestionElements,
+      getAllSuggestionElements: () => this.suggestionElements,
     });
   }
 
@@ -135,12 +135,6 @@ export class AtomicInsightSearchBox {
     this.isExpanded = false;
     this.updateActiveDescendant();
     this.clearSuggestionElements();
-  }
-
-  private scrollActiveDescendantIntoView() {
-    this.activeDescendantElement?.scrollIntoView({
-      block: 'nearest',
-    });
   }
 
   private onSubmit() {
@@ -179,7 +173,7 @@ export class AtomicInsightSearchBox {
 
   private focusValue(value: HTMLElement) {
     this.updateActiveDescendant(value.id);
-    this.scrollActiveDescendantIntoView();
+    this.searchBoxCommon.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
     this.updateAriaLiveActiveDescendant(value);
   }

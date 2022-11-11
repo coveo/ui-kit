@@ -1,5 +1,8 @@
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
-import {SearchBoxSuggestionElement} from '../../search/search-box-suggestions/suggestions-common';
+import {
+  elementHasQuery,
+  SearchBoxSuggestionElement,
+} from '../../search/search-box-suggestions/suggestions-common';
 import {SearchBoxCommonProps} from './search-box-common-interface';
 
 export class SearchBoxCommon {
@@ -10,7 +13,7 @@ export class SearchBoxCommon {
   }
 
   public get hasSuggestions() {
-    return !!this.props.getSuggestionElements().length;
+    return !!this.props.getAllSuggestionElements().length;
   }
 
   public get hasActiveDescendant() {
