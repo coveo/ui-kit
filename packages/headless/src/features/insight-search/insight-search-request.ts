@@ -11,6 +11,7 @@ import {MappedSearchRequest, mapSearchRequest} from '../search/search-mappings';
 type StateNeededBySearchRequest = ConfigurationSection &
   InsightConfigurationSection &
   Partial<InsightAppState>;
+
 export const buildInsightSearchRequest = (
   state: StateNeededBySearchRequest
 ): MappedSearchRequest<InsightQueryRequest> => {

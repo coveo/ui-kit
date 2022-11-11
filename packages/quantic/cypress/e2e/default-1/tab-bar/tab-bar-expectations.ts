@@ -75,6 +75,20 @@ function tabBarExpectations(selector: TabBarSelector) {
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the more button icon`);
     },
+
+    displayWithLightTheme(lightThemeEnabled: boolean) {
+      selector
+        .tabBarContainer()
+        .should(
+          lightThemeEnabled ? 'not.have.class' : 'have.class',
+          'slds-theme_shade'
+        )
+        .logDetail(
+          `${should(
+            lightThemeEnabled
+          )} display the component with the light theme styles`
+        );
+    },
   };
 }
 

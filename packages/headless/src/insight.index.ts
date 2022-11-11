@@ -22,6 +22,7 @@ export type {LogLevel} from './app/logger';
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader';
 export * from './features/insight-search/insight-search-actions-loader';
+export * from './features/insight-search/insight-query-set-actions-loader';
 export * from './features/analytics/insight-analytics-actions-loader';
 export * from './features/facets/range-facets/date-facet-set/date-facet-actions-loader';
 export * from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
