@@ -39,9 +39,7 @@ export default class QuanticResultAction extends LightningElement {
     const resultActionRegister = new CustomEvent('resultactionregister', {
       bubbles: true,
       detail: {
-        callbacks: {
-          setOrder: this.setOrder,
-        },
+        setOrder: this.setOrder,
       },
     });
 

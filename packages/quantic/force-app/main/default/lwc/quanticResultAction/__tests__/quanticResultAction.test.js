@@ -56,7 +56,7 @@ function setupClickEventDispatchTest() {
 
 function setupRegisterEventDispatchTest() {
   const handler = (event) => {
-    event.detail.callbacks.setOrder(order);
+    event.detail.setOrder(order);
     functionsMocks.listener();
     document.removeEventListener('resultactionregister', handler);
   };
@@ -128,7 +128,6 @@ describe('c-quantic-search-box', () => {
 
       clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      console.log(iconButton.className);
       expect(iconButton.className).toBe('result-action_button result-action_first');
     });
 
