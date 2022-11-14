@@ -1,5 +1,5 @@
 import {promisify} from 'util';
-const exec = promisify(require('child_process').exec);
+import {execute} from '../exec.mjs';
 import {
   isOnReleaseBranch,
   getHowManyCommitsBehind,
@@ -9,6 +9,9 @@ import {
 async function bumpVersionAndPush() {
   try {
     const flags = [
+      '--no-install',
+      'lerna',
+      'version',
       '--conventional-commits',
       (await isOnReleaseBranch())
         ? '--conventional-graduate'
@@ -17,7 +20,7 @@ async function bumpVersionAndPush() {
       '--yes',
       '--exact',
     ];
-    await exec(`npx --no-install lerna version ${flags.join(' ')}`);
+    await execute(`npx`, flags);
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',

@@ -1,5 +1,5 @@
 import {promisify} from 'util';
-const exec = promisify(require('child_process').exec);
+import {execute} from '../exec.mjs';
 import {packageDirsNpmTag} from '../packages';
 
 async function main() {
@@ -22,11 +22,11 @@ async function updateNpmTag(packageName, version) {
   }
 
   console.log(`updating ${packageName}@${version} to ${tag}.`);
-  await exec(`npm dist-tag add ${packageName}@${version} ${tag}`);
+  await execute('npm', ['dist-tag', 'add', `${packageName}@${version}`, tag]);
 }
 
 async function getLatestVersion(packageName) {
-  const res = await exec(`npm view ${packageName} version`);
+  const res = await execute('npm', ['view', packageName, 'version']);
   return res.stdout.trim();
 }
 
