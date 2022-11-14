@@ -4,8 +4,7 @@ import {execute} from './exec.mjs';
 const releaseBranch = 'master';
 
 async function getBranchName() {
-  const {stdout} = await execute('git', ['branch', '--show-current']);
-  return stdout;
+  return await execute('git', ['branch', '--show-current']);
 }
 
 export async function isOnReleaseBranch() {
@@ -13,11 +12,9 @@ export async function isOnReleaseBranch() {
 }
 
 export async function getHowManyCommitsBehind() {
-  const {stdout} = await execute('git', ['rev-list', '--count HEAD..@{u}']);
-  return parseInt(stdout);
+  return parseInt(await execute('git', ['rev-list', '--count', 'HEAD..@{u}']));
 }
 
 export async function getHeadCommitTag() {
-  const {stdout} = await execute('git', ['tag', '--points-at HEAD']);
-  return stdout;
+  return await execute('git', ['tag', '--points-at', 'HEAD']);
 }
