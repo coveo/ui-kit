@@ -1,0 +1,19 @@
+<template>
+  <div class="slds-is-relative result-action_container">
+    <template if:false={toggleMode}>
+      <lightning-button-icon variant="border-filled" icon-name={iconName} class={resultActionOrderClasses}>
+      </lightning-button-icon>
+    </template>
+    <template if:true={toggleMode}>
+      <lightning-button-icon-stateful variant="border-filled" class={resultActionOrderClasses} icon-name={iconName}
+        selected={selected}>
+      </lightning-button-icon-stateful>
+    </template>
+    <template if:true={displayedLabel}>
+      <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left result-action_tooltip slds-fall-into-ground"
+        role="tooltip">
+        <div class="slds-popover__body">{displayedLabel}</div>
+      </div>
+    </template>
+  </div>
+</template>
