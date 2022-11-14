@@ -1,7 +1,7 @@
-const {resolve} = require('path');
-const {readFileSync, writeFileSync} = require('fs');
-const {cwd} = require('process');
-const {packageDirsSnyk} = require('../packages');
+import {resolve} from 'path';
+import {readFileSync, writeFileSync} from 'fs';
+import {cwd} from 'process';
+import {packageDirsSnyk} from '../packages';
 const packageJsonPath = resolve(cwd(), 'package.json');
 
 const packageJSON = JSON.parse(readFileSync(packageJsonPath));

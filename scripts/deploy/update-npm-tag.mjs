@@ -1,6 +1,6 @@
-const {promisify} = require('util');
+import {promisify} from 'util';
 const exec = promisify(require('child_process').exec);
-const {packageDirsNpmTag} = require('../packages');
+import {packageDirsNpmTag} from '../packages';
 
 async function main() {
   const requests = packageDirsNpmTag

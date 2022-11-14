@@ -1,10 +1,10 @@
-const {promisify} = require('util');
+import {promisify} from 'util';
 const exec = promisify(require('child_process').exec);
-const {
+import {
   isOnReleaseBranch,
   getHowManyCommitsBehind,
   getHeadCommitTag,
-} = require('../git');
+} from '../git.mjs';
 
 async function bumpVersionAndPush() {
   try {

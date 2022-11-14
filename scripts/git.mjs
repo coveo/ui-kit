@@ -1,4 +1,4 @@
-const {promisify} = require('util');
+import {promisify} from 'util';
 const exec = promisify(require('child_process').exec);
 
 const releaseBranch = 'master';
@@ -8,18 +8,16 @@ async function getBranchName() {
   return stdout;
 }
 
-async function isOnReleaseBranch() {
+export async function isOnReleaseBranch() {
   return (await getBranchName()) === releaseBranch;
 }
 
-async function getHowManyCommitsBehind() {
+export async function getHowManyCommitsBehind() {
   const {stdout} = await exec('git rev-list --count HEAD..@{u}');
   return parseInt(stdout);
 }
 
-async function getHeadCommitTag() {
+export async function getHeadCommitTag() {
   const {stdout} = await exec('git tag --points-at HEAD');
   return stdout;
 }
-
-module.exports = {isOnReleaseBranch, getHowManyCommitsBehind, getHeadCommitTag};
