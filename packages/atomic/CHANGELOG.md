@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.123.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.122.0...@coveo/atomic@1.123.0) (2022-11-15)
+
+
+### Features
+
+* **atomic:** added query suggestions to the insight search box ([#2549](https://github.com/coveo/ui-kit/issues/2549)) ([36ef42b](https://github.com/coveo/ui-kit/commit/36ef42b9a706d137999d3f9337bb78fea748e12e))
+
+
+
+
+
 # [1.122.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.121.2...@coveo/atomic@1.122.0) (2022-11-10)
 
 
