@@ -64,7 +64,7 @@ function setupRegisterEventDispatchTest() {
   document.addEventListener('resultactionregister', handler);
 }
 
-describe('c-quantic-search-box', () => {
+describe('c-quantic-result-action', () => {
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
