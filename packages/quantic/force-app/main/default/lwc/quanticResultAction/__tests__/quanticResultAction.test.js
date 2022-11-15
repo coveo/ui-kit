@@ -1,4 +1,5 @@
-import { createElement } from 'lwc';
+// @ts-ignore
+import {createElement} from 'lwc';
 import QuanticResultAction from '../quanticResultAction';
 
 let order;
@@ -36,8 +37,8 @@ function createTestComponent(options = defaultOptions) {
 
 // Helper function to wait until the microtask queue is empty.
 function flushPromises() {
-  // eslint-disable-next-line no-undef
-  return new Promise((resolve) => setImmediate(resolve));
+  // eslint-disable-next-line @lwc/lwc/no-async-operation
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function clickButton(element, buttonSelector) {
@@ -81,8 +82,12 @@ describe('c-quantic-search-box', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector('lightning-button-icon');
-      const statefulIconButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+      const iconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon'
+      );
+      const statefulIconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       expect(iconButton).not.toBeNull();
       expect(statefulIconButton).toBeNull();
@@ -102,7 +107,9 @@ describe('c-quantic-search-box', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector('lightning-button-icon');
+      const iconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon'
+      );
 
       expect(iconButton).not.toBeNull();
       expect(iconButton.iconName).toBe(exampleIconName);
@@ -124,11 +131,15 @@ describe('c-quantic-search-box', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector('lightning-button-icon');
+      const iconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon'
+      );
 
       clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(iconButton.className).toBe('result-action_button result-action_first');
+      expect(iconButton.className).toBe(
+        'result-action_button result-action_first'
+      );
     });
 
     it('should display the button properely when its in a middle position', async () => {
@@ -137,11 +148,15 @@ describe('c-quantic-search-box', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector('lightning-button-icon');
+      const iconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon'
+      );
 
       clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(iconButton.className).toBe('result-action_button result-action_middle');
+      expect(iconButton.className).toBe(
+        'result-action_button result-action_middle'
+      );
     });
 
     it('should display the button properely when its in the last position', async () => {
@@ -150,11 +165,15 @@ describe('c-quantic-search-box', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector('lightning-button-icon');
+      const iconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon'
+      );
 
       clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(iconButton.className).toBe('result-action_button result-action_last');
+      expect(iconButton.className).toBe(
+        'result-action_button result-action_last'
+      );
     });
 
     it('should display the button properely when its the only result action displayed', async () => {
@@ -163,7 +182,9 @@ describe('c-quantic-search-box', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector('lightning-button-icon');
+      const iconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon'
+      );
 
       clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
@@ -173,18 +194,28 @@ describe('c-quantic-search-box', () => {
 
   describe('when the toggle mode is enabled', () => {
     it('should display the lightning stateful icon button', async () => {
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector('lightning-button-icon');
-      const statefulIconButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+      const iconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon'
+      );
+      const statefulIconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       expect(iconButton).toBeNull();
       expect(statefulIconButton).not.toBeNull();
     });
 
     it('should display the correct tooltip when the button is off', async () => {
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
       const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
@@ -194,7 +225,11 @@ describe('c-quantic-search-box', () => {
     });
 
     it('should display the correct tooltip when the button is on', async () => {
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true, selected: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+        selected: true,
+      });
       await flushPromises();
 
       const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
@@ -204,17 +239,25 @@ describe('c-quantic-search-box', () => {
     });
 
     it('should display the correct icon', async () => {
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+      const statefulIconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       expect(statefulIconButton).not.toBeNull();
       expect(statefulIconButton.iconName).toBe(exampleIconName);
     });
 
     it('should dispatch a click event when the lightning button is clicked', async () => {
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
       setupClickEventDispatchTest();
@@ -226,49 +269,75 @@ describe('c-quantic-search-box', () => {
     it('should display the button properely when its in the first position', async () => {
       order = 'first';
       setupRegisterEventDispatchTest();
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+      const statefulIconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(statefulIconButton.className).toBe('result-action_button result-action_first');
+      expect(statefulIconButton.className).toBe(
+        'result-action_button result-action_first'
+      );
     });
 
     it('should display the button properely when its in a middle position', async () => {
       order = 'middle';
       setupRegisterEventDispatchTest();
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+      const statefulIconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(statefulIconButton.className).toBe('result-action_button result-action_middle');
+      expect(statefulIconButton.className).toBe(
+        'result-action_button result-action_middle'
+      );
     });
 
     it('should display the button properely when its in the last position', async () => {
       order = 'last';
       setupRegisterEventDispatchTest();
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+      const statefulIconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(statefulIconButton.className).toBe('result-action_button result-action_last');
+      expect(statefulIconButton.className).toBe(
+        'result-action_button result-action_last'
+      );
     });
 
     it('should display the button properely when its the only result action displayed', async () => {
       order = null;
       setupRegisterEventDispatchTest();
-      const element = createTestComponent({ ...defaultOptions, toggleMode: true });
+      const element = createTestComponent({
+        ...defaultOptions,
+        toggleMode: true,
+      });
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+      const statefulIconButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);

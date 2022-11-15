@@ -1,4 +1,5 @@
-import { createElement } from 'lwc';
+// @ts-ignore
+import {createElement} from 'lwc';
 import QuanticResultActionBar from '../quanticResultActionBar';
 
 const functionsMocks = {
@@ -24,7 +25,10 @@ function createExampleResultActionButton(element) {
   return resultActionButton;
 }
 
-function registerExampleResultActionButton(resultActionButton, setOrderCallback) {
+function registerExampleResultActionButton(
+  resultActionButton,
+  setOrderCallback
+) {
   const resultActionRegister = new CustomEvent('resultactionregister', {
     bubbles: true,
     detail: {
@@ -45,8 +49,8 @@ function triggerSlotChange(element) {
 
 // Helper function to wait until the microtask queue is empty.
 function flushPromises() {
-  // eslint-disable-next-line no-undef
-  return new Promise((resolve) => setImmediate(resolve));
+  // eslint-disable-next-line @lwc/lwc/no-async-operation
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 describe('c-quantic-result-action-bar', () => {
@@ -75,7 +79,7 @@ describe('c-quantic-result-action-bar', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const { setOrderFirst, setOrderMiddle, setOrderLast } = functionsMocks;
+    const {setOrderFirst, setOrderMiddle, setOrderLast} = functionsMocks;
 
     const firstResultActionButton = createExampleResultActionButton(element);
     const middleResultActionButton = createExampleResultActionButton(element);
@@ -98,7 +102,7 @@ describe('c-quantic-result-action-bar', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const { setOrderFirst, setOrderMiddle, setOrderLast } = functionsMocks;
+    const {setOrderFirst, setOrderMiddle, setOrderLast} = functionsMocks;
 
     const firstResultActionButton = createExampleResultActionButton(element);
     const middleResultActionButton = createExampleResultActionButton(element);
@@ -121,7 +125,7 @@ describe('c-quantic-result-action-bar', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const { setOrderFirst } = functionsMocks;
+    const {setOrderFirst} = functionsMocks;
 
     const firstResultActionButton = createExampleResultActionButton(element);
 
