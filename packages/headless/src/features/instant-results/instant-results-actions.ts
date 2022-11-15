@@ -1,4 +1,4 @@
-import {createAction} from '@reduxjs/toolkit';
+import {Result} from '../../case-assist.index';
 import {InstantResultSection} from '../../state/state-sections';
 import {
   validatePayload,
@@ -6,7 +6,8 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
 import {StateNeededByExecuteSearch} from '../search/search-actions';
-import {Result} from '../../case-assist.index';
+import {createAction} from '@reduxjs/toolkit';
+
 export interface RegisterInstantResultActionCreatorPayload {
   /**
    * The search box ID.
@@ -73,7 +74,7 @@ export interface FetchInstantResultsActionCreatorPayload {
    */
   maxResultsPerQuery: number;
   /**
-   * The maximum items to be stored in the instant result list for each query.
+   * Number in milliseconds that cached results will be valid for. Defaults to 1 minute. Set to 0 so that results never expire.
    */
   cacheTimeout?: number;
 }
