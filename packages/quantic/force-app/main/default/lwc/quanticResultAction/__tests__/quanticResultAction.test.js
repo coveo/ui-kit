@@ -47,12 +47,12 @@ function clickButton(element, buttonSelector) {
   button.click();
 }
 
-function setupClickEventDispatchTest() {
+function setupClickEventDispatchTest(element) {
   const handler = () => {
     functionsMocks.listener();
-    document.removeEventListener('click', handler);
+    element.removeEventListener('click', handler);
   };
-  document.addEventListener('click', handler);
+  element.addEventListener('click', handler);
 }
 
 function setupRegisterEventDispatchTest() {
@@ -119,7 +119,7 @@ describe('c-quantic-result-action', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      setupClickEventDispatchTest();
+      setupClickEventDispatchTest(element);
 
       clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
@@ -135,7 +135,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon'
       );
 
-      clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(iconButton.className).toBe(
         'result-action_button result-action_first'
@@ -152,7 +151,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon'
       );
 
-      clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(iconButton.className).toBe(
         'result-action_button result-action_middle'
@@ -169,7 +167,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon'
       );
 
-      clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(iconButton.className).toBe(
         'result-action_button result-action_last'
@@ -186,7 +183,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon'
       );
 
-      clickButton(element, 'lightning-button-icon');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(iconButton.className).toBe('result-action_button');
     });
@@ -260,7 +256,7 @@ describe('c-quantic-result-action', () => {
       });
       await flushPromises();
 
-      setupClickEventDispatchTest();
+      setupClickEventDispatchTest(element);
 
       clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
@@ -279,7 +275,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon-stateful'
       );
 
-      clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(statefulIconButton.className).toBe(
         'result-action_button result-action_first'
@@ -299,7 +294,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon-stateful'
       );
 
-      clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(statefulIconButton.className).toBe(
         'result-action_button result-action_middle'
@@ -319,7 +313,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon-stateful'
       );
 
-      clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(statefulIconButton.className).toBe(
         'result-action_button result-action_last'
@@ -339,7 +332,6 @@ describe('c-quantic-result-action', () => {
         'lightning-button-icon-stateful'
       );
 
-      clickButton(element, 'lightning-button-icon-stateful');
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
       expect(statefulIconButton.className).toBe('result-action_button');
     });
