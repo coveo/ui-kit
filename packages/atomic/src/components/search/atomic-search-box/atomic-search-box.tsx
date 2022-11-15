@@ -47,8 +47,9 @@ import {
   SimpleSearchSuggestion,
 } from './search-suggestion';
 
-import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
+import {isMacOS} from '../../../utils/device-utils';
 import {RedirectionPayload} from './redirection-payload';
+import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -103,6 +104,8 @@ export class AtomicSearchBox {
   private querySetActions!: QuerySetActionCreators;
   private suggestionEvents: SearchBoxSuggestionsEvent[] = [];
   private suggestions: SearchBoxSuggestions[] = [];
+  private searchBoxCommon!: SearchBoxCommon;
+
   @Element() private host!: HTMLElement;
 
   @BindStateToController('searchBox')
@@ -212,6 +215,20 @@ export class AtomicSearchBox {
     this.suggestions = this.suggestionEvents.map((event) =>
       event(this.suggestionBindings)
     );
+
+    this.searchBoxCommon = new SearchBoxCommon({
+      id: this.id,
+      disableSearch: this.disableSearch,
+      bindings: this.bindings,
+      querySetActions: this.querySetActions,
+      focusValue: this.focusValue.bind(this),
+      clearSuggestions: this.clearSuggestions.bind(this),
+      getIsExpanded: () => this.isExpanded,
+      getPanelInFocus: () => this.panelInFocus,
+      getActiveDescendant: () => this.activeDescendant,
+      getActiveDescendantElement: () => this.activeDescendantElement,
+      getAllSuggestionElements: () => this.allSuggestionElements,
+    });
   }
 
   public componentWillUpdate() {
@@ -270,18 +287,6 @@ export class AtomicSearchBox {
   }
   private updateBreakpoints = once(() => updateBreakpoints(this.host));
 
-  private get popupId() {
-    return `${this.id}-popup`;
-  }
-
-  private get hasSuggestions() {
-    return !!this.allSuggestionElements.length;
-  }
-
-  private get hasActiveDescendant() {
-    return this.activeDescendant !== '';
-  }
-
   private get isDoubleList() {
     return Boolean(
       this.leftSuggestionElements.length && this.rightSuggestionElements.length
@@ -300,7 +305,7 @@ export class AtomicSearchBox {
   }
 
   private get activeDescendantElement(): HTMLElement | null {
-    if (!this.hasActiveDescendant) {
+    if (!this.searchBoxCommon.hasActiveDescendant) {
       return null;
     }
 
@@ -309,35 +314,6 @@ export class AtomicSearchBox {
       this.rightPanelRef?.querySelector(`#${this.activeDescendant}`) ||
       null
     );
-  }
-
-  private get firstValue() {
-    return this.panelInFocus?.firstElementChild;
-  }
-
-  private get lastValue() {
-    return this.panelInFocus?.lastElementChild;
-  }
-
-  private get nextOrFirstValue() {
-    if (!this.hasActiveDescendant) {
-      return this.firstValue;
-    }
-
-    return this.activeDescendantElement?.nextElementSibling || this.firstValue;
-  }
-
-  private get previousOrLastValue() {
-    if (!this.hasActiveDescendant) {
-      return this.lastValue;
-    }
-
-    return (
-      this.activeDescendantElement?.previousElementSibling || this.lastValue
-    );
-  }
-  private get showSuggestions() {
-    return this.hasSuggestions && this.isExpanded && !this.disableSearch;
   }
 
   private get allSuggestionElements() {
@@ -364,31 +340,9 @@ export class AtomicSearchBox {
     return elements.slice(0, max);
   }
 
-  private scrollActiveDescendantIntoView() {
-    this.activeDescendantElement?.scrollIntoView({
-      block: 'nearest',
-    });
-  }
-
-  private focusNextValue() {
-    if (!this.hasSuggestions || !this.nextOrFirstValue) {
-      return;
-    }
-
-    this.focusValue(this.nextOrFirstValue as HTMLElement);
-  }
-
-  private focusPreviousValue() {
-    if (!this.hasSuggestions || !this.previousOrLastValue) {
-      return;
-    }
-
-    this.focusValue(this.previousOrLastValue as HTMLElement);
-  }
-
   private focusValue(value: HTMLElement) {
     this.updateActiveDescendant(value.id);
-    this.scrollActiveDescendantIntoView();
+    this.searchBoxCommon.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
     this.updateAriaLiveActiveDescendant(value);
   }
@@ -497,15 +451,6 @@ export class AtomicSearchBox {
     this.clearSuggestions();
   }
 
-  private updateQuery(query: string) {
-    this.bindings.engine.dispatch(
-      this.querySetActions.updateQuerySetQuery({
-        id: this.id,
-        query,
-      })
-    );
-  }
-
   private isPanelInFocus(
     panel: HTMLElement | undefined,
     query: string
@@ -526,7 +471,7 @@ export class AtomicSearchBox {
     const suggestedQuery =
       this.activeDescendantElement?.getAttribute(queryDataAttribute);
     if (suggestedQuery && this.searchBoxState.value !== suggestedQuery) {
-      this.updateQuery(suggestedQuery);
+      this.searchBoxCommon.updateQuery(suggestedQuery);
       this.updateSuggestedQuery(suggestedQuery);
     }
   }
@@ -568,14 +513,14 @@ export class AtomicSearchBox {
         break;
       case 'ArrowDown':
         e.preventDefault();
-        this.focusNextValue();
+        this.searchBoxCommon.focusNextValue();
         break;
       case 'ArrowUp':
         e.preventDefault();
-        if (this.firstValue === this.activeDescendantElement) {
+        if (this.searchBoxCommon.firstValue === this.activeDescendantElement) {
           this.updateActiveDescendant();
         } else {
-          this.focusPreviousValue();
+          this.searchBoxCommon.focusPreviousValue();
         }
         break;
       case 'ArrowRight':
@@ -600,11 +545,6 @@ export class AtomicSearchBox {
     this.leftSuggestionElements = [];
     this.rightSuggestionElements = [];
     this.searchBoxAriaMessage = '';
-  }
-
-  private onSuggestionClick(item: SearchBoxSuggestionElement, e: Event) {
-    item.onSelect && item.onSelect(e);
-    item.query && this.clearSuggestions();
   }
 
   private onSuggestionMouseOver(
@@ -667,7 +607,7 @@ export class AtomicSearchBox {
         lastIndex={lastIndex}
         isDoubleList={this.isDoubleList}
         onClick={(e: Event) => {
-          this.onSuggestionClick(item, e);
+          this.searchBoxCommon.onSuggestionClick(item, e);
         }}
         onMouseOver={() => {
           this.onSuggestionMouseOver(item, side, id);
@@ -721,16 +661,16 @@ export class AtomicSearchBox {
   }
 
   private renderSuggestions() {
-    if (!this.hasSuggestions) {
+    if (!this.searchBoxCommon.hasSuggestions) {
       return null;
     }
 
     return (
       <div
-        id={this.popupId}
+        id={this.searchBoxCommon.popupId}
         part="suggestions-wrapper"
         class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
-          this.showSuggestions ? '' : 'hidden'
+          this.searchBoxCommon.showSuggestions ? '' : 'hidden'
         }`}
         role="application"
         aria-label={this.bindings.i18n.t(
@@ -756,16 +696,6 @@ export class AtomicSearchBox {
     );
   }
 
-  private getSearchInputLabel() {
-    if (isMacOS()) {
-      return this.bindings.i18n.t('search-box-with-suggestions-macos');
-    }
-    if (!hasKeyboard()) {
-      return this.bindings.i18n.t('search-box-with-suggestions-keyboardless');
-    }
-    return this.bindings.i18n.t('search-box-with-suggestions');
-  }
-
   public render() {
     this.updateBreakpoints();
     return [
@@ -777,16 +707,16 @@ export class AtomicSearchBox {
             ref={(el) => (this.inputRef = el as HTMLInputElement)}
             bindings={this.bindings}
             value={this.searchBoxState.value}
-            ariaLabel={this.getSearchInputLabel()}
+            ariaLabel={this.searchBoxCommon.getSearchInputLabel()}
             onFocus={() => this.onFocus()}
             onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
             onKeyDown={(e) => this.onKeyDown(e)}
             onClear={() => this.searchBox.clear()}
             popup={{
-              id: this.popupId,
+              id: this.searchBoxCommon.popupId,
               activeDescendant: this.activeDescendant,
               expanded: this.isExpanded,
-              hasSuggestions: this.hasSuggestions,
+              hasSuggestions: this.searchBoxCommon.hasSuggestions,
             }}
           />
           {this.renderSuggestions()}
