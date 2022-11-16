@@ -3,15 +3,10 @@
     "team_name": "commerce",
     "general": {
         "environments_order": {
-            "sequential": [
-                "dev",
-                "prd"
-            ]
+            "sequential": ["dev", "stg", "prd"]
         },
         "notifications": {
-            "slack_channels": [
-                "commerceteambuilds"
-            ]
+            "slack_channels": ["commerceteambuilds"]
         },
         "team_jenkins": "commercebuilds"
     },
@@ -52,6 +47,9 @@
                     "acl": "public-read"
                 },
                 "source": "deploy",
+                "stg": {
+                    "bucket": "coveo-hstg-binaries"
+                },
                 "prd": {
                     "bucket": "coveo-public-content",
                     "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION]"
@@ -69,6 +67,9 @@
                     "acl": "public-read"
                 },
                 "source": "deploy",
+                "stg": {
+                    "bucket": "coveo-hstg-binaries"
+                },
                 "prd": {
                     "bucket": "coveo-public-content",
                     "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_VERSION]"
@@ -86,6 +87,9 @@
                     "acl": "public-read"
                 },
                 "source": "deploy",
+                "stg": {
+                    "bucket": "coveo-hstg-binaries"
+                },
                 "prd": {
                     "bucket": "coveo-public-content",
                     "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_VERSION]"
