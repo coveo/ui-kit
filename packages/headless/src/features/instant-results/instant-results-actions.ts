@@ -74,7 +74,7 @@ export interface FetchInstantResultsActionCreatorPayload {
    */
   maxResultsPerQuery: number;
   /**
-   * Number in milliseconds that cached results will be valid for. Defaults to 1 minute. Set to 0 so that results never expire.
+   * Number in milliseconds that cached results will be valid for. Set to 0 so that results never expire.
    */
   cacheTimeout?: number;
 }
