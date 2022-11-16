@@ -1,26 +1,16 @@
-import {promisify} from 'util';
-import {execute} from '../exec.mjs';
 import {
   isOnReleaseBranch,
   getHowManyCommitsBehind,
   getHeadCommitTag,
 } from '../git.mjs';
+import {bumpReleaseVersionAndPush} from '../release.mjs';
+import {bumpPrereleaseVersionAndPush} from '../prerelease.mjs';
 
 async function bumpVersionAndPush() {
   try {
-    const flags = [
-      '--no-install',
-      'lerna',
-      'version',
-      '--conventional-commits',
-      (await isOnReleaseBranch())
-        ? '--conventional-graduate'
-        : '--conventional-prerelease',
-      '--no-private',
-      '--yes',
-      '--exact',
-    ];
-    await execute(`npx`, flags);
+    (await isOnReleaseBranch())
+      ? await bumpReleaseVersionAndPush()
+      : await bumpPrereleaseVersionAndPush();
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',

@@ -1,6 +1,13 @@
 import {spawn} from 'child_process';
 
 /**
+ * @param {string} str
+ */
+function trimNewline(str) {
+  return str.endsWith('\n') ? str.slice(0, -1) : str;
+}
+
+/**
  * @param {string} command
  * @param {readonly string[]} [args]
  * @returns {Promise<string>}
@@ -15,16 +22,9 @@ export function execute(command, args = []) {
       '\x1b[35m>\x1b[0m\xa0',
       command,
       ...args
-        .map((arg) => arg.replace('"', '\\"'))
+        .map((arg) => arg.replace(/"/g, '\\"').replace(/\n/g, '\\n'))
         .map((arg) => (arg.includes(' ') ? `"${arg}"` : arg))
     );
-
-    /**
-     * @param {string} str
-     */
-    function trimNewline(str) {
-      return str.endsWith('\n') ? str.slice(0, -1) : str;
-    }
 
     proc.stdout.on('data', (chunk) => {
       console.log(trimNewline(chunk.toString()));
