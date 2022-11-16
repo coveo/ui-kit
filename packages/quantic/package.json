@@ -32,6 +32,7 @@
     "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json",
     "package:create": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "package:create:publish": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote",
+    "npm:publish": "node ../../scripts/deploy/publish.js",
     "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js"
