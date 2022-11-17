@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.51.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.51.0...@coveo/quantic@1.51.1) (2022-11-10)
+
+
+### Bug Fixes
+
+* **quantic:** corner case in QuanticTabBar addressed ([#2544](https://github.com/coveo/ui-kit/issues/2544)) ([26488de](https://github.com/coveo/ui-kit/commit/26488deea2ba9272073d592cad99f94686f208b0))
+
+
+
+
+
 # [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.50.1...@coveo/quantic@1.51.0) (2022-11-10)
 
 
