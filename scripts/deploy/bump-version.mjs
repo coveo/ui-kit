@@ -1,13 +1,11 @@
 import {execute} from '../exec.mjs';
 
 async function getHeadCommitHash() {
-  const {stdout} = await execute('git', ['rev-parse', 'HEAD']);
-  return stdout;
+  return execute('git', ['rev-parse', 'HEAD']);
 }
 
 async function getHeadCommitTag() {
-  const {stdout} = await execute('git', ['tag', '--points-at', 'HEAD']);
-  return stdout;
+  return execute('git', ['tag', '--points-at', 'HEAD']);
 }
 
 async function checkoutLatestMaster() {

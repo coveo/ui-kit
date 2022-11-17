@@ -1,7 +1,7 @@
-import {resolve} from 'path';
-import {promisify} from 'util';
 import {execute} from '../exec.mjs';
 import {packageDirsNpmTag, getPackageFromPath} from '../packages.mjs';
+import {resolve} from 'path';
+import {promisify} from 'util';
 
 async function main() {
   const requests = packageDirsNpmTag
@@ -30,7 +30,7 @@ async function updateNpmTag(packageName, version) {
 
 async function getLatestVersion(packageName) {
   const res = await execute('npm', ['view', packageName, 'version']);
-  return res.stdout.trim();
+  return res.trim();
 }
 
 function isGreaterThanLatestVersion(version, latestVersion) {
