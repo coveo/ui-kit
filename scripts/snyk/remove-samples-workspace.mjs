@@ -1,7 +1,7 @@
 import {resolve} from 'path';
 import {readFileSync, writeFileSync} from 'fs';
 import {cwd} from 'process';
-import {packageDirsSnyk} from '../packages';
+import {packageDirsSnyk} from '../packages.mjs';
 const packageJsonPath = resolve(cwd(), 'package.json');
 
 const packageJSON = JSON.parse(readFileSync(packageJsonPath));

@@ -1,6 +1,6 @@
 import {promisify} from 'util';
 import {execute} from '../exec.mjs';
-import {packageDirsNpmTag} from '../packages';
+import {packageDirsNpmTag} from '../packages.mjs';
 
 async function main() {
   const requests = packageDirsNpmTag
