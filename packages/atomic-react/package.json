@@ -15,7 +15,7 @@
     "compile:cjs": "tsc -p tsconfig.cjs.json",
     "compile:iife": "rollup --config rollup.config.js",
     "compile": "concurrently \"npm run compile:esm\" \"npm run compile:cjs\"  \"npm run compile:iife\"",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha",
     "copy:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
   "main": "./dist/cjs/index.js",

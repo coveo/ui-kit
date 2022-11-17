@@ -1,24 +1,19 @@
-function buildReport(oldSizes, newSizes) {
-  const rows = prepareData(oldSizes, newSizes);
-  return buildVisualReport(rows);
-}
-
 function prepareData(oldBundleMap, newBundleMap) {
   console.log('preparing data');
 
   const oldEntries = Object.entries(oldBundleMap);
-  
-  const combinedEntries = oldEntries.map(entry => {
+
+  const combinedEntries = oldEntries.map((entry) => {
     const [useCase, oldSize] = entry;
     const newSize = newBundleMap[useCase] || 0;
     return [useCase, oldSize, newSize];
-  })
-  
-  return combinedEntries.map(entry => buildRows(...entry));
+  });
+
+  return combinedEntries.map((entry) => buildRows(...entry));
 }
 
 function buildRows(useCase, oldSize, newSize) {
-  const change = (newSize - oldSize) * 100 / oldSize;
+  const change = ((newSize - oldSize) * 100) / oldSize;
   return [useCase, toKb(oldSize), toKb(newSize), toOneDecimal(change)];
 }
 
@@ -34,16 +29,19 @@ function toOneDecimal(num) {
 function buildVisualReport(rows) {
   console.log('building visual report');
 
-  const rowsWithColumnsConcatenated = rows.map(row => '|' + row.join('|'));
+  const rowsWithColumnsConcatenated = rows.map((row) => '|' + row.join('|'));
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
-  
+
   return `
   **Bundle Size**
   
   | File | Old (kb) | New (kb) | Change (%)
   | ---- |:--------:|:--------:|:------:
   ${presentableRows}
-  `
+  `;
 }
 
-module.exports = { buildReport }
+export function buildReport(oldSizes, newSizes) {
+  const rows = prepareData(oldSizes, newSizes);
+  return buildVisualReport(rows);
+}

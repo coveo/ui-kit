@@ -1,7 +1,8 @@
-const util = require('util');
-const fs = require('fs');
-const rm = util.promisify(fs.rm);
-const mkdir = util.promisify(fs.mkdir);
+import fs from 'fs';
+import {promisify} from 'util';
+
+const rm = promisify(fs.rm);
+const mkdir = promisify(fs.mkdir);
 
 async function createGeneratedFolder() {
   const generatedPath = 'src/generated';

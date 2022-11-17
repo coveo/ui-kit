@@ -1,9 +1,9 @@
-const path = require('path');
-const fs = require('fs');
-const {build} = require('esbuild');
-const alias = require('esbuild-plugin-alias');
-const {umdWrapper} = require('../../scripts/bundle/umd');
-const {apacheLicense} = require('../../scripts/license/apache');
+import {build} from 'esbuild';
+import alias from 'esbuild-plugin-alias';
+import {readFileSync, promises} from 'fs';
+import {resolve} from 'path';
+import {umdWrapper} from '../../scripts/bundle/umd.mjs';
+import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const devMode = process.argv[2] === 'dev';
 
@@ -23,7 +23,7 @@ function getUmdGlobalName(useCase) {
     'product-recommendation': 'CoveoHeadlessProductRecommendation',
     'product-listing': 'CoveoHeadlessProductListing',
     'case-assist': 'CoveoHeadlessCaseAssist',
-    'insight': 'CoveoHeadlessInsight',
+    insight: 'CoveoHeadlessInsight',
   };
 
   const globalName = map[useCase];
@@ -38,7 +38,7 @@ function getUmdGlobalName(useCase) {
 }
 
 function getPackageVersion() {
-  return JSON.parse(fs.readFileSync('package.json', 'utf-8')).version;
+  return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
 
 function getUseCaseDir(prefix, useCase) {
@@ -119,14 +119,19 @@ function buildBrowserConfig(options) {
     sourcemap: true,
     plugins: [
       alias({
-        'coveo.analytics': path.resolve(
-          __dirname,
-          '../../node_modules/coveo.analytics/dist/library.es.js'
+        'coveo.analytics': resolve(
+          '..',
+          '..',
+          'node_modules',
+          'coveo.analytics',
+          'dist',
+          'library.es.js'
         ),
-        'cross-fetch': path.resolve(__dirname, './fetch-ponyfill.js'),
-        'web-encoding': path.resolve(
-          __dirname,
-          '../../node_modules/web-encoding/src/lib.js'
+        'cross-fetch': resolve('.', 'fetch-ponyfill.js'),
+        'web-encoding': resolve(
+          '..',
+          '..',
+          'node_modules/web-encoding/src/lib.js'
         ),
       }),
     ],
@@ -167,13 +172,21 @@ function buildNodeConfig(options) {
     platform: 'node',
     plugins: [
       alias({
-        'coveo.analytics': path.resolve(
-          __dirname,
-          '../../node_modules/coveo.analytics/dist/library.js'
+        'coveo.analytics': resolve(
+          '..',
+          '..',
+          'node_modules',
+          'coveo.analytics',
+          'dist',
+          'library.js'
         ),
-        'web-encoding': path.resolve(
-          __dirname,
-          '../../node_modules/web-encoding/src/lib.cjs'
+        'web-encoding': resolve(
+          '..',
+          '..',
+          'node_modules',
+          'web-encoding',
+          'src',
+          'lib.cjs'
         ),
       }),
     ],
@@ -186,14 +199,14 @@ function adjustRequireImportsInNodeEsmBundles() {
   const paths = getNodeEsmBundlePaths();
 
   return paths.map(async (filePath) => {
-    const resolvedPath = path.resolve(__dirname, filePath);
+    const resolvedPath = resolve(filePath);
 
-    const content = await fs.promises.readFile(resolvedPath, {
+    const content = await promises.readFile(resolvedPath, {
       encoding: 'utf-8',
     });
     const modified = content.replace(/__require\(/g, 'require(');
 
-    await fs.promises.writeFile(resolvedPath, modified);
+    await promises.writeFile(resolvedPath, modified);
   });
 }
 

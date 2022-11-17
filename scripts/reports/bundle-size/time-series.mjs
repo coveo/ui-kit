@@ -1,5 +1,5 @@
-const { existsSync, writeFileSync, appendFileSync } = require('fs')
-const { computeFileSizes } = require('./command');
+import {existsSync, writeFileSync, appendFileSync} from 'fs';
+import {computeFileSizes} from './command.mjs';
 
 const branch = process.env.GIT_BRANCH;
 const fileName = 'bundle-size-time-series.csv';
@@ -28,9 +28,9 @@ async function getData() {
   const useCase = 'search';
   const sizes = await computeFileSizes();
   const data = sizes[useCase];
-  
+
   if (!data) {
-    throw new Error(`failed to retrieve data for bundle: ${useCase}`)
+    throw new Error(`failed to retrieve data for bundle: ${useCase}`);
   }
 
   return data;

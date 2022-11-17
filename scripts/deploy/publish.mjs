@@ -1,17 +1,19 @@
-const {resolve} = require('path');
-const {readFileSync} = require('fs');
-const {execSync, spawnSync} = require('child_process');
+import {execSync, spawnSync} from 'child_process';
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
+import {getPackageFromPath} from '../packages.mjs';
 
 const [tag] = process.argv.slice(2);
 
-const pathToPackageJSON = resolve(process.cwd(), './package.json');
-/** @type {{ name: string, version: string }} */
-const pkg = JSON.parse(readFileSync(pathToPackageJSON));
+const pathToPackageJSON = resolve(process.cwd(), 'package.json');
+const pkg = getPackageFromPath(pathToPackageJSON);
 const packageRef = `${pkg.name}@${pkg.version}`;
 
 function shouldPublish() {
   try {
-    const packageVersionNotPublished = !execSync(`npm view ${packageRef}`).toString().length;
+    const packageVersionNotPublished = !execSync(
+      `npm view ${packageRef}`
+    ).toString().length;
     return packageVersionNotPublished;
   } catch (e) {
     const isFirstPublish = e.toString().includes('code E404');

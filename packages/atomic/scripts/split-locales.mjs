@@ -1,9 +1,10 @@
-const util = require('util');
-const fs = require('fs');
-const mkdir = util.promisify(fs.mkdir);
-const rm = util.promisify(fs.rm);
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
+import fs from 'fs';
+import {promisify} from 'util';
+
+const mkdir = promisify(fs.mkdir);
+const rm = promisify(fs.rm);
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
 async function splitLocales() {
   const localesJSONData = await readFile('src/locales.json');
@@ -43,8 +44,8 @@ async function splitLocales() {
 
 async function saveAvailableLocales(localesMap) {
   const generatedPath = 'src/generated';
-  const localesArray = Object.entries(localesMap).map(
-    ([localeKey]) => localeKey.toLowerCase()
+  const localesArray = Object.entries(localesMap).map(([localeKey]) =>
+    localeKey.toLowerCase()
   );
 
   await writeFile(

@@ -1,6 +1,6 @@
-const {build} = require('esbuild');
-const {apacheLicense} = require('../../scripts/license/apache');
-const {umdWrapper} = require('../../scripts/bundle/umd');
+import {build} from 'esbuild';
+import {umdWrapper} from '../../scripts/bundle/umd.mjs';
+import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 const devMode = process.argv[2] === 'dev';
 
@@ -53,11 +53,11 @@ function browserUmd() {
     outfile: 'dist/browser/bueno.js',
     format: 'cjs',
     banner: {
-      js: `${base.banner.js}\n${umd.header}`
+      js: `${base.banner.js}\n${umd.header}`,
     },
     footer: {
-      js: umd.footer
-    }
+      js: umd.footer,
+    },
   });
 }
 
