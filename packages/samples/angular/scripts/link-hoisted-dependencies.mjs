@@ -27,6 +27,7 @@ function getUnlinkedDependencies() {
 
   const dependencies = Array.from(
     listOutput.matchAll(
+      // eslint-disable-next-line node/no-unsupported-features/es-syntax
       /^[^:\n]+:(?<dependencyName>[^:\n]+)@[^:\n]+(:[^:\n]+)?$/gm
     )
   ).map((match) => match.groups['dependencyName']);
