@@ -1,5 +1,5 @@
 import {configure} from '../../../page-objects/configurator';
-import {getAlias, interceptSearch} from '../../../page-objects/search';
+import {getQueryAlias, interceptSearch} from '../../../page-objects/search';
 import {ResultsPerPageExpectations as Expect} from './results-per-page-expectations';
 import {ResultsPerPageActions as Actions} from './results-per-page-actions';
 import {stubConsoleError} from '../../console-selectors';
@@ -38,7 +38,7 @@ describe('quantic-result-per-page', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 

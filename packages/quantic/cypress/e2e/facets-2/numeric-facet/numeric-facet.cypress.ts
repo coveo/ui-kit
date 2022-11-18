@@ -5,7 +5,7 @@ import {
   NumericFacetExpectations as Expect,
 } from './numeric-facet-expectations';
 import {
-  getAlias,
+  getQueryAlias,
   InterceptAliases,
   interceptSearch,
   mockSearchNoResults,
@@ -61,7 +61,7 @@ describe('quantic-numeric-facet', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -81,71 +81,195 @@ describe('quantic-numeric-facet', () => {
         it('should work as expected', () => {
           visitNumericFacetPage({...defaultSettings, useCase: param.useCase});
 
-          scope('on initial load', () => {
-            if (param.useCase === useCaseEnum.search) {
-              Expect.logFacetLoad();
-            }
-            Expect.displayFacet(true);
-            Expect.displayLabel(true);
-            Expect.displaySearchForm(false);
-            Expect.displayClearButton(false);
-            Expect.displayValues(true);
-            Expect.labelContains(defaultLabel);
-            Expect.numberOfValues(defaultNumberOfValues);
-            Expect.numberOfSelectedCheckboxValues(0);
-            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-          });
+          cy.get(getQueryAlias(param.useCase))
+            .its('response.body.facets')
+            .then((facets: {values: {start: number; end: number}[]}[]) => {
+              const values = facets[0].values;
+              const firstValue = values[0];
 
-          scope('when selecting a value', () => {
-            const min = 0;
-            const max = 8000;
+              scope('on initial load', () => {
+                if (param.useCase === useCaseEnum.search) {
+                  Expect.logFacetLoad();
+                }
+                Expect.displayFacet(true);
+                Expect.displayLabel(true);
+                Expect.displaySearchForm(false);
+                Expect.displayClearButton(false);
+                Expect.displayValues(true);
+                Expect.labelContains(defaultLabel);
+                Expect.numberOfValues(defaultNumberOfValues);
+                Expect.numberOfSelectedCheckboxValues(0);
+                Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+              });
 
-            visitNumericFacetPage({...defaultSettings, useCase: param.useCase});
-            Actions.checkValueAt(0);
-
-            Expect.displayClearButton(true);
-            Expect.clearFilterContains('Clear filter');
-            Expect.numberOfSelectedCheckboxValues(1);
-            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
-            Expect.logNumericFacetSelect(`${min}..${max}`);
-            if (param.useCase === useCaseEnum.search) {
-              Expect.urlHashContains(`${min}..${max}`);
-            }
-          });
-
-          scope('when selecting multiple values', () => {
-            visitNumericFacetPage({...defaultSettings, useCase: param.useCase});
-
-            for (let index = 0; index < defaultNumberOfValues; index++) {
-              scope(`when selecting ${index + 1} values`, () => {
-                const filterLabel =
-                  index === 0 ? 'Clear filter' : `Clear ${index + 1} filters`;
-                Actions.checkFirstIdleCheckbox();
-                cy.wait(InterceptAliases.UA.Facet.Select);
+              scope('when selecting a value', () => {
+                visitNumericFacetPage({
+                  ...defaultSettings,
+                  useCase: param.useCase,
+                });
+                Actions.checkValueAt(0);
 
                 Expect.displayClearButton(true);
-                Expect.clearFilterContains(filterLabel);
-                Expect.numberOfSelectedCheckboxValues(index + 1);
-                Expect.numberOfIdleCheckboxValues(
-                  defaultNumberOfValues - (index + 1)
+                Expect.clearFilterContains('Clear filter');
+                Expect.numberOfSelectedCheckboxValues(1);
+                Expect.numberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+                Expect.logNumericFacetSelect(
+                  `${firstValue.start}..${firstValue.end}`
                 );
+                if (param.useCase === useCaseEnum.search) {
+                  Expect.urlHashContains(
+                    `${firstValue.start}..${firstValue.end}`
+                  );
+                }
               });
-            }
-          });
 
-          scope('when clearing the selection', () => {
-            visitNumericFacetPage({...defaultSettings, useCase: param.useCase});
+              scope('when selecting multiple values', () => {
+                visitNumericFacetPage({
+                  ...defaultSettings,
+                  useCase: param.useCase,
+                });
 
-            Actions.checkValueAt(0);
-            Actions.checkValueAt(1);
-            Expect.displayClearButton(true);
+                for (let index = 0; index < defaultNumberOfValues; index++) {
+                  scope(`when selecting ${index + 1} values`, () => {
+                    const filterLabel =
+                      index === 0
+                        ? 'Clear filter'
+                        : `Clear ${index + 1} filters`;
+                    Actions.checkFirstIdleCheckbox();
+                    cy.wait(InterceptAliases.UA.Facet.Select);
 
-            Actions.clickClearFilter();
-            Expect.logClearFacetValues(field);
-            Expect.displayClearButton(false);
-            Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
-            Expect.numberOfSelectedCheckboxValues(0);
-          });
+                    Expect.displayClearButton(true);
+                    Expect.clearFilterContains(filterLabel);
+                    Expect.numberOfSelectedCheckboxValues(index + 1);
+                    Expect.numberOfIdleCheckboxValues(
+                      defaultNumberOfValues - (index + 1)
+                    );
+                  });
+                }
+              });
+
+              scope('when clearing the selection', () => {
+                visitNumericFacetPage({
+                  ...defaultSettings,
+                  useCase: param.useCase,
+                });
+
+                Actions.checkValueAt(0);
+                Actions.checkValueAt(1);
+                Expect.displayClearButton(true);
+
+                Actions.clickClearFilter();
+                Expect.logClearFacetValues(field);
+                Expect.displayClearButton(false);
+                Expect.numberOfIdleCheckboxValues(defaultNumberOfValues);
+                Expect.numberOfSelectedCheckboxValues(0);
+              });
+            });
+        });
+      });
+
+      describe('with link values', () => {
+        const linkValueOptions = {
+          ...defaultSettings,
+          displayValuesAs: 'link',
+          useCase: param.useCase,
+        };
+
+        function setupWithLinkValues() {
+          visitNumericFacetPage(linkValueOptions);
+        }
+
+        it('should work as expected', () => {
+          setupWithLinkValues();
+
+          cy.get(getQueryAlias(param.useCase))
+            .its('response.body.facets')
+            .then((facets: {values: {start: number; end: number}[]}[]) => {
+              const values = facets[0].values;
+              const firstValue = values[0];
+              const lastValue = values[values.length - 1];
+
+              scope('on initial load', () => {
+                if (param.useCase === useCaseEnum.search) {
+                  Expect.logFacetLoad();
+                }
+                Expect.displayFacet(true);
+                Expect.displayLabel(true);
+                Expect.displayClearButton(false);
+                Expect.displayValues(true);
+                Expect.labelContains(defaultLabel);
+                Expect.numberOfValues(defaultNumberOfValues);
+                Expect.numberOfSelectedLinkValues(0);
+                Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+              });
+
+              scope('when selecting a value', () => {
+                function selectFirstFacetValue() {
+                  Actions.selectFirstLinkValue();
+                }
+
+                function collapseFacet() {
+                  Actions.clickCollapseButton();
+                }
+
+                selectFirstFacetValue();
+
+                Expect.clearFilterContains('Clear filter');
+                Expect.numberOfSelectedLinkValues(1);
+                Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
+                Expect.logNumericFacetSelect(
+                  `${firstValue.start}..${firstValue.end}`
+                );
+
+                scope('when collapsing the facet', () => {
+                  collapseFacet();
+
+                  Expect.displayClearButton(true);
+                  Expect.clearFilterContains('Clear filter');
+                });
+
+                scope('when selecting the "Clear" button', () => {
+                  function clearSelectedValues() {
+                    Actions.clickExpandButton();
+                    Actions.clickClearFilter();
+                    cy.wait(getQueryAlias(param.useCase));
+                  }
+
+                  clearSelectedValues();
+
+                  Expect.displayClearButton(false);
+                  Expect.numberOfSelectedLinkValues(0);
+                  Expect.numberOfIdleLinkValues(defaultNumberOfValues);
+                  Expect.logClearFacetValues(defaultField);
+                });
+
+                scope('when selecting a second value', () => {
+                  function selectLastFacetValue() {
+                    selectFirstFacetValue();
+                    Expect.logNumericFacetSelect(
+                      `${firstValue.start}..${firstValue.end}`
+                    );
+                    Actions.selectLastLinkValue();
+                  }
+
+                  selectLastFacetValue();
+
+                  Expect.clearFilterContains('Clear filter');
+                  Expect.numberOfSelectedLinkValues(1);
+                  Expect.numberOfIdleLinkValues(defaultNumberOfValues - 1);
+                  Expect.logNumericFacetSelect(
+                    `${lastValue.start}..${lastValue.end}`
+                  );
+
+                  scope('when collapsing the facet', () => {
+                    selectLastFacetValue();
+                    collapseFacet();
+
+                    Expect.clearFilterContains('Clear filter');
+                  });
+                });
+              });
+            });
         });
       });
 
@@ -171,12 +295,12 @@ describe('quantic-numeric-facet', () => {
               ...customWithInputSettings,
               useCase: param.useCase,
             });
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             Actions.inputMinValue(min);
             Actions.inputMaxValue(max);
             Actions.submitManualRange();
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             Expect.displayValues(false);
             Expect.search.numberOfResults(10, param.useCase);
@@ -225,7 +349,7 @@ describe('quantic-numeric-facet', () => {
               ...customWithInputSettings,
               useCase: param.useCase,
             });
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             Actions.checkValueAt(2);
             cy.wait(InterceptAliases.UA.Facet.Select);
@@ -373,7 +497,7 @@ describe('quantic-numeric-facet', () => {
               },
               false
             );
-            cy.wait(getAlias(param.useCase)).then((interception) => {
+            cy.wait(getQueryAlias(param.useCase)).then((interception) => {
               const facetRequest = interception.request.body.facets[0];
               expect(facetRequest.sortCriteria).to.eq(sorting);
             });

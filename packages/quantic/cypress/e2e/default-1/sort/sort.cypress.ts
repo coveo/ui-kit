@@ -1,6 +1,6 @@
 import {configure} from '../../../page-objects/configurator';
 import {
-  getAlias,
+  getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
@@ -47,7 +47,7 @@ describe('quantic-sort', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 

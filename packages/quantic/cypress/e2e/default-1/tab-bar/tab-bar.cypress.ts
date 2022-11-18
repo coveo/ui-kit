@@ -1,5 +1,5 @@
 import {configure} from '../../../page-objects/configurator';
-import {getAlias, interceptSearch} from '../../../page-objects/search';
+import {getQueryAlias, interceptSearch} from '../../../page-objects/search';
 import {TabBarExpectations as Expect} from './tab-bar-expectations';
 import {TabBarActions as Actions} from './tab-bar-actions';
 import {scope} from '../../../reporters/detailed-collector';
@@ -38,7 +38,7 @@ describe('quantic-tab-bar', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 

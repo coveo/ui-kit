@@ -3,7 +3,7 @@ import {Interception} from 'cypress/types/net-stubbing';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
-  getAlias,
+  getQueryAlias,
   getRoute,
   interceptSearch,
 } from '../../../page-objects/search';
@@ -52,7 +52,7 @@ describe('quantic-facet-manager', () => {
         res.body.facets = reordered;
         res.send();
       });
-    }).as(getAlias(useCase).substring(1));
+    }).as(getQueryAlias(useCase).substring(1));
   }
 
   function getFacetOrder(interception: Interception) {
@@ -66,7 +66,7 @@ describe('quantic-facet-manager', () => {
     describe(param.label, () => {
       it('should load facets in the same order as in the search response', () => {
         visit({useCase: param.useCase});
-        cy.wait(getAlias(param.useCase)).then((interception) =>
+        cy.wait(getQueryAlias(param.useCase)).then((interception) =>
           getFacetOrder(interception)
         );
         Expect.containsFacets(responseFacetIdsAlias);
@@ -74,7 +74,7 @@ describe('quantic-facet-manager', () => {
         scope('when reordering the facets', () => {
           mockFacetOrder(['language', 'objecttype', 'date'], param.useCase);
           performSearch()
-            .wait(getAlias(param.useCase))
+            .wait(getQueryAlias(param.useCase))
             .then((interception) => getFacetOrder(interception));
           Expect.containsFacets(responseFacetIdsAlias);
         });

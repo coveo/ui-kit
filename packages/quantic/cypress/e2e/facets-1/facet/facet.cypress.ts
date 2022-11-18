@@ -3,7 +3,7 @@ import {configure} from '../../../page-objects/configurator';
 import {FacetExpectations as Expect} from './facet-expectations';
 import {
   extractFacetValues,
-  getAlias,
+  getQueryAlias,
   InterceptAliases,
   interceptSearch,
   interceptSearchIndefinitely,
@@ -54,7 +54,7 @@ describe('Facet Test Suite', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -69,7 +69,7 @@ describe('Facet Test Suite', () => {
   }
 
   function aliasFacetValues(useCase: string) {
-    cy.wait(getAlias(useCase)).then((interception) => {
+    cy.wait(getQueryAlias(useCase)).then((interception) => {
       const indexValues = extractFacetValues(interception.response);
       cy.wrap(indexValues).as(indexFacetValuesAlias.substring(1));
     });
@@ -192,7 +192,7 @@ describe('Facet Test Suite', () => {
 
             function collapseFacet() {
               Actions.clickCollapseButton();
-              cy.wait(getAlias(param.useCase));
+              cy.wait(getQueryAlias(param.useCase));
             }
 
             selectFirstFacetValue();
@@ -212,7 +212,7 @@ describe('Facet Test Suite', () => {
               function clearSelectedValues() {
                 Actions.clickExpandButton();
                 Actions.clickClearFilter();
-                cy.wait(getAlias(param.useCase));
+                cy.wait(getQueryAlias(param.useCase));
               }
               clearSelectedValues();
 
@@ -493,7 +493,7 @@ describe('Facet Test Suite', () => {
               function clearSelectedValues() {
                 Actions.clickExpandButton();
                 Actions.clickClearFilter();
-                cy.wait(getAlias(param.useCase));
+                cy.wait(getQueryAlias(param.useCase));
               }
 
               clearSelectedValues();
@@ -707,7 +707,7 @@ describe('Facet Test Suite', () => {
               scope('when clicking show less button', () => {
                 function showLessValues() {
                   showMoreValuesAgain();
-                  cy.wait(getAlias(param.useCase));
+                  cy.wait(getQueryAlias(param.useCase));
                   Actions.clickShowLessButton();
                 }
 
@@ -780,7 +780,7 @@ describe('Facet Test Suite', () => {
                 },
                 false
               );
-              cy.wait(getAlias(param.useCase)).then((interception) => {
+              cy.wait(getQueryAlias(param.useCase)).then((interception) => {
                 const facetRequest = interception.request.body.facets[0];
                 expect(facetRequest.sortCriteria).to.eq(sorting);
               });
