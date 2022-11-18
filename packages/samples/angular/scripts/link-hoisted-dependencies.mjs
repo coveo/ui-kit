@@ -5,12 +5,12 @@ import {resolve, parse} from 'path';
 
 /** @param {string} dependency */
 function getLocalPathToDependency(dependency) {
-  return resolve('..', 'node_modules', dependency);
+  return resolve('node_modules', dependency);
 }
 
 /** @param {string} dependency */
 function getHoistedPathToDependency(dependency) {
-  return resolve('..', '..', '..', '..', 'node_modules', dependency);
+  return resolve('..', '..', '..', 'node_modules', dependency);
 }
 
 /** @param {string} path */
