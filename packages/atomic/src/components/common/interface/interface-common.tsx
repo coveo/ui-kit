@@ -1,18 +1,18 @@
 import {LogLevel} from '@coveo/headless';
-import {i18n, TFunction} from 'i18next';
 import {ComponentInterface, h} from '@stencil/core';
+import {HTMLStencilElement} from '@stencil/core/internal';
+import {i18n, TFunction} from 'i18next';
+import Backend from 'i18next-http-backend';
 import {setCoveoGlobal} from '../../../global/environment';
 import {loadFocusVisiblePolyfill} from '../../../global/focus-visible';
-import {initi18n} from './i18n';
-import {HTMLStencilElement} from '@stencil/core/internal';
-import {AnyBindings, AnyEngineType} from './bindings';
+import {loadDayjsLocale} from '../../../utils/dayjs-locales';
+import {InitializeEvent} from '../../../utils/initialization-utils';
 import {
   i18nBackendOptions,
   i18nTranslationNamespace,
 } from '../../common/interface/i18n';
-import Backend from 'i18next-http-backend';
-import {InitializeEvent} from '../../../utils/initialization-utils';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
+import {AnyBindings, AnyEngineType} from './bindings';
+import {initi18n} from './i18n';
 
 export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   extends ComponentInterface {

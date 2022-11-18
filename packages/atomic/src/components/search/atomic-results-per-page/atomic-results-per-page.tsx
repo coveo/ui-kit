@@ -1,4 +1,3 @@
-import {Component, h, Prop, State} from '@stencil/core';
 import {
   ResultsPerPage,
   buildResultsPerPage,
@@ -7,15 +6,16 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
+import {FieldsetGroup} from '../../common/fieldset-group';
 import {RadioButton} from '../../common/radio-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {FieldsetGroup} from '../../common/fieldset-group';
 
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.

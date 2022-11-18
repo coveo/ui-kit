@@ -1,3 +1,9 @@
+import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
+import {
+  logFacetClearAll,
+  logFacetSelect,
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {
   NumericFilterOptions,
   NumericFilterInitialState,
@@ -7,12 +13,6 @@ import {
   NumericFilter,
   buildCoreNumericFilter,
 } from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter';
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
-import {
-  logFacetClearAll,
-  logFacetSelect,
-} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 
 export type {
   NumericFilterOptions,

@@ -1,7 +1,7 @@
+import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
 import {buildMockApiFunction} from '../mocks/mock-api-function';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
-import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
 import {buildMockEntity} from '../mocks/mock-entity';
 import {buildMockEntryPoint} from '../mocks/mock-entry-point';
 import {

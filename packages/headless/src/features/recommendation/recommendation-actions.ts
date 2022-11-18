@@ -6,6 +6,7 @@ import {
   isErrorResponse,
 } from '../../api/search/search-api-client';
 import {Result} from '../../api/search/search/result';
+import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {
   ConfigurationSection,
   RecommendationSection,
@@ -14,10 +15,9 @@ import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {logRecommendationUpdate} from './recommendation-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
+import {logRecommendationUpdate} from './recommendation-analytics-actions';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &

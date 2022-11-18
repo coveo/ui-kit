@@ -1,21 +1,21 @@
-import {createMockState} from '../../test/mock-state';
+import {SearchAppState} from '../../state/search-app-state';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {buildMockFacetOptions} from '../../test/mock-facet-options';
+import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockFacetOptions} from '../../test/mock-facet-options';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {createMockState} from '../../test/mock-state';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {buildSearchRequest} from './search-request';
-import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {omit} from '../../utils/utils';
-import {FacetRequest} from '../facets/facet-set/interfaces/request';
 import {FacetSetState} from '../facets/facet-set/facet-set-state';
+import {FacetRequest} from '../facets/facet-set/interfaces/request';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
-import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {buildSearchRequest} from './search-request';
 
 describe('search request', () => {
   let state: SearchAppState;

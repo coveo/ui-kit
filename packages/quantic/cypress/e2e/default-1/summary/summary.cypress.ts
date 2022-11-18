@@ -1,3 +1,9 @@
+import {getNextResults} from '../../../page-objects/actions/action-get-next-results';
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {
+  setPageSizeValue,
+  setResultsPerPage,
+} from '../../../page-objects/actions/action-set-results-per-page';
 import {configure} from '../../../page-objects/configurator';
 import {
   getQueryAlias,
@@ -5,18 +11,12 @@ import {
   interceptSearchIndefinitely,
   mockSearchNoResults,
 } from '../../../page-objects/search';
-import {SummaryExpectations as Expect} from './summary-expectations';
-import {getNextResults} from '../../../page-objects/actions/action-get-next-results';
-import {
-  setPageSizeValue,
-  setResultsPerPage,
-} from '../../../page-objects/actions/action-set-results-per-page';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {SummaryExpectations as Expect} from './summary-expectations';
 
 describe('quantic-summary', () => {
   const summaryUrl = 's/quantic-summary';

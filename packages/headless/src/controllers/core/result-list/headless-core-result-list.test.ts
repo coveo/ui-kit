@@ -1,10 +1,10 @@
-import {buildMockSearchAppEngine} from '../../../test/mock-engine';
-import {buildMockResult, MockSearchEngine} from '../../../test';
-import {fetchMoreResults} from '../../../features/search/search-actions';
-import {buildCoreResultList, ResultList} from './headless-core-result-list';
-import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
-import {configuration, fields, search} from '../../../app/reducers';
 import {SchemaValidationError} from '@coveo/bueno';
+import {configuration, fields, search} from '../../../app/reducers';
+import {registerFieldsToInclude} from '../../../features/fields/fields-actions';
+import {fetchMoreResults} from '../../../features/search/search-actions';
+import {buildMockResult, MockSearchEngine} from '../../../test';
+import {buildMockSearchAppEngine} from '../../../test/mock-engine';
+import {buildCoreResultList, ResultList} from './headless-core-result-list';
 
 describe('CoreResultList', () => {
   const testProps = {

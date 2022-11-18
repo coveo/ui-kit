@@ -1,15 +1,15 @@
-import {createMockState} from '../../../test/mock-state';
+import {ProductListingAppState} from '../../../state/product-listing-app-state';
+import {SearchAppState} from '../../../state/search-app-state';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
+import {createMockState} from '../../../test/mock-state';
 import {
   baseFacetResponseSelector,
   facetRequestSelector,
   facetResponseSelectedValuesSelector,
 } from './facet-set-selectors';
-import {SearchAppState} from '../../../state/search-app-state';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
-import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 
 describe('facet-set selectors', () => {
   it('#facetSelector gets the facet response by id', () => {

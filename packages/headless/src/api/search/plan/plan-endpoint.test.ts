@@ -1,5 +1,5 @@
-import {ExecutionPlan} from './plan-endpoint';
 import {TriggerRedirect} from '../trigger';
+import {ExecutionPlan} from './plan-endpoint';
 import {PlanResponseSuccess} from './plan-response';
 
 describe('execution plan', () => {

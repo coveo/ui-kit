@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {fetchInstantResults} from '../search/search-actions';
-
 import {
   clearExpiredResults,
   FetchInstantResultsActionCreatorPayload,

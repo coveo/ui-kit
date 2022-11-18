@@ -1,14 +1,14 @@
+import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../test/mock-engine';
 import {buildMockInsightState} from '../../test/mock-insight-state';
+import {getCaseContextInitialState} from '../case-context/case-context-state';
+import {getQueryInitialState} from '../query/query-state';
 import {
   logContextChanged,
   logExpandToFullUI,
   logFetchMoreResults,
   logQueryError,
 } from './insight-search-analytics-actions';
-import * as CoveoAnalytics from 'coveo.analytics';
-import {getCaseContextInitialState} from '../case-context/case-context-state';
-import {getQueryInitialState} from '../query/query-state';
 
 const mockLogContextChanged = jest.fn();
 const mockLogExpandtoFullUI = jest.fn();

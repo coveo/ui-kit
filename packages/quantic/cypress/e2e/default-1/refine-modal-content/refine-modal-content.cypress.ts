@@ -1,8 +1,8 @@
 import {configure} from '../../../page-objects/configurator';
 import {InterceptAliases, interceptSearch} from '../../../page-objects/search';
-import {RefineContentExpectations as Expect} from './refine-modal-content-expectations';
-import {RefineContentActions as Actions} from './refine-modal-content-actions';
 import {scope} from '../../../reporters/detailed-collector';
+import {RefineContentActions as Actions} from './refine-modal-content-actions';
+import {RefineContentExpectations as Expect} from './refine-modal-content-expectations';
 
 interface RefineContentOptions {
   hideSort: boolean;

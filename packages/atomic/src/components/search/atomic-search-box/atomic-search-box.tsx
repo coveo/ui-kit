@@ -1,15 +1,4 @@
 import {
-  Component,
-  h,
-  State,
-  Prop,
-  Listen,
-  Watch,
-  Element,
-  Event,
-  EventEmitter,
-} from '@stencil/core';
-import {
   SearchBox,
   SearchBoxState,
   buildSearchBox,
@@ -21,10 +10,31 @@ import {
   SearchBoxOptions,
 } from '@coveo/headless';
 import {
+  Component,
+  h,
+  State,
+  Prop,
+  Listen,
+  Watch,
+  Element,
+  Event,
+  EventEmitter,
+} from '@stencil/core';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
+import {isMacOS} from '../../../utils/device-utils';
+import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
+import {promiseTimeout} from '../../../utils/promise-utils';
+import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {getUniqueItemsByProperties, once, randomID} from '../../../utils/utils';
+import {SearchBoxCommon} from '../../common/search-box/search-box-common';
+import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import {SearchInput} from '../../common/search-box/search-input';
+import {SubmitButton} from '../../common/search-box/submit-button';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
@@ -33,23 +43,12 @@ import {
   elementHasNoQuery,
   elementHasQuery,
 } from '../search-box-suggestions/suggestions-common';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {SafeStorage, StorageItems} from '../../../utils/local-storage-utils';
-import {promiseTimeout} from '../../../utils/promise-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {SearchInput} from '../../common/search-box/search-input';
-import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
-import {SubmitButton} from '../../common/search-box/submit-button';
+import {RedirectionPayload} from './redirection-payload';
 import {
   ButtonSearchSuggestion,
   queryDataAttribute,
   SimpleSearchSuggestion,
 } from './search-suggestion';
-
-import {isMacOS} from '../../../utils/device-utils';
-import {RedirectionPayload} from './redirection-payload';
-import {SearchBoxCommon} from '../../common/search-box/search-box-common';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.

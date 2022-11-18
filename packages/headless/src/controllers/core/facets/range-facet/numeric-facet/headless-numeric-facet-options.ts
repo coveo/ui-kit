@@ -7,6 +7,7 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
+import {CoreEngine} from '../../../../../app/engine';
 import {facetValueStates} from '../../../../../features/facets/facet-api/value';
 import {
   rangeFacetRangeAlgorithm,
@@ -15,6 +16,13 @@ import {
   RangeFacetSortCriterion,
 } from '../../../../../features/facets/range-facets/generic/interfaces/request';
 import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
+import {validateManualNumericRanges} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  ConfigurationSection,
+  NumericFacetSection,
+  SearchSection,
+} from '../../../../../state/state-sections';
+import {validateOptions} from '../../../../../utils/validate-payload';
 import {
   facetId,
   field,
@@ -23,14 +31,6 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../../../core/facets/_common/facet-option-definitions';
-import {validateOptions} from '../../../../../utils/validate-payload';
-import {
-  ConfigurationSection,
-  NumericFacetSection,
-  SearchSection,
-} from '../../../../../state/state-sections';
-import {validateManualNumericRanges} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {CoreEngine} from '../../../../../app/engine';
 
 /**
  * The options defining a `NumericFacet`.

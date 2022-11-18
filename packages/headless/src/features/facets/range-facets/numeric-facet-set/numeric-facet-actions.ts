@@ -1,12 +1,3 @@
-import {createAction} from '@reduxjs/toolkit';
-import {NumericFacetValue} from './interfaces/response';
-import {
-  validatePayload,
-  requiredNonEmptyString,
-  serializeSchemaValidationError,
-  validatePayloadAndThrow,
-} from '../../../../utils/validate-payload';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
   RecordValue,
   NumberValue,
@@ -14,14 +5,23 @@ import {
   Value,
   ArrayValue,
 } from '@coveo/bueno';
+import {createAction} from '@reduxjs/toolkit';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+  serializeSchemaValidationError,
+  validatePayloadAndThrow,
+} from '../../../../utils/validate-payload';
+import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
   RangeFacetRangeAlgorithm,
   RangeFacetSortCriterion,
 } from '../generic/interfaces/request';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {NumericRangeRequest} from './interfaces/request';
-import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
-import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
+import {NumericFacetValue} from './interfaces/response';
 
 export interface RegisterNumericFacetActionCreatorPayload {
   /**

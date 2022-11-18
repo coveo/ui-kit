@@ -2,6 +2,10 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {facetSet} from '../../../app/reducers';
 import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
+  updateFacetAutoSelection,
+  UpdateFacetAutoSelectionActionCreatorPayload,
+} from '../generic/facet-actions';
+import {
   deselectAllFacetValues,
   registerFacet,
   RegisterFacetActionCreatorPayload,
@@ -16,10 +20,6 @@ import {
   updateFreezeCurrentValues,
   UpdateFreezeCurrentValuesActionCreatorPayload,
 } from './facet-set-actions';
-import {
-  updateFacetAutoSelection,
-  UpdateFacetAutoSelectionActionCreatorPayload,
-} from '../generic/facet-actions';
 
 export type {
   RegisterFacetActionCreatorPayload,

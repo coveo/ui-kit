@@ -4,6 +4,11 @@ import {
   facetOptions,
   search,
 } from '../../../../../app/reducers';
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {
+  registerNumericFacet,
+  updateNumericFacetValues,
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {SearchAppState} from '../../../../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
@@ -11,6 +16,9 @@ import {
   MockSearchEngine,
 } from '../../../../../test';
 import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {
   buildCoreNumericFilter,
   NumericFilter,
@@ -18,14 +26,6 @@ import {
   NumericFilterOptions,
 } from './headless-core-numeric-filter';
 import {buildNumericRange} from './numeric-range';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
-import {
-  registerNumericFacet,
-  updateNumericFacetValues,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
 
 describe('numeric filter', () => {
   const facetId = '1';

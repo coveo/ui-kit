@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildBreadcrumbManager,
   BreadcrumbManager as HeadlessBreadcrumbManager,
   BreadcrumbManagerState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class BreadcrumbManager extends Component<{}, BreadcrumbManagerState> {

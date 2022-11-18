@@ -1,7 +1,7 @@
 import {Component, h, Host, Prop, State, VNode} from '@stencil/core';
 import {InitializeBindings} from '../../../utils/initialization-utils';
-import {AnyBindings} from '../interface/bindings';
 import {Button} from '../button';
+import {AnyBindings} from '../interface/bindings';
 
 /**
  * @internal

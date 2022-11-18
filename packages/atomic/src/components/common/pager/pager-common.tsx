@@ -6,6 +6,7 @@ import {Button} from '../button';
 import {Hidden} from '../hidden';
 import {AnyBindings} from '../interface/bindings';
 import {RadioButton} from '../radio-button';
+
 interface PagerProps {
   bindings: AnyBindings;
   searchStatusState: {

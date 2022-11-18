@@ -1,20 +1,20 @@
+import {NumberValue} from '@coveo/bueno';
+import {Action} from 'redux';
+import {search, recentQueries} from '../../app/reducers';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+import {updatePage} from '../../features/pagination/pagination-actions';
+import {updateQuery} from '../../features/query/query-actions';
+import {
+  clearRecentQueries,
+  registerRecentQueries,
+} from '../../features/recent-queries/recent-queries-actions';
+import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
+import {executeSearch} from '../../features/search/search-actions';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {
   buildRecentQueriesList,
   RecentQueriesList,
 } from './headless-recent-queries-list';
-import {search, recentQueries} from '../../app/reducers';
-import {
-  clearRecentQueries,
-  registerRecentQueries,
-} from '../../features/recent-queries/recent-queries-actions';
-import {Action} from 'redux';
-import {updateQuery} from '../../features/query/query-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {logClearRecentQueries} from '../../features/recent-queries/recent-queries-analytics-actions';
-import {NumberValue} from '@coveo/bueno';
-import {updatePage} from '../../features/pagination/pagination-actions';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 
 describe('recent queries list', () => {
   let engine: MockSearchEngine;

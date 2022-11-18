@@ -1,15 +1,16 @@
-import {Component, Prop, Element, State} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {Component, Prop, Element, State} from '@stencil/core';
+import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
+import updateLocale from 'dayjs/plugin/updateLocale';
+import {parseDate} from '../../../../utils/date-utils';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {parseDate} from '../../../../utils/date-utils';
-import dayjs from 'dayjs';
-import calendar from 'dayjs/plugin/calendar';
-import updateLocale from 'dayjs/plugin/updateLocale';
+import {ResultContext} from '../result-template-decorators';
+
 dayjs.extend(calendar);
 dayjs.extend(updateLocale);
 

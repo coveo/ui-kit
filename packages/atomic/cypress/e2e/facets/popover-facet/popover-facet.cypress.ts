@@ -1,13 +1,13 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {addPopover, label} from './popover-facet-actions';
+import {hierarchicalField} from '../category-facet/category-facet-actions';
+import {colorFacetField} from '../color-facet/color-facet-actions';
 import {field as facetField} from '../facet/facet-actions';
 import {numericFacetField} from '../numeric-facet/numeric-facet-actions';
-import {PopoverSelectors} from './popover-facet-selectors';
-import * as PopoverAssertions from './popover-facet-assertions';
-import {colorFacetField} from '../color-facet/color-facet-actions';
-import {hierarchicalField} from '../category-facet/category-facet-actions';
 import {ratingFacetField} from '../rating-facet/rating-facet-actions';
 import {createTimeframeElements} from '../timeframe-facet/timeframe-facet-action';
+import {addPopover, label} from './popover-facet-actions';
+import * as PopoverAssertions from './popover-facet-assertions';
+import {PopoverSelectors} from './popover-facet-selectors';
 
 describe('Popover Facet Test Suites', () => {
   function testSuites() {

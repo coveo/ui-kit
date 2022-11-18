@@ -1,9 +1,17 @@
+import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client';
-
+import {
+  ProductRecommendation,
+  ProductRecommendationDefaultFields,
+} from '../../api/search/search/product-recommendation';
+import {Result} from '../../api/search/search/result';
+import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   ConfigurationSection,
   ProductRecommendationsSection,
@@ -13,17 +21,8 @@ import {
   requiredNonEmptyString,
   nonEmptyString,
 } from '../../utils/validate-payload';
-import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
-import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
-import {
-  ProductRecommendation,
-  ProductRecommendationDefaultFields,
-} from '../../api/search/search/product-recommendation';
-import {Result} from '../../api/search/search/result';
-import {logProductRecommendations} from './product-recommendations-analytics.actions';
 import {SearchAction} from '../analytics/analytics-utils';
-import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
+import {logProductRecommendations} from './product-recommendations-analytics.actions';
 
 interface ResultWithChildren extends Result {
   childResults: ResultWithChildren[];

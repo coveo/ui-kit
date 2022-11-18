@@ -1,19 +1,19 @@
-import {redirectionReducer} from './redirection-slice';
-import {checkForRedirection} from './redirection-actions';
+import pino from 'pino';
 import {Trigger} from '../../api/search/trigger';
-import {logRedirection} from './redirection-analytics-actions';
-import {
-  getRedirectionInitialState,
-  RedirectionState,
-} from './redirection-state';
 import {
   buildMockSearchAppEngine,
   createMockState,
   MockSearchEngine,
 } from '../../test';
-import pino from 'pino';
-import {validatePayloadAndThrow} from '../../utils/validate-payload';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
+import {validatePayloadAndThrow} from '../../utils/validate-payload';
+import {checkForRedirection} from './redirection-actions';
+import {logRedirection} from './redirection-analytics-actions';
+import {redirectionReducer} from './redirection-slice';
+import {
+  getRedirectionInitialState,
+  RedirectionState,
+} from './redirection-state';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {

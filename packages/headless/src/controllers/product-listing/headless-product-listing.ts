@@ -1,16 +1,16 @@
+import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
+import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
+import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
+import {configuration, productListing} from '../../app/reducers';
 import {
   fetchProductListing,
   setAdditionalFields,
   setProductListingUrl,
 } from '../../features/product-listing/product-listing-actions';
-import {buildController, Controller} from '../controller/headless-controller';
-import {ArrayValue, Schema, StringValue} from '@coveo/bueno';
-import {configuration, productListing} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {ProductListingEngine} from '../../app/product-listing-engine/product-listing-engine';
-import {validateOptions} from '../../utils/validate-payload';
 import {ProductRecommendation} from '../../product-listing.index';
-import {ProductListingAPIErrorStatusResponse} from '../../api/commerce/product-listings/product-listing-api-client';
+import {loadReducerError} from '../../utils/errors';
+import {validateOptions} from '../../utils/validate-payload';
+import {buildController, Controller} from '../controller/headless-controller';
 
 const optionsSchema = new Schema({
   url: new StringValue({

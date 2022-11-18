@@ -1,22 +1,22 @@
+import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {ProductListingAppState} from '../../../state/product-listing-app-state';
+import {
+  buildMockProductListingEngine,
+  MockProductListingEngine,
+} from '../../../test';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
+import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
 import {
   buildCategoryFacet,
   CategoryFacet,
   CategoryFacetOptions,
 } from './headless-product-listing-category-facet';
-import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
-import {
-  buildMockProductListingEngine,
-  MockProductListingEngine,
-} from '../../../test';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {ProductListingAppState} from '../../../state/product-listing-app-state';
-import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 
 describe('category facet', () => {
   const facetId = '1';

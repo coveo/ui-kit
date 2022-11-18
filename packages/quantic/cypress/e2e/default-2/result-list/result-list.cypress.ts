@@ -1,3 +1,5 @@
+import {getNextResults} from '../../../page-objects/actions/action-get-next-results';
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   extractResults,
@@ -5,15 +7,13 @@ import {
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
-import {ResultListExpectations as Expect} from './result-list-expectations';
-import {getNextResults} from '../../../page-objects/actions/action-get-next-results';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
-import {scope} from '../../../reporters/detailed-collector';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {scope} from '../../../reporters/detailed-collector';
+import {ResultListExpectations as Expect} from './result-list-expectations';
 
 interface ResultListOptions {
   useCase: string;

@@ -1,33 +1,33 @@
+import {QuerySetActionCreators, Suggestion} from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
-import {randomID} from '../../../utils/utils';
-import {
-  BindStateToController,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
-import {SearchInput} from '../../common/search-box/search-input';
-import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {
   buildInsightSearchBox,
   InsightSearchBox,
   InsightSearchBoxState,
   loadInsightQuerySetActions,
 } from '..';
-import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
+import {isMacOS} from '../../../utils/device-utils';
+import {
+  BindStateToController,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {encodeForDomAttribute} from '../../../utils/string-utils';
+import {randomID} from '../../../utils/utils';
+import {SearchBoxCommon} from '../../common/search-box/search-box-common';
+import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import {SearchInput} from '../../common/search-box/search-input';
+import {
+  ButtonSearchSuggestion,
+  queryDataAttribute,
+} from '../../search/atomic-search-box/search-suggestion';
 import {
   elementHasNoQuery,
   elementHasQuery,
   SearchBoxSuggestionElement,
 } from '../../search/search-box-suggestions/suggestions-common';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {QuerySetActionCreators, Suggestion} from '@coveo/headless';
-import {
-  ButtonSearchSuggestion,
-  queryDataAttribute,
-} from '../../search/atomic-search-box/search-suggestion';
-import {isMacOS} from '../../../utils/device-utils';
-import {encodeForDomAttribute} from '../../../utils/string-utils';
-import {SearchBoxCommon} from '../../common/search-box/search-box-common';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

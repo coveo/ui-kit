@@ -1,12 +1,12 @@
-import {Component, h, Prop, Element} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
-import {filterProtocol} from '../../../../utils/xss-utils';
+import {Component, h, Prop, Element} from '@stencil/core';
 import {
   InitializeBindings,
   InitializableComponent,
 } from '../../../../utils/initialization-utils';
+import {filterProtocol} from '../../../../utils/xss-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-image` component renders an image from a result field.

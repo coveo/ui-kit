@@ -1,3 +1,4 @@
+import {NumberValue} from '@coveo/bueno';
 import {
   buildRecommendationList,
   RecommendationList,
@@ -14,32 +15,31 @@ import {
   Fragment,
   Watch,
 } from '@stencil/core';
+import {buildRecsInteractiveResult, RecsResult} from '..';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 import {randomID} from '../../../utils/utils';
-import {ResultListCommon} from '../../common/result-list/result-list-common';
-import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
+import {Carousel} from '../../common/carousel';
+import {Heading} from '../../common/heading';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayBasicLayout,
 } from '../../common/layout/display-options';
+import {ResultListCommon} from '../../common/result-list/result-list-common';
 import {
   ResultListCommonState,
   ResultRenderingFunction,
 } from '../../common/result-list/result-list-common-interface';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
-import {Heading} from '../../common/heading';
-import {buildRecsInteractiveResult, RecsResult} from '..';
-import {NumberValue} from '@coveo/bueno';
-import {Carousel} from '../../common/carousel';
+import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
+import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 
 /**
  * The `atomic-recs-list` component displays recommendations by applying one or more result templates.

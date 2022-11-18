@@ -1,10 +1,11 @@
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {Result} from '../../api/search/search/result';
 import {
   validatePayload,
   requiredNonEmptyString,
   nonEmptyString,
 } from '../../utils/validate-payload';
-import {Result} from '../../api/search/search/result';
+import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 import {
   AnalyticsType,
   documentIdentifier,
@@ -12,7 +13,6 @@ import {
   partialDocumentInformation,
   validateResultPayload,
 } from './analytics-utils';
-import {OmniboxSuggestionMetadata} from '../query-suggest/query-suggest-analytics-actions';
 
 export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */

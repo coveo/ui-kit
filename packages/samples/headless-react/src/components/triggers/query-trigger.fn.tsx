@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {QueryTrigger as HeadlessQueryTrigger} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface HeadlessQueryTriggerProps {
   controller: HeadlessQueryTrigger;

@@ -1,23 +1,23 @@
 import {ArrayValue, isArray, Schema} from '@coveo/bueno';
-import {
-  registerSortCriterion,
-  updateSortCriterion,
-} from '../../../features/sort-criteria/sort-criteria-actions';
+import {CoreEngine} from '../../../app/engine';
+import {configuration, sortCriteria} from '../../../app/reducers';
+import {updatePage} from '../../../features/pagination/pagination-actions';
 import {
   buildCriterionExpression,
   SortCriterion,
   criterionDefinition,
 } from '../../../features/sort-criteria/criteria';
 import {
+  registerSortCriterion,
+  updateSortCriterion,
+} from '../../../features/sort-criteria/sort-criteria-actions';
+import {ConfigurationSection, SortSection} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
+import {validateInitialState} from '../../../utils/validate-payload';
+import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {updatePage} from '../../../features/pagination/pagination-actions';
-import {ConfigurationSection, SortSection} from '../../../state/state-sections';
-import {configuration, sortCriteria} from '../../../app/reducers';
-import {loadReducerError} from '../../../utils/errors';
-import {validateInitialState} from '../../../utils/validate-payload';
-import {CoreEngine} from '../../../app/engine';
 
 export interface SortProps {
   /**

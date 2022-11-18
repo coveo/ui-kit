@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {RelevanceInspector as HeadlessRelevanceInspector} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface RelevanceInspectorProps {
   controller: HeadlessRelevanceInspector;

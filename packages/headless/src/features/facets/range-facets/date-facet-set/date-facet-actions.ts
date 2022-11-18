@@ -1,11 +1,3 @@
-import {createAction} from '@reduxjs/toolkit';
-import {DateFacetValue} from './interfaces/response';
-import {
-  validatePayload,
-  requiredNonEmptyString,
-  validatePayloadAndThrow,
-  serializeSchemaValidationError,
-} from '../../../../utils/validate-payload';
 import {
   NumberValue,
   BooleanValue,
@@ -13,21 +5,29 @@ import {
   Value,
   ArrayValue,
 } from '@coveo/bueno';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {
-  RangeFacetSortCriterion,
-  RangeFacetRangeAlgorithm,
-} from '../generic/interfaces/request';
-import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {DateRangeRequest} from './interfaces/request';
-import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
-import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
+import {createAction} from '@reduxjs/toolkit';
+import {parseDate} from '../../../../api/search/date/date-format';
 import {
   formatRelativeDateForSearchApi,
   isRelativeDateFormat,
 } from '../../../../api/search/date/relative-date';
 import {buildDateRange} from '../../../../controllers/core/facets/range-facet/date-facet/date-range';
-import {parseDate} from '../../../../api/search/date/date-format';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+  validatePayloadAndThrow,
+  serializeSchemaValidationError,
+} from '../../../../utils/validate-payload';
+import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
+import {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from '../generic/interfaces/request';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
+import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {DateRangeRequest} from './interfaces/request';
+import {DateFacetValue} from './interfaces/response';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**

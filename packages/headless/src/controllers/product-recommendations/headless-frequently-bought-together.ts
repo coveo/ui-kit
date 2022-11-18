@@ -1,10 +1,10 @@
 import {Schema, SchemaValues, StringValue} from '@coveo/bueno';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
+import {validateOptions} from '../../utils/validate-payload';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
-import {validateOptions} from '../../utils/validate-payload';
-import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 
 const optionsSchema = new Schema({
   sku: new StringValue({required: true, emptyAllowed: false}),

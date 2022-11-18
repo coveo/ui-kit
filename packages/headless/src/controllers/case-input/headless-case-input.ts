@@ -1,15 +1,5 @@
-import {updateCaseInput} from '../../features/case-input/case-input-actions';
-import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
-import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions';
+import {Schema} from '@coveo/bueno';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {
-  CaseAssistConfigurationSection,
-  CaseFieldSection,
-  CaseInputSection,
-  ConfigurationSection,
-  DocumentSuggestionSection,
-} from '../../state/state-sections';
-import {buildController, Controller} from '../controller/headless-controller';
 import {
   caseAssistConfiguration,
   caseField,
@@ -17,13 +7,23 @@ import {
   configuration,
   documentSuggestion,
 } from '../../app/reducers';
-import {Schema} from '@coveo/bueno';
+import {logUpdateCaseField} from '../../features/case-assist/case-assist-analytics-actions';
+import {fetchCaseClassifications} from '../../features/case-field/case-field-actions';
+import {updateCaseInput} from '../../features/case-input/case-input-actions';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {
+  CaseAssistConfigurationSection,
+  CaseFieldSection,
+  CaseInputSection,
+  ConfigurationSection,
+  DocumentSuggestionSection,
+} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
   requiredNonEmptyString,
   validateOptions,
 } from '../../utils/validate-payload';
-import {loadReducerError} from '../../utils/errors';
-import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {buildController, Controller} from '../controller/headless-controller';
 
 export interface CaseInputOptions {
   field: string;

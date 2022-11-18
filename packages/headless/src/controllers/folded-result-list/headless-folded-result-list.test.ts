@@ -1,17 +1,17 @@
+import {Result} from '../../api/search/search/result';
+import {search, folding, configuration, query} from '../../app/reducers';
+import {Raw} from '../../case-assist.index';
+import {buildMockResult} from '../../test';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {
   FoldedResultList,
   FoldedResultListOptions,
   buildFoldedResultList,
   FoldedCollection,
 } from './headless-folded-result-list';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
-import {Result} from '../../api/search/search/result';
-import {search, folding, configuration, query} from '../../app/reducers';
-import {buildMockResult} from '../../test';
-import {Raw} from '../../case-assist.index';
 
 describe('FoldedResultList', () => {
   let engine: MockSearchEngine;

@@ -1,12 +1,12 @@
-import {buildMockInsightState} from '../../test/mock-insight-state';
 import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../test/mock-engine';
+import {buildMockInsightState} from '../../test/mock-insight-state';
+import {buildMockPagination} from '../../test/mock-pagination';
 import {
   logPageNext,
   logPageNumber,
   logPagePrevious,
 } from './pagination-insight-analytics-actions';
-import {buildMockPagination} from '../../test/mock-pagination';
 
 const mockLogPagerNumber = jest.fn();
 const mockLogPagerNext = jest.fn();

@@ -1,20 +1,20 @@
+import {configuration, pagination} from '../../../app/reducers';
+import {
+  registerNumberOfResults,
+  updateNumberOfResults,
+} from '../../../features/pagination/pagination-actions';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {
+  MockProductListingEngine,
+  buildMockProductListingEngine,
+} from '../../../test/mock-engine';
+import {buildMockPagination} from '../../../test/mock-pagination';
+import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 import {
   ResultsPerPage,
   ResultsPerPageProps,
   buildResultsPerPage,
 } from './headless-product-listing-results-per-page';
-import {
-  MockProductListingEngine,
-  buildMockProductListingEngine,
-} from '../../../test/mock-engine';
-import {
-  registerNumberOfResults,
-  updateNumberOfResults,
-} from '../../../features/pagination/pagination-actions';
-import {buildMockPagination} from '../../../test/mock-pagination';
-import {configuration, pagination} from '../../../app/reducers';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {buildMockProductListingState} from '../../../test/mock-product-listing-state';
 
 describe('ResultsPerPage', () => {
   let engine: MockProductListingEngine;

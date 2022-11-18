@@ -1,17 +1,10 @@
-import {Result} from '../../api/search/search/result';
-import {
-  PartialDocumentInformation,
-  DocumentIdentifier,
-} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../state/search-app-state';
-import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {
   isNullOrUndefined,
   RecordValue,
   Schema,
   StringValue,
 } from '@coveo/bueno';
-import {Raw} from '../../api/search/search/raw';
+import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
@@ -19,32 +12,39 @@ import {
   CoveoInsightClient,
 } from 'coveo.analytics';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
-import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
-  ConfigurationSection,
-  PipelineSection,
-} from '../../state/state-sections';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
-import {ResultWithFolding} from '../folding/folding-slice';
-import {getAllIncludedResultsFrom} from '../folding/folding-utils';
-import {CaseAssistAppState} from '../../state/case-assist-app-state';
-import {
-  configureAnalytics,
-  SearchAnalyticsProvider,
-  StateNeededBySearchAnalyticsProvider,
-} from '../../api/analytics/search-analytics';
+  PartialDocumentInformation,
+  DocumentIdentifier,
+} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {
   configureCaseAssistAnalytics,
   StateNeededByCaseAssistAnalytics,
 } from '../../api/analytics/case-assist-analytics';
-import {InsightAppState} from '../../state/insight-app-state';
 import {
   configureInsightAnalytics,
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
+import {
+  configureAnalytics,
+  SearchAnalyticsProvider,
+  StateNeededBySearchAnalyticsProvider,
+} from '../../api/analytics/search-analytics';
+import {Raw} from '../../api/search/search/raw';
+import {Result} from '../../api/search/search/result';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {CaseAssistAppState} from '../../state/case-assist-app-state';
+import {InsightAppState} from '../../state/insight-app-state';
+import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {SearchAppState} from '../../state/search-app-state';
+import {
+  ConfigurationSection,
+  PipelineSection,
+} from '../../state/state-sections';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {ResultWithFolding} from '../folding/folding-slice';
+import {getAllIncludedResultsFrom} from '../folding/folding-utils';
+import {getPipelineInitialState} from '../pipeline/pipeline-state';
 
 export enum AnalyticsType {
   Search,

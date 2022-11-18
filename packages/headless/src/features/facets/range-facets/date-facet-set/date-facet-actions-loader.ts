@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {dateFacetSet} from '../../../../app/reducers';
 import {CoreEngine} from '../../../../app/engine';
+import {dateFacetSet} from '../../../../app/reducers';
 import {
   deselectAllDateFacetValues,
   registerDateFacet,

@@ -1,9 +1,9 @@
 import type {SearchEngine} from '@coveo/headless';
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
-import {i18n} from 'i18next';
-import {AtomicCommonStore, AtomicCommonStoreData} from './store';
 import {HTMLStencilElement} from '@stencil/core/internal';
+import {i18n} from 'i18next';
 import {InsightEngine} from '../../insight';
+import {AtomicCommonStore, AtomicCommonStoreData} from './store';
 
 export interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
   state: StoreData;

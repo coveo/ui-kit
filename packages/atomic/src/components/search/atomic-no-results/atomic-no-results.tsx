@@ -10,14 +10,14 @@ import {
   buildQuerySummary,
 } from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {NoResultsCommon} from '../../common/no-results/no-results-common';
 import {Button} from '../../common/button';
+import {NoResultsCommon} from '../../common/no-results/no-results-common';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.

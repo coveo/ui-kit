@@ -1,4 +1,25 @@
-import {categoryFacetSetReducer} from './category-facet-set-slice';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
+import {buildMockSearch} from '../../../test/mock-search';
+import {logSearchEvent} from '../../analytics/analytics-actions';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {change} from '../../history/history-actions';
+import {getHistoryInitialState} from '../../history/history-state';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
+import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
+import {FacetResponse} from '../facet-set/interfaces/response';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
+import * as FacetReducers from '../generic/facet-reducer-helpers';
+import * as CategoryFacetReducers from './category-facet-reducer-helpers';
+import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
@@ -7,33 +28,12 @@ import {
   updateCategoryFacetSortCriterion,
   RegisterCategoryFacetActionCreatorPayload,
 } from './category-facet-set-actions';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {change} from '../../history/history-actions';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
-import * as FacetReducers from '../generic/facet-reducer-helpers';
-import * as CategoryFacetReducers from './category-facet-reducer-helpers';
-import {CategoryFacetSortCriterion} from './interfaces/request';
-import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
-import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
+import {categoryFacetSetReducer} from './category-facet-set-slice';
 import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {getHistoryInitialState} from '../../history/history-state';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
-import {executeSearch, fetchFacetValues} from '../../search/search-actions';
-import {FacetResponse} from '../facet-set/interfaces/response';
-import {buildMockSearch} from '../../../test/mock-search';
-import {logSearchEvent} from '../../analytics/analytics-actions';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {CategoryFacetSortCriterion} from './interfaces/request';
 
 describe('category facet slice', () => {
   const facetId = '1';

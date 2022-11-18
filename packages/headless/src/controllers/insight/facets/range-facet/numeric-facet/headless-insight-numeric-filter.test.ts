@@ -1,20 +1,20 @@
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {updateNumericFacetValues} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+import {InsightAppState} from '../../../../../state/insight-app-state';
+import {
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../../../test/mock-engine';
+import {buildMockInsightState} from '../../../../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
 import {
   buildNumericFilter,
   NumericFilter,
   NumericFilterInitialState,
   NumericFilterOptions,
 } from './headless-insight-numeric-filter';
-import {updateNumericFacetValues} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {
-  buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../../../test/mock-engine';
-import {InsightAppState} from '../../../../../state/insight-app-state';
-import {buildMockInsightState} from '../../../../../test/mock-insight-state';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 
 describe('insight numeric filter', () => {
   const facetId = '1';

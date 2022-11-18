@@ -1,6 +1,5 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
-
-import {FacetExpectations as Expect} from './facet-expectations';
 import {
   extractFacetValues,
   getQueryAlias,
@@ -12,14 +11,14 @@ import {
   mockNoMoreFacetValues,
   routeMatchers,
 } from '../../../page-objects/search';
-import {FacetActions as Actions} from './facet-actions';
-import {scope} from '../../../reporters/detailed-collector';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {scope} from '../../../reporters/detailed-collector';
+import {FacetActions as Actions} from './facet-actions';
+import {FacetExpectations as Expect} from './facet-expectations';
 
 interface FacetOptions {
   field: string;

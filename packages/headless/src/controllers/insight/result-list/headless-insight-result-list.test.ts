@@ -1,10 +1,10 @@
-import {buildResultList} from './headless-insight-result-list';
+import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
+import {buildMockResult} from '../../../test';
 import {
   buildMockInsightEngine,
   MockInsightEngine,
 } from '../../../test/mock-engine';
-import {buildMockResult} from '../../../test';
-import {fetchMoreResults} from '../../../features/insight-search/insight-search-actions';
+import {buildResultList} from './headless-insight-result-list';
 
 describe('InsightResultList', () => {
   let engine: MockInsightEngine;

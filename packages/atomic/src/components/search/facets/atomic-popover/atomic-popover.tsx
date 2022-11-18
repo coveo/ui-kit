@@ -4,7 +4,13 @@ import {
   SearchStatusState,
   FacetState,
 } from '@coveo/headless';
+import {
+  createPopperLite as createPopper,
+  preventOverflow,
+  Instance as PopperInstance,
+} from '@popperjs/core';
 import {Component, h, Listen, State, Element, Host} from '@stencil/core';
+import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {
   BindStateToController,
   InitializableComponent,
@@ -13,13 +19,7 @@ import {
 import {Button} from '../../../common/button';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {PopoverChildFacet, popoverClass} from './popover-type';
-import {
-  createPopperLite as createPopper,
-  preventOverflow,
-  Instance as PopperInstance,
-} from '@popperjs/core';
 
 /**
  * The `atomic-popover` component displays any facet as a popover menu.

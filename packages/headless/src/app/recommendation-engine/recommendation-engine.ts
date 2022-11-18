@@ -1,32 +1,32 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import {Logger} from 'pino';
+import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {SearchAPIClient} from '../../api/search/search-api-client';
+import {
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+} from '../../api/search/search-api-client-middleware';
+import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {setPipeline} from '../../features/pipeline/pipeline-actions';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions';
+import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {
   buildEngine,
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
-import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {buildLogger} from '../logger';
 import {debug, pipeline, recommendation, searchHub} from '../reducers';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   RecommendationEngineConfiguration,
   recommendationEngineConfigurationSchema,
   getSampleRecommendationEngineConfiguration,
 } from './recommendation-engine-configuration';
-import {buildLogger} from '../logger';
-import {Logger} from 'pino';
-import {buildThunkExtraArguments} from '../thunk-extra-arguments';
-import {
-  NoopPostprocessFacetSearchResponseMiddleware,
-  NoopPostprocessQuerySuggestResponseMiddleware,
-  NoopPostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
-import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {SearchAPIClient} from '../../api/search/search-api-client';
-import {setPipeline} from '../../features/pipeline/pipeline-actions';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {isNullOrUndefined} from '@coveo/bueno';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 
 export type {RecommendationEngineConfiguration};
 export {getSampleRecommendationEngineConfiguration};

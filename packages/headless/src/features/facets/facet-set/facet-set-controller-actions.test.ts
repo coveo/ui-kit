@@ -1,6 +1,6 @@
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../../test';
-import {executeToggleFacetSelect} from './facet-set-controller-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {executeToggleFacetSelect} from './facet-set-controller-actions';
 
 describe('facet set controller actions', () => {
   let engine: MockSearchEngine;

@@ -1,3 +1,4 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   captureBaselineNumberOfRequests,
@@ -7,17 +8,15 @@ import {
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
-import {scope} from '../../../reporters/detailed-collector';
-
-import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
-import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
-import {SearchExpectations} from '../../search-expectations';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {scope} from '../../../reporters/detailed-collector';
+import {SearchExpectations} from '../../search-expectations';
+import {TimeframeFacetActions as Actions} from './timeframe-facet-actions';
+import {TimeframeFacetExpectations as Expect} from './timeframe-facet-expectations';
 
 interface TimeframeFacetOptions {
   field: string;

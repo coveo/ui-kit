@@ -1,4 +1,3 @@
-import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -12,43 +11,44 @@ import {
   buildFacetConditionsManager,
   FacetConditionsManager,
 } from '@coveo/headless';
+import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
-import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
-import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
-import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
-import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
-import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
-import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
-import {
-  shouldUpdateFacetSearchComponent,
-  shouldDisplaySearchResults,
-} from '../../../common/facets/facet-search/facet-search-utils';
-import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import {
-  getFieldCaptions,
-  getFieldValueCaption,
-} from '../../../../utils/field-utils';
-import {Hidden} from '../../../common/hidden';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
 import {MapProp} from '../../../../utils/props-utils';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   BaseFacet,
   parseDependsOn,
   validateDependsOn,
 } from '../../../common/facets/facet-common';
-import {initializePopover} from '../atomic-popover/popover-type';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
+import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
+import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
+import {
+  shouldUpdateFacetSearchComponent,
+  shouldDisplaySearchResults,
+} from '../../../common/facets/facet-search/facet-search-utils';
+import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {Hidden} from '../../../common/hidden';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {initializePopover} from '../atomic-popover/popover-type';
+import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
