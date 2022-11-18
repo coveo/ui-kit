@@ -2,6 +2,7 @@ import {AnalyticsClient} from '../client/analytics';
 import {uuidv4} from '../client/crypto';
 import {getFormattedLocation} from '../client/location';
 import {UAPluginOptions} from '../coveoua/plugins';
+import {hasDocument} from '../detector';
 
 type PluginWithId = {
     readonly Id: string;
@@ -33,7 +34,7 @@ export abstract class BasePlugin {
         this.pageViewId = uuidGenerator();
         this.nextPageViewId = this.pageViewId;
         this.currentLocation = getFormattedLocation(window.location);
-        this.lastReferrer = document.referrer;
+        this.lastReferrer = hasDocument() ? document.referrer : '';
 
         this.addHooks();
     }
@@ -65,8 +66,8 @@ export abstract class BasePlugin {
 
     public getDefaultContextInformation(eventType: string) {
         const documentContext = {
-            title: document.title,
-            encoding: document.characterSet,
+            title: hasDocument() ? document.title : '',
+            encoding: hasDocument() ? document.characterSet :'UTF-8',
         };
         const screenContext = {
             screenResolution: `${screen.width}x${screen.height}`,
