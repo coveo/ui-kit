@@ -1,3 +1,17 @@
+import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
+import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
+import {
+  logFacetClearAll,
+  logFacetDeselect,
+  logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../../../../features/insight-search/insight-search-actions';
 import {
   buildCoreCategoryFacet,
   CategoryFacet,
@@ -12,20 +26,6 @@ import {
   CoreCategoryFacet,
   CoreCategoryFacetState,
 } from '../../../core/facets/category-facet/headless-core-category-facet';
-import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
-import {
-  logFacetClearAll,
-  logFacetDeselect,
-  logFacetSelect,
-  logFacetShowLess,
-  logFacetShowMore,
-  logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../../features/insight-search/insight-search-actions';
-import {InsightEngine} from '../../../../app/insight-engine/insight-engine';
 
 export type {
   CategoryFacetValue,

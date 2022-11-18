@@ -1,11 +1,11 @@
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+import {FacetRequest} from '../facet-set/interfaces/request';
 import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
 } from './facet-reducer-helpers';
-import {FacetRequest} from '../facet-set/interfaces/request';
-import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 
 describe('generic facet reducers', () => {
   describe('#handleFacetSortCriterionUpdate', () => {

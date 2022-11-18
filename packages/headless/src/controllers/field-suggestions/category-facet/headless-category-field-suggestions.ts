@@ -1,8 +1,3 @@
-import {
-  buildController,
-  Subscribable,
-} from '../../controller/headless-controller';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {CoreEngine} from '../../..';
 import {
   categoryFacetSet,
@@ -10,6 +5,7 @@ import {
   categoryFacetSearchSet,
   search,
 } from '../../../app/reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
 import {registerCategoryFacet} from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
@@ -22,8 +18,12 @@ import {
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
 import {omit} from '../../../utils/utils';
-import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search';
+import {
+  buildController,
+  Subscribable,
+} from '../../controller/headless-controller';
 import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
+import {buildCategoryFacetSearch} from '../../facets/category-facet/headless-category-facet-search';
 
 export interface CategoryFieldSuggestionsValue {
   /**

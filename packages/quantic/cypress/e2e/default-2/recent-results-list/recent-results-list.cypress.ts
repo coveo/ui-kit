@@ -1,15 +1,15 @@
-import {configure} from '../../../page-objects/configurator';
-import {
-  interceptSearch,
-  interceptSearchIndefinitely,
-} from '../../../page-objects/search';
-import {RecentResultsListExpectations as Expect} from './recent-results-list-expectations';
-import {scope} from '../../../reporters/detailed-collector';
 import {selectResults} from '../../../page-objects/actions/action-select-results';
 import {
   clearLocalStorage,
   setRecentResultsListLocalStorage,
 } from '../../../page-objects/actions/action-set-local-storage';
+import {configure} from '../../../page-objects/configurator';
+import {
+  interceptSearch,
+  interceptSearchIndefinitely,
+} from '../../../page-objects/search';
+import {scope} from '../../../reporters/detailed-collector';
+import {RecentResultsListExpectations as Expect} from './recent-results-list-expectations';
 
 interface RecentResultsListOptions {
   maxLength: number;

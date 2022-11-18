@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface SmartSnippetQuestionsListProps {
   controller: HeadlessSmartSnippetQuestionsList;

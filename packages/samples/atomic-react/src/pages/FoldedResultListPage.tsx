@@ -1,5 +1,3 @@
-import React, {FunctionComponent} from 'react';
-
 import {
   AtomicResultBadge,
   AtomicResultFieldsList,
@@ -18,6 +16,7 @@ import {
   AtomicResultSectionChildren,
   AtomicFoldedResultList,
 } from '@coveo/atomic-react';
+import React, {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const FoldedResultListPage: FunctionComponent = () => {

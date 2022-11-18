@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {QuerySummary as HeadlessQuerySummary} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface QuerySummaryProps {
   controller: HeadlessQuerySummary;

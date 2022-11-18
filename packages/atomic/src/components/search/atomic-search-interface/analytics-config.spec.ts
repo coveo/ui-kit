@@ -3,8 +3,8 @@ import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
-import {createAtomicStore} from './store';
 import {getAnalyticsConfig} from './analytics-config';
+import {createAtomicStore} from './store';
 
 describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;

@@ -1,11 +1,11 @@
 import {TestFixture} from '../fixtures/test-fixture';
 import {addSearchBox} from './search-box/search-box-actions';
-import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   assertHasText,
   assertLogOmniboxFromLink,
   assertLogSearchFromLink,
 } from './search-box/search-box-assertions';
+import {SearchBoxSelectors} from './search-box/search-box-selectors';
 
 describe('Standalone Search Box Test Suites', () => {
   function setupStandaloneSearchBox(url = '/test.html') {

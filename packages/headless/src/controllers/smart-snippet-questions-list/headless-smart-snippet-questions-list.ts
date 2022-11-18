@@ -1,24 +1,24 @@
-import {buildController, Controller} from '../controller/headless-controller';
-import {search, questionAnswering} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
-import {
-  logCollapseSmartSnippetSuggestion,
-  logExpandSmartSnippetSuggestion,
-} from '../../features/question-answering/question-answering-analytics-actions';
-import {QuestionAnsweringSection} from '../../state/state-sections';
+import {Result} from '../../api/search/search/result';
+import {search, questionAnswering} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   collapseSmartSnippetRelatedQuestion,
   expandSmartSnippetRelatedQuestion,
 } from '../../features/question-answering/question-answering-actions';
-import {Result} from '../../api/search/search/result';
+import {
+  logCollapseSmartSnippetSuggestion,
+  logExpandSmartSnippetSuggestion,
+} from '../../features/question-answering/question-answering-analytics-actions';
 import {getResultProperty} from '../../features/result-templates/result-templates-helpers';
-import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
+import {QuestionAnsweringSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
+import {buildController, Controller} from '../controller/headless-controller';
 import {
   buildSmartSnippetInteractiveInlineLinks,
   InlineLink,
 } from '../smart-snippet/headless-smart-snippet-interactive-inline-links';
+import {buildSmartSnippetInteractiveQuestions} from './headless-smart-snippet-interactive-questions';
 
 export type {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 

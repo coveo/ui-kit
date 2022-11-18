@@ -1,5 +1,5 @@
-import {TabBarSelector, TabBarSelectors} from './tab-bar-selectors';
 import {should} from '../../common-selectors';
+import {TabBarSelector, TabBarSelectors} from './tab-bar-selectors';
 
 function tabBarExpectations(selector: TabBarSelector) {
   return {

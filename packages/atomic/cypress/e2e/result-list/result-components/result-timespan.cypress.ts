@@ -3,12 +3,12 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import * as CommonAssertions from '../../common-assertions';
 import {addResultList, buildTemplateWithSections} from '../result-list-actions';
 import {
   resultTimespanComponent,
   ResultTimespanSelectors,
 } from './result-timespan-selectors';
-import * as CommonAssertions from '../../common-assertions';
 
 const addResultTimespanInResultList = (props: TagProps) =>
   addResultList(

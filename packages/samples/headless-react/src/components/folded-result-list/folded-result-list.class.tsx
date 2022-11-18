@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildFoldedResultList,
   FoldedResult,
@@ -6,8 +5,9 @@ import {
   FoldedResultListState,
   Unsubscribe,
 } from '@coveo/headless';
-import {ResultLink} from '../result-list/result-link';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
+import {ResultLink} from '../result-list/result-link';
 
 export class FoldedResultList extends Component<{}, FoldedResultListState> {
   static contextType = AppContext;

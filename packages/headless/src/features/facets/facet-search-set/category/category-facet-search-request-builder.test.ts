@@ -1,11 +1,11 @@
-import {createMockState} from '../../../../test/mock-state';
-import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
-import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {buildCategoryFacetSearchRequest} from './category-facet-search-request-builder';
-import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
+import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
+import {createMockState} from '../../../../test/mock-state';
 import {buildSearchRequest} from '../../../search/search-request';
+import {buildCategoryFacetSearchRequest} from './category-facet-search-request-builder';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   const id = '1';

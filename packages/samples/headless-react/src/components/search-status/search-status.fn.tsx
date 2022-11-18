@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {SearchStatus as HeadlessSearchStatus} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface SearchStatusProps {
   controller: HeadlessSearchStatus;

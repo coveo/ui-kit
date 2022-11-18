@@ -3,12 +3,12 @@ import {
   TestFixture,
 } from '../../../fixtures/test-fixture';
 import * as CommonAssertions from '../../common-assertions';
+import * as IconAssertions from '../../icon-assertions';
 import {
   addFieldValueInResponse,
   addResultList,
   buildTemplateWithSections,
 } from '../result-list-actions';
-import * as IconAssertions from '../../icon-assertions';
 import {
   resultIconComponent,
   ResultIconSelectors,

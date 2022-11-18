@@ -1,20 +1,20 @@
-import {
-  ResultsPerPage,
-  ResultsPerPageProps,
-  buildResultsPerPage,
-} from './headless-results-per-page';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../test/mock-engine';
+import {configuration, pagination} from '../../app/reducers';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
 } from '../../features/pagination/pagination-actions';
 import {fetchPage} from '../../features/search/search-actions';
-import {createMockState} from '../../test/mock-state';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../test/mock-engine';
 import {buildMockPagination} from '../../test/mock-pagination';
-import {configuration, pagination} from '../../app/reducers';
+import {createMockState} from '../../test/mock-state';
+import {
+  ResultsPerPage,
+  ResultsPerPageProps,
+  buildResultsPerPage,
+} from './headless-results-per-page';
 
 describe('ResultsPerPage', () => {
   let engine: MockSearchEngine;

@@ -1,4 +1,6 @@
 import {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
+import {initializeBindings as genericInitializeBindings} from './utils/initialization-utils';
+
 export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 
 export {Components, JSX} from './components';
@@ -7,7 +9,6 @@ export type {i18n} from 'i18next';
 export {bindLogDocumentOpenOnResult} from './utils/result-utils';
 
 export {MissingInterfaceParentError} from './utils/initialization-utils';
-import {initializeBindings as genericInitializeBindings} from './utils/initialization-utils';
 
 export {PopoverChildFacet} from './components/search/facets/atomic-popover/popover-type';
 

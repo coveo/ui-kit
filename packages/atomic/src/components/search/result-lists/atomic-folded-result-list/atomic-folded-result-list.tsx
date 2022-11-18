@@ -1,13 +1,4 @@
 import {
-  Component,
-  Element,
-  State,
-  Prop,
-  Listen,
-  Method,
-  h,
-} from '@stencil/core';
-import {
   ResultsPerPageState,
   ResultsPerPage,
   buildFoldedResultList,
@@ -20,25 +11,34 @@ import {
   buildInteractiveResult,
 } from '@coveo/headless';
 import {
+  Component,
+  Element,
+  State,
+  Prop,
+  Listen,
+  Method,
+  h,
+} from '@stencil/core';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
+import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {randomID} from '../../../../utils/utils';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../../common/layout/display-options';
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
-import {FoldedResultListStateContextEvent} from '../result-list-decorators';
-import {randomID} from '../../../../utils/utils';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {FoldedResultListStateContextEvent} from '../result-list-decorators';
 
 /**
  * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).

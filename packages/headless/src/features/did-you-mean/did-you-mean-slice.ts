@@ -1,10 +1,10 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {executeSearch} from '../search/search-actions';
 import {
   enableDidYouMean,
   disableDidYouMean,
   applyDidYouMeanCorrection,
 } from './did-you-mean-actions';
-import {executeSearch} from '../search/search-actions';
 import {emptyCorrection, getDidYouMeanInitialState} from './did-you-mean-state';
 
 export const didYouMeanReducer = createReducer(

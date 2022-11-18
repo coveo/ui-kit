@@ -2,14 +2,14 @@ import {
   QueryCorrection,
   WordCorrection,
 } from '../../../api/search/search/query-corrections';
+import {logDidYouMeanClick} from '../../../features/did-you-mean/did-you-mean-insight-analytics-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
+import {InsightEngine} from '../../../insight.index';
 import {
   buildCoreDidYouMean,
   DidYouMean,
   DidYouMeanState,
 } from '../../core/did-you-mean/headless-core-did-you-mean';
-import {InsightEngine} from '../../../insight.index';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {logDidYouMeanClick} from '../../../features/did-you-mean/did-you-mean-insight-analytics-actions';
 
 export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
 

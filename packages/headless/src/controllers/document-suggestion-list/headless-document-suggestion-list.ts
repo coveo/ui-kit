@@ -1,13 +1,6 @@
-import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
+import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine';
-import {
-  ConfigurationSection,
-  CaseAssistConfigurationSection,
-  CaseInputSection,
-  DocumentSuggestionSection,
-  CaseFieldSection,
-} from '../../state/state-sections';
-import {buildController, Controller} from '../controller/headless-controller';
 import {
   caseAssistConfiguration,
   configuration,
@@ -15,9 +8,16 @@ import {
   caseField,
   documentSuggestion,
 } from '../../app/reducers';
+import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
+import {
+  ConfigurationSection,
+  CaseAssistConfigurationSection,
+  CaseInputSection,
+  DocumentSuggestionSection,
+  CaseFieldSection,
+} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
-import {CaseAssistAPIErrorStatusResponse} from '../../api/service/case-assist/case-assist-api-client';
-import {DocumentSuggestionResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response';
+import {buildController, Controller} from '../controller/headless-controller';
 
 /**
  * The `DocumentSuggestion` controller is responsible for getting document suggestions using case information present in the state.

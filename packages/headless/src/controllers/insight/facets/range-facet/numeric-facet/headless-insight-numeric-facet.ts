@@ -1,6 +1,13 @@
+import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
+import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
+import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
 import {NumericRangeRequest} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
@@ -10,13 +17,6 @@ import {
   NumericFacetState,
   NumericRangeOptions,
 } from '../../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   NumericRangeOptions,

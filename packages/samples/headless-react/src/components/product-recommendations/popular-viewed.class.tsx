@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildPopularViewedRecommendationsList,
   PopularViewedRecommendationsList as HeadlessRecommendationList,
@@ -8,6 +7,7 @@ import {
   Unsubscribe,
   ProductRecommendation,
 } from '@coveo/headless/product-recommendation';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';
 

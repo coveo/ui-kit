@@ -1,9 +1,9 @@
-import {buildMockInsightState} from '../../test/mock-insight-state';
 import * as CoveoAnalytics from 'coveo.analytics';
-import {buildMockInsightEngine} from '../../test/mock-engine';
-import {logDocumentOpen} from './result-insight-analytics-actions';
 import {buildMockRaw, buildMockResult} from '../../test';
+import {buildMockInsightEngine} from '../../test/mock-engine';
+import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockSearchState} from '../../test/mock-search-state';
+import {logDocumentOpen} from './result-insight-analytics-actions';
 
 const mockLogDocumentOpen = jest.fn();
 

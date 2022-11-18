@@ -4,6 +4,7 @@ import {
   InitializeEvent,
   initializeEventName,
 } from '../../../utils/initialization-utils';
+
 /**
  * The `atomic-external` component allows components defined outside of the `atomic-search-interface` to initialize.
  */

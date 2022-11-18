@@ -1,5 +1,5 @@
-import {makeHistory, undoable} from './undoable';
 import {AnyAction, Reducer} from 'redux';
+import {makeHistory, undoable} from './undoable';
 
 describe('undoable', () => {
   const reducer: Reducer = (state: string, action: AnyAction) =>

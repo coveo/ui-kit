@@ -3,20 +3,20 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {facetComponent} from '../facet/facet-selectors';
-import {field as facetField} from '../facet/facet-actions';
-import {numericFacetField} from '../numeric-facet/numeric-facet-actions';
 import {hierarchicalField} from '../category-facet/category-facet-actions';
-import {numericFacetComponent} from '../numeric-facet/numeric-facet-selectors';
 import {categoryFacetComponent} from '../category-facet/category-facet-selectors';
-import {ratingFacetComponent} from '../rating-facet/rating-facet-selectors';
+import {colorFacetField} from '../color-facet/color-facet-actions';
+import {colorFacetComponent} from '../color-facet/color-facet-selectors';
+import {field as facetField} from '../facet/facet-actions';
+import {facetComponent} from '../facet/facet-selectors';
+import {numericFacetField} from '../numeric-facet/numeric-facet-actions';
+import {numericFacetComponent} from '../numeric-facet/numeric-facet-selectors';
 import {ratingFacetField} from '../rating-facet/rating-facet-actions';
+import {ratingFacetComponent} from '../rating-facet/rating-facet-selectors';
 import {ratingRangeFacetField} from '../rating-range-facet/rating-range-facet-actions';
 import {ratingRangeFacetComponent} from '../rating-range-facet/rating-range-facet-selectors';
-import {colorFacetComponent} from '../color-facet/color-facet-selectors';
-import {colorFacetField} from '../color-facet/color-facet-actions';
-import {timeframeFacetComponent} from '../timeframe-facet/timeframe-facet-selectors';
 import {createTimeframeElements} from '../timeframe-facet/timeframe-facet-action';
+import {timeframeFacetComponent} from '../timeframe-facet/timeframe-facet-selectors';
 
 export const facetManagerComponent = 'atomic-facet-manager';
 

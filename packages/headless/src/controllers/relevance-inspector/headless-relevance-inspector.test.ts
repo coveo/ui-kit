@@ -1,23 +1,23 @@
-import {
-  buildRelevanceInspector,
-  RelevanceInspector,
-  RelevanceInspectorProps,
-} from './headless-relevance-inspector';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
-import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
-import {createMockState} from '../../test';
-import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
-import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {configuration, debug, search, fields} from '../../app/reducers';
+import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
+import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {
   disableFetchAllFields,
   enableFetchAllFields,
   fetchFieldsDescription,
 } from '../../features/fields/fields-actions';
+import {createMockState} from '../../test';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {buildMockFieldDescription} from '../../test/mock-field-description';
+import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
+import {
+  buildRelevanceInspector,
+  RelevanceInspector,
+  RelevanceInspectorProps,
+} from './headless-relevance-inspector';
 
 describe('RelevanceInspector', () => {
   let engine: MockSearchEngine;

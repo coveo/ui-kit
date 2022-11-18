@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {FieldSuggestions as HeadlessFieldSuggestions} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface FieldSuggestionsProps {
   controller: HeadlessFieldSuggestions;

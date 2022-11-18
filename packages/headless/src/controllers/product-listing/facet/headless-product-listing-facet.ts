@@ -1,5 +1,26 @@
-import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
+import {CoreEngine} from '../../../app/engine';
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {configuration, facetSearchSet, facetSet} from '../../../app/reducers';
+import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
+import {
+  logFacetClearAll,
+  logFacetSelect,
+  logFacetShowLess,
+  logFacetShowMore,
+  logFacetUpdateSort,
+} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
+import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
+import {
+  ConfigurationSection,
+  FacetSearchSection,
+  FacetSection,
+} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
+import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
 import {
   buildCoreFacet,
   Facet,
@@ -14,27 +35,6 @@ import {
   CoreFacet,
   CoreFacetState,
 } from '../../core/facets/facet/headless-core-facet';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
-import {CoreEngine} from '../../../app/engine';
-import {
-  ConfigurationSection,
-  FacetSearchSection,
-  FacetSection,
-} from '../../../state/state-sections';
-import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
-import {loadReducerError} from '../../../utils/errors';
-import {getAnalyticsActionForToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-utils';
-import {configuration, facetSearchSet, facetSet} from '../../../app/reducers';
-import {
-  logFacetClearAll,
-  logFacetSelect,
-  logFacetShowLess,
-  logFacetShowMore,
-  logFacetUpdateSort,
-} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 export type {
   FacetOptions,

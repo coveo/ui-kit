@@ -1,19 +1,19 @@
 import {ArrayValue, NumberValue, Schema} from '@coveo/bueno';
-import {buildController, Controller} from '../controller/headless-controller';
-import {loadReducerError} from '../../utils/errors';
+import {Result} from '../../api/search/search/result';
 import {recentResults} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {RecentResultsSection} from '../../state/state-sections';
 import {
   clearRecentResults,
   registerRecentResults,
 } from '../../features/recent-results/recent-results-actions';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
+import {RecentResultsSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
-import {Result} from '../../api/search/search/result';
+import {buildController, Controller} from '../controller/headless-controller';
 
 export interface RecentResultsListProps {
   /**

@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildNumericFacet,
   NumericFacet as HeadlessNumericFacet,
@@ -7,6 +6,7 @@ import {
   NumericFacetValue,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface NumericFacetProps extends NumericFacetOptions {

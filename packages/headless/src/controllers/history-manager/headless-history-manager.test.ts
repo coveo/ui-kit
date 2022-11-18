@@ -1,7 +1,4 @@
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+import {configuration, facetOrder, history} from '../../app/reducers';
 import {
   back,
   forward,
@@ -12,8 +9,11 @@ import {
   extractHistory,
   getHistoryInitialState,
 } from '../../features/history/history-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {buildHistoryManager, HistoryManager} from './headless-history-manager';
-import {configuration, facetOrder, history} from '../../app/reducers';
 
 describe('History Manager', () => {
   let engine: MockSearchEngine;

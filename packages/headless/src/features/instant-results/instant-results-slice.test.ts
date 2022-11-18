@@ -1,11 +1,11 @@
-import {instantResultsReducer} from './instant-results-slice';
+import {buildMockResult} from '../../test';
+import {fetchInstantResults} from '../search/search-actions';
 import {
   registerInstantResults,
   updateInstantResultsQuery,
 } from './instant-results-actions';
-import {buildMockResult} from '../../test';
+import {instantResultsReducer} from './instant-results-slice';
 import {InstantResultCache} from './instant-results-state';
-import {fetchInstantResults} from '../search/search-actions';
 
 const id1 = 'search_box_1';
 const id2 = 'search_box_2';

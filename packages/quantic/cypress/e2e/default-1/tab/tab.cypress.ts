@@ -1,17 +1,17 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   getAlias,
   interceptSearch,
   mockSearchNoResults,
 } from '../../../page-objects/search';
-import {TabExpectations as Expect} from './tab-expectations';
-import {TabActions as Actions} from './tab-actions';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {TabActions as Actions} from './tab-actions';
+import {TabExpectations as Expect} from './tab-expectations';
 
 interface TabOptions {
   label: string;

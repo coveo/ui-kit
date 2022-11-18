@@ -1,7 +1,19 @@
+import {CoreEngine} from '../../../../app/engine';
 import {
-  buildController,
-  Controller,
-} from '../../../controller/headless-controller';
+  configuration,
+  facetSearchSet,
+  facetSet,
+  facetOptions,
+} from '../../../../app/reducers';
+import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../features/facet-options/facet-options-actions';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
+import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {
   registerFacet,
   deselectAllFacetValues,
@@ -9,17 +21,15 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../../features/facets/facet-set/facet-set-actions';
+import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions';
 import {
   facetRequestSelector,
   facetResponseSelector,
   isFacetLoadingResponseSelector,
 } from '../../../../features/facets/facet-set/facet-set-selectors';
+import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
+import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
 import {FacetSortCriterion} from '../../../../features/facets/facet-set/interfaces/request';
-import {
-  disableFacet,
-  enableFacet,
-  updateFacetOptions,
-} from '../../../../features/facet-options/facet-options-actions';
 import {
   ConfigurationSection,
   FacetOptionsSection,
@@ -28,29 +38,19 @@ import {
   ProductListingSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {isFacetValueSelected} from '../../../../features/facets/facet-set/facet-set-utils';
-import {executeToggleFacetSelect} from '../../../../features/facets/facet-set/facet-set-controller-actions';
+import {loadReducerError} from '../../../../utils/errors';
+import {omit} from '../../../../utils/utils';
 import {validateOptions} from '../../../../utils/validate-payload';
-import {defaultFacetOptions} from '../../../../features/facets/facet-set/facet-set-slice';
-import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {
+  buildController,
+  Controller,
+} from '../../../controller/headless-controller';
+import {determineFacetId} from '../_common/facet-id-determinor';
 import {
   FacetOptions,
   facetOptionsSchema,
   FacetSearchOptions,
 } from './headless-core-facet-options';
-import {determineFacetId} from '../_common/facet-id-determinor';
-import {FacetValueState} from '../../../../features/facets/facet-api/value';
-import {
-  configuration,
-  facetSearchSet,
-  facetSet,
-  facetOptions,
-} from '../../../../app/reducers';
-import {loadReducerError} from '../../../../utils/errors';
-import {CoreEngine} from '../../../../app/engine';
-import {SearchThunkExtraArguments} from '../../../../app/search-thunk-extra-arguments';
-import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
-import {omit} from '../../../../utils/utils';
 
 export type {FacetOptions, FacetSearchOptions, FacetValueState};
 

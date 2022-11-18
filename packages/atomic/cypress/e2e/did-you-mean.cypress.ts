@@ -4,8 +4,8 @@ import {
   addDidYouMeanCorrectionToNextQuery,
   addQueryTriggerCorrectionToNextQuery,
 } from './did-you-mean-actions';
-import {DidYouMeanSelectors} from './did-you-mean-selectors';
 import * as DidYouMeanAssertions from './did-you-mean-assertions';
+import {DidYouMeanSelectors} from './did-you-mean-selectors';
 import {addQuerySummary} from './query-summary-actions';
 import * as QuerySummaryAssertions from './query-summary-assertions';
 import {addSearchBox} from './search-box/search-box-actions';

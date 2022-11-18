@@ -3,6 +3,8 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
+import * as CommonAssertions from '../../common-assertions';
+import * as CommonFacetAssertions from '../../facets/facet-common-assertions';
 import {addFacet} from '../../facets/facet/facet-actions';
 import {FacetSelectors} from '../../facets/facet/facet-selectors';
 import {
@@ -10,6 +12,7 @@ import {
   addResultList,
   buildTemplateWithSections,
 } from '../result-list-actions';
+import {ResultListSelectors} from '../result-list-selectors';
 import {
   assertShouldRenderValues,
   assertDisplaysXMoreLabel,
@@ -19,9 +22,6 @@ import {
   resultMultiValueTextComponent,
   ResultMultiValueTextSelectors,
 } from './result-multi-value-text-selectors';
-import * as CommonFacetAssertions from '../../facets/facet-common-assertions';
-import {ResultListSelectors} from '../result-list-selectors';
-import * as CommonAssertions from '../../common-assertions';
 
 export interface MultiValueTextProps {
   field?: string | number;

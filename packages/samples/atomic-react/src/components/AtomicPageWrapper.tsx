@@ -1,5 +1,3 @@
-import React, {FunctionComponent} from 'react';
-
 import {
   AtomicBreadbox,
   AtomicColorFacet,
@@ -38,6 +36,7 @@ import {
   Bindings,
   AtomicSearchBoxQuerySuggestions,
 } from '@coveo/atomic-react';
+import React, {FunctionComponent} from 'react';
 
 type Options = {
   instantResults?: boolean;

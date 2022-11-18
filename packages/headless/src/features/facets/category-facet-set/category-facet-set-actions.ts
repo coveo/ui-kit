@@ -1,13 +1,3 @@
-import {createAction} from '@reduxjs/toolkit';
-import {CategoryFacetValue} from './interfaces/response';
-import {CategoryFacetSortCriterion} from './interfaces/request';
-import {
-  serializeSchemaValidationError,
-  validatePayload,
-  validatePayloadAndThrow,
-  requiredNonEmptyString,
-} from '../../../utils/validate-payload';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {
   Value,
   BooleanValue,
@@ -15,7 +5,17 @@ import {
   StringValue,
   NumberValue,
 } from '@coveo/bueno';
+import {createAction} from '@reduxjs/toolkit';
+import {
+  serializeSchemaValidationError,
+  validatePayload,
+  validatePayloadAndThrow,
+  requiredNonEmptyString,
+} from '../../../utils/validate-payload';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
+import {CategoryFacetSortCriterion} from './interfaces/request';
+import {CategoryFacetValue} from './interfaces/response';
 
 export interface RegisterCategoryFacetActionCreatorPayload {
   /**

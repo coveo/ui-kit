@@ -24,9 +24,8 @@ import {
   FacetCommon,
   FacetDisplayValues,
 } from '../../common/facets/facet-common';
-
-import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {parseDependsOn} from '../../common/facets/facet-common';
+import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**

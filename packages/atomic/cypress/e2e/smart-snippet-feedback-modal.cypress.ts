@@ -1,12 +1,12 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import {addSmartSnippet} from './smart-snippet-actions';
-import {SmartSnippetSelectors} from './smart-snippet-selectors';
-import * as SmartSnippetFeedbackModalAssertions from './smart-snippet-feedback-modal-assertions';
 import * as CommonAssertions from './common-assertions';
+import {addSmartSnippet} from './smart-snippet-actions';
+import * as SmartSnippetFeedbackModalAssertions from './smart-snippet-feedback-modal-assertions';
 import {
   smartSnippetFeedbackModalComponent,
   SmartSnippetFeedbackModalSelectors,
 } from './smart-snippet-feedback-modal-selectors';
+import {SmartSnippetSelectors} from './smart-snippet-selectors';
 
 describe('Smart Snippet Feedback Modal Test Suites', () => {
   function setupOpenModal() {

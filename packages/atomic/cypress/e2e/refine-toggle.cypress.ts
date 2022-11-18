@@ -1,22 +1,22 @@
 import {TestFixture} from '../fixtures/test-fixture';
+import * as CommonAssertions from './common-assertions';
+import {categoryFacetComponent} from './facets/category-facet/category-facet-selectors';
+import {colorFacetComponent} from './facets/color-facet/color-facet-selectors';
+import {facetComponent} from './facets/facet/facet-selectors';
+import {facetManagerComponent} from './facets/manager/facet-manager-actions';
+import {numericFacetComponent} from './facets/numeric-facet/numeric-facet-selectors';
+import {ratingFacetComponent} from './facets/rating-facet/rating-facet-selectors';
+import {ratingRangeFacetComponent} from './facets/rating-range-facet/rating-range-facet-selectors';
+import {timeframeFacetComponent} from './facets/timeframe-facet/timeframe-facet-selectors';
 import {
   addRefineToggle,
   addRefineToggleRangeVariations,
 } from './refine-toggle-actions';
-import * as CommonAssertions from './common-assertions';
 import {
   refineModalComponent,
   RefineModalSelectors,
   RefineToggleSelectors,
 } from './refine-toggle-selectors';
-import {facetComponent} from './facets/facet/facet-selectors';
-import {numericFacetComponent} from './facets/numeric-facet/numeric-facet-selectors';
-import {categoryFacetComponent} from './facets/category-facet/category-facet-selectors';
-import {ratingFacetComponent} from './facets/rating-facet/rating-facet-selectors';
-import {ratingRangeFacetComponent} from './facets/rating-range-facet/rating-range-facet-selectors';
-import {colorFacetComponent} from './facets/color-facet/color-facet-selectors';
-import {timeframeFacetComponent} from './facets/timeframe-facet/timeframe-facet-selectors';
-import {facetManagerComponent} from './facets/manager/facet-manager-actions';
 
 describe('Refine Toggle Test Suites', () => {
   describe('when the modal is closed', () => {

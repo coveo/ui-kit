@@ -4,15 +4,15 @@ import {
   TagProps,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {
-  fieldConditionComponent,
-  FieldConditionSelectors,
-} from './field-condition-selector';
 import * as CommonAssertions from '../../common-assertions';
 import {
   addResultList,
   buildTemplateWithoutSections,
 } from '../result-list-actions';
+import {
+  fieldConditionComponent,
+  FieldConditionSelectors,
+} from './field-condition-selector';
 
 const addInResultListFixture = (props: TagProps) => {
   return new TestFixture()

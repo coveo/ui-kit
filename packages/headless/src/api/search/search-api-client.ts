@@ -1,41 +1,41 @@
+import {isNullOrUndefined} from '@coveo/bueno';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {SearchAppState} from '../../state/search-app-state';
+import {pickNonBaseParams, unwrapError} from '../api-client-utils';
 import {PlatformClient} from '../platform-client';
+import {BaseParam} from '../platform-service-params';
+import {FacetSearchRequest} from './facet-search/facet-search-request';
+import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {
+  FieldDescription,
+  FieldDescriptionsResponseSuccess,
+} from './fields/fields-response';
+import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
+import {HtmlRequest} from './html/html-request';
+import {PlanRequest} from './plan/plan-request';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
+import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
+import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {
   QuerySuggestSuccessResponse,
   QuerySuggest,
 } from './query-suggest/query-suggest-response';
-import {SearchRequest} from './search/search-request';
-import {Search, SearchResponseSuccess} from './search/search-response';
-import {
-  SearchAPIErrorWithStatusCode,
-  buildAPIResponseFromErrorOrThrow,
-} from './search-api-error-response';
-import {PlanRequest} from './plan/plan-request';
-import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
-import {FacetSearchRequest} from './facet-search/facet-search-request';
-import {SearchAppState} from '../../state/search-app-state';
-import {baseSearchRequest} from './search-api-params';
 import {RecommendationRequest} from './recommendation/recommendation-request';
-import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
-import {HtmlRequest} from './html/html-request';
-import {BaseParam} from '../platform-service-params';
-import {emptyQuestionAnswer} from '../../features/search/search-state';
-import {isNullOrUndefined} from '@coveo/bueno';
 import {
-  FieldDescription,
-  FieldDescriptionsResponseSuccess,
-} from './fields/fields-response';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {FacetSearchResponse} from './facet-search/facet-search-response';
-import {getHtml, HtmlAPIClientOptions} from './html/html-api-client';
-import {pickNonBaseParams, unwrapError} from '../api-client-utils';
+  SearchAPIErrorWithStatusCode,
+  buildAPIResponseFromErrorOrThrow,
+} from './search-api-error-response';
+import {baseSearchRequest} from './search-api-params';
 import {SearchOrigin} from './search-metadata';
+import {SearchRequest} from './search/search-request';
+import {Search, SearchResponseSuccess} from './search/search-response';
 
 export interface FacetSearchAPIClient {
   facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse>;
