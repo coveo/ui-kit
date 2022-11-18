@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildStandaloneSearchBox,
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   StandaloneSearchBoxState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {standaloneSearchBoxStorageKey} from './standalone-search-box-storage-key';
 

@@ -1,9 +1,9 @@
-import {useEffect, useState, FunctionComponent, useContext} from 'react';
 import {
   PopularViewedRecommendationsList as HeadlessRecommendationList,
   loadClickAnalyticsActions,
   ProductRecommendation,
 } from '@coveo/headless/product-recommendation';
+import {useEffect, useState, FunctionComponent, useContext} from 'react';
 import {AppContext} from '../../context/engine';
 import {filterProtocol} from '../../utils/filter-protocol';
 

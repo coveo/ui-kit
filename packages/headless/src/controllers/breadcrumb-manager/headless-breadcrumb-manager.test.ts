@@ -1,35 +1,4 @@
 import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../test';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockFacetValue} from '../../test/mock-facet-value';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
-import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-response';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
-import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
-import {executeSearch} from '../../features/search/search-actions';
-import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
-import {
-  toggleSelectFacetValue,
-  updateFreezeCurrentValues,
-} from '../../features/facets/facet-set/facet-set-actions';
-import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
-import {
   configuration,
   search,
   facetSet,
@@ -37,10 +6,41 @@ import {
   dateFacetSet,
   categoryFacetSet,
 } from '../../app/reducers';
+import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
+import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
+import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
+import {
+  toggleSelectFacetValue,
+  updateFreezeCurrentValues,
+} from '../../features/facets/facet-set/facet-set-actions';
+import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
+import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {executeSearch} from '../../features/search/search-actions';
+import {getSearchInitialState} from '../../features/search/search-state';
+import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
+import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  createMockState,
+  MockSearchEngine,
+} from '../../test';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
+import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockDateFacetResponse} from '../../test/mock-date-facet-response';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {buildMockFacetValue} from '../../test/mock-facet-value';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {toggleSelectStaticFilterValue} from '../../features/static-filter-set/static-filter-set-actions';
-import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions';
 import {
   BreadcrumbManager,
   CategoryFacetBreadcrumb,

@@ -1,26 +1,25 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {
-  addRatingFacet,
-  ratingFacetDefaultNumberOfIntervals,
-  ratingFacetField,
-  ratingFacetLabel,
-} from './rating-facet-actions';
-
-import * as RatingFacetAssertions from './rating-facet-assertions';
 import * as CommonAssertions from '../../common-assertions';
-import * as CommonFacetAssertions from '../facet-common-assertions';
-import {
-  ratingFacetComponent,
-  RatingFacetSelectors,
-} from './rating-facet-selectors';
 import {
   pressClearButton,
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
   typeFacetSearchQuery,
 } from '../facet-common-actions';
+import * as CommonFacetAssertions from '../facet-common-assertions';
 import {addFacet} from '../facet/facet-actions';
 import {FacetSelectors} from '../facet/facet-selectors';
+import {
+  addRatingFacet,
+  ratingFacetDefaultNumberOfIntervals,
+  ratingFacetField,
+  ratingFacetLabel,
+} from './rating-facet-actions';
+import * as RatingFacetAssertions from './rating-facet-assertions';
+import {
+  ratingFacetComponent,
+  RatingFacetSelectors,
+} from './rating-facet-selectors';
 
 describe('Rating Facet Test Suites', () => {
   describe('with default rating facet', () => {

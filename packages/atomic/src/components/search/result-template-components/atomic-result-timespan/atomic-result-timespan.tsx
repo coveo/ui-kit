@@ -3,10 +3,11 @@ import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {Component, Prop, State} from '@stencil/core';
 import dayjs from 'dayjs';
 import {DurationUnitType} from 'dayjs/plugin/duration';
+import duration from 'dayjs/plugin/duration';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
-import duration from 'dayjs/plugin/duration';
+
 dayjs.extend(duration);
 
 /**

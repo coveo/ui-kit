@@ -1,12 +1,12 @@
-import {Component, Prop, h, Element} from '@stencil/core';
 import {
   Result,
   ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {Component, Prop, h, Element} from '@stencil/core';
 import {MapProp} from '../../../../utils/props-utils';
 import {makeMatchConditions} from '../../../common/result-templates/result-template-common';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.

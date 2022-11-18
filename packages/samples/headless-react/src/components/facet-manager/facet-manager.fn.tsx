@@ -1,15 +1,15 @@
 import {
+  FacetManager as HeadlessFacetManager,
+  Facet as HeadlessFacet,
+  FacetManagerPayload,
+} from '@coveo/headless';
+import {
   useEffect,
   useState,
   FunctionComponent,
   ReactElement,
   Children,
 } from 'react';
-import {
-  FacetManager as HeadlessFacetManager,
-  Facet as HeadlessFacet,
-  FacetManagerPayload,
-} from '@coveo/headless';
 
 type FacetManagerChild = ReactElement<{controller: HeadlessFacet}>;
 

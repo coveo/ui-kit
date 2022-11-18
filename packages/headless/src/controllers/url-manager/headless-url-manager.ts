@@ -1,14 +1,14 @@
 import {Schema, StringValue} from '@coveo/bueno';
+import {configuration} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer';
 import {SearchParametersState} from '../../state/search-app-state';
+import {ConfigurationSection} from '../../state/state-sections';
+import {deepEqualAnyOrder} from '../../utils/compare-utils';
+import {loadReducerError} from '../../utils/errors';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
-import {ConfigurationSection} from '../../state/state-sections';
-import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer';
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager';
-import {configuration} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {deepEqualAnyOrder} from '../../utils/compare-utils';
 
 export interface UrlManagerProps {
   /**

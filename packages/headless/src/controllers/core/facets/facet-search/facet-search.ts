@@ -1,5 +1,6 @@
-import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
+import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
+import {CoreEngine} from '../../../../app/engine';
+import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
 import {CategoryFacetSearchState} from '../../../../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
 import {
@@ -7,14 +8,13 @@ import {
   executeFacetSearch,
   executeFieldSuggest,
 } from '../../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {updateFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {SpecificFacetSearchState} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
   FacetSearchSection,
 } from '../../../../state/state-sections';
-import {CoreEngine} from '../../../../app/engine';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
 
 type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 

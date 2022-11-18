@@ -1,4 +1,17 @@
-import {dateFacetSetReducer} from './date-facet-set-slice';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
+import {buildMockSearch} from '../../../../test/mock-search';
+import {logSearchEvent} from '../../../analytics/analytics-actions';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {change} from '../../../history/history-actions';
+import {getHistoryInitialState} from '../../../history/history-state';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
+import {executeSearch} from '../../../search/search-actions';
+import {deselectAllFacets} from '../../generic/facet-actions';
+import * as FacetReducers from '../../generic/facet-reducer-helpers';
+import * as RangeFacetReducers from '../generic/range-facet-reducers';
 import {
   registerDateFacet,
   toggleSelectDateFacetValue,
@@ -7,24 +20,11 @@ import {
   RegisterDateFacetActionCreatorPayload,
   updateDateFacetValues,
 } from './date-facet-actions';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {change} from '../../../history/history-actions';
-import * as RangeFacetReducers from '../generic/range-facet-reducers';
-import * as FacetReducers from '../../generic/facet-reducer-helpers';
-import {executeSearch} from '../../../search/search-actions';
-import {buildMockSearch} from '../../../../test/mock-search';
-import {logSearchEvent} from '../../../analytics/analytics-actions';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {dateFacetSetReducer} from './date-facet-set-slice';
 import {
   DateFacetSetState,
   getDateFacetSetInitialState,
 } from './date-facet-set-state';
-import {deselectAllFacets} from '../../generic/facet-actions';
-import {getHistoryInitialState} from '../../../history/history-state';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;

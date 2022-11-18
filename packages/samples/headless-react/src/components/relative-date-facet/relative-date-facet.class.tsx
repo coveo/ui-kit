@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildDateFacet,
   DateFacet,
@@ -8,6 +7,7 @@ import {
   Unsubscribe,
   deserializeRelativeDate,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface RelativeDateFacetProps extends DateFacetOptions {

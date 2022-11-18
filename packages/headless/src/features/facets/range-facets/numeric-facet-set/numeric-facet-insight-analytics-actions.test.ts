@@ -1,9 +1,9 @@
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../../../test/mock-engine';
-import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions';
+import {buildMockInsightState} from '../../../../test/mock-insight-state';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {logNumericFacetBreadcrumb} from './numeric-facet-insight-analytics-actions';
 
 const mockLogBreadcrumbFacet = jest.fn();
 

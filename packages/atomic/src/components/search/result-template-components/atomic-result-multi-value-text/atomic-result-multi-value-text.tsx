@@ -1,15 +1,15 @@
-import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
 import {
   BreadcrumbManager,
   buildBreadcrumbManager,
   Result,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {titleToKebab} from '../../../../utils/utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.

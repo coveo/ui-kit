@@ -1,13 +1,4 @@
 import {
-  Component,
-  h,
-  State,
-  Prop,
-  Element,
-  Watch,
-  Fragment,
-} from '@stencil/core';
-import {
   BreadcrumbManager,
   buildBreadcrumbManager,
   BreadcrumbManagerState,
@@ -22,18 +13,27 @@ import {
   buildQuerySummary,
 } from '@coveo/headless';
 import {
+  Component,
+  h,
+  State,
+  Prop,
+  Element,
+  Watch,
+  Fragment,
+} from '@stencil/core';
+import SortIcon from '../../../images/sort.svg';
+import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {SortDropdownOption} from '../atomic-search-interface/store';
-import SortIcon from '../../../images/sort.svg';
 import {Button} from '../../common/button';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {
   getClonedFacetElements,
   RefineModalCommon,
 } from '../../common/refine-modal/refine-modal-common';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SortDropdownOption} from '../atomic-search-interface/store';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.

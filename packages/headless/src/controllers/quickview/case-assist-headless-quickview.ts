@@ -1,6 +1,5 @@
 import {CaseAssistEngine} from '../../app//case-assist-engine/case-assist-engine';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
-
 import {
   buildCoreQuickview,
   QuickviewOptions,

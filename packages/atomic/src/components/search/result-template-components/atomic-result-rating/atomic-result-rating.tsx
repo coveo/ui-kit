@@ -1,10 +1,10 @@
-import {Component, Element, Prop, h, State} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
+import {Component, Element, Prop, h, State} from '@stencil/core';
 import Star from '../../../../images/star.svg';
-import {ResultContext} from '../result-template-decorators';
-import {Rating} from '../../atomic-rating/atomic-rating';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {Rating} from '../../atomic-rating/atomic-rating';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-rating` element renders a star rating.

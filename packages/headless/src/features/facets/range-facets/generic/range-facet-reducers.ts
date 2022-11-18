@@ -1,10 +1,10 @@
+import {RangeFacetOptionalParameters} from './interfaces/options';
 import {
   RangeFacetRequest,
   RangeFacetResponse,
   RangeFacetValue,
   RangeValueRequest,
 } from './interfaces/range-facet';
-import {RangeFacetOptionalParameters} from './interfaces/options';
 
 export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   filterFacetCount: true,

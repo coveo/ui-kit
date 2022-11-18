@@ -10,6 +10,7 @@ import {
   CategoryFacetSelectors,
   AllFacetSelectors,
 } from './category-facet-selectors';
+
 const hierarchicalField = 'geographicalhierarchy';
 const categoryFacetExpectations = (selector: AllFacetSelectors) => {
   return {

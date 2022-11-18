@@ -1,25 +1,25 @@
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+import {
+  deselectAllDateFacetValues,
+  toggleSelectDateFacetValue,
+} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
+import {updateRangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/range-facet-actions';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+import {InsightAppState} from '../../../../../state/insight-app-state';
+import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
+import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../../../../test/mock-engine';
+import {buildMockInsightState} from '../../../../../test/mock-insight-state';
 import {
   DateFacet,
   DateFacetOptions,
   buildDateFacet,
 } from './headless-insight-date-facet';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../../../../test/mock-engine';
-import {
-  deselectAllDateFacetValues,
-  toggleSelectDateFacetValue,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
-import {buildMockDateFacetRequest} from '../../../../../test/mock-date-facet-request';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {updateRangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/range-facet-actions';
-import {InsightAppState} from '../../../../../state/insight-app-state';
-import {buildMockInsightState} from '../../../../../test/mock-insight-state';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 
 describe('insight date facet', () => {
   const facetId = '1';

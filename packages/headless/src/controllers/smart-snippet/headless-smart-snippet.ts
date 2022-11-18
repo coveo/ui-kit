@@ -1,8 +1,15 @@
-import {buildController, Controller} from '../controller/headless-controller';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {Result} from '../../api/search/search/result';
 import {search, questionAnswering} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {
+  closeFeedbackModal,
+  collapseSmartSnippet,
+  dislikeSmartSnippet,
+  expandSmartSnippet,
+  likeSmartSnippet,
+  openFeedbackModal,
+} from '../../features/question-answering/question-answering-actions';
 import {
   logCollapseSmartSnippet,
   logDislikeSmartSnippet,
@@ -15,19 +22,12 @@ import {
   logSmartSnippetDetailedFeedback,
   SmartSnippetFeedback,
 } from '../../features/question-answering/question-answering-analytics-actions';
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {
-  closeFeedbackModal,
-  collapseSmartSnippet,
-  dislikeSmartSnippet,
-  expandSmartSnippet,
-  likeSmartSnippet,
-  openFeedbackModal,
-} from '../../features/question-answering/question-answering-actions';
-import {QuestionAnsweringSection} from '../../state/state-sections';
-import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
-import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
 import {answerSourceSelector} from '../../features/question-answering/question-answering-selectors';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
+import {QuestionAnsweringSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
+import {buildController, Controller} from '../controller/headless-controller';
+import {buildInteractiveResultCore} from '../core/interactive-result/headless-core-interactive-result';
 import {
   buildSmartSnippetInteractiveInlineLinks,
   InlineLink,

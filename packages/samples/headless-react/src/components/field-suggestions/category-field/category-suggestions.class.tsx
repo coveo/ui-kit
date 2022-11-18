@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions,
   CategoryFieldSuggestionsOptions,
@@ -6,6 +5,7 @@ import {
   buildCategoryFieldSuggestions,
   CategoryFacetSearchState,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../../context/engine';
 
 interface CategoryFieldSuggestionsProps

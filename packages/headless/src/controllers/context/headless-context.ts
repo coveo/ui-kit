@@ -1,8 +1,8 @@
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   ContextPayload,
   ContextValue,
 } from '../../features/context/context-state';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   buildCoreContext,
   Context,

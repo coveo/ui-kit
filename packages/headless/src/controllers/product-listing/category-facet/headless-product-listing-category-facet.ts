@@ -1,3 +1,12 @@
+import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {
+  categoryFacetSearchSet,
+  categoryFacetSet,
+  configuration,
+  productListing,
+} from '../../../app/reducers';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -6,24 +15,13 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
   ProductListingSection,
 } from '../../../state/state-sections';
-import {
-  CategoryFacetOptions,
-  CategoryFacetSearchOptions,
-} from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  productListing,
-} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
 import {
   buildCoreCategoryFacet,
@@ -36,8 +34,10 @@ import {
   CoreCategoryFacet,
   CoreCategoryFacetState,
 } from '../../core/facets/category-facet/headless-core-category-facet';
-import {fetchProductListing} from '../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../app/product-listing-engine/product-listing-engine';
+import {
+  CategoryFacetOptions,
+  CategoryFacetSearchOptions,
+} from '../../core/facets/category-facet/headless-core-category-facet-options';
 import {buildCategoryFacetSearch} from './headless-product-listing-category-facet-search';
 
 export type {

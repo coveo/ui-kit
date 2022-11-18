@@ -1,11 +1,10 @@
 import {InterceptAliases} from '../../../page-objects/case-assist';
 import {should} from '../../common-selectors';
-
+import {ConsoleExpectations} from '../../console-expectations';
 import {
   CaseClassificationSelector,
   CaseClassificationSelectors,
 } from './case-classification-selectors';
-import {ConsoleExpectations} from '../../console-expectations';
 
 const testOrigin = 'test origin';
 

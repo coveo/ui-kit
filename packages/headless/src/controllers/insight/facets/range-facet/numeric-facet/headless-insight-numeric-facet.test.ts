@@ -1,18 +1,18 @@
+import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
+import {InsightAppState} from '../../../../../state/insight-app-state';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../../../../test/mock-engine';
+import {buildMockInsightState} from '../../../../../test/mock-insight-state';
+import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
 import {
   NumericFacet,
   buildNumericFacet,
   NumericFacetOptions,
 } from './headless-insight-numeric-facet';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../../../../test/mock-engine';
-import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetRequest} from '../../../../../test/mock-numeric-facet-request';
-import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions';
-import {InsightAppState} from '../../../../../state/insight-app-state';
-import {buildMockInsightState} from '../../../../../test/mock-insight-state';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 
 describe('insight numeric facet', () => {
   const facetId = '1';

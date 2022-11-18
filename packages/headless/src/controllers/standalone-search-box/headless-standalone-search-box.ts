@@ -25,12 +25,12 @@ import {
 import {loadReducerError} from '../../utils/errors';
 import {randomID} from '../../utils/utils';
 import {validateOptions} from '../../utils/validate-payload';
+import {defaultSearchBoxOptions} from '../core/search-box/headless-core-search-box-options';
 import {
   buildSearchBox,
   SearchBox,
   SearchBoxState,
 } from '../search-box/headless-search-box';
-import {defaultSearchBoxOptions} from '../core/search-box/headless-core-search-box-options';
 import {
   StandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,

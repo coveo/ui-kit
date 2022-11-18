@@ -1,6 +1,12 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client';
+import {SearchAction} from '../../features/analytics/analytics-utils';
+import {logInsightInterfaceLoad} from '../../features/analytics/insight-analytics-actions';
+import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
+import {executeSearch} from '../../features/insight-search/insight-search-actions';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {InsightAppState} from '../../state/insight-app-state';
 import {
   buildEngine,
@@ -22,12 +28,6 @@ import {
   InsightEngineConfiguration,
   insightEngineConfigurationSchema,
 } from './insight-engine-configuration';
-import {Logger} from 'pino';
-import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions';
-import {SearchAction} from '../../features/analytics/analytics-utils';
-import {logInsightInterfaceLoad} from '../../features/analytics/insight-analytics-actions';
-import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
-import {executeSearch} from '../../features/insight-search/insight-search-actions';
 
 export type {InsightEngineConfiguration};
 

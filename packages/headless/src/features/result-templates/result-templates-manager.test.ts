@@ -1,13 +1,13 @@
-import {
-  ResultTemplatesManager,
-  buildResultTemplatesManager,
-} from './result-templates-manager';
-import {buildMockResult} from '../../test/mock-result';
+import {fields} from '../../app/reducers';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {fields} from '../../app/reducers';
+import {buildMockResult} from '../../test/mock-result';
+import {
+  ResultTemplatesManager,
+  buildResultTemplatesManager,
+} from './result-templates-manager';
 
 describe('result template manager', () => {
   let resultTemplateManager: ResultTemplatesManager<string>;

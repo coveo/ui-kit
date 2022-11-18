@@ -1,43 +1,43 @@
-import {createMockState} from './mock-state';
-import configureStore, {MockStoreCreator} from 'redux-mock-store';
 import {
   AnyAction,
   ThunkDispatch,
   getDefaultMiddleware,
   ActionCreatorWithPreparedPayload,
 } from '@reduxjs/toolkit';
-import thunk from 'redux-thunk';
-import {analyticsMiddleware} from '../app/analytics-middleware';
-import {SearchAppState} from '../state/search-app-state';
-import {RecommendationAppState} from '../state/recommendation-app-state';
-import {createMockRecommendationState} from './mock-recommendation-state';
-import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
-import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
 import pino, {Logger} from 'pino';
+import configureStore, {MockStoreCreator} from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import {SearchAPIClient} from '../api/search/search-api-client';
+import {InsightAPIClient} from '../api/service/insight/insight-api-client';
+import {analyticsMiddleware} from '../app/analytics-middleware';
+import {CoreEngine} from '../app/engine';
+import {InsightEngine} from '../app/insight-engine/insight-engine';
+import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
 import {
   logActionErrorMiddleware,
   logActionMiddleware,
 } from '../app/logger-middlewares';
-import {validatePayloadAndThrow} from '../utils/validate-payload';
-import {buildMockSearchAPIClient} from './mock-search-api-client';
-import {SearchEngine} from '../app/search-engine/search-engine';
-import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
-import {CoreEngine} from '../app/engine';
-import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
 import {ProductListingEngine} from '../app/product-listing-engine/product-listing-engine';
-import {ProductListingAppState} from '../state/product-listing-app-state';
-import {buildMockProductListingState} from './mock-product-listing-state';
+import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
+import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
+import {SearchEngine} from '../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../app/search-thunk-extra-arguments';
-import {CaseAssistAppState} from '../state/case-assist-app-state';
 import {CaseAssistEngine} from '../case-assist.index';
-import {buildMockCaseAssistState} from './mock-case-assist-state';
-import {InsightEngine} from '../app/insight-engine/insight-engine';
+import {CaseAssistAppState} from '../state/case-assist-app-state';
 import {InsightAppState} from '../state/insight-app-state';
-import {buildMockInsightState} from './mock-insight-state';
+import {ProductListingAppState} from '../state/product-listing-app-state';
+import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
+import {RecommendationAppState} from '../state/recommendation-app-state';
+import {SearchAppState} from '../state/search-app-state';
+import {validatePayloadAndThrow} from '../utils/validate-payload';
+import {buildMockCaseAssistState} from './mock-case-assist-state';
 import {buildMockInsightAPIClient} from './mock-insight-api-client';
-import {InsightThunkExtraArguments} from '../app/insight-thunk-extra-arguments';
-import {SearchAPIClient} from '../api/search/search-api-client';
-import {InsightAPIClient} from '../api/service/insight/insight-api-client';
+import {buildMockInsightState} from './mock-insight-state';
+import {buildMockProductListingState} from './mock-product-listing-state';
+import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
+import {createMockRecommendationState} from './mock-recommendation-state';
+import {buildMockSearchAPIClient} from './mock-search-api-client';
+import {createMockState} from './mock-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],

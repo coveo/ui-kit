@@ -1,17 +1,15 @@
 /* eslint-disable node/no-unpublished-import */
+import {InsightEngine, SearchEngine} from '@coveo/headless';
+import {LightningElement} from 'lwc';
+import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine';
+import {ExternalEngineOptions} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine-configuration';
+import * as HeadlessCaseAssistTypes from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
 import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/definitions/index';
+import * as HeadlessInsightTypes from './force-app/main/default/staticresources/coveoheadless/definitions/insight.index';
+
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
 export * from './force-app/main/default/staticresources/coveoheadless/definitions/insight.index';
-
-import * as HeadlessCaseAssistTypes from './force-app/main/default/staticresources/coveoheadless/definitions/case-assist.index';
-import * as HeadlessInsightTypes from './force-app/main/default/staticresources/coveoheadless/definitions/insight.index';
-
-import {LightningElement} from 'lwc';
-import {Deferred} from 'utils';
-import {CoreEngine} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine';
-import {ExternalEngineOptions} from './force-app/main/default/staticresources/coveoheadless/definitions/app/engine-configuration';
-import {InsightEngine, SearchEngine} from '@coveo/headless';
 
 interface Bindings {
   engine?:

@@ -1,6 +1,6 @@
+import * as Store from '../app/store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import * as Store from '../app/store';
 import {configuration} from './reducers';
 
 describe('engine', () => {

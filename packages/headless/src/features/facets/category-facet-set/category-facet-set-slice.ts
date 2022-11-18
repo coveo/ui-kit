@@ -1,8 +1,20 @@
-import {
-  CategoryFacetRequest,
-  CategoryFacetValueRequest,
-} from './interfaces/request';
 import {createReducer} from '@reduxjs/toolkit';
+import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
+import {disableFacet} from '../../facet-options/facet-options-actions';
+import {change} from '../../history/history-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
+import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
+import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
+import {
+  handleCategoryFacetDeselectAll,
+  selectPath,
+} from './category-facet-reducer-helpers';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
@@ -11,29 +23,17 @@ import {
   updateCategoryFacetSortCriterion,
   RegisterCategoryFacetActionCreatorPayload,
 } from './category-facet-set-actions';
-import {CategoryFacetOptionalParameters} from './interfaces/options';
-import {change} from '../../history/history-actions';
-import {CategoryFacetResponse} from './interfaces/response';
-import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
-import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {
-  handleCategoryFacetDeselectAll,
-  selectPath,
-} from './category-facet-reducer-helpers';
-import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {partitionIntoParentsAndValues} from './category-facet-utils';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
-import {deselectAllBreadcrumbs} from '../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../../facet-options/facet-options-actions';
+import {CategoryFacetOptionalParameters} from './interfaces/options';
+import {
+  CategoryFacetRequest,
+  CategoryFacetValueRequest,
+} from './interfaces/request';
+import {CategoryFacetResponse} from './interfaces/response';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),

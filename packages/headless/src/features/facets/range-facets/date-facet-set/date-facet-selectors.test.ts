@@ -1,14 +1,14 @@
 import {SearchAppState} from '../../../../state/search-app-state';
-import {
-  dateFacetResponseSelector,
-  dateFacetSelectedValuesSelector,
-} from './date-facet-selectors';
 import {createMockState} from '../../../../test';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
+import {
+  dateFacetResponseSelector,
+  dateFacetSelectedValuesSelector,
+} from './date-facet-selectors';
 
 describe('date facet selectors', () => {
   const facetId = 'abc123';

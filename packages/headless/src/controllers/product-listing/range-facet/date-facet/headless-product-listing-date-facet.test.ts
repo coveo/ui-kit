@@ -1,24 +1,24 @@
 import {
-  DateFacet,
-  buildDateFacet,
-  DateFacetOptions,
-} from './headless-product-listing-date-facet';
-import {
-  MockProductListingEngine,
-  buildMockProductListingEngine,
-} from '../../../../test/mock-engine';
-import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
-import {
   configuration,
   dateFacetSet,
   search,
   facetOptions,
 } from '../../../../app/reducers';
 import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {ProductListingAppState} from '../../../../state/product-listing-app-state';
-import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
 import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+import {ProductListingAppState} from '../../../../state/product-listing-app-state';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {
+  MockProductListingEngine,
+  buildMockProductListingEngine,
+} from '../../../../test/mock-engine';
+import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
+import {
+  DateFacet,
+  buildDateFacet,
+  DateFacetOptions,
+} from './headless-product-listing-date-facet';
 
 describe('date facet', () => {
   const facetId = '1';

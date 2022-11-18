@@ -1,6 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
-import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   logSearchEvent,
   LogSearchEventActionCreatorPayload,
@@ -9,7 +9,7 @@ import {
   logCustomEvent,
   LogCustomEventActionCreatorPayload,
 } from './analytics-actions';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
 
 export type {
   LogSearchEventActionCreatorPayload,

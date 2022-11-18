@@ -1,11 +1,7 @@
 import {Schema} from '@coveo/bueno';
-import {buildController, Controller} from '../controller/headless-controller';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {staticFilterSet} from '../../app/reducers';
-import {
-  staticFilterIdSchema,
-  staticFilterValuesSchema,
-} from '../../features/static-filter-set/static-filter-set-schema';
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   deselectAllStaticFilterValues,
   logStaticFilterClearAll,
@@ -15,13 +11,17 @@ import {
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions';
 import {
+  staticFilterIdSchema,
+  staticFilterValuesSchema,
+} from '../../features/static-filter-set/static-filter-set-schema';
+import {
   StaticFilterValue,
   StaticFilterValueState,
 } from '../../features/static-filter-set/static-filter-set-state';
 import {StaticFilterSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
-import {executeSearch} from '../../features/search/search-actions';
+import {buildController, Controller} from '../controller/headless-controller';
 import {
   buildStaticFilterValue,
   StaticFilterValueOptions,

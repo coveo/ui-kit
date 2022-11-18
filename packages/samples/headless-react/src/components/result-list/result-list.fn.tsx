@@ -1,7 +1,7 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {ResultList as HeadlessResultList} from '@coveo/headless';
-import {ResultLink} from './result-link';
+import {useEffect, useState, FunctionComponent} from 'react';
 import {Quickview} from '../quickview/quickview.fn';
+import {ResultLink} from './result-link';
 
 interface ResultListProps {
   controller: HeadlessResultList;

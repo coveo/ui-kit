@@ -1,3 +1,4 @@
+import {ProductRecommendationEngine} from '../../../app/product-recommendation-engine/product-recommendation-engine';
 import {
   ContextPayload,
   ContextValue,
@@ -7,7 +8,6 @@ import {
   Context,
   ContextState,
 } from '../../core/context/headless-core-context';
-import {ProductRecommendationEngine} from '../../../app/product-recommendation-engine/product-recommendation-engine';
 
 export type {Context, ContextState, ContextPayload, ContextValue};
 

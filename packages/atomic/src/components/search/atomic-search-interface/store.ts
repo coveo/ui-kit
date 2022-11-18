@@ -4,18 +4,18 @@ import {
   SortCriterion,
   SearchEngine,
 } from '@coveo/headless';
-import {makeDesktopQuery} from '../atomic-layout/search-layout';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {
-  createAtomicCommonStore,
-  AtomicCommonStoreData,
-  AtomicCommonStore,
-} from '../../common/interface/store';
 import {
   FacetInfo,
   FacetStore,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
+import {
+  createAtomicCommonStore,
+  AtomicCommonStoreData,
+  AtomicCommonStore,
+} from '../../common/interface/store';
+import {makeDesktopQuery} from '../atomic-layout/search-layout';
 
 export interface SortDropdownOption {
   expression: string;

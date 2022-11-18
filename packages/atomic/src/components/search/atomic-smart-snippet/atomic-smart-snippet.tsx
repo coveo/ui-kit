@@ -1,19 +1,19 @@
+import {
+  buildSmartSnippet,
+  SmartSnippet,
+  SmartSnippetState,
+} from '@coveo/headless';
 import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../utils/initialization-utils';
-import {
-  buildSmartSnippet,
-  SmartSnippet,
-  SmartSnippetState,
-} from '@coveo/headless';
-import {Hidden} from '../../common/hidden';
-import {Heading} from '../../common/heading';
-import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 import {randomID} from '../../../utils/utils';
+import {Heading} from '../../common/heading';
+import {Hidden} from '../../common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SmartSnippetFeedbackBanner} from './atomic-smart-snippet-feedback-banner';
 
 /**
  * The `atomic-smart-snippet` component displays the excerpt of a document that would be most likely to answer a particular query.

@@ -1,3 +1,24 @@
+import {CoreEngine} from '../../../../../app/engine';
+import {
+  configuration,
+  dateFacetSet,
+  facetOptions,
+  search,
+} from '../../../../../app/reducers';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../../features/facet-options/facet-options-actions';
+import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
+import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
+import {
+  registerDateFacet,
+  RegisterDateFacetActionCreatorPayload,
+  updateDateFacetValues,
+} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
+import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {
   ConfigurationSection,
   DateFacetSection,
@@ -9,29 +30,8 @@ import {
   buildController,
   Controller,
 } from '../../../../controller/headless-controller';
-import {
-  configuration,
-  dateFacetSet,
-  facetOptions,
-  search,
-} from '../../../../../app/reducers';
 import {determineFacetId} from '../../_common/facet-id-determinor';
-import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {
-  disableFacet,
-  enableFacet,
-  updateFacetOptions,
-} from '../../../../../features/facet-options/facet-options-actions';
-import {
-  registerDateFacet,
-  RegisterDateFacetActionCreatorPayload,
-  updateDateFacetValues,
-} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {validateDateFacetOptions} from './headless-date-facet-options';
-import {dateFacetSelectedValuesSelector} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
-import {CoreEngine} from '../../../../../app/engine';
-import {isFacetLoadingResponseSelector} from '../../../../../features/facets/facet-set/facet-set-selectors';
-import {isFacetEnabledSelector} from '../../../../../features/facet-options/facet-options-selectors';
 
 /**
  * The options defining a `DateFilter`.

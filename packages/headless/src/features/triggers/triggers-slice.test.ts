@@ -1,13 +1,13 @@
-import {triggerReducer} from './triggers-slice';
-import {getTriggerInitialState} from './triggers-state';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearch} from '../../test/mock-search';
-import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute';
 import {buildMockNotifyTrigger} from '../../test/mock-trigger-notify';
 import {buildMockQueryTrigger} from '../../test/mock-trigger-query';
-import {buildMockExecuteTrigger} from '../../test/mock-trigger-execute';
-import {executeSearch} from '../search/search-actions';
+import {buildMockRedirectTrigger} from '../../test/mock-trigger-redirect';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {executeSearch} from '../search/search-actions';
+import {triggerReducer} from './triggers-slice';
+import {getTriggerInitialState} from './triggers-state';
 
 describe('trigger slice', () => {
   it('should have initial state', () => {

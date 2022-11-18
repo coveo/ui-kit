@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {HistoryManager as HeadlessHistoryManager} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface HistoryManagerProps {
   controller: HeadlessHistoryManager;

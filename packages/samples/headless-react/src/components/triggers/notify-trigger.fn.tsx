@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {NotifyTrigger as HeadlessNotifyTrigger} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface HeadlessNotifyTriggerProps {
   controller: HeadlessNotifyTrigger;

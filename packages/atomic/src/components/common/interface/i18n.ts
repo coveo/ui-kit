@@ -1,8 +1,8 @@
 import {getAssetPath} from '@stencil/core';
 import Backend, {BackendOptions} from 'i18next-http-backend';
-import {BaseAtomicInterface} from './interface-common';
 import availableLocales from '../../../generated/availableLocales.json';
 import {AnyEngineType} from './bindings';
+import {BaseAtomicInterface} from './interface-common';
 
 export const i18nTranslationNamespace = 'translation';
 

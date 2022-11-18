@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, Element} from '@stencil/core';
+import {isArray} from '@coveo/bueno';
 import {
   Facet,
   buildFacet,
@@ -10,24 +10,24 @@ import {
   buildSearchStatus,
   buildFacetConditionsManager,
 } from '@coveo/headless';
+import {Component, h, State, Prop, Element} from '@stencil/core';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   BaseFacet,
   FacetCommon,
   parseDependsOn,
 } from '../../../common/facets/facet-common';
-import {isArray} from '@coveo/bueno';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
