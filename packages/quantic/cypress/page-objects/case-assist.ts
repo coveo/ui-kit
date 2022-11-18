@@ -63,8 +63,7 @@ export function mockCaseClassification(field: string, value: Array<object>) {
 export function mockSfPicklistValues(field: string, values: Array<object>) {
   cy.intercept(
     {
-      url: '**/aura?*',
-      query: {'aura.RecordUi.getPicklistValuesByRecordType': '1'},
+      url: '**/aura?*aura.RecordUi.getPicklistValuesByRecordType=1',
     },
     (req) => {
       req.continue((res) => {
