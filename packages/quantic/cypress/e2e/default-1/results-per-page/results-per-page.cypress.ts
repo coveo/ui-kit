@@ -1,6 +1,6 @@
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
-import {getAlias, interceptSearch} from '../../../page-objects/search';
+import {getQueryAlias, interceptSearch} from '../../../page-objects/search';
 import {
   useCaseParamTest,
   useCaseEnum,
@@ -38,7 +38,7 @@ describe('quantic-result-per-page', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 

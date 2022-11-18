@@ -6,7 +6,7 @@ import {
 } from '../../../page-objects/actions/action-set-results-per-page';
 import {configure} from '../../../page-objects/configurator';
 import {
-  getAlias,
+  getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
   mockSearchNoResults,
@@ -31,7 +31,7 @@ describe('quantic-summary', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(useCase));
+      cy.wait(getQueryAlias(useCase));
     }
   }
 
@@ -60,7 +60,7 @@ describe('quantic-summary', () => {
         it('should work as expected', () => {
           visitSummary(param.useCase, false);
 
-          cy.wait(getAlias(param.useCase)).then((interception) => {
+          cy.wait(getQueryAlias(param.useCase)).then((interception) => {
             Expect.displaySummary(true);
             Expect.displayQuery(false);
             Expect.displayRange(true);
@@ -106,7 +106,7 @@ describe('quantic-summary', () => {
           setPageSizeValue(customResultsPerPage);
           setResultsPerPage();
 
-          cy.wait(getAlias(param.useCase)).then((interception) => {
+          cy.wait(getQueryAlias(param.useCase)).then((interception) => {
             Expect.displaySummary(true);
             Expect.displayQuery(false);
             Expect.displayRange(true);
@@ -123,7 +123,7 @@ describe('quantic-summary', () => {
 
           getNextResults();
 
-          cy.wait(getAlias(param.useCase)).then((interception) => {
+          cy.wait(getQueryAlias(param.useCase)).then((interception) => {
             Expect.displaySummary(true);
             Expect.displayQuery(false);
             Expect.displayRange(true);

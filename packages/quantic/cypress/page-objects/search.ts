@@ -118,7 +118,7 @@ export function mockNoMoreFacetValues(field: string, useCase?: string) {
       ).moreValuesAvailable = false;
       res.send();
     });
-  }).as(getAlias(useCase).substring(1));
+  }).as(getQueryAlias(useCase).substring(1));
 }
 
 export function mockFacetSearchSingleValue(queryString: string) {
@@ -175,7 +175,7 @@ export function mockSearchNoResults(useCase?: string) {
       res.body.totalCountFiltered = 0;
       res.send();
     });
-  }).as(getAlias(useCase).substring(1));
+  }).as(getQueryAlias(useCase).substring(1));
 }
 
 export function mockSearchWithResults() {
@@ -226,7 +226,7 @@ export function captureBaselineNumberOfRequests(interceptAlias: string) {
   );
 }
 
-export function getAlias(useCase?: string) {
+export function getQueryAlias(useCase?: string) {
   return useCase === useCaseEnum.insight
     ? InterceptAliases.Insight
     : InterceptAliases.Search;
