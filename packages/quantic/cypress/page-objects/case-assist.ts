@@ -67,11 +67,10 @@ export function mockSfPicklistValues(field: string, values: Array<object>) {
 
     (req) => {
       req.continue((res) => {
-        res.body!.actions![0]!.returnValue!.picklistFieldValues![
-          field
-        ]!.values = values.map((value) => {
-          return {...value, attributes: null};
-        });
+        res.body.actions[0].returnValue.picklistFieldValues[field].values =
+          values.map((value) => {
+            return {...value, attributes: null};
+          });
         res.send();
       });
     }
