@@ -20,6 +20,7 @@ export const routeMatchers = {
   analytics: '**/rest/ua/v15/analytics/*',
   documentSuggestion: '**/rest/organizations/*/caseassists/*/documents/suggest',
   caseClassification: '**/rest/organizations/*/caseassists/*/classify',
+  auraPicklistValues: '**/aura?*aura.RecordUi.getPicklistValuesByRecordType=1',
 };
 
 export function interceptCaseAssist() {
@@ -62,9 +63,8 @@ export function mockCaseClassification(field: string, value: Array<object>) {
 
 export function mockSfPicklistValues(field: string, values: Array<object>) {
   cy.intercept(
-    {
-      url: '**/aura?*aura.RecordUi.getPicklistValuesByRecordType=1',
-    },
+    routeMatchers.auraPicklistValues,
+
     (req) => {
       req.continue((res) => {
         res.body!.actions![0]!.returnValue!.picklistFieldValues![
