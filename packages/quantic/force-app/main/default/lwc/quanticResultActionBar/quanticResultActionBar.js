@@ -15,11 +15,17 @@ export default class QuanticResultActionBar extends LightningElement {
   resultActionButtons = [];
 
   connectedCallback() {
-    this.addEventListener('resultactionregister', this.handleButtonRegister);
+    this.addEventListener(
+      'qunatic__resultactionregister',
+      this.handleButtonRegister
+    );
   }
 
   disconnectedCallback() {
-    this.removeEventListener('resultactionregister', this.handleButtonRegister);
+    this.removeEventListener(
+      'qunatic__resultactionregister',
+      this.handleButtonRegister
+    );
   }
 
   /**
@@ -39,7 +45,7 @@ export default class QuanticResultActionBar extends LightningElement {
     this.resultActionButtons = this.getSortedButtons(this.resultActionButtons);
 
     if (this.resultActionButtons.length === 1) {
-      this.resultActionButtons[0].callbacks.setOrder(null);
+      this.resultActionButtons[0].callbacks.applyCssOrderClass(null);
     } else {
       this.resultActionButtons.forEach((resultActionButton, index, array) => {
         const order =
@@ -48,7 +54,7 @@ export default class QuanticResultActionBar extends LightningElement {
             : index === array.length - 1
             ? 'last'
             : 'middle';
-        resultActionButton.callbacks.setOrder(order);
+        resultActionButton.callbacks.applyCssOrderClass(order);
       });
     }
   }

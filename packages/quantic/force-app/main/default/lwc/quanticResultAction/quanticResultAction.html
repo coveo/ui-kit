@@ -1,13 +1,18 @@
 <template>
   <div class="slds-is-relative result-action_container">
-    <template if:false={toggleMode}>
-      <lightning-button-icon aria-label={displayedLabel} variant="border-filled" icon-name={iconName}
-        class={resultActionOrderClasses}>
-      </lightning-button-icon>
+    <template if:true={_loading}>
+      <button class={loadingClasses} aria-label={displayedLabel}>
+        <div class="slds-spinner_container">
+          <div role="status" class="slds-spinner slds-spinner_xx-small">
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+          </div>
+        </div>
+      </button>
     </template>
-    <template if:true={toggleMode}>
-      <lightning-button-icon-stateful aria-label={displayedLabel} variant="border-filled"
-        class={resultActionOrderClasses} icon-name={iconName} selected={selected}>
+    <template if:false={_loading}>
+      <lightning-button-icon-stateful onclick={handleClick} aria-label={displayedLabel} variant="border-filled"
+        class={resultActionOrderClasses} icon-name={iconName} selected={_selected}>
       </lightning-button-icon-stateful>
     </template>
     <template if:true={displayedLabel}>

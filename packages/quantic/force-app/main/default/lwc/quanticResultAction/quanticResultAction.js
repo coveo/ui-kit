@@ -1,5 +1,7 @@
 import {LightningElement, api} from 'lwc';
 
+/** @typedef {import("coveo").Result} Result */
+
 /**
  * The `QuanticResultAction` component allows the end user to perform a specific action on a result.
  * @category Search
@@ -9,23 +11,17 @@ import {LightningElement, api} from 'lwc';
  */
 export default class QuanticResultAction extends LightningElement {
   /**
-   * The label displayed in the tooltip. This property takes effect when the toggle mode is disabled.
+   * The label displayed in the tooltip of the result action button.
    * @api
    * @type {string}
    */
-  @api labelWhenHover;
+  @api label;
   /**
-   * The label displayed in the tooltip when the result action button is selected. This property takes effect when the toggle mode is enabled.
+   * The label displayed in the tooltip when the result action button is selected. This property takes effect only when the toggle mode is enabled.
    * @api
    * @type {string}
    */
   @api labelWhenOn;
-  /**
-   * The label displayed in the tooltip when the result action button is not selected. This property takes effect when the toggle mode is enabled.
-   * @api
-   * @type {string}
-   */
-  @api labelWhenOff;
   /**
    * The name of the icon displayed inside the result action button.
    * @api
@@ -44,18 +40,47 @@ export default class QuanticResultAction extends LightningElement {
    * @type {boolean}
    */
   @api selected;
+  /**
+   * Specifies whether the result action button is in loading state or not.
+   * @api
+   * @type {boolean}
+   */
+  @api loading;
+  /**
+   * The name of the event to be dispatched.
+   * @api
+   * @type {string}
+   */
+  @api eventName;
+  /**
+   * The result to perform the action on.
+   * @api
+   * @type {Result}
+   */
+  @api result;
 
   /** @type {string} */
   resultActionOrderClasses;
 
-  connectedCallback() {
-    const resultActionRegister = new CustomEvent('resultactionregister', {
-      bubbles: true,
-      detail: {
-        setOrder: this.setOrder,
-      },
-    });
+  /** @type {boolean} */
+  _selected;
+  /** @type {boolean} */
+  _loading;
 
+  connectedCallback() {
+    this._selected = this.selected;
+    this._loading = this.loading;
+
+    const resultActionRegister = new CustomEvent(
+      'qunatic__resultactionregister',
+      {
+        bubbles: true,
+        composed: true,
+        detail: {
+          applyCssOrderClass: this.applyCssOrderClass,
+        },
+      }
+    );
     this.dispatchEvent(resultActionRegister);
   }
 
@@ -63,7 +88,7 @@ export default class QuanticResultAction extends LightningElement {
    * Sets the correct order on the result action button.
    * @param {'first' | 'middle' | 'last'} order
    */
-  setOrder = (order) => {
+  applyCssOrderClass = (order) => {
     const commonButtonClass = 'result-action_button';
     let orderClass = '';
 
@@ -80,13 +105,53 @@ export default class QuanticResultAction extends LightningElement {
   };
 
   /**
-   * Returns the label to be dusplayed in the tooltip.
+   * Sets the loading state.
+   * @param {boolean} value
+   */
+  setLoading = (value) => {
+    this._loading = value;
+  };
+
+  /**
+   * Sets the selected state
+   * @param {boolean} value
+   */
+  setSelected = (value) => {
+    this._selected = value;
+  };
+
+  handleClick(event) {
+    event.stopPropagation();
+    const resultCopy = {...this.result};
+    const resultActionEvent = new CustomEvent(this.eventName, {
+      bubbles: true,
+      composed: true,
+      detail: {
+        result: resultCopy,
+        setLoading: this.setLoading,
+        ...(this.toggleMode && {
+          setSelected: this.setSelected,
+          state: this._selected,
+        }),
+      },
+    });
+
+    this.dispatchEvent(resultActionEvent);
+  }
+
+  /**
+   * Returns the label to be displayed in the tooltip.
    */
   get displayedLabel() {
-    return !this.toggleMode
-      ? this.labelWhenHover
-      : this.selected
+    return this.toggleMode && this._selected && this.labelWhenOn
       ? this.labelWhenOn
-      : this.labelWhenOff;
+      : this.label;
+  }
+
+  /**
+   * Returns the CSS classes to be used in the loading state.
+   */
+  get loadingClasses() {
+    return `slds-button slds-button_icon slds-button_icon-border-filled ${this.resultActionOrderClasses}`;
   }
 }
