@@ -17,7 +17,7 @@ export default class QuanticResultAction extends LightningElement {
    */
   @api label;
   /**
-   * The label displayed in the tooltip when the result action button is selected. This property takes effect only when the toggle mode is enabled.
+   * The label displayed in the tooltip when the result action button is selected.
    * @api
    * @type {string}
    */
@@ -28,12 +28,6 @@ export default class QuanticResultAction extends LightningElement {
    * @type {string}
    */
   @api iconName;
-  /**
-   * Specifies whether the toggle mode is enabled or not.
-   * @api
-   * @type {boolean}
-   */
-  @api toggleMode;
   /**
    * Specifies whether the result action button is in selected state or not.
    * @api
@@ -129,10 +123,8 @@ export default class QuanticResultAction extends LightningElement {
       detail: {
         result: resultCopy,
         setLoading: this.setLoading,
-        ...(this.toggleMode && {
-          setSelected: this.setSelected,
-          state: this._selected,
-        }),
+        setSelected: this.setSelected,
+        state: this._selected,
       },
     });
 
@@ -143,9 +135,7 @@ export default class QuanticResultAction extends LightningElement {
    * Returns the label to be displayed in the tooltip.
    */
   get displayedLabel() {
-    return this.toggleMode && this._selected && this.labelWhenOn
-      ? this.labelWhenOn
-      : this.label;
+    return this._selected && this.labelWhenOn ? this.labelWhenOn : this.label;
   }
 
   /**

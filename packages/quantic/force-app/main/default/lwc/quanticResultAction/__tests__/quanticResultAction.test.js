@@ -1,5 +1,5 @@
 // @ts-ignore
-import {createElement} from 'lwc';
+import { createElement } from 'lwc';
 import QuanticResultAction from '../quanticResultAction';
 
 let order;
@@ -8,18 +8,19 @@ const functionsMocks = {
   listener: jest.fn(() => {}),
 };
 
-const exampleLabelWhenHover = 'example label';
+const exampleLabel = 'example label';
 const exampleLabelWhenOn = 'example label on';
-const exampleLabelWhenOff = 'example label off';
 const exampleIconName = 'example icon name';
+const exampleEventName = 'example_event_name';
 
 const defaultOptions = {
-  labelWhenHover: exampleLabelWhenHover,
+  label: exampleLabel,
   labelWhenOn: exampleLabelWhenOn,
-  labelWhenOff: exampleLabelWhenOff,
   toggleMode: false,
   selected: false,
   iconName: exampleIconName,
+  eventName: exampleEventName,
+  loading: false,
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -41,27 +42,49 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-function clickButton(element, buttonSelector) {
-  const button = element.shadowRoot.querySelector(buttonSelector);
+function clickButton(element) {
+  const button = element.shadowRoot.querySelector('lightning-button-icon-stateful');
   expect(button).not.toBeNull();
   button.click();
 }
 
-function setupClickEventDispatchTest(element) {
-  const handler = () => {
+function setupClickSimullation(element, eventName, newState) {
+  const handler = (event) => {
+    const { setLoading, setSelected, state } = event.detail;
     functionsMocks.listener();
-    element.removeEventListener('click', handler);
+    if (newState === 'loading') {
+      setLoading(true);
+    }
+    if (newState === 'selected') {
+      setSelected(!state);
+    }
+    element.removeEventListener(eventName, handler);
   };
-  element.addEventListener('click', handler);
+  element.addEventListener(eventName, handler);
 }
 
 function setupRegisterEventDispatchTest() {
   const handler = (event) => {
-    event.detail.setOrder(order);
+    event.detail.applyCssOrderClass(order);
     functionsMocks.listener();
-    document.removeEventListener('resultactionregister', handler);
+    document.removeEventListener('qunatic__resultactionregister', handler);
   };
-  document.addEventListener('resultactionregister', handler);
+  document.addEventListener('qunatic__resultactionregister', handler);
+}
+
+function expectLoadingState(element) {
+  const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+  const loadingResultActionButton = element.shadowRoot.querySelector('.slds-button_icon');
+
+  expect(resultActionButton).toBeNull();
+  expect(loadingResultActionButton).not.toBeNull();
+}
+
+function expectSelectedState(element) {
+  const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+
+  expect(resultActionButton).not.toBeNull();
+  expect(resultActionButton.selected).toBe(true);
 }
 
 describe('c-quantic-result-action', () => {
@@ -77,155 +100,100 @@ describe('c-quantic-result-action', () => {
     cleanup();
   });
 
-  describe('when the toggle mode is disabled', () => {
-    it('should display the lightning icon button', async () => {
-      const element = createTestComponent();
+  it('should display the result action button', async () => {
+    const element = createTestComponent();
+    await flushPromises();
+
+    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+
+    expect(resultActionButton).not.toBeNull();
+  });
+
+  it('should display the correct tooltip', async () => {
+    const element = createTestComponent();
+    await flushPromises();
+
+    const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
+
+    expect(tooltip).not.toBeNull();
+    expect(tooltip.textContent).toBe(exampleLabel);
+  });
+
+  it('should display the correct icon', async () => {
+    const element = createTestComponent();
+    await flushPromises();
+
+    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+
+    expect(resultActionButton).not.toBeNull();
+    expect(resultActionButton.iconName).toBe(exampleIconName);
+  });
+
+  it('should display the button properly when it is in the first position', async () => {
+    order = 'first';
+    setupRegisterEventDispatchTest();
+    const element = createTestComponent();
+    await flushPromises();
+
+    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+
+    expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
+    expect(resultActionButton.className).toBe('result-action_button result-action_first');
+  });
+
+  it('should display the button properly when it is in a middle position', async () => {
+    order = 'middle';
+    setupRegisterEventDispatchTest();
+    const element = createTestComponent();
+    await flushPromises();
+
+    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+
+    expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
+    expect(resultActionButton.className).toBe('result-action_button result-action_middle');
+  });
+
+  it('should display the button properly when it is in the last position', async () => {
+    order = 'last';
+    setupRegisterEventDispatchTest();
+    const element = createTestComponent();
+    await flushPromises();
+
+    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+
+    expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
+    expect(resultActionButton.className).toBe('result-action_button result-action_last');
+  });
+
+  it('should display the button properly when it is the only result action displayed', async () => {
+    order = null;
+    setupRegisterEventDispatchTest();
+    const element = createTestComponent();
+    await flushPromises();
+
+    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+
+    expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
+    expect(resultActionButton.className).toBe('result-action_button');
+  });
+
+  it('should display the result action button in the loading state when the lloading property is set to true', async () => {
+    const element = createTestComponent({ ...defaultOptions, loading: true });
+    await flushPromises();
+
+    expectLoadingState(element);
+  });
+
+  describe('when the selected property is set to true', () => {
+    it('should display the result action button in the selected state', async () => {
+      const element = createTestComponent({ ...defaultOptions, selected: true });
       await flushPromises();
 
-      const iconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon'
-      );
-      const statefulIconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon-stateful'
-      );
-
-      expect(iconButton).not.toBeNull();
-      expect(statefulIconButton).toBeNull();
+      expectSelectedState(element);
     });
 
     it('should display the correct tooltip', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
-
-      expect(tooltip).not.toBeNull();
-      expect(tooltip.textContent).toBe(exampleLabelWhenHover);
-    });
-
-    it('should display the correct icon', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      const iconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon'
-      );
-
-      expect(iconButton).not.toBeNull();
-      expect(iconButton.iconName).toBe(exampleIconName);
-    });
-
-    it('should dispatch a click event when the lightning button is clicked', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      setupClickEventDispatchTest(element);
-
-      clickButton(element, 'lightning-button-icon');
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-    });
-
-    it('should display the button properely when its in the first position', async () => {
-      order = 'first';
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent();
-      await flushPromises();
-
-      const iconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon'
-      );
-
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(iconButton.className).toBe(
-        'result-action_button result-action_first'
-      );
-    });
-
-    it('should display the button properely when its in a middle position', async () => {
-      order = 'middle';
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent();
-      await flushPromises();
-
-      const iconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon'
-      );
-
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(iconButton.className).toBe(
-        'result-action_button result-action_middle'
-      );
-    });
-
-    it('should display the button properely when its in the last position', async () => {
-      order = 'last';
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent();
-      await flushPromises();
-
-      const iconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon'
-      );
-
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(iconButton.className).toBe(
-        'result-action_button result-action_last'
-      );
-    });
-
-    it('should display the button properely when its the only result action displayed', async () => {
-      order = null;
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent();
-      await flushPromises();
-
-      const iconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon'
-      );
-
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(iconButton.className).toBe('result-action_button');
-    });
-  });
-
-  describe('when the toggle mode is enabled', () => {
-    it('should display the lightning stateful icon button', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
-      await flushPromises();
-
-      const iconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon'
-      );
-      const statefulIconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon-stateful'
-      );
-
-      expect(iconButton).toBeNull();
-      expect(statefulIconButton).not.toBeNull();
-    });
-
-    it('should display the correct tooltip when the button is off', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
-      await flushPromises();
-
-      const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
-
-      expect(tooltip).not.toBeNull();
-      expect(tooltip.textContent).toBe(exampleLabelWhenOff);
-    });
-
-    it('should display the correct tooltip when the button is on', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-        selected: true,
-      });
+      const element = createTestComponent({ ...defaultOptions, selected: true });
       await flushPromises();
 
       const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
@@ -233,107 +201,33 @@ describe('c-quantic-result-action', () => {
       expect(tooltip).not.toBeNull();
       expect(tooltip.textContent).toBe(exampleLabelWhenOn);
     });
+  });
 
-    it('should display the correct icon', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
+  describe('when the result action is clicked', () => {
+    it('should dispatch a the correct event and sets the loading state', async () => {
+      const element = createTestComponent();
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon-stateful'
-      );
+      setupClickSimullation(element, exampleEventName, 'loading');
 
-      expect(statefulIconButton).not.toBeNull();
-      expect(statefulIconButton.iconName).toBe(exampleIconName);
-    });
-
-    it('should dispatch a click event when the lightning button is clicked', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
+      clickButton(element);
       await flushPromises();
-
-      setupClickEventDispatchTest(element);
-
-      clickButton(element, 'lightning-button-icon-stateful');
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-    });
-
-    it('should display the button properely when its in the first position', async () => {
-      order = 'first';
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
-      await flushPromises();
-
-      const statefulIconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon-stateful'
-      );
 
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(statefulIconButton.className).toBe(
-        'result-action_button result-action_first'
-      );
+      expectLoadingState(element);
     });
 
-    it('should display the button properely when its in a middle position', async () => {
-      order = 'middle';
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
+    it('should dispatch a the correct event and sets the selected state', async () => {
+      const element = createTestComponent();
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon-stateful'
-      );
+      setupClickSimullation(element, exampleEventName, 'selected');
 
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(statefulIconButton.className).toBe(
-        'result-action_button result-action_middle'
-      );
-    });
-
-    it('should display the button properely when its in the last position', async () => {
-      order = 'last';
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
+      clickButton(element);
       await flushPromises();
 
-      const statefulIconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon-stateful'
-      );
-
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(statefulIconButton.className).toBe(
-        'result-action_button result-action_last'
-      );
-    });
-
-    it('should display the button properely when its the only result action displayed', async () => {
-      order = null;
-      setupRegisterEventDispatchTest();
-      const element = createTestComponent({
-        ...defaultOptions,
-        toggleMode: true,
-      });
-      await flushPromises();
-
-      const statefulIconButton = element.shadowRoot.querySelector(
-        'lightning-button-icon-stateful'
-      );
-
-      expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expect(statefulIconButton.className).toBe('result-action_button');
+      expectSelectedState(element);
     });
   });
 });
