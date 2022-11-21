@@ -12,12 +12,12 @@
             {moreButtonLabel}
             <lightning-icon class={moreButtonIconClasses} icon-name={arrowIconName} size="xx-small" aria-hidden="true"> </lightning-icon>
           </button>
-          <div class="slds-dropdown slds-dropdown_right">
+          <div class="tab-bar_dropdown slds-dropdown slds-dropdown_right">
             <ul class="slds-dropdown__list slds-dropdown_length-with-icon-10" role="menu">
               <template for:each={tabsInDropdown} for:item="tab">
                 <li class="slds-dropdown__item" role="presentation" key={tab.id}>
                   <button
-                    class="slds-button slds-tabs_default__item"
+                    class="slds-size_1-of-1 slds-button slds-tabs_default__item"
                     role="menuitem"
                     tabindex={optionTabIndex}
                     onclick={handleDropdownTabSelect}
