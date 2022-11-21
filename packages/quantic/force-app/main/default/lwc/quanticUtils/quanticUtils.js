@@ -688,3 +688,48 @@ export function isParentOf(element, targetElement) {
     false
   );
 }
+
+export async function copyToClipboard(text) {
+  if (navigator?.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      this.copyToClipboardFallback(text);
+    }
+  } else {
+    this.copyToClipboardFallback(text);
+  }
+}
+
+/**
+ * @param {string} text
+ */
+export function copyToClipboardFallback(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+}
+
+export function readFromObject(object, key) {
+  const firstPeriodIndex = key.indexOf('.');
+  if (object && firstPeriodIndex !== -1) {
+    let newKey = key.substring(firstPeriodIndex + 1);
+    key = key.substring(0, firstPeriodIndex);
+    return this.readFromObject(object[key], newKey);
+  }
+  return object ? object[key] : undefined;
+}
+
+export function buildTemplateTextFromResult(template, result) {
+  if (!template) {
+    return '';
+  }
+  return template.replace(/\$\{(.*?)\}/g, (value) => {
+    const key = value.substring(2, value.length - 1);
+    const newValue = readFromObject(result, key);
+    return newValue || value;
+  });
+}
