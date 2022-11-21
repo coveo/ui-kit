@@ -3,7 +3,7 @@ import {performSearch} from '../../../page-objects/actions/action-perform-search
 import {configure} from '../../../page-objects/configurator';
 import {
   extractResults,
-  getAlias,
+  getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
@@ -46,7 +46,7 @@ describe('quantic-resultlist', () => {
   }
 
   function aliasResultValues(useCase: string) {
-    cy.wait(getAlias(useCase)).then((interception) => {
+    cy.wait(getQueryAlias(useCase)).then((interception) => {
       const results = extractResults(interception.response);
       cy.wrap(results).as(indexResultsAlias.substring(1));
     });

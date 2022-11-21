@@ -1,7 +1,7 @@
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
-  getAlias,
+  getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
@@ -32,7 +32,7 @@ describe('quantic-pager', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -100,7 +100,7 @@ describe('quantic-pager', () => {
 
           scope('when performing a new search query', () => {
             performSearch();
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
             Expect.selectedPageContains(1);
           });
         });
