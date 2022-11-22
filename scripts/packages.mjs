@@ -72,13 +72,13 @@ export function updatePackageVersion(
     if (manifest.name === packageName) {
       manifest.version = newVersion;
     } else {
-      if (packageName in manifest.dependencies) {
+      if (packageName in (manifest.dependencies || {})) {
         manifest.dependencies[packageName] = newVersion;
       }
-      if (packageName in manifest.devDependencies) {
+      if (packageName in (manifest.devDependencies || {})) {
         manifest.devDependencies[packageName] = newVersion;
       }
-      if (packageName in manifest.peerDependencies) {
+      if (packageName in (manifest.peerDependencies || {})) {
         manifest.peerDependencies[packageName] = newVersion;
       }
     }
