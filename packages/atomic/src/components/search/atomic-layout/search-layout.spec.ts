@@ -1,7 +1,7 @@
-import {buildSearchLayout} from './search-layout';
 import {newSpecPage} from '@stencil/core/testing';
 import {AtomicLayoutSection} from '../../common/atomic-layout-section/atomic-layout-section';
 import {AtomicSearchLayout} from './atomic-search-layout';
+import {buildSearchLayout} from './search-layout';
 
 describe('Search Layout', () => {
   describe('#buildSearchLayout', () => {

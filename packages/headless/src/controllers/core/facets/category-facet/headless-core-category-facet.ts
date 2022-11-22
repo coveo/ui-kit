@@ -1,7 +1,17 @@
+import {CoreEngine} from '../../../../app/engine';
 import {
-  buildController,
-  Controller,
-} from '../../../controller/headless-controller';
+  categoryFacetSearchSet,
+  categoryFacetSet,
+  facetOptions,
+  configuration,
+  search,
+} from '../../../../app/reducers';
+import {
+  disableFacet,
+  enableFacet,
+  updateFacetOptions,
+} from '../../../../features/facet-options/facet-options-actions';
+import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
 import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,
@@ -10,14 +20,13 @@ import {
   updateCategoryFacetSortCriterion,
 } from '../../../../features/facets/category-facet-set/category-facet-set-actions';
 import {categoryFacetResponseSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
-import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {
-  disableFacet,
-  enableFacet,
-  updateFacetOptions,
-} from '../../../../features/facet-options/facet-options-actions';
+import {defaultCategoryFacetOptions} from '../../../../features/facets/category-facet-set/category-facet-set-slice';
+import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
+import {CategoryFacetSortCriterion} from '../../../../features/facets/category-facet-set/interfaces/request';
+import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
+import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
@@ -25,28 +34,19 @@ import {
   FacetOptionsSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {partitionIntoParentsAndValues} from '../../../../features/facets/category-facet-set/category-facet-utils';
+import {loadReducerError} from '../../../../utils/errors';
+import {omit} from '../../../../utils/utils';
 import {validateOptions} from '../../../../utils/validate-payload';
+import {
+  buildController,
+  Controller,
+} from '../../../controller/headless-controller';
+import {determineFacetId} from '../_common/facet-id-determinor';
 import {
   CategoryFacetOptions,
   categoryFacetOptionsSchema,
   CategoryFacetSearchOptions,
 } from './headless-core-category-facet-options';
-import {determineFacetId} from '../_common/facet-id-determinor';
-import {CategoryFacetValue} from '../../../../features/facets/category-facet-set/interfaces/response';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  facetOptions,
-  configuration,
-  search,
-} from '../../../../app/reducers';
-import {loadReducerError} from '../../../../utils/errors';
-import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {CoreEngine} from '../../../../app/engine';
-import {isFacetLoadingResponseSelector} from '../../../../features/facets/facet-set/facet-set-selectors';
-import {isFacetEnabledSelector} from '../../../../features/facet-options/facet-options-selectors';
-import {omit} from '../../../../utils/utils';
 
 export type {
   CategoryFacetValue,

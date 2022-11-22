@@ -1,16 +1,12 @@
-import {NumericFacetRequest, NumericRangeRequest} from './interfaces/request';
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  registerNumericFacet,
-  toggleSelectNumericFacetValue,
-  deselectAllNumericFacetValues,
-  updateNumericFacetSortCriterion,
-  RegisterNumericFacetActionCreatorPayload,
-  updateNumericFacetValues,
-} from './numeric-facet-actions';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {disableFacet} from '../../../facet-options/facet-options-actions';
 import {change} from '../../../history/history-actions';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {NumericFacetResponse, NumericFacetValue} from './interfaces/response';
+import {deselectAllFacets} from '../../generic/facet-actions';
+import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
@@ -20,13 +16,17 @@ import {
   handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
 } from '../generic/range-facet-reducers';
-import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
+import {NumericFacetRequest, NumericRangeRequest} from './interfaces/request';
+import {NumericFacetResponse, NumericFacetValue} from './interfaces/response';
+import {
+  registerNumericFacet,
+  toggleSelectNumericFacetValue,
+  deselectAllNumericFacetValues,
+  updateNumericFacetSortCriterion,
+  RegisterNumericFacetActionCreatorPayload,
+  updateNumericFacetValues,
+} from './numeric-facet-actions';
 import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
-import {deselectAllFacets} from '../../generic/facet-actions';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../../../facet-options/facet-options-actions';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
 
 export const numericFacetSetReducer = createReducer(
   getNumericFacetSetInitialState(),

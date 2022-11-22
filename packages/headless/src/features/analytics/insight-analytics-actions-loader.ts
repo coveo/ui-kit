@@ -35,13 +35,13 @@ import {
 } from '../static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter-set-insight-analytics-actions';
 import {
-  logInsightInterfaceChange,
-  logInsightInterfaceLoad,
-} from './insight-analytics-actions';
-import {
   AnalyticsType,
   AsyncThunkInsightAnalyticsOptions,
 } from './analytics-utils';
+import {
+  logInsightInterfaceChange,
+  logInsightInterfaceLoad,
+} from './insight-analytics-actions';
 
 export type {
   LogStaticFilterToggleValueActionCreatorPayload,

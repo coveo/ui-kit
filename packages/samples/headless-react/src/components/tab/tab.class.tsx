@@ -1,10 +1,10 @@
-import {Component, ContextType, PropsWithChildren} from 'react';
 import {
   buildTab,
   Tab as HeadlessTab,
   TabState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType, PropsWithChildren} from 'react';
 import {AppContext} from '../../context/engine';
 
 export interface TabProps {

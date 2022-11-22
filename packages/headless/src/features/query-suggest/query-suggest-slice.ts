@@ -1,5 +1,8 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {updateQuerySetQuery} from '../query-set/query-set-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {executeSearch} from '../search/search-actions';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
@@ -7,14 +10,11 @@ import {
   selectQuerySuggestion,
   unregisterQuerySuggest,
 } from './query-suggest-actions';
-import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {
   getQuerySuggestSetInitialState,
   QuerySuggestSet,
   QuerySuggestState,
 } from './query-suggest-state';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {executeSearch} from '../search/search-actions';
 
 export const querySuggestReducer = createReducer(
   getQuerySuggestSetInitialState(),

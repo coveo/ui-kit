@@ -1,12 +1,12 @@
 import {SearchResponseSuccess} from '@coveo/headless/dist/definitions/api/search/search/search-response';
 import {NumericFacetValue} from '@coveo/headless/dist/definitions/product-listing.index';
-import {getAlias, InterceptAliases} from '../../../page-objects/search';
+import {getQueryAlias, InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
-import {SearchExpectations} from '../../search-expectations';
 import {
   baseFacetExpectations,
   facetWithValuesExpectations,
 } from '../../facets-1/facet-common-expectations';
+import {SearchExpectations} from '../../search-expectations';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,
@@ -96,7 +96,7 @@ const numericFacetExpectations = (selector: AllFacetSelectors) => {
         .logDetail(`the URL hash should contain the range "${value}"`);
     },
     displayEqualRange: (useCase: string) => {
-      cy.wait(getAlias(useCase)).then((interception) => {
+      cy.wait(getQueryAlias(useCase)).then((interception) => {
         const values = (interception.response?.body as SearchResponseSuccess)
           .facets[0].values;
         const fixedRange = getEvenRangeValue(values[0] as NumericFacetValue);

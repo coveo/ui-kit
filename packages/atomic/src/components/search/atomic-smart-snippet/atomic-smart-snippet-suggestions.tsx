@@ -1,21 +1,21 @@
-import {Component, h, Prop, State, Element} from '@stencil/core';
-import {
-  InitializableComponent,
-  InitializeBindings,
-  BindStateToController,
-} from '../../../utils/initialization-utils';
-import ArrowRight from '../../../images/arrow-right.svg';
-import ArrowDown from '../../../images/arrow-down.svg';
 import {
   buildSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
 } from '@coveo/headless';
-import {Hidden} from '../../common/hidden';
-import {Heading} from '../../common/heading';
-import {Button} from '../../common/button';
+import {Component, h, Prop, State, Element} from '@stencil/core';
+import ArrowDown from '../../../images/arrow-down.svg';
+import ArrowRight from '../../../images/arrow-right.svg';
+import {
+  InitializableComponent,
+  InitializeBindings,
+  BindStateToController,
+} from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
+import {Button} from '../../common/button';
+import {Heading} from '../../common/heading';
+import {Hidden} from '../../common/hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

@@ -1,9 +1,9 @@
-import {Component, h, State, Element} from '@stencil/core';
 import {
   buildSearchStatus,
   SearchStatusState,
   SearchStatus,
 } from '@coveo/headless';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   InitializeBindings,
   InitializableComponent,

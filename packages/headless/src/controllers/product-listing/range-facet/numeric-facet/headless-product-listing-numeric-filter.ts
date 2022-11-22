@@ -1,15 +1,16 @@
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {
+  logFacetClearAll,
+  logFacetSelect,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
-import {
-  logFacetClearAll,
-  logFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
-
 import {
   NumericFilterOptions,
   NumericFilterInitialState,
@@ -19,8 +20,6 @@ import {
   NumericFilter,
   buildCoreNumericFilter,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-filter';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
 
 export type {
   NumericFilterOptions,

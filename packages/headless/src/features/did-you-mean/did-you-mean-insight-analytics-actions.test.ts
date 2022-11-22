@@ -1,6 +1,6 @@
-import {buildMockInsightState} from '../../test/mock-insight-state';
 import * as CoveoAnalytics from 'coveo.analytics';
 import {buildMockInsightEngine} from '../../test/mock-engine';
+import {buildMockInsightState} from '../../test/mock-insight-state';
 import {
   logDidYouMeanAutomatic,
   logDidYouMeanClick,

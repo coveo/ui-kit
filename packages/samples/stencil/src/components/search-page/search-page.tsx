@@ -1,9 +1,9 @@
-import {Component, h, Prop} from '@stencil/core';
 import {
   loadSearchActions,
   loadSearchAnalyticsActions,
   SearchEngine,
 } from '@coveo/atomic/headless';
+import {Component, h, Prop} from '@stencil/core';
 import template from './template.html';
 
 @Component({

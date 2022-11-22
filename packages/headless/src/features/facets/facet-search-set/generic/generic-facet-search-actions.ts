@@ -6,22 +6,22 @@ import {
 import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
 import {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response';
 import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request';
+import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
+import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../../utils/validate-payload';
 import {logFacetSearch} from '../../facet-set/facet-set-analytics-actions';
-import {buildSpecificFacetSearchRequest} from '../specific/specific-facet-search-request-builder';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {buildCategoryFacetSearchRequest} from '../category/category-facet-search-request-builder';
+import {buildSpecificFacetSearchRequest} from '../specific/specific-facet-search-request-builder';
 import {
   StateNeededForCategoryFacetSearch,
   StateNeededForFacetSearch,
   StateNeededForSpecificFacetSearch,
 } from './generic-facet-search-state';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../../../utils/validate-payload';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {AsyncThunkOptions} from '../../../../app/async-thunk-options';
-import {ClientThunkExtraArguments} from '../../../../app/thunk-extra-arguments';
-import {FacetSearchAPIClient} from '../../../../api/search/search-api-client';
 
 type ExecuteFacetSearchThunkReturn = {
   facetId: string;

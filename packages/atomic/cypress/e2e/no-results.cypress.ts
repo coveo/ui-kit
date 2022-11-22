@@ -1,9 +1,9 @@
 import {TestFixture, generateComponentHTML} from '../fixtures/test-fixture';
 import {getAnalyticsAt} from '../utils/network';
-import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import * as CommonAssertions from './common-assertions';
-import {addSearchBox} from './search-box/search-box-actions';
 import {noResultsComponent, NoResultsSelectors} from './no-results-selectors';
+import {addSearchBox} from './search-box/search-box-actions';
+import {SearchBoxSelectors} from './search-box/search-box-selectors';
 
 describe('No Results Test Suites', () => {
   const wait = 1000;

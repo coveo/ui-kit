@@ -1,11 +1,10 @@
+import {StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {
   AsyncThunkSearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client';
-import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
-import {StringValue} from '@coveo/bueno';
-import {logRedirection} from './redirection-analytics-actions';
 import {
   ConfigurationSection,
   ContextSection,
@@ -14,6 +13,7 @@ import {
   SearchHubSection,
 } from '../../state/state-sections';
 import {buildPlanRequest} from '../standalone-search-box-set/standalone-search-box-set-actions';
+import {logRedirection} from './redirection-analytics-actions';
 
 export type RedirectionState = ConfigurationSection &
   QuerySection &

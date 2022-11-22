@@ -1,7 +1,13 @@
+import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-
-import {DateFacetOptions} from '../../../../core/facets/range-facet/date-facet/headless-date-facet-options';
+import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
+import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
+import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
 import {
   buildCoreDateFacet,
   buildDateRange,
@@ -11,14 +17,7 @@ import {
   DateRangeInput,
   DateRangeOptions,
 } from '../../../../core/facets/range-facet/date-facet/headless-core-date-facet';
-import {RangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/interfaces/request';
-import {InsightEngine} from '../../../../../app/insight-engine/insight-engine';
-import {executeSearch} from '../../../../../features/insight-search/insight-search-actions';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-} from '../../../../../features/facets/facet-set/facet-set-insight-analytics-actions';
-import {getInsightAnalyticsActionForToggleRangeFacetSelect} from '../../../../../features/facets/range-facets/generic/range-facet-insight-utils';
+import {DateFacetOptions} from '../../../../core/facets/range-facet/date-facet/headless-date-facet-options';
 
 export type {
   DateFacetOptions,

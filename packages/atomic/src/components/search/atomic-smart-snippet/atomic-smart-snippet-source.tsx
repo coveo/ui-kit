@@ -1,3 +1,4 @@
+import {Result} from '@coveo/headless';
 import {
   Component,
   Prop,
@@ -8,14 +9,13 @@ import {
   Event,
   Host,
 } from '@stencil/core';
-import {Result} from '@coveo/headless';
-import {LinkWithResultAnalytics} from '../result-link/result-link';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {LinkWithResultAnalytics} from '../result-link/result-link';
+import {ResultContextEvent} from '../result-template-components/result-template-decorators';
 
 /**
  * @part source-url

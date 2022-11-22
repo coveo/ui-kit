@@ -1,3 +1,6 @@
+import {InsightEngine} from '../../../app/insight-engine/insight-engine';
+import {logInsightInterfaceChange} from '../../../features/analytics/insight-analytics-actions';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {
   buildCoreTab,
   Tab,
@@ -6,9 +9,6 @@ import {
   TabInitialState,
   TabOptions,
 } from '../../core/tab/headless-core-tab';
-import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {logInsightInterfaceChange} from '../../../features/analytics/insight-analytics-actions';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 
 export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
 

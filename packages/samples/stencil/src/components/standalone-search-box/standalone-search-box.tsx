@@ -1,5 +1,5 @@
-import {Component, h, Prop} from '@stencil/core';
 import {getSampleSearchEngineConfiguration} from '@coveo/atomic/headless';
+import {Component, h, Prop} from '@stencil/core';
 import {Router} from 'stencil-router-v2';
 
 @Component({

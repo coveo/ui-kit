@@ -1,16 +1,16 @@
-import {SmartSnippet, buildSmartSnippet} from './headless-smart-snippet';
-import {createMockState} from '../../test/mock-state';
+import {SmartSnippetState} from '../..';
+import {QuestionsAnswers} from '../../api/search/search/question-answering';
+import {questionAnswering, search} from '../../app/reducers';
+import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
-import {questionAnswering, search} from '../../app/reducers';
-import {SmartSnippetState} from '../..';
-import {buildMockSearchState} from '../../test/mock-search-state';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {QuestionsAnswers} from '../../api/search/search/question-answering';
-import {emptyQuestionAnswer} from '../../features/search/search-state';
+import {buildMockSearchState} from '../../test/mock-search-state';
+import {createMockState} from '../../test/mock-state';
+import {SmartSnippet, buildSmartSnippet} from './headless-smart-snippet';
 
 describe('smartSnippet', () => {
   let state: SearchAppState;

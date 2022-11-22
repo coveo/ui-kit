@@ -1,5 +1,3 @@
-import React, {FunctionComponent} from 'react';
-
 import {
   AtomicFormatCurrency,
   AtomicResultBadge,
@@ -23,6 +21,7 @@ import {
   AtomicText,
   Result,
 } from '@coveo/atomic-react';
+import React, {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const ResultListPage: FunctionComponent = () => {

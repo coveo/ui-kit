@@ -1,5 +1,22 @@
 import {TagProps, TestFixture} from '../../../fixtures/test-fixture';
 import {
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from '../../breadbox-actions';
+import * as BreadboxAssertions from '../../breadbox-assertions';
+import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
+import * as CommonAssertions from '../../common-assertions';
+import {
+  pressClearButton,
+  selectIdleCheckboxValueAt,
+  selectIdleLinkValueAt,
+  typeFacetSearchQuery,
+} from '../facet-common-actions';
+import * as CommonFacetAssertions from '../facet-common-assertions';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
+import {
   addNumericFacet,
   addNumericFacetWithRange,
   clickApplyButton,
@@ -12,28 +29,11 @@ import {
   NumericRange,
   numericRanges,
 } from './numeric-facet-actions';
+import * as NumericFacetAssertions from './numeric-facet-assertions';
 import {
   numericFacetComponent,
   NumericFacetSelectors,
 } from './numeric-facet-selectors';
-import {
-  pressClearButton,
-  selectIdleCheckboxValueAt,
-  selectIdleLinkValueAt,
-  typeFacetSearchQuery,
-} from '../facet-common-actions';
-import * as NumericFacetAssertions from './numeric-facet-assertions';
-import * as CommonAssertions from '../../common-assertions';
-import * as CommonFacetAssertions from '../facet-common-assertions';
-import * as BreadboxAssertions from '../../breadbox-assertions';
-import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
-import {
-  addBreadbox,
-  breadboxLabel,
-  deselectBreadcrumbAtIndex,
-} from '../../breadbox-actions';
-import {addFacet} from '../facet/facet-actions';
-import {FacetSelectors} from '../facet/facet-selectors';
 
 describe('Numeric Facet V1 Test Suites', () => {
   const min = 0;

@@ -1,16 +1,12 @@
-import {DateFacetRequest, DateRangeRequest} from './interfaces/request';
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  registerDateFacet,
-  toggleSelectDateFacetValue,
-  deselectAllDateFacetValues,
-  updateDateFacetSortCriterion,
-  RegisterDateFacetActionCreatorPayload,
-  updateDateFacetValues,
-} from './date-facet-actions';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {disableFacet} from '../../../facet-options/facet-options-actions';
 import {change} from '../../../history/history-actions';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {DateFacetResponse, DateFacetValue} from './interfaces/response';
+import {deselectAllFacets} from '../../generic/facet-actions';
+import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
@@ -20,13 +16,17 @@ import {
   handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
 } from '../generic/range-facet-reducers';
-import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
+import {
+  registerDateFacet,
+  toggleSelectDateFacetValue,
+  deselectAllDateFacetValues,
+  updateDateFacetSortCriterion,
+  RegisterDateFacetActionCreatorPayload,
+  updateDateFacetValues,
+} from './date-facet-actions';
 import {getDateFacetSetInitialState} from './date-facet-set-state';
-import {deselectAllFacets} from '../../generic/facet-actions';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../../../facet-options/facet-options-actions';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
+import {DateFacetRequest, DateRangeRequest} from './interfaces/request';
+import {DateFacetResponse, DateFacetValue} from './interfaces/response';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),

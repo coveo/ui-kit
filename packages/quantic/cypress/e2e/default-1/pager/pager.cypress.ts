@@ -1,19 +1,19 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
-  getAlias,
+  getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
-import {PagerExpectations as Expect} from './pager-expectations';
-import {PagerActions as Actions} from './pager-actions';
-import {stubConsoleError} from '../../console-selectors';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
-import {scope} from '../../../reporters/detailed-collector';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {scope} from '../../../reporters/detailed-collector';
+import {stubConsoleError} from '../../console-selectors';
+import {PagerActions as Actions} from './pager-actions';
+import {PagerExpectations as Expect} from './pager-expectations';
 
 interface PagerOptions {
   useCase: string;
@@ -32,7 +32,7 @@ describe('quantic-pager', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -100,7 +100,7 @@ describe('quantic-pager', () => {
 
           scope('when performing a new search query', () => {
             performSearch();
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
             Expect.selectedPageContains(1);
           });
         });

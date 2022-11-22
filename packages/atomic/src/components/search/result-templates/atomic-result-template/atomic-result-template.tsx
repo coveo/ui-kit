@@ -1,5 +1,5 @@
-import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {ResultTemplate, ResultTemplateCondition} from '@coveo/headless';
+import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../../utils/props-utils';
 import {
   makeMatchConditions,

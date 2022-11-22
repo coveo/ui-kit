@@ -1,4 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
+import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
 import {InsightEngine} from '../../insight.index';
 import {
   AnalyticsType,
@@ -8,7 +9,6 @@ import {
   logContextChanged,
   logExpandToFullUI,
 } from './insight-search-analytics-actions';
-import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
 
 /**
  * The Insight Search analytics action creators.

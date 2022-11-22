@@ -1,12 +1,13 @@
+import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
 import {FacetOptions} from '../../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../../features/facets/generic/interfaces/generic-facet-request';
+import {SortCriterion} from '../../../features/sort/sort';
 import {
   HTTPContentType,
   HttpMethods,
   PlatformClientCallOptions,
 } from '../../platform-client';
-import {SortCriterion} from '../../../features/sort/sort';
-import {ContextPayload} from '../../../controllers/product-listing/context/headless-product-listing-context';
+
 export interface ProductListingsParam
   extends ProductListingBaseParam,
     ProductListingRequestParam {}

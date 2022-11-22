@@ -1,11 +1,11 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
+import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
 import {AnyBindings} from '../interface/bindings';
-import {FacetManager} from '../types';
-import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {isRefineModalFacet} from '../interface/store';
+import {FacetManager} from '../types';
 
 interface RefineModalCommonProps {
   host: HTMLElement;

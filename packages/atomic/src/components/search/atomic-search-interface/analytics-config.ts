@@ -1,13 +1,13 @@
 import {
+  AnalyticsConfiguration,
+  SearchEngineConfiguration,
+} from '@coveo/headless';
+import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
   augmentAnalyticsConfigWithDocument,
 } from '../../common/interface/analytics-config';
-import {
-  AnalyticsConfiguration,
-  SearchEngineConfiguration,
-} from '@coveo/headless';
 import {createAtomicStore} from './store';
 
 export function getAnalyticsConfig(

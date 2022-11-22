@@ -1,6 +1,5 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
-
 import {
   buildCoreQuickview,
   QuickviewOptions,

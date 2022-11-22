@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-
 import {registerDetailedReporterPlugin} from '../reporters/detailed-collector';
 
 interface CommunityConfig {

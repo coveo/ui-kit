@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {recentQueries} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   RegisterRecentQueriesCreatorPayload,
   registerRecentQueries,

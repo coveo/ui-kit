@@ -1,4 +1,3 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   categoryFacetSet,
   configuration,
@@ -7,6 +6,7 @@ import {
   numericFacetSet,
   search,
 } from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {categoryFacetSelectedValuesSelector} from '../../features/facets/category-facet-set/category-facet-set-selectors';
@@ -43,6 +43,7 @@ import {
   NumericFacetSection,
   SearchSection,
 } from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
   Breadcrumb,
   BreadcrumbManager,
@@ -57,7 +58,6 @@ import {
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {loadReducerError} from '../../utils/errors';
 
 export type {
   NumericFacetBreadcrumb,

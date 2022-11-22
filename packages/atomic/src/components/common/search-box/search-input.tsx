@@ -1,5 +1,5 @@
-import {JSXBase} from '@stencil/core/internal';
 import {FunctionalComponent, h} from '@stencil/core';
+import {JSXBase} from '@stencil/core/internal';
 import {AnyBindings} from '../interface/bindings';
 import {ClearButton} from './clear-button';
 

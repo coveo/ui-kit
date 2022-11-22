@@ -1,17 +1,17 @@
-import {
-  buildDictionaryFieldContext,
-  DictionaryFieldContext,
-} from './headless-dictionary-field-context';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../test/mock-engine';
+import {dictionaryFieldContext} from '../../app/reducers';
 import {
   setContext,
   addContext,
   removeContext,
 } from '../../features/dictionary-field-context/dictionary-field-context-actions';
-import {dictionaryFieldContext} from '../../app/reducers';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
+import {
+  buildDictionaryFieldContext,
+  DictionaryFieldContext,
+} from './headless-dictionary-field-context';
 
 describe('Context', () => {
   let context: DictionaryFieldContext;

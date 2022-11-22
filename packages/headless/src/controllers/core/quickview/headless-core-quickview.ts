@@ -1,5 +1,8 @@
+import {CoreEngine} from '../../..';
+import {HtmlApiClient} from '../../../api/search/html/html-api-client';
 import {Result} from '../../../api/search/search/result';
 import {configuration, resultPreview} from '../../../app/reducers';
+import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {fetchResultContent} from '../../../features/result-preview/result-preview-actions';
 import {
   ConfigurationSection,
@@ -10,9 +13,6 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {CoreEngine} from '../../..';
-import {HtmlApiClient} from '../../../api/search/html/html-api-client';
-import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 
 export interface QuickviewProps {
   /**

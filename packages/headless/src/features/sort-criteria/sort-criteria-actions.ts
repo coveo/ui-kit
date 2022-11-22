@@ -1,7 +1,7 @@
-import {createAction} from '@reduxjs/toolkit';
-import {SortBy, SortCriterion} from './criteria';
-import {validatePayload} from '../../utils/validate-payload';
 import {EnumValue, isArray, SchemaDefinition} from '@coveo/bueno';
+import {createAction} from '@reduxjs/toolkit';
+import {validatePayload} from '../../utils/validate-payload';
+import {SortBy, SortCriterion} from './criteria';
 
 const criterionDefinition = {
   by: new EnumValue<SortBy>({enum: SortBy, required: true}),

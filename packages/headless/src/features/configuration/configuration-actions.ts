@@ -1,11 +1,11 @@
+import {ArrayValue, BooleanValue, Value} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
+import {IRuntimeEnvironment} from 'coveo.analytics';
 import {
   nonEmptyString,
   validatePayload,
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
-import {ArrayValue, BooleanValue, Value} from '@coveo/bueno';
-import {IRuntimeEnvironment} from 'coveo.analytics';
 
 const originSchemaOnConfigUpdate = () => nonEmptyString;
 

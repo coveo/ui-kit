@@ -1,5 +1,5 @@
-import {CoreEngine} from '../../../../app/engine';
 import {PayloadAction} from '@reduxjs/toolkit';
+import {CoreEngine} from '../../../../app/engine';
 import {numericFacetSet} from '../../../../app/reducers';
 import {
   deselectAllNumericFacetValues,

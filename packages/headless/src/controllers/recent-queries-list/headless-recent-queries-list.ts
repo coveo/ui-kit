@@ -1,25 +1,25 @@
 import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
-import {buildController, Controller} from '../controller/headless-controller';
 import {search, recentQueries} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {RecentQueriesSection} from '../../state/state-sections';
 import {
   clearRecentQueries,
   registerRecentQueries,
 } from '../../features/recent-queries/recent-queries-actions';
 import {
-  validateInitialState,
-  validateOptions,
-} from '../../utils/validate-payload';
+  logClearRecentQueries,
+  logRecentQueryClick,
+} from '../../features/recent-queries/recent-queries-analytics-actions';
 import {
   executeSearch,
   prepareForSearchWithQuery,
 } from '../../features/search/search-actions';
+import {RecentQueriesSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
-  logClearRecentQueries,
-  logRecentQueryClick,
-} from '../../features/recent-queries/recent-queries-analytics-actions';
+  validateInitialState,
+  validateOptions,
+} from '../../utils/validate-payload';
+import {buildController, Controller} from '../controller/headless-controller';
 
 export interface RecentQueriesListProps {
   /**

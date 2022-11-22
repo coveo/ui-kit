@@ -1,3 +1,13 @@
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {
+  NumericFacetRequest,
+  NumericRangeRequest,
+} from '../numeric-facet-set/interfaces/request';
+import {NumericFacetValue} from '../numeric-facet-set/interfaces/response';
+import {RegisterNumericFacetActionCreatorPayload} from '../numeric-facet-set/numeric-facet-actions';
+import {AutomaticRangeFacetOptions} from './interfaces/options';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
@@ -6,16 +16,6 @@ import {
   handleRangeFacetSearchParameterRestoration,
   updateRangeValues,
 } from './range-facet-reducers';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {
-  NumericFacetRequest,
-  NumericRangeRequest,
-} from '../numeric-facet-set/interfaces/request';
-import {AutomaticRangeFacetOptions} from './interfaces/options';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {NumericFacetValue} from '../numeric-facet-set/interfaces/response';
-import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
-import {RegisterNumericFacetActionCreatorPayload} from '../numeric-facet-set/numeric-facet-actions';
 
 describe('range facet reducers', () => {
   let state: Record<string, NumericFacetRequest> = {};

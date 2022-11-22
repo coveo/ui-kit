@@ -1,15 +1,9 @@
+import {
+  buildResultsPerPage,
+  ResultsPerPage,
+  ResultsPerPageState,
+} from '@coveo/headless/insight';
 import {Component, h, Element, State, Prop, Method} from '@stencil/core';
-import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-} from '../../common/layout/display-options';
 import {
   InsightResultList,
   InsightResultListState,
@@ -17,19 +11,25 @@ import {
   InsightResult,
   buildInsightInteractiveResult,
 } from '..';
-import {randomID} from '../../../utils/utils';
-import {
-  buildResultsPerPage,
-  ResultsPerPage,
-  ResultsPerPageState,
-} from '@coveo/headless/insight';
-import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
-import {ResultListCommon} from '../../common/result-list/result-list-common';
 import {
   FocusTarget,
   FocusTargetController,
 } from '../../../utils/accessibility-utils';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../utils/initialization-utils';
+import {randomID} from '../../../utils/utils';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../common/layout/display-options';
+import {ResultListCommon} from '../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../common/result-list/result-template-provider';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
  * @internal

@@ -1,19 +1,19 @@
+import {getNextResults} from '../../../page-objects/actions/action-get-next-results';
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   extractResults,
-  getAlias,
+  getQueryAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
-import {ResultListExpectations as Expect} from './result-list-expectations';
-import {getNextResults} from '../../../page-objects/actions/action-get-next-results';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
-import {scope} from '../../../reporters/detailed-collector';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {scope} from '../../../reporters/detailed-collector';
+import {ResultListExpectations as Expect} from './result-list-expectations';
 
 interface ResultListOptions {
   useCase: string;
@@ -46,7 +46,7 @@ describe('quantic-resultlist', () => {
   }
 
   function aliasResultValues(useCase: string) {
-    cy.wait(getAlias(useCase)).then((interception) => {
+    cy.wait(getQueryAlias(useCase)).then((interception) => {
       const results = extractResults(interception.response);
       cy.wrap(results).as(indexResultsAlias.substring(1));
     });

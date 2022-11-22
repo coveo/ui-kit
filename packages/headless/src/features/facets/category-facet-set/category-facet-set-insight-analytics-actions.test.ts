@@ -1,8 +1,8 @@
+import * as CoveoAnalytics from 'coveo.analytics';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockInsightEngine} from '../../../test/mock-engine';
 import {buildMockInsightState} from '../../../test/mock-insight-state';
 import {logCategoryFacetBreadcrumb} from './category-facet-set-insight-analytics-actions';
-import * as CoveoAnalytics from 'coveo.analytics';
-import {buildMockInsightEngine} from '../../../test/mock-engine';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 
 const mockLogBreadcrumbFacet = jest.fn();
 

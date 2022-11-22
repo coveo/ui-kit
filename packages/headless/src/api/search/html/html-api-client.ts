@@ -1,12 +1,12 @@
-import {HtmlRequest} from './html-request';
+import {Logger} from 'pino';
+import {TextDecoder} from 'web-encoding';
+import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
+import {PlatformClient} from '../../platform-client';
+import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
+import {findEncoding} from '../encoding-finder';
 import {SearchAPIErrorWithStatusCode} from '../search-api-error-response';
 import {baseSearchRequest} from '../search-api-params';
-import {PlatformClient} from '../../platform-client';
-import {findEncoding} from '../encoding-finder';
-import {TextDecoder} from 'web-encoding';
-import {Logger} from 'pino';
-import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
-import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
+import {HtmlRequest} from './html-request';
 
 export interface HtmlApiClient {
   html: (req: HtmlRequest) => Promise<

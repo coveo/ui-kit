@@ -1,14 +1,14 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
-import {getAlias, interceptSearch} from '../../../page-objects/search';
-import {TabBarExpectations as Expect} from './tab-bar-expectations';
-import {TabBarActions as Actions} from './tab-bar-actions';
-import {scope} from '../../../reporters/detailed-collector';
+import {getQueryAlias, interceptSearch} from '../../../page-objects/search';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {scope} from '../../../reporters/detailed-collector';
+import {TabBarActions as Actions} from './tab-bar-actions';
+import {TabBarExpectations as Expect} from './tab-bar-expectations';
 
 interface TabBarOptions {
   lightTheme: boolean;
@@ -38,7 +38,7 @@ describe('quantic-tab-bar', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 

@@ -1,24 +1,12 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  registerNumberOfResults,
-  updateNumberOfResults,
-  updatePage,
-  registerPage,
-  previousPage,
-  nextPage,
-} from './pagination-actions';
-import {executeSearch} from '../search/search-actions';
-import {change} from '../history/history-actions';
-import {getPaginationInitialState, PaginationState} from './pagination-state';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {
-  deselectAllFacetValues,
-  toggleSelectFacetValue,
-} from './../facets/facet-set/facet-set-actions';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
 } from '../facets/category-facet-set/category-facet-set-actions';
+import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
+import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {
   toggleSelectDateFacetValue,
   updateDateFacetValues,
@@ -27,15 +15,27 @@ import {
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {deselectAllFacets} from '../facets/generic/facet-actions';
-import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
-import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
+import {change} from '../history/history-actions';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
-import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {executeSearch} from '../search/search-actions';
+import {
+  deselectAllFacetValues,
+  toggleSelectFacetValue,
+} from './../facets/facet-set/facet-set-actions';
+import {
+  registerNumberOfResults,
+  updateNumberOfResults,
+  updatePage,
+  registerPage,
+  previousPage,
+  nextPage,
+} from './pagination-actions';
 import {
   maximumNumberOfResultsFromIndex,
   minimumPage,
 } from './pagination-constants';
+import {getPaginationInitialState, PaginationState} from './pagination-state';
 
 export const paginationReducer = createReducer(
   getPaginationInitialState(),

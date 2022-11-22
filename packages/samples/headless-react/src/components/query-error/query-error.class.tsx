@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildQueryError,
   QueryError as HeadlessQueryError,
   QueryErrorState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class QueryError extends Component<{}, QueryErrorState> {

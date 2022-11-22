@@ -1,6 +1,6 @@
+import {resultContext} from '@coveo/atomic';
 import {Result} from '@coveo/atomic/headless';
 import {Component, h, Element, State} from '@stencil/core';
-import {resultContext} from '@coveo/atomic';
 
 @Component({
   tag: 'sample-result-component',

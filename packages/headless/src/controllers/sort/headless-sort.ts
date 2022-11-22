@@ -1,7 +1,7 @@
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {executeSearch} from '../../features/search/search-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   buildCoreSort,
   Sort,

@@ -1,14 +1,14 @@
-import {configure} from '../../../page-objects/configurator';
-import {getAlias, interceptSearch} from '../../../page-objects/search';
-import {ResultsPerPageExpectations as Expect} from './results-per-page-expectations';
-import {ResultsPerPageActions as Actions} from './results-per-page-actions';
-import {stubConsoleError} from '../../console-selectors';
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {configure} from '../../../page-objects/configurator';
+import {getQueryAlias, interceptSearch} from '../../../page-objects/search';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {stubConsoleError} from '../../console-selectors';
+import {ResultsPerPageActions as Actions} from './results-per-page-actions';
+import {ResultsPerPageExpectations as Expect} from './results-per-page-expectations';
 
 interface ResultsPerPageOptions {
   initialChoice: number;
@@ -38,7 +38,7 @@ describe('quantic-result-per-page', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 

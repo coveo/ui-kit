@@ -1,5 +1,25 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {WritableDraft} from 'immer/dist/internal';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../../breadcrumb/breadcrumb-actions';
+import {disableFacet} from '../../facet-options/facet-options-actions';
 import {change} from '../../history/history-actions';
+import {fetchProductListing} from '../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {executeSearch, fetchFacetValues} from '../../search/search-actions';
+import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
+import {
+  deselectAllFacets,
+  updateFacetAutoSelection,
+} from '../generic/facet-actions';
+import {
+  handleFacetSortCriterionUpdate,
+  handleFacetDeselectAll,
+  handleFacetUpdateNumberOfValues,
+} from '../generic/facet-reducer-helpers';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -10,30 +30,10 @@ import {
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
 } from './facet-set-actions';
-import {executeSearch, fetchFacetValues} from '../../search/search-actions';
-import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
+import {getFacetSetInitialState} from './facet-set-state';
+import {FacetOptionalParameters} from './interfaces/options';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
-import {FacetOptionalParameters} from './interfaces/options';
-import {
-  handleFacetSortCriterionUpdate,
-  handleFacetDeselectAll,
-  handleFacetUpdateNumberOfValues,
-} from '../generic/facet-reducer-helpers';
-import {getFacetSetInitialState} from './facet-set-state';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {fetchProductListing} from '../../product-listing/product-listing-actions';
-import {WritableDraft} from 'immer/dist/internal';
-import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
-import {
-  deselectAllBreadcrumbs,
-  deselectAllNonBreadcrumbs,
-} from '../../breadcrumb/breadcrumb-actions';
-import {disableFacet} from '../../facet-options/facet-options-actions';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),

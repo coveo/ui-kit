@@ -1,22 +1,21 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
-
-import {CategoryFacetExpectations as Expect} from './category-facet-expectations';
 import {
-  montrealHierarchy,
-  CategoryFacetActions as Actions,
-  togoHierarchy,
-} from './category-facet-actions';
-import {
-  getAlias,
+  getQueryAlias,
   InterceptAliases,
   interceptSearch,
 } from '../../../page-objects/search';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {
+  montrealHierarchy,
+  CategoryFacetActions as Actions,
+  togoHierarchy,
+} from './category-facet-actions';
+import {CategoryFacetExpectations as Expect} from './category-facet-expectations';
 
 interface CategoryFacetOptions {
   field: string;
@@ -77,7 +76,7 @@ describe('quantic-category-facet', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -131,7 +130,7 @@ describe('quantic-category-facet', () => {
 
   function setupShowLess(useCase: string) {
     setupShowMore(useCase);
-    cy.wait(getAlias(useCase));
+    cy.wait(getQueryAlias(useCase));
     Actions.clickShowLessButton();
   }
 
@@ -442,7 +441,7 @@ describe('quantic-category-facet', () => {
               },
               false
             );
-            cy.wait(getAlias(param.useCase)).then((interception) => {
+            cy.wait(getQueryAlias(param.useCase)).then((interception) => {
               const facetRequest = interception.request.body.facets[0];
               expect(facetRequest.sortCriteria).to.eq(sorting);
             });
