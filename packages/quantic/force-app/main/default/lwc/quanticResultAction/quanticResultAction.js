@@ -55,7 +55,6 @@ export default class QuanticResultAction extends LightningElement {
 
   /** @type {string} */
   resultActionOrderClasses;
-
   /** @type {boolean} */
   _selected;
   /** @type {boolean} */
