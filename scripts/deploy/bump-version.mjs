@@ -1,30 +1,16 @@
-import {execute} from '../exec.mjs';
-
-async function getHeadCommitHash() {
-  return execute('git', ['rev-parse', 'HEAD']);
-}
-
-async function getHeadCommitTag() {
-  return execute('git', ['tag', '--points-at', 'HEAD']);
-}
-
-async function checkoutLatestMaster() {
-  await execute('git', ['checkout', 'master']);
-  await execute('git', ['pull', 'origin', 'master']);
-}
+import {
+  isOnReleaseBranch,
+  getHowManyCommitsBehindUpstream,
+  getHeadCommitTag,
+} from '../git.mjs';
+import {bumpPrereleaseVersionAndPush} from '../prerelease.mjs';
+import {bumpReleaseVersionAndPush} from '../release.mjs';
 
 async function bumpVersionAndPush() {
   try {
-    await execute('npx', [
-      '--no-install',
-      'lerna',
-      'version',
-      '--conventional-commits',
-      '--conventional-graduate',
-      '--no-private',
-      '--yes',
-      '--exact',
-    ]);
+    (await isOnReleaseBranch())
+      ? await bumpReleaseVersionAndPush()
+      : await bumpPrereleaseVersionAndPush();
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',
@@ -36,13 +22,9 @@ async function bumpVersionAndPush() {
 
 async function main() {
   try {
-    const buildCommitHash = await getHeadCommitHash();
-    await checkoutLatestMaster();
-    const masterCommitHash = await getHeadCommitHash();
-
-    if (buildCommitHash !== masterCommitHash) {
+    if ((await getHowManyCommitsBehindUpstream()) !== 0) {
       console.log(
-        'Build commit does not match latest master commit. Skipping version bump.'
+        'Build commit does not match latest commit. Skipping version bump.'
       );
       return;
     }

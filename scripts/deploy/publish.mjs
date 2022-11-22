@@ -1,42 +1,55 @@
-import {execSync, spawnSync} from 'child_process';
-import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import {getPackageFromPath} from '../packages.mjs';
+import {execute} from '../exec.mjs';
+import {isOnReleaseBranch} from '../git.mjs';
+import {getPackageDefinitionFromPath} from '../packages.mjs';
+import {isPrereleaseVersion} from '../prerelease.mjs';
 
 const [tag] = process.argv.slice(2);
 
-const pathToPackageJSON = resolve(process.cwd(), 'package.json');
-const pkg = getPackageFromPath(pathToPackageJSON);
+const pathToPackageJSON = resolve(process.cwd(), './package.json');
+const pkg = getPackageDefinitionFromPath(pathToPackageJSON);
 const packageRef = `${pkg.name}@${pkg.version}`;
 
-function shouldPublish() {
+async function isAlreadyPublished() {
   try {
-    const packageVersionNotPublished = !execSync(
-      `npm view ${packageRef}`
-    ).toString().length;
-    return packageVersionNotPublished;
+    const isPublished = !!execute('npm', ['view', packageRef]);
+    return isPublished;
   } catch (e) {
-    const isFirstPublish = e.toString().includes('code E404');
-    return isFirstPublish;
+    const isFirstPublish = e.includes('code E404');
+    return !isFirstPublish;
   }
 }
 
-function publish() {
+async function shouldPublish() {
+  if (isAlreadyPublished()) {
+    return false;
+  }
+  if (await isOnReleaseBranch()) {
+    return true;
+  }
+  // On a prerelease branch, we may not want to prerelease some packages.
+  // We only want to prerelease packages that were already bumped to a prerelease version.
+  return isPrereleaseVersion(pkg.version);
+}
+
+async function publish() {
   const params = ['publish', '--verbose', '--access', 'public'];
   if (tag) {
     params.push('--tag', tag);
   }
-  spawnSync('npm', params, {
-    stdio: 'inherit',
-  });
+  await execute('npm', params);
 }
 
-if (shouldPublish()) {
-  publish();
-} else {
-  console.info(
-    `Skipped publishing ${packageRef} (${
-      tag || 'latest'
-    }) since it's already published.`
-  );
+async function main() {
+  if (await shouldPublish()) {
+    await publish();
+  } else {
+    console.info(
+      `Skipped publishing ${packageRef} (${
+        tag || 'latest'
+      }) since it's already published.`
+    );
+  }
 }
+
+main();
