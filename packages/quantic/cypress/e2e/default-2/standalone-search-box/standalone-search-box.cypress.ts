@@ -77,7 +77,7 @@ describe('quantic-standalone-search-box', () => {
 
       scope('when selecting from suggestions', () => {
         Actions.clickFirstSuggestion();
-        Expect.inputContains('test');
+        Expect.urlHashContains('/global-search/%40uri#q=test');
       });
 
       scope('when submitting a search', () => {
