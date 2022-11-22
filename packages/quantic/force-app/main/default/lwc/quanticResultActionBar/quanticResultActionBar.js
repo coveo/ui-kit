@@ -12,6 +12,7 @@ import {LightningElement} from 'lwc';
  * </c-quantic-result-action-bar>
  */
 export default class QuanticResultActionBar extends LightningElement {
+  /** @type { Array<{ callbacks: { applyCssOrderClass: function } , ref: HTMLElement }> } */
   resultActionButtons = [];
 
   connectedCallback() {
