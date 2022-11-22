@@ -1,7 +1,7 @@
 import {LightningElement} from 'lwc';
 
 /**
- *  The `QuanticResultActionBar` component displays the Quantic Result Actions in a proper way with the right styles.
+ *  The `QuanticResultActionBar` component displays multiple result actions in a proper way and with the right styles.
  * @category Search
  * @category Insight Panel
  * @example
@@ -29,7 +29,7 @@ export default class QuanticResultActionBar extends LightningElement {
   }
 
   /**
-   * Handles the result action button registration event.
+   * Registers a new result action.
    */
   handleButtonRegister = (event) => {
     event.stopPropagation();
@@ -39,7 +39,7 @@ export default class QuanticResultActionBar extends LightningElement {
   };
 
   /**
-   * Handles the slot change event.
+   * Inform the result actions about their order to apply the proper styles.
    */
   handleSlotChange() {
     this.resultActionButtons = this.getSortedButtons(this.resultActionButtons);

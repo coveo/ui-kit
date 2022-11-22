@@ -7,7 +7,7 @@ import {LightningElement, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-result-action onclick={action} icon-name="utility:chat" label-when-hover="Label"></c-quantic-result-action>
+ * <c-quantic-result-action result={result} event-name={attachtocase} icon-name="utility:chat" label="Attach result" selected label-when-on="Detach result"></c-quantic-result-action>
  */
 export default class QuanticResultAction extends LightningElement {
   /**
@@ -62,8 +62,8 @@ export default class QuanticResultAction extends LightningElement {
   _loading;
 
   connectedCallback() {
-    this._selected = this.selected;
-    this._loading = this.loading;
+    this.setSelected(this.selected);
+    this.setLoading(this.loading);
 
     const resultActionRegister = new CustomEvent(
       'qunatic__resultactionregister',
@@ -114,6 +114,9 @@ export default class QuanticResultAction extends LightningElement {
     this._selected = value;
   };
 
+  /**
+   * Dispatches a custon event.
+   */
   handleClick(event) {
     event.stopPropagation();
     const resultCopy = {...this.result};

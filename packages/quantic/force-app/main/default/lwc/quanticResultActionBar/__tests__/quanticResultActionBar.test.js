@@ -66,7 +66,7 @@ describe('c-quantic-result-action-bar', () => {
     cleanup();
   });
 
-  it('should display slot element', async () => {
+  it('should display the slot element', async () => {
     const element = createTestComponent();
     await flushPromises();
 
@@ -75,7 +75,7 @@ describe('c-quantic-result-action-bar', () => {
     expect(slot).not.toBeNull();
   });
 
-  it('should order the result action correctly when they are registered in order', async () => {
+  it('should order the result actions correctly when they are registered in order', async () => {
     const element = createTestComponent();
     await flushPromises();
 
@@ -98,7 +98,7 @@ describe('c-quantic-result-action-bar', () => {
     expect(setOrderLast.mock.calls[0][0]).toEqual('last');
   });
 
-  it('should order the result action correctly when they are registered in an inverse order', async () => {
+  it('should order the result actions correctly when they are registered in an inverse order', async () => {
     const element = createTestComponent();
     await flushPromises();
 

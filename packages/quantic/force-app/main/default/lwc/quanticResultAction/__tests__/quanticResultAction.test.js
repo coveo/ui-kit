@@ -1,8 +1,6 @@
 // @ts-ignore
-import { createElement } from 'lwc';
+import {createElement} from 'lwc';
 import QuanticResultAction from '../quanticResultAction';
-
-let order;
 
 const functionsMocks = {
   listener: jest.fn(() => {}),
@@ -16,7 +14,6 @@ const exampleEventName = 'example_event_name';
 const defaultOptions = {
   label: exampleLabel,
   labelWhenOn: exampleLabelWhenOn,
-  toggleMode: false,
   selected: false,
   iconName: exampleIconName,
   eventName: exampleEventName,
@@ -43,14 +40,16 @@ function flushPromises() {
 }
 
 function clickButton(element) {
-  const button = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+  const button = element.shadowRoot.querySelector(
+    'lightning-button-icon-stateful'
+  );
   expect(button).not.toBeNull();
   button.click();
 }
 
-function setupClickSimullation(element, eventName, newState) {
+function setupClickSimulation(element, eventName, newState) {
   const handler = (event) => {
-    const { setLoading, setSelected, state } = event.detail;
+    const {setLoading, setSelected, state} = event.detail;
     functionsMocks.listener();
     if (newState === 'loading') {
       setLoading(true);
@@ -63,7 +62,7 @@ function setupClickSimullation(element, eventName, newState) {
   element.addEventListener(eventName, handler);
 }
 
-function setupRegisterEventDispatchTest() {
+function setupRegisterEventDispatchTest(order) {
   const handler = (event) => {
     event.detail.applyCssOrderClass(order);
     functionsMocks.listener();
@@ -73,15 +72,20 @@ function setupRegisterEventDispatchTest() {
 }
 
 function expectLoadingState(element) {
-  const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
-  const loadingResultActionButton = element.shadowRoot.querySelector('.slds-button_icon');
+  const resultActionButton = element.shadowRoot.querySelector(
+    'lightning-button-icon-stateful'
+  );
+  const loadingResultActionButton =
+    element.shadowRoot.querySelector('.slds-button_icon');
 
   expect(resultActionButton).toBeNull();
   expect(loadingResultActionButton).not.toBeNull();
 }
 
 function expectSelectedState(element) {
-  const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+  const resultActionButton = element.shadowRoot.querySelector(
+    'lightning-button-icon-stateful'
+  );
 
   expect(resultActionButton).not.toBeNull();
   expect(resultActionButton.selected).toBe(true);
@@ -104,7 +108,9 @@ describe('c-quantic-result-action', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+    const resultActionButton = element.shadowRoot.querySelector(
+      'lightning-button-icon-stateful'
+    );
 
     expect(resultActionButton).not.toBeNull();
   });
@@ -123,77 +129,91 @@ describe('c-quantic-result-action', () => {
     const element = createTestComponent();
     await flushPromises();
 
-    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+    const resultActionButton = element.shadowRoot.querySelector(
+      'lightning-button-icon-stateful'
+    );
 
     expect(resultActionButton).not.toBeNull();
     expect(resultActionButton.iconName).toBe(exampleIconName);
   });
 
   it('should display the button properly when it is in the first position', async () => {
-    order = 'first';
-    setupRegisterEventDispatchTest();
+    setupRegisterEventDispatchTest('first');
     const element = createTestComponent();
     await flushPromises();
 
-    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+    const resultActionButton = element.shadowRoot.querySelector(
+      'lightning-button-icon-stateful'
+    );
 
     expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-    expect(resultActionButton.className).toBe('result-action_button result-action_first');
+    expect(resultActionButton.className).toBe(
+      'result-action_button result-action_first'
+    );
   });
 
   it('should display the button properly when it is in a middle position', async () => {
-    order = 'middle';
-    setupRegisterEventDispatchTest();
+    setupRegisterEventDispatchTest('middle');
     const element = createTestComponent();
     await flushPromises();
 
-    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+    const resultActionButton = element.shadowRoot.querySelector(
+      'lightning-button-icon-stateful'
+    );
 
     expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-    expect(resultActionButton.className).toBe('result-action_button result-action_middle');
+    expect(resultActionButton.className).toBe(
+      'result-action_button result-action_middle'
+    );
   });
 
   it('should display the button properly when it is in the last position', async () => {
-    order = 'last';
-    setupRegisterEventDispatchTest();
+    setupRegisterEventDispatchTest('last');
     const element = createTestComponent();
     await flushPromises();
 
-    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+    const resultActionButton = element.shadowRoot.querySelector(
+      'lightning-button-icon-stateful'
+    );
 
     expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-    expect(resultActionButton.className).toBe('result-action_button result-action_last');
+    expect(resultActionButton.className).toBe(
+      'result-action_button result-action_last'
+    );
   });
 
   it('should display the button properly when it is the only result action displayed', async () => {
-    order = null;
-    setupRegisterEventDispatchTest();
+    setupRegisterEventDispatchTest(null);
     const element = createTestComponent();
     await flushPromises();
 
-    const resultActionButton = element.shadowRoot.querySelector('lightning-button-icon-stateful');
+    const resultActionButton = element.shadowRoot.querySelector(
+      'lightning-button-icon-stateful'
+    );
 
     expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
     expect(resultActionButton.className).toBe('result-action_button');
   });
 
-  it('should display the result action button in the loading state when the lloading property is set to true', async () => {
-    const element = createTestComponent({ ...defaultOptions, loading: true });
-    await flushPromises();
+  describe('when the loading property is set to true', () => {
+    it('should display the result action button in the loading state', async () => {
+      const element = createTestComponent({...defaultOptions, loading: true});
+      await flushPromises();
 
-    expectLoadingState(element);
+      expectLoadingState(element);
+    });
   });
 
   describe('when the selected property is set to true', () => {
     it('should display the result action button in the selected state', async () => {
-      const element = createTestComponent({ ...defaultOptions, selected: true });
+      const element = createTestComponent({...defaultOptions, selected: true});
       await flushPromises();
 
       expectSelectedState(element);
     });
 
     it('should display the correct tooltip', async () => {
-      const element = createTestComponent({ ...defaultOptions, selected: true });
+      const element = createTestComponent({...defaultOptions, selected: true});
       await flushPromises();
 
       const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
@@ -204,11 +224,11 @@ describe('c-quantic-result-action', () => {
   });
 
   describe('when the result action is clicked', () => {
-    it('should dispatch a the correct event and sets the loading state', async () => {
+    it('should dispatch the correct event and set the loading state', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      setupClickSimullation(element, exampleEventName, 'loading');
+      setupClickSimulation(element, exampleEventName, 'loading');
 
       clickButton(element);
       await flushPromises();
@@ -217,11 +237,11 @@ describe('c-quantic-result-action', () => {
       expectLoadingState(element);
     });
 
-    it('should dispatch a the correct event and sets the selected state', async () => {
+    it('should dispatch the correct event and set the selected state', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      setupClickSimullation(element, exampleEventName, 'selected');
+      setupClickSimulation(element, exampleEventName, 'selected');
 
       clickButton(element);
       await flushPromises();
