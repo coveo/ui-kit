@@ -62,7 +62,7 @@ node('heavy && linux && docker') {
 
         (headlessMajor, headlessMinor, headlessPatch) = parseSemanticVersion(headless.version)
         (atomicMajor, atomicMinor, atomicPatch) = parseSemanticVersion(atomic.version)
-        (atomicReactMajor, atomicReactMinor, atomicReactPatch) = parseSemanticVersion(atomicReact)
+        (atomicReactMajor, atomicReactMinor, atomicReactPatch) = parseSemanticVersion(atomicReact.version)
         
         sh "deployment-package package create --with-deploy \
         --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
