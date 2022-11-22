@@ -7,13 +7,13 @@ const functionsMocks = {
 };
 
 const exampleLabel = 'example label';
-const exampleLabelWhenOn = 'example label on';
+const exampleSelectedLabel = 'example label on';
 const exampleIconName = 'example icon name';
 const exampleEventName = 'example_event_name';
 
 const defaultOptions = {
   label: exampleLabel,
-  labelWhenOn: exampleLabelWhenOn,
+  selectedLabel: exampleSelectedLabel,
   selected: false,
   iconName: exampleIconName,
   eventName: exampleEventName,
@@ -66,9 +66,9 @@ function setupRegisterEventDispatchTest(order) {
   const handler = (event) => {
     event.detail.applyCssOrderClass(order);
     functionsMocks.listener();
-    document.removeEventListener('qunatic__resultactionregister', handler);
+    document.removeEventListener('quantic__resultactionregister', handler);
   };
-  document.addEventListener('qunatic__resultactionregister', handler);
+  document.addEventListener('quantic__resultactionregister', handler);
 }
 
 describe('c-quantic-result-action', () => {
@@ -193,7 +193,7 @@ describe('c-quantic-result-action', () => {
       const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
 
       expect(tooltip).not.toBeNull();
-      expect(tooltip.textContent).toBe(exampleLabelWhenOn);
+      expect(tooltip.textContent).toBe(exampleSelectedLabel);
     });
   });
 

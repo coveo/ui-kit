@@ -29,7 +29,7 @@ function registerExampleResultActionButton(
   resultActionButton,
   setOrderCallback
 ) {
-  const resultActionRegister = new CustomEvent('qunatic__resultactionregister', {
+  const resultActionRegister = new CustomEvent('quantic__resultactionregister', {
     bubbles: true,
     detail: {
       applyCssOrderClass: setOrderCallback,

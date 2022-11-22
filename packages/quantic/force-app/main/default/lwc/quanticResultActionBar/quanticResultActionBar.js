@@ -6,9 +6,8 @@ import {LightningElement} from 'lwc';
  * @category Insight Panel
  * @example
  * <c-quantic-result-action-bar>
- *   <c-quantic-result-action onclick={actionOne} icon-name="utility:attach" label-when-hover="Action One"></c-quantic-result-action>
- *   <c-quantic-result-action onclick={actionTwo} icon-name="utility:email" label-when-hover="Action Two"></c-quantic-result-action>
- *   <c-quantic-result-action onclick={actionThree} icon-name="utility:chat" label-when-hover="Action Three"></c-quantic-result-action>
+ *   <c-quantic-result-action result={result} event-name='posttofeed' icon-name="utility:chat" label="Post to feed"></c-quantic-result-action>
+ *   <c-quantic-result-action result={result} event-name='sendasemail' icon-name="utility:email" label="Send as email"></c-quantic-result-action>
  * </c-quantic-result-action-bar>
  */
 export default class QuanticResultActionBar extends LightningElement {
@@ -17,14 +16,14 @@ export default class QuanticResultActionBar extends LightningElement {
 
   connectedCallback() {
     this.addEventListener(
-      'qunatic__resultactionregister',
+      'quantic__resultactionregister',
       this.handleButtonRegister
     );
   }
 
   disconnectedCallback() {
     this.removeEventListener(
-      'qunatic__resultactionregister',
+      'quantic__resultactionregister',
       this.handleButtonRegister
     );
   }

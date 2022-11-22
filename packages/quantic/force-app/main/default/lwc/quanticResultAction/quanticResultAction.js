@@ -7,7 +7,7 @@ import {LightningElement, api} from 'lwc';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-result-action result={result} event-name={attachtocase} icon-name="utility:chat" label="Attach result" selected label-when-on="Detach result"></c-quantic-result-action>
+ * <c-quantic-result-action result={result} event-name="attachtocase" icon-name="utility:chat" label="Attach result" selected selected-label="Detach result"></c-quantic-result-action>
  */
 export default class QuanticResultAction extends LightningElement {
   /**
@@ -21,7 +21,7 @@ export default class QuanticResultAction extends LightningElement {
    * @api
    * @type {string}
    */
-  @api labelWhenOn;
+  @api selectedLabel;
   /**
    * The name of the icon displayed inside the result action button.
    * @api
@@ -65,7 +65,7 @@ export default class QuanticResultAction extends LightningElement {
     this.setLoading(this.loading);
 
     const resultActionRegister = new CustomEvent(
-      'qunatic__resultactionregister',
+      'quantic__resultactionregister',
       {
         bubbles: true,
         composed: true,
@@ -137,7 +137,7 @@ export default class QuanticResultAction extends LightningElement {
    * Returns the label to be displayed in the tooltip.
    */
   get displayedLabel() {
-    return this._selected && this.labelWhenOn ? this.labelWhenOn : this.label;
+    return this._selected && this.selectedLabel ? this.selectedLabel : this.label;
   }
 
   /**
