@@ -71,26 +71,6 @@ function setupRegisterEventDispatchTest(order) {
   document.addEventListener('qunatic__resultactionregister', handler);
 }
 
-function expectLoadingState(element) {
-  const resultActionButton = element.shadowRoot.querySelector(
-    'lightning-button-icon-stateful'
-  );
-  const loadingResultActionButton =
-    element.shadowRoot.querySelector('.slds-button_icon');
-
-  expect(resultActionButton).toBeNull();
-  expect(loadingResultActionButton).not.toBeNull();
-}
-
-function expectSelectedState(element) {
-  const resultActionButton = element.shadowRoot.querySelector(
-    'lightning-button-icon-stateful'
-  );
-
-  expect(resultActionButton).not.toBeNull();
-  expect(resultActionButton.selected).toBe(true);
-}
-
 describe('c-quantic-result-action', () => {
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
@@ -104,36 +84,18 @@ describe('c-quantic-result-action', () => {
     cleanup();
   });
 
-  it('should display the result action button', async () => {
+  it('should display the result action button properly', async () => {
     const element = createTestComponent();
     await flushPromises();
 
     const resultActionButton = element.shadowRoot.querySelector(
       'lightning-button-icon-stateful'
     );
-
-    expect(resultActionButton).not.toBeNull();
-  });
-
-  it('should display the correct tooltip', async () => {
-    const element = createTestComponent();
-    await flushPromises();
-
     const tooltip = element.shadowRoot.querySelector('.slds-popover_tooltip');
 
+    expect(resultActionButton).not.toBeNull();
     expect(tooltip).not.toBeNull();
     expect(tooltip.textContent).toBe(exampleLabel);
-  });
-
-  it('should display the correct icon', async () => {
-    const element = createTestComponent();
-    await flushPromises();
-
-    const resultActionButton = element.shadowRoot.querySelector(
-      'lightning-button-icon-stateful'
-    );
-
-    expect(resultActionButton).not.toBeNull();
     expect(resultActionButton.iconName).toBe(exampleIconName);
   });
 
@@ -200,7 +162,14 @@ describe('c-quantic-result-action', () => {
       const element = createTestComponent({...defaultOptions, loading: true});
       await flushPromises();
 
-      expectLoadingState(element);
+      const resultActionButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
+      const loadingResultActionButton =
+        element.shadowRoot.querySelector('.slds-button_icon');
+
+      expect(resultActionButton).toBeNull();
+      expect(loadingResultActionButton).not.toBeNull();
     });
   });
 
@@ -209,7 +178,12 @@ describe('c-quantic-result-action', () => {
       const element = createTestComponent({...defaultOptions, selected: true});
       await flushPromises();
 
-      expectSelectedState(element);
+      const resultActionButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
+
+      expect(resultActionButton).not.toBeNull();
+      expect(resultActionButton.selected).toBe(true);
     });
 
     it('should display the correct tooltip', async () => {
@@ -232,9 +206,15 @@ describe('c-quantic-result-action', () => {
 
       clickButton(element);
       await flushPromises();
+      const resultActionButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
+      const loadingResultActionButton =
+        element.shadowRoot.querySelector('.slds-button_icon');
 
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expectLoadingState(element);
+      expect(resultActionButton).toBeNull();
+      expect(loadingResultActionButton).not.toBeNull();
     });
 
     it('should dispatch the correct event and set the selected state', async () => {
@@ -242,12 +222,16 @@ describe('c-quantic-result-action', () => {
       await flushPromises();
 
       setupClickSimulation(element, exampleEventName, 'selected');
+      const resultActionButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
 
       clickButton(element);
       await flushPromises();
 
       expect(functionsMocks.listener).toHaveBeenCalledTimes(1);
-      expectSelectedState(element);
+      expect(resultActionButton).not.toBeNull();
+      expect(resultActionButton.selected).toBe(true);
     });
   });
 });

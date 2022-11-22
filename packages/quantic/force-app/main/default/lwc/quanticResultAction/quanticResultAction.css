@@ -14,10 +14,6 @@
   transform: translate(-50%, 0);
 }
 
-.result-action_container {
-  display: inline;
-}
-
 .result-action_container:hover > .result-action_tooltip {
   visibility: visible;
   opacity: 1;
