@@ -1,7 +1,11 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {Result} from '../../insight.index';
 import {
   AnalyticsType,
+  documentIdentifier,
   makeInsightAnalyticsAction,
+  partialDocumentInformation,
+  validateResultPayload,
 } from '../analytics/analytics-utils';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 import {getQueryInitialState} from '../query/query-state';
@@ -63,5 +67,22 @@ export const logExpandToFullUI = (
         caseContext: state.insightCaseContext?.caseContext || {},
       };
       client.logExpandToFullUI(meta);
+    }
+  )();
+
+export const logCopyToClipboard = (result: Result) =>
+  makeInsightAnalyticsAction(
+    'analytics/insight/copyToClipboard',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(result);
+      const metadata = getCaseContextAnalyticsMetadata(
+        state.insightCaseContext
+      );
+      return client.logCopyToClipboard(
+        partialDocumentInformation(result, state),
+        documentIdentifier(result),
+        metadata
+      );
     }
   )();

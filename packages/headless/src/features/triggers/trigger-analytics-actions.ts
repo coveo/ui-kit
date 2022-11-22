@@ -45,11 +45,11 @@ export const logUndoTriggerQuery = (
 export const logNotifyTrigger = makeAnalyticsAction(
   'analytics/trigger/notify',
   AnalyticsType.Search,
-  (client, state) => {
+  (_client, state) => {
     if (state.triggers?.notifications.length) {
-      return client.logTriggerNotify({
-        notifications: state.triggers.notifications,
-      });
+      // return client.logTriggerNotify({
+      //   notifications: state.triggers.notifications,
+      // });
     }
     return;
   }
@@ -74,11 +74,11 @@ export const logTriggerRedirect = makeAnalyticsAction(
 export const logTriggerExecute = makeAnalyticsAction(
   'analytics/trigger/execute',
   AnalyticsType.Search,
-  (client, state) => {
+  (_client, state) => {
     if (state.triggers?.executions.length) {
-      return client.logTriggerExecute({
-        executions: state.triggers.executions,
-      });
+      // return client.logTriggerExecute({
+      //   executions: state.triggers.executions,
+      // });
     }
     return;
   }
