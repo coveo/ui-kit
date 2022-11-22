@@ -78,7 +78,7 @@ export default class QuanticResultAction extends LightningElement {
   }
 
   /**
-   * Sets the correct order on the result action button.
+   * Applies the proper CSS order class.
    * @param {'first' | 'middle' | 'last'} order
    */
   applyCssOrderClass = (order) => {
