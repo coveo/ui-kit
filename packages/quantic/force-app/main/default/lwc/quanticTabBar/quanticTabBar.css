@@ -1,4 +1,7 @@
 .tab-bar_list-container {
   display: flex;
-  overflow: hidden;
+}
+
+.tab-bar_dropdown {
+  max-width: 150px;
 }
