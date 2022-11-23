@@ -318,6 +318,11 @@ describe('InsightClient', () => {
             await client.logDocumentOpen(fakeDocInfo, fakeDocID);
             expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
         });
+
+        it('should send proper payload for #copyToClipboard', async () => {
+            await client.logCopyToClipboard(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
+        });
     });
 
     describe('when the case metadata is included', () => {
@@ -674,6 +679,17 @@ describe('InsightClient', () => {
             };
             await client.logDocumentOpen(fakeDocInfo, fakeDocID, metadata);
             expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #copyToClipboard', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logCopyToClipboard(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, expectedMetadata);
         });
     });
 

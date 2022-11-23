@@ -1174,6 +1174,11 @@ describe('SearchPageClient', () => {
         expectMatchDocumentPayload(SearchPageEvents.openSmartSnippetSource, fakeDocInfo, fakeDocID);
     });
 
+    it('should send proper payload for #logCopyToClipboard', async () => {
+        await client.logCopyToclipboard(fakeDocInfo, fakeDocID);
+        expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
+    });
+
     it('should send proper payload for #makeOpenSmartSnippetSource', async () => {
         const built = client.makeOpenSmartSnippetSource(fakeDocInfo, fakeDocID);
         await built.log();

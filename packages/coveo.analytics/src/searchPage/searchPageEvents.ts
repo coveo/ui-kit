@@ -274,6 +274,10 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a user clicks the Show Less link under a search result that support the folding component.
      */
     showLessFoldedResults = 'showLessFoldedResults',
+    /**
+     * Identifies the click event that gets logged when a user clicks the Copy To Clipboard result action.
+     */
+    copyToClipboard = 'copyToClipboard',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
