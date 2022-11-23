@@ -26,7 +26,7 @@ function createTestComponent(options = defaultOptions) {
   });
 
   for (const [key, value] of Object.entries(options)) {
-    element[`${key}`] = value;
+    element[key] = value;
   }
 
   document.body.appendChild(element);
