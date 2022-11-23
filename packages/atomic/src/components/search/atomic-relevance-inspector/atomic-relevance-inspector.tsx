@@ -1,10 +1,5 @@
-import {
-  RelevanceInspector,
-  RelevanceInspectorState,
-  Unsubscribe,
-  buildRelevanceInspector,
-} from '@coveo/headless';
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
+import {Button} from '../../common/button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -12,46 +7,53 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-relevance-inspector',
+  styleUrl: 'atomic-relevance-inspector.pcss',
   shadow: true,
 })
 export class AtomicRelevanceInspector {
-  public relevanceInspector!: RelevanceInspector;
-  private unsubscribe: Unsubscribe = () => {};
-
-  @State() relevanceInspectorState!: RelevanceInspectorState;
-
   /**
    * The Atomic interface bindings, namely the headless search engine and i18n instances.
    */
   @Prop() bindings!: Bindings;
 
-  constructor() {
-    this.relevanceInspector = buildRelevanceInspector(this.bindings.engine, {
-      initialState: {
-        // TODO: add enable/disable mechanism
-        enabled: false,
-      },
-    });
-    this.unsubscribe = this.relevanceInspector.subscribe(
-      () => (this.relevanceInspectorState = this.relevanceInspector.state)
-    );
-  }
+  @Prop({reflect: true}) open = false;
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
+  @Event({eventName: 'atomic/relevanceInspector/close'})
+  closeRelevanceInspector: EventEmitter<null> | undefined;
 
   public render() {
-    if (!this.relevanceInspectorState.isEnabled) {
-      return;
-    }
-
-    // TODO: Display data in a cleaner manner
+    const {platformUrl, organizationId} =
+      this.bindings.engine.state.configuration;
+    const {searchUid} = this.bindings.engine.state.search.response;
     return (
-      <p>
-        Debug mode is enabled. Look at the developper console to see additional
-        information.
-      </p>
+      <atomic-modal
+        exportparts="footer"
+        isOpen={this.open}
+        close={() => {
+          this.closeRelevanceInspector?.emit();
+        }}
+      >
+        <p slot="header">Open the relevance inspector</p>
+        <p slot="body">
+          The Relevance Inspector will open in the Coveo Administration Console.
+        </p>
+        <div slot="footer" class="w-full flex justify-end items-center">
+          <Button
+            style="outline-primary"
+            class="p-2 mr-2"
+            onClick={() => this.closeRelevanceInspector?.emit()}
+          >
+            Ignore
+          </Button>
+          <a
+            class="btn-primary p-2"
+            target="_blank"
+            href={`${platformUrl}/admin/#/${organizationId}/search/relevanceInspector/${searchUid}`}
+          >
+            Open
+          </a>
+        </div>
+      </atomic-modal>
     );
   }
 }

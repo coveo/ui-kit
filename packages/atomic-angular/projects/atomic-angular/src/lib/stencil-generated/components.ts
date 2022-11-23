@@ -759,23 +759,30 @@ export class AtomicRefineToggle {
 }
 
 
-export declare interface AtomicRelevanceInspector extends Components.AtomicRelevanceInspector {}
+export declare interface AtomicRelevanceInspector extends Components.AtomicRelevanceInspector {
+  /**
+   *  
+   */
+  'atomic/relevanceInspector/close': EventEmitter<CustomEvent<any>>;
+
+}
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['bindings']
+  inputs: ['bindings', 'open']
 })
 @Component({
   selector: 'atomic-relevance-inspector',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['bindings']
+  inputs: ['bindings', 'open']
 })
 export class AtomicRelevanceInspector {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/relevanceInspector/close']);
   }
 }
 
@@ -1480,14 +1487,14 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
+  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
 })
 @Component({
   selector: 'atomic-search-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone']
+  inputs: ['analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone']
 })
 export class AtomicSearchInterface {
   protected el: HTMLElement;
