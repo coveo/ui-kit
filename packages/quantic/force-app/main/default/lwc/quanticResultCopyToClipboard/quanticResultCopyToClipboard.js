@@ -57,7 +57,7 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
       .then(() => {
         setLoading(false);
         this.engine.dispatch(
-          this.actions.logCopyToClipboard()
+          this.actions.logCopyToClipboard(this.result)
         );
         this.displayedLabel = this.successLabel;
         this.refreshLabel();
