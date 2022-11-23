@@ -1175,7 +1175,7 @@ describe('SearchPageClient', () => {
     });
 
     it('should send proper payload for #logCopyToClipboard', async () => {
-        await client.logCopyToclipboard(fakeDocInfo, fakeDocID);
+        await client.logCopyToClipboard(fakeDocInfo, fakeDocID);
         expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
     });
 

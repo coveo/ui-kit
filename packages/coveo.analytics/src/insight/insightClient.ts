@@ -241,6 +241,24 @@ export class CoveoInsightClient {
         );
     }
 
+    public logPostToFeed(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
+        return this.logClickEvent(
+            SearchPageEvents.postToFeed,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logSendAsEmail(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
+        return this.logClickEvent(
+            SearchPageEvents.sendAsEmail,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
     public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 

@@ -323,6 +323,16 @@ describe('InsightClient', () => {
             await client.logCopyToClipboard(fakeDocInfo, fakeDocID);
             expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
         });
+
+        it('should send proper payload for #postToFeed', async () => {
+            await client.logPostToFeed(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.postToFeed, fakeDocInfo, fakeDocID);
+        });
+
+        it('should send proper payload for #sendAsEmail', async () => {
+            await client.logSendAsEmail(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.sendAsEmail, fakeDocInfo, fakeDocID);
+        });
     });
 
     describe('when the case metadata is included', () => {
@@ -690,6 +700,28 @@ describe('InsightClient', () => {
             };
             await client.logCopyToClipboard(fakeDocInfo, fakeDocID, metadata);
             expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #postToFeed', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logPostToFeed(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.postToFeed, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #sendAsEmail', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logSendAsEmail(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.sendAsEmail, fakeDocInfo, expectedMetadata);
         });
     });
 
