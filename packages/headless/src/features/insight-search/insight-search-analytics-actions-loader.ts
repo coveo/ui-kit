@@ -1,6 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
-import {InsightEngine, Result} from '../../insight.index';
+import {InsightEngine} from '../../insight.index';
 import {
   AnalyticsType,
   AsyncThunkInsightAnalyticsOptions,
@@ -8,7 +8,6 @@ import {
 import {
   logContextChanged,
   logExpandToFullUI,
-  logCopyToClipboard,
 } from './insight-search-analytics-actions';
 
 /**
@@ -28,23 +27,6 @@ export interface InsightSearchAnalyticsActionCreators {
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
-  >;
-
-  /**
-   * The event to log when the full search page is opened.
-   *
-   * @param caseId - The case ID.
-   * @param caseNumber - The case number.
-   * @param fullSearchComponentName - The name of the full search component to open.
-   * @param triggeredBy - The action that triggered the event.
-   * @returns A dispatchable action.
-   */
-  logCopyToClipboard(result: Result): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
     },
     void,
     AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
@@ -85,6 +67,5 @@ export function loadInsightSearchAnalyticsActions(
   return {
     logContextChanged,
     logExpandToFullUI,
-    logCopyToClipboard,
   };
 }
