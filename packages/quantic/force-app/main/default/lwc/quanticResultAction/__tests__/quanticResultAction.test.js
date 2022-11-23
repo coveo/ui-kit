@@ -10,6 +10,7 @@ const exampleLabel = 'example label';
 const exampleSelectedLabel = 'example label on';
 const exampleIconName = 'example icon name';
 const exampleEventName = 'example_event_name';
+const exampleSelectedIconName = 'example selected icon name';
 
 const defaultOptions = {
   label: exampleLabel,
@@ -18,6 +19,7 @@ const defaultOptions = {
   iconName: exampleIconName,
   eventName: exampleEventName,
   loading: false,
+  selectedIconName: exampleSelectedIconName,
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -194,6 +196,18 @@ describe('c-quantic-result-action', () => {
 
       expect(tooltip).not.toBeNull();
       expect(tooltip.textContent).toBe(exampleSelectedLabel);
+    });
+
+    it('should display the correct icon', async () => {
+      const element = createTestComponent({...defaultOptions, selected: true});
+      await flushPromises();
+
+      const resultActionButton = element.shadowRoot.querySelector(
+        'lightning-button-icon-stateful'
+      );
+
+      expect(resultActionButton).not.toBeNull();
+      expect(resultActionButton.iconName).toBe(exampleSelectedIconName);
     });
   });
 

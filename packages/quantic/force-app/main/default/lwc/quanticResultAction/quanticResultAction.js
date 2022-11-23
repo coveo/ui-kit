@@ -52,6 +52,12 @@ export default class QuanticResultAction extends LightningElement {
    * @type {Result}
    */
   @api result;
+  /**
+   * The name of the icon displayed inside the result action button when the result action button is selected.
+   * @api
+   * @type {string}
+   */
+  @api selectedIconName;
 
   /** @type {string} */
   resultActionOrderClasses;
@@ -137,7 +143,18 @@ export default class QuanticResultAction extends LightningElement {
    * Returns the label to be displayed in the tooltip.
    */
   get displayedLabel() {
-    return this._selected && this.selectedLabel ? this.selectedLabel : this.label;
+    return this._selected && this.selectedLabel
+      ? this.selectedLabel
+      : this.label;
+  }
+
+  /**
+   * Returns the icon name to be displayed in the result action button.
+   */
+  get displayedIcon() {
+    return this._selected && this.selectedIconName
+      ? this.selectedIconName
+      : this.iconName;
   }
 
   /**

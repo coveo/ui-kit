@@ -12,7 +12,7 @@
     </template>
     <template if:false={_loading}>
       <lightning-button-icon-stateful onclick={handleClick} aria-label={displayedLabel} variant="border-filled"
-        class={resultActionOrderClasses} icon-name={iconName} selected={_selected}>
+        class={resultActionOrderClasses} icon-name={displayedIcon} selected={_selected}>
       </lightning-button-icon-stateful>
     </template>
     <template if:true={displayedLabel}>
