@@ -324,14 +324,9 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
         });
 
-        it('should send proper payload for #postToFeed', async () => {
-            await client.logPostToFeed(fakeDocInfo, fakeDocID);
-            expectMatchDocumentPayload(SearchPageEvents.postToFeed, fakeDocInfo, fakeDocID);
-        });
-
-        it('should send proper payload for #sendAsEmail', async () => {
-            await client.logSendAsEmail(fakeDocInfo, fakeDocID);
-            expectMatchDocumentPayload(SearchPageEvents.sendAsEmail, fakeDocInfo, fakeDocID);
+        it('should send proper payload for #documentQuickview', async () => {
+            await client.logDocumentQuickview(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, fakeDocID);
         });
     });
 
@@ -702,26 +697,15 @@ describe('InsightClient', () => {
             expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, expectedMetadata);
         });
 
-        it('should send proper payload for #postToFeed', async () => {
+        it('should send proper payload for #documentQuickview', async () => {
             const metadata = baseCaseMetadata;
 
             const expectedMetadata = {
                 ...fakeDocID,
                 ...expectedBaseCaseMetadata,
             };
-            await client.logPostToFeed(fakeDocInfo, fakeDocID, metadata);
-            expectMatchDocumentPayload(SearchPageEvents.postToFeed, fakeDocInfo, expectedMetadata);
-        });
-
-        it('should send proper payload for #sendAsEmail', async () => {
-            const metadata = baseCaseMetadata;
-
-            const expectedMetadata = {
-                ...fakeDocID,
-                ...expectedBaseCaseMetadata,
-            };
-            await client.logSendAsEmail(fakeDocInfo, fakeDocID, metadata);
-            expectMatchDocumentPayload(SearchPageEvents.sendAsEmail, fakeDocInfo, expectedMetadata);
+            await client.logDocumentQuickview(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, expectedMetadata);
         });
     });
 

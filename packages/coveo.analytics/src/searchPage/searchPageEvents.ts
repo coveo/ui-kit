@@ -278,14 +278,6 @@ export enum SearchPageEvents {
      * Identifies the click event that gets logged when a user clicks the Copy To Clipboard result action.
      */
     copyToClipboard = 'copyToClipboard',
-    /**
-     * Identifies the click event that gets logged when a user clicks the Post To Feed result action.
-     */
-    postToFeed = 'FeedItem.TextPost',
-    /**
-     * Identifies the click event that gets logged when a user clicks the Send As Email result action.
-     */
-    sendAsEmail = 'Case.SendEmail',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
