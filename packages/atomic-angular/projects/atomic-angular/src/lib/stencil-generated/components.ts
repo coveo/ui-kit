@@ -358,46 +358,6 @@ export class AtomicIcon {
 }
 
 
-export declare interface AtomicIpxRefineModal extends Components.AtomicIpxRefineModal {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined,
-  inputs: ['isOpen', 'openButton']
-})
-@Component({
-  selector: 'atomic-ipx-refine-modal',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  inputs: ['isOpen', 'openButton']
-})
-export class AtomicIpxRefineModal {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicIpxRefineToggle extends Components.AtomicIpxRefineToggle {}
-
-@ProxyCmp({
-  defineCustomElementFn: undefined
-})
-@Component({
-  selector: 'atomic-ipx-refine-toggle',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>'
-})
-export class AtomicIpxRefineToggle {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
 export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
 
 @ProxyCmp({
