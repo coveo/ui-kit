@@ -16,10 +16,10 @@ function trimNewline(str) {
 export function execute(command, args = []) {
   return new Promise((resolve, reject) => {
     const proc = spawn(command, args);
-    /** @type {Uint8Array} */
-    let dataChunks = [];
-    /** @type {Uint8Array} */
-    let errorChunks = [];
+    /** @type {Buffer} */
+    let dataBuffer = Buffer.alloc(0);
+    /** @type {Buffer} */
+    let errorBuffer = Buffer.alloc(0);
 
     console.log(
       '\x1b[35m>\x1b[0m\xa0',
@@ -31,7 +31,7 @@ export function execute(command, args = []) {
 
     proc.stdout.on('data', (chunk) => {
       console.log(trimNewline(chunk.toString()));
-      dataChunks.push(Buffer.from(chunk));
+      dataBuffer = Buffer.concat([dataBuffer, chunk]);
     });
     proc.stderr.on('data', (chunk) => {
       const exclamation = '\x1b[31m!\x1b[0m\xa0';
@@ -39,15 +39,15 @@ export function execute(command, args = []) {
         exclamation,
         trimNewline(chunk.toString()).replace('\n', '\n' + exclamation)
       );
-      errorChunks.push(Buffer.from(chunk));
+      errorBuffer = Buffer.concat([errorBuffer, chunk]);
     });
     proc.on('exit', (code) =>
       code === 0
-        ? resolve(trimNewline(Buffer.concat(dataChunks).toString('utf8')))
+        ? resolve(trimNewline(dataBuffer.toString('utf8')))
         : reject(
             JSON.stringify({
               code,
-              error: trimNewline(Buffer.concat(errorChunks).toString('utf8')),
+              error: trimNewline(errorBuffer.toString('utf8')),
             })
           )
     );
