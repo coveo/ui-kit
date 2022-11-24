@@ -4,7 +4,7 @@
  */
 atomic-ipx-layout {
   display: grid;
-  grid-template-rows: auto auto 8fr 1fr;
+  grid-template-rows: auto auto auto 8fr 1fr;
   max-height: 100%;
   box-sizing: border-box;
   width: var(--atomic-ipx-width, 500px);
@@ -21,6 +21,10 @@ atomic-ipx-layout {
     background: var(--atomic-neutral-light);
     padding: 1.5rem;
     box-sizing: border-box;
+  }
+
+  atomic-layout-section[section='facets'] {
+    display: none;
   }
 
   atomic-layout-section[section='status'] {
