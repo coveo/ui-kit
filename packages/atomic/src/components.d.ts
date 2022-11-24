@@ -356,7 +356,6 @@ export namespace Components {
         "clickCallback": () => void;
         "disabled": boolean;
         "icon": string;
-        "iconClass": string;
         "labelI18nKey": string;
         "tooltip": string;
     }
@@ -2905,7 +2904,6 @@ declare namespace LocalJSX {
         "clickCallback"?: () => void;
         "disabled"?: boolean;
         "icon": string;
-        "iconClass"?: string;
         "labelI18nKey": string;
         "tooltip"?: string;
     }

@@ -22,7 +22,6 @@ export class AtomicIconButton {
   @Prop({mutable: true}) public tooltip = '';
   @Prop({mutable: true}) public labelI18nKey!: string;
   @Prop({mutable: true}) public icon!: string;
-  @Prop({mutable: true}) public iconClass = 'w-4 h-4 shrink-0';
   @Prop({mutable: true}) public buttonRef?: (el?: HTMLButtonElement) => void;
   @Prop({mutable: true}) public badge?: VNode;
   @Prop() public disabled = false;
@@ -42,8 +41,9 @@ export class AtomicIconButton {
         >
           <atomic-icon
             icon={this.icon}
-            class={this.iconClass}
+            class="w-4 h-4 shrink-0"
             aria-hidden="true"
+            part="icon"
           ></atomic-icon>
         </Button>
         {this.badge && <span part="badge">{this.badge}</span>}
