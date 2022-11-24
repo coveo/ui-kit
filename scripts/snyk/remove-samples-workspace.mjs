@@ -1,6 +1,6 @@
-import {readFileSync, writeFileSync} from 'fs';
-import {resolve} from 'path';
-import {cwd} from 'process';
+import {readFileSync, writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {cwd} from 'node:process';
 import {packageDirsSnyk} from '../packages.mjs';
 
 const packageJsonPath = resolve(cwd(), 'package.json');

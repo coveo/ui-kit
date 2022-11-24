@@ -1,7 +1,7 @@
 import {build} from 'esbuild';
 import alias from 'esbuild-plugin-alias';
-import {readFileSync, promises} from 'fs';
-import {resolve} from 'path';
+import {readFileSync, promises} from 'node:fs';
+import {resolve} from 'node:path';
 import {umdWrapper} from '../../scripts/bundle/umd.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 

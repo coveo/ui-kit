@@ -1,5 +1,5 @@
 import {getCurrentVersion} from '@coveo/semantic-monorepo-tools';
-import {resolve} from 'path';
+import {resolve} from 'node:path';
 import {execute} from '../exec.mjs';
 import {commitVersionBump, stageAll, tagExists, tagPackages} from '../git.mjs';
 import {

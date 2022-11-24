@@ -4,7 +4,7 @@ import {
   gitPush,
   gitPushTags,
 } from '@coveo/semantic-monorepo-tools';
-import {resolve} from 'path';
+import {resolve} from 'node:path';
 import {execute} from './exec.mjs';
 import {commitVersionBump, stageAll, tagPackages} from './git.mjs';
 import {

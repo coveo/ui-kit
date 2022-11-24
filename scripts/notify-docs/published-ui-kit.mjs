@@ -1,5 +1,5 @@
 import {Octokit} from '@octokit/rest';
-import {resolve} from 'path';
+import {resolve} from 'node:path';
 import {getPackageFromPath} from '../packages.mjs';
 
 const headlessPackageJson = getPackageFromPath(

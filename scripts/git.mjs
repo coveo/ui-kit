@@ -1,6 +1,6 @@
 import {gitTag} from '@coveo/semantic-monorepo-tools';
-import {readFileSync} from 'fs';
-import {resolve} from 'path';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
 import {execute} from './exec.mjs';
 
 /**

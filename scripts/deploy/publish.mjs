@@ -1,4 +1,4 @@
-import {resolve} from 'path';
+import {resolve} from 'node:path';
 import {execute} from '../exec.mjs';
 import {isOnReleaseBranch} from '../git.mjs';
 import {getPackageDefinitionFromPath} from '../packages.mjs';

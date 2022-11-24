@@ -1,5 +1,5 @@
-import {statSync, readdirSync} from 'fs';
-import {resolve} from 'path';
+import {statSync, readdirSync} from 'node:fs';
+import {resolve} from 'node:path';
 import {execute} from '../../exec.mjs';
 
 async function setup() {

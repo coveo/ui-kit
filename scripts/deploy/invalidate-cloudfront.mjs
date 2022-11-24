@@ -1,5 +1,5 @@
 import {CloudFront} from 'aws-sdk';
-import {resolve} from 'path';
+import {resolve} from 'node:path';
 import {getPackageFromPath} from '../packages.mjs';
 
 const cloudfront = new CloudFront();

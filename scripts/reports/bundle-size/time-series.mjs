@@ -1,4 +1,4 @@
-import {existsSync, writeFileSync, appendFileSync} from 'fs';
+import {existsSync, writeFileSync, appendFileSync} from 'node:fs';
 import {computeFileSizes} from './command.mjs';
 
 const branch = process.env.GIT_BRANCH;

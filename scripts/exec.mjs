@@ -1,5 +1,5 @@
-import {Buffer} from 'buffer';
-import {spawn} from 'child_process';
+import {Buffer} from 'node:buffer';
+import {spawn} from 'node:child_process';
 
 /**
  * @param {string} str

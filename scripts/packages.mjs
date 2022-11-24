@@ -1,7 +1,6 @@
 import detectIndent from 'detect-indent';
-import {existsSync, writeFileSync} from 'fs';
-import {readFileSync} from 'fs';
-import {resolve} from 'path';
+import {existsSync, writeFileSync, readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
 
 export const packageDirsNpmTag = [
   'atomic',
