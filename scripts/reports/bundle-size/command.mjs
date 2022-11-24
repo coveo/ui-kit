@@ -1,36 +1,28 @@
-const {resolve} = require('path');
-const {statSync, readdirSync} = require('fs');
-const {promisify} = require('util');
-const exec = promisify(require('child_process').exec);
-
-async function computeFileSizes() {
-  await setup();
-  await buildFiles();
-  return readFileSizes();
-}
+import {statSync, readdirSync} from 'fs';
+import {resolve} from 'path';
+import {execute} from '../../exec.mjs';
 
 async function setup() {
   console.log('setting up repositories');
-  await exec('npm ci');
+  await execute('npm', ['ci']);
 }
 
 async function buildFiles() {
   console.log('building files');
-  await exec('npm run build');
+  await execute('npm', ['run', 'build']);
 }
 
 function readFileSizes() {
   console.log('getting file sizes');
-  const dir = resolve(__dirname, '../../../packages/headless/dist/browser');
+  const dir = resolve('packages', 'headless', 'dist', 'browser');
   const entries = getUseCasesAndFilePaths(dir);
 
-  const sizeEntries = entries
-    .map((entry) => {
-      const {useCase, filePath} = entry;
-      const {size} = statSync(filePath);
-      return [useCase, size];
-    });
-  
+  const sizeEntries = entries.map((entry) => {
+    const {useCase, filePath} = entry;
+    const {size} = statSync(filePath);
+    return [useCase, size];
+  });
+
   return Object.fromEntries(sizeEntries);
 }
 
@@ -67,4 +59,8 @@ function determineUseCase(dir, filePath) {
   return parts.length > 2 ? parts[1] : 'search';
 }
 
-module.exports = {computeFileSizes};
+export async function computeFileSizes() {
+  await setup();
+  await buildFiles();
+  return readFileSizes();
+}

@@ -16,10 +16,8 @@ const license = `/**
  * limitations under the License.
  */`;
 
-const apacheLicense = () => {
+export const apacheLicense = () => {
   return license
     .replace('[yyyy]', new Date().getFullYear())
     .replace('[name of copyright owner]', 'Coveo Solutions Inc.');
 };
-
-module.exports = {apacheLicense};

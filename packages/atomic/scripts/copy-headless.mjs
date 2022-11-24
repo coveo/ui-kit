@@ -1,9 +1,11 @@
-const util = require('util');
-const fs = require('fs');
-const ncp = util.promisify(require('ncp'));
-const readFile = util.promisify(fs.readFile);
-const mkdir = util.promisify(fs.mkdir);
-const exists = util.promisify(fs.exists);
+import fs from 'fs';
+import _ncp from 'ncp';
+import {promisify} from 'util';
+
+const ncp = promisify(_ncp);
+const readFile = promisify(fs.readFile);
+const mkdir = promisify(fs.mkdir);
+const exists = promisify(fs.exists);
 
 async function copyHeadless() {
   const headlessPath = '../headless/';

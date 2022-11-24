@@ -1,26 +1,30 @@
-const {promisify} = require('util');
-const exec = promisify(require('child_process').exec);
+import {execute} from '../exec.mjs';
 
 async function getHeadCommitHash() {
-  const {stdout} = await exec('git rev-parse HEAD');
-  return stdout;
+  return execute('git', ['rev-parse', 'HEAD']);
 }
 
 async function getHeadCommitTag() {
-  const {stdout} = await exec('git tag --points-at HEAD');
-  return stdout;
+  return execute('git', ['tag', '--points-at', 'HEAD']);
 }
 
 async function checkoutLatestMaster() {
-  await exec('git checkout master');
-  await exec('git pull origin master');
+  await execute('git', ['checkout', 'master']);
+  await execute('git', ['pull', 'origin', 'master']);
 }
 
 async function bumpVersionAndPush() {
   try {
-    await exec(
-      `npx --no-install lerna version --conventional-commits --conventional-graduate --no-private --yes --exact`
-    );
+    await execute('npx', [
+      '--no-install',
+      'lerna',
+      'version',
+      '--conventional-commits',
+      '--conventional-graduate',
+      '--no-private',
+      '--yes',
+      '--exact',
+    ]);
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',

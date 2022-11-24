@@ -1,7 +1,8 @@
-const util = require('util');
-const fs = require('fs');
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
+import fs from 'fs';
+import {promisify} from 'util';
+
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
 
 function getI18nLocaleKey(key) {
   if (!key.includes('-')) {
@@ -14,7 +15,9 @@ function getI18nLocaleKey(key) {
 }
 
 async function copyDayjsLocales() {
-  const localesJSONData = await readFile('../../node_modules/dayjs/locale.json');
+  const localesJSONData = await readFile(
+    '../../node_modules/dayjs/locale.json'
+  );
   const localesData = JSON.parse(localesJSONData);
   let fileContent =
     'export const locales: Record<string, () => Promise<unknown>> = {';

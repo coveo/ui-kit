@@ -1,17 +1,13 @@
-const { getPullRequestTitle } = require('../github-client');
+import _lint from '@commitlint/lint';
+import _load from '@commitlint/load';
+import {getPullRequestTitle} from '../github-client.mjs';
 
-const load = require('@commitlint/load').default;
-const lint = require('@commitlint/lint').default;
+/** @type {import('@commitlint/lint').default} */
+const lint = _lint['default'];
+/** @type {import('@commitlint/load').default} */
+const load = _load['default'];
 
 const specUrl = 'https://www.conventionalcommits.org/en/v1.0.0/#summary';
-
-async function buildTitleReport() {
-  const prTitle = await getPullRequestTitle() || '';
-  const {valid} = await analyze(prTitle);
-  const isTitleValid = prTitle && valid;
-
-  return buildReport(isTitleValid);
-}
 
 async function analyze(title) {
   const {rules, parserPreset} = await getLinterConfiguration();
@@ -19,24 +15,24 @@ async function analyze(title) {
 }
 
 async function getLinterConfiguration() {
-  const conventionalConfig = { extends: ['@commitlint/config-conventional'] };
-  return await load(conventionalConfig)
+  const conventionalConfig = {extends: ['@commitlint/config-conventional']};
+  return await load(conventionalConfig);
 }
 
 function buildReport(isTitleValid) {
   const message = isTitleValid ? buildSuccessMessage() : buildErrorMessage();
-  
+
   return `
   **PR Title**
 
   ${message}
-  `
+  `;
 }
 
 function buildSuccessMessage() {
   return `
   :white_check_mark: Title follows the [conventional commit](${specUrl}) spec.
-  `
+  `;
 }
 
 function buildErrorMessage() {
@@ -48,7 +44,13 @@ function buildErrorMessage() {
   Example:
   
   feat(headless): add result-list controller
-  `
+  `;
 }
 
-module.exports = { buildTitleReport };
+export async function buildTitleReport() {
+  const prTitle = (await getPullRequestTitle()) || '';
+  const {valid} = await analyze(prTitle);
+  const isTitleValid = prTitle && valid;
+
+  return buildReport(isTitleValid);
+}

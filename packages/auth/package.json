@@ -12,12 +12,12 @@
     "dist/"
   ],
   "scripts": {
-    "build": "npm run typedefinitions & node esbuild.js",
+    "build": "npm run typedefinitions & node esbuild.mjs",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha",
     "e2e:saml": "vite manual-e2e/saml/"
   },
   "repository": {

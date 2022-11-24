@@ -1,9 +1,13 @@
-const AWS = require('aws-sdk');
+import {CloudFront} from 'aws-sdk';
+import {resolve} from 'path';
+import {getPackageFromPath} from '../packages.mjs';
 
-const cloudfront = new AWS.CloudFront();
+const cloudfront = new CloudFront();
 
 async function getMajorVersion(dir) {
-  const {version} = await require(`../../packages/${dir}/package.json`);
+  const {version} = getPackageFromPath(
+    resolve('..', '..', 'packages', dir, 'package.json')
+  );
   return version.split('.')[0];
 }
 

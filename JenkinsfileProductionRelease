@@ -58,7 +58,7 @@ node('heavy && linux && docker') {
         ]
       ]) {
           sh 'npm ci';
-          sh 'node ./scripts/deploy/invalidate-cloudfront.js'
+          sh 'node ./scripts/deploy/invalidate-cloudfront.mjs'
       }
     }
   }

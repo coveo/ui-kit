@@ -1,4 +1,4 @@
-function umdWrapper(globalName) {
+export function umdWrapper(globalName) {
   const header = `(function (global, factory) {
     const isCommonjs = typeof exports === 'object' && typeof module !== 'undefined';
     
@@ -19,5 +19,3 @@ function umdWrapper(globalName) {
 
   return {header, footer};
 }
-
-module.exports = {umdWrapper};

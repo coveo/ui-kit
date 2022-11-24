@@ -1,10 +1,13 @@
-const {promisify} = require('util');
-const exec = promisify(require('child_process').exec);
-const {packageDirsNpmTag} = require('../packages');
+import {execute} from '../exec.mjs';
+import {packageDirsNpmTag, getPackageFromPath} from '../packages.mjs';
+import {resolve} from 'path';
+import {promisify} from 'util';
 
 async function main() {
   const requests = packageDirsNpmTag
-    .map((dir) => require(`../../packages/${dir}/package.json`))
+    .map((dir) =>
+      getPackageFromPath(resolve('..', '..', 'packages', dir, 'package.json'))
+    )
     .map(({name, version}) => updateNpmTag(name, version));
 
   await Promise.all(requests);
@@ -22,12 +25,12 @@ async function updateNpmTag(packageName, version) {
   }
 
   console.log(`updating ${packageName}@${version} to ${tag}.`);
-  await exec(`npm dist-tag add ${packageName}@${version} ${tag}`);
+  await execute('npm', ['dist-tag', 'add', `${packageName}@${version}`, tag]);
 }
 
 async function getLatestVersion(packageName) {
-  const res = await exec(`npm view ${packageName} version`);
-  return res.stdout.trim();
+  const res = await execute('npm', ['view', packageName, 'version']);
+  return res.trim();
 }
 
 function isGreaterThanLatestVersion(version, latestVersion) {

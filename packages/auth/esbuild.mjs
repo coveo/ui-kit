@@ -1,5 +1,5 @@
-const {build} = require('esbuild');
-const {apacheLicense} = require('../../scripts/license/apache');
+import {build} from 'esbuild';
+import {apacheLicense} from '../../scripts/license/apache.mjs';
 
 /**
  * @type {import('esbuild').BuildOptions}

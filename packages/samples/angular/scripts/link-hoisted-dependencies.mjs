@@ -1,17 +1,16 @@
 // TODO: remove this script when nohoist (https://github.com/npm/rfcs/issues/287) is introduced.
-
-const {execSync} = require('child_process');
-const {existsSync, symlinkSync, mkdirSync} = require('fs');
-const {join, parse} = require('path');
+import {execSync} from 'child_process';
+import {existsSync, symlinkSync, mkdirSync} from 'fs';
+import {resolve, parse} from 'path';
 
 /** @param {string} dependency */
 function getLocalPathToDependency(dependency) {
-  return join(__dirname, '../node_modules', dependency);
+  return resolve('node_modules', dependency);
 }
 
 /** @param {string} dependency */
 function getHoistedPathToDependency(dependency) {
-  return join(__dirname, '../../../../node_modules', dependency);
+  return resolve('..', '..', '..', 'node_modules', dependency);
 }
 
 /** @param {string} path */
@@ -28,6 +27,7 @@ function getUnlinkedDependencies() {
 
   const dependencies = Array.from(
     listOutput.matchAll(
+      // eslint-disable-next-line node/no-unsupported-features/es-syntax
       /^[^:\n]+:(?<dependencyName>[^:\n]+)@[^:\n]+(:[^:\n]+)?$/gm
     )
   ).map((match) => match.groups['dependencyName']);

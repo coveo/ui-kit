@@ -1,10 +1,10 @@
-const { buildBundleSizeReport } = require('./bundle-size/bundle-size');
-const {
+import {buildBundleSizeReport} from './bundle-size/bundle-size.mjs';
+import {
   getPullRequestComments,
   updatePullRequestComment,
   createPullRequestComment,
-} = require('./github-client');
-const {buildTitleReport} = require('./title/verify-title');
+} from './github-client.mjs';
+import {buildTitleReport} from './title/verify-title.mjs';
 
 const reportTitle = 'Pull Request Report';
 
