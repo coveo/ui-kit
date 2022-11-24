@@ -1,4 +1,3 @@
-/* eslint-disable @lwc/lwc/no-async-operation */
 import {LightningElement, api} from 'lwc';
 import {
   registerComponentForInit,
@@ -42,9 +41,9 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
     this.engine = engine;
     this.headless = getHeadlessBundle(this.engineId);
 
-    this.actions = {
-      ...this.headless.loadInsightSearchAnalyticsActions(engine),
-    };
+    // this.actions = {
+    //   ...this.headless.loadInsightSearchAnalyticsActions(engine),
+    // };
   };
 
   handleCopyToClipBoard = (event) => {
@@ -56,9 +55,9 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
     copyToClipboard(resultText)
       .then(() => {
         setLoading(false);
-        this.engine.dispatch(
-          this.actions.logCopyToClipboard(this.result)
-        );
+        // this.engine.dispatch(
+        //   this.actions.logCopyToClipboard(this.result)
+        // );
         this.displayedLabel = this.successLabel;
         this.refreshLabel();
       })
@@ -69,6 +68,7 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
   };
 
   refreshLabel() {
+    // eslint-disable-next-line @lwc/lwc/no-async-operation
     setTimeout(() => {
       this.displayedLabel = this.label;
     }, 500);
