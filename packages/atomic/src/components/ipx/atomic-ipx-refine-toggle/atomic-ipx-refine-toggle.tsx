@@ -76,6 +76,7 @@ export class AtomicIPXRefineToggle {
   public render() {
     return (
       <atomic-icon-button
+        iconClass="w-5 h-5 shrink-0"
         tooltip={this.bindings.i18n.t('filters')}
         icon={FilterIcon}
         disabled={
