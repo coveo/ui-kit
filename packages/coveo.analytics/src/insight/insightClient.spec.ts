@@ -325,8 +325,32 @@ describe('InsightClient', () => {
         });
 
         it('should send proper payload for #documentQuickview', async () => {
+            const expectedMetadata = {
+                ...fakeDocID,
+                documentTitle: fakeDocInfo.documentTitle,
+                documentURL: fakeDocInfo.documentUrl,
+            };
             await client.logDocumentQuickview(fakeDocInfo, fakeDocID);
-            expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #caseAttach', async () => {
+            const expectedMetadata = {
+                ...fakeDocID,
+                documentTitle: fakeDocInfo.documentTitle,
+                documentURL: fakeDocInfo.documentUrl,
+                resultUriHash: fakeDocInfo.documentUriHash,
+            };
+            await client.logCaseAttach(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.caseAttach, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #CaseDetach', async () => {
+            const expectedMetadata = {
+                resultUriHash: fakeDocInfo.documentUriHash,
+            };
+            await client.logCaseDetach(fakeDocInfo.documentUriHash);
+            expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
         });
     });
 
@@ -703,9 +727,36 @@ describe('InsightClient', () => {
             const expectedMetadata = {
                 ...fakeDocID,
                 ...expectedBaseCaseMetadata,
+                documentTitle: fakeDocInfo.documentTitle,
+                documentURL: fakeDocInfo.documentUrl,
             };
             await client.logDocumentQuickview(fakeDocInfo, fakeDocID, metadata);
             expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #caseAttach', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+                documentTitle: fakeDocInfo.documentTitle,
+                documentURL: fakeDocInfo.documentUrl,
+                resultUriHash: fakeDocInfo.documentUriHash,
+            };
+            await client.logCaseAttach(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.caseAttach, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #CaseDetach', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                resultUriHash: fakeDocInfo.documentUriHash,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logCaseDetach(fakeDocInfo.documentUriHash, metadata);
+            expectMatchCustomEventPayload(SearchPageEvents.caseDetach, expectedMetadata);
         });
     });
 

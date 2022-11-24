@@ -244,13 +244,43 @@ export class CoveoInsightClient {
     public logDocumentQuickview(
         info: PartialDocumentInformation,
         identifier: DocumentIdentifier,
-        metadata?: CaseMetadata
+        caseMetadata?: CaseMetadata
     ) {
+        const metadata = {
+            documentTitle: info.documentTitle,
+            documentURL: info.documentUrl,
+        };
         return this.logClickEvent(
             SearchPageEvents.documentQuickview,
             info,
             identifier,
-            metadata ? generateMetadataToSend(metadata, false) : undefined
+            caseMetadata ? {...generateMetadataToSend(caseMetadata, false), ...metadata} : metadata
+        );
+    }
+
+    public logCaseAttach(
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        caseMetadata?: CaseMetadata
+    ) {
+        const metadata = {
+            documentTitle: info.documentTitle,
+            documentURL: info.documentUrl,
+            resultUriHash: info.documentUriHash,
+        };
+
+        return this.logClickEvent(
+            SearchPageEvents.caseAttach,
+            info,
+            identifier,
+            caseMetadata ? {...generateMetadataToSend(caseMetadata, false), ...metadata} : metadata
+        );
+    }
+
+    public logCaseDetach(resultUriHash: string, metadata?: CaseMetadata) {
+        return this.logCustomEvent(
+            SearchPageEvents.caseDetach,
+            metadata ? {...generateMetadataToSend(metadata, false), resultUriHash} : {resultUriHash}
         );
     }
 
