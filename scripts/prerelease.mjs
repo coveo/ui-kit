@@ -5,6 +5,7 @@ import {
   gitPushTags,
 } from '@coveo/semantic-monorepo-tools';
 import {resolve} from 'node:path';
+import semver from 'semver';
 import {execute} from './exec.mjs';
 import {commitVersionBump, stageAll, tagPackages} from './git.mjs';
 import {
@@ -24,7 +25,7 @@ export const prereleaseSuffix = 'pre';
  * @param {string} version
  */
 export function isPrereleaseVersion(version) {
-  return !!version.match(new RegExp(`-${prereleaseSuffix}\\.[0-9]+\$`));
+  return !!semver.prerelease(version);
 }
 
 function getPackagesToPrereleaseBump() {
