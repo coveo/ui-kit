@@ -278,14 +278,6 @@ export enum SearchPageEvents {
      * Identifies the click event that gets logged when a user clicks the Copy To Clipboard result action.
      */
     copyToClipboard = 'copyToClipboard',
-    /**
-     * Identifies the click event that gets logged when a user clicks the Attach To Case result action.
-     */
-    caseAttach = 'caseAttach',
-    /**
-     * Identifies the click event that gets logged when a user clicks the Detach From Case result action.
-     */
-    caseDetach = 'caseDetach',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents, string>> = {
@@ -322,7 +314,6 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents | InsightEvents,
     [SearchPageEvents.clearRecentResults]: 'recentlyClickedDocuments',
     [SearchPageEvents.showLessFoldedResults]: 'folding',
     [InsightEvents.expandToFullUI]: 'interface',
-    [SearchPageEvents.caseDetach]: 'case',
 };
 
 export interface StaticFilterMetadata {
