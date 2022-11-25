@@ -32,10 +32,6 @@ export async function tagExists(tag) {
   return !!(await execute('git', ['tag', '-l', tag]));
 }
 
-export async function stageAll() {
-  await execute('git', ['add', '.']);
-}
-
 /**
  * @param {PackageDefinition[]} updatedPackages
  */

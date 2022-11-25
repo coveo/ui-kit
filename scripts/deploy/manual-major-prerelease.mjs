@@ -1,7 +1,7 @@
-import {getCurrentVersion} from '@coveo/semantic-monorepo-tools';
+import {getCurrentVersion, gitAdd} from '@coveo/semantic-monorepo-tools';
 import {resolve} from 'node:path';
 import {execute} from '../exec.mjs';
-import {commitVersionBump, stageAll, tagExists, tagPackages} from '../git.mjs';
+import {commitVersionBump, tagExists, tagPackages} from '../git.mjs';
 import {
   getPackageDefinitionFromPackageName,
   getPackagePathFromPackageDir,
@@ -66,7 +66,7 @@ export async function main(args) {
   const updatedPackages = packageNamesToBump.map(
     getPackageDefinitionFromPackageName
   );
-  await stageAll();
+  await gitAdd('.');
   await commitVersionBump(updatedPackages);
   await tagPackages(updatedPackages);
 }

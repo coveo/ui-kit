@@ -3,11 +3,12 @@ import {
   getCurrentVersion,
   gitPush,
   gitPushTags,
+  gitAdd,
 } from '@coveo/semantic-monorepo-tools';
 import {resolve} from 'node:path';
 import semver from 'semver';
 import {execute} from './exec.mjs';
-import {commitVersionBump, stageAll, tagPackages} from './git.mjs';
+import {commitVersionBump, tagPackages} from './git.mjs';
 import {
   packageDirsNpmTag,
   getPackageDefinitionFromPackageDir,
@@ -69,7 +70,7 @@ export async function bumpPrereleaseVersionAndPush() {
   const updatedPackages = packages.map(({packageDir}) =>
     getPackageDefinitionFromPackageDir(packageDir)
   );
-  await stageAll();
+  await gitAdd('.');
   await commitVersionBump(updatedPackages);
   await tagPackages(updatedPackages);
   await gitPush();
