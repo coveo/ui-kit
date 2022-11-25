@@ -2,6 +2,7 @@
 import {execSync} from 'child_process';
 import {existsSync, symlinkSync, mkdirSync} from 'fs';
 import {resolve, parse} from 'path';
+import {workspacesRoot} from '../../../../scripts/packages.mjs';
 
 /** @param {string} dependency */
 function getLocalPathToDependency(dependency) {
@@ -10,7 +11,7 @@ function getLocalPathToDependency(dependency) {
 
 /** @param {string} dependency */
 function getHoistedPathToDependency(dependency) {
-  return resolve('..', '..', '..', 'node_modules', dependency);
+  return resolve(workspacesRoot, 'node_modules', dependency);
 }
 
 /** @param {string} path */

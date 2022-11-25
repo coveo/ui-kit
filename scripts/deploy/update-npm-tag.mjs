@@ -1,12 +1,17 @@
-import {execute} from '../exec.mjs';
-import {packageDirsNpmTag, getPackageFromPath} from '../packages.mjs';
 import {resolve} from 'path';
-import {promisify} from 'util';
+import {execute} from '../exec.mjs';
+import {
+  packageDirsNpmTag,
+  getPackageFromPath,
+  workspacesRoot,
+} from '../packages.mjs';
 
 async function main() {
   const requests = packageDirsNpmTag
     .map((dir) =>
-      getPackageFromPath(resolve('..', '..', 'packages', dir, 'package.json'))
+      getPackageFromPath(
+        resolve(workspacesRoot, 'packages', dir, 'package.json')
+      )
     )
     .map(({name, version}) => updateNpmTag(name, version));
 

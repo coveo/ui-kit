@@ -1,15 +1,15 @@
 import {Octokit} from '@octokit/rest';
 import {resolve} from 'path';
-import {getPackageFromPath} from '../packages.mjs';
+import {getPackageFromPath, workspacesRoot} from '../packages.mjs';
 
 const headlessPackageJson = getPackageFromPath(
-  resolve('..', '..', 'packages', 'headless', 'package.json')
+  resolve(workspacesRoot, 'packages', 'headless', 'package.json')
 );
 const atomicPackageJson = getPackageFromPath(
-  resolve('..', '..', 'packages', 'atomic', 'package.json')
+  resolve(workspacesRoot, 'packages', 'atomic', 'package.json')
 );
 const quanticPackageJson = getPackageFromPath(
-  resolve('..', '..', 'packages', 'quantic', 'package.json')
+  resolve(workspacesRoot, 'packages', 'quantic', 'package.json')
 );
 
 const token = process.env.GITHUB_TOKEN || '';

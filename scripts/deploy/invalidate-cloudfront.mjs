@@ -1,12 +1,12 @@
 import {CloudFront} from 'aws-sdk';
 import {resolve} from 'path';
-import {getPackageFromPath} from '../packages.mjs';
+import {getPackageFromPath, workspacesRoot} from '../packages.mjs';
 
 const cloudfront = new CloudFront();
 
 async function getMajorVersion(dir) {
   const {version} = getPackageFromPath(
-    resolve('..', '..', 'packages', dir, 'package.json')
+    resolve(workspacesRoot, 'packages', dir, 'package.json')
   );
   return version.split('.')[0];
 }
