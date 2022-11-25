@@ -14,7 +14,7 @@ export const packageDirsNpmTag = [
 
 export const packageDirsSnyk = ['headless', 'atomic'];
 
-export const workspaceRoot = resolve(
+export const workspacesRoot = resolve(
   fileURLToPath(import.meta.url),
   '..',
   '..'

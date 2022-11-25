@@ -3,14 +3,14 @@ import {execute} from '../exec.mjs';
 import {
   packageDirsNpmTag,
   getPackageFromPath,
-  workspaceRoot,
+  workspacesRoot,
 } from '../packages.mjs';
 
 async function main() {
   const requests = packageDirsNpmTag
     .map((dir) =>
       getPackageFromPath(
-        resolve(workspaceRoot, 'packages', dir, 'package.json')
+        resolve(workspacesRoot, 'packages', dir, 'package.json')
       )
     )
     .map(({name, version}) => updateNpmTag(name, version));
