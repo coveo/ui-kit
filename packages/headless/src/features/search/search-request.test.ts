@@ -1,21 +1,21 @@
-import {createMockState} from '../../test/mock-state';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {SearchAppState} from '../../state/search-app-state';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
+import {buildMockFacetOptions} from '../../test/mock-facet-options';
+import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../test/mock-facet-slice';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
+import {createMockState} from '../../test/mock-state';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
-import {buildSearchRequest} from './search-request';
-import {buildFacetOptionsSlice} from '../../test/mock-facet-options-slice';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants';
-import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
-import {buildMockFacetSlice} from '../../test/mock-facet-slice';
-import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
-import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
+import {buildSearchRequest} from './search-request';
 
 describe('search request', () => {
   let state: SearchAppState;

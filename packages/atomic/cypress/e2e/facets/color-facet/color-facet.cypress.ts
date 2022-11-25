@@ -1,15 +1,14 @@
+import {FacetValue} from '@coveo/headless';
 import {TestFixture} from '../../../fixtures/test-fixture';
+import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {
-  addColorFacet,
-  colorFacetDefaultNumberOfValues,
-  colorFacetField,
-  colorFacetLabel,
-  selectIdleBoxValueAt,
-} from './color-facet-actions';
-import {
-  colorFacetComponent,
-  ColorFacetSelectors,
-} from './color-facet-selectors';
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from '../../breadbox-actions';
+import * as BreadboxAssertions from '../../breadbox-assertions';
+import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
+import * as CommonAssertions from '../../common-assertions';
 import {
   pressClearButton,
   pressLabelButton,
@@ -18,21 +17,22 @@ import {
   typeFacetSearchQuery,
   selectIdleCheckboxValueAt,
 } from '../facet-common-actions';
-import * as FacetAssertions from '../facet/facet-assertions';
-import * as ColorFacetAssertions from './color-facet-assertions';
-import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import * as BreadboxAssertions from '../../breadbox-assertions';
-import {
-  addBreadbox,
-  breadboxLabel,
-  deselectBreadcrumbAtIndex,
-} from '../../breadbox-actions';
-import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
-import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {addFacet} from '../facet/facet-actions';
+import * as FacetAssertions from '../facet/facet-assertions';
 import {FacetSelectors} from '../facet/facet-selectors';
-import {FacetValue} from '@coveo/headless';
+import {
+  addColorFacet,
+  colorFacetDefaultNumberOfValues,
+  colorFacetField,
+  colorFacetLabel,
+  selectIdleBoxValueAt,
+} from './color-facet-actions';
+import * as ColorFacetAssertions from './color-facet-assertions';
+import {
+  colorFacetComponent,
+  ColorFacetSelectors,
+} from './color-facet-selectors';
 
 describe('Color Facet Test Suites', () => {
   describe('with default setting', () => {

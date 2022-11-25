@@ -1,3 +1,5 @@
+import {buildMockRaw} from '../../test/mock-raw';
+import {buildMockResult} from '../../test/mock-result';
 import {
   fieldMustMatch,
   fieldMustNotMatch,
@@ -5,8 +7,6 @@ import {
   fieldsMustNotBeDefined,
   getResultProperty,
 } from './result-templates-helpers';
-import {buildMockResult} from '../../test/mock-result';
-import {buildMockRaw} from '../../test/mock-raw';
 
 describe('result template helpers', () => {
   function buildResult(fieldName: string, fiedlValues: unknown) {

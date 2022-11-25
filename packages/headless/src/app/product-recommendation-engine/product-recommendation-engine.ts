@@ -1,5 +1,6 @@
-import {Logger} from 'pino';
+import {isNullOrUndefined} from '@coveo/bueno';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -7,6 +8,8 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
+import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   buildEngine,
@@ -16,15 +19,12 @@ import {
 } from '../engine';
 import {buildLogger} from '../logger';
 import {productRecommendations, searchHub} from '../reducers';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   ProductRecommendationEngineConfiguration,
   productRecommendationEngineConfigurationSchema,
 } from './product-recommendation-engine-configuration';
-import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
-import {setSearchHub} from '../../features/search-hub/search-hub-actions';
-import {isNullOrUndefined} from '@coveo/bueno';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 
 export type {ProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';
 export {getSampleProductRecommendationEngineConfiguration} from './product-recommendation-engine-configuration';

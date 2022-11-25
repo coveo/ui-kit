@@ -1,7 +1,7 @@
-import {AnalyticsParam} from '../../api/search/search-api-params';
-import {getPageID, getVisitorID} from '../../api/analytics/search-analytics';
-import {AnalyticsState} from './configuration-state';
 import {EventDescription} from 'coveo.analytics';
+import {getPageID, getVisitorID} from '../../api/analytics/search-analytics';
+import {AnalyticsParam} from '../../api/search/search-api-params';
+import {AnalyticsState} from './configuration-state';
 
 export const fromAnalyticsStateToAnalyticsParams = async (
   s: AnalyticsState,

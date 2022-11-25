@@ -1,19 +1,19 @@
-import {TestFixture} from '../../fixtures/test-fixture';
 import {
   SafeStorage,
   StorageItems,
 } from '../../../src/utils/local-storage-utils';
-import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
-import {addSearchBox} from './search-box-actions';
+import {RouteAlias} from '../../fixtures/fixture-common';
+import {TestFixture} from '../../fixtures/test-fixture';
 import * as CommonAssertions from '../common-assertions';
-import * as SearchBoxAssertions from './search-box-assertions';
-import {addQuerySummary} from '../query-summary-actions';
-import * as QuerySummaryAssertions from '../query-summary-assertions';
-import {addFacet, field} from '../facets/facet/facet-actions';
-import {FacetSelectors} from '../facets/facet/facet-selectors';
 import {selectIdleCheckboxValueAt} from '../facets/facet-common-actions';
 import * as FacetCommonAssertions from '../facets/facet-common-assertions';
-import {RouteAlias} from '../../fixtures/fixture-common';
+import {addFacet, field} from '../facets/facet/facet-actions';
+import {FacetSelectors} from '../facets/facet/facet-selectors';
+import {addQuerySummary} from '../query-summary-actions';
+import * as QuerySummaryAssertions from '../query-summary-assertions';
+import {addSearchBox} from './search-box-actions';
+import * as SearchBoxAssertions from './search-box-assertions';
+import {searchBoxComponent, SearchBoxSelectors} from './search-box-selectors';
 
 const setSuggestions = (count: number) => () => {
   cy.intercept(

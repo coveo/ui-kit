@@ -1,17 +1,14 @@
-import {Result} from '../../api/search/search/result';
-import {
-  PartialDocumentInformation,
-  DocumentIdentifier,
-} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../state/search-app-state';
-import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {
   isNullOrUndefined,
   RecordValue,
   Schema,
   StringValue,
 } from '@coveo/bueno';
-import {Raw} from '../../api/search/search/raw';
+import {
+  AsyncThunk,
+  AsyncThunkPayloadCreator,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
@@ -21,25 +18,12 @@ import {
   EventDescription,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
+import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {
-  AsyncThunk,
-  AsyncThunkPayloadCreator,
-  createAsyncThunk,
-} from '@reduxjs/toolkit';
-import {requiredNonEmptyString} from '../../utils/validate-payload';
-import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {
-  ConfigurationSection,
-  PipelineSection,
-} from '../../state/state-sections';
-import {RecommendationAppState} from '../../state/recommendation-app-state';
-import {ResultWithFolding} from '../folding/folding-slice';
-import {getAllIncludedResultsFrom} from '../folding/folding-utils';
-import {
-  configureAnalytics,
-  SearchAnalyticsProvider,
-  StateNeededBySearchAnalyticsProvider,
-} from '../../api/analytics/search-analytics';
+  PartialDocumentInformation,
+  DocumentIdentifier,
+} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {Logger} from 'pino';
 import {
   configureCaseAssistAnalytics,
   StateNeededByCaseAssistAnalytics,
@@ -49,10 +33,26 @@ import {
   InsightAnalyticsProvider,
   StateNeededByInsightAnalyticsProvider,
 } from '../../api/analytics/insight-analytics';
-import {PreprocessRequest} from '../../api/preprocess-request';
-import {Logger} from 'pino';
-import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {StateNeededByProductRecommendationsAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
+import {
+  configureAnalytics,
+  SearchAnalyticsProvider,
+  StateNeededBySearchAnalyticsProvider,
+} from '../../api/analytics/search-analytics';
+import {PreprocessRequest} from '../../api/preprocess-request';
+import {Raw} from '../../api/search/search/raw';
+import {Result} from '../../api/search/search/result';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
+import {RecommendationAppState} from '../../state/recommendation-app-state';
+import {SearchAppState} from '../../state/search-app-state';
+import {
+  ConfigurationSection,
+  PipelineSection,
+} from '../../state/state-sections';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {ResultWithFolding} from '../folding/folding-slice';
+import {getAllIncludedResultsFrom} from '../folding/folding-utils';
+import {getPipelineInitialState} from '../pipeline/pipeline-state';
 
 export enum AnalyticsType {
   Search,

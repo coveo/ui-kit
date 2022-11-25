@@ -2,11 +2,11 @@ import {SearchResponseSuccess} from '@coveo/headless/dist/definitions/api/search
 import {NumericFacetValue} from '@coveo/headless/dist/definitions/product-listing.index';
 import {getAlias, InterceptAliases} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
-import {SearchExpectations} from '../../search-expectations';
 import {
   baseFacetExpectations,
   facetWithValuesExpectations,
 } from '../../facets-1/facet-common-expectations';
+import {SearchExpectations} from '../../search-expectations';
 import {
   AllFacetSelectors,
   NumericFacetSelectors,

@@ -1,13 +1,13 @@
-import {Component, ContextType} from 'react';
 import {
   buildResultList,
   ResultList as ResultListController,
   ResultListState,
   Unsubscribe,
 } from '@coveo/headless';
-import {ResultLink} from './result-link';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {Quickview} from '../quickview/quickview.class';
+import {ResultLink} from './result-link';
 
 export class ResultList extends Component<{}, ResultListState> {
   static contextType = AppContext;

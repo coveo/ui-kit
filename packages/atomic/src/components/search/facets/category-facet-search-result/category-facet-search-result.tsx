@@ -1,9 +1,9 @@
+import {CategoryFacetSearchResult as HeadlessCategoryFacetSearchResult} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
-import {CategoryFacetSearchResult as HeadlessCategoryFacetSearchResult} from '@coveo/headless';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {Button} from '../../../common/button';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 
 interface CategoryFacetSearchResultProps {
   result: HeadlessCategoryFacetSearchResult;

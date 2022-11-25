@@ -1,9 +1,9 @@
-import {h} from '@stencil/core';
 import {
   ResultTemplate,
   ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
+import {h} from '@stencil/core';
 
 export type TemplateContent = DocumentFragment;
 

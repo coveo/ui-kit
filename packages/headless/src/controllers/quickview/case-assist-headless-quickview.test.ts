@@ -1,17 +1,17 @@
 import {configuration, resultPreview} from '../../app/reducers';
-import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
 import {logQuickviewDocumentSuggestionClick} from '../../features/case-assist/case-assist-analytics-actions';
+import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
 import {buildMockResult} from '../../test';
+import {
+  buildMockCaseAssistEngine,
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
 import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
   buildCaseAssistQuickview,
   CaseAssistQuickviewOptions,
   CaseAssistQuickview,
 } from './case-assist-headless-quickview';
-import {
-  buildMockCaseAssistEngine,
-  MockCaseAssistEngine,
-} from '../../test/mock-engine';
 
 describe('CaseAssistQuickview', () => {
   let engine: MockCaseAssistEngine;

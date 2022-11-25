@@ -1,25 +1,26 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SerializedError} from '@reduxjs/toolkit';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {Result} from '../../api/search/search/result';
-import {InstantResultSection} from '../../state/state-sections';
-import {buildController, Controller} from '../controller/headless-controller';
 import {instantResults} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {validateOptions} from '../../utils/validate-payload';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   clearExpiredResults,
   registerInstantResults,
   updateInstantResultsQuery,
 } from '../../features/instant-results/instant-results-actions';
+import {hasExpired} from '../../features/instant-results/instant-results-state';
+import {fetchInstantResults} from '../../features/search/search-actions';
+import {InstantResultSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
+import {randomID} from '../../utils/utils';
+import {validateOptions} from '../../utils/validate-payload';
+import {buildController, Controller} from '../controller/headless-controller';
 import {
   InstantResultOptions,
   instantResultsOptionsSchema,
 } from './instant-results-options';
+
 export type {InstantResultOptions} from './instant-results-options';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {SerializedError} from '@reduxjs/toolkit';
-import {fetchInstantResults} from '../../features/search/search-actions';
-import {hasExpired} from '../../features/instant-results/instant-results-state';
-import {randomID} from '../../utils/utils';
 
 export interface InstantResultProps {
   options: InstantResultOptions;

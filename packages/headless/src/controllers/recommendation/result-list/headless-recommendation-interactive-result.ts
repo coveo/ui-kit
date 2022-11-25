@@ -1,12 +1,12 @@
 import {Result} from '../../../api/search/search/result';
+import {RecommendationEngine} from '../../../app/recommendation-engine/recommendation-engine';
+import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
 import {
   buildInteractiveResultCore,
   InteractiveResultCore,
   InteractiveResultCoreOptions,
   InteractiveResultCoreProps,
 } from '../../core/interactive-result/headless-core-interactive-result';
-import {logRecommendationOpen} from '../../../features/recommendation/recommendation-analytics-actions';
-import {RecommendationEngine} from '../../../app/recommendation-engine/recommendation-engine';
 
 export interface RecommendationInteractiveResultOptions
   extends InteractiveResultCoreOptions {

@@ -4,8 +4,8 @@ import {
   makeAnalyticsAction,
   SearchAction,
 } from '../../../analytics/analytics-utils';
-import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
 import {getRangeFacetMetadata} from '../generic/range-facet-analytics-actions';
+import {rangeFacetSelectionPayloadDefinition} from '../generic/range-facet-validate-payload';
 import {DateFacetValue} from './interfaces/response';
 
 export interface LogDateFacetBreadcrumbActionCreatorPayload {

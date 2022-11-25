@@ -1,3 +1,11 @@
+import {
+  getResultProperty as getResultPropertyAlias,
+  fieldsMustBeDefined as fieldsMustBeDefinedAlias,
+  fieldsMustNotBeDefined as fieldsMustNotBeDefinedAlias,
+  fieldMustMatch as fieldMustMatchAlias,
+  fieldMustNotMatch as fieldMustNotMatchAlias,
+} from './result-templates/result-templates-helpers';
+
 export * from './advanced-search-queries/advanced-search-queries-actions-loader';
 export * from './facets/category-facet-set/category-facet-set-actions-loader';
 export * from './facets/facet-set/facet-set-actions-loader';
@@ -34,13 +42,6 @@ export * from './excerpt-length/excerpt-length-actions-loader';
 export type {ResultTemplatesManager} from './result-templates/result-templates-manager';
 export {buildResultTemplatesManager} from './result-templates/result-templates-manager';
 
-import {
-  getResultProperty as getResultPropertyAlias,
-  fieldsMustBeDefined as fieldsMustBeDefinedAlias,
-  fieldsMustNotBeDefined as fieldsMustNotBeDefinedAlias,
-  fieldMustMatch as fieldMustMatchAlias,
-  fieldMustNotMatch as fieldMustNotMatchAlias,
-} from './result-templates/result-templates-helpers';
 export namespace ResultTemplatesHelpers {
   export const getResultProperty = getResultPropertyAlias;
   export const fieldsMustBeDefined = fieldsMustBeDefinedAlias;

@@ -1,5 +1,5 @@
-import {createAction} from '@reduxjs/toolkit';
 import {NumberValue} from '@coveo/bueno';
+import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload';
 
 const numberValue = new NumberValue({required: true, min: 0});

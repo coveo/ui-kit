@@ -1,14 +1,14 @@
-import {querySuggestReducer} from './query-suggest-slice';
 import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
+import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
+import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
 import {
   clearQuerySuggest,
   fetchQuerySuggestions,
   registerQuerySuggest,
 } from './query-suggest-actions';
-import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
+import {querySuggestReducer} from './query-suggest-slice';
 import {QuerySuggestSet} from './query-suggest-state';
-import {buildMockSearchApiErrorWithStatusCode} from '../../test/mock-search-api-error-with-status-code';
-import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 
 describe('querySuggest slice', () => {
   let state: QuerySuggestSet;

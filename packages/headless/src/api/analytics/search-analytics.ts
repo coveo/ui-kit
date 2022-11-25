@@ -5,19 +5,19 @@ import {
   CoveoAnalyticsClient,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
+import {IRuntimeEnvironment} from 'coveo.analytics';
+import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
 import {Logger} from 'pino';
-import {getQueryInitialState} from '../../features/query/query-state';
-import {getSearchInitialState} from '../../features/search/search-state';
-import {ConfigurationSection} from '../../state/state-sections';
-import {PreprocessRequest} from '../preprocess-request';
-import {BaseAnalyticsProvider} from './base-analytics';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
 } from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events';
-import {IRuntimeEnvironment} from 'coveo.analytics';
+import {getQueryInitialState} from '../../features/query/query-state';
+import {getSearchInitialState} from '../../features/search/search-state';
 import {SearchAppState} from '../../state/search-app-state';
+import {ConfigurationSection} from '../../state/state-sections';
+import {PreprocessRequest} from '../preprocess-request';
+import {BaseAnalyticsProvider} from './base-analytics';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;

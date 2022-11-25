@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildExecuteTrigger,
   ExecuteTrigger as HeadlessExecuteTrigger,
@@ -7,6 +6,7 @@ import {
   Unsubscribe,
   FunctionExecutionTrigger,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class ExecuteTrigger extends Component<{}, ExecuteTriggerState> {

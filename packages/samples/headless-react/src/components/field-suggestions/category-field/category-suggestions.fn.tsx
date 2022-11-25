@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {CategoryFieldSuggestions as HeadlessCategoryFieldSuggestions} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 
 interface CategoryFieldSuggestionsProps {
   controller: HeadlessCategoryFieldSuggestions;

@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {configuration, pipeline, searchHub} from '../../app/reducers';
 import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
+import {configuration, pipeline, searchHub} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   updateSearchConfiguration,

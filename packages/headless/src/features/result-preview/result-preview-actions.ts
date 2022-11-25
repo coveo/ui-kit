@@ -1,14 +1,14 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {HtmlApiClient} from '../../api/search/html/html-api-client';
 import {HtmlRequestOptions} from '../../api/search/html/html-request';
 import {isErrorResponse} from '../../api/search/search-api-client';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
+import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
 import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
 } from './result-preview-request-builder';
-import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments';
-import {HtmlApiClient} from '../../api/search/html/html-api-client';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 
 interface FetchResultContentResponse {
   content: string;

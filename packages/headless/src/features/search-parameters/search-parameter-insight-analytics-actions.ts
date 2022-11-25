@@ -1,6 +1,5 @@
-import {SearchParameters} from './search-parameter-actions';
 import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
-import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
+import {InsightAction} from '../analytics/analytics-utils';
 import {logInsightInterfaceChange} from '../analytics/insight-analytics-actions';
 import {
   logFacetClearAll,
@@ -8,7 +7,8 @@ import {
   logFacetSelect,
 } from '../facets/facet-set/facet-set-insight-analytics-actions';
 import {logSearchboxSubmit} from '../query/query-insight-analytics-actions';
-import {InsightAction} from '../analytics/analytics-utils';
+import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
+import {SearchParameters} from './search-parameter-actions';
 
 export function logParametersChange(
   previousParameters: SearchParameters,

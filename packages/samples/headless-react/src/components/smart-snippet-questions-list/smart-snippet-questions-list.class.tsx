@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildSmartSnippetQuestionsList,
   SmartSnippetQuestionsList as HeadlessSmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class SmartSnippetQuestionsList extends Component<

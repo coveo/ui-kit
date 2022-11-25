@@ -1,11 +1,4 @@
-import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
-import {
-  logInterfaceChange,
-  logInterfaceLoad,
-  logSearchFromLink,
-  logOmniboxFromLink,
-} from './analytics-actions';
-import {CustomAction, SearchAction} from './analytics-utils';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
 import {
   logCategoryFacetBreadcrumb,
@@ -24,6 +17,7 @@ import {
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions';
+import {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
 import {
   logDateFacetBreadcrumb,
   LogDateFacetBreadcrumbActionCreatorPayload,
@@ -43,13 +37,12 @@ import {
   logPagePrevious,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
   logQuerySuggestionClick,
   LogQuerySuggestionClickActionCreatorPayload,
   OmniboxSuggestionMetadata,
 } from '../query-suggest/query-suggest-analytics-actions';
-import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
   logCollapseSmartSnippet,
   logExpandSmartSnippet,
@@ -67,7 +60,7 @@ import {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../question-answering/question-answering-document-id';
-import {SearchEngine} from '../../app/search-engine/search-engine';
+import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 import {
   logStaticFilterSelect,
   logStaticFilterDeselect,
@@ -84,6 +77,13 @@ import {
   logUndoTriggerQuery,
   LogUndoTriggerQueryActionCreatorPayload,
 } from '../triggers/trigger-analytics-actions';
+import {
+  logInterfaceChange,
+  logInterfaceLoad,
+  logSearchFromLink,
+  logOmniboxFromLink,
+} from './analytics-actions';
+import {CustomAction, SearchAction} from './analytics-utils';
 
 export type {
   LogCategoryFacetBreadcrumbActionCreatorPayload,

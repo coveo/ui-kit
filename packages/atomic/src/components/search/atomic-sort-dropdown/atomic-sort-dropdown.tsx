@@ -1,4 +1,4 @@
-import {Component, h, State, Element} from '@stencil/core';
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   Sort,
   buildSort,
@@ -8,16 +8,16 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
+import {Component, h, State, Element} from '@stencil/core';
+import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {SortDropdownOption} from '../atomic-search-interface/store';
-import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
-import {Schema, StringValue} from '@coveo/bueno';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
+import {SortDropdownOption} from '../atomic-search-interface/store';
 
 /**
  * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.

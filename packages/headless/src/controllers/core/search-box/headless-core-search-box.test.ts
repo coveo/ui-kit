@@ -1,30 +1,4 @@
 import {
-  SearchBox,
-  SearchBoxProps,
-  SearchBoxOptions,
-  buildCoreSearchBox,
-} from './headless-core-search-box';
-import {
-  registerQuerySuggest,
-  clearQuerySuggest,
-  fetchQuerySuggestions,
-  selectQuerySuggestion,
-} from '../../../features/query-suggest/query-suggest-actions';
-import {createMockState} from '../../../test/mock-state';
-import {executeSearch} from '../../../features/search/search-actions';
-import {updateQuery} from '../../../features/query/query-actions';
-import {
-  registerQuerySetQuery,
-  updateQuerySetQuery,
-} from '../../../features/query-set/query-set-actions';
-import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
-import {updatePage} from '../../../features/pagination/pagination-actions';
-import {SearchAppState} from '../../../state/search-app-state';
-import {
   configuration,
   query,
   querySet,
@@ -36,7 +10,33 @@ import {
   deselectAllNonBreadcrumbs,
 } from '../../../features/breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../../../features/facets/generic/facet-actions';
+import {updatePage} from '../../../features/pagination/pagination-actions';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from '../../../features/query-set/query-set-actions';
+import {
+  registerQuerySuggest,
+  clearQuerySuggest,
+  fetchQuerySuggestions,
+  selectQuerySuggestion,
+} from '../../../features/query-suggest/query-suggest-actions';
+import {updateQuery} from '../../../features/query/query-actions';
 import {logSearchboxSubmit} from '../../../features/query/query-analytics-actions';
+import {executeSearch} from '../../../features/search/search-actions';
+import {SearchAppState} from '../../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../../test/mock-engine';
+import {buildMockQuerySuggest} from '../../../test/mock-query-suggest';
+import {createMockState} from '../../../test/mock-state';
+import {
+  SearchBox,
+  SearchBoxProps,
+  SearchBoxOptions,
+  buildCoreSearchBox,
+} from './headless-core-search-box';
 
 jest.mock('../../../features/query/query-analytics-actions', () => ({
   logSearchboxSubmit: jest.fn(() => () => {}),

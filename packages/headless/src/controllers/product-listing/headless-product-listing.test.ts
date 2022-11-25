@@ -1,3 +1,11 @@
+import {Action} from 'redux';
+import {configuration} from '../../app/reducers';
+import {
+  fetchProductListing,
+  setAdditionalFields,
+  setProductListingUrl,
+} from '../../features/product-listing/product-listing-actions';
+import {productListingReducer} from '../../features/product-listing/product-listing-slice';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
@@ -7,14 +15,6 @@ import {
   ProductListing,
   ProductListingOptions,
 } from './headless-product-listing';
-import {Action} from 'redux';
-import {configuration} from '../../app/reducers';
-import {productListingReducer} from '../../features/product-listing/product-listing-slice';
-import {
-  fetchProductListing,
-  setAdditionalFields,
-  setProductListingUrl,
-} from '../../features/product-listing/product-listing-actions';
 
 describe('headless product-listing', () => {
   let productListing: ProductListing;

@@ -1,15 +1,20 @@
+import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {
+  logFacetClearAll,
+  logFacetUpdateSort,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {NumericRangeRequest} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {executeSearch} from '../../../../features/search/search-actions';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
-import {SearchEngine} from '../../../../app/search-engine/search-engine';
-import {executeSearch} from '../../../../features/search/search-actions';
-import {getAnalyticsActionForToggleRangeFacetSelect} from '../../../../features/facets/range-facets/generic/range-facet-utils';
 import {
   buildCoreNumericFacet,
   buildNumericRange,
@@ -19,11 +24,6 @@ import {
   NumericFacetState,
   NumericRangeOptions,
 } from '../../../core/facets/range-facet/numeric-facet/headless-core-numeric-facet';
-import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
-import {
-  logFacetClearAll,
-  logFacetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 
 export type {
   NumericRangeOptions,

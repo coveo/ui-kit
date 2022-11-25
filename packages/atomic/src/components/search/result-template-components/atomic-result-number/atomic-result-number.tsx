@@ -1,12 +1,12 @@
-import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {Component, Prop, Element, State, Listen} from '@stencil/core';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../../common/formats/format-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-number` component renders the value of a number result field.

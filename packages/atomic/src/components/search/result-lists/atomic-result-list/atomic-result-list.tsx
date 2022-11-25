@@ -1,4 +1,3 @@
-import {Component, Element, State, Prop, Method, h} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -9,17 +8,17 @@ import {
   Result,
   buildInteractiveResult,
 } from '@coveo/headless';
+import {Component, Element, State, Prop, Method, h} from '@stencil/core';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   ResultDisplayDensity,
   ResultDisplayImageSize,
@@ -28,6 +27,7 @@ import {
 import {ResultListCommon} from '../../../common/result-list/result-list-common';
 import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
 import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-result-list` component is responsible for displaying query results by applying one or more result templates.

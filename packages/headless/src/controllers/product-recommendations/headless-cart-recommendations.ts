@@ -1,14 +1,14 @@
 import {Schema} from '@coveo/bueno';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
+import {validateOptions} from '../../utils/validate-payload';
+import {ErrorPayload} from '../controller/error-payload';
+import {Controller} from '../controller/headless-controller';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
-import {validateOptions} from '../../utils/validate-payload';
-import {Controller} from '../controller/headless-controller';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {CartRecommendationsListOptions} from './headless-cart-recommendations-options';
-import {ErrorPayload} from '../controller/error-payload';
-import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 
 export type {CartRecommendationsListOptions, ProductRecommendation};
 

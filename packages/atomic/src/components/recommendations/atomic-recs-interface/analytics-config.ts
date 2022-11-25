@@ -1,13 +1,13 @@
 import {
+  AnalyticsConfiguration,
+  RecommendationEngineConfiguration,
+} from '@coveo/headless/recommendation';
+import {
   AnalyticsPayload,
   augmentAnalyticsWithAtomicVersion,
   augmentWithExternalMiddleware,
   augmentAnalyticsConfigWithDocument,
 } from '../../common/interface/analytics-config';
-import {
-  AnalyticsConfiguration,
-  RecommendationEngineConfiguration,
-} from '@coveo/headless/recommendation';
 
 export function getAnalyticsConfig(
   recsConfig: RecommendationEngineConfiguration,

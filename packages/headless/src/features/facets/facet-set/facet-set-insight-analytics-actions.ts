@@ -1,23 +1,23 @@
-import {FacetSortCriterion} from './interfaces/request';
-import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
+import {Value} from '@coveo/bueno';
 import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {Value} from '@coveo/bueno';
 import {
   AnalyticsType,
   InsightAction,
   makeInsightAnalyticsAction,
 } from '../../analytics/analytics-utils';
+import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
+import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
+import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
 import {
   buildFacetBaseMetadata,
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
-import {LogFacetBreadcrumbActionCreatorPayload} from './facet-set-analytics-actions';
-import {getCaseContextAnalyticsMetadata} from '../../case-context/case-context-state';
+import {FacetSortCriterion} from './interfaces/request';
 
 export const logFacetShowMore = (facetId: string): InsightAction =>
   makeInsightAnalyticsAction(

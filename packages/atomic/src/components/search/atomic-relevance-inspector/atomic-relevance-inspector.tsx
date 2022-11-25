@@ -1,10 +1,10 @@
-import {Component, h, State, Prop} from '@stencil/core';
 import {
   RelevanceInspector,
   RelevanceInspectorState,
   Unsubscribe,
   buildRelevanceInspector,
 } from '@coveo/headless';
+import {Component, h, State, Prop} from '@stencil/core';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

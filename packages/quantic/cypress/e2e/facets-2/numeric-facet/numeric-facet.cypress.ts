@@ -1,23 +1,22 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure, reset} from '../../../page-objects/configurator';
-
-import {
-  field,
-  NumericFacetExpectations as Expect,
-} from './numeric-facet-expectations';
 import {
   getAlias,
   InterceptAliases,
   interceptSearch,
   mockSearchNoResults,
 } from '../../../page-objects/search';
-import {NumericFacetActions as Actions} from './numeric-facet-actions';
-import {scope} from '../../../reporters/detailed-collector';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {scope} from '../../../reporters/detailed-collector';
+import {NumericFacetActions as Actions} from './numeric-facet-actions';
+import {
+  field,
+  NumericFacetExpectations as Expect,
+} from './numeric-facet-expectations';
 
 interface NumericFacetOptions {
   field: string;

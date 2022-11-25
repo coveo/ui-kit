@@ -1,21 +1,21 @@
-import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {Schema, NumberValue} from '@coveo/bueno';
 import {
   buildInteractiveResult,
   InteractiveResult,
   Result,
 } from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
-import {parseXML} from '../../../../utils/utils';
-import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {Schema, NumberValue} from '@coveo/bueno';
+import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
 import Arrow from '../../../../images/arrow-right.svg';
-import {LinkWithResultAnalytics} from '../../result-link/result-link';
 import {
   FocusTarget,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
+import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {parseXML} from '../../../../utils/utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {getAttributesFromLinkSlot} from '../../result-link/attributes-slot';
+import {LinkWithResultAnalytics} from '../../result-link/result-link';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.

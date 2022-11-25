@@ -1,16 +1,16 @@
 import {SearchAppState} from '../../../state/search-app-state';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {createMockState} from '../../../test/mock-state';
 import {
   categoryFacetResponseSelector,
   categoryFacetResponseSelectedValuesSelector,
 } from './category-facet-set-selectors';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 
 describe('category facet selectors', () => {
   const facetId = 'abc123';

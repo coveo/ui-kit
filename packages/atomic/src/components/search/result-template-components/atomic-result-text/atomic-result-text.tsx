@@ -1,6 +1,6 @@
-import {Component, Prop, h, Element, Host, State} from '@stencil/core';
+import {isArray} from '@coveo/bueno';
 import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {ResultContext} from '../result-template-decorators';
+import {Component, Prop, h, Element, Host, State} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   InitializableComponent,
@@ -8,7 +8,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {isArray} from '@coveo/bueno';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.

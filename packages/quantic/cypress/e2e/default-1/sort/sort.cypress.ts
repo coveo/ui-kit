@@ -1,18 +1,18 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   getAlias,
   interceptSearch,
   interceptSearchIndefinitely,
 } from '../../../page-objects/search';
-import {SortExpectations as Expect} from './sort-expectations';
-import {SortActions as Actions} from './sort-actions';
-import {SearchExpectations} from '../../search-expectations';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {SearchExpectations} from '../../search-expectations';
+import {SortActions as Actions} from './sort-actions';
+import {SortExpectations as Expect} from './sort-expectations';
 
 describe('quantic-sort', () => {
   const sortUrl = 's/quantic-sort';

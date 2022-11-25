@@ -1,12 +1,4 @@
 import {
-  DocumentSuggestionList,
-  buildDocumentSuggestionList,
-} from './headless-document-suggestion-list';
-import {
-  buildMockCaseAssistEngine,
-  MockCaseAssistEngine,
-} from '../../test/mock-engine';
-import {
   caseAssistConfiguration,
   caseField,
   caseInput,
@@ -15,6 +7,14 @@ import {
 } from '../../app/reducers';
 import {fetchDocumentSuggestions} from '../../features/document-suggestion/document-suggestion-actions';
 import {getDocumentSuggestionInitialState} from '../../features/document-suggestion/document-suggestion-state';
+import {
+  buildMockCaseAssistEngine,
+  MockCaseAssistEngine,
+} from '../../test/mock-engine';
+import {
+  DocumentSuggestionList,
+  buildDocumentSuggestionList,
+} from './headless-document-suggestion-list';
 
 describe('Document Suggestion List', () => {
   let engine: MockCaseAssistEngine;

@@ -1,16 +1,16 @@
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {Result} from '../../api/search/search/result';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
+import {configuration, recommendation} from '../../app/reducers';
+import {loadPaginationActions} from '../../features';
 import {
   getRecommendations,
   setRecommendationId,
 } from '../../features/recommendation/recommendation-actions';
-import {buildController, Controller} from '../controller/headless-controller';
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {validateOptions} from '../../utils/validate-payload';
-import {Result} from '../../api/search/search/result';
-import {ErrorPayload} from '../controller/error-payload';
-import {configuration, recommendation} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
-import {loadPaginationActions} from '../../features';
+import {validateOptions} from '../../utils/validate-payload';
+import {ErrorPayload} from '../controller/error-payload';
+import {buildController, Controller} from '../controller/headless-controller';
 
 const optionsSchema = new Schema<RecommendationListOptions>({
   id: new StringValue<string>({

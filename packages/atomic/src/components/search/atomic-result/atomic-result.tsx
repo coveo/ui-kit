@@ -1,23 +1,23 @@
-import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
+import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
-  DisplayConfig,
-  InteractiveResultContextEvent,
-  ResultContextEvent,
-} from '../result-template-components/result-template-decorators';
+  AtomicCommonStore,
+  AtomicCommonStoreData,
+} from '../../common/interface/store';
 import {
   ResultLayout,
   ResultDisplayDensity,
   ResultDisplayImageSize,
   ResultDisplayLayout,
 } from '../../common/layout/display-options';
-import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-} from '../../common/interface/store';
-import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
 import {resultComponentClass} from '../../common/result-list/result-list-common';
+import {ResultRenderingFunction} from '../../common/result-list/result-list-common-interface';
+import {
+  DisplayConfig,
+  InteractiveResultContextEvent,
+  ResultContextEvent,
+} from '../result-template-components/result-template-decorators';
 
 /**
  * The `atomic-result` component is used internally by the `atomic-result-list` component.

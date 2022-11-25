@@ -1,18 +1,18 @@
+import {InlineLink} from '@coveo/headless';
 import {generateComponentHTML, TestFixture} from '../fixtures/test-fixture';
-import {
-  smartSnippetComponent,
-  SmartSnippetSelectors,
-} from './smart-snippet-selectors';
-import * as CommonAssertions from './common-assertions';
-import * as SmartSnippetAssertions from './smart-snippet-assertions';
 import {AnalyticsTracker} from '../utils/analyticsUtils';
+import * as CommonAssertions from './common-assertions';
 import {addSearchBox} from './search-box/search-box-actions';
 import {SearchBoxSelectors} from './search-box/search-box-selectors';
 import {
   addSmartSnippet,
   addSmartSnippetDefaultOptions,
 } from './smart-snippet-actions';
-import {InlineLink} from '@coveo/headless';
+import * as SmartSnippetAssertions from './smart-snippet-assertions';
+import {
+  smartSnippetComponent,
+  SmartSnippetSelectors,
+} from './smart-snippet-selectors';
 
 const {
   remSize,

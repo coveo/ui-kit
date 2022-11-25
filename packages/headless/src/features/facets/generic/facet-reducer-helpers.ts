@@ -1,5 +1,5 @@
-import {AnyFacetRequest} from './interfaces/generic-facet-request';
 import {FacetRequest} from '../facet-set/interfaces/request';
+import {AnyFacetRequest} from './interfaces/generic-facet-request';
 import {AnyFacetSlice} from './interfaces/generic-facet-section';
 
 export type SpecificFacetState<

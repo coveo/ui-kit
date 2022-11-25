@@ -1,19 +1,19 @@
+import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+import {ProductListingAppState} from '../../../../state/product-listing-app-state';
+import {
+  MockProductListingEngine,
+  buildMockProductListingEngine,
+} from '../../../../test/mock-engine';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
 import {
   NumericFacet,
   buildNumericFacet,
   NumericFacetOptions,
 } from './headless-product-listing-numeric-facet';
-import {
-  MockProductListingEngine,
-  buildMockProductListingEngine,
-} from '../../../../test/mock-engine';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {configuration, numericFacetSet, search} from '../../../../app/reducers';
-import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
-import {ProductListingAppState} from '../../../../state/product-listing-app-state';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 
 describe('numeric facet', () => {
   const facetId = '1';

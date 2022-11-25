@@ -3,16 +3,16 @@ import {
   generateComponentHTML,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {
-  resultPrintableUriComponent,
-  ResultPrintableUriSelectors,
-} from './result-printable-uri-selectors';
 import * as CommonAssertions from '../../common-assertions';
-import * as ResultPrintableUriAssertions from './result-printable-uri-assertions';
 import {
   addResultList,
   buildTemplateWithoutSections,
 } from '../result-list-actions';
+import * as ResultPrintableUriAssertions from './result-printable-uri-assertions';
+import {
+  resultPrintableUriComponent,
+  ResultPrintableUriSelectors,
+} from './result-printable-uri-selectors';
 import {resultTextComponent} from './result-text-selectors';
 
 const getNameForPart = (index: number) => `Parent ${index + 1}`;

@@ -1,9 +1,3 @@
-import {Component, h, Prop, State, VNode} from '@stencil/core';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../../utils/initialization-utils';
 import {
   buildFacet,
   buildFacetConditionsManager,
@@ -17,13 +11,19 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '@coveo/headless';
+import {Component, h, Prop, State, VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
+import {
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../../../utils/initialization-utils';
 import {MapProp} from '../../../../utils/props-utils';
+import {parseDependsOn} from '../../../common/facets/facet-common';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {parseDependsOn} from '../../../common/facets/facet-common';
+import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 
 /**
  * The `atomic-segmented-facet` displays a horizontal facet of the results for the current query.

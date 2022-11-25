@@ -1,18 +1,18 @@
-import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
+import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
+import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {logInterfaceChange} from '../analytics/analytics-actions';
+import {SearchAction} from '../analytics/analytics-utils';
 import {
   logPageNumber,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
-import {SearchAction} from '../analytics/analytics-utils';
 
 export function logParametersChange(
   previousParameters: SearchParameters,

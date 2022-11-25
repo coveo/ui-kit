@@ -1,5 +1,32 @@
-import {facetSetReducer, convertFacetValueToRequest} from './facet-set-slice';
+import {PayloadAction} from '@reduxjs/toolkit';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
+import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
+import {buildMockSearch} from '../../../test/mock-search';
+import {logSearchEvent} from '../../analytics/analytics-actions';
+import {
+  deselectAllBreadcrumbs,
+  deselectAllNonBreadcrumbs,
+} from '../../breadcrumb/breadcrumb-actions';
 import {change} from '../../history/history-actions';
+import {getHistoryInitialState} from '../../history/history-state';
+import {
+  fetchProductListing,
+  FetchProductListingThunkReturn,
+} from '../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {
+  executeSearch,
+  ExecuteSearchThunkReturn,
+  fetchFacetValues,
+} from '../../search/search-actions';
+import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
+import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -10,36 +37,9 @@ import {
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
 } from './facet-set-actions';
-import {buildMockFacetValue} from '../../../test/mock-facet-value';
-import {buildMockSearch} from '../../../test/mock-search';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
-import {
-  executeSearch,
-  ExecuteSearchThunkReturn,
-  fetchFacetValues,
-} from '../../search/search-actions';
-import {logSearchEvent} from '../../analytics/analytics-actions';
-import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
-import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
-import {FacetResponse} from './interfaces/response';
-import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
-import * as FacetReducers from '../generic/facet-reducer-helpers';
+import {facetSetReducer, convertFacetValueToRequest} from './facet-set-slice';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
-import {updateFacetAutoSelection} from '../generic/facet-actions';
-import {getHistoryInitialState} from '../../history/history-state';
-import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {buildFetchProductListingResponse} from '../../../test/mock-product-listing';
-import {
-  fetchProductListing,
-  FetchProductListingThunkReturn,
-} from '../../product-listing/product-listing-actions';
-import {
-  deselectAllBreadcrumbs,
-  deselectAllNonBreadcrumbs,
-} from '../../breadcrumb/breadcrumb-actions';
-import {PayloadAction} from '@reduxjs/toolkit';
-import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
+import {FacetResponse} from './interfaces/response';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;

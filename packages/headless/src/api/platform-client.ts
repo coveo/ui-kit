@@ -1,9 +1,4 @@
 import fetch from 'cross-fetch';
-export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
-export type HTTPContentType =
-  | 'application/json'
-  | 'application/x-www-form-urlencoded'
-  | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
 import {DisconnectedError, ExpiredTokenError} from '../utils/errors';
@@ -14,6 +9,12 @@ import {
   PreprocessRequest,
   RequestMetadata,
 } from './preprocess-request';
+
+export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
+export type HTTPContentType =
+  | 'application/json'
+  | 'application/x-www-form-urlencoded'
+  | 'text/html';
 
 function isThrottled(status: number): boolean {
   return status === 429;

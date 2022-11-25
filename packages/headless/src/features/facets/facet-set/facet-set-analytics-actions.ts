@@ -1,21 +1,21 @@
-import {FacetSortCriterion} from './interfaces/request';
-import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
+import {Value} from '@coveo/bueno';
 import {
   validatePayload,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
-import {facetIdDefinition} from '../generic/facet-actions-validation';
-import {Value} from '@coveo/bueno';
 import {
   AnalyticsType,
   makeAnalyticsAction,
   SearchAction,
 } from '../../analytics/analytics-utils';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
+import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 import {
   buildFacetBaseMetadata,
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
+import {FacetSortCriterion} from './interfaces/request';
 
 export const logFacetShowMore = (facetId: string): SearchAction =>
   makeAnalyticsAction(

@@ -1,27 +1,13 @@
-import {paginationReducer, calculatePage} from './pagination-slice';
-import {
-  registerNumberOfResults,
-  updateNumberOfResults,
-  updatePage,
-  registerPage,
-  previousPage,
-  nextPage,
-} from './pagination-actions';
+import {Action} from '@reduxjs/toolkit';
+import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
 import {buildMockSearch} from '../../test/mock-search';
-import {change} from '../history/history-actions';
-import {executeSearch} from '../search/search-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {getPaginationInitialState, PaginationState} from './pagination-state';
-import {getHistoryInitialState} from '../history/history-state';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
-import {
-  deselectAllFacetValues,
-  toggleSelectFacetValue,
-} from './../facets/facet-set/facet-set-actions';
+import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
 } from '../facets/category-facet-set/category-facet-set-actions';
+import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
+import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {
   deselectAllDateFacetValues,
   toggleSelectDateFacetValue,
@@ -32,12 +18,26 @@ import {
   deselectAllNumericFacetValues,
   updateNumericFacetValues,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
-import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
-import {Action} from '@reduxjs/toolkit';
+import {change} from '../history/history-actions';
+import {getHistoryInitialState} from '../history/history-state';
 import {fetchProductListing} from '../product-listing/product-listing-actions';
-import {buildFetchProductListingResponse} from '../../test/mock-product-listing';
-import {deselectAllBreadcrumbs} from '../breadcrumb/breadcrumb-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {executeSearch} from '../search/search-actions';
+import {
+  deselectAllFacetValues,
+  toggleSelectFacetValue,
+} from './../facets/facet-set/facet-set-actions';
+import {
+  registerNumberOfResults,
+  updateNumberOfResults,
+  updatePage,
+  registerPage,
+  previousPage,
+  nextPage,
+} from './pagination-actions';
+import {paginationReducer, calculatePage} from './pagination-slice';
+import {getPaginationInitialState, PaginationState} from './pagination-state';
 
 describe('pagination slice', () => {
   let state: PaginationState;

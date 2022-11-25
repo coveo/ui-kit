@@ -1,8 +1,3 @@
-import {buildCoreContext, Context} from './headless-core-context';
-import {
-  buildMockSearchAppEngine,
-  MockSearchEngine,
-} from '../../../test/mock-engine';
 import {Action} from 'redux';
 import {
   setContext,
@@ -10,6 +5,11 @@ import {
   removeContext,
 } from '../../../features/context/context-actions';
 import {contextReducer} from '../../../features/context/context-slice';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../../test/mock-engine';
+import {buildCoreContext, Context} from './headless-core-context';
 
 describe('Context', () => {
   let context: Context;

@@ -1,17 +1,17 @@
-import {Component, h, State} from '@stencil/core';
 import {
   QuerySummary,
   QuerySummaryState,
   buildQuerySummary,
 } from '@coveo/headless';
+import {Component, h, State} from '@stencil/core';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {QuerySummaryCommon} from '../../common/query-summary/query-summary-common';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").

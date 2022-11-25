@@ -1,8 +1,6 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {
-  segmentedFacetComponent,
-  SegmentedFacetSelectors,
-} from './segmented-facet-selectors';
+import * as CommonAssertions from '../../common-assertions';
+import * as CommonFacetAssertions from '../facet-common-assertions';
 import {
   addSegmentedFacet,
   defaultNumberOfValues,
@@ -10,9 +8,11 @@ import {
   label,
   selectIdleBoxValueAt,
 } from './segmented-facet-actions';
-import * as CommonAssertions from '../../common-assertions';
-import * as CommonFacetAssertions from '../facet-common-assertions';
 import * as FacetAssertions from './segmented-facet-assertions';
+import {
+  segmentedFacetComponent,
+  SegmentedFacetSelectors,
+} from './segmented-facet-selectors';
 
 describe('Segmented Facet Test Suites', () => {
   function setupSegmentedFacet() {

@@ -1,7 +1,9 @@
 import {
-  buildController,
-  Controller,
-} from '../../controller/headless-controller';
+  QueryCorrection,
+  WordCorrection,
+} from '../../../api/search/search/query-corrections';
+import {CoreEngine} from '../../../app/engine';
+import {configuration, didYouMean} from '../../../app/reducers';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
@@ -10,13 +12,11 @@ import {
   ConfigurationSection,
   DidYouMeanSection,
 } from '../../../state/state-sections';
-import {
-  QueryCorrection,
-  WordCorrection,
-} from '../../../api/search/search/query-corrections';
 import {loadReducerError} from '../../../utils/errors';
-import {configuration, didYouMean} from '../../../app/reducers';
-import {CoreEngine} from '../../../app/engine';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 
 export type {QueryCorrection, WordCorrection};
 

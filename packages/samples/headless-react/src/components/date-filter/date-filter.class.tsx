@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildDateFilter,
   buildDateRange,
@@ -7,6 +6,7 @@ import {
   DateFilterState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 import {parseDate} from '../date-facet/date-utils';
 

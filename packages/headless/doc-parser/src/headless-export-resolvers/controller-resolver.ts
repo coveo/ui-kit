@@ -1,12 +1,12 @@
 import {ApiEntryPoint, ApiFunction} from '@microsoft/api-extractor-model';
 import {findApi} from '../api-finder';
-import {FuncEntity, ObjEntity} from '../entity';
-import {resolveFunction} from '../function-resolver';
 import {
   resolveCodeSamplePaths,
   SamplePaths,
   CodeSampleInfo,
 } from '../code-sample-resolver';
+import {FuncEntity, ObjEntity} from '../entity';
+import {resolveFunction} from '../function-resolver';
 import {extractTypesFromConfiguration} from './configuration-type-extractor';
 import {resolveInitializer} from './initializer-resolver';
 

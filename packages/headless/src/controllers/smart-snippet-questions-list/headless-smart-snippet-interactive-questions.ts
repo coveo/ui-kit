@@ -1,18 +1,18 @@
+import {Result} from '../../api/search/search/result';
 import {questionAnswering, search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {QuestionAnsweringSection} from '../../state/state-sections';
-import {loadReducerError} from '../../utils/errors';
-import {Result} from '../../api/search/search/result';
-import {
-  buildInteractiveResultCore,
-  InteractiveResultCore,
-} from '../core/interactive-result/headless-core-interactive-result';
 import {logOpenSmartSnippetSuggestionSource} from '../../features/question-answering/question-answering-analytics-actions';
-import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
 import {
   answerSourceSelector,
   relatedQuestionSelector,
 } from '../../features/question-answering/question-answering-selectors';
+import {pushRecentResult} from '../../features/recent-results/recent-results-actions';
+import {QuestionAnsweringSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
+import {
+  buildInteractiveResultCore,
+  InteractiveResultCore,
+} from '../core/interactive-result/headless-core-interactive-result';
 
 /**
  * @internal

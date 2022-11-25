@@ -1,5 +1,6 @@
-import {createMockState} from '../../test/mock-state';
 import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
+import {createMockState} from '../../test/mock-state';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {
   executeSearch,
   fetchInstantResults,
@@ -8,7 +9,6 @@ import {
   fetchPage,
   fetchMoreResults,
 } from './search-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {buildSearchRequest} from './search-request';
 
 describe('search actions', () => {

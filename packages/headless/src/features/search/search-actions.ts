@@ -1,45 +1,45 @@
+import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {historyStore} from '../../api/analytics/search-analytics';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
-import {
-  updateQuery,
-  UpdateQueryActionCreatorPayload,
-} from '../query/query-actions';
+import {AsyncThunkOptions} from '../../app/async-thunk-options';
 import {InstantResultSection} from '../../state/state-sections';
-import {historyStore} from '../../api/analytics/search-analytics';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload';
 import {
   AnalyticsAsyncThunk,
   AnalyticsType,
   SearchAction,
 } from '../analytics/analytics-utils';
-import {logFetchMoreResults} from './search-analytics-actions';
-import {MappedSearchRequest, mapSearchRequest} from './search-mappings';
-import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
-import {updatePage} from '../pagination/pagination-actions';
-import {
-  requiredNonEmptyString,
-  validatePayload,
-} from '../../utils/validate-payload';
-import {AsyncThunkOptions} from '../../app/async-thunk-options';
-import {buildSearchRequest} from './search-request';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
 } from '../breadcrumb/breadcrumb-actions';
 import {updateFacetAutoSelection} from '../facets/generic/facet-actions';
-
 import {
   FetchInstantResultsActionCreatorPayload,
   FetchInstantResultsThunkReturn,
   updateInstantResultsQuery,
 } from '../instant-results/instant-results-actions';
+import {updatePage} from '../pagination/pagination-actions';
+import {
+  updateQuery,
+  UpdateQueryActionCreatorPayload,
+} from '../query/query-actions';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request';
-
-export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
 import {
   AsyncSearchThunkProcessor,
   StateNeededByExecuteSearch,
 } from './search-actions-thunk-processor';
+import {logFetchMoreResults} from './search-analytics-actions';
+import {MappedSearchRequest, mapSearchRequest} from './search-mappings';
+import {buildSearchRequest} from './search-request';
+
+export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor';
+
 export interface ExecuteSearchThunkReturn {
   /** The successful search response. */
   response: SearchResponseSuccess;

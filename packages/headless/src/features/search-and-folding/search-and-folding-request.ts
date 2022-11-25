@@ -1,10 +1,10 @@
-import {SearchAppState} from '../../state/search-app-state';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
-import {ConfigurationSection} from '../../state/state-sections';
-import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
-import {SearchRequest} from '../../api/search/search/search-request';
 import {isNullOrUndefined} from '@coveo/bueno';
 import {EventDescription} from 'coveo.analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {SearchRequest} from '../../api/search/search/search-request';
+import {SearchAppState} from '../../state/search-app-state';
+import {ConfigurationSection} from '../../state/state-sections';
+import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
 
 type StateNeededByExecuteSearchAndFolding = ConfigurationSection &
   Partial<SearchAppState>;

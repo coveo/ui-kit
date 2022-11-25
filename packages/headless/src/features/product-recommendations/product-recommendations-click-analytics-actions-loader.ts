@@ -1,6 +1,5 @@
 import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
-
 import {
   AnalyticsType,
   ProductRecommendationAction,

@@ -1,3 +1,6 @@
+import {ArrayValue, NumberValue, Schema, SchemaValues} from '@coveo/bueno';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
+import {configuration, productRecommendations} from '../../app/reducers';
 import {
   getProductRecommendations as updateProductRecommendations,
   setProductRecommendationsSkus,
@@ -5,16 +8,13 @@ import {
   setProductRecommendationsRecommenderId,
   setProductRecommendationsAdditionalFields,
 } from '../../features/product-recommendations/product-recommendations-actions';
-import {buildController} from '../controller/headless-controller';
-import {ArrayValue, NumberValue, Schema, SchemaValues} from '@coveo/bueno';
+import {loadReducerError} from '../../utils/errors';
 import {
   nonEmptyString,
   requiredNonEmptyString,
   validateOptions,
 } from '../../utils/validate-payload';
-import {configuration, productRecommendations} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
+import {buildController} from '../controller/headless-controller';
 
 export const baseProductRecommendationsOptionsSchema = {
   additionalFields: new ArrayValue<string>({

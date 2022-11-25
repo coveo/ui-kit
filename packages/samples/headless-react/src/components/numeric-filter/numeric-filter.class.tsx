@@ -1,4 +1,3 @@
-import {Component, ContextType} from 'react';
 import {
   buildNumericFilter,
   NumericFilter as HeadlessNumericFilter,
@@ -6,6 +5,7 @@ import {
   NumericFilterState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 interface NumericFilterProps extends NumericFilterOptions {

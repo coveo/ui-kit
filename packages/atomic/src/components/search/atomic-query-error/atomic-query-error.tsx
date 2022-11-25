@@ -1,13 +1,13 @@
-import {Component, h, State} from '@stencil/core';
 import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
+import {Component, h, State} from '@stencil/core';
+import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
-import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {QueryErrorCommon} from '../../common/query-error/query-error-common';
+import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.

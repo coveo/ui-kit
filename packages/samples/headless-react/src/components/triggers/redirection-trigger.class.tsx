@@ -1,10 +1,10 @@
-import {Component, ContextType} from 'react';
 import {
   buildRedirectionTrigger,
   RedirectionTrigger as HeadlessRedirectionTrigger,
   RedirectionTriggerState,
   Unsubscribe,
 } from '@coveo/headless';
+import {Component, ContextType} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class RedirectionTrigger extends Component<{}, RedirectionTriggerState> {

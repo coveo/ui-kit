@@ -8,24 +8,24 @@ import {
   Middleware,
   Reducer,
 } from '@reduxjs/toolkit';
+import {Logger} from 'pino';
 import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
+import {SearchParametersState} from '../state/search-app-state';
+import {analyticsMiddleware} from './analytics-middleware';
 import {EngineConfiguration} from './engine-configuration';
-import {createReducerManager, ReducerManager} from './reducer-manager';
-import {Store, configureStore} from './store';
+import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
 import {LoggerOptions} from './logger';
-import {Logger} from 'pino';
-import {ThunkExtraArguments} from './thunk-extra-arguments';
+import {logActionErrorMiddleware} from './logger-middlewares';
+import {createReducerManager, ReducerManager} from './reducer-manager';
 import {configuration, version} from './reducers';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
-import {logActionErrorMiddleware} from './logger-middlewares';
-import {analyticsMiddleware} from './analytics-middleware';
-import {SearchParametersState} from '../state/search-app-state';
-import {instantlyCallableThunkActionMiddleware} from './instantly-callable-middleware';
+import {Store, configureStore} from './store';
+import {ThunkExtraArguments} from './thunk-extra-arguments';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers> &

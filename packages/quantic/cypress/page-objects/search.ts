@@ -2,8 +2,7 @@ import {
   CyHttpMessages,
   HttpResponseInterceptor,
   RouteMatcher,
-  StaticResponse,
-  // eslint-disable-next-line node/no-unpublished-import
+  StaticResponse, // eslint-disable-next-line node/no-unpublished-import
 } from 'cypress/types/net-stubbing';
 import {useCaseEnum} from './use-case';
 

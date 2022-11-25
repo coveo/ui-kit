@@ -1,3 +1,4 @@
+import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
   documentIdentifier,
@@ -6,7 +7,6 @@ import {
   AnalyticsType,
   ClickAction,
 } from '../analytics/analytics-utils';
-import {Result} from '../../api/search/search/result';
 
 export const logDocumentOpen = (result: Result): ClickAction =>
   makeAnalyticsAction(

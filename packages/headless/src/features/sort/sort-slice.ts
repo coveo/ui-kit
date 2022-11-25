@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {getSortInitialState} from './sort-state';
 import {registerSortCriterion, updateSortCriterion} from './sort-actions';
+import {getSortInitialState} from './sort-state';
 
 export const sortReducer = createReducer(getSortInitialState(), (builder) => {
   builder

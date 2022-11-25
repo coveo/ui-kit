@@ -1,7 +1,16 @@
-import {
-  NumericFacetSetState,
-  getNumericFacetSetInitialState,
-} from './numeric-facet-set-state';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
+import {buildMockSearch} from '../../../../test/mock-search';
+import {logSearchEvent} from '../../../analytics/analytics-actions';
+import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
+import {change} from '../../../history/history-actions';
+import {getHistoryInitialState} from '../../../history/history-state';
+import {fetchProductListing} from '../../../product-listing/product-listing-actions';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
+import {executeSearch} from '../../../search/search-actions';
+import * as FacetReducers from '../../generic/facet-reducer-helpers';
+import * as RangeFacetReducers from '../generic/range-facet-reducers';
 import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
@@ -10,20 +19,11 @@ import {
   RegisterNumericFacetActionCreatorPayload,
   updateNumericFacetValues,
 } from './numeric-facet-actions';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {change} from '../../../history/history-actions';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import * as RangeFacetReducers from '../generic/range-facet-reducers';
-import * as FacetReducers from '../../generic/facet-reducer-helpers';
-import {executeSearch} from '../../../search/search-actions';
-import {buildMockSearch} from '../../../../test/mock-search';
-import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
-import {getHistoryInitialState} from '../../../history/history-state';
-import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
-import {deselectAllBreadcrumbs} from '../../../breadcrumb/breadcrumb-actions';
-import {fetchProductListing} from '../../../product-listing/product-listing-actions';
-import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing';
+import {
+  NumericFacetSetState,
+  getNumericFacetSetInitialState,
+} from './numeric-facet-set-state';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;

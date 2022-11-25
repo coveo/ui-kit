@@ -1,7 +1,12 @@
 import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../features/search/search-actions';
+  categoryFacetSearchSet,
+  categoryFacetSet,
+  configuration,
+  search,
+} from '../../../app/reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {
   logFacetUpdateSort,
   logFacetShowMore,
@@ -10,26 +15,17 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
   ConfigurationSection,
   SearchSection,
 } from '../../../state/state-sections';
-import {
-  CategoryFacetOptions,
-  CategoryFacetSearchOptions,
-} from '../../core/facets/category-facet/headless-core-category-facet-options';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
-import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  search,
-} from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   buildCoreCategoryFacet,
   CategoryFacet,
@@ -41,6 +37,10 @@ import {
   CoreCategoryFacet,
   CoreCategoryFacetState,
 } from '../../core/facets/category-facet/headless-core-category-facet';
+import {
+  CategoryFacetOptions,
+  CategoryFacetSearchOptions,
+} from '../../core/facets/category-facet/headless-core-category-facet-options';
 import {buildCategoryFacetSearch} from './headless-category-facet-search';
 
 export type {

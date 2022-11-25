@@ -1,9 +1,11 @@
-import {ProductRecommendationAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
-import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {Schema} from '@coveo/bueno';
 import {
   PartialDocumentInformation,
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {ProductRecommendationAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
+import {Result} from '../../api/search/search/result';
 import {ProductRecommendationsAppState} from '../../state/product-recommendations-app-state';
 import {
   AnalyticsType,
@@ -11,8 +13,6 @@ import {
   ProductRecommendationAction,
   resultPartialDefinition,
 } from '../analytics/analytics-utils';
-import {Schema} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result';
 
 export const logProductRecommendations = (): ProductRecommendationAction =>
   makeAnalyticsAction(

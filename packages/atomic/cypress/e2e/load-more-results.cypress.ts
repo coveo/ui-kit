@@ -1,10 +1,10 @@
 import {TestFixture} from '../fixtures/test-fixture';
+import * as CommonAssertions from './common-assertions';
 import {addLoadMoreResults} from './load-more-results-actions';
 import {
   loadMoreResultsComponent,
   LoadMoreResultsSelectors,
 } from './load-more-results-selectors';
-import * as CommonAssertions from './common-assertions';
 
 describe('Load More Results Test Suites', () => {
   describe('when theres results', () => {
