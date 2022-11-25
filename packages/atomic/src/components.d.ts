@@ -605,6 +605,10 @@ export namespace Components {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch": boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions": number;
     }
     interface AtomicInsightTab {
         /**
@@ -659,6 +663,8 @@ export namespace Components {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
+    }
+    interface AtomicIpxLayout {
     }
     interface AtomicLayoutSection {
         /**
@@ -1956,6 +1962,12 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    interface HTMLAtomicIpxLayoutElement extends Components.AtomicIpxLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxLayoutElement: {
+        prototype: HTMLAtomicIpxLayoutElement;
+        new (): HTMLAtomicIpxLayoutElement;
+    };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
     var HTMLAtomicLayoutSectionElement: {
@@ -2430,6 +2442,7 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -3058,6 +3071,10 @@ declare namespace LocalJSX {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch"?: boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions"?: number;
     }
     interface AtomicInsightTab {
         /**
@@ -3112,6 +3129,8 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
+    }
+    interface AtomicIpxLayout {
     }
     interface AtomicLayoutSection {
         /**
@@ -4119,6 +4138,7 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-ipx-layout": AtomicIpxLayout;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -4238,6 +4258,7 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;

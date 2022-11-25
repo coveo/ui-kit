@@ -11,6 +11,13 @@
     <script type="module">
       import {loadAdvancedSearchQueryActions} from 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js';
 
+      function setExpression(engine) {
+        const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
+          aq: '@source=iNaturalistTaxons',
+        });
+        engine.dispatch(action);
+      }
+
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('atomic-search-interface');
@@ -20,6 +27,9 @@
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
         });
+
+        const engine = searchInterface.engine;
+        setExpression(engine);
 
         // Trigger a first search
         searchInterface.executeFirstSearch();
@@ -42,7 +52,7 @@
   </head>
 
   <body>
-    <atomic-search-interface fields-to-include='["snrating", "sncost"]'>
+    <atomic-search-interface fields-to-include='["inat_kingdom", "inat_family", "inat_class"]'>
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
@@ -50,16 +60,9 @@
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
-            <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
-            </atomic-category-facet>
-            <atomic-facet field="source" label="Source"></atomic-facet>
-            <atomic-facet field="objecttype" label="Type" display-values-as="link"></atomic-facet>
-            <atomic-color-facet
-              field="filetype"
-              label="Files"
-              number-of-values="6"
-              sort-criteria="occurrences"
-            ></atomic-color-facet>
+            <atomic-facet field="inat_kingdom" label="Kingdom"></atomic-facet>
+            <atomic-facet field="inat_family" label="Family"></atomic-facet>
+            <atomic-facet field="inat_class" label="Class"></atomic-facet>
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
@@ -90,94 +93,32 @@
                     }
 
                     .thumbnail {
-                      width: 100%;
-                      height: 100%;
-                    }
-
-                    .result-root.image-small .thumbnail,
-                    .result-root.image-large .thumbnail {
-                      display: inline-block;
-                    }
-
-                    .result-root.image-icon .icon {
-                      display: inline-block;
-                    }
-
-                    .result-root.image-small atomic-result-section-visual,
-                    .result-root.image-large atomic-result-section-visual {
-                      border-radius: var(--atomic-border-radius-xl);
-                    }
-
-                    .salesforce-badge::part(result-badge-element) {
-                      background-color: #44a1da;
-                      color: white;
+                      border-radius: var(--atomic-border-radius);
                     }
                   </style>
                   <atomic-result-section-visual>
-                    <atomic-result-image class="icon"></atomic-result-image>
                     <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
                   </atomic-result-section-visual>
-                  <atomic-result-section-badges>
-                    <atomic-field-condition must-match-sourcetype="Salesforce">
-                      <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
-                    </atomic-field-condition>
-                    <atomic-result-badge
-                      icon="https://raw.githubusercontent.com/Rush/Font-Awesome-SVG-PNG/master/black/svg/language.svg"
-                    >
-                      <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-                    </atomic-result-badge>
-                    <atomic-field-condition must-match-is-recommendation="true">
-                      <atomic-result-badge label="Recommended"></atomic-result-badge>
-                    </atomic-field-condition>
-                    <atomic-field-condition must-match-is-top-result="true">
-                      <atomic-result-badge label="Top Result"></atomic-result-badge>
-                    </atomic-field-condition>
-                  </atomic-result-section-badges>
                   <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
-                  <atomic-result-section-title-metadata>
-                    <atomic-field-condition class="field" if-defined="snrating">
-                      <atomic-result-rating field="snrating"></atomic-result-rating>
-                    </atomic-field-condition>
-                    <atomic-field-condition class="field" if-not-defined="snrating">
-                      <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
-                    </atomic-field-condition>
-                  </atomic-result-section-title-metadata>
                   <atomic-result-section-excerpt
                     ><atomic-result-text field="excerpt"></atomic-result-text
                   ></atomic-result-section-excerpt>
                   <atomic-result-section-bottom-metadata>
                     <atomic-result-fields-list>
-                      <atomic-field-condition class="field" if-defined="author">
-                        <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
-                        <atomic-result-text field="author"></atomic-result-text>
+                      <atomic-field-condition class="field" if-defined="inat_kingdom">
+                        <span class="field-label">Kingdom:</span>
+                        <atomic-result-text field="inat_kingdom"></atomic-result-text>
                       </atomic-field-condition>
 
-                      <atomic-field-condition class="field" if-defined="source">
-                        <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
-                        <atomic-result-text field="source"></atomic-result-text>
+                      <atomic-field-condition class="field" if-defined="inat_family">
+                        <span class="field-label">Family:</span>
+                        <atomic-result-text field="inat_family"></atomic-result-text>
                       </atomic-field-condition>
 
-                      <atomic-field-condition class="field" if-defined="language">
-                        <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
-                        <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
+                      <atomic-field-condition class="field" if-defined="inat_class">
+                        <span class="field-label">Class:</span>
+                        <atomic-result-text field="inat_class"></atomic-result-text>
                       </atomic-field-condition>
-
-                      <atomic-field-condition class="field" if-defined="filetype">
-                        <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
-                        <atomic-result-text field="filetype"></atomic-result-text>
-                      </atomic-field-condition>
-
-                      <atomic-field-condition class="field" if-defined="sncost">
-                        <span class="field-label">Cost:</span>
-                        <atomic-result-number field="sncost">
-                          <atomic-format-currency currency="CAD"></atomic-format-currency>
-                        </atomic-result-number>
-                      </atomic-field-condition>
-
-                      <span class="field">
-                        <span class="field-label">Date:</span>
-                        <atomic-result-date></atomic-result-date>
-                      </span>
                     </atomic-result-fields-list>
                   </atomic-result-section-bottom-metadata>
                   <atomic-result-section-children>
@@ -197,33 +138,8 @@
                               font-weight: bold;
                               margin-right: 0.25rem;
                             }
-
-                            .thumbnail {
-                              width: 100%;
-                              height: 100%;
-                            }
-
-                            .result-root.image-small .thumbnail,
-                            .result-root.image-large .thumbnail {
-                              display: inline-block;
-                            }
-
-                            .result-root.image-icon .icon {
-                              display: inline-block;
-                            }
-
-                            .result-root.image-small atomic-result-section-visual,
-                            .result-root.image-large atomic-result-section-visual {
-                              border-radius: var(--atomic-border-radius-xl);
-                            }
-
-                            .salesforce-badge::part(result-badge-element) {
-                              background-color: #44a1da;
-                              color: white;
-                            }
                           </style>
                           <atomic-result-section-visual>
-                            <atomic-result-image class="icon"></atomic-result-image>
                             <img loading="lazy" src="https://picsum.photos/seed/picsum/350" class="thumbnail" />
                           </atomic-result-section-visual>
                           <atomic-result-section-title
@@ -234,24 +150,19 @@
                           ></atomic-result-section-excerpt>
                           <atomic-result-section-bottom-metadata>
                             <atomic-result-fields-list>
-                              <atomic-field-condition class="field" if-defined="author">
-                                <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
-                                <atomic-result-text field="author"></atomic-result-text>
+                              <atomic-field-condition class="field" if-defined="inat_kingdom">
+                                <span class="field-label">Kingdom:</span>
+                                <atomic-result-text field="inat_kingdom"></atomic-result-text>
                               </atomic-field-condition>
 
-                              <atomic-field-condition class="field" if-defined="source">
-                                <span class="field-label"><atomic-text value="source"></atomic-text>:</span>
-                                <atomic-result-text field="source"></atomic-result-text>
+                              <atomic-field-condition class="field" if-defined="inat_family">
+                                <span class="field-label">Family:</span>
+                                <atomic-result-text field="inat_family"></atomic-result-text>
                               </atomic-field-condition>
 
-                              <atomic-field-condition class="field" if-defined="language">
-                                <span class="field-label"><atomic-text value="language"></atomic-text>:</span>
-                                <atomic-result-multi-value-text field="language"></atomic-result-multi-value-text>
-                              </atomic-field-condition>
-
-                              <atomic-field-condition class="field" if-defined="filetype">
-                                <span class="field-label"><atomic-text value="fileType"></atomic-text>:</span>
-                                <atomic-result-text field="filetype"></atomic-result-text>
+                              <atomic-field-condition class="field" if-defined="inat_class">
+                                <span class="field-label">Class:</span>
+                                <atomic-result-text field="inat_class"></atomic-result-text>
                               </atomic-field-condition>
                             </atomic-result-fields-list>
                           </atomic-result-section-bottom-metadata>
@@ -270,10 +181,6 @@
           </atomic-layout-section>
           <atomic-layout-section section="pagination">
             <atomic-load-more-results></atomic-load-more-results>
-            <!-- Alternative pagination
-              <atomic-pager></atomic-pager>
-              <atomic-results-per-page></atomic-results-per-page>
-              -->
           </atomic-layout-section>
         </atomic-layout-section>
       </atomic-search-layout>

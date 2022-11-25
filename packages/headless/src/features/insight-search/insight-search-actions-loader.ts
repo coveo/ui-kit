@@ -3,14 +3,22 @@ import {AsyncThunkInsightOptions} from '../../api/service/insight/insight-api-cl
 import {search} from '../../app/reducers';
 import {InsightEngine} from '../../insight.index';
 import {InsightAction} from '../analytics/analytics-utils';
+import {
+  FetchQuerySuggestionsActionCreatorPayload,
+  FetchQuerySuggestionsThunkReturn,
+} from '../query-suggest/query-suggest-actions';
 import {ExecuteSearchThunkReturn} from '../search/search-actions';
 import {
   executeSearch,
   fetchFacetValues,
   fetchMoreResults,
   fetchPage,
+  fetchQuerySuggestions,
   StateNeededByExecuteSearch,
+  StateNeededByQuerySuggest,
 } from './insight-search-actions';
+
+export type {FetchQuerySuggestionsActionCreatorPayload};
 
 export interface InsightSearchActionCreators {
   /**
@@ -73,6 +81,20 @@ export interface InsightSearchActionCreators {
     InsightAction,
     AsyncThunkInsightOptions<StateNeededByExecuteSearch>
   >;
+
+  /**
+   * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  fetchQuerySuggestions(
+    payload: FetchQuerySuggestionsActionCreatorPayload
+  ): AsyncThunkAction<
+    FetchQuerySuggestionsThunkReturn,
+    FetchQuerySuggestionsActionCreatorPayload,
+    AsyncThunkInsightOptions<StateNeededByQuerySuggest>
+  >;
 }
 
 /**
@@ -91,5 +113,6 @@ export function loadInsightSearchActions(
     fetchFacetValues,
     fetchMoreResults,
     fetchPage,
+    fetchQuerySuggestions,
   };
 }

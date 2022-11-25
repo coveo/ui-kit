@@ -94,7 +94,7 @@ export const loadCollection = createAsyncThunk<
         ...sharedWithSearchRequest,
         q: getQForHighlighting(state),
         enableQuerySyntax: true,
-        cq: `@${state.folding.fields.collection}=${collectionId}`,
+        cq: `@${state.folding.fields.collection}="${collectionId}"`,
         filterField: state.folding.fields.collection,
         childField: state.folding.fields.parent,
         parentField: state.folding.fields.child,

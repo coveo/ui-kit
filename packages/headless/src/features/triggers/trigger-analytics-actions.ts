@@ -1,4 +1,3 @@
-import {RecordValue} from '@coveo/bueno';
 import {
   requiredEmptyAllowedString,
   validatePayload,
@@ -8,6 +7,7 @@ import {
   makeAnalyticsAction,
   SearchAction,
 } from '../analytics/analytics-utils';
+import {RecordValue} from '@coveo/bueno';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {
   /**

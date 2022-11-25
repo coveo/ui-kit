@@ -75,4 +75,5 @@ export {
   ResultTemplatesHelpers as InsightResultTemplatesHelpers,
   buildInteractiveResult as buildInsightInteractiveResult,
   InteractiveResult as InsightInteractiveResult,
+  loadQuerySetActions as loadInsightQuerySetActions,
 } from '@coveo/headless/insight';

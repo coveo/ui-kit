@@ -33,12 +33,14 @@
                 <c-quantic-tab label="Files" expression="@boxdocumenttype==File OR @spcontenttype==Document" engine-id={engineId}></c-quantic-tab>
               </c-quantic-tab-bar>
               <div class="slds-grid slds-var-m-top_small">
-                <c-quantic-summary class="slds-var-m-vertical_x-small slds-medium-size_7-of-12" engine-id={engineId}>
+                <c-quantic-summary class="slds-var-m-vertical_x-small slds-small-size_8-of-12 slds-large-size_7-of-12" engine-id={engineId}>
                 </c-quantic-summary>
-                <c-quantic-sort class="slds-var-m-vertical_xxx-small slds-medium-size_5-of-12 slds-col_bump-left slds-show_large" engine-id={engineId}>
+                <c-quantic-sort class="slds-var-m-vertical_xxx-small slds-large-size_5-of-12 slds-show_large" engine-id={engineId}>
                 </c-quantic-sort>
-                <div class="refine-toggle_container slds-hide_large">
-                  <c-quantic-refine-toggle engine-id={engineId} full-screen></c-quantic-refine-toggle>
+                <div class="slds-small-size_4-of-12 slds-clearfix slds-hide_large">
+                    <div class="slds-float_right">
+                      <c-quantic-refine-toggle engine-id={engineId} full-screen></c-quantic-refine-toggle>
+                    </div>
                 </div>
               </div>
               <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
