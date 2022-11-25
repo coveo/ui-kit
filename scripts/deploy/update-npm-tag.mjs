@@ -1,13 +1,14 @@
 import {resolve} from 'node:path';
 import {promisify} from 'node:util';
 import {execute} from '../exec.mjs';
-import {packageDirsNpmTag, getPackageFromPath} from '../packages.mjs';
+import {
+  packageDirsNpmTag,
+  getPackageDefinitionFromPackageDir,
+} from '../packages.mjs';
 
 async function main() {
   const requests = packageDirsNpmTag
-    .map((dir) =>
-      getPackageFromPath(resolve('..', '..', 'packages', dir, 'package.json'))
-    )
+    .map((dir) => getPackageDefinitionFromPackageDir(dir))
     .map(({name, version}) => updateNpmTag(name, version));
 
   await Promise.all(requests);

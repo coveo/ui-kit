@@ -4,6 +4,7 @@ import {execute} from '../exec.mjs';
 import {commitVersionBump, stageAll, tagExists, tagPackages} from '../git.mjs';
 import {
   getPackageDefinitionFromPackageName,
+  getPackagePathFromPackageDir,
   updatePackageVersion,
 } from '../packages.mjs';
 import {prereleaseSuffix} from '../prerelease.mjs';
@@ -31,7 +32,7 @@ async function getNewMajorPrerelease(packageName, major, prerelease = 0) {
  */
 async function getNewVersion(packageDef) {
   const version = getCurrentVersion(
-    resolve('.', 'packages', packageDef.packageDir)
+    getPackagePathFromPackageDir(packageDef.packageDir)
   );
   return getNewMajorPrerelease(packageDef.name, version.major + 1);
 }

@@ -11,6 +11,7 @@ import {
   packageDirsNpmTag,
   getPackageDefinitionFromPackageDir,
   updatePackageVersion,
+  getPackagePathFromPackageDir,
 } from './packages.mjs';
 
 /**
@@ -37,7 +38,7 @@ function getPackagesToPrereleaseBump() {
  */
 async function getNewVersion(packageDef) {
   const version = getCurrentVersion(
-    resolve('.', 'packages', packageDef.packageDir)
+    getPackagePathFromPackageDir(packageDef.packageDir)
   );
   return getNextVersion(version, {
     type: 'prerelease',

@@ -1,8 +1,9 @@
 import detectIndent from 'detect-indent';
 import {existsSync, writeFileSync, readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 
-export const packageDirsNpmTag = [
+export const packageDirsNpmTag = /** @type {const} */ ([
   'atomic',
   'auth',
   'bueno',
@@ -10,35 +11,53 @@ export const packageDirsNpmTag = [
   'atomic-react',
   'atomic-angular/projects/atomic-angular',
   'quantic',
-];
+]);
 
+/**
+ * @typedef {(typeof packageDirsNpmTag)[number]} PackageDir
+ */
+
+/** @type {PackageDir[]} */
 export const packageDirsSnyk = ['headless', 'atomic'];
+
+export const workspacesRoot = resolve(
+  fileURLToPath(import.meta.url),
+  '..',
+  '..'
+);
 
 /**
  * @typedef PackageDefinition
  * @property {string} name
  * @property {string} version
- * @property {string} packageDir Relative to `/packages` (e.g., `atomic-angular/projects/atomic-angular`).
+ * @property {PackageDir} packageDir
  */
+
+/**
+ * @param {PackageDir} packageDir
+ */
+export function getPackagePathFromPackageDir(packageDir) {
+  return resolve(workspacesRoot, 'packages', packageDir);
+}
 
 /**
  * @param {string} fullPath
  * @returns {import('@lerna/package').RawManifest}
  */
-export function getPackageFromPath(fullPath) {
-  return JSON.parse(readFileSync(fullPath).toString());
+function getPackageManifestFromPackagePath(fullPath) {
+  return resolve(JSON.parse(readFileSync(fullPath).toString()), 'package.json');
 }
 
 /**
- * @param {string} packageDir E.g.: `samples/some-package`
+ * @param {PackageDir} packageDir E.g.: `samples/some-package`
  * @returns {PackageDefinition}
  */
 export function getPackageDefinitionFromPackageDir(packageDir) {
-  const fullPath = resolve('.', 'packages', packageDir, 'package.json');
+  const fullPath = getPackagePathFromPackageDir(packageDir);
   if (!existsSync(fullPath)) {
     throw `Could not find package at ${fullPath}.`;
   }
-  const {name, version} = getPackageFromPath(fullPath);
+  const {name, version} = getPackageManifestFromPackagePath(fullPath);
   return {name, version, packageDir};
 }
 
@@ -54,7 +73,7 @@ export function getPackageDefinitionFromPackageName(name) {
 /**
  * @param {string} packageName
  * @param {string} newVersion
- * @param {string[]} depdendenciesPackageDirs E.g.: [`samples/some-package`]
+ * @param {PackageDir[]} depdendenciesPackageDirs E.g.: [`samples/some-package`]
  */
 export function updatePackageVersion(
   packageName,
@@ -62,8 +81,11 @@ export function updatePackageVersion(
   depdendenciesPackageDirs
 ) {
   depdendenciesPackageDirs.forEach((packageDir) => {
-    const fullPath = resolve('.', 'packages', packageDir, 'package.json');
-    const originalContentAsText = readFileSync(fullPath).toString();
+    const manifestPath = resolve(
+      getPackagePathFromPackageDir(packageDir),
+      'package.json'
+    );
+    const originalContentAsText = readFileSync(manifestPath).toString();
     const {indent} = detectIndent(originalContentAsText);
     /** @type {import('@lerna/package').RawManifest} */
     const manifest = JSON.parse(originalContentAsText);
@@ -82,7 +104,7 @@ export function updatePackageVersion(
       }
     }
     writeFileSync(
-      fullPath,
+      manifestPath,
       JSON.stringify(manifest, undefined, indent || '  ')
     );
   });

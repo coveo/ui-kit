@@ -1,22 +1,23 @@
 import {CloudFront} from 'aws-sdk';
 import {resolve} from 'node:path';
-import {getPackageFromPath} from '../packages.mjs';
+import {getPackageDefinitionFromPackageDir} from '../packages.mjs';
 
 const cloudfront = new CloudFront();
 
-async function getMajorVersion(dir) {
-  const {version} = getPackageFromPath(
-    resolve('..', '..', 'packages', dir, 'package.json')
-  );
+/**
+ * @param {import('../packages.mjs').PackageDir} dir
+ */
+function getMajorVersion(dir) {
+  const {version} = getPackageDefinitionFromPackageDir(resolve(dir));
   return version.split('.')[0];
 }
 
 async function main() {
   const pathsToInvalidate = [
     '/atomic/latest/*',
-    `/atomic/v${await getMajorVersion('atomic')}/*`,
+    `/atomic/v${getMajorVersion('atomic')}/*`,
     '/headless/latest/*',
-    `/headless/v${await getMajorVersion('headless')}/*`,
+    `/headless/v${getMajorVersion('headless')}/*`,
   ];
 
   const invalidationRequest = cloudfront.createInvalidation({
