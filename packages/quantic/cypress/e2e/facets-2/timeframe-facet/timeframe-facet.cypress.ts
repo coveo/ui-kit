@@ -2,7 +2,7 @@ import {performSearch} from '../../../page-objects/actions/action-perform-search
 import {configure} from '../../../page-objects/configurator';
 import {
   captureBaselineNumberOfRequests,
-  getAlias,
+  getQueryAlias,
   getRoute,
   InterceptAliases,
   interceptSearch,
@@ -54,7 +54,7 @@ describe('quantic-timeframe-facet', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -83,7 +83,7 @@ describe('quantic-timeframe-facet', () => {
         }
         res.send();
       });
-    }).as(getAlias(useCase).substring(1));
+    }).as(getQueryAlias(useCase).substring(1));
   }
 
   function mockSearchWithAllTimeframes(useCase: string) {
@@ -95,7 +95,7 @@ describe('quantic-timeframe-facet', () => {
         }
         res.send();
       });
-    }).as(getAlias(useCase).substring(1));
+    }).as(getQueryAlias(useCase).substring(1));
   }
 
   useCaseParamTest.forEach((param) => {
@@ -144,11 +144,11 @@ describe('quantic-timeframe-facet', () => {
           });
 
           scope('when clearing filter', () => {
-            captureBaselineNumberOfRequests(getAlias(param.useCase));
+            captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
 
             Actions.clearFilter();
 
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             SearchExpectations.numberOfSearchRequests(1, param.useCase);
             Expect.numberOfSelectedValues(0);
@@ -280,7 +280,7 @@ describe('quantic-timeframe-facet', () => {
           scope('when specifying a valid range', () => {
             Actions.applyRange(validRange.start, validRange.end);
 
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             if (param.useCase === useCaseEnum.search) {
               Expect.urlHashContains('Date_input', validRange.filter);
@@ -293,11 +293,11 @@ describe('quantic-timeframe-facet', () => {
           });
 
           scope('when clearing filter', () => {
-            captureBaselineNumberOfRequests(getAlias(param.useCase));
+            captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
 
             Actions.clearFilter();
 
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             SearchExpectations.numberOfSearchRequests(1, param.useCase);
             Expect.displayClearButton(false);
@@ -323,14 +323,14 @@ describe('quantic-timeframe-facet', () => {
 
               Actions.typeEndDate(validRange.end);
               Actions.submitForm();
-              cy.wait(getAlias(param.useCase));
+              cy.wait(getQueryAlias(param.useCase));
 
               Expect.numberOfValidationErrors(0);
 
-              captureBaselineNumberOfRequests(getAlias(param.useCase));
+              captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
 
               Actions.clearFilter();
-              cy.wait(getAlias(param.useCase));
+              cy.wait(getQueryAlias(param.useCase));
 
               SearchExpectations.numberOfSearchRequests(1, param.useCase);
             });
@@ -448,7 +448,7 @@ describe('quantic-timeframe-facet', () => {
               }
               res.send();
             });
-          }).as(getAlias(param.useCase).substring(1));
+          }).as(getQueryAlias(param.useCase).substring(1));
         }
 
         function setupWithNoResultsMatchingFacet(
@@ -500,7 +500,7 @@ describe('quantic-timeframe-facet', () => {
 
               res.send();
             });
-          }).as(getAlias(param.useCase).substring(1));
+          }).as(getQueryAlias(param.useCase).substring(1));
         }
 
         function setupWithNoResults(options: Partial<TimeframeFacetOptions>) {

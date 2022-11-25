@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.52.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.52.0...@coveo/quantic@1.52.1) (2022-11-24)
+
+
+### Bug Fixes
+
+* **quantic:** changed assertion to hash ([#2562](https://github.com/coveo/ui-kit/issues/2562)) ([4bf473d](https://github.com/coveo/ui-kit/commit/4bf473d0ddf9ea6097e1cd23bf05135d21446a91))
+
+
+
+
+
+# [1.52.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.51.1...@coveo/quantic@1.52.0) (2022-11-22)
+
+
+### Bug Fixes
+
+* **quantic:** fixed tab dropdown visibility ([#2559](https://github.com/coveo/ui-kit/issues/2559)) ([601dddb](https://github.com/coveo/ui-kit/commit/601dddbb32055afd56a4edadb738f782279a81bc))
+
+
+### Features
+
+* **quantic:** added link value for numeric facet ([#2557](https://github.com/coveo/ui-kit/issues/2557)) ([7bf6724](https://github.com/coveo/ui-kit/commit/7bf6724115a8e7ed4c9a2e62549ecbf963ce53bf))
+
+
+
+
+
 ## [1.51.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.51.0...@coveo/quantic@1.51.1) (2022-11-10)
 
 

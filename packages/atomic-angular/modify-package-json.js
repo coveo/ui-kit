@@ -8,6 +8,6 @@ if (!packageJSON.scripts) {
   packageJSON.scripts = {};
 }
 packageJSON.scripts['npm:publish:alpha'] =
-  'node ../../../../../scripts/deploy/publish.js alpha';
+  'node ../../../../../scripts/deploy/publish.mjs alpha';
 
 writeFileSync(packageJSONPath, JSON.stringify(packageJSON, null, 2));

@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "1.51.1",
+  "version": "1.52.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -32,12 +32,12 @@
     "doc:generate": "mkdir -p docs/out; jsdoc -c jsdoc-config.json > docs/out/quantic-docs.json",
     "package:create": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "package:create:publish": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations --promote",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.js alpha",
+    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js"
   },
   "dependencies": {
-    "@coveo/headless": "1.111.1",
+    "@coveo/headless": "1.111.3",
     "fs-extra": "10.1.0"
   },
   "engines": {

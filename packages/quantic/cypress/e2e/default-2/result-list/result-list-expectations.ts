@@ -1,4 +1,4 @@
-import {getAlias} from '../../../page-objects/search';
+import {getQueryAlias} from '../../../page-objects/search';
 import {should} from '../../common-selectors';
 import {EventExpectations} from '../../event-expectations';
 import {ResultListSelector, ResultListSelectors} from './result-list-selectors';
@@ -34,7 +34,7 @@ function resultListExpectations(selector: ResultListSelector) {
       });
     },
     requestFields: (expectedFieldsToInclude: string[], useCase: string) => {
-      cy.wait(getAlias(useCase))
+      cy.wait(getQueryAlias(useCase))
         .then((interception) => {
           const fieldsToInclude = interception.request.body.fieldsToInclude;
           expectedFieldsToInclude.forEach((field) =>
