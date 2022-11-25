@@ -6,7 +6,7 @@ const cloudfront = new CloudFront();
 
 async function getMajorVersion(dir) {
   const {version} = getPackageFromPath(
-    resolve('..', '..', 'packages', dir, 'package.json')
+    resolve('packages', dir, 'package.json')
   );
   return version.split('.')[0];
 }
