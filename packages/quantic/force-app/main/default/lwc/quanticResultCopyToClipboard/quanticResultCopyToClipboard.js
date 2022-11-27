@@ -6,11 +6,38 @@ import {
 } from 'c/quanticHeadlessLoader';
 import {copyToClipboard, buildTemplateTextFromResult} from 'c/quanticUtils';
 
+/** @typedef {import("coveo").Result} Result */
+
 export default class QuanticResultCopyToClipboard extends LightningElement {
+  /**
+   * The ID of the engine instance the component registers to.
+   * @api
+   * @type {string}
+   */
   @api engineId;
+  /**
+   * The result to copy.
+   * @api
+   * @type {Result}
+   */
   @api result;
-  @api label;
-  @api successLabel;
+  /**
+   * The label to be displayed in the tooltip of the button.
+   * @api
+   * @type {string}
+   */
+  @api label = 'Copy';
+  /**
+   * The label to be displayed in the tooltip of the button when the action is successful.
+   * @api
+   * @type {string}
+   */
+  @api successLabel = 'Copied!';
+  /**
+   * The template that will be used for the copy to clipboard.
+   * @api
+   * @type {string}
+   */
   @api textTemplate = '${title}\n${clickUri}';
 
   actions;

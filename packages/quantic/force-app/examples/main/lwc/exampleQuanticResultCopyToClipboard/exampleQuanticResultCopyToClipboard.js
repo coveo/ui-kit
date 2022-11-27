@@ -17,6 +17,27 @@ export default class ExampleQuanticResultCopyToClipboard extends LightningElemen
         'Define which use case to test. Possible values are: search, insight',
       defaultValue: 'search',
     },
+    {
+      attribute: 'label',
+      label: 'Label',
+      description:
+        'The label to be displayed in the tooltip of the button.',
+      defaultValue: 'Copy',
+    },
+    {
+      attribute: 'successLabel',
+      label: 'Success Label',
+      description:
+        'The label to be displayed in the tooltip of the button when the action is successful.',
+      defaultValue: 'Copied!',
+    },
+    {
+      attribute: 'template',
+      label: 'Template',
+      description:
+        'The template that will be used for the copy to clipboard.',
+      defaultValue: '${title}\n${clickUri}',
+    },
   ];
 
   handleTryItNow(evt) {
