@@ -1,0 +1,49 @@
+/**
+ * @prop --atomic-ipx-width: Width of the IPX
+ * @prop --atomic-ipx-height: Height of the IPX
+ */
+atomic-ipx-layout {
+  display: grid;
+  grid-template-rows: auto auto auto 8fr 1fr;
+  max-height: 100%;
+  box-sizing: border-box;
+  width: var(--atomic-ipx-width, 500px);
+  height: var(--atomic-ipx-height, 1000px);
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0px 3px 24px 0px #0000001a;
+
+  atomic-layout-section[section='search'] {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 0.5rem;
+    background: var(--atomic-neutral-light);
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  atomic-layout-section[section='facets'] {
+    display: none;
+  }
+
+  atomic-layout-section[section='status'] {
+    padding: 1.5rem;
+  }
+
+  atomic-layout-section[section='results'] {
+    overflow: auto;
+    atomic-result-list {
+      display: block;
+      padding: 0 1.5rem;
+    }
+  }
+
+  atomic-layout-section[section='pagination'] {
+    background: var(--atomic-neutral-light);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
