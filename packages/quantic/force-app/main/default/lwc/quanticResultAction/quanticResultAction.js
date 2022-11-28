@@ -85,6 +85,8 @@ export default class QuanticResultAction extends LightningElement {
 
   /**
    * Applies the proper CSS order class.
+   * This method is inspired from how the lightning-button-group component works:
+   * https://github.com/salesforce/base-components-recipes/blob/master/force-app/main/default/lwc/buttonGroup/buttonGroup.js
    * @param {'first' | 'middle' | 'last'} order
    */
   applyCssOrderClass = (order) => {
