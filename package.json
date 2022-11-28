@@ -10,17 +10,19 @@
     "test:watch": "lerna run --parallel test:watch --no-prefix",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
-    "pr:report": "node ./scripts/reports/pr-report.js",
-    "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
+    "pr:report": "node ./scripts/reports/pr-report.mjs",
+    "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
-    "setup:snyk": "node ./scripts/snyk/remove-samples-workspace.js",
-    "bump:version": "node ./scripts/deploy/bump-version.js",
+    "setup:snyk": "node ./scripts/snyk/remove-samples-workspace.mjs",
+    "bump:version": "node ./scripts/deploy/bump-version.mjs",
+    "bump:version:major-prerelease": "node ./scripts/deploy/manual-major-prerelease.mjs",
+    "npm:publish": "lerna run --stream npm:publish",
     "npm:publish:alpha": "lerna run --stream npm:publish:alpha",
-    "npm:tag": "node ./scripts/deploy/update-npm-tag.js",
+    "npm:tag": "node ./scripts/deploy/update-npm-tag.mjs",
     "npm:tag:beta": "npm run npm:tag -- beta",
     "npm:tag:latest": "npm run npm:tag -- latest",
-    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.js",
+    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "doc:generate": "lerna run doc:generate"
   },
   "dependencies": {
@@ -58,7 +60,9 @@
     "rimraf": "3.0.2",
     "semver": "7.3.7",
     "ts-jest": "27.1.5",
-    "typescript": "4.6.4"
+    "typescript": "4.6.4",
+    "@coveo/semantic-monorepo-tools": "1.5.5",
+    "detect-indent": "7.0.1"
   },
   "workspaces": [
     "packages/bueno",
