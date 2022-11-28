@@ -694,10 +694,10 @@ export async function copyToClipboard(text) {
     try {
       await navigator.clipboard.writeText(text);
     } catch (err) {
-      this.copyToClipboardFallback(text);
+      copyToClipboardFallback(text);
     }
   } else {
-    this.copyToClipboardFallback(text);
+    copyToClipboardFallback(text);
   }
 }
 
@@ -718,7 +718,7 @@ export function readFromObject(object, key) {
   if (object && firstPeriodIndex !== -1) {
     let newKey = key.substring(firstPeriodIndex + 1);
     key = key.substring(0, firstPeriodIndex);
-    return this.readFromObject(object[key], newKey);
+    return readFromObject(object[key], newKey);
   }
   return object ? object[key] : undefined;
 }

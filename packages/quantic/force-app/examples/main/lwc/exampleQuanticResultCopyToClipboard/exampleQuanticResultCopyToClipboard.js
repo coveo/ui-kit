@@ -32,13 +32,28 @@ export default class ExampleQuanticResultCopyToClipboard extends LightningElemen
       defaultValue: 'Copied!',
     },
     {
-      attribute: 'template',
-      label: 'Template',
+      attribute: 'textTemplate',
+      label: 'Text Template',
       description:
         'The template that will be used for the copy to clipboard.',
       defaultValue: '${title}\n${clickUri}',
     },
   ];
+  testResult = {
+    clickUri: 'https://test.com',
+    Excerpt: 'Test excerpt',
+    title: 'Test result',
+    raw: {
+      urihash: 'Test uri hash',
+      objecttype: 'Test',
+      source: 'Test source',
+      date: 1669504751000
+    }
+  }
+
+  resultTemplateManager = {
+    selectTemplate: () => null
+  }
 
   handleTryItNow(evt) {
     this.config = evt.detail;

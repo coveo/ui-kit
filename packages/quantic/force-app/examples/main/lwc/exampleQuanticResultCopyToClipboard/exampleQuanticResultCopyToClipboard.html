@@ -20,7 +20,8 @@
       engine-id={engineId}
       onregisterresulttemplates={handleResultTemplateRegistration}
     >
-      <c-quantic-result-list engine-id={engineId}> </c-quantic-result-list>
+      <c-quantic-result-copy-to-clipboard engine-id={engineId} result={testResult} label={config.label} success-label={config.successLabel} text-template={config.textTemplate}></c-quantic-result-copy-to-clipboard>
+      <c-quantic-result engine-id={engineId} result={testResult} result-templates-manager={resultTemplateManager}></c-quantic-result>
     </c-example-use-case>
   </c-example-layout>
 </template>
