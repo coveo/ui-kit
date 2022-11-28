@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import {promisify} from 'util';
 
 const rm = promisify(fs.rm);

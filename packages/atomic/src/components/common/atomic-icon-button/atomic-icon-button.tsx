@@ -43,6 +43,7 @@ export class AtomicIconButton {
             icon={this.icon}
             class="w-4 h-4 shrink-0"
             aria-hidden="true"
+            part="icon"
           ></atomic-icon>
         </Button>
         {this.badge && <span part="badge">{this.badge}</span>}

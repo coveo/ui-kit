@@ -1,16 +1,5 @@
 import {Octokit} from '@octokit/rest';
-import {resolve} from 'path';
-import {getPackageFromPath} from '../packages.mjs';
-
-const headlessPackageJson = getPackageFromPath(
-  resolve('..', '..', 'packages', 'headless', 'package.json')
-);
-const atomicPackageJson = getPackageFromPath(
-  resolve('..', '..', 'packages', 'atomic', 'package.json')
-);
-const quanticPackageJson = getPackageFromPath(
-  resolve('..', '..', 'packages', 'quantic', 'package.json')
-);
+import {getPackageDefinitionFromPackageDir} from '../packages.mjs';
 
 const token = process.env.GITHUB_TOKEN || '';
 const github = new Octokit({auth: token});
@@ -20,9 +9,12 @@ const repo = 'doc_jekyll-public-site';
 const event_type = 'published_ui-kit_to_npm';
 
 async function notify() {
-  const headless_version = headlessPackageJson.version;
-  const atomic_version = atomicPackageJson.version;
-  const quantic_version = quanticPackageJson.version;
+  const {version: headless_version} =
+    getPackageDefinitionFromPackageDir('headless');
+  const {version: atomic_version} =
+    getPackageDefinitionFromPackageDir('atomic');
+  const {version: quantic_version} =
+    getPackageDefinitionFromPackageDir('quantic');
   const client_payload = {headless_version, atomic_version, quantic_version};
 
   return github.repos.createDispatchEvent({

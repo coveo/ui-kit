@@ -7,6 +7,8 @@ const packageJSON = JSON.parse(readFileSync(packageJSONPath));
 if (!packageJSON.scripts) {
   packageJSON.scripts = {};
 }
+packageJSON.scripts['npm:publish'] =
+  'node ../../../../../scripts/deploy/publish.mjs';
 packageJSON.scripts['npm:publish:alpha'] =
   'node ../../../../../scripts/deploy/publish.mjs alpha';
 

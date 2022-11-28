@@ -666,6 +666,12 @@ export namespace Components {
     }
     interface AtomicIpxLayout {
     }
+    interface AtomicIpxRefineModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicIpxRefineToggle {
+    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -1968,6 +1974,18 @@ declare global {
         prototype: HTMLAtomicIpxLayoutElement;
         new (): HTMLAtomicIpxLayoutElement;
     };
+    interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxRefineModalElement: {
+        prototype: HTMLAtomicIpxRefineModalElement;
+        new (): HTMLAtomicIpxRefineModalElement;
+    };
+    interface HTMLAtomicIpxRefineToggleElement extends Components.AtomicIpxRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxRefineToggleElement: {
+        prototype: HTMLAtomicIpxRefineToggleElement;
+        new (): HTMLAtomicIpxRefineToggleElement;
+    };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
     var HTMLAtomicLayoutSectionElement: {
@@ -2443,6 +2461,8 @@ declare global {
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
         "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
+        "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
+        "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -3131,6 +3151,12 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicIpxLayout {
+    }
+    interface AtomicIpxRefineModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicIpxRefineToggle {
     }
     interface AtomicLayoutSection {
         /**
@@ -4139,6 +4165,8 @@ declare namespace LocalJSX {
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
         "atomic-ipx-layout": AtomicIpxLayout;
+        "atomic-ipx-refine-modal": AtomicIpxRefineModal;
+        "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -4259,6 +4287,8 @@ declare module "@stencil/core" {
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
             "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
+            "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
+            "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;

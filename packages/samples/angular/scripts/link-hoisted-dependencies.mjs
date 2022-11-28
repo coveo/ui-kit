@@ -1,7 +1,7 @@
 // TODO: remove this script when nohoist (https://github.com/npm/rfcs/issues/287) is introduced.
 import {execSync} from 'child_process';
-import {existsSync, symlinkSync, mkdirSync} from 'fs';
-import {resolve, parse} from 'path';
+import {existsSync, symlinkSync, mkdirSync} from 'node:fs';
+import {resolve, parse} from 'node:path';
 import {workspacesRoot} from '../../../../scripts/packages.mjs';
 
 /** @param {string} dependency */
