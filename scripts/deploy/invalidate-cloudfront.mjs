@@ -1,8 +1,8 @@
-import {CloudFront} from 'aws-sdk';
+import awsSDK from 'aws-sdk';
 import {resolve} from 'node:path';
-import {getPackageDefinitionFromPackageDir} from '../packages.mjs';
+import {getPackageFromPath, workspacesRoot} from '../packages.mjs';
 
-const cloudfront = new CloudFront();
+const cloudfront = new awsSDK.CloudFront();
 
 /**
  * @param {import('../packages.mjs').PackageDir} dir
