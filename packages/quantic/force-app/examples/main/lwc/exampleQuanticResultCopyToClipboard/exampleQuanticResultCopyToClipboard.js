@@ -41,8 +41,10 @@ export default class ExampleQuanticResultCopyToClipboard extends LightningElemen
   ];
   testResult = {
     clickUri: 'https://test.com',
-    Excerpt: 'Test excerpt',
+    excerpt: 'Test excerpt',
     title: 'Test result',
+    uniqueId: 'Test unique id',
+    uri: 'https://test.com',
     raw: {
       urihash: 'Test uri hash',
       objecttype: 'Test',

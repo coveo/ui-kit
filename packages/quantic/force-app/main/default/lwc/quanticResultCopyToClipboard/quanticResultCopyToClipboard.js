@@ -68,9 +68,10 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
     this.engine = engine;
     this.headless = getHeadlessBundle(this.engineId);
 
-    // this.actions = {
-    //   ...this.headless.loadInsightSearchAnalyticsActions(engine),
-    // };
+    this.actions = {
+      ...this.headless.loadInsightAnalyticsActions?.(engine),
+      ...this.headless.loadSearchAnalyticsActions?.(engine),
+    };
   };
 
   handleCopyToClipBoard = (event) => {
@@ -82,9 +83,9 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
     copyToClipboard(resultText)
       .then(() => {
         setLoading(false);
-        // this.engine.dispatch(
-        //   this.actions.logCopyToClipboard(this.result)
-        // );
+        this.engine.dispatch(
+          this.actions.logCopyToClipboard(this.result)
+        );
         this.displayedLabel = this.successLabel;
         this.refreshLabel();
       })
