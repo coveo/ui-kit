@@ -1,6 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByInsightAnalyticsProvider} from '../../api/analytics/insight-analytics';
-import {InsightEngine} from '../../insight.index';
+import {InsightEngine, Result} from '../../insight.index';
 import {LogCategoryFacetBreadcrumbActionCreatorPayload} from '../facets/category-facet-set/category-facet-set-analytics-actions';
 import {logCategoryFacetBreadcrumb} from '../facets/category-facet-set/category-facet-set-insight-analytics-actions';
 import {
@@ -28,6 +28,7 @@ import {
   logPageNumber,
   logPagePrevious,
 } from '../pagination/pagination-insight-analytics-actions';
+import {logCopyToClipboard} from '../result-actions/result-actions-insight-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-insight-analytics-actions';
 import {
   LogStaticFilterToggleValueActionCreatorPayload,
@@ -315,6 +316,19 @@ export interface InsightAnalyticsActionCreators {
     void,
     AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
   >;
+  /**
+   * The event to log when the Copy To Clipboard result action is clicked.
+   *
+   * @param result - The result.
+   * @returns A dispatchable action.
+   */
+  logCopyToClipboard(result: Result): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Click;
+    },
+    void,
+    AsyncThunkInsightAnalyticsOptions<StateNeededByInsightAnalyticsProvider>
+  >;
 }
 
 /**
@@ -347,5 +361,6 @@ export function loadInsightAnalyticsActions(
     logPagePrevious,
     logResultsSort,
     logStaticFilterDeselect: logInsightStaticFilterDeselect,
+    logCopyToClipboard,
   };
 }

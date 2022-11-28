@@ -32,7 +32,7 @@ export interface ResultActionsAnalyticsActionsCreators {
  * @param engine The search engine.
  * @returns The available analytics actions.
  */
-export function ResultActionsAnalyticsActions(
+export function loadResultActionsAnalyticsActions(
   engine: SearchEngine
 ): ResultActionsAnalyticsActionsCreators {
   engine.addReducers({});

@@ -1,23 +1,34 @@
 import * as CoveoAnalytics from 'coveo.analytics';
-import {
-  buildMockResult,
-  buildMockSearchAppEngine,
-  createMockState,
-  buildMockRaw,
-} from '../../test';
+import {buildMockRaw, buildMockResult} from '../../test';
+import {buildMockInsightEngine} from '../../test/mock-engine';
+import {buildMockInsightState} from '../../test/mock-insight-state';
 import {buildMockSearchState} from '../../test/mock-search-state';
-import {logCopyToClipboard} from './result-actions-analytics-actions';
+import {logCopyToClipboard} from './result-actions-insight-analytics-actions';
 
 const mockLogCopyToClipboard = jest.fn();
 
-const mockCoveoSearchPageClient = jest.fn(() => ({
+const mockCoveoInsightClient = jest.fn(() => ({
   disable: () => {},
   logCopyToClipboard: mockLogCopyToClipboard,
 }));
 
-Object.defineProperty(CoveoAnalytics, 'CoveoSearchPageClient', {
-  value: mockCoveoSearchPageClient,
+Object.defineProperty(CoveoAnalytics, 'CoveoInsightClient', {
+  value: mockCoveoInsightClient,
 });
+
+const exampleSubject = 'example subject';
+const exampleDescription = 'example description';
+const exampleCaseId = '1234';
+const exampleCaseNumber = '5678';
+
+const expectedMetadata = {
+  caseContext: {
+    Case_Subject: exampleSubject,
+    Case_Description: exampleDescription,
+  },
+  caseId: exampleCaseId,
+  caseNumber: exampleCaseNumber,
+};
 
 const expectedDocumentInfo = {
   queryPipeline: '',
@@ -57,15 +68,22 @@ const resultParams = {
 
 const testResult = buildMockResult(resultParams);
 
-describe('logCopyToClipboard', () => {
+describe('logExpandToFullUI', () => {
   it('should log #logCopyToClipboard with the right payload', async () => {
-    const engine = buildMockSearchAppEngine({
-      state: {
-        ...createMockState(),
+    const engine = buildMockInsightEngine({
+      state: buildMockInsightState({
         search: buildMockSearchState({
           results: [testResult],
         }),
-      },
+        insightCaseContext: {
+          caseContext: {
+            Case_Subject: exampleSubject,
+            Case_Description: exampleDescription,
+          },
+          caseId: exampleCaseId,
+          caseNumber: exampleCaseNumber,
+        },
+      }),
     });
     await engine.dispatch(logCopyToClipboard(testResult));
 
@@ -75,6 +93,9 @@ describe('logCopyToClipboard', () => {
     );
     expect(mockLogCopyToClipboard.mock.calls[0][1]).toStrictEqual(
       expectedDocumentIdentifier
+    );
+    expect(mockLogCopyToClipboard.mock.calls[0][2]).toStrictEqual(
+      expectedMetadata
     );
   });
 });
