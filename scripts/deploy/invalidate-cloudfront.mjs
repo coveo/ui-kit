@@ -1,19 +1,21 @@
 import {CloudFront} from 'aws-sdk';
 import {resolve} from 'path';
-import {getPackageFromPath, workspacesRoot} from '../packages.mjs';
+import {getPackageFromPath} from '../packages.mjs';
 
 const cloudfront = new CloudFront();
 
 async function getMajorVersion(dir) {
   const {version} = getPackageFromPath(
-    resolve(workspacesRoot, 'packages', dir, 'package.json')
+    resolve('..', '..', 'packages', dir, 'package.json')
   );
   return version.split('.')[0];
 }
 
 async function main() {
   const pathsToInvalidate = [
+    '/atomic/latest/*',
     `/atomic/v${await getMajorVersion('atomic')}/*`,
+    '/headless/latest/*',
     `/headless/v${await getMajorVersion('headless')}/*`,
   ];
 
