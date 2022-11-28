@@ -1,8 +1,8 @@
-import {CloudFront} from 'aws-sdk';
+import awsSDK from 'aws-sdk';
 import {resolve} from 'path';
 import {getPackageFromPath, workspacesRoot} from '../packages.mjs';
 
-const cloudfront = new CloudFront();
+const cloudfront = new awsSDK.CloudFront();
 
 async function getMajorVersion(dir) {
   const {version} = getPackageFromPath(
