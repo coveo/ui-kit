@@ -51,13 +51,13 @@ function clickButton(element) {
 
 function setupClickSimulation(element, eventName, newState) {
   const handler = (event) => {
-    const {setLoading, setSelected, state} = event.detail;
+    const {setLoading, setSelected, isSelected} = event.detail;
     functionsMocks.listener();
     if (newState === 'loading') {
       setLoading(true);
     }
     if (newState === 'selected') {
-      setSelected(!state);
+      setSelected(!isSelected);
     }
     element.removeEventListener(eventName, handler);
   };

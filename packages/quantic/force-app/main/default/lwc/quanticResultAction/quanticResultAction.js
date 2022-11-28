@@ -134,7 +134,7 @@ export default class QuanticResultAction extends LightningElement {
         result: resultCopy,
         setLoading: this.setLoading,
         setSelected: this.setSelected,
-        state: this._selected,
+        isSelected: this._selected,
       },
     });
 
