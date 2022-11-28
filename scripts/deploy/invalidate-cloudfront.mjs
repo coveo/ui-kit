@@ -1,6 +1,5 @@
 import awsSDK from 'aws-sdk';
-import {resolve} from 'node:path';
-import {getPackageFromPath, workspacesRoot} from '../packages.mjs';
+import {getPackageDefinitionFromPackageDir} from '../packages.mjs';
 
 const cloudfront = new awsSDK.CloudFront();
 
@@ -8,7 +7,7 @@ const cloudfront = new awsSDK.CloudFront();
  * @param {import('../packages.mjs').PackageDir} dir
  */
 function getMajorVersion(dir) {
-  const {version} = getPackageDefinitionFromPackageDir(resolve(dir));
+  const {version} = getPackageDefinitionFromPackageDir(dir);
   return version.split('.')[0];
 }
 
