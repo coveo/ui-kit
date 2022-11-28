@@ -1,26 +1,21 @@
-import {Result} from '../../insight.index';
+import {Result} from '../../api/search/search/result';
 import {
   AnalyticsType,
   documentIdentifier,
-  makeInsightAnalyticsAction,
+  makeAnalyticsAction,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
-import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
 export const logCopyToClipboard = (result: Result) =>
-  makeInsightAnalyticsAction(
-    'analytics/resultAction/insight/copyToClipboard',
+  makeAnalyticsAction(
+    'analytics/resultAction/copyToClipboard',
     AnalyticsType.Click,
     (client, state) => {
       validateResultPayload(result);
-      const metadata = getCaseContextAnalyticsMetadata(
-        state.insightCaseContext
-      );
       return client.logCopyToClipboard(
         partialDocumentInformation(result, state),
-        documentIdentifier(result),
-        metadata
+        documentIdentifier(result)
       );
     }
   )();

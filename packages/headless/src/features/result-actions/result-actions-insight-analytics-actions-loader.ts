@@ -8,11 +8,11 @@ import {
 import {logCopyToClipboard} from './result-actions-insight-analytics-actions';
 
 /**
- * The Insight Search analytics action creators.
+ * The Insight Result Actions analytics action creators.
  */
-export interface ResultActionsAnalyticsActionCreators {
+export interface InsighResultActionsAnalyticsActionsCreators {
   /**
-   * The event to log when the full search page is opened.
+   * The event to log when the Copy To Clipboard result action is clicked.
    *
    * @param result - The result.
    * @returns A dispatchable action.
@@ -27,13 +27,13 @@ export interface ResultActionsAnalyticsActionCreators {
 }
 
 /**
- * Loads the insight search analytics actions.
+ * Loads the insight result actions analytics actions.
  * @param engine The insight engine.
  * @returns The available analytics actions.
  */
-export function loadInsighResultActionAnalyticsActions(
+export function loadResultActionsAnalyticsActions(
   engine: InsightEngine
-): ResultActionsAnalyticsActionCreators {
+): InsighResultActionsAnalyticsActionsCreators {
   engine.addReducers({});
   return {
     logCopyToClipboard,
