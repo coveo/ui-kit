@@ -1,5 +1,5 @@
-import fs from 'fs';
 import _ncp from 'ncp';
+import fs from 'node:fs';
 import {promisify} from 'util';
 
 const ncp = promisify(_ncp);
