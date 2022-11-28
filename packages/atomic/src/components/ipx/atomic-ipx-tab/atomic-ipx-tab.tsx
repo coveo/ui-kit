@@ -6,18 +6,18 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
+import {Button} from '../../common/button';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {Button} from '../button';
 
 /**
  * @internal
  */
 @Component({
-  tag: 'atomic-tab',
-  styleUrl: './atomic-tab.pcss',
+  tag: 'atomic-ipx-tab',
+  styleUrl: './atomic-ipx-tab.pcss',
   shadow: true,
 })
-export class AtomicTab implements InitializableComponent {
+export class AtomicIPXTab implements InitializableComponent {
   private tab!: Tab;
   private tabId = randomID('ipx-tab');
 

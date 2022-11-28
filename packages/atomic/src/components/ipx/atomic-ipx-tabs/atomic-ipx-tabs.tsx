@@ -4,11 +4,11 @@ import {Component, Element, h} from '@stencil/core';
  * @internal
  */
 @Component({
-  tag: 'atomic-tabs',
-  styleUrl: './atomic-tabs.pcss',
+  tag: 'atomic-ipx-tabs',
+  styleUrl: './atomic-ipx-tabs.pcss',
   shadow: true,
 })
-export class AtomicTabs {
+export class AtomicIPXTabs {
   @Element() host!: HTMLElement;
 
   private scrollCallback = (e: Event) => {

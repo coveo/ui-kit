@@ -682,6 +682,22 @@ export namespace Components {
     }
     interface AtomicIpxRefineToggle {
     }
+    interface AtomicIpxTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active": boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label": string;
+    }
+    interface AtomicIpxTabs {
+    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -1646,27 +1662,11 @@ export namespace Components {
          */
         "label": string;
     }
-    interface AtomicTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active": boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label": string;
-    }
     interface AtomicTableElement {
         /**
           * The label to display in the header of this column.
          */
         "label": string;
-    }
-    interface AtomicTabs {
     }
     interface AtomicText {
         /**
@@ -2043,6 +2043,18 @@ declare global {
     var HTMLAtomicIpxRefineToggleElement: {
         prototype: HTMLAtomicIpxRefineToggleElement;
         new (): HTMLAtomicIpxRefineToggleElement;
+    };
+    interface HTMLAtomicIpxTabElement extends Components.AtomicIpxTab, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxTabElement: {
+        prototype: HTMLAtomicIpxTabElement;
+        new (): HTMLAtomicIpxTabElement;
+    };
+    interface HTMLAtomicIpxTabsElement extends Components.AtomicIpxTabs, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxTabsElement: {
+        prototype: HTMLAtomicIpxTabsElement;
+        new (): HTMLAtomicIpxTabsElement;
     };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
@@ -2452,23 +2464,11 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
-    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
-    }
-    var HTMLAtomicTabElement: {
-        prototype: HTMLAtomicTabElement;
-        new (): HTMLAtomicTabElement;
-    };
     interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
     }
     var HTMLAtomicTableElementElement: {
         prototype: HTMLAtomicTableElementElement;
         new (): HTMLAtomicTableElementElement;
-    };
-    interface HTMLAtomicTabsElement extends Components.AtomicTabs, HTMLStencilElement {
-    }
-    var HTMLAtomicTabsElement: {
-        prototype: HTMLAtomicTabsElement;
-        new (): HTMLAtomicTabsElement;
     };
     interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
     }
@@ -2533,6 +2533,8 @@ declare global {
         "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
+        "atomic-ipx-tab": HTMLAtomicIpxTabElement;
+        "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -2601,9 +2603,7 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
-        "atomic-tab": HTMLAtomicTabElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
-        "atomic-tabs": HTMLAtomicTabsElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
@@ -3239,6 +3239,22 @@ declare namespace LocalJSX {
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+    }
+    interface AtomicIpxTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active"?: boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label"?: string;
+    }
+    interface AtomicIpxTabs {
     }
     interface AtomicLayoutSection {
         /**
@@ -4164,27 +4180,11 @@ declare namespace LocalJSX {
          */
         "label": string;
     }
-    interface AtomicTab {
-        /**
-          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
-         */
-        "active"?: boolean;
-        /**
-          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
-         */
-        "expression": string;
-        /**
-          * The label that will be shown to the user.
-         */
-        "label"?: string;
-    }
     interface AtomicTableElement {
         /**
           * The label to display in the header of this column.
          */
         "label": string;
-    }
-    interface AtomicTabs {
     }
     interface AtomicText {
         /**
@@ -4297,6 +4297,8 @@ declare namespace LocalJSX {
         "atomic-ipx-layout": AtomicIpxLayout;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
+        "atomic-ipx-tab": AtomicIpxTab;
+        "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -4365,9 +4367,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
-        "atomic-tab": AtomicTab;
         "atomic-table-element": AtomicTableElement;
-        "atomic-tabs": AtomicTabs;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
@@ -4421,6 +4421,8 @@ declare module "@stencil/core" {
             "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
+            "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
+            "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
@@ -4489,9 +4491,7 @@ declare module "@stencil/core" {
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
-            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
-            "atomic-tabs": LocalJSX.AtomicTabs & JSXBase.HTMLAttributes<HTMLAtomicTabsElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
