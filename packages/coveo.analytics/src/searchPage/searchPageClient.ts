@@ -603,6 +603,14 @@ export class CoveoSearchPageClient {
         );
     }
 
+    public makeCopyToClipboard(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.makeClickEvent(SearchPageEvents.copyToClipboard, info, identifier);
+    }
+
+    public logCopyToClipboard(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.makeCopyToClipboard(info, identifier).log();
+    }
+
     public logOpenSmartSnippetSuggestionSource(info: PartialDocumentInformation, snippet: SmartSnippetSuggestionMeta) {
         return this.makeOpenSmartSnippetSuggestionSource(info, snippet).log();
     }

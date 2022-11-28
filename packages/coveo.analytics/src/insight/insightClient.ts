@@ -221,10 +221,41 @@ export class CoveoInsightClient {
 
     public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: CaseMetadata) {
         return this.logClickEvent(
-          SearchPageEvents.documentOpen,
-          info,
-          identifier,
-          metadata ? generateMetadataToSend(metadata, false) : undefined);
+            SearchPageEvents.documentOpen,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logCopyToClipboard(
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: CaseMetadata
+    ) {
+        return this.logClickEvent(
+            SearchPageEvents.copyToClipboard,
+            info,
+            identifier,
+            metadata ? generateMetadataToSend(metadata, false) : undefined
+        );
+    }
+
+    public logDocumentQuickview(
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        caseMetadata?: CaseMetadata
+    ) {
+        const metadata = {
+            documentTitle: info.documentTitle,
+            documentURL: info.documentUrl,
+        };
+        return this.logClickEvent(
+            SearchPageEvents.documentQuickview,
+            info,
+            identifier,
+            caseMetadata ? {...generateMetadataToSend(caseMetadata, false), ...metadata} : metadata
+        );
     }
 
     public async logCustomEvent(event: SearchPageEvents | InsightEvents, metadata?: Record<string, any>) {

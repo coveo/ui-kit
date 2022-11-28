@@ -318,6 +318,21 @@ describe('InsightClient', () => {
             await client.logDocumentOpen(fakeDocInfo, fakeDocID);
             expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
         });
+
+        it('should send proper payload for #copyToClipboard', async () => {
+            await client.logCopyToClipboard(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, fakeDocID);
+        });
+
+        it('should send proper payload for #documentQuickview', async () => {
+            const expectedMetadata = {
+                ...fakeDocID,
+                documentTitle: fakeDocInfo.documentTitle,
+                documentURL: fakeDocInfo.documentUrl,
+            };
+            await client.logDocumentQuickview(fakeDocInfo, fakeDocID);
+            expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, expectedMetadata);
+        });
     });
 
     describe('when the case metadata is included', () => {
@@ -674,6 +689,30 @@ describe('InsightClient', () => {
             };
             await client.logDocumentOpen(fakeDocInfo, fakeDocID, metadata);
             expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #copyToClipboard', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+            };
+            await client.logCopyToClipboard(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.copyToClipboard, fakeDocInfo, expectedMetadata);
+        });
+
+        it('should send proper payload for #documentQuickview', async () => {
+            const metadata = baseCaseMetadata;
+
+            const expectedMetadata = {
+                ...fakeDocID,
+                ...expectedBaseCaseMetadata,
+                documentTitle: fakeDocInfo.documentTitle,
+                documentURL: fakeDocInfo.documentUrl,
+            };
+            await client.logDocumentQuickview(fakeDocInfo, fakeDocID, metadata);
+            expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, expectedMetadata);
         });
     });
 
