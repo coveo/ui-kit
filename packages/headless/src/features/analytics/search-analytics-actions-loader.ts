@@ -64,7 +64,6 @@ import {
   QuestionAnsweringInlineLinkActionCreatorPayload,
   QuestionAnsweringUniqueIdentifierActionCreatorPayload,
 } from '../question-answering/question-answering-document-id';
-import {logCopyToClipboard} from '../result-actions/result-actions-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 import {
   logStaticFilterSelect,
@@ -727,19 +726,6 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkInsightAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
   >;
-  /**
-   * The event to log when the Copy To Clipboard result action is clicked.
-   *
-   * @param result - The result.
-   * @returns A dispatchable action.
-   */
-  logCopyToClipboard(result: Result): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededBySearchAnalyticsProvider>
-  >;
 }
 
 /**
@@ -798,6 +784,5 @@ export function loadSearchAnalyticsActions(
     logNotifyTrigger,
     logTriggerRedirect,
     logTriggerExecute,
-    logCopyToClipboard,
   };
 }
