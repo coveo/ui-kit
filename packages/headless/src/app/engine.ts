@@ -8,6 +8,7 @@ import {
   Middleware,
   Reducer,
 } from '@reduxjs/toolkit';
+import coveoAnalytics from 'coveo.analytics';
 import {Logger} from 'pino';
 import {
   disableAnalytics,
@@ -157,6 +158,9 @@ export function buildEngine<
 
   if (analytics) {
     const {analyticsClientMiddleware, ...rest} = analytics;
+    if (analytics.enabled && coveoAnalytics.donottrack.doNotTrack()) {
+      rest.enabled = false;
+    }
     engine.dispatch(updateAnalyticsConfiguration(rest));
   }
 
