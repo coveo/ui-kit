@@ -4,6 +4,10 @@ def parseSemanticVersion(String version) {
   return [major, minor, patch, prerelease]
 }
 
+def toJSONArray(String[] values) {
+  return "[${values.collect { "\"$it\"" }.join(',')}]"
+}
+
 node('heavy && linux && docker') {
   checkout scm
   def tag = sh(script: "git tag --contains", returnStdout: true).trim()
@@ -63,6 +67,8 @@ node('heavy && linux && docker') {
         (headlessMajor, headlessMinor, headlessPatch) = parseSemanticVersion(headless.version)
         (atomicMajor, atomicMinor, atomicPatch) = parseSemanticVersion(atomic.version)
         (atomicReactMajor, atomicReactMinor, atomicReactPatch) = parseSemanticVersion(atomicReact.version)
+
+        environments = (isOnReleaseBranch ? ['dev', 'stg', 'prd'] : ['dev']) as String[]
         
         sh "deployment-package package create --with-deploy \
         --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
@@ -74,7 +80,7 @@ node('heavy && linux && docker') {
         --resolve ATOMIC_REACT_MAJOR_VERSION=${atomicReactMajor} \
         --resolve ATOMIC_REACT_MINOR_VERSION=${atomicReactMinor} \
         --resolve ATOMIC_REACT_PATCH_VERSION=${atomicReactPatch} \
-        --resolve STOP_AT_DEV=${!isOnReleaseBranch} \
+        --resolve ENVIRONMENTS=${toJSONArray(environments)} \
         || true"
       }
     }
