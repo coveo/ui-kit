@@ -1,4 +1,3 @@
-import {setupIntercept} from '../fixtures/fixture-common';
 import {TestFixture} from '../fixtures/test-fixture';
 import {assertConsoleErrorMessage} from './common-assertions';
 import {addQuerySummary} from './query-summary-actions';
