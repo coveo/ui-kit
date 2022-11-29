@@ -43,3 +43,20 @@ export function omit<T>(key: keyof T, obj: T) {
 export function getObjectHash<T>(obj: T) {
   return encodedBtoa(JSON.stringify(obj));
 }
+
+const doNotTrackValues = new Set(['1', 1, 'yes', true]);
+
+/**
+ * Logic copied from coveo.analytics.
+ */
+export function doNotTrack() {
+  if (typeof navigator === 'undefined') {
+    return false;
+  }
+  return [
+    (<any>navigator).globalPrivacyControl,
+    (<any>navigator).doNotTrack,
+    (<any>navigator).msDoNotTrack,
+    (<any>window).doNotTrack,
+  ].some((value) => doNotTrackValues.has(value));
+}
