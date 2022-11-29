@@ -145,7 +145,7 @@ export type AnalyticsRuntimeEnvironment = IRuntimeEnvironment;
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
   (payload: UpdateAnalyticsConfigurationActionCreatorPayload) => {
-    if (payload.enabled && doNotTrack()) {
+    if (doNotTrack()) {
       payload.enabled = false;
     }
     return validatePayload(payload, {
