@@ -1,6 +1,5 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededBySearchAnalyticsProvider} from '../../api/analytics/search-analytics';
-import {Result} from '../../api/search/search/result';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logDidYouMeanClick} from '../did-you-mean/did-you-mean-analytics-actions';
 import {
