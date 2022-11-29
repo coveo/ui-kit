@@ -184,6 +184,14 @@ export type {
 export {buildPager} from './controllers/insight/pager/headless-insight-pager';
 
 export type {
+  AttachToCaseInitialState,
+  AttachToCaseProps,
+  AttachToCaseState,
+  AttachToCase,
+} from './controllers/insight/attach-to-case/headless-attach-to-case';
+export {buildAttachToCase} from './controllers/insight/attach-to-case/headless-attach-to-case';
+
+export type {
   QuerySummaryState,
   QuerySummary,
 } from './controllers/insight/query-summary/headless-insight-query-summary';
