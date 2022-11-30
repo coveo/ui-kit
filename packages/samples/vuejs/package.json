@@ -1,5 +1,5 @@
 {
-  "name": "vuejs",
+  "name": "@coveo/atomic-vuejs-samples",
   "version": "0.1.0",
   "private": true,
   "scripts": {
