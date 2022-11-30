@@ -50,14 +50,17 @@ const doNotTrackValues = new Set(['1', 1, 'yes', true]);
  * Logic copied from coveo.analytics.
  */
 export function doNotTrack() {
+  if (typeof navigator === 'undefined' || typeof window === 'undefined') {
+    return false;
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const nav = <any | undefined>navigator;
+  const nav = <any>navigator;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const win = <any | undefined>window;
+  const win = <any>window;
   return [
-    nav?.globalPrivacyControl,
-    nav?.doNotTrack,
-    nav?.msDoNotTrack,
-    win?.doNotTrack,
+    nav.globalPrivacyControl,
+    nav.doNotTrack,
+    nav.msDoNotTrack,
+    win.doNotTrack,
   ].some((value) => doNotTrackValues.has(value));
 }
