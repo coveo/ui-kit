@@ -143,7 +143,7 @@ describe('Search Interface Component', () => {
 
       it('should call the analytics server', () => {
         cy.wait(TestFixture.interceptAliases.Search);
-        cy.shouldBeCalled(TestFixture.urlParts.UASearch, 1);
+        cy.wait(TestFixture.interceptAliases.UA).should('exist');
       });
 
       it('should include analytics in the search request', () => {
