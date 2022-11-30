@@ -109,38 +109,84 @@ describe('Search Interface Component', () => {
     });
   });
 
-  describe('without an automatic search', () => {
+  describe('without waiting for the automatic search', () => {
+    let fixture: TestFixture;
     beforeEach(() => {
-      new TestFixture()
-        .with(addQuerySummary())
-        .withLanguage('fr')
-        .withoutFirstIntercept()
-        .init();
+      fixture = new TestFixture().withoutFirstIntercept();
     });
 
-    it('should set locale for search request', (done) => {
-      cy.wait(TestFixture.interceptAliases.Search).then((intercept) => {
-        expect(intercept.request.body.locale).to.be.eq('fr');
-        done();
+    describe('with the language set to french and a query summary present', () => {
+      beforeEach(() => {
+        fixture.with(addQuerySummary()).withLanguage('fr').init();
+      });
+
+      it('should set locale for search request', (done) => {
+        cy.wait(TestFixture.interceptAliases.Search).then((intercept) => {
+          expect(intercept.request.body.locale).to.be.eq('fr');
+          done();
+        });
+      });
+
+      it('should set language for analytics request', (done) => {
+        cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
+          const analyticsBody = intercept.request.body;
+          expect(analyticsBody).to.have.property('language', 'fr');
+          done();
+        });
       });
     });
 
-    it('should set language for analytics request', (done) => {
-      cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
-        const analyticsBody = intercept.request.body;
-        expect(analyticsBody).to.have.property('language', 'fr');
-        done();
+    describe('by default (with analytics)', () => {
+      beforeEach(() => {
+        fixture.init();
+      });
+
+      it('should call the analytics server', () => {
+        cy.wait(TestFixture.interceptAliases.Search);
+        cy.wait(TestFixture.interceptAliases.UA).should('exist');
+      });
+
+      it('should include analytics in the search request', () => {
+        cy.wait(TestFixture.interceptAliases.Search).should(
+          (firstSearch) =>
+            expect(firstSearch.request.body).to.have.property('analytics')
+          // TODO: in v2, add: .to.have.property('actionCause', 'interfaceLoad')
+        );
       });
     });
-  });
 
-  describe('without analytics', () => {
-    beforeEach(() => {
-      new TestFixture().withoutAnalytics().init();
+    describe('without analytics', () => {
+      beforeEach(() => {
+        fixture.withoutAnalytics().init();
+      });
+
+      it('should not call the analytics server', () => {
+        cy.wait(TestFixture.interceptAliases.Search);
+        cy.shouldBeCalled(TestFixture.urlParts.UASearch, 0);
+      });
+
+      it('should not include analytics in the search request', () => {
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) =>
+          expect(firstSearch.request.body).not.to.have.property('analytics')
+        );
+      });
     });
 
-    it('should not call the analytics server', () => {
-      cy.shouldBeCalled(TestFixture.urlParts.UASearch, 0);
+    describe('with doNotTrack', () => {
+      beforeEach(() => {
+        fixture.withDoNotTrack().init();
+      });
+
+      it('should not call the analytics server', () => {
+        cy.wait(TestFixture.interceptAliases.Search);
+        cy.shouldBeCalled(TestFixture.urlParts.UASearch, 0);
+      });
+
+      it('should not include analytics in the search request', () => {
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) =>
+          expect(firstSearch.request.body).not.to.have.property('analytics')
+        );
+      });
     });
   });
 });
