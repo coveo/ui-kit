@@ -44,7 +44,7 @@ export function getPackagePathFromPackageDir(packageDir) {
  * @param {string} fullPath
  * @returns {import('@lerna/package').RawManifest}
  */
-function getPackageManifestFromPackagePath(fullPath) {
+export function getPackageManifestFromPackagePath(fullPath) {
   return JSON.parse(readFileSync(resolve(fullPath, 'package.json')).toString());
 }
 
