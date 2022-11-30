@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.111.5](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.111.4...@coveo/headless@1.111.5) (2022-11-30)
+
+
+### Bug Fixes
+
+* **headless:** disabled analytics when doNotTrack is on ([#2574](https://github.com/coveo/ui-kit/issues/2574)) ([8f6ebea](https://github.com/coveo/ui-kit/commit/8f6ebea6f55d89b66d7bd1a06c16118877b0993a))
+
+
+
+
+
 ## [1.111.4](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.111.3...@coveo/headless@1.111.4) (2022-11-28)
 
 **Note:** Version bump only for package @coveo/headless
