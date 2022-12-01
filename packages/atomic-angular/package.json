@@ -1,5 +1,5 @@
 {
-  "name": "atomic-angular",
+  "name": "@coveo/atomic-angular-builder",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
