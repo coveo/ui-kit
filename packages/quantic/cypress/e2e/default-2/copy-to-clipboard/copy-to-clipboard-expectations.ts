@@ -17,7 +17,7 @@ function copyToClipboardExpectations(selector: CopyToClipboardSelector) {
       selector
         .copyToClipboardTooltip()
         .contains(label)
-        .log('should display the copy to clipboard button');
+        .log('should display the copy to clipboard tooltip');
     },
 
     logCopyToClipboard: (result: {

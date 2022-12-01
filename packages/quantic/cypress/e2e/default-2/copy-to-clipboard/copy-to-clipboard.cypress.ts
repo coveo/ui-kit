@@ -38,25 +38,24 @@ const customTextTemplate = '${raw.source} : ${clickUri}';
 describe('quantic-copy-to-clipboard', {browser: 'electron'}, () => {
   const pageUrl = 's/quantic-result-copy-to-clipboard';
 
-  function visitcopyToClipboard(options: Partial<copyToClipboardOptions>) {
+  function visitCopyToClipboard(options: Partial<copyToClipboardOptions>) {
     interceptSearch();
     cy.visit(pageUrl);
-    mockSearchWithResults();
     configure(options);
     InsightInterfaceExpect.isInitialized();
     performSearch();
   }
 
   describe('with the default options', () => {
-    it.skip('should correctly display the copy to clipboard button', () => {
-      visitcopyToClipboard({});
+    it('should correctly display the copy to clipboard button', () => {
+      visitCopyToClipboard({});
 
       Expect.displayCopyToClipboardButton(true);
       Expect.displayCopyToClipboardTooltip(defaultLabel);
     });
 
     it('should correctly copy the result to clipboard', () => {
-      visitcopyToClipboard({});
+      visitCopyToClipboard({});
 
       Expect.displayCopyToClipboardButton(true);
       Actions.clickCopyToClipboardButton();
@@ -70,9 +69,9 @@ describe('quantic-copy-to-clipboard', {browser: 'electron'}, () => {
     });
   });
 
-  describe.skip('with custom options', () => {
+  describe('with custom options', () => {
     it('should correctly display the copy to clipboard button', () => {
-      visitcopyToClipboard({
+      visitCopyToClipboard({
         label: customLabel,
       });
 
@@ -81,7 +80,7 @@ describe('quantic-copy-to-clipboard', {browser: 'electron'}, () => {
     });
 
     it('should correctly copy the result to clipboard', () => {
-      visitcopyToClipboard({
+      visitCopyToClipboard({
         successLabel: customSuccessLabel,
         textTemplate: customTextTemplate,
       });

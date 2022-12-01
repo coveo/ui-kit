@@ -7,7 +7,7 @@ export default class ExampleQuanticResultCopyToClipboard extends LightningElemen
 
   pageTitle = 'Quantic Result Copy To Clipboard';
   pageDescription =
-    'The QuanticResultCopyToClipboard component allows the end user to copy a result to clipboard..';
+    'The QuanticResultCopyToClipboard component allows the end user to copy a result to clipboard.';
   options = [
     {
       attribute: 'label',
