@@ -42,8 +42,10 @@ describe('fieldSuggestions', () => {
 
   beforeEach(() => {
     options = {
-      facetId,
-      field: 'author',
+      facet: {
+        facetId,
+        field: 'author',
+      },
     };
 
     state = createMockState();

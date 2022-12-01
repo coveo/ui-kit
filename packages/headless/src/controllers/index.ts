@@ -377,7 +377,6 @@ export type {
   FieldSuggestionsValue,
   FieldSuggestionsState,
   FieldSuggestions,
-  FieldSuggestionsFacetSearchOptions,
   FieldSuggestionsOptions,
   FieldSuggestionsProps,
 } from './field-suggestions/facet/headless-field-suggestions';
@@ -387,7 +386,6 @@ export type {
   CategoryFieldSuggestionsValue,
   CategoryFieldSuggestionsState,
   CategoryFieldSuggestions,
-  CategoryFieldSuggestionsFacetSearchOptions,
   CategoryFieldSuggestionsOptions,
   CategoryFieldSuggestionsProps,
 } from './field-suggestions/category-facet/headless-category-field-suggestions';
