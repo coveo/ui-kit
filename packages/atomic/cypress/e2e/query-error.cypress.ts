@@ -1,6 +1,6 @@
 import {TestFixture} from '../fixtures/test-fixture';
-import {addQueryError} from './query-error-actions';
 import * as CommonAssertions from './common-assertions';
+import {addQueryError} from './query-error-actions';
 import {QueryErrorSelectors} from './query-error-selectors';
 
 describe('Query Error Test Suites', () => {

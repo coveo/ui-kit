@@ -1,20 +1,21 @@
+import fetch from 'cross-fetch';
+import * as BackOff from 'exponential-backoff';
+import pino from 'pino';
+import {allValidPlatformCombination} from '../test/platform-url';
+import {ExpiredTokenError} from '../utils/errors';
 import {
   platformUrl,
   PlatformClient,
   PlatformClientCallOptions,
   analyticsUrl,
 } from './platform-client';
-import pino from 'pino';
-import * as BackOff from 'exponential-backoff';
-
-jest.mock('cross-fetch');
-import fetch from 'cross-fetch';
 import {
   NoopPreprocessRequest,
   PlatformRequestOptions,
 } from './preprocess-request';
-import {ExpiredTokenError} from '../utils/errors';
-import {allValidPlatformCombination} from '../test/platform-url';
+
+jest.mock('cross-fetch');
+
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 

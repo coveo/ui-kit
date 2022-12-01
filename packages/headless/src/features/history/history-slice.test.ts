@@ -1,20 +1,20 @@
-import {historyReducer} from './history-slice';
-import {redo, snapshot, undo} from './history-actions';
 import {Reducer} from 'redux';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
+import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
+import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetSlice} from '../../test/mock-facet-slice';
 import {buildMockNumericFacetSlice} from '../../test/mock-numeric-facet-slice';
-import {buildMockDateFacetSlice} from '../../test/mock-date-facet-slice';
-import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {buildMockQueryState} from '../../test/mock-query-state';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
-import {getHistoryInitialState, HistoryState} from './history-state';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
-import {buildMockTabSlice} from '../../test/mock-tab-state';
 import {buildMockStaticFilterSlice} from '../../test/mock-static-filter-slice';
 import {buildMockStaticFilterValue} from '../../test/mock-static-filter-value';
+import {buildMockTabSlice} from '../../test/mock-tab-state';
+import {redo, snapshot, undo} from './history-actions';
+import {historyReducer} from './history-slice';
+import {getHistoryInitialState, HistoryState} from './history-state';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;

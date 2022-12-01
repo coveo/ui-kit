@@ -1,6 +1,3 @@
-import {createAction} from '@reduxjs/toolkit';
-import {FacetSortCriterion} from './interfaces/request';
-import {validatePayload} from '../../../utils/validate-payload';
 import {
   StringValue,
   NumberValue,
@@ -8,10 +5,13 @@ import {
   RecordValue,
   Value,
 } from '@coveo/bueno';
-import {FacetValue} from './interfaces/response';
+import {createAction} from '@reduxjs/toolkit';
+import {allowedValues} from '../../../controllers/core/facets/_common/facet-option-definitions';
+import {validatePayload} from '../../../utils/validate-payload';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
-import {allowedValues} from '../../../controllers/core/facets/_common/facet-option-definitions';
+import {FacetSortCriterion} from './interfaces/request';
+import {FacetValue} from './interfaces/response';
 
 export interface RegisterFacetActionCreatorPayload {
   /**

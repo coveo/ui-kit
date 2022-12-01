@@ -1,14 +1,16 @@
+import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
+import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {
+  logFacetClearAll,
+  logFacetSelect,
+} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 import {
   ConfigurationSection,
   DateFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
 import {loadReducerError} from '../../../../utils/errors';
-import {configuration, dateFacetSet, search} from '../../../../app/reducers';
-import {
-  logFacetClearAll,
-  logFacetSelect,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
   buildCoreDateFilter,
   DateFilter,
@@ -18,8 +20,6 @@ import {
   DateFilterRange,
   DateFilterState,
 } from '../../../core/facets/range-facet/date-facet/headless-core-date-filter';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
-import {ProductListingEngine} from '../../../../app/product-listing-engine/product-listing-engine';
 
 export type {
   DateFilterOptions,

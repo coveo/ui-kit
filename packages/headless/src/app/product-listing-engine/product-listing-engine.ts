@@ -1,6 +1,14 @@
-import {Logger} from 'pino';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
+import {Logger} from 'pino';
+import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {SearchAPIClient} from '../../api/search/search-api-client';
+import {
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+} from '../../api/search/search-api-client-middleware';
+import {ProductListingAppState} from '../../state/product-listing-app-state';
 import {
   buildEngine,
   CoreEngine,
@@ -8,23 +16,15 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
+import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
+import {productListing} from '../reducers';
+import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   ProductListingEngineConfiguration,
   productListingEngineConfigurationSchema,
   getSampleProductListingEngineConfiguration,
 } from './product-listing-engine-configuration';
-import {ProductListingAppState} from '../../state/product-listing-app-state';
-import {ProductListingAPIClient} from '../../api/commerce/product-listings/product-listing-api-client';
-import {ProductListingThunkExtraArguments} from '../product-listing-thunk-extra-arguments';
-import {productListing} from '../reducers';
-import {SearchEngineConfiguration} from '../search-engine/search-engine-configuration';
-import {SearchAPIClient} from '../../api/search/search-api-client';
-import {
-  NoopPostprocessFacetSearchResponseMiddleware,
-  NoopPostprocessQuerySuggestResponseMiddleware,
-  NoopPostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
 
 export type {ProductListingEngineConfiguration};
 export {getSampleProductListingEngineConfiguration};

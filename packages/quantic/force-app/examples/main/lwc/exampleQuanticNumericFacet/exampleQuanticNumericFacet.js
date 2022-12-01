@@ -29,6 +29,13 @@ export default class ExampleQuanticNumericFacet extends LightningElement {
       defaultValue: 8,
     },
     {
+      attribute: 'displayValuesAs',
+      label: 'Display values as',
+      description:
+        'Whether to display the facet values in "checkbox" mode (multiple selection) or "link" mode (single selection).',
+      defaultValue: 'checkbox',
+    },
+    {
       attribute: 'sortCriteria',
       label: 'Sort criteria',
       description:

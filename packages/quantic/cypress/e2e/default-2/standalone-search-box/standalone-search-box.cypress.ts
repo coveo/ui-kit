@@ -5,9 +5,9 @@ import {
   interceptSearch,
   routeMatchers,
 } from '../../../page-objects/search';
-import {StandaloneSearchBoxExpectations as Expect} from './standalone-search-box-expectations';
-import {StandaloneSearchBoxActions as Actions} from './standalone-search-box-actions';
 import {scope} from '../../../reporters/detailed-collector';
+import {StandaloneSearchBoxActions as Actions} from './standalone-search-box-actions';
+import {StandaloneSearchBoxExpectations as Expect} from './standalone-search-box-expectations';
 
 interface StandaloneSearchBoxOptions {
   placeholder: string;
@@ -77,7 +77,7 @@ describe('quantic-standalone-search-box', () => {
 
       scope('when selecting from suggestions', () => {
         Actions.clickFirstSuggestion();
-        Expect.inputContains('test');
+        Expect.urlContains('/global-search/%40uri#q=test');
       });
 
       scope('when submitting a search', () => {
@@ -88,7 +88,7 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Expect.displayClearButton(true);
         Actions.submitSearch();
-        Expect.urlHashContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+        Expect.urlContains(`/global-search/%40uri#q=${encodeURI(query)}`);
       });
 
       scope('when submitting using ENTER key', () => {
@@ -100,7 +100,7 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Actions.pressEnter();
         Expect.displayClearButton(true);
-        Expect.urlHashContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+        Expect.urlContains(`/global-search/%40uri#q=${encodeURI(query)}`);
       });
 
       scope('when submitting script', () => {
@@ -111,7 +111,7 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Expect.displayClearButton(true);
         Actions.submitSearch();
-        Expect.urlHashContains(`/global-search/%40uri#q=${encodeURI(query)}`);
+        Expect.urlContains(`/global-search/%40uri#q=${encodeURI(query)}`);
       });
     });
   });
@@ -161,7 +161,7 @@ describe('quantic-standalone-search-box', () => {
         Actions.typeInSearchBox(query);
         Expect.displayClearButton(true);
         Actions.submitSearch();
-        Expect.urlHashContains(`/full-search-example#q=${encodeURI(query)}`);
+        Expect.urlContains(`/full-search-example#q=${encodeURI(query)}`);
         Expect.logSearchFromLink(query);
       });
 

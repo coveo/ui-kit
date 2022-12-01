@@ -1,22 +1,22 @@
-import {configure} from '../../../page-objects/configurator';
-import {
-  getAlias,
-  interceptSearch,
-  interceptSearchIndefinitely,
-  mockSearchNoResults,
-} from '../../../page-objects/search';
-import {SummaryExpectations as Expect} from './summary-expectations';
 import {getNextResults} from '../../../page-objects/actions/action-get-next-results';
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {
   setPageSizeValue,
   setResultsPerPage,
 } from '../../../page-objects/actions/action-set-results-per-page';
+import {configure} from '../../../page-objects/configurator';
+import {
+  getQueryAlias,
+  interceptSearch,
+  interceptSearchIndefinitely,
+  mockSearchNoResults,
+} from '../../../page-objects/search';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
+import {SummaryExpectations as Expect} from './summary-expectations';
 
 describe('quantic-summary', () => {
   const summaryUrl = 's/quantic-summary';
@@ -31,7 +31,7 @@ describe('quantic-summary', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(useCase));
+      cy.wait(getQueryAlias(useCase));
     }
   }
 
@@ -60,7 +60,7 @@ describe('quantic-summary', () => {
         it('should work as expected', () => {
           visitSummary(param.useCase, false);
 
-          cy.wait(getAlias(param.useCase)).then((interception) => {
+          cy.wait(getQueryAlias(param.useCase)).then((interception) => {
             Expect.displaySummary(true);
             Expect.displayQuery(false);
             Expect.displayRange(true);
@@ -106,7 +106,7 @@ describe('quantic-summary', () => {
           setPageSizeValue(customResultsPerPage);
           setResultsPerPage();
 
-          cy.wait(getAlias(param.useCase)).then((interception) => {
+          cy.wait(getQueryAlias(param.useCase)).then((interception) => {
             Expect.displaySummary(true);
             Expect.displayQuery(false);
             Expect.displayRange(true);
@@ -123,7 +123,7 @@ describe('quantic-summary', () => {
 
           getNextResults();
 
-          cy.wait(getAlias(param.useCase)).then((interception) => {
+          cy.wait(getQueryAlias(param.useCase)).then((interception) => {
             Expect.displaySummary(true);
             Expect.displayQuery(false);
             Expect.displayRange(true);

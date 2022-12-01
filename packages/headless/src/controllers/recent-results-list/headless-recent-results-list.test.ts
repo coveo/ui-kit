@@ -1,3 +1,10 @@
+import {Action} from 'redux';
+import {recentResults} from '../../app/reducers';
+import {
+  clearRecentResults,
+  registerRecentResults,
+} from '../../features/recent-results/recent-results-actions';
+import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
@@ -7,13 +14,6 @@ import {
   buildRecentResultsList,
   RecentResultsList,
 } from './headless-recent-results-list';
-import {recentResults} from '../../app/reducers';
-import {
-  clearRecentResults,
-  registerRecentResults,
-} from '../../features/recent-results/recent-results-actions';
-import {Action} from 'redux';
-import {logClearRecentResults} from '../../features/recent-results/recent-results-analytics-actions';
 
 describe('recent results list', () => {
   let engine: MockSearchEngine;

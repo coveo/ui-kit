@@ -1,9 +1,9 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import CannotAccess from '../../../images/cannot-access.svg';
-import SomethingWrong from '../../../images/something-wrong.svg';
-import SearchInactive from '../../../images/search-inactive.svg';
-import NoConnection from '../../../images/no-connection.svg';
 import Indexing from '../../../images/indexing.svg';
+import NoConnection from '../../../images/no-connection.svg';
+import SearchInactive from '../../../images/search-inactive.svg';
+import SomethingWrong from '../../../images/something-wrong.svg';
 import {Button} from '../button';
 import {AnyBindings} from '../interface/bindings';
 

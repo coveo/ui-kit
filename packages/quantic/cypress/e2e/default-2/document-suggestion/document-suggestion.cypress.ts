@@ -1,20 +1,20 @@
-import {configure} from '../../../page-objects/configurator';
-import {DocumentSuggestionExpectations as Expect} from './document.suggestion.expectations';
-import {DocumentSuggestionActions as Actions} from './document-suggestion-actions';
-import {scope} from '../../../reporters/detailed-collector';
+import allDocuments from '../../../fixtures/documentSuggestions.json';
+import similarDocuments from '../../../fixtures/similarDocumentSuggestions.json';
+import {fetchSuggestions} from '../../../page-objects/actions/action-get-suggestions';
+import {sendRating} from '../../../page-objects/actions/action-send-rating';
 import {
   interceptCaseAssist,
   mockDocumentSuggestion,
   interceptSuggestionIndefinitely,
 } from '../../../page-objects/case-assist';
-import {sendRating} from '../../../page-objects/actions/action-send-rating';
-import allDocuments from '../../../fixtures/documentSuggestions.json';
-import similarDocuments from '../../../fixtures/similarDocumentSuggestions.json';
-import {fetchSuggestions} from '../../../page-objects/actions/action-get-suggestions';
+import {configure} from '../../../page-objects/configurator';
 import {
   InterceptAliases,
   interceptResultHtmlContent,
 } from '../../../page-objects/search';
+import {scope} from '../../../reporters/detailed-collector';
+import {DocumentSuggestionActions as Actions} from './document-suggestion-actions';
+import {DocumentSuggestionExpectations as Expect} from './document.suggestion.expectations';
 
 interface DocumentSuggestionOptions {
   maxDocuments: number;

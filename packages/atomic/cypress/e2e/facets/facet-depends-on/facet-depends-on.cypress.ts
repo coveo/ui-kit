@@ -3,14 +3,14 @@ import {
   addColorFacet,
   selectIdleBoxValueAt,
 } from '../color-facet/color-facet-actions';
+import * as ColorFacetAssertions from '../color-facet/color-facet-assertions';
+import {ColorFacetSelectors} from '../color-facet/color-facet-selectors';
 import {pressClearButton, typeFacetSearchQuery} from '../facet-common-actions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import * as FacetAssertions from '../facet/facet-assertions';
-import * as ColorFacetAssertions from '../color-facet/color-facet-assertions';
 import {addFacet} from '../facet/facet-actions';
-import {addNumericFacet} from '../numeric-facet/numeric-facet-actions';
+import * as FacetAssertions from '../facet/facet-assertions';
 import {FacetSelectors} from '../facet/facet-selectors';
-import {ColorFacetSelectors} from '../color-facet/color-facet-selectors';
+import {addNumericFacet} from '../numeric-facet/numeric-facet-actions';
 import {NumericFacetSelectors} from '../numeric-facet/numeric-facet-selectors';
 
 const level0FacetId = 'abc';
@@ -83,10 +83,10 @@ describe('Facet DependsOn Test Suites', () => {
     ) => {
       const values: string[] = [];
       if (selectLevel0) {
-        values.push(`f[${level0FacetId}]=${level0FacetExpectedValue}`);
+        values.push(`f-${level0FacetId}=${level0FacetExpectedValue}`);
       }
       if (selectLevel1) {
-        values.push(`f[${level1FacetIdA}]=${level1FacetAPossibleValue}`);
+        values.push(`f-${level1FacetIdA}=${level1FacetAPossibleValue}`);
       }
       return values.join('&');
     };

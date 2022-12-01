@@ -1,4 +1,3 @@
-import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {
   buildInstantResults,
   buildInteractiveResult,
@@ -6,23 +5,24 @@ import {
   InstantResults,
   Result,
 } from '@coveo/headless';
+import {Component, Element, State, h, Prop, Method} from '@stencil/core';
+import {InitializableComponent} from '../../../../utils/initialization-utils';
+import {encodeForDomAttribute} from '../../../../utils/string-utils';
+import {getClassNameForButtonStyle} from '../../../common/button-style';
+import {
+  ResultDisplayDensity,
+  ResultDisplayImageSize,
+  ResultDisplayLayout,
+} from '../../../common/layout/display-options';
+import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../suggestions-common';
-import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {
-  ResultDisplayDensity,
-  ResultDisplayImageSize,
-  ResultDisplayLayout,
-} from '../../../common/layout/display-options';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {getClassNameForButtonStyle} from '../../../common/button-style';
-import {InitializableComponent} from '../../../../utils/initialization-utils';
-import {ResultRenderingFunction} from '../../../common/result-list/result-list-common-interface';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
 
 export type AriaLabelGenerator = (
   bindings: Bindings,

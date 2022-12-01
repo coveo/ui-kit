@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {i18n} from 'i18next';
 import {Button} from '../../button';
 
@@ -16,7 +16,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
   props
 ) => {
   const label = props.i18n.t(props.label);
-  const search = props.i18n.t('search');
+  const search = props.i18n.t('facet-search-input');
   const facetSearch = props.i18n.t('facet-search', {label});
   const clear = props.i18n.t('clear');
   let inputRef: HTMLInputElement | undefined;

@@ -1,10 +1,3 @@
-import {SearchEngine} from '../../../app/search-engine/search-engine';
-import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
-import {
-  buildController,
-  Subscribable,
-} from '../../controller/headless-controller';
-import {loadReducerError} from '../../../utils/errors';
 import {CoreEngine} from '../../../app/engine';
 import {
   facetSet,
@@ -12,21 +5,28 @@ import {
   facetSearchSet,
   search,
 } from '../../../app/reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {SearchThunkExtraArguments} from '../../../app/search-thunk-extra-arguments';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
+import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
+import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
+import {executeSearch} from '../../../features/search/search-actions';
 import {
   FacetSection,
   ConfigurationSection,
   FacetSearchSection,
   SearchSection,
 } from '../../../state/state-sections';
-import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {executeSearch} from '../../../features/search/search-actions';
-import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
+import {loadReducerError} from '../../../utils/errors';
 import {omit} from '../../../utils/utils';
-import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
-import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
+import {
+  buildController,
+  Subscribable,
+} from '../../controller/headless-controller';
+import {determineFacetId} from '../../core/facets/_common/facet-id-determinor';
+import {buildFacetSearch} from '../../core/facets/facet-search/specific/headless-facet-search';
 
 export interface FieldSuggestionsValue {
   /**

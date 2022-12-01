@@ -1,4 +1,3 @@
-import type {NextPage} from 'next';
 import {
   AtomicBreadbox,
   AtomicColorFacet,
@@ -45,6 +44,7 @@ import {
   AtomicText,
   Result,
 } from '@coveo/atomic-react';
+import type {NextPage} from 'next';
 
 const SearchPage: NextPage = () => {
   const engine = buildSearchEngine({

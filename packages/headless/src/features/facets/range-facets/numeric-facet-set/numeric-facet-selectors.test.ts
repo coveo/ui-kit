@@ -1,16 +1,16 @@
 import {SearchAppState} from '../../../../state/search-app-state';
+import {createMockState} from '../../../../test';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
+import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {
   numericFacetResponseSelector,
   numericFacetSelectedValuesSelector,
 } from './numeric-facet-selectors';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
-import {buildMockFacetResponse} from '../../../../test/mock-facet-response';
-import {createMockState} from '../../../../test';
-import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 
 describe('numeric facet selectors', () => {
   const facetId = 'abc123';

@@ -1,15 +1,15 @@
-import {configure} from '../../../page-objects/configurator';
+import {fetchClassifications} from '../../../page-objects/actions/action-fetch-classifications';
 import {
   interceptCaseAssist,
   mockCaseClassification,
   mockSfPicklistValues,
   interceptClassificationsIndefinitely,
 } from '../../../page-objects/case-assist';
-import {CaseClassificationExpectations as Expect} from './case-classification-expectations';
-import {CaseClassificationActions as Actions} from './case-classification-actions';
+import {configure} from '../../../page-objects/configurator';
 import {scope} from '../../../reporters/detailed-collector';
-import {fetchClassifications} from '../../../page-objects/actions/action-fetch-classifications';
 import {stubConsoleWarning} from '../../console-selectors';
+import {CaseClassificationActions as Actions} from './case-classification-actions';
+import {CaseClassificationExpectations as Expect} from './case-classification-expectations';
 
 interface CaseClassificationOptions {
   maxSuggestions: number;

@@ -1,5 +1,3 @@
-import {ResultTemplate} from './result-templates';
-import {Result} from '../../api/search/search/result';
 import {
   ArrayValue,
   NumberValue,
@@ -7,12 +5,14 @@ import {
   SchemaValidationError,
   Value,
 } from '@coveo/bueno';
-import {registerFieldsToInclude} from '../fields/fields-actions';
-import {fields} from '../../app/reducers';
-import {loadReducerError} from '../../utils/errors';
-import {FieldsSection} from '../../state/state-sections';
+import {Result} from '../../api/search/search/result';
 import {CoreEngine} from '../../app/engine';
+import {fields} from '../../app/reducers';
+import {FieldsSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {registerFieldsToInclude} from '../fields/fields-actions';
+import {ResultTemplate} from './result-templates';
 
 const resultTemplateSchema = new Schema<ResultTemplate>({
   content: new Value({required: true}),

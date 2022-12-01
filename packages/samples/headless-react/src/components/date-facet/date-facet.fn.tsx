@@ -1,5 +1,5 @@
-import {useEffect, useState, FunctionComponent} from 'react';
 import {DateFacet as HeadlessDateFacet, DateFacetValue} from '@coveo/headless';
+import {useEffect, useState, FunctionComponent} from 'react';
 import {parseDate} from './date-utils';
 
 interface DateFacetProps {

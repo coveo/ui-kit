@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {fetchPage} from '../../../features/insight-search/insight-search-actions';
+import {
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../test/mock-engine';
 import {
   Pager,
   PagerOptions,
   PagerInitialState,
   buildPager,
 } from './headless-insight-pager';
-import {
-  buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../test/mock-engine';
-import {fetchPage} from '../../../features/insight-search/insight-search-actions';
 
 describe('Pager', () => {
   let engine: MockInsightEngine;

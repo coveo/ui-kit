@@ -1,31 +1,30 @@
-import {
-  AnyFacetRequest,
-  AnyFacetValueRequest,
-} from '../generic/interfaces/generic-facet-request';
+import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {
   CategoryFacetSection,
   DateFacetSection,
   FacetSection,
   NumericFacetSection,
 } from '../../../state/state-sections';
+import {categoryFacetRequestSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
+import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
+import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
+import {FacetType} from '../facet-api/request';
+import {
+  AnyFacetRequest,
+  AnyFacetValueRequest,
+} from '../generic/interfaces/generic-facet-request';
+import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
 import {
   DateFacetRequest,
   DateRangeRequest,
 } from '../range-facets/date-facet-set/interfaces/request';
-import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {
   NumericFacetRequest,
   NumericRangeRequest,
 } from '../range-facets/numeric-facet-set/interfaces/request';
-
-import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
-import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {FacetType} from '../facet-api/request';
-import {categoryFacetRequestSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
-import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
-import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
-import {getFacetSetInitialState} from './facet-set-state';
 import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
+import {getFacetSetInitialState} from './facet-set-state';
+import {FacetRequest, FacetValueRequest} from './interfaces/request';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &

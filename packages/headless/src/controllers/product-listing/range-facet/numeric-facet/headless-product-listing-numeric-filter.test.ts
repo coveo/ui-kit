@@ -1,18 +1,18 @@
+import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
+import {ProductListingAppState} from '../../../../state/product-listing-app-state';
 import {
   buildMockProductListingEngine,
   MockProductListingEngine,
 } from '../../../../test';
 import {buildMockNumericFacetSlice} from '../../../../test/mock-numeric-facet-slice';
+import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
+import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
 import {
   buildNumericFilter,
   NumericFilter,
   NumericFilterInitialState,
   NumericFilterOptions,
 } from './headless-product-listing-numeric-filter';
-import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
-import {ProductListingAppState} from '../../../../state/product-listing-app-state';
-import {buildMockProductListingState} from '../../../../test/mock-product-listing-state';
-import {fetchProductListing} from '../../../../features/product-listing/product-listing-actions';
 
 describe('numeric filter', () => {
   const facetId = '1';

@@ -113,6 +113,33 @@
     "en": "{{title}}, instant result",
     "fr": "{{title}}, résultat instantané"
   },
+  "facet-search-input": {
+    "en": "Search",
+    "fr": "Recherche",
+    "cs": "Hledat",
+    "da": "Søg",
+    "de": "Suchen",
+    "el": "Αναζήτηση",
+    "es": "Buscar",
+    "fi": "Hae",
+    "hu": "Keresés",
+    "id": "Cari",
+    "it": "Cerca",
+    "ja": "検索する",
+    "ko": "검색",
+    "nl": "Zoeken",
+    "no": "Søk",
+    "pl": "Wyszukaj",
+    "pt": "Pesquisar",
+    "pt-BR": "Pesquisar",
+    "ru": "Искать",
+    "sv": "Sök",
+    "th": "ค้นหา",
+    "tr": "Ara",
+    "zh": "搜索",
+    "zh-CN": "搜索",
+    "zh-TW": "搜尋"
+  },
   "facet-search": {
     "en": "Search for values in the {{label}} facet",
     "fr": "Rechercher des valeurs dans la facette {{label}}"

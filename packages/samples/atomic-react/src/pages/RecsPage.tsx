@@ -1,5 +1,3 @@
-import React, {FunctionComponent} from 'react';
-
 import {
   AtomicFormatCurrency,
   AtomicRecsInterface,
@@ -25,6 +23,7 @@ import {
   Result,
   AtomicRecsList,
 } from '@coveo/atomic-react/recommendation';
+import React, {FunctionComponent} from 'react';
 
 export const RecsPage: FunctionComponent = () => {
   const engine = buildRecommendationEngine({

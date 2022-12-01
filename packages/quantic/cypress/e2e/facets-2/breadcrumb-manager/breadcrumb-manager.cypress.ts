@@ -1,7 +1,7 @@
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure, reset} from '../../../page-objects/configurator';
 import {
-  getAlias,
+  getQueryAlias,
   InterceptAliases,
   interceptSearch,
 } from '../../../page-objects/search';
@@ -41,7 +41,7 @@ describe('quantic-breadcrumb-manager', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -199,10 +199,10 @@ describe('quantic-breadcrumb-manager', () => {
             Expect.facetBreadcrumb.numberOfValues(1);
 
             Actions.facet.clickShowMoreButton();
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             Actions.facet.selectLastLinkValue();
-            cy.wait(getAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
             Expect.facetBreadcrumb.numberOfValues(1);
           });
@@ -214,7 +214,7 @@ describe('quantic-breadcrumb-manager', () => {
           it('should work as expected', () => {
             scope('with one filter', () => {
               const path = 'Africa,Togo';
-              const url = `cf[${categoryField}]=${path}`;
+              const url = `cf-${categoryField}=${path}`;
 
               loadFromUrlHash(url);
               Expect.displayBreadcrumbManager(true);
@@ -235,7 +235,7 @@ describe('quantic-breadcrumb-manager', () => {
               const path = 'North America,Canada';
               const timeframeRange = 'past-6-month..now';
               const fileType = 'txt';
-              const url = `cf[${categoryField}]=${path}&f[${facetField}]=${fileType}&df[${dateField}]=${timeframeRange}`;
+              const url = `cf-${categoryField}=${path}&f-${facetField}=${fileType}&df-${dateField}=${timeframeRange}`;
 
               loadFromUrlHash(url);
               Expect.facetBreadcrumb.displayBreadcrumb(true);

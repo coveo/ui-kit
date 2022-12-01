@@ -1,9 +1,8 @@
-import {configure} from '../../../page-objects/configurator';
-
-import {ModalExpectations as Expect} from './modal-expectations';
-import {scope} from '../../../reporters/detailed-collector';
-import {openModal} from '../../../page-objects/actions/action-open-modal';
 import {closeModal} from '../../../page-objects/actions/action-close-modal';
+import {openModal} from '../../../page-objects/actions/action-open-modal';
+import {configure} from '../../../page-objects/configurator';
+import {scope} from '../../../reporters/detailed-collector';
+import {ModalExpectations as Expect} from './modal-expectations';
 
 interface ModalOptions {
   fullScreen: boolean;

@@ -3,9 +3,9 @@ import {
   interceptSearch,
   mockResultHtmlContent,
 } from '../../../page-objects/search';
-import {ResultQuickviewExpectations as Expect} from './result-quickview-expectations';
-import {ResultQuickviewActions as Actions} from './result-quickview-actions';
 import {scope} from '../../../reporters/detailed-collector';
+import {ResultQuickviewActions as Actions} from './result-quickview-actions';
+import {ResultQuickviewExpectations as Expect} from './result-quickview-expectations';
 
 interface ResultQuickviewOptions {
   result: string;

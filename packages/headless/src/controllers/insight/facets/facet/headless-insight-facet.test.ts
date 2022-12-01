@@ -1,28 +1,27 @@
-import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
-import {
-  MockInsightEngine,
-  buildMockInsightEngine,
-} from '../../../../test/mock-engine';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
 import {
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
 } from '../../../../features/facets/facet-set/facet-set-actions';
-import {buildMockFacetValue} from '../../../../test/mock-facet-value';
+import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
+import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {
   executeSearch,
   fetchFacetValues,
 } from '../../../../features/insight-search/insight-search-actions';
-import {FacetRequest} from '../../../../features/facets/facet-set/interfaces/request';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
-
-import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
-import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
-import {FacetValue} from '../../../../features/facets/facet-set/interfaces/response';
 import {InsightAppState} from '../../../../state/insight-app-state';
-import {buildMockInsightState} from '../../../../test/mock-insight-state';
+import {
+  MockInsightEngine,
+  buildMockInsightEngine,
+} from '../../../../test/mock-engine';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {buildMockFacetSlice} from '../../../../test/mock-facet-slice';
+import {buildMockFacetValue} from '../../../../test/mock-facet-value';
+import {buildMockInsightState} from '../../../../test/mock-insight-state';
+import {buildFacet, Facet, FacetOptions} from './headless-insight-facet';
 
 describe('InsightFacet', () => {
   const facetId = '1';

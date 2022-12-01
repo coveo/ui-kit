@@ -3,16 +3,16 @@ import {
   generateComponentHTML,
   TestFixture,
 } from '../../../fixtures/test-fixture';
-import {
-  resultPrintableUriComponent,
-  ResultPrintableUriSelectors,
-} from './result-printable-uri-selectors';
 import * as CommonAssertions from '../../common-assertions';
-import * as ResultPrintableUriAssertions from './result-printable-uri-assertions';
 import {
   addResultList,
   buildTemplateWithoutSections,
 } from '../result-list-actions';
+import * as ResultPrintableUriAssertions from './result-printable-uri-assertions';
+import {
+  resultPrintableUriComponent,
+  ResultPrintableUriSelectors,
+} from './result-printable-uri-selectors';
 import {resultTextComponent} from './result-text-selectors';
 
 const getNameForPart = (index: number) => `Parent ${index + 1}`;
@@ -114,7 +114,7 @@ describe('Result Printable Uri Component', () => {
         .init();
     });
 
-    it('should render an "atomic-result-link" containing an "atomic-result-text" component displaying the "printableUri" property', () => {
+    it('should render an "atomic-result-printable-uri" containing an "atomic-result-text" component displaying the "printableUri" property', () => {
       ResultPrintableUriSelectors.firstInResult()
         .find(resultTextComponent)
         .should('exist')
@@ -127,17 +127,19 @@ describe('Result Printable Uri Component', () => {
   });
 
   describe('when there is a "parents" property in the result object and "max-number-of-parts" is 3', () => {
-    const addResultListWithPrintableUri = () => (fixture: TestFixture) => {
-      fixture.with(
-        addResultList(
-          buildTemplateWithoutSections([
-            generateComponentHTML(resultPrintableUriComponent, {
-              'max-number-of-parts': '3',
-            }),
-          ])
-        )
-      );
-    };
+    const addResultListWithPrintableUri =
+      (children?: HTMLElement[]) => (fixture: TestFixture) => {
+        const printableUriEl = generateComponentHTML(
+          resultPrintableUriComponent,
+          {
+            'max-number-of-parts': '3',
+          }
+        );
+        children?.forEach((slot) => printableUriEl.appendChild(slot));
+        fixture.with(
+          addResultList(buildTemplateWithoutSections([printableUriEl]))
+        );
+      };
 
     describe('when the number of parts is 3', () => {
       before(() => {
@@ -194,6 +196,26 @@ describe('Result Printable Uri Component', () => {
 
       ResultPrintableUriAssertions.assertDisplayEllipsis(true);
       ResultPrintableUriAssertions.assertDisplayParentsCount(3);
+    });
+
+    describe('when there is a valid slot named "attributes"', () => {
+      before(() => {
+        const attributesSlot = generateComponentHTML('a', {
+          download: 'test',
+          target: '_self',
+          slot: 'attributes',
+        });
+        new TestFixture()
+          .with(addResultListWithPrintableUri([attributesSlot]))
+          .with(addUriParentsInResponse(5))
+          .init();
+      });
+
+      it('copies the attributes properly', () => {
+        ResultPrintableUriSelectors.links()
+          .should('have.attr', 'download', 'test')
+          .should('have.attr', 'target', '_self');
+      });
     });
   });
 });

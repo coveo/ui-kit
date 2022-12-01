@@ -1,47 +1,46 @@
 import {TagProps, TestFixture} from '../fixtures/test-fixture';
 import {
-  addColorFacet,
-  colorFacetField,
-  colorFacetLabel,
-  selectIdleBoxValueAt as selectColorFacetIdleBoxValueAt,
-} from './facets/color-facet/color-facet-actions';
-import {addFacet, field, label} from './facets/facet/facet-actions';
-import {FacetSelectors} from './facets/facet/facet-selectors';
-
-import {
-  selectIdleCheckboxValueAt,
-  selectIdleLinkValueAt,
-} from './facets/facet-common-actions';
-import {
   addBreadbox,
   breadboxLabel,
   deselectAllBreadcrumbs,
   deselectBreadcrumbAtIndex,
 } from './breadbox-actions';
 import * as BreadboxAssertions from './breadbox-assertions';
-import * as CommonAssertions from './common-assertions';
-import * as CommonFacetAssertions from './facets/facet-common-assertions';
-import * as CategoryFacetAssertions from './facets/category-facet/category-facet-assertions';
-import * as ColorFacetAssertions from './facets/color-facet/color-facet-assertions';
 import {breadboxComponent, BreadboxSelectors} from './breadbox-selectors';
+import * as CommonAssertions from './common-assertions';
 import {
   addCategoryFacet,
   canadaHierarchy,
   canadaHierarchyIndex,
   selectChildValueAt as selectCategoryFacetChildValueAt,
 } from './facets/category-facet/category-facet-actions';
+import * as CategoryFacetAssertions from './facets/category-facet/category-facet-assertions';
+import {
+  addColorFacet,
+  colorFacetField,
+  colorFacetLabel,
+  selectIdleBoxValueAt as selectColorFacetIdleBoxValueAt,
+} from './facets/color-facet/color-facet-actions';
+import * as ColorFacetAssertions from './facets/color-facet/color-facet-assertions';
+import {
+  selectIdleCheckboxValueAt,
+  selectIdleLinkValueAt,
+} from './facets/facet-common-actions';
+import * as CommonFacetAssertions from './facets/facet-common-assertions';
+import {addFacet, field, label} from './facets/facet/facet-actions';
+import {FacetSelectors} from './facets/facet/facet-selectors';
 import {
   addNumericFacet,
   numericFacetField,
   numericFacetLabel,
 } from './facets/numeric-facet/numeric-facet-actions';
+import {NumericFacetSelectors} from './facets/numeric-facet/numeric-facet-selectors';
 import {
   addTimeframeFacet,
   timeframeFacetLabel,
   unitFrames,
 } from './facets/timeframe-facet/timeframe-facet-action';
 import {TimeframeFacetSelectors} from './facets/timeframe-facet/timeframe-facet-selectors';
-import {NumericFacetSelectors} from './facets/numeric-facet/numeric-facet-selectors';
 
 describe('Breadbox Test Suites', () => {
   function setupBreadboxWithMultipleFacets(props: TagProps = {}) {
@@ -188,7 +187,7 @@ describe('Breadbox Test Suites', () => {
       new TestFixture()
         .with(addBreadbox())
         .with(addFacet({field, label}))
-        .withHash(`f[${field}]=${activeValues.join(',')}`)
+        .withHash(`f-${field}=${activeValues.join(',')}`)
         .init();
       BreadboxSelectors.breadcrumbButton().then((buttons) =>
         cy.wrap(buttons.filter(':visible').length).as('numberOfVisibleButtons')

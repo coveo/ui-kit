@@ -1,3 +1,4 @@
+import {loadFieldActions} from '@coveo/headless/insight';
 import {
   Component,
   Element,
@@ -9,14 +10,6 @@ import {
   Watch,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
-import {InitializeEvent} from '../../../utils/initialization-utils';
-import {CommonBindings} from '../../common/interface/bindings';
-import {
-  BaseAtomicInterface,
-  CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
-import {AtomicInsightStore, createAtomicInsightStore} from './store';
-import {getAnalyticsConfig} from './analytics-config';
 import {
   InsightLogLevel,
   InsightEngine,
@@ -24,8 +17,15 @@ import {
   buildInsightEngine,
   buildInsightResultsPerPage,
 } from '..';
-import {loadFieldActions} from '@coveo/headless/insight';
+import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
+import {CommonBindings} from '../../common/interface/bindings';
+import {
+  BaseAtomicInterface,
+  CommonAtomicInterfaceHelper,
+} from '../../common/interface/interface-common';
+import {getAnalyticsConfig} from './analytics-config';
+import {AtomicInsightStore, createAtomicInsightStore} from './store';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;

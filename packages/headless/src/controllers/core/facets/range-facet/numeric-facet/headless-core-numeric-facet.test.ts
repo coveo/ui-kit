@@ -1,25 +1,4 @@
 import {
-  NumericFacet,
-  buildCoreNumericFacet,
-  NumericFacetOptions,
-  buildNumericRange,
-} from './headless-core-numeric-facet';
-import {
-  MockSearchEngine,
-  buildMockSearchAppEngine,
-} from '../../../../../test/mock-engine';
-import {createMockState} from '../../../../../test/mock-state';
-import {
-  deselectAllNumericFacetValues,
-  registerNumericFacet,
-  toggleSelectNumericFacetValue,
-} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
-import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
-import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
-import {SearchAppState} from '../../../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
-import {
   configuration,
   numericFacetSet,
   search,
@@ -27,6 +6,27 @@ import {
 } from '../../../../../app/reducers';
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
+import {
+  deselectAllNumericFacetValues,
+  registerNumericFacet,
+  toggleSelectNumericFacetValue,
+} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {SearchAppState} from '../../../../../state/search-app-state';
+import {
+  MockSearchEngine,
+  buildMockSearchAppEngine,
+} from '../../../../../test/mock-engine';
+import {buildMockNumericFacetResponse} from '../../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetSlice} from '../../../../../test/mock-numeric-facet-slice';
+import {buildMockNumericFacetValue} from '../../../../../test/mock-numeric-facet-value';
+import {createMockState} from '../../../../../test/mock-state';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import {
+  NumericFacet,
+  buildCoreNumericFacet,
+  NumericFacetOptions,
+  buildNumericRange,
+} from './headless-core-numeric-facet';
 
 describe('numeric facet', () => {
   const facetId = '1';

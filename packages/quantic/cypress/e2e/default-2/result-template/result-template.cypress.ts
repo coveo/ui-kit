@@ -1,7 +1,7 @@
-import {interceptSearch} from '../../../page-objects/search';
-import {ResultTemplateExpectations as Expect} from './result-template-expectations';
-import {ResultTemplateActions as Actions} from './result-template-actions';
 import {configure} from '../../../page-objects/configurator';
+import {interceptSearch} from '../../../page-objects/search';
+import {ResultTemplateActions as Actions} from './result-template-actions';
+import {ResultTemplateExpectations as Expect} from './result-template-expectations';
 
 const slots = {
   LABEL: 'label',

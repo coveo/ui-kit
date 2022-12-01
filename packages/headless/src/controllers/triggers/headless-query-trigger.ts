@@ -1,12 +1,12 @@
-import {SearchEngine} from '../../app/search-engine/search-engine';
-import {TriggerSection, QuerySection} from '../../state/state-sections';
 import {triggers, query} from '../../app/reducers';
-import {buildController, Controller} from '../controller/headless-controller';
-import {loadReducerError} from '../../utils/errors';
-import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {logUndoTriggerQuery} from '../../features/triggers/trigger-analytics-actions';
+import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions';
+import {TriggerSection, QuerySection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
+import {buildController, Controller} from '../controller/headless-controller';
 
 /**
  * The `QueryTrigger` controller handles query triggers.

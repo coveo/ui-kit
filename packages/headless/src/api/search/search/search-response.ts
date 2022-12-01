@@ -1,15 +1,15 @@
-import {Result} from './result';
+import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,
 } from '../search-api-error-response';
-import {QueryCorrection} from './query-corrections';
-import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
-import {QueryRankingExpression} from './query-ranking-expression';
-import {SecurityIdentity} from './security-identity';
-import {ExecutionReport} from './execution-report';
 import {Trigger} from './../trigger';
+import {ExecutionReport} from './execution-report';
+import {QueryCorrection} from './query-corrections';
+import {QueryRankingExpression} from './query-ranking-expression';
 import {QuestionsAnswers} from './question-answering';
+import {Result} from './result';
+import {SecurityIdentity} from './security-identity';
 
 export interface SearchResponseSuccess {
   results: Result[];

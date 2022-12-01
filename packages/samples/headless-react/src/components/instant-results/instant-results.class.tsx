@@ -1,4 +1,3 @@
-import {Component, ContextType, ReactNode} from 'react';
 import {
   buildSearchBox,
   SearchBox as HeadlessSearchbox,
@@ -8,6 +7,7 @@ import {
   Unsubscribe,
   SearchBoxState,
 } from '@coveo/headless';
+import {Component, ContextType, ReactNode} from 'react';
 import {AppContext} from '../../context/engine';
 
 export class InstantResults extends Component<

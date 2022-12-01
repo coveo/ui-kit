@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.4](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.9.3...@coveo/auth@1.9.4) (2022-11-28)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
+## [1.9.3](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.9.2...@coveo/auth@1.9.3) (2022-11-24)
+
+**Note:** Version bump only for package @coveo/auth
+
+
+
+
+
 ## [1.9.2](https://github.com/coveo/ui-kit/compare/@coveo/auth@1.9.1...@coveo/auth@1.9.2) (2022-09-06)
 
 **Note:** Version bump only for package @coveo/auth

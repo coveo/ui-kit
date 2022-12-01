@@ -1,8 +1,8 @@
-import {configuration} from '../../../app/reducers';
-import {loadReducerError} from '../../../utils/errors';
-import {ConfigurationSection} from '../../../state/state-sections';
 import {debounce} from 'ts-debounce';
 import {CoreEngine} from '../../..';
+import {configuration} from '../../../app/reducers';
+import {ConfigurationSection} from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
 
 export interface InteractiveResultCoreOptions {
   /**

@@ -10,6 +10,7 @@ import {
   CategoryFacetSelectors,
   AllFacetSelectors,
 } from './category-facet-selectors';
+
 const hierarchicalField = 'geographicalhierarchy';
 const categoryFacetExpectations = (selector: AllFacetSelectors) => {
   return {
@@ -60,7 +61,7 @@ const categoryFacetExpectations = (selector: AllFacetSelectors) => {
     },
     urlHashContains: (path: string[]) => {
       const categoryFacetListInUrl = path.join(',');
-      const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
+      const urlHash = `#cf-${hierarchicalField}=${encodeURI(
         categoryFacetListInUrl
       )}`;
       cy.url()

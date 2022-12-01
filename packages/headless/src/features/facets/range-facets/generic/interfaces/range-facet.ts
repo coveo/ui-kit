@@ -1,22 +1,22 @@
+import {RegisterDateFacetActionCreatorPayload} from '../../date-facet-set/date-facet-actions';
+import {DateFacetSetState} from '../../date-facet-set/date-facet-set-state';
 import {
   DateFacetRequest,
   DateRangeRequest,
 } from '../../date-facet-set/interfaces/request';
 import {
-  NumericFacetRequest,
-  NumericRangeRequest,
-} from '../../numeric-facet-set/interfaces/request';
-import {
   DateFacetValue,
   DateFacetResponse,
 } from '../../date-facet-set/interfaces/response';
 import {
+  NumericFacetRequest,
+  NumericRangeRequest,
+} from '../../numeric-facet-set/interfaces/request';
+import {
   NumericFacetValue,
   NumericFacetResponse,
 } from '../../numeric-facet-set/interfaces/response';
-import {RegisterDateFacetActionCreatorPayload} from '../../date-facet-set/date-facet-actions';
 import {RegisterNumericFacetActionCreatorPayload} from '../../numeric-facet-set/numeric-facet-actions';
-import {DateFacetSetState} from '../../date-facet-set/date-facet-set-state';
 import {NumericFacetSetState} from '../../numeric-facet-set/numeric-facet-set-state';
 
 export type RangeFacetRequest = DateFacetRequest | NumericFacetRequest;

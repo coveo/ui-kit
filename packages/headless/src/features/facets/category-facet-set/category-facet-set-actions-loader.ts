@@ -1,10 +1,10 @@
 import {PayloadAction} from '@reduxjs/toolkit';
+import {categoryFacetSet} from '../../../app/reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   UpdateFacetAutoSelectionActionCreatorPayload,
   updateFacetAutoSelection,
 } from '../generic/facet-actions';
-import {categoryFacetSet} from '../../../app/reducers';
-import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   deselectAllCategoryFacetValues,
   registerCategoryFacet,

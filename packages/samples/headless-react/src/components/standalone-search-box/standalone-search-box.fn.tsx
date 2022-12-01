@@ -1,8 +1,8 @@
-import {useEffect, useState, FunctionComponent, useContext} from 'react';
 import {
   buildStandaloneSearchBox,
   StandaloneSearchBoxOptions,
 } from '@coveo/headless';
+import {useEffect, useState, FunctionComponent, useContext} from 'react';
 import {AppContext} from '../../context/engine';
 import {standaloneSearchBoxStorageKey} from './standalone-search-box-storage-key';
 

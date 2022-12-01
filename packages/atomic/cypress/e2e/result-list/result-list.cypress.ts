@@ -1,21 +1,21 @@
-import {pagerComponent, PagerSelectors} from '../pager-selectors';
-import {withAnySectionnableResultList} from './result-list-utils';
-import {
-  resultListComponent,
-  ResultListSelectors,
-} from './result-list-selectors';
 import {generateComponentHTML, TestFixture} from '../../fixtures/test-fixture';
+import * as CommonAssertions from '../common-assertions';
+import {pagerComponent, PagerSelectors} from '../pager-selectors';
+import {getSearchInterface} from '../search-interface-utils';
+import {
+  foldedResultListComponent,
+  FoldedResultListSelectors,
+} from './folded-result-list-selectors';
 import {
   addFoldedResultList,
   addResultList,
   buildTemplateWithSections,
 } from './result-list-actions';
-import * as CommonAssertions from '../common-assertions';
 import {
-  foldedResultListComponent,
-  FoldedResultListSelectors,
-} from './folded-result-list-selectors';
-import {getSearchInterface} from '../search-interface-utils';
+  resultListComponent,
+  ResultListSelectors,
+} from './result-list-selectors';
+import {withAnySectionnableResultList} from './result-list-utils';
 
 const foldedResultListConfig = {
   componentSelectors: FoldedResultListSelectors,

@@ -1,13 +1,10 @@
 import {
-  buildCategoryFacet,
-  CategoryFacet,
-  CategoryFacetOptions,
-} from './headless-category-facet';
-import {
-  buildMockSearchAppEngine,
-  createMockState,
-  MockSearchEngine,
-} from '../../../test';
+  categoryFacetSearchSet,
+  categoryFacetSet,
+  configuration,
+  search,
+} from '../../../app/reducers';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
@@ -15,30 +12,33 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
-import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
-import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
-import {
-  executeSearch,
-  fetchFacetValues,
-} from '../../../features/search/search-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
-import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
-import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {SearchAppState} from '../../../state/search-app-state';
-import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
-import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {
-  categoryFacetSearchSet,
-  categoryFacetSet,
-  configuration,
-  search,
-} from '../../../app/reducers';
+  executeSearch,
+  fetchFacetValues,
+} from '../../../features/search/search-actions';
+import {SearchAppState} from '../../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  createMockState,
+  MockSearchEngine,
+} from '../../../test';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
+import * as FacetIdDeterminor from '../../core/facets/_common/facet-id-determinor';
+import * as CategoryFacetSearch from '../../core/facets/facet-search/category/headless-category-facet-search';
+import {
+  buildCategoryFacet,
+  CategoryFacet,
+  CategoryFacetOptions,
+} from './headless-category-facet';
 
 describe('category facet', () => {
   const facetId = '1';

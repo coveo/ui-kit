@@ -1,5 +1,4 @@
 import {should} from '../../common-selectors';
-
 import {ModalSelector, ModalSelectors} from './modal-selectors';
 
 function modalExpectations(selector: ModalSelector) {

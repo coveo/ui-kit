@@ -2,10 +2,10 @@ import {
   doSortAlphanumeric,
   doSortOccurrences,
 } from '../../../utils/componentUtils';
-import {ResultListSelectors} from '../../result-list/result-list-selectors';
-import {CategoryFacetSelectors} from './category-facet-selectors';
-import {hierarchicalField} from './category-facet-actions';
 import {should} from '../../common-assertions';
+import {ResultListSelectors} from '../../result-list/result-list-selectors';
+import {hierarchicalField} from './category-facet-actions';
+import {CategoryFacetSelectors} from './category-facet-selectors';
 
 export type ExpectedHierarchyValues = {type: 'values'; valueLabels: string[]};
 export type ExpectedHierarchyActiveValue = {
@@ -59,7 +59,7 @@ export function assertNumberOfParentValues(value: number) {
 export function assertPathInUrl(path: string[]) {
   const categoryFacetListInUrl = path.join(',');
   it(`should display the selected path "${categoryFacetListInUrl}" in the url`, () => {
-    const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
+    const urlHash = `#cf-${hierarchicalField}=${encodeURI(
       categoryFacetListInUrl
     )}`;
     cy.url().should('include', urlHash);

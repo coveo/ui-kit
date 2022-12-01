@@ -19,6 +19,12 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {elementHasAncestorTag} from '../../../../utils/utils';
+import {ResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
+import {Button} from '../../../common/button';
+import {extractUnfoldedResult} from '../../../common/interface/result';
+import {ResultDisplayImageSize} from '../../../common/layout/display-options';
+import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
+import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {
   ResultContext,
   ChildTemplatesContextEvent,
@@ -30,12 +36,6 @@ import {
   FoldedResultListContext,
   FoldedResultListStateContext,
 } from '../result-list-decorators';
-import {ResultDisplayImageSize} from '../../../common/layout/display-options';
-import {ResultsPlaceholder} from '../../../common/atomic-result-placeholder/placeholders';
-import {Button} from '../../../common/button';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultTemplateProvider} from '../../../common/result-list/result-template-provider';
-import {extractUnfoldedResult} from '../../../common/interface/result';
 
 const childTemplateComponent = 'atomic-result-children-template';
 const componentTag = 'atomic-result-children';
@@ -195,7 +195,7 @@ export class AtomicResultChildren implements InitializableComponent {
 
   private renderNoResult() {
     return (
-      <p part="no-result-root" class="no-result-root">
+      <p part="no-result-root" class="no-result-root my-3">
         {this.bindings.i18n.t(this.noResultText)}
       </p>
     );

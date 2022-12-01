@@ -1,17 +1,17 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
-  getAlias,
+  getQueryAlias,
   interceptSearch,
   mockSearchNoResults,
 } from '../../../page-objects/search';
-import {TabExpectations as Expect} from './tab-expectations';
-import {TabActions as Actions} from './tab-actions';
-import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {
   useCaseParamTest,
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
+import {TabActions as Actions} from './tab-actions';
+import {TabExpectations as Expect} from './tab-expectations';
 
 interface TabOptions {
   label: string;
@@ -47,7 +47,7 @@ describe('quantic-tab', () => {
       performSearch();
     }
     if (waitForSearch) {
-      cy.wait(getAlias(options.useCase));
+      cy.wait(getQueryAlias(options.useCase));
     }
   }
 
@@ -75,7 +75,7 @@ describe('quantic-tab', () => {
         it('should not show tabs before search completes', () => {
           Expect.displayTabs(false);
 
-          cy.wait(getAlias(param.useCase));
+          cy.wait(getQueryAlias(param.useCase));
           Expect.displayTabs(true);
         });
 
@@ -111,7 +111,7 @@ describe('quantic-tab', () => {
 
           mockSearchNoResults(param.useCase);
           performSearch();
-          cy.wait(getAlias(param.useCase));
+          cy.wait(getQueryAlias(param.useCase));
           Expect.displayTabs(true);
         });
       });

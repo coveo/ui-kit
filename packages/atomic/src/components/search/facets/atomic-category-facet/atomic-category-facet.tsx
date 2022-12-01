@@ -1,4 +1,3 @@
-import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -12,45 +11,46 @@ import {
   buildFacetConditionsManager,
   FacetConditionsManager,
 } from '@coveo/headless';
+import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
+import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
+import {
+  FocusTarget,
+  FocusTargetController,
+} from '../../../../utils/accessibility-utils';
+import {
+  getFieldCaptions,
+  getFieldValueCaption,
+} from '../../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {Button} from '../../../common/button';
+import {
+  parseDependsOn,
+  validateDependsOn,
+} from '../../../common/facets/facet-common';
+import {BaseFacet} from '../../../common/facets/facet-common';
+import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
-import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
 import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
-import {
-  parseDependsOn,
-  validateDependsOn,
-} from '../../../common/facets/facet-common';
-import {
-  getFieldCaptions,
-  getFieldValueCaption,
-} from '../../../../utils/field-utils';
-import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
+import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
-import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
-import {Button} from '../../../common/button';
-import {Hidden} from '../../../common/hidden';
-import {
-  FocusTarget,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {Hidden} from '../../../common/hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {BaseFacet} from '../../../common/facets/facet-common';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {initializePopover} from '../atomic-popover/popover-type';
+import {CategoryFacetSearchResult} from '../category-facet-search-result/category-facet-search-result';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).

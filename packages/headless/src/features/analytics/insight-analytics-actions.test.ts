@@ -1,12 +1,12 @@
-import {buildMockInsightState} from '../../test/mock-insight-state';
 import * as CoveoAnalytics from 'coveo.analytics';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
 import {buildMockInsightEngine} from '../../test/mock-engine';
+import {buildMockInsightState} from '../../test/mock-insight-state';
+import {getConfigurationInitialState} from '../configuration/configuration-state';
 import {
   logInsightInterfaceChange,
   logInsightInterfaceLoad,
 } from './insight-analytics-actions';
-import {buildMockAnalyticsState} from '../../test/mock-analytics-state';
-import {getConfigurationInitialState} from '../configuration/configuration-state';
 
 const mockLogInterfaceLoad = jest.fn();
 const mockLogInterfaceChange = jest.fn();

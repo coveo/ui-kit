@@ -1074,13 +1074,13 @@ export declare interface AtomicResultPrintableUri extends Components.AtomicResul
 
 @ProxyCmp({
   defineCustomElementFn: undefined,
-  inputs: ['maxNumberOfParts', 'target']
+  inputs: ['maxNumberOfParts']
 })
 @Component({
   selector: 'atomic-result-printable-uri',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
-  inputs: ['maxNumberOfParts', 'target']
+  inputs: ['maxNumberOfParts']
 })
 export class AtomicResultPrintableUri {
   protected el: HTMLElement;

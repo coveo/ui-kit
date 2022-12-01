@@ -1,7 +1,7 @@
 import {Component, h, Host, Prop, State, VNode} from '@stencil/core';
 import {InitializeBindings} from '../../../utils/initialization-utils';
-import {AnyBindings} from '../interface/bindings';
 import {Button} from '../button';
+import {AnyBindings} from '../interface/bindings';
 
 /**
  * @internal
@@ -43,6 +43,7 @@ export class AtomicIconButton {
             icon={this.icon}
             class="w-4 h-4 shrink-0"
             aria-hidden="true"
+            part="icon"
           ></atomic-icon>
         </Button>
         {this.badge && <span part="badge">{this.badge}</span>}

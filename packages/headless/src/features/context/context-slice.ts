@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, addContext, removeContext} from './context-actions';
 import {change} from '../history/history-actions';
+import {setContext, addContext, removeContext} from './context-actions';
 import {getContextInitialState} from './context-state';
 
 export const contextReducer = createReducer(

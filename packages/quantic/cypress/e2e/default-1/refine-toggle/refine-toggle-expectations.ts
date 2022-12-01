@@ -1,5 +1,4 @@
 import {should} from '../../common-selectors';
-
 import {
   RefineToggleSelector,
   RefineToggleSelectors,

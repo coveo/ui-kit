@@ -1,20 +1,20 @@
+import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
+import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {executeSearch} from '../../../../../features/search/search-actions';
+import {InsightAppState} from '../../../../../state/insight-app-state';
 import {buildMockDateFacetSlice} from '../../../../../test/mock-date-facet-slice';
+import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
+import {
+  buildMockInsightEngine,
+  MockInsightEngine,
+} from '../../../../../test/mock-engine';
+import {buildMockInsightState} from '../../../../../test/mock-insight-state';
 import {
   buildDateFilter,
   DateFilter,
   DateFilterInitialState,
   DateFilterOptions,
 } from './headless-insight-date-filter';
-import {updateDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {buildMockDateFacetValue} from '../../../../../test/mock-date-facet-value';
-import {executeSearch} from '../../../../../features/search/search-actions';
-import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions';
-import {InsightAppState} from '../../../../../state/insight-app-state';
-import {
-  buildMockInsightEngine,
-  MockInsightEngine,
-} from '../../../../../test/mock-engine';
-import {buildMockInsightState} from '../../../../../test/mock-insight-state';
 
 describe('insight date filter', () => {
   const facetId = '1';

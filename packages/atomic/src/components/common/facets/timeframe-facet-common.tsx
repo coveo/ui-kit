@@ -1,17 +1,10 @@
 import {h, VNode} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
+import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
+import {randomID} from '../../../utils/utils';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {Hidden} from '../hidden';
-import {
-  shouldDisplayInputForFacetRange,
-  validateDependsOn,
-} from './facet-common';
-import {FacetContainer} from './facet-container/facet-container';
-import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
-import {FacetValueLink} from './facet-value-link/facet-value-link';
-import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
-import {FacetValuesGroup} from './facet-values-group/facet-values-group';
-import {FacetHeader} from './facet-header/facet-header';
 import {AnyBindings} from '../interface/bindings';
 import {
   DateFacet,
@@ -25,10 +18,17 @@ import {
   RelativeDateUnit,
   SearchStatusState,
 } from '../types';
+import {
+  shouldDisplayInputForFacetRange,
+  validateDependsOn,
+} from './facet-common';
 import {FacetInfo} from './facet-common-store';
-import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
-import {randomID} from '../../../utils/utils';
-import {parseDate} from '../../../utils/date-utils';
+import {FacetContainer} from './facet-container/facet-container';
+import {FacetHeader} from './facet-header/facet-header';
+import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
+import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLink} from './facet-value-link/facet-value-link';
+import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 
 export interface Timeframe {
   period: RelativeDatePeriod;

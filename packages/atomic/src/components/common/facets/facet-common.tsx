@@ -1,28 +1,15 @@
-import {VNode, h} from '@stencil/core';
-import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
-import {i18n} from 'i18next';
 import {Schema, StringValue} from '@coveo/bueno';
-import {
-  shouldDisplaySearchResults,
-  shouldUpdateFacetSearchComponent,
-} from './facet-search/facet-search-utils';
-import {FacetHeader} from './facet-header/facet-header';
+import {AnyFacetValuesCondition, AnyFacetValueRequest} from '@coveo/headless';
+import {VNode, h} from '@stencil/core';
+import {i18n} from 'i18next';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
-import {FacetSearchInput} from './facet-search/facet-search-input';
 import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../utils/field-utils';
-import {FacetValuesGroup} from './facet-values-group/facet-values-group';
-import {FacetValueCheckbox} from './facet-value-checkbox/facet-value-checkbox';
-import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
-import {FacetValueLink} from './facet-value-link/facet-value-link';
-import {FacetValueBox} from './facet-value-box/facet-value-box';
-import {FacetShowMoreLess} from './facet-show-more-less/facet-show-more-less';
-import {FacetSearchMatches} from './facet-search/facet-search-matches';
-import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
+import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
 import {Hidden} from '../hidden';
-import {FacetContainer} from './facet-container/facet-container';
+import {AnyBindings} from '../interface/bindings';
 import {
   CategoryFacet,
   CategoryFacetSortCriterion,
@@ -43,9 +30,22 @@ import {
   SearchStatus,
   SearchStatusState,
 } from '../types';
-import {AnyBindings} from '../interface/bindings';
 import {FacetInfo} from './facet-common-store';
-import {initializePopover} from '../../search/facets/atomic-popover/popover-type';
+import {FacetContainer} from './facet-container/facet-container';
+import {FacetHeader} from './facet-header/facet-header';
+import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
+import {FacetSearchInput} from './facet-search/facet-search-input';
+import {FacetSearchMatches} from './facet-search/facet-search-matches';
+import {
+  shouldDisplaySearchResults,
+  shouldUpdateFacetSearchComponent,
+} from './facet-search/facet-search-utils';
+import {FacetShowMoreLess} from './facet-show-more-less/facet-show-more-less';
+import {FacetValueBox} from './facet-value-box/facet-value-box';
+import {FacetValueCheckbox} from './facet-value-checkbox/facet-value-checkbox';
+import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLink} from './facet-value-link/facet-value-link';
+import {FacetValuesGroup} from './facet-values-group/facet-values-group';
 
 export type FacetDisplayValues = 'checkbox' | 'link' | 'box';
 

@@ -1,6 +1,6 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {configuration, pagination} from '../../../app/reducers';
 import {CoreEngine} from '../../../app/engine';
+import {configuration, pagination} from '../../../app/reducers';
 import {
   registerNumberOfResults,
   updateNumberOfResults,

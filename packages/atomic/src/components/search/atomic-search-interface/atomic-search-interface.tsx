@@ -1,14 +1,4 @@
 import {
-  Component,
-  Prop,
-  h,
-  Listen,
-  Method,
-  Watch,
-  Element,
-  State,
-} from '@stencil/core';
-import {
   LogLevel,
   Unsubscribe,
   buildUrlManager,
@@ -23,21 +13,31 @@ import {
   EcommerceDefaultFieldsToInclude,
   loadFieldActions,
 } from '@coveo/headless';
+import {
+  Component,
+  Prop,
+  h,
+  Listen,
+  Method,
+  Watch,
+  Element,
+  State,
+} from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {AtomicStore, createAtomicStore} from './store';
-import {getAnalyticsConfig} from './analytics-config';
 import {
   SafeStorage,
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
+import {ArrayProp} from '../../../utils/props-utils';
+import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
-import {CommonBindings} from '../../common/interface/bindings';
-import {ArrayProp} from '../../../utils/props-utils';
+import {getAnalyticsConfig} from './analytics-config';
+import {AtomicStore, createAtomicStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;

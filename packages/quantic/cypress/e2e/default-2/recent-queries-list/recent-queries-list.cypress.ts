@@ -1,3 +1,8 @@
+import {
+  clearInput,
+  performSearch,
+  setQuery,
+} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
 import {
   InterceptAliases,
@@ -5,13 +10,8 @@ import {
   mockSearchNoResults,
   mockSearchWithResults,
 } from '../../../page-objects/search';
-import {RecentQueriesListExpectations as Expect} from './recent-queries-list-expectations';
 import {scope} from '../../../reporters/detailed-collector';
-import {
-  clearInput,
-  performSearch,
-  setQuery,
-} from '../../../page-objects/actions/action-perform-search';
+import {RecentQueriesListExpectations as Expect} from './recent-queries-list-expectations';
 import {RecentQueriesListSelectors} from './recent-queries-list-selectors';
 
 interface RecentQueriesListOptions {

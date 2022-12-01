@@ -3,6 +3,106 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.124.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.124.0...@coveo/atomic@1.124.1) (2022-11-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.124.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.123.2...@coveo/atomic@1.124.0) (2022-11-25)
+
+
+### Features
+
+* **atomic:** add ipx facets ([#2565](https://github.com/coveo/ui-kit/issues/2565)) ([d58e5df](https://github.com/coveo/ui-kit/commit/d58e5df7dc53b7c9c24795436e1c87bc42936912))
+
+
+
+
+
+## [1.123.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.123.1...@coveo/atomic@1.123.2) (2022-11-24)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.123.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.123.0...@coveo/atomic@1.123.1) (2022-11-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.123.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.122.0...@coveo/atomic@1.123.0) (2022-11-15)
+
+
+### Features
+
+* **atomic:** added query suggestions to the insight search box ([#2549](https://github.com/coveo/ui-kit/issues/2549)) ([36ef42b](https://github.com/coveo/ui-kit/commit/36ef42b9a706d137999d3f9337bb78fea748e12e))
+
+
+
+
+
+# [1.122.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.121.2...@coveo/atomic@1.122.0) (2022-11-10)
+
+
+### Features
+
+* **atomic:** add ipx layout ([#2535](https://github.com/coveo/ui-kit/issues/2535)) ([3c032bf](https://github.com/coveo/ui-kit/commit/3c032bf666572f8f3e9e5a6ec29123220f6444ab))
+
+
+
+
+
+## [1.121.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.121.1...@coveo/atomic@1.121.2) (2022-11-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.121.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.121.0...@coveo/atomic@1.121.1) (2022-11-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.121.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.120.0...@coveo/atomic@1.121.0) (2022-11-08)
+
+
+### Bug Fixes
+
+* **headless:** folding cq should support spaces ([#2527](https://github.com/coveo/ui-kit/issues/2527)) ([28d0392](https://github.com/coveo/ui-kit/commit/28d0392a8fae5a97dd53aa70215e061605f61dfc))
+
+
+### Features
+
+* **atomic:** decouple label for facet search and search box input ([#2540](https://github.com/coveo/ui-kit/issues/2540)) ([1a4b1ab](https://github.com/coveo/ui-kit/commit/1a4b1ab08884a58825d350acb4354bd70477be9c))
+
+
+
+
+
+# [1.120.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.3...@coveo/atomic@1.120.0) (2022-11-04)
+
+
+### Features
+
+* **atomic:** add slack custom result templates ([#2531](https://github.com/coveo/ui-kit/issues/2531)) ([db37aba](https://github.com/coveo/ui-kit/commit/db37abab0cd1eb329ea34d3d18d53e76a63591b4))
+
+
+
+
+
 ## [1.119.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.119.2...@coveo/atomic@1.119.3) (2022-11-02)
 
 **Note:** Version bump only for package @coveo/atomic

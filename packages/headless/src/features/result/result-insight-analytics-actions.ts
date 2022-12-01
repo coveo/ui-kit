@@ -1,3 +1,4 @@
+import {Result} from '../../api/search/search/result';
 import {
   partialDocumentInformation,
   documentIdentifier,
@@ -5,10 +6,9 @@ import {
   AnalyticsType,
   makeInsightAnalyticsAction,
 } from '../analytics/analytics-utils';
-import {Result} from '../../api/search/search/result';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state';
 
-export const logDocumentOpenThunk = (result: Result) =>
+export const logDocumentOpen = (result: Result) =>
   makeInsightAnalyticsAction(
     'analytics/insight/result/open',
     AnalyticsType.Click,
@@ -24,6 +24,3 @@ export const logDocumentOpenThunk = (result: Result) =>
       );
     }
   );
-
-export const logDocumentOpen = (result: Result) =>
-  logDocumentOpenThunk(result)();

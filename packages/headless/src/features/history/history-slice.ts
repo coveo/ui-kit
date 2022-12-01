@@ -1,21 +1,21 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {ContextState} from '../context/context-state';
-import {QueryState} from '../query/query-state';
-import {PaginationState} from '../pagination/pagination-state';
 import {SortState} from '../../controllers/sort/headless-sort';
-import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
-import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
-import {getHistoryInitialState, HistoryState} from './history-state';
-import {snapshot} from './history-actions';
 import {arrayEqual} from '../../utils/compare-utils';
+import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
+import {ContextState} from '../context/context-state';
 import {DictionaryFieldContextState} from '../dictionary-field-context/dictionary-field-context-state';
-import {TabSetState} from '../tab-set/tab-set-state';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
+import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
+import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
+import {PaginationState} from '../pagination/pagination-state';
+import {QueryState} from '../query/query-state';
 import {
   StaticFilterSetState,
   StaticFilterSlice,
 } from '../static-filter-set/static-filter-set-state';
-import {AnyFacetSetState} from '../facets/generic/interfaces/generic-facet-section';
+import {TabSetState} from '../tab-set/tab-set-state';
+import {snapshot} from './history-actions';
+import {getHistoryInitialState, HistoryState} from './history-state';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),

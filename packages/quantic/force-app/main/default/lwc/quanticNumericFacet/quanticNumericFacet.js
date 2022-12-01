@@ -79,6 +79,13 @@ export default class QuanticNumericFacet extends LightningElement {
    */
   @api numberOfValues = 8;
   /**
+   * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox', 'link'.
+   * @api
+   * @type {'checkbox' | 'link'}
+   * @defaultValue `'checkbox'`
+   */
+  @api displayValuesAs = 'checkbox';
+  /**
    * The sort criterion to apply to the returned facet values. Possible values are:
    *   - `ascending`
    *   - `descending`
@@ -137,6 +144,7 @@ export default class QuanticNumericFacet extends LightningElement {
     'field',
     'label',
     'numberOfValues',
+    'displayValuesAs',
     'sortCriteria',
     'rangeAlgorithm',
     'withInput',
@@ -396,6 +404,10 @@ export default class QuanticNumericFacet extends LightningElement {
     return this.shouldRenderInput || this.shouldRenderValues;
   }
 
+  get isDisplayAsLink() {
+    return this.displayValuesAs === 'link';
+  }
+
   setValidityParameters() {
     this.inputMin.max = this.max || Number.MAX_VALUE.toString();
     this.inputMax.min = this.min || Number.MIN_VALUE.toString();
@@ -417,7 +429,11 @@ export default class QuanticNumericFacet extends LightningElement {
     const item = this.values.find(
       (value) => this.formattingFunction(value) === evt.detail.value
     );
-    this.facet.toggleSelect(item);
+    if (this.isDisplayAsLink) {
+      this.facet.toggleSingleSelect(item);
+    } else {
+      this.facet.toggleSelect(item);
+    }
     this.focusShouldBeInFacet = true;
     this.focusTarget = {
       type: 'facetValue',

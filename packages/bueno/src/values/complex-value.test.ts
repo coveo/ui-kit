@@ -1,7 +1,8 @@
-import {RecordValue, ArrayValue} from './complex-value';
 import {BooleanValue} from './boolean-value';
+import {RecordValue, ArrayValue} from './complex-value';
 import {NumberValue} from './number-value';
 import {StringValue} from './string-value';
+
 describe('complex value', () => {
   describe('record value', () => {
     describe('can validate', () => {

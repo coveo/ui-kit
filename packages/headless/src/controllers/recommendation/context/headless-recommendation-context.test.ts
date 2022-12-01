@@ -1,8 +1,8 @@
-import {buildContext, Context} from './headless-recommendation-context';
 import {
   buildMockRecommendationAppEngine,
   MockRecommendationEngine,
 } from '../../../test/mock-engine';
+import {buildContext, Context} from './headless-recommendation-context';
 
 describe('Context', () => {
   let context: Context;

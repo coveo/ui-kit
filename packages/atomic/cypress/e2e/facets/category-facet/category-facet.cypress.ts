@@ -1,10 +1,23 @@
+import {TestFixture} from '../../../fixtures/test-fixture';
 import {
-  CategoryFacetSelectors,
-  categoryFacetComponent,
-} from './category-facet-selectors';
-import * as CategoryFacetAssertions from './category-facet-assertions';
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from '../../breadbox-actions';
+import * as BreadboxAssertions from '../../breadbox-assertions';
+import {breadboxComponent} from '../../breadbox-selectors';
 import * as CommonAssertions from '../../common-assertions';
+import {
+  pressClearButton,
+  pressLabelButton,
+  typeFacetSearchQuery,
+  pressShowLess,
+  pressShowMore,
+  selectIdleCheckboxValueAt,
+} from '../facet-common-actions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
 import {
   selectChildValueAt,
   canadaHierarchyIndex,
@@ -19,24 +32,11 @@ import {
   pressActiveParent,
   pressAllCategoriesButton,
 } from './category-facet-actions';
-import {TestFixture} from '../../../fixtures/test-fixture';
+import * as CategoryFacetAssertions from './category-facet-assertions';
 import {
-  pressClearButton,
-  pressLabelButton,
-  typeFacetSearchQuery,
-  pressShowLess,
-  pressShowMore,
-  selectIdleCheckboxValueAt,
-} from '../facet-common-actions';
-import * as BreadboxAssertions from '../../breadbox-assertions';
-import {breadboxComponent} from '../../breadbox-selectors';
-import {
-  addBreadbox,
-  breadboxLabel,
-  deselectBreadcrumbAtIndex,
-} from '../../breadbox-actions';
-import {addFacet} from '../facet/facet-actions';
-import {FacetSelectors} from '../facet/facet-selectors';
+  CategoryFacetSelectors,
+  categoryFacetComponent,
+} from './category-facet-selectors';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -514,7 +514,7 @@ describe('Category Facet Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addCategoryFacet({}, true))
-        .withHash('cf[geographicalhierarchy]=Africa,Togo')
+        .withHash('cf-geographicalhierarchy=Africa,Togo')
         .init();
     });
 

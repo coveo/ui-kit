@@ -1,5 +1,22 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
 import {
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from '../../breadbox-actions';
+import * as BreadboxAssertions from '../../breadbox-assertions';
+import {breadboxComponent} from '../../breadbox-selectors';
+import * as CommonAssertions from '../../common-assertions';
+import {
+  pressClearButton,
+  selectIdleLinkValueAt,
+  selectIdleCheckboxValueAt,
+  typeFacetSearchQuery,
+} from '../facet-common-actions';
+import * as CommonFacetAssertions from '../facet-common-assertions';
+import {addFacet} from '../facet/facet-actions';
+import {FacetSelectors} from '../facet/facet-selectors';
+import {
   addTimeframeFacet,
   timeframeFacetField,
   inputStartDate,
@@ -9,28 +26,11 @@ import {
   inputEndDate,
   invokeSubmitButton,
 } from './timeframe-facet-action';
+import * as TimeframeFacetAssertions from './timeframe-facet-assertions';
 import {
   timeframeFacetComponent,
   TimeframeFacetSelectors,
 } from './timeframe-facet-selectors';
-import {
-  pressClearButton,
-  selectIdleLinkValueAt,
-  selectIdleCheckboxValueAt,
-  typeFacetSearchQuery,
-} from '../facet-common-actions';
-import * as CommonAssertions from '../../common-assertions';
-import * as CommonFacetAssertions from '../facet-common-assertions';
-import * as TimeframeFacetAssertions from './timeframe-facet-assertions';
-import * as BreadboxAssertions from '../../breadbox-assertions';
-import {breadboxComponent} from '../../breadbox-selectors';
-import {
-  addBreadbox,
-  breadboxLabel,
-  deselectBreadcrumbAtIndex,
-} from '../../breadbox-actions';
-import {addFacet} from '../facet/facet-actions';
-import {FacetSelectors} from '../facet/facet-selectors';
 
 const startDate = '2020-08-06';
 const endDate = '2021-09-03';
@@ -201,7 +201,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           new TestFixture()
             .with(addTimeFrameWithInputRange())
             .withHash(
-              `df[date_input]=${startDate.replaceAll(
+              `df-date_input=${startDate.replaceAll(
                 '-',
                 '/'
               )}@00:00:00..${endDate.replaceAll('-', '/')}@00:00:00`
@@ -496,7 +496,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
             unitFrames
           )
         )
-        .withHash(`df[${timeframeFacetField}]=past-1-month..now`)
+        .withHash(`df-${timeframeFacetField}=past-1-month..now`)
         .init();
     });
 

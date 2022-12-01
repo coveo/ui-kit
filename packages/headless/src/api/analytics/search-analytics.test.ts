@@ -1,8 +1,6 @@
-const mockGetHistory = jest.fn();
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import pino from 'pino';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
-
 import {buildMockResult, createMockState} from '../../test';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
@@ -18,6 +16,8 @@ import {
   StateNeededBySearchAnalyticsProvider,
 } from './search-analytics';
 
+const mockGetHistory = jest.fn();
+
 jest.mock('coveo.analytics', () => {
   const originalModule = jest.requireActual('coveo.analytics');
   return {
@@ -25,7 +25,7 @@ jest.mock('coveo.analytics', () => {
     history: {
       HistoryStore: jest.fn().mockImplementation(() => {
         return {
-          getHistory: mockGetHistory,
+          getHistory: () => mockGetHistory(),
         };
       }),
     },

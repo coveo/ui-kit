@@ -8,16 +8,22 @@ import {
   search,
 } from '../../../app/reducers';
 import {deselectAllCategoryFacetValues} from '../../../features/facets/category-facet-set/category-facet-set-actions';
+import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-insight-analytics-actions';
 import {categoryFacetResponseSelectedValuesSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
+import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 import {facetResponseSelectedValuesSelector} from '../../../features/facets/facet-set/facet-set-selectors';
+import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
 import {toggleSelectDateFacetValue} from '../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
 import {dateFacetSelectedValuesSelector} from '../../../features/facets/range-facets/date-facet-set/date-facet-selectors';
 import {toggleSelectNumericFacetValue} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
 import {numericFacetSelectedValuesSelector} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-selectors';
+import {executeSearch} from '../../../features/insight-search/insight-search-actions';
 import {toggleSelectStaticFilterValue} from '../../../features/static-filter-set/static-filter-set-actions';
 import {logInsightStaticFilterDeselect} from '../../../features/static-filter-set/static-filter-set-insight-analytics-actions';
 import {
@@ -32,6 +38,7 @@ import {
   NumericFacetSection,
   SearchSection,
 } from '../../../state/state-sections';
+import {loadReducerError} from '../../../utils/errors';
 import {
   Breadcrumb,
   BreadcrumbManager,
@@ -46,13 +53,6 @@ import {
   NumericFacetBreadcrumb,
   StaticFilterBreadcrumb,
 } from '../../core/breadcrumb-manager/headless-core-breadcrumb-manager';
-import {executeSearch} from '../../../features/insight-search/insight-search-actions';
-import {logNumericFacetBreadcrumb} from '../../../features/facets/range-facets/numeric-facet-set/numeric-facet-insight-analytics-actions';
-import {logDateFacetBreadcrumb} from '../../../features/facets/range-facets/date-facet-set/date-facet-insight-analytics-actions';
-import {logClearBreadcrumbs} from '../../../features/facets/generic/facet-generic-insight-analytics-actions';
-import {loadReducerError} from '../../../utils/errors';
-import {logCategoryFacetBreadcrumb} from '../../../features/facets/category-facet-set/category-facet-set-insight-analytics-actions';
-import {logFacetBreadcrumb} from '../../../features/facets/facet-set/facet-set-insight-analytics-actions';
 
 export type {
   NumericFacetBreadcrumb,

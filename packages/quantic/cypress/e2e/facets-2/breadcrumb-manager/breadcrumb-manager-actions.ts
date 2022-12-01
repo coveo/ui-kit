@@ -1,11 +1,11 @@
+import {CategoryFacetActions} from '../../facets-1/category-facet/category-facet-actions';
+import {FacetActions} from '../../facets-1/facet/facet-actions';
+import {NumericFacetActions} from '../numeric-facet/numeric-facet-actions';
 import {TimeframeFacetActions} from '../timeframe-facet/timeframe-facet-actions';
 import {
   BreadcrumbManagerSelector,
   BreadcrumbManagerSelectors,
 } from './breadcrumb-manager-selectors';
-import {CategoryFacetActions} from '../../facets-1/category-facet/category-facet-actions';
-import {NumericFacetActions} from '../numeric-facet/numeric-facet-actions';
-import {FacetActions} from '../../facets-1/facet/facet-actions';
 
 function breadcrumbManagerActions(selector: BreadcrumbManagerSelector) {
   return {

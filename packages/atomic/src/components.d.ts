@@ -605,6 +605,10 @@ export namespace Components {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch": boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions": number;
     }
     interface AtomicInsightTab {
         /**
@@ -659,6 +663,14 @@ export namespace Components {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
+    }
+    interface AtomicIpxLayout {
+    }
+    interface AtomicIpxRefineModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicIpxRefineToggle {
     }
     interface AtomicLayoutSection {
         /**
@@ -1254,10 +1266,6 @@ export namespace Components {
           * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
          */
         "maxNumberOfParts": number;
-        /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
-         */
-        "target": string;
     }
     interface AtomicResultRating {
         /**
@@ -1960,6 +1968,24 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    interface HTMLAtomicIpxLayoutElement extends Components.AtomicIpxLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxLayoutElement: {
+        prototype: HTMLAtomicIpxLayoutElement;
+        new (): HTMLAtomicIpxLayoutElement;
+    };
+    interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxRefineModalElement: {
+        prototype: HTMLAtomicIpxRefineModalElement;
+        new (): HTMLAtomicIpxRefineModalElement;
+    };
+    interface HTMLAtomicIpxRefineToggleElement extends Components.AtomicIpxRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxRefineToggleElement: {
+        prototype: HTMLAtomicIpxRefineToggleElement;
+        new (): HTMLAtomicIpxRefineToggleElement;
+    };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
     var HTMLAtomicLayoutSectionElement: {
@@ -2434,6 +2460,9 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
+        "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
+        "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -3062,6 +3091,10 @@ declare namespace LocalJSX {
           * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
          */
         "disableSearch"?: boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions"?: number;
     }
     interface AtomicInsightTab {
         /**
@@ -3116,6 +3149,14 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
+    }
+    interface AtomicIpxLayout {
+    }
+    interface AtomicIpxRefineModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicIpxRefineToggle {
     }
     interface AtomicLayoutSection {
         /**
@@ -3675,10 +3716,6 @@ declare namespace LocalJSX {
           * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
          */
         "maxNumberOfParts"?: number;
-        /**
-          * Where to open the linked URL, as the name for a browsing context (a tab, window, or iframe).  The following keywords have special meanings:  * _self: the current browsing context. (Default) * _blank: usually a new tab, but users can configure their browsers to open a new window instead. * _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. * _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
-         */
-        "target"?: string;
     }
     interface AtomicResultRating {
         /**
@@ -4127,6 +4164,9 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-ipx-layout": AtomicIpxLayout;
+        "atomic-ipx-refine-modal": AtomicIpxRefineModal;
+        "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -4246,6 +4286,9 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
+            "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
+            "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;

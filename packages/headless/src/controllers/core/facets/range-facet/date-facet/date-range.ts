@@ -1,5 +1,3 @@
-import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {FacetValueState} from '../../../../../features/facets/facet-api/value';
 import {
   formatDateForSearchApi,
   AbsoluteDate,
@@ -13,6 +11,8 @@ import {
   RelativeDate,
   validateRelativeDate,
 } from '../../../../../api/search/date/relative-date';
+import {FacetValueState} from '../../../../../features/facets/facet-api/value';
+import {DateRangeRequest} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 
 export type DateRangeInput = AbsoluteDate | RelativeDate;
 

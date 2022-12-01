@@ -3,6 +3,124 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.53.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.52.2...@coveo/quantic@1.53.0) (2022-11-28)
+
+
+### Features
+
+* **quantic:** new QuanticResultAction component created ([#2550](https://github.com/coveo/ui-kit/issues/2550)) ([74a35f9](https://github.com/coveo/ui-kit/commit/74a35f9d8b03141b39818ef78b557fc327c66c36))
+
+
+
+
+
+## [1.52.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.52.1...@coveo/quantic@1.52.2) (2022-11-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.52.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.52.0...@coveo/quantic@1.52.1) (2022-11-24)
+
+
+### Bug Fixes
+
+* **quantic:** changed assertion to hash ([#2562](https://github.com/coveo/ui-kit/issues/2562)) ([4bf473d](https://github.com/coveo/ui-kit/commit/4bf473d0ddf9ea6097e1cd23bf05135d21446a91))
+
+
+
+
+
+# [1.52.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.51.1...@coveo/quantic@1.52.0) (2022-11-22)
+
+
+### Bug Fixes
+
+* **quantic:** fixed tab dropdown visibility ([#2559](https://github.com/coveo/ui-kit/issues/2559)) ([601dddb](https://github.com/coveo/ui-kit/commit/601dddbb32055afd56a4edadb738f782279a81bc))
+
+
+### Features
+
+* **quantic:** added link value for numeric facet ([#2557](https://github.com/coveo/ui-kit/issues/2557)) ([7bf6724](https://github.com/coveo/ui-kit/commit/7bf6724115a8e7ed4c9a2e62549ecbf963ce53bf))
+
+
+
+
+
+## [1.51.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.51.0...@coveo/quantic@1.51.1) (2022-11-10)
+
+
+### Bug Fixes
+
+* **quantic:** corner case in QuanticTabBar addressed ([#2544](https://github.com/coveo/ui-kit/issues/2544)) ([26488de](https://github.com/coveo/ui-kit/commit/26488deea2ba9272073d592cad99f94686f208b0))
+
+
+
+
+
+# [1.51.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.50.1...@coveo/quantic@1.51.0) (2022-11-10)
+
+
+### Features
+
+* **quantic:** added example insight panel ([#2538](https://github.com/coveo/ui-kit/issues/2538)) ([df2bc9d](https://github.com/coveo/ui-kit/commit/df2bc9de2491274a963f65c1c8846de461ce847f))
+
+
+
+
+
+## [1.50.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.50.0...@coveo/quantic@1.50.1) (2022-11-10)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [1.50.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.49.2...@coveo/quantic@1.50.0) (2022-11-10)
+
+
+### Features
+
+* **quantic:** possibility to have a white background in the QuanticTabBar component added ([#2547](https://github.com/coveo/ui-kit/issues/2547)) ([9b56de7](https://github.com/coveo/ui-kit/commit/9b56de754a4e7cc5edec89a9012d1d461c2ab8e9))
+
+
+
+
+
+## [1.49.2](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.49.1...@coveo/quantic@1.49.2) (2022-11-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [1.49.1](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.49.0...@coveo/quantic@1.49.1) (2022-11-04)
+
+
+### Bug Fixes
+
+* **quantic:** display of QuerySummary adjusted in the example search page ([#2532](https://github.com/coveo/ui-kit/issues/2532)) ([1b54d47](https://github.com/coveo/ui-kit/commit/1b54d47c3c2dd8802f48754760d60a88f1a47645))
+* **quantic:** padding of the QuanticSort component fixed ([#2537](https://github.com/coveo/ui-kit/issues/2537)) ([28f2b31](https://github.com/coveo/ui-kit/commit/28f2b31c4a098dd8cc4c70bc872249abd634cde6))
+
+
+
+
+
+# [1.49.0](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.5...@coveo/quantic@1.49.0) (2022-11-03)
+
+
+### Features
+
+* **quantic:** QuanticQueryError updated to support the insight use case ([#2530](https://github.com/coveo/ui-kit/issues/2530)) ([8295192](https://github.com/coveo/ui-kit/commit/82951929f5e0d0c2e74c13cb9dfc8e05ef3ecc73))
+
+
+
+
+
 ## [1.48.5](https://github.com/coveo/ui-kit/compare/@coveo/quantic@1.48.4...@coveo/quantic@1.48.5) (2022-11-02)
 
 **Note:** Version bump only for package @coveo/quantic

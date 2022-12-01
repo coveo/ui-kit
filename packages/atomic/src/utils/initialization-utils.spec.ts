@@ -1,7 +1,12 @@
-jest.mock('./replace-breakpoint.ts', () => ({
-  ...jest.requireActual('./replace-breakpoint.ts'),
-  updateBreakpoints: () => {},
-}));
+import {buildSearchBox, Controller, TestUtils} from '@coveo/headless';
+import {newSpecPage, SpecPage} from '@stencil/core/testing';
+import i18next from 'i18next';
+import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
+import {
+  AtomicSearchInterface,
+  Bindings,
+} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {createAtomicStore} from '../components/search/atomic-search-interface/store';
 import {
   BindStateToController,
   InitializableComponent,
@@ -9,16 +14,11 @@ import {
   initializeBindings,
   MissingInterfaceParentError,
 } from './initialization-utils';
-import {buildSearchBox, Controller, TestUtils} from '@coveo/headless';
-import {newSpecPage, SpecPage} from '@stencil/core/testing';
-import {
-  AtomicSearchInterface,
-  Bindings,
-} from '../components/search/atomic-search-interface/atomic-search-interface';
-import i18next from 'i18next';
-import {AtomicSearchBox} from '../components/search/atomic-search-box/atomic-search-box';
 
-import {createAtomicStore} from '../components/search/atomic-search-interface/store';
+jest.mock('./replace-breakpoint.ts', () => ({
+  ...jest.requireActual('./replace-breakpoint.ts'),
+  updateBreakpoints: () => {},
+}));
 
 // https://github.com/ionic-team/stencil/issues/3260
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

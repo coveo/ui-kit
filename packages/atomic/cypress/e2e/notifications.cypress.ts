@@ -1,10 +1,10 @@
 import {TestFixture} from '../fixtures/test-fixture';
+import * as CommonAssertions from './common-assertions';
 import {addNotifications, addNotifyTriggers} from './notifications-actions';
 import {
   notificationsComponent,
   NotificationsSelectors,
 } from './notifications-selectors';
-import * as CommonAssertions from './common-assertions';
 
 describe('Notifications Test Suites', () => {
   describe('without any notify trigger', () => {

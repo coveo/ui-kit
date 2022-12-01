@@ -1,15 +1,12 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  validatePayload,
-  requiredNonEmptyString,
-  requiredEmptyAllowedString,
-} from '../../utils/validate-payload';
 import {NumberValue} from '@coveo/bueno';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
+import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
+import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
-
 import {
   ConfigurationSection,
   ContextSection,
@@ -18,9 +15,11 @@ import {
   QuerySuggestionSection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
-import {getVisitorID, historyStore} from '../../api/analytics/search-analytics';
-import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+  requiredEmptyAllowedString,
+} from '../../utils/validate-payload';
 import {fromAnalyticsStateToAnalyticsParams} from '../configuration/analytics-params';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &

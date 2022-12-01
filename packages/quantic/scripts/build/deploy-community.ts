@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import waitOn from 'wait-on';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
 import {SfdxJWTAuth} from './util/sfdx-commands';
-import waitOn from 'wait-on';
 
 interface Options {
   configFile: string;

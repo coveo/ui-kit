@@ -1,11 +1,11 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {sortCriteria} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {SortCriterion} from './criteria';
 import {
   registerSortCriterion,
   updateSortCriterion,
 } from './sort-criteria-actions';
-import {SortCriterion} from './criteria';
-import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
  * The sort criteria action creators.

@@ -1,7 +1,7 @@
-import {createAction} from '@reduxjs/toolkit';
 import {ArrayValue, NumberValue, RecordValue} from '@coveo/bueno';
-import {validatePayload} from '../../utils/validate-payload';
+import {createAction} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
+import {validatePayload} from '../../utils/validate-payload';
 import {
   resultPartialDefinition,
   validateResultPayload,

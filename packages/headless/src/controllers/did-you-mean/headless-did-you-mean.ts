@@ -1,10 +1,10 @@
-import {logDidYouMeanClick} from '../../features/did-you-mean/did-you-mean-analytics-actions';
-import {executeSearch} from '../../features/search/search-actions';
 import {
   QueryCorrection,
   WordCorrection,
 } from '../../api/search/search/query-corrections';
 import {SearchEngine} from '../../app/search-engine/search-engine';
+import {logDidYouMeanClick} from '../../features/did-you-mean/did-you-mean-analytics-actions';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCoreDidYouMean,
   DidYouMean,

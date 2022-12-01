@@ -1,5 +1,5 @@
-import {TabBarSelector, TabBarSelectors} from './tab-bar-selectors';
 import {should} from '../../common-selectors';
+import {TabBarSelector, TabBarSelectors} from './tab-bar-selectors';
 
 function tabBarExpectations(selector: TabBarSelector) {
   return {
@@ -56,10 +56,13 @@ function tabBarExpectations(selector: TabBarSelector) {
 
     displayDropdown(display: boolean) {
       selector
-        .dropdown()
+        .dropdownTrigger()
         .should('exist')
-        .should(display ? 'have.class' : 'not.have.class', 'slds-is-open')
-        .logDetail(`${should(display)} display the dropdown list`);
+        .should(display ? 'have.class' : 'not.have.class', 'slds-is-open');
+      selector
+        .dropdown()
+        .should(display ? 'be.visible' : 'not.be.visible')
+        .logDetail(`${should(display)} display the dropdown`);
     },
 
     displayMoreButtonLabel(text: string) {
@@ -74,6 +77,20 @@ function tabBarExpectations(selector: TabBarSelector) {
         .moreButtonIcon()
         .should(display ? 'exist' : 'not.exist')
         .logDetail(`${should(display)} display the more button icon`);
+    },
+
+    displayWithLightTheme(lightThemeEnabled: boolean) {
+      selector
+        .tabBarContainer()
+        .should(
+          lightThemeEnabled ? 'not.have.class' : 'have.class',
+          'slds-theme_shade'
+        )
+        .logDetail(
+          `${should(
+            lightThemeEnabled
+          )} display the component with the light theme styles`
+        );
     },
   };
 }

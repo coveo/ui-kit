@@ -1,12 +1,12 @@
-import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
+import {AnyAction} from 'redux';
+import {triggers, query} from '../../app/reducers';
+import {updateQuery} from '../../features/query/query-actions';
+import {executeSearch} from '../../features/search/search-actions';
 import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../test/mock-engine';
-import {triggers, query} from '../../app/reducers';
-import {updateQuery} from '../../features/query/query-actions';
-import {executeSearch} from '../../features/search/search-actions';
-import {AnyAction} from 'redux';
+import {QueryTrigger, buildQueryTrigger} from './headless-query-trigger';
 
 describe('QueryTrigger', () => {
   let engine: MockSearchEngine;

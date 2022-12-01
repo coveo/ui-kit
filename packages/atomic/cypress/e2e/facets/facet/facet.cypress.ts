@@ -1,12 +1,13 @@
 import {SearchInterface, TestFixture} from '../../../fixtures/test-fixture';
-import {facetComponent, FacetSelectors} from './facet-selectors';
+import {AnalyticsTracker} from '../../../utils/analyticsUtils';
 import {
-  addFacet,
-  field,
-  label,
-  defaultNumberOfValues,
-  selectIdleBoxValueAt,
-} from './facet-actions';
+  addBreadbox,
+  breadboxLabel,
+  deselectBreadcrumbAtIndex,
+} from '../../breadbox-actions';
+import * as BreadboxAssertions from '../../breadbox-assertions';
+import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
+import * as CommonAssertions from '../../common-assertions';
 import {
   pressClearButton,
   pressLabelButton,
@@ -17,17 +18,16 @@ import {
   typeFacetSearchQuery,
   pressClearSearchButton,
 } from '../facet-common-actions';
-import * as FacetAssertions from './facet-assertions';
-import * as BreadboxAssertions from '../../breadbox-assertions';
-import * as CommonAssertions from '../../common-assertions';
 import * as CommonFacetAssertions from '../facet-common-assertions';
-import {breadboxComponent, BreadboxSelectors} from '../../breadbox-selectors';
 import {
-  addBreadbox,
-  breadboxLabel,
-  deselectBreadcrumbAtIndex,
-} from '../../breadbox-actions';
-import {AnalyticsTracker} from '../../../utils/analyticsUtils';
+  addFacet,
+  field,
+  label,
+  defaultNumberOfValues,
+  selectIdleBoxValueAt,
+} from './facet-actions';
+import * as FacetAssertions from './facet-assertions';
+import {facetComponent, FacetSelectors} from './facet-selectors';
 
 describe('Facet v1 Test Suites', () => {
   describe('with checkbox values', () => {
@@ -900,7 +900,7 @@ describe('Facet v1 Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addFacet({field, label}))
-        .withHash(`f[${field}]=Cervantes`)
+        .withHash(`f-${field}=Cervantes`)
         .init();
     });
 

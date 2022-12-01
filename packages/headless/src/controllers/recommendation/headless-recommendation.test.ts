@@ -1,3 +1,11 @@
+import {Action} from 'redux';
+import {configuration} from '../../app/reducers';
+import {updateNumberOfResults} from '../../features/pagination/pagination-actions';
+import {
+  getRecommendations,
+  setRecommendationId,
+} from '../../features/recommendation/recommendation-actions';
+import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
 import {
   buildMockRecommendationAppEngine,
   MockRecommendationEngine,
@@ -6,14 +14,6 @@ import {
   buildRecommendationList,
   RecommendationList,
 } from './headless-recommendation';
-import {Action} from 'redux';
-import {
-  getRecommendations,
-  setRecommendationId,
-} from '../../features/recommendation/recommendation-actions';
-import {configuration} from '../../app/reducers';
-import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
-import {updateNumberOfResults} from '../../features/pagination/pagination-actions';
 
 describe('headless recommendation', () => {
   let recommendation: RecommendationList;
