@@ -1,27 +1,18 @@
 import {LightningElement, api, track} from 'lwc';
-// @ts-ignore
-import defaultTemplate from './resultTemplate.html';
 
 export default class ExampleQuanticResultCopyToClipboard extends LightningElement {
   @api engineId = 'quantic-result-copy-to-clipboard-engine';
   @track config = {};
   isConfigured = false;
 
-  pageTitle = 'Quantic Result Copy To Clip Board';
-  pageDescription = 'The QuanticResultCopyToClipboard component is responsible for displaying query results by applying one or more result templates.';
+  pageTitle = 'Quantic Result Copy To Clipboard';
+  pageDescription =
+    'The QuanticResultCopyToClipboard component allows the end user to copy a result to clipboard..';
   options = [
-    {
-      attribute: 'useCase',
-      label: 'Use Case',
-      description:
-        'Define which use case to test. Possible values are: search, insight',
-      defaultValue: 'search',
-    },
     {
       attribute: 'label',
       label: 'Label',
-      description:
-        'The label to be displayed in the tooltip of the button.',
+      description: 'The label to be displayed in the tooltip of the button.',
       defaultValue: 'Copy',
     },
     {
@@ -35,10 +26,11 @@ export default class ExampleQuanticResultCopyToClipboard extends LightningElemen
       attribute: 'textTemplate',
       label: 'Text Template',
       description:
-        'The template that will be used for the copy to clipboard.',
+        'The template used to generate the text to copy to clipboard.',
       defaultValue: '${title}\n${clickUri}',
     },
   ];
+
   testResult = {
     clickUri: 'https://test.com',
     excerpt: 'Test excerpt',
@@ -47,30 +39,19 @@ export default class ExampleQuanticResultCopyToClipboard extends LightningElemen
     uri: 'https://test.com',
     raw: {
       urihash: 'Test uri hash',
+      permanentid: 'Test permanent id',
       objecttype: 'Test',
       source: 'Test source',
-      date: 1669504751000
-    }
-  }
+      date: 1669504751000,
+    },
+  };
 
   resultTemplateManager = {
-    selectTemplate: () => null
-  }
+    selectTemplate: () => null,
+  };
 
   handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
-  }
-
-  handleResultTemplateRegistration(event) {
-    event.stopPropagation();
-
-    const resultTemplatesManager = event.detail;
-    resultTemplatesManager.registerTemplates(
-      {
-        content: defaultTemplate,
-        conditions: [],
-      }
-    );
   }
 }

@@ -1,6 +1,10 @@
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
-import {mockSearchWithResults} from '../../../page-objects/search';
-import {useCaseParamTest} from '../../../page-objects/use-case';
+import {
+  interceptSearch,
+  mockSearchWithResults,
+} from '../../../page-objects/search';
+import {InsightInterfaceExpectations as InsightInterfaceExpect} from '../../../page-objects/use-case';
 import {CopyToClipboardActions as Actions} from './copy-to-clipboard-actions';
 import {CopyToClipboardExpectations as Expect} from './copy-to-clipboard-expectations';
 
@@ -25,7 +29,7 @@ const testResult = {
 const defaultLabel = 'Copy';
 const defaultSuccessLabel = 'Copied!';
 const customLabel = 'Copy to clipboard';
-const customSuccessLabel = 'Copied to vlipboard!';
+const customSuccessLabel = 'Copied to clipboard!';
 const customTextTemplate = '${raw.source} : ${clickUri}';
 
 // access to the clipboard reliably works in Electron browser
@@ -34,71 +38,63 @@ const customTextTemplate = '${raw.source} : ${clickUri}';
 describe('quantic-copy-to-clipboard', {browser: 'electron'}, () => {
   const pageUrl = 's/quantic-result-copy-to-clipboard';
 
-  function visitcopyToClipboard(
-    useCase: string,
-    options: Partial<copyToClipboardOptions>
-  ) {
+  function visitcopyToClipboard(options: Partial<copyToClipboardOptions>) {
+    interceptSearch();
     cy.visit(pageUrl);
     mockSearchWithResults();
-    configure({
-      useCase: useCase,
-      ...options,
-    });
+    configure(options);
+    InsightInterfaceExpect.isInitialized();
+    performSearch();
   }
 
-  useCaseParamTest.forEach((param) => {
-    describe(param.label, () => {
-      describe('with the default options', () => {
-        it('should correctly display the copy to clipboard button', () => {
-          visitcopyToClipboard(param.useCase, {});
+  describe('with the default options', () => {
+    it.skip('should correctly display the copy to clipboard button', () => {
+      visitcopyToClipboard({});
 
-          Expect.displayCopyToClipboardButton(true);
-          Expect.displayCopyToClipboardTooltip(defaultLabel);
-        });
+      Expect.displayCopyToClipboardButton(true);
+      Expect.displayCopyToClipboardTooltip(defaultLabel);
+    });
 
-        it('should correctly copy the result to clipboard', () => {
-          visitcopyToClipboard(param.useCase, {});
+    it('should correctly copy the result to clipboard', () => {
+      visitcopyToClipboard({});
 
-          Expect.displayCopyToClipboardButton(true);
-          Actions.clickCopyToClipboardButton();
-          Expect.displayCopyToClipboardTooltip(defaultSuccessLabel);
+      Expect.displayCopyToClipboardButton(true);
+      Actions.clickCopyToClipboardButton();
+      Expect.displayCopyToClipboardTooltip(defaultSuccessLabel);
+      Expect.logCopyToClipboard(testResult);
 
-          cy.window()
-            .its('navigator.clipboard')
-            .invoke('readText')
-            .should('equal', `${testResult.title}\n${testResult.clickUri}`);
-        });
+      cy.window()
+        .its('navigator.clipboard')
+        .invoke('readText')
+        .should('equal', `${testResult.title}\n${testResult.clickUri}`);
+    });
+  });
+
+  describe.skip('with custom options', () => {
+    it('should correctly display the copy to clipboard button', () => {
+      visitcopyToClipboard({
+        label: customLabel,
       });
 
-      describe('with custom options', () => {
-        it('should correctly display the copy to clipboard button', () => {
-          visitcopyToClipboard(param.useCase, {
-            label: customLabel,
-          });
+      Expect.displayCopyToClipboardButton(true);
+      Expect.displayCopyToClipboardTooltip(customLabel);
+    });
 
-          Expect.displayCopyToClipboardButton(true);
-          Expect.displayCopyToClipboardTooltip(customLabel);
-        });
-
-        it('should correctly copy the result to clipboard', () => {
-          visitcopyToClipboard(param.useCase, {
-            successLabel: customSuccessLabel,
-            textTemplate: customTextTemplate,
-          });
-
-          Expect.displayCopyToClipboardButton(true);
-          Actions.clickCopyToClipboardButton();
-          Expect.displayCopyToClipboardTooltip(customSuccessLabel);
-
-          cy.window()
-            .its('navigator.clipboard')
-            .invoke('readText')
-            .should(
-              'equal',
-              `${testResult.raw.source} : ${testResult.clickUri}`
-            );
-        });
+    it('should correctly copy the result to clipboard', () => {
+      visitcopyToClipboard({
+        successLabel: customSuccessLabel,
+        textTemplate: customTextTemplate,
       });
+
+      Expect.displayCopyToClipboardButton(true);
+      Actions.clickCopyToClipboardButton();
+      Expect.displayCopyToClipboardTooltip(customSuccessLabel);
+      Expect.logCopyToClipboard(testResult);
+
+      cy.window()
+        .its('navigator.clipboard')
+        .invoke('readText')
+        .should('equal', `${testResult.raw.source} : ${testResult.clickUri}`);
     });
   });
 });

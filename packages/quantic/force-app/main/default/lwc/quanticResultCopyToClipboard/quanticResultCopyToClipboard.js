@@ -1,16 +1,28 @@
-import {LightningElement, api} from 'lwc';
+import copied from '@salesforce/label/c.quantic_Copied';
+import copy from '@salesforce/label/c.quantic_Copy';
 import {
   registerComponentForInit,
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {copyToClipboard, buildTemplateTextFromResult} from 'c/quanticUtils';
+import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
 
-
+/**
+ * The `QuanticResultCopyToClipboard` component allows the end user to copy a result to clipboard.
+ * @category Insight Panel
+ * @example
+ * <c-quantic-result-copy-to-clipboard engine-id={engineId} result={result} label="Copy" success-label="Copied!" text-template="${title}\n${clickUri}"></c-quantic-result-copy-to-clipboard>
+ */
 export default class QuanticResultCopyToClipboard extends LightningElement {
+  labels = {
+    copy,
+    copied,
+  };
+
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -28,15 +40,15 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
    * @api
    * @type {string}
    */
-  @api label = 'Copy';
+  @api label = this.labels.copy;
   /**
    * The label to be displayed in the tooltip of the button when the action is successful.
    * @api
    * @type {string}
    */
-  @api successLabel = 'Copied!';
+  @api successLabel = this.labels.copied;
   /**
-   * The template that will be used for the copy to clipboard.
+   * The template used to generate the text to copy to clipboard.
    * @api
    * @type {string}
    */
@@ -80,7 +92,7 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
 
   /**
    * Performs the copy to clipboard action.
-   * @param {CustomEvent} event 
+   * @param {CustomEvent} event
    */
   handleCopyToClipBoard = (event) => {
     event.stopPropagation();
@@ -91,11 +103,9 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
     copyToClipboard(resultText)
       .then(() => {
         setLoading(false);
-        this.engine.dispatch(
-          this.actions.logCopyToClipboard(this.result)
-        );
+        this.engine.dispatch(this.actions.logCopyToClipboard(this.result));
         this.displayedLabel = this.successLabel;
-        this.refreshLabel();
+        this.resetOriginalLabel();
       })
       .catch((err) => {
         setLoading(false);
@@ -103,7 +113,10 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
       });
   };
 
-  refreshLabel() {
+  /**
+   * Resets the original label after 500ms.
+   */
+  resetOriginalLabel() {
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     setTimeout(() => {
       this.displayedLabel = this.label;
