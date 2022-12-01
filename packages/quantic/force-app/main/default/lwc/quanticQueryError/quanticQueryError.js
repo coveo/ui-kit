@@ -114,7 +114,7 @@ export default class QuanticQueryError extends LightningElement {
     const text = this.template.querySelector('code').textContent;
 
     copyToClipboard(text).catch((err) => {
-      console.error('Copy to clipboard action failed.', err);
+      console.error('Copy to clipboard failed.', text, err);
     });
   }
 
