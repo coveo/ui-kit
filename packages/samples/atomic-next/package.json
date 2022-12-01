@@ -1,5 +1,5 @@
 {
-  "name": "atomic-next",
+  "name": "@coveo/atomic-next-samples",
   "version": "0.0.0",
   "private": true,
   "dependencies": {

@@ -7,6 +7,8 @@ import {
 import {copyToClipboard, buildTemplateTextFromResult} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
+/** @typedef {import("coveo").InsightEngine} InsightEngine */
+
 
 export default class QuanticResultCopyToClipboard extends LightningElement {
   /**
@@ -40,8 +42,11 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
    */
   @api textTemplate = '${title}\n${clickUri}';
 
+  /** @type {object} */
   actions;
+  /** @type {string} */
   displayedLabel;
+  /** @type {InsightEngine} */
   engine;
 
   connectedCallback() {
@@ -69,11 +74,14 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
 
     this.actions = {
-      ...this.headless.loadInsightAnalyticsActions?.(engine),
-      ...this.headless.loadSearchAnalyticsActions?.(engine),
+      ...this.headless.loadInsightAnalyticsActions(engine),
     };
   };
 
+  /**
+   * Performs the copy to clipboard action.
+   * @param {CustomEvent} event 
+   */
   handleCopyToClipBoard = (event) => {
     event.stopPropagation();
     const {setLoading, result} = event.detail;

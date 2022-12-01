@@ -9,6 +9,7 @@ export interface TabBarSelector extends ComponentSelector {
   moreButton: () => CypressSelector;
   moreButtonLabel: () => CypressSelector;
   moreButtonIcon: () => CypressSelector;
+  dropdownTrigger: () => CypressSelector;
   dropdown: () => CypressSelector;
   allDropdownOptions: () => CypressSelector;
   tabBarContainer: () => CypressSelector;
@@ -24,8 +25,9 @@ export const TabBarSelectors: TabBarSelector = {
   moreButtonLabel: () =>
     TabBarSelectors.moreButton().find('button').first().invoke('text'),
   moreButtonIcon: () => TabBarSelectors.moreButton().find('lightning-icon'),
-  dropdown: () => TabBarSelectors.get().find('.slds-dropdown-trigger'),
+  dropdownTrigger: () => TabBarSelectors.get().find('.slds-dropdown-trigger'),
+  dropdown: () => TabBarSelectors.get().find('.slds-dropdown'),
   allDropdownOptions: () =>
-    TabBarSelectors.dropdown().find('.slds-dropdown__item'),
+    TabBarSelectors.dropdownTrigger().find('.slds-dropdown__item'),
   tabBarContainer: () => TabBarSelectors.get().find('.tab-bar_container'),
 };

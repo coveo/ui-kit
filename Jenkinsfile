@@ -1,10 +1,21 @@
+def parseSemanticVersion(String version) {
+  def semanticVersionRegex = /^(((([0-9]+)\.[0-9]+)\.[0-9]+)(?:\-.+)?)$/
+  def (_, prerelease, patch, minor, major) = (version =~ semanticVersionRegex)[0]
+  return [major, minor, patch, prerelease]
+}
+
+def toJSONArray(String[] values) {
+  return "[${values.collect { "\"$it\"" }.join(',')}]"
+}
+
 node('heavy && linux && docker') {
   checkout scm
   def tag = sh(script: "git tag --contains", returnStdout: true).trim()
   def isBump = !!tag
-  def isMaster = env.BRANCH_NAME == 'master'
+  def isOnReleaseBranch = env.BRANCH_NAME == 'master'
+  def isOnPrereleaseBranch = env.BRANCH_NAME.startsWith('prerelease/')
 
-  if (!isMaster) {
+  if (!isOnReleaseBranch && !isOnPrereleaseBranch) {
     return
   }
 
@@ -37,7 +48,11 @@ node('heavy && linux && docker') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
           sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
-          sh 'npm run npm:publish:alpha || true'
+          if (isOnReleaseBranch) {
+            sh 'npm run npm:publish:alpha || true'
+          } else {
+            sh 'npm run npm:publish || true'
+          }
         }
       }
     }
@@ -48,23 +63,24 @@ node('heavy && linux && docker') {
         headless = readJSON file: 'packages/headless/package.json'
         atomic = readJSON file: 'packages/atomic/package.json'
         atomicReact = readJSON file: 'packages/atomic-react/package.json'
-        semanticVersionRegex = /^([^\.]*)\.[^\.]*/
 
-        (headlessMinor, headlessMajor) = (headless.version =~ semanticVersionRegex)[0]
-        (atomicMinor, atomicMajor) = (atomic.version =~ semanticVersionRegex)[0]
-        (atomicReactMinor, atomicReactMajor) = (atomicReact.version =~ semanticVersionRegex)[0]
+        (headlessMajor, headlessMinor, headlessPatch) = parseSemanticVersion(headless.version)
+        (atomicMajor, atomicMinor, atomicPatch) = parseSemanticVersion(atomic.version)
+        (atomicReactMajor, atomicReactMinor, atomicReactPatch) = parseSemanticVersion(atomicReact.version)
 
+        environments = (isOnReleaseBranch ? ['dev', 'stg', 'prd'] : ['dev']) as String[]
         
         sh "deployment-package package create --with-deploy \
         --resolve HEADLESS_MAJOR_VERSION=${headlessMajor} \
         --resolve HEADLESS_MINOR_VERSION=${headlessMinor} \
-        --resolve HEADLESS_PATCH_VERSION=${headless.version} \
+        --resolve HEADLESS_PATCH_VERSION=${headlessPatch} \
         --resolve ATOMIC_MAJOR_VERSION=${atomicMajor} \
         --resolve ATOMIC_MINOR_VERSION=${atomicMinor} \
-        --resolve ATOMIC_PATCH_VERSION=${atomic.version} \
+        --resolve ATOMIC_PATCH_VERSION=${atomicPatch} \
         --resolve ATOMIC_REACT_MAJOR_VERSION=${atomicReactMajor} \
         --resolve ATOMIC_REACT_MINOR_VERSION=${atomicReactMinor} \
-        --resolve ATOMIC_REACT_PATCH_VERSION=${atomicReact.version} \
+        --resolve ATOMIC_REACT_PATCH_VERSION=${atomicReactPatch} \
+        --resolve ENVIRONMENTS=${toJSONArray(environments)} \
         || true"
       }
     }

@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.124.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.124.1...@coveo/atomic@1.124.2) (2022-11-30)
+
+
+### Bug Fixes
+
+* **headless:** disabled analytics when doNotTrack is on ([#2574](https://github.com/coveo/ui-kit/issues/2574)) ([8f6ebea](https://github.com/coveo/ui-kit/commit/8f6ebea6f55d89b66d7bd1a06c16118877b0993a))
+
+
+
+
+
+## [1.124.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.124.0...@coveo/atomic@1.124.1) (2022-11-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [1.124.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.123.2...@coveo/atomic@1.124.0) (2022-11-25)
+
+
+### Features
+
+* **atomic:** add ipx facets ([#2565](https://github.com/coveo/ui-kit/issues/2565)) ([d58e5df](https://github.com/coveo/ui-kit/commit/d58e5df7dc53b7c9c24795436e1c87bc42936912))
+
+
+
+
+
+## [1.123.2](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.123.1...@coveo/atomic@1.123.2) (2022-11-24)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [1.123.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.123.0...@coveo/atomic@1.123.1) (2022-11-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [1.123.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.122.0...@coveo/atomic@1.123.0) (2022-11-15)
 
 
