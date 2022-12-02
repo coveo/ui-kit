@@ -49,6 +49,7 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
   @api successLabel = this.labels.copied;
   /**
    * The template used to generate the text to copy to clipboard.
+   * Use references to result [fields](https://docs.coveo.com/en/2036/index-content/about-fields) to get their value.
    * @api
    * @type {string}
    */
