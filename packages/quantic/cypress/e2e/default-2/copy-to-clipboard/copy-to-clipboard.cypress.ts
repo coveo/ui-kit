@@ -1,9 +1,6 @@
 import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {configure} from '../../../page-objects/configurator';
-import {
-  interceptSearch,
-  mockSearchWithResults,
-} from '../../../page-objects/search';
+import {interceptSearch} from '../../../page-objects/search';
 import {InsightInterfaceExpectations as InsightInterfaceExpect} from '../../../page-objects/use-case';
 import {CopyToClipboardActions as Actions} from './copy-to-clipboard-actions';
 import {CopyToClipboardExpectations as Expect} from './copy-to-clipboard-expectations';
@@ -35,7 +32,7 @@ const customTextTemplate = '${raw.source} : ${clickUri}';
 // access to the clipboard reliably works in Electron browser
 // in other browsers, there are popups asking for permission
 // thus we should only run these tests in Electron
-describe('quantic-copy-to-clipboard', {browser: 'electron'}, () => {
+describe('quantic-result-copy-to-clipboard', {browser: 'electron'}, () => {
   const pageUrl = 's/quantic-result-copy-to-clipboard';
 
   function visitCopyToClipboard(options: Partial<copyToClipboardOptions>) {
