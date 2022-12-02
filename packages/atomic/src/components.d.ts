@@ -682,6 +682,22 @@ export namespace Components {
     }
     interface AtomicIpxRefineToggle {
     }
+    interface AtomicIpxTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active": boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label": string;
+    }
+    interface AtomicIpxTabs {
+    }
     interface AtomicLayoutSection {
         /**
           * For column sections, the maximum horizontal space it should take. E.g. '300px'
@@ -2028,6 +2044,18 @@ declare global {
         prototype: HTMLAtomicIpxRefineToggleElement;
         new (): HTMLAtomicIpxRefineToggleElement;
     };
+    interface HTMLAtomicIpxTabElement extends Components.AtomicIpxTab, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxTabElement: {
+        prototype: HTMLAtomicIpxTabElement;
+        new (): HTMLAtomicIpxTabElement;
+    };
+    interface HTMLAtomicIpxTabsElement extends Components.AtomicIpxTabs, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxTabsElement: {
+        prototype: HTMLAtomicIpxTabsElement;
+        new (): HTMLAtomicIpxTabsElement;
+    };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
     var HTMLAtomicLayoutSectionElement: {
@@ -2505,6 +2533,8 @@ declare global {
         "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
+        "atomic-ipx-tab": HTMLAtomicIpxTabElement;
+        "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -3209,6 +3239,22 @@ declare namespace LocalJSX {
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+    }
+    interface AtomicIpxTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active"?: boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label"?: string;
+    }
+    interface AtomicIpxTabs {
     }
     interface AtomicLayoutSection {
         /**
@@ -4251,6 +4297,8 @@ declare namespace LocalJSX {
         "atomic-ipx-layout": AtomicIpxLayout;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
+        "atomic-ipx-tab": AtomicIpxTab;
+        "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -4373,6 +4421,8 @@ declare module "@stencil/core" {
             "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
+            "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
+            "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
