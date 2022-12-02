@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.125.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.124.3...@coveo/atomic@1.125.0) (2022-12-02)
+
+### Features
+
+- **atomic:** add tabs for IPX ([#2567](https://github.com/coveo/ui-kit/issues/2567)) ([1989310](https://github.com/coveo/ui-kit/commit/19893104b9731fc6d738bab732617f17e6d2310a))
+
 ## [1.124.3](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.124.2...@coveo/atomic@1.124.3) (2022-12-01)
 
 **Note:** Version bump only for package @coveo/atomic
