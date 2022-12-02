@@ -4,6 +4,8 @@ import dayPattern from '@salesforce/label/c.quantic_DatePatternDay';
 import monthPattern from '@salesforce/label/c.quantic_DatePatternMonth';
 import yearPattern from '@salesforce/label/c.quantic_DatePatternYear';
 
+/** @typedef {import("coveo").Result} Result */
+
 export class Debouncer {
   _timeout;
 
@@ -689,6 +691,11 @@ export function isParentOf(element, targetElement) {
   );
 }
 
+/**
+ * Copies text to clipboard using the Clipboard API.
+ * https://developer.mozilla.org/en-US/docs/Web/API/Clipboard
+ * @param {string} text 
+ */
 export async function copyToClipboard(text) {
   if (navigator?.clipboard?.writeText) {
     try {
@@ -702,6 +709,7 @@ export async function copyToClipboard(text) {
 }
 
 /**
+ * Copies text to clipboard using the DOM. 
  * @param {string} text
  */
 export function copyToClipboardFallback(text) {
@@ -713,6 +721,11 @@ export function copyToClipboardFallback(text) {
   document.body.removeChild(el);
 }
 
+/**
+ * Read the value of a given key from an object.
+ * @param {object} object 
+ * @param {string} key 
+ */
 export function readFromObject(object, key) {
   const firstPeriodIndex = key.indexOf('.');
   if (object && firstPeriodIndex !== -1) {
@@ -723,6 +736,12 @@ export function readFromObject(object, key) {
   return object ? object[key] : undefined;
 }
 
+/**
+ * Generates a text from a result based on a given template.
+ * @param {string} template 
+ * @param {Result} result 
+ * @returns {string}
+ */
 export function buildTemplateTextFromResult(template, result) {
   if (!template) {
     return '';

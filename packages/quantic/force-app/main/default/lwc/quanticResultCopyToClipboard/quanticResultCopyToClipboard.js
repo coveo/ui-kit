@@ -114,12 +114,12 @@ export default class QuanticResultCopyToClipboard extends LightningElement {
   };
 
   /**
-   * Resets the original label after 500ms.
+   * Resets the original label after 1000ms.
    */
   resetOriginalLabel() {
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     setTimeout(() => {
       this.displayedLabel = this.label;
-    }, 500);
+    }, 1000);
   }
 }
