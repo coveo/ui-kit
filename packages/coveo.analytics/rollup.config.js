@@ -30,10 +30,18 @@ const browserUMD = {
             format: 'umd',
             name: 'coveoua',
             sourcemap: true,
+            plugins: [terser({format: {comments: false}})],
         },
         {
             file: './dist/coveoua.browser.js',
             format: 'iife',
+            name: 'coveoua',
+            sourcemap: true,
+            plugins: [terser({format: {comments: false}})],
+        },
+        {
+            file: './dist/coveoua.debug.js',
+            format: 'umd',
             name: 'coveoua',
             sourcemap: true,
         },
@@ -41,7 +49,6 @@ const browserUMD = {
     plugins: [
         browserFetch(),
         tsPlugin(),
-        terser({format: {comments: false}}),
         process.env.SERVE
             ? serve({
                   contentBase: ['dist', 'public'],

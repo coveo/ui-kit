@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "localhost:9001",
+            "url": "http://localhost:9001",
             "webRoot": "${workspaceFolder}/src",
             "preLaunchTask": "dev",
             "sourceMapPathOverrides": {
