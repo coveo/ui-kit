@@ -31,6 +31,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
       width: 100%;
       display: grid;
       grid-template-columns: 1fr auto;
+      grid-template-rows: max-content;
       grid-gap: 0.5rem;
       background: var(--atomic-neutral-light);
       padding-top: 1.5rem;
