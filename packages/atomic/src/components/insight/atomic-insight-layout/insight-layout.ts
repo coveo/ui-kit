@@ -43,7 +43,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
       box-sizing: border-box;
-      overflow-x: hidden;
+      overflow-x: auto;
       ${!hasTabs ? 'padding-bottom: 1.5rem;' : ''}
     }
 
