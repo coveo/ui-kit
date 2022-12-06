@@ -147,11 +147,10 @@ describe('Search Interface Component', () => {
       });
 
       it('should include analytics in the search request', () => {
-        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) =>
-          expect(firstSearch.request.body).to.have.property(
-            'actionCause',
-            'interfaceLoad'
-          )
+        cy.wait(TestFixture.interceptAliases.Search).should(
+          (firstSearch) =>
+            expect(firstSearch.request.body).to.have.property('analytics')
+          // TODO: in v2, add: .to.have.property('actionCause', 'interfaceLoad')
         );
       });
     });
