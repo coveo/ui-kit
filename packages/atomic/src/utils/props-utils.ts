@@ -40,7 +40,7 @@ export function ArrayProp() {
 
     component.componentWillLoad = function () {
       const value = this[variableName];
-      if (!value) {
+      if (!value || isArray(value)) {
         componentWillLoad?.call(this);
         return;
       }
