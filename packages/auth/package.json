@@ -18,7 +18,6 @@
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "npm:publish": "node ../../scripts/deploy/publish.mjs",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha",
     "e2e:saml": "vite manual-e2e/saml/"
   },
   "repository": {
