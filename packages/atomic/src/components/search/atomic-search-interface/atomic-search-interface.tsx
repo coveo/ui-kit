@@ -444,7 +444,6 @@ export class AtomicSearchInterface
   }
 
   public render() {
-    // console.log('waa', this.fieldsToInclude);
     return [
       this.engine && (
         <atomic-relevance-inspector
