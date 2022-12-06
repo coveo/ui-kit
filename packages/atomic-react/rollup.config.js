@@ -13,7 +13,6 @@ const outputIIFE = ({minify}) => ({
     react: 'React',
     'react-dom': 'ReactDOM',
     '@coveo/atomic': 'CoveoAtomic',
-    '@coveo/atomic/headless': 'CoveoHeadless',
   },
   plugins: minify ? [terser()] : [],
 });
@@ -26,7 +25,6 @@ const outputIIFERecs = ({minify}) => ({
     react: 'React',
     'react-dom': 'ReactDOM',
     '@coveo/atomic': 'CoveoAtomic',
-    '@coveo/atomic/headless/recommendation': 'CoveoHeadlessRecommendation',
   },
   plugins: minify ? [terser()] : [],
 });
@@ -53,13 +51,13 @@ export default [
   {
     input: 'src/index.ts',
     output: [outputIIFE({minify: true}), outputIIFE({minify: false})],
-    external: [...commonExternal, '@coveo/atomic/headless'],
+    external: commonExternal,
     plugins,
   },
   {
     input: 'src/recommendation.index.ts',
     output: [outputIIFERecs({minify: true}), outputIIFERecs({minify: false})],
-    external: [...commonExternal, '@coveo/atomic/headless/recommendation'],
+    external:commonExternal,
     plugins,
   },
 ];
