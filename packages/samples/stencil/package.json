@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@coveo/atomic": "^1.123.0",
+    "@coveo/headless": "^1.112.0",
     "@stencil/core": "2.17.3",
     "stencil-router-v2": "0.6.0"
   },

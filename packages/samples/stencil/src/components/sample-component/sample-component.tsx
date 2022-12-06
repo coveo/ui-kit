@@ -6,7 +6,7 @@ import {
   buildSearchStatus,
   buildPager,
   Unsubscribe,
-} from '@coveo/atomic/headless';
+} from '@coveo/headless';
 import {Component, Element, h, State, forceUpdate} from '@stencil/core';
 
 @Component({
