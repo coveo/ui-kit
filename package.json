@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install & patch-package && npm run link:angular -w @coveo/atomic-angular-samples",
+    "postinstall": "husky install & patch-package && npm run link:angular -w @coveo/atomic-angular-samples && install-peers",
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run clean && lerna run build",
@@ -52,6 +52,7 @@
     "eslint-plugin-cypress": "2.12.1",
     "gts": "3.1.0",
     "husky": "5.2.0",
+    "install-peers-cli": "2.2.0",
     "jest": "27.5.1",
     "lerna": "5.6.2",
     "lint-staged": "11.2.6",
