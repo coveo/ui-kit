@@ -158,7 +158,8 @@ export class AtomicCategoryFacet
    */
   @ArrayProp()
   @Prop({reflect: true, mutable: true})
-  public basePath?: string[];
+  public basePath: string[] | string = '[]';
+
   /**
    * Whether to use basePath as a filter for the results.
    */
@@ -230,7 +231,7 @@ export class AtomicCategoryFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      basePath: this.basePath,
+      basePath: [...this.basePath],
       delimitingCharacter: this.delimitingCharacter,
       filterByBasePath: this.filterByBasePath,
       injectionDepth: this.injectionDepth,

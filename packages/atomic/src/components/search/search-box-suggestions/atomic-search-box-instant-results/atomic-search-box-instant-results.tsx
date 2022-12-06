@@ -1,7 +1,6 @@
 import {
   buildInstantResults,
   buildInteractiveResult,
-  buildResultList,
   InstantResults,
   Result,
 } from '@coveo/headless';
@@ -202,11 +201,6 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
         this.templateHasError = value;
       },
       bindings: this.bindings,
-    });
-
-    // TODO: remove v2
-    buildResultList(this.bindings.engine, {
-      options: {fieldsToInclude: this.bindings.store.state.fieldsToInclude},
     });
 
     return {
