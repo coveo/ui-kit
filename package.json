@@ -71,6 +71,7 @@
     "packages/atomic",
     "packages/quantic",
     "packages/atomic-react",
+    "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
     "packages/samples/*"
   ],
