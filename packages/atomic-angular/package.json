@@ -21,8 +21,10 @@
     "@angular/platform-browser-dynamic": "13.3.0",
     "@angular/router": "13.3.0",
     "@coveo/atomic": "^1.123.0",
-    "@coveo/headless": "^1.112.0",
     "rxjs": "7.5.6"
+  },
+  "peerDependencies": {
+    "@coveo/headless": "^1.112.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "13.3.5",
