@@ -57,7 +57,7 @@ export default [
   {
     input: 'src/recommendation.index.ts',
     output: [outputIIFERecs({minify: true}), outputIIFERecs({minify: false})],
-    external:commonExternal,
+    external: commonExternal,
     plugins,
   },
 ];
