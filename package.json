@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install & patch-package && npm run link:angular -w @coveo/atomic-angular-samples && install-peers",
+    "postinstall": "husky install & patch-package && npm run link:angular -w @coveo/atomic-angular-samples",
     "start": "lerna run --parallel start",
     "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run clean && lerna run build",
