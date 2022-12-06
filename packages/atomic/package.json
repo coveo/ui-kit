@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "1.125.1",
+  "version": "2.0.0-pre.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -116,7 +116,7 @@
     "tailwindcss": "3.0.23"
   },
   "peerDependencies": {
-    "@coveo/headless": "1.112.0"
+    "@coveo/headless": "2.0.0-pre.0"
   },
   "license": "Apache-2.0",
   "engines": {
