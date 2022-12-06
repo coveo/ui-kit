@@ -63,9 +63,9 @@ import {
  * @part suggestions - A list of suggested query corrections on each panel.
  * @part suggestions-left - A list of suggested query corrections on the left panel.
  * @part suggestions-right - A list of suggested query corrections on the right panel.
- * @part suggestions-wrapper - The wrapper that contains suggestions panels.
- * @part suggestions-single-list - The wrapper that contains 1 suggestions list.
- * @part suggestions-double-list - The wrapper that contains 2 suggestions lists.
+ * @part suggestions-wrapper - The wrapper that contains suggestion panels.
+ * @part suggestions-single-list - The wrapper that contains 1 suggestion list.
+ * @part suggestions-double-list - The wrapper that contains 2 suggestion lists.
  * @part suggestion - A suggested query correction.
  * @part active-suggestion - The currently active suggestion.
  * @part suggestion-divider - An item in the list that separates groups of suggestions.
