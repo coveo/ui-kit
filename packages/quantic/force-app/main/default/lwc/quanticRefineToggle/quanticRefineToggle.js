@@ -11,12 +11,6 @@ import viewResults from '@salesforce/label/c.quantic_ViewResults';
 import noFiltersAvailableForThisQuery from '@salesforce/label/c.quantic_NoFiltersAvailableForThisQuery';
 import noFilterForCurrentTab from '@salesforce/label/c.quantic_NoFilterForCurrentTab';
 
-/**
- * @typedef {Object} QuanticModalElement
- * @method openModal
- * @method closeModal
- */
-
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
 /** @typedef {import("coveo").QuerySummary} QuerySummary */
 /** @typedef {import("coveo").BreadcrumbManager} BreadcrumbManager */
@@ -129,9 +123,10 @@ export default class QuanticRefineToggle extends LightningElement {
       this.renderedFacets[facetId] = true;
     });
 
-    /** @type {QuanticModalElement} */
     const modal = this.getModal();
+    const modalContent = this.getModalContent();
     modal.fullScreen = this.fullScreen;
+    modalContent.hideSort = this.hideSort;
   };
 
   get refineButtonDisabled() {
@@ -240,10 +235,18 @@ export default class QuanticRefineToggle extends LightningElement {
 
   /**
    * Returns the Quantic Modal element.
-   * @returns {HTMLElement}
+   * @returns {HTMLElement & {fullScreen: boolean, openModal: function, closeModal: function}}
    */
   getModal() {
     return this.template.querySelector(`[data-id=${this.modalId}]`);
+  }
+
+  /**
+   * Returns the Quantic Refine Modal Content element.
+   * @returns {HTMLElement & {hideSort: boolean}}
+   */
+  getModalContent() {
+    return this.template.querySelector('c-quantic-refine-modal-content');
   }
 
   /**
@@ -251,7 +254,6 @@ export default class QuanticRefineToggle extends LightningElement {
    * @returns {void}
    */
   openModal() {
-    /** @type {QuanticModalElement} */
     const modal = this.getModal();
     modal.openModal();
     this.sendRefineModalEvent(true);
@@ -263,7 +265,6 @@ export default class QuanticRefineToggle extends LightningElement {
    * @returns {void}
    */
   closeModal() {
-    /** @type {QuanticModalElement} */
     const modal = this.getModal();
     modal.closeModal();
     this.sendRefineModalEvent(false);
