@@ -5,20 +5,4362 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { CategoryFacetSortCriterion, FacetSortCriterion, FoldedResult, InlineLink, InteractiveResult, LogLevel, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
+import { AnyBindings } from "./components/common/interface/bindings";
+import { DateFilter, DateFilterState, NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
+import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
+import { ResultDisplayBasicLayout, ResultDisplayDensity, ResultDisplayImageSize, ResultDisplayLayout } from "./components/common/layout/display-options";
+import { ResultRenderingFunction } from "./components/common/result-list/result-list-common-interface";
+import { VNode } from "@stencil/core";
+import { InsightEngine, InsightFacetSortCriterion, InsightInteractiveResult, InsightLogLevel, InsightRangeFacetRangeAlgorithm, InsightRangeFacetSortCriterion, InsightResult, InsightResultTemplate, InsightResultTemplateCondition } from "./components/insight";
+import { FacetDisplayValues } from "./components/common/facets/facet-common";
+import { i18n } from "i18next";
+import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
+import { NumericFacetDisplayValues } from "./components/common/facets/numeric-facet-common";
+import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+import { Section } from "./components/common/atomic-layout-section/sections";
+import { RecommendationEngine } from "@coveo/headless/recommendation";
+import { RecsInteractiveResult, RecsLogLevel, RecsResult, RecsResultTemplate, RecsResultTemplateCondition } from "./components/recommendations";
+import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
+import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
+import { Bindings } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
+import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
+import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export namespace Components {
+    interface AtomicAriaLive {
+        "registerRegion": (region: string, assertive: boolean) => Promise<void>;
+        "updateMessage": (region: string, message: string, assertive: boolean) => Promise<void>;
+    }
+    interface AtomicBreadbox {
+    }
+    interface AtomicCategoryFacet {
+        /**
+          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```
+         */
+        "basePath"?: string[];
+        /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter": string;
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to use basePath as a filter for the results.
+         */
+        "filterByBasePath": boolean;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+         */
+        "sortCriteria": CategoryFacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch": boolean;
+    }
+    interface AtomicColorFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
+         */
+        "displayValuesAs": 'checkbox' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch": boolean;
+    }
+    interface AtomicComponentError {
+        "element": HTMLElement;
+        "error": Error;
+    }
+    interface AtomicDidYouMean {
+    }
+    interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
+        "selector": string;
+    }
+    interface AtomicFacet {
+        /**
+          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+         */
+        "allowedValues"?: string[];
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs": 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch": boolean;
+    }
+    interface AtomicFacetDateInput {
+        "bindings": AnyBindings;
+        "filter": DateFilter;
+        "filterState": DateFilterState;
+        "label": string;
+    }
+    interface AtomicFacetManager {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+         */
+        "collapseFacetsAfter": number;
+    }
+    interface AtomicFacetNumberInput {
+        "bindings": AnyBindings;
+        "filter": NumericFilter;
+        "filterState": NumericFilterState;
+        "label": string;
+        "type": NumberInputType;
+    }
+    interface AtomicFieldCondition {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": ResultTemplateCondition[];
+        /**
+          * Verifies whether the specified fields are defined.
+         */
+        "ifDefined"?: string;
+        /**
+          * Verifies whether the specified fields are not defined.
+         */
+        "ifNotDefined"?: string;
+    }
+    interface AtomicFocusDetector {
+    }
+    interface AtomicFocusTrap {
+        "active": boolean;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+         */
+        "container"?: HTMLElement;
+        /**
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+         */
+        "shouldHideSelf": boolean;
+        /**
+          * The source to focus when the focus trap becomes inactive.
+         */
+        "source"?: HTMLElement;
+    }
+    interface AtomicFoldedResultList {
+        /**
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
+         */
+        "childField"?: string;
+        /**
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
+         */
+        "collectionField"?: string;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
+         */
+        "parentField"?: string;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicFormatCurrency {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+         */
+        "currency": string;
+    }
+    interface AtomicFormatNumber {
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicFormatUnit {
+        /**
+          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+         */
+        "unit": string;
+        /**
+          * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
+    }
+    interface AtomicFrequentlyBoughtTogether {
+    }
+    interface AtomicHtml {
+        /**
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize": boolean;
+        /**
+          * The string value containing HTML to display;
+         */
+        "value": string;
+    }
+    interface AtomicIcon {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon": string;
+    }
+    interface AtomicIconButton {
+        "badge"?: VNode;
+        "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "clickCallback": () => void;
+        "disabled": boolean;
+        "icon": string;
+        "labelI18nKey": string;
+        "tooltip": string;
+    }
+    interface AtomicInsightEditToggle {
+        "clickCallback": () => void;
+        "tooltip": string;
+    }
+    interface AtomicInsightFacet {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs": FacetDisplayValues;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": InsightFacetSortCriterion;
+    }
+    interface AtomicInsightHistoryToggle {
+        "clickCallback": () => void;
+        "tooltip": string;
+    }
+    interface AtomicInsightInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * The service insight interface headless engine.
+         */
+        "engine"?: InsightEngine;
+        /**
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+         */
+        "executeFirstSearch": () => Promise<void>;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface> ```
+         */
+        "fieldsToInclude": string[];
+        /**
+          * The service insight interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless insight engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: InsightEngineConfiguration) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless insight engine.
+         */
+        "initializeWithInsightEngine": (engine: InsightEngine) => Promise<void>;
+        /**
+          * The service insight interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage": number;
+    }
+    interface AtomicInsightLayout {
+        /**
+          * Whether the interface should be shown in widget format.
+         */
+        "widget": boolean;
+    }
+    interface AtomicInsightNoResults {
+    }
+    interface AtomicInsightNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs": NumericFacetDisplayValues;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
+         */
+        "numberOfValues": number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm": InsightRangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": InsightRangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
+         */
+        "withInput"?: NumberInputType;
+    }
+    interface AtomicInsightPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+    }
+    interface AtomicInsightQueryError {
+    }
+    interface AtomicInsightQuerySummary {
+    }
+    interface AtomicInsightRefineModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicInsightRefineToggle {
+    }
+    interface AtomicInsightResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": InsightInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * The result item.
+         */
+        "result": InsightResult;
+        /**
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicInsightStore;
+    }
+    interface AtomicInsightResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicInsightResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": InsightResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<InsightResultTemplate<DocumentFragment> | null>;
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
+    }
+    interface AtomicInsightSearchBox {
+        /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch": boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions": number;
+    }
+    interface AtomicInsightTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active": boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label": string;
+    }
+    interface AtomicInsightTabs {
+    }
+    interface AtomicInsightTimeframeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+         */
+        "label": string;
+        /**
+          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+         */
+        "withDatePicker": boolean;
+    }
+    interface AtomicIpxLayout {
+    }
+    interface AtomicIpxRefineModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicIpxRefineToggle {
+    }
+    interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
+        "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
+        "minWidth"?: string;
+        /**
+          * The name of the layout section.
+         */
+        "section": Section;
+    }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The non-localized label for the button used to load more results.
+         */
+        "label": string;
+    }
+    interface AtomicLoadMoreResults {
+    }
+    interface AtomicModal {
+        "close": () => void;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "fullscreen": boolean;
+        "isOpen": boolean;
+        "source"?: HTMLElement;
+    }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction": boolean;
+    }
+    interface AtomicNotifications {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notifications, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * Specifies an icon to display at the left-end of a notification.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+    }
+    interface AtomicNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs": 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
+         */
+        "numberOfValues": number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm": RangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria": RangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
+         */
+        "withInput"?: NumberInputType;
+    }
+    interface AtomicNumericRange {
+        /**
+          * The ending value for the numeric range.
+         */
+        "end": number;
+        /**
+          * Specifies whether the end value should be included in the range.
+         */
+        "endInclusive": boolean;
+        /**
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The starting value for the numeric range.
+         */
+        "start": number;
+    }
+    interface AtomicPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
+    }
+    interface AtomicPopover {
+    }
+    interface AtomicQueryError {
+    }
+    interface AtomicQuerySummary {
+    }
+    interface AtomicRatingFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs": 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon": string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
+         */
+        "maxValueInIndex": number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex": number;
+        /**
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
+         */
+        "numberOfIntervals": number;
+    }
+    interface AtomicRatingRangeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon": string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label": string;
+        /**
+          * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
+         */
+        "maxValueInIndex": number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex": number;
+        /**
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
+         */
+        "numberOfIntervals": number;
+    }
+    interface AtomicRecsInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * The recommendation interface headless engine.
+         */
+        "engine"?: RecommendationEngine;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
+         */
+        "fieldsToInclude": string[];
+        /**
+          * Fetches new recommendations.
+         */
+        "getRecommendations": () => Promise<void>;
+        /**
+          * The recommendation interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless recommendation engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: RecommendationEngineConfiguration) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless recommendation engine. This bypasses the properties set on the component, such as analytics, recommendation, searchHub, language, timezone & logLevel.
+         */
+        "initializeWithRecommendationEngine": (engine: RecommendationEngine) => Promise<void>;
+        /**
+          * The recommendation interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: RecsLogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub": string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
+    }
+    interface AtomicRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "display": ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * Moves to the next page, when the carousel is activated.
+         */
+        "nextPage": () => Promise<void>;
+        /**
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations": number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * Moves to the previous page, when the carousel is activated.
+         */
+        "previousPage": () => Promise<void>;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation": string;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicRecsResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": RecsInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicRecsStore;
+    }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": RecsResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on the conditions applied.
+         */
+        "getTemplate": () => Promise<RecsResultTemplate<DocumentFragment> | null>;
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
+    }
+    interface AtomicRefineModal {
+        "isOpen": boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicRefineToggle {
+    }
+    interface AtomicRelevanceInspector {
+        /**
+          * The Atomic interface bindings, namely the headless search engine and i18n instances.
+         */
+        "bindings": Bindings;
+    }
+    interface AtomicResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes": string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": InteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction": ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": Result | FoldedResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicResultBadge {
+        /**
+          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+         */
+        "field"?: string;
+        /**
+          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+        /**
+          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
+         */
+        "label"?: string;
+    }
+    interface AtomicResultChildren {
+        /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates": boolean;
+        /**
+          * The non-localized copy for an empty result state.
+         */
+        "noResultText": string;
+    }
+    interface AtomicResultChildrenTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+    }
+    interface AtomicResultDate {
+        /**
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * Available formats: https://day.js.org/docs/en/display/format
+         */
+        "format": string;
+        /**
+          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+         */
+        "relativeTime"?: boolean;
+    }
+    interface AtomicResultFieldsList {
+    }
+    interface AtomicResultHtml {
+        /**
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches throught the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
+         */
+        "field": string;
+        /**
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize": boolean;
+    }
+    interface AtomicResultIcon {
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+    }
+    interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+         */
+        "hrefTemplate"?: string;
+    }
+    interface AtomicResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display": ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicResultLocalizedText {
+        /**
+          * The numerical field value used to determine whether to use the singular or plural value of a translation.
+         */
+        "fieldCount"?: string;
+        /**
+          * The i18n translation key.
+         */
+        "localeKey": string;
+    }
+    interface AtomicResultMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter": string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay": number;
+    }
+    interface AtomicResultNumber {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
+         */
+        "field": string;
+    }
+    interface AtomicResultPlaceholder {
+        "density": ResultDisplayDensity;
+        "display": ResultDisplayLayout;
+        "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicResultPrintableUri {
+        /**
+          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
+         */
+        "maxNumberOfParts": number;
+    }
+    interface AtomicResultRating {
+        /**
+          * The field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon": string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex": number;
+    }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionChildren {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+        /**
+          * How large or small the visual section of results using this template should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicResultTablePlaceholder {
+        "density": ResultDisplayDensity;
+        "imageSize": ResultDisplayImageSize;
+        "rows": number;
+    }
+    interface AtomicResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
+        "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+    }
+    interface AtomicResultText {
+        /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * If this is set to true, it will look for the corresponding highlight property and use it if available.
+         */
+        "shouldHighlight": boolean;
+    }
+    interface AtomicResultTimespan {
+        /**
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format"?: string;
+        /**
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit": string;
+    }
+    interface AtomicResultsPerPage {
+        /**
+          * A list of choices for the number of results to display per page, separated by commas.
+         */
+        "choicesDisplayed": string;
+        /**
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+         */
+        "initialChoice"?: number;
+    }
+    interface AtomicSearchBox {
+        /**
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+         */
+        "clearFilters": boolean;
+        /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch": boolean;
+        /**
+          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
+         */
+        "numberOfQueries": number;
+        /**
+          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
+        /**
+          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout": number;
+    }
+    interface AtomicSearchBoxInstantResults {
+        /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density": ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize": ResultDisplayImageSize;
+        /**
+          * The maximum number of results to show.
+         */
+        "maxResultsPerQuery": number;
+        /**
+          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
+          * @param resultRenderingFunction
+         */
+        "setRenderFunction": (resultRenderingFunction: ResultRenderingFunction) => Promise<void>;
+    }
+    interface AtomicSearchBoxQuerySuggestions {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
+    interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery": number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
+    interface AtomicSearchInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics": boolean;
+        /**
+          * The search interface headless engine.
+         */
+        "engine"?: SearchEngine;
+        /**
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
+         */
+        "executeFirstSearch": () => Promise<void>;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
+         */
+        "fieldsToInclude": string[];
+        /**
+          * The search interface i18next instance.
+         */
+        "i18n": i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath": string;
+        /**
+          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
+        "initialize": (options: SearchEngineConfiguration) => Promise<void>;
+        /**
+          * Initializes the connection with an already preconfigured headless search engine, as opposed to the `initialize` method which will internally create a new search engine instance. This bypasses the properties set on the component, such as analytics, searchHub, pipeline, language, timezone & logLevel.
+         */
+        "initializeWithSearchEngine": (engine: SearchEngine) => Promise<void>;
+        /**
+          * The search interface language.
+         */
+        "language": string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath": string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * Whether the state should be reflected in the URL parameters.
+         */
+        "reflectStateInUrl": boolean;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer": string;
+        /**
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub": string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
+    }
+    interface AtomicSearchLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint": string;
+    }
+    interface AtomicSegmentedFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+    }
+    interface AtomicSegmentedFacetScrollable {
+    }
+    interface AtomicSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetAnswer {
+        "htmlContent": string;
+        "innerStyle"?: string;
+    }
+    interface AtomicSmartSnippetExpandableAnswer {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight": number;
+        "expanded": boolean;
+        "htmlContent": string;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight": number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetFeedbackModal {
+        "isOpen": boolean;
+        "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSource {
+        "source": Result;
+    }
+    interface AtomicSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
+         */
+        "headingLevel": number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSortDropdown {
+    }
+    interface AtomicSortExpression {
+        /**
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
+         */
+        "expression": string;
+        /**
+          * The non-localized label to display for this expression.
+         */
+        "label": string;
+    }
+    interface AtomicTableElement {
+        /**
+          * The label to display in the header of this column.
+         */
+        "label": string;
+    }
+    interface AtomicText {
+        /**
+          * The count value used for plurals.
+         */
+        "count"?: number;
+        /**
+          * The string key value.
+         */
+        "value": string;
+    }
+    interface AtomicTimeframe {
+        /**
+          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+         */
+        "amount": number;
+        /**
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The relative period of time to now.
+         */
+        "period": 'past' | 'next';
+        /**
+          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
+         */
+        "unit": RelativeDateUnit;
+    }
+    interface AtomicTimeframeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+         */
+        "dependsOn": Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount": boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel": number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth": number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed": boolean;
+        /**
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+         */
+        "label": string;
+        /**
+          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+         */
+        "withDatePicker": boolean;
+    }
+}
+export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicFacetDateInputElement;
+}
+export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicFacetNumberInputElement;
+}
+export interface AtomicFocusDetectorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicFocusDetectorElement;
+}
+export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightPagerElement;
+}
+export interface AtomicModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicModalElement;
+}
+export interface AtomicPagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicPagerElement;
+}
+export interface AtomicSearchBoxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSearchBoxElement;
+}
+export interface AtomicSmartSnippetAnswerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetAnswerElement;
+}
+export interface AtomicSmartSnippetExpandableAnswerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetExpandableAnswerElement;
+}
+export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetFeedbackModalElement;
+}
+export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicSmartSnippetSourceElement;
 }
 declare global {
+    interface HTMLAtomicAriaLiveElement extends Components.AtomicAriaLive, HTMLStencilElement {
+    }
+    var HTMLAtomicAriaLiveElement: {
+        prototype: HTMLAtomicAriaLiveElement;
+        new (): HTMLAtomicAriaLiveElement;
+    };
+    interface HTMLAtomicBreadboxElement extends Components.AtomicBreadbox, HTMLStencilElement {
+    }
+    var HTMLAtomicBreadboxElement: {
+        prototype: HTMLAtomicBreadboxElement;
+        new (): HTMLAtomicBreadboxElement;
+    };
+    interface HTMLAtomicCategoryFacetElement extends Components.AtomicCategoryFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicCategoryFacetElement: {
+        prototype: HTMLAtomicCategoryFacetElement;
+        new (): HTMLAtomicCategoryFacetElement;
+    };
+    interface HTMLAtomicColorFacetElement extends Components.AtomicColorFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicColorFacetElement: {
+        prototype: HTMLAtomicColorFacetElement;
+        new (): HTMLAtomicColorFacetElement;
+    };
+    interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
+    }
+    var HTMLAtomicComponentErrorElement: {
+        prototype: HTMLAtomicComponentErrorElement;
+        new (): HTMLAtomicComponentErrorElement;
+    };
+    interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
+    }
+    var HTMLAtomicDidYouMeanElement: {
+        prototype: HTMLAtomicDidYouMeanElement;
+        new (): HTMLAtomicDidYouMeanElement;
+    };
+    interface HTMLAtomicExternalElement extends Components.AtomicExternal, HTMLStencilElement {
+    }
+    var HTMLAtomicExternalElement: {
+        prototype: HTMLAtomicExternalElement;
+        new (): HTMLAtomicExternalElement;
+    };
+    interface HTMLAtomicFacetElement extends Components.AtomicFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetElement: {
+        prototype: HTMLAtomicFacetElement;
+        new (): HTMLAtomicFacetElement;
+    };
+    interface HTMLAtomicFacetDateInputElement extends Components.AtomicFacetDateInput, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetDateInputElement: {
+        prototype: HTMLAtomicFacetDateInputElement;
+        new (): HTMLAtomicFacetDateInputElement;
+    };
+    interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetManagerElement: {
+        prototype: HTMLAtomicFacetManagerElement;
+        new (): HTMLAtomicFacetManagerElement;
+    };
+    interface HTMLAtomicFacetNumberInputElement extends Components.AtomicFacetNumberInput, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetNumberInputElement: {
+        prototype: HTMLAtomicFacetNumberInputElement;
+        new (): HTMLAtomicFacetNumberInputElement;
+    };
+    interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
+    }
+    var HTMLAtomicFieldConditionElement: {
+        prototype: HTMLAtomicFieldConditionElement;
+        new (): HTMLAtomicFieldConditionElement;
+    };
+    interface HTMLAtomicFocusDetectorElement extends Components.AtomicFocusDetector, HTMLStencilElement {
+    }
+    var HTMLAtomicFocusDetectorElement: {
+        prototype: HTMLAtomicFocusDetectorElement;
+        new (): HTMLAtomicFocusDetectorElement;
+    };
+    interface HTMLAtomicFocusTrapElement extends Components.AtomicFocusTrap, HTMLStencilElement {
+    }
+    var HTMLAtomicFocusTrapElement: {
+        prototype: HTMLAtomicFocusTrapElement;
+        new (): HTMLAtomicFocusTrapElement;
+    };
+    interface HTMLAtomicFoldedResultListElement extends Components.AtomicFoldedResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicFoldedResultListElement: {
+        prototype: HTMLAtomicFoldedResultListElement;
+        new (): HTMLAtomicFoldedResultListElement;
+    };
+    interface HTMLAtomicFormatCurrencyElement extends Components.AtomicFormatCurrency, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatCurrencyElement: {
+        prototype: HTMLAtomicFormatCurrencyElement;
+        new (): HTMLAtomicFormatCurrencyElement;
+    };
+    interface HTMLAtomicFormatNumberElement extends Components.AtomicFormatNumber, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatNumberElement: {
+        prototype: HTMLAtomicFormatNumberElement;
+        new (): HTMLAtomicFormatNumberElement;
+    };
+    interface HTMLAtomicFormatUnitElement extends Components.AtomicFormatUnit, HTMLStencilElement {
+    }
+    var HTMLAtomicFormatUnitElement: {
+        prototype: HTMLAtomicFormatUnitElement;
+        new (): HTMLAtomicFormatUnitElement;
+    };
+    interface HTMLAtomicFrequentlyBoughtTogetherElement extends Components.AtomicFrequentlyBoughtTogether, HTMLStencilElement {
+    }
+    var HTMLAtomicFrequentlyBoughtTogetherElement: {
+        prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
+        new (): HTMLAtomicFrequentlyBoughtTogetherElement;
+    };
+    interface HTMLAtomicHtmlElement extends Components.AtomicHtml, HTMLStencilElement {
+    }
+    var HTMLAtomicHtmlElement: {
+        prototype: HTMLAtomicHtmlElement;
+        new (): HTMLAtomicHtmlElement;
+    };
+    interface HTMLAtomicIconElement extends Components.AtomicIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicIconElement: {
+        prototype: HTMLAtomicIconElement;
+        new (): HTMLAtomicIconElement;
+    };
+    interface HTMLAtomicIconButtonElement extends Components.AtomicIconButton, HTMLStencilElement {
+    }
+    var HTMLAtomicIconButtonElement: {
+        prototype: HTMLAtomicIconButtonElement;
+        new (): HTMLAtomicIconButtonElement;
+    };
+    interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightEditToggleElement: {
+        prototype: HTMLAtomicInsightEditToggleElement;
+        new (): HTMLAtomicInsightEditToggleElement;
+    };
+    interface HTMLAtomicInsightFacetElement extends Components.AtomicInsightFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightFacetElement: {
+        prototype: HTMLAtomicInsightFacetElement;
+        new (): HTMLAtomicInsightFacetElement;
+    };
+    interface HTMLAtomicInsightHistoryToggleElement extends Components.AtomicInsightHistoryToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightHistoryToggleElement: {
+        prototype: HTMLAtomicInsightHistoryToggleElement;
+        new (): HTMLAtomicInsightHistoryToggleElement;
+    };
+    interface HTMLAtomicInsightInterfaceElement extends Components.AtomicInsightInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightInterfaceElement: {
+        prototype: HTMLAtomicInsightInterfaceElement;
+        new (): HTMLAtomicInsightInterfaceElement;
+    };
+    interface HTMLAtomicInsightLayoutElement extends Components.AtomicInsightLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightLayoutElement: {
+        prototype: HTMLAtomicInsightLayoutElement;
+        new (): HTMLAtomicInsightLayoutElement;
+    };
+    interface HTMLAtomicInsightNoResultsElement extends Components.AtomicInsightNoResults, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightNoResultsElement: {
+        prototype: HTMLAtomicInsightNoResultsElement;
+        new (): HTMLAtomicInsightNoResultsElement;
+    };
+    interface HTMLAtomicInsightNumericFacetElement extends Components.AtomicInsightNumericFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightNumericFacetElement: {
+        prototype: HTMLAtomicInsightNumericFacetElement;
+        new (): HTMLAtomicInsightNumericFacetElement;
+    };
+    interface HTMLAtomicInsightPagerElement extends Components.AtomicInsightPager, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightPagerElement: {
+        prototype: HTMLAtomicInsightPagerElement;
+        new (): HTMLAtomicInsightPagerElement;
+    };
+    interface HTMLAtomicInsightQueryErrorElement extends Components.AtomicInsightQueryError, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightQueryErrorElement: {
+        prototype: HTMLAtomicInsightQueryErrorElement;
+        new (): HTMLAtomicInsightQueryErrorElement;
+    };
+    interface HTMLAtomicInsightQuerySummaryElement extends Components.AtomicInsightQuerySummary, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightQuerySummaryElement: {
+        prototype: HTMLAtomicInsightQuerySummaryElement;
+        new (): HTMLAtomicInsightQuerySummaryElement;
+    };
+    interface HTMLAtomicInsightRefineModalElement extends Components.AtomicInsightRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightRefineModalElement: {
+        prototype: HTMLAtomicInsightRefineModalElement;
+        new (): HTMLAtomicInsightRefineModalElement;
+    };
+    interface HTMLAtomicInsightRefineToggleElement extends Components.AtomicInsightRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightRefineToggleElement: {
+        prototype: HTMLAtomicInsightRefineToggleElement;
+        new (): HTMLAtomicInsightRefineToggleElement;
+    };
+    interface HTMLAtomicInsightResultElement extends Components.AtomicInsightResult, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultElement: {
+        prototype: HTMLAtomicInsightResultElement;
+        new (): HTMLAtomicInsightResultElement;
+    };
+    interface HTMLAtomicInsightResultListElement extends Components.AtomicInsightResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultListElement: {
+        prototype: HTMLAtomicInsightResultListElement;
+        new (): HTMLAtomicInsightResultListElement;
+    };
+    interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultTemplateElement: {
+        prototype: HTMLAtomicInsightResultTemplateElement;
+        new (): HTMLAtomicInsightResultTemplateElement;
+    };
+    interface HTMLAtomicInsightSearchBoxElement extends Components.AtomicInsightSearchBox, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightSearchBoxElement: {
+        prototype: HTMLAtomicInsightSearchBoxElement;
+        new (): HTMLAtomicInsightSearchBoxElement;
+    };
+    interface HTMLAtomicInsightTabElement extends Components.AtomicInsightTab, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightTabElement: {
+        prototype: HTMLAtomicInsightTabElement;
+        new (): HTMLAtomicInsightTabElement;
+    };
+    interface HTMLAtomicInsightTabsElement extends Components.AtomicInsightTabs, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightTabsElement: {
+        prototype: HTMLAtomicInsightTabsElement;
+        new (): HTMLAtomicInsightTabsElement;
+    };
+    interface HTMLAtomicInsightTimeframeFacetElement extends Components.AtomicInsightTimeframeFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightTimeframeFacetElement: {
+        prototype: HTMLAtomicInsightTimeframeFacetElement;
+        new (): HTMLAtomicInsightTimeframeFacetElement;
+    };
+    interface HTMLAtomicIpxLayoutElement extends Components.AtomicIpxLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxLayoutElement: {
+        prototype: HTMLAtomicIpxLayoutElement;
+        new (): HTMLAtomicIpxLayoutElement;
+    };
+    interface HTMLAtomicIpxRefineModalElement extends Components.AtomicIpxRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxRefineModalElement: {
+        prototype: HTMLAtomicIpxRefineModalElement;
+        new (): HTMLAtomicIpxRefineModalElement;
+    };
+    interface HTMLAtomicIpxRefineToggleElement extends Components.AtomicIpxRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxRefineToggleElement: {
+        prototype: HTMLAtomicIpxRefineToggleElement;
+        new (): HTMLAtomicIpxRefineToggleElement;
+    };
+    interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
+    }
+    var HTMLAtomicLayoutSectionElement: {
+        prototype: HTMLAtomicLayoutSectionElement;
+        new (): HTMLAtomicLayoutSectionElement;
+    };
+    interface HTMLAtomicLoadMoreChildrenResultsElement extends Components.AtomicLoadMoreChildrenResults, HTMLStencilElement {
+    }
+    var HTMLAtomicLoadMoreChildrenResultsElement: {
+        prototype: HTMLAtomicLoadMoreChildrenResultsElement;
+        new (): HTMLAtomicLoadMoreChildrenResultsElement;
+    };
+    interface HTMLAtomicLoadMoreResultsElement extends Components.AtomicLoadMoreResults, HTMLStencilElement {
+    }
+    var HTMLAtomicLoadMoreResultsElement: {
+        prototype: HTMLAtomicLoadMoreResultsElement;
+        new (): HTMLAtomicLoadMoreResultsElement;
+    };
+    interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
+    }
+    var HTMLAtomicModalElement: {
+        prototype: HTMLAtomicModalElement;
+        new (): HTMLAtomicModalElement;
+    };
+    interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
+    }
+    var HTMLAtomicNoResultsElement: {
+        prototype: HTMLAtomicNoResultsElement;
+        new (): HTMLAtomicNoResultsElement;
+    };
+    interface HTMLAtomicNotificationsElement extends Components.AtomicNotifications, HTMLStencilElement {
+    }
+    var HTMLAtomicNotificationsElement: {
+        prototype: HTMLAtomicNotificationsElement;
+        new (): HTMLAtomicNotificationsElement;
+    };
+    interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicNumericFacetElement: {
+        prototype: HTMLAtomicNumericFacetElement;
+        new (): HTMLAtomicNumericFacetElement;
+    };
+    interface HTMLAtomicNumericRangeElement extends Components.AtomicNumericRange, HTMLStencilElement {
+    }
+    var HTMLAtomicNumericRangeElement: {
+        prototype: HTMLAtomicNumericRangeElement;
+        new (): HTMLAtomicNumericRangeElement;
+    };
+    interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
+    }
+    var HTMLAtomicPagerElement: {
+        prototype: HTMLAtomicPagerElement;
+        new (): HTMLAtomicPagerElement;
+    };
+    interface HTMLAtomicPopoverElement extends Components.AtomicPopover, HTMLStencilElement {
+    }
+    var HTMLAtomicPopoverElement: {
+        prototype: HTMLAtomicPopoverElement;
+        new (): HTMLAtomicPopoverElement;
+    };
+    interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
+    }
+    var HTMLAtomicQueryErrorElement: {
+        prototype: HTMLAtomicQueryErrorElement;
+        new (): HTMLAtomicQueryErrorElement;
+    };
+    interface HTMLAtomicQuerySummaryElement extends Components.AtomicQuerySummary, HTMLStencilElement {
+    }
+    var HTMLAtomicQuerySummaryElement: {
+        prototype: HTMLAtomicQuerySummaryElement;
+        new (): HTMLAtomicQuerySummaryElement;
+    };
+    interface HTMLAtomicRatingFacetElement extends Components.AtomicRatingFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicRatingFacetElement: {
+        prototype: HTMLAtomicRatingFacetElement;
+        new (): HTMLAtomicRatingFacetElement;
+    };
+    interface HTMLAtomicRatingRangeFacetElement extends Components.AtomicRatingRangeFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicRatingRangeFacetElement: {
+        prototype: HTMLAtomicRatingRangeFacetElement;
+        new (): HTMLAtomicRatingRangeFacetElement;
+    };
+    interface HTMLAtomicRecsInterfaceElement extends Components.AtomicRecsInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsInterfaceElement: {
+        prototype: HTMLAtomicRecsInterfaceElement;
+        new (): HTMLAtomicRecsInterfaceElement;
+    };
+    interface HTMLAtomicRecsListElement extends Components.AtomicRecsList, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsListElement: {
+        prototype: HTMLAtomicRecsListElement;
+        new (): HTMLAtomicRecsListElement;
+    };
+    interface HTMLAtomicRecsResultElement extends Components.AtomicRecsResult, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultElement: {
+        prototype: HTMLAtomicRecsResultElement;
+        new (): HTMLAtomicRecsResultElement;
+    };
+    interface HTMLAtomicRecsResultTemplateElement extends Components.AtomicRecsResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicRecsResultTemplateElement: {
+        prototype: HTMLAtomicRecsResultTemplateElement;
+        new (): HTMLAtomicRecsResultTemplateElement;
+    };
+    interface HTMLAtomicRefineModalElement extends Components.AtomicRefineModal, HTMLStencilElement {
+    }
+    var HTMLAtomicRefineModalElement: {
+        prototype: HTMLAtomicRefineModalElement;
+        new (): HTMLAtomicRefineModalElement;
+    };
+    interface HTMLAtomicRefineToggleElement extends Components.AtomicRefineToggle, HTMLStencilElement {
+    }
+    var HTMLAtomicRefineToggleElement: {
+        prototype: HTMLAtomicRefineToggleElement;
+        new (): HTMLAtomicRefineToggleElement;
+    };
+    interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
+    }
+    var HTMLAtomicRelevanceInspectorElement: {
+        prototype: HTMLAtomicRelevanceInspectorElement;
+        new (): HTMLAtomicRelevanceInspectorElement;
+    };
+    interface HTMLAtomicResultElement extends Components.AtomicResult, HTMLStencilElement {
+    }
+    var HTMLAtomicResultElement: {
+        prototype: HTMLAtomicResultElement;
+        new (): HTMLAtomicResultElement;
+    };
+    interface HTMLAtomicResultBadgeElement extends Components.AtomicResultBadge, HTMLStencilElement {
+    }
+    var HTMLAtomicResultBadgeElement: {
+        prototype: HTMLAtomicResultBadgeElement;
+        new (): HTMLAtomicResultBadgeElement;
+    };
+    interface HTMLAtomicResultChildrenElement extends Components.AtomicResultChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicResultChildrenElement: {
+        prototype: HTMLAtomicResultChildrenElement;
+        new (): HTMLAtomicResultChildrenElement;
+    };
+    interface HTMLAtomicResultChildrenTemplateElement extends Components.AtomicResultChildrenTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicResultChildrenTemplateElement: {
+        prototype: HTMLAtomicResultChildrenTemplateElement;
+        new (): HTMLAtomicResultChildrenTemplateElement;
+    };
+    interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
+    }
+    var HTMLAtomicResultDateElement: {
+        prototype: HTMLAtomicResultDateElement;
+        new (): HTMLAtomicResultDateElement;
+    };
+    interface HTMLAtomicResultFieldsListElement extends Components.AtomicResultFieldsList, HTMLStencilElement {
+    }
+    var HTMLAtomicResultFieldsListElement: {
+        prototype: HTMLAtomicResultFieldsListElement;
+        new (): HTMLAtomicResultFieldsListElement;
+    };
+    interface HTMLAtomicResultHtmlElement extends Components.AtomicResultHtml, HTMLStencilElement {
+    }
+    var HTMLAtomicResultHtmlElement: {
+        prototype: HTMLAtomicResultHtmlElement;
+        new (): HTMLAtomicResultHtmlElement;
+    };
+    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicResultIconElement: {
+        prototype: HTMLAtomicResultIconElement;
+        new (): HTMLAtomicResultIconElement;
+    };
+    interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
+    }
+    var HTMLAtomicResultImageElement: {
+        prototype: HTMLAtomicResultImageElement;
+        new (): HTMLAtomicResultImageElement;
+    };
+    interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
+    }
+    var HTMLAtomicResultLinkElement: {
+        prototype: HTMLAtomicResultLinkElement;
+        new (): HTMLAtomicResultLinkElement;
+    };
+    interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicResultListElement: {
+        prototype: HTMLAtomicResultListElement;
+        new (): HTMLAtomicResultListElement;
+    };
+    interface HTMLAtomicResultLocalizedTextElement extends Components.AtomicResultLocalizedText, HTMLStencilElement {
+    }
+    var HTMLAtomicResultLocalizedTextElement: {
+        prototype: HTMLAtomicResultLocalizedTextElement;
+        new (): HTMLAtomicResultLocalizedTextElement;
+    };
+    interface HTMLAtomicResultMultiValueTextElement extends Components.AtomicResultMultiValueText, HTMLStencilElement {
+    }
+    var HTMLAtomicResultMultiValueTextElement: {
+        prototype: HTMLAtomicResultMultiValueTextElement;
+        new (): HTMLAtomicResultMultiValueTextElement;
+    };
+    interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
+    }
+    var HTMLAtomicResultNumberElement: {
+        prototype: HTMLAtomicResultNumberElement;
+        new (): HTMLAtomicResultNumberElement;
+    };
+    interface HTMLAtomicResultPlaceholderElement extends Components.AtomicResultPlaceholder, HTMLStencilElement {
+    }
+    var HTMLAtomicResultPlaceholderElement: {
+        prototype: HTMLAtomicResultPlaceholderElement;
+        new (): HTMLAtomicResultPlaceholderElement;
+    };
+    interface HTMLAtomicResultPrintableUriElement extends Components.AtomicResultPrintableUri, HTMLStencilElement {
+    }
+    var HTMLAtomicResultPrintableUriElement: {
+        prototype: HTMLAtomicResultPrintableUriElement;
+        new (): HTMLAtomicResultPrintableUriElement;
+    };
+    interface HTMLAtomicResultRatingElement extends Components.AtomicResultRating, HTMLStencilElement {
+    }
+    var HTMLAtomicResultRatingElement: {
+        prototype: HTMLAtomicResultRatingElement;
+        new (): HTMLAtomicResultRatingElement;
+    };
+    interface HTMLAtomicResultSectionActionsElement extends Components.AtomicResultSectionActions, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionActionsElement: {
+        prototype: HTMLAtomicResultSectionActionsElement;
+        new (): HTMLAtomicResultSectionActionsElement;
+    };
+    interface HTMLAtomicResultSectionBadgesElement extends Components.AtomicResultSectionBadges, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBadgesElement: {
+        prototype: HTMLAtomicResultSectionBadgesElement;
+        new (): HTMLAtomicResultSectionBadgesElement;
+    };
+    interface HTMLAtomicResultSectionBottomMetadataElement extends Components.AtomicResultSectionBottomMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionBottomMetadataElement: {
+        prototype: HTMLAtomicResultSectionBottomMetadataElement;
+        new (): HTMLAtomicResultSectionBottomMetadataElement;
+    };
+    interface HTMLAtomicResultSectionChildrenElement extends Components.AtomicResultSectionChildren, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionChildrenElement: {
+        prototype: HTMLAtomicResultSectionChildrenElement;
+        new (): HTMLAtomicResultSectionChildrenElement;
+    };
+    interface HTMLAtomicResultSectionEmphasizedElement extends Components.AtomicResultSectionEmphasized, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionEmphasizedElement: {
+        prototype: HTMLAtomicResultSectionEmphasizedElement;
+        new (): HTMLAtomicResultSectionEmphasizedElement;
+    };
+    interface HTMLAtomicResultSectionExcerptElement extends Components.AtomicResultSectionExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionExcerptElement: {
+        prototype: HTMLAtomicResultSectionExcerptElement;
+        new (): HTMLAtomicResultSectionExcerptElement;
+    };
+    interface HTMLAtomicResultSectionTitleElement extends Components.AtomicResultSectionTitle, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleElement: {
+        prototype: HTMLAtomicResultSectionTitleElement;
+        new (): HTMLAtomicResultSectionTitleElement;
+    };
+    interface HTMLAtomicResultSectionTitleMetadataElement extends Components.AtomicResultSectionTitleMetadata, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionTitleMetadataElement: {
+        prototype: HTMLAtomicResultSectionTitleMetadataElement;
+        new (): HTMLAtomicResultSectionTitleMetadataElement;
+    };
+    interface HTMLAtomicResultSectionVisualElement extends Components.AtomicResultSectionVisual, HTMLStencilElement {
+    }
+    var HTMLAtomicResultSectionVisualElement: {
+        prototype: HTMLAtomicResultSectionVisualElement;
+        new (): HTMLAtomicResultSectionVisualElement;
+    };
+    interface HTMLAtomicResultTablePlaceholderElement extends Components.AtomicResultTablePlaceholder, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTablePlaceholderElement: {
+        prototype: HTMLAtomicResultTablePlaceholderElement;
+        new (): HTMLAtomicResultTablePlaceholderElement;
+    };
+    interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTemplateElement: {
+        prototype: HTMLAtomicResultTemplateElement;
+        new (): HTMLAtomicResultTemplateElement;
+    };
+    interface HTMLAtomicResultTextElement extends Components.AtomicResultText, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTextElement: {
+        prototype: HTMLAtomicResultTextElement;
+        new (): HTMLAtomicResultTextElement;
+    };
+    interface HTMLAtomicResultTimespanElement extends Components.AtomicResultTimespan, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTimespanElement: {
+        prototype: HTMLAtomicResultTimespanElement;
+        new (): HTMLAtomicResultTimespanElement;
+    };
+    interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
+    }
+    var HTMLAtomicResultsPerPageElement: {
+        prototype: HTMLAtomicResultsPerPageElement;
+        new (): HTMLAtomicResultsPerPageElement;
+    };
+    interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxElement: {
+        prototype: HTMLAtomicSearchBoxElement;
+        new (): HTMLAtomicSearchBoxElement;
+    };
+    interface HTMLAtomicSearchBoxInstantResultsElement extends Components.AtomicSearchBoxInstantResults, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxInstantResultsElement: {
+        prototype: HTMLAtomicSearchBoxInstantResultsElement;
+        new (): HTMLAtomicSearchBoxInstantResultsElement;
+    };
+    interface HTMLAtomicSearchBoxQuerySuggestionsElement extends Components.AtomicSearchBoxQuerySuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxQuerySuggestionsElement: {
+        prototype: HTMLAtomicSearchBoxQuerySuggestionsElement;
+        new (): HTMLAtomicSearchBoxQuerySuggestionsElement;
+    };
+    interface HTMLAtomicSearchBoxRecentQueriesElement extends Components.AtomicSearchBoxRecentQueries, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxRecentQueriesElement: {
+        prototype: HTMLAtomicSearchBoxRecentQueriesElement;
+        new (): HTMLAtomicSearchBoxRecentQueriesElement;
+    };
+    interface HTMLAtomicSearchInterfaceElement extends Components.AtomicSearchInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchInterfaceElement: {
+        prototype: HTMLAtomicSearchInterfaceElement;
+        new (): HTMLAtomicSearchInterfaceElement;
+    };
+    interface HTMLAtomicSearchLayoutElement extends Components.AtomicSearchLayout, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchLayoutElement: {
+        prototype: HTMLAtomicSearchLayoutElement;
+        new (): HTMLAtomicSearchLayoutElement;
+    };
+    interface HTMLAtomicSegmentedFacetElement extends Components.AtomicSegmentedFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetElement: {
+        prototype: HTMLAtomicSegmentedFacetElement;
+        new (): HTMLAtomicSegmentedFacetElement;
+    };
+    interface HTMLAtomicSegmentedFacetScrollableElement extends Components.AtomicSegmentedFacetScrollable, HTMLStencilElement {
+    }
+    var HTMLAtomicSegmentedFacetScrollableElement: {
+        prototype: HTMLAtomicSegmentedFacetScrollableElement;
+        new (): HTMLAtomicSegmentedFacetScrollableElement;
+    };
+    interface HTMLAtomicSmartSnippetElement extends Components.AtomicSmartSnippet, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetElement: {
+        prototype: HTMLAtomicSmartSnippetElement;
+        new (): HTMLAtomicSmartSnippetElement;
+    };
+    interface HTMLAtomicSmartSnippetAnswerElement extends Components.AtomicSmartSnippetAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetAnswerElement: {
+        prototype: HTMLAtomicSmartSnippetAnswerElement;
+        new (): HTMLAtomicSmartSnippetAnswerElement;
+    };
+    interface HTMLAtomicSmartSnippetExpandableAnswerElement extends Components.AtomicSmartSnippetExpandableAnswer, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetExpandableAnswerElement: {
+        prototype: HTMLAtomicSmartSnippetExpandableAnswerElement;
+        new (): HTMLAtomicSmartSnippetExpandableAnswerElement;
+    };
+    interface HTMLAtomicSmartSnippetFeedbackModalElement extends Components.AtomicSmartSnippetFeedbackModal, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetFeedbackModalElement: {
+        prototype: HTMLAtomicSmartSnippetFeedbackModalElement;
+        new (): HTMLAtomicSmartSnippetFeedbackModalElement;
+    };
+    interface HTMLAtomicSmartSnippetSourceElement extends Components.AtomicSmartSnippetSource, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetSourceElement: {
+        prototype: HTMLAtomicSmartSnippetSourceElement;
+        new (): HTMLAtomicSmartSnippetSourceElement;
+    };
+    interface HTMLAtomicSmartSnippetSuggestionsElement extends Components.AtomicSmartSnippetSuggestions, HTMLStencilElement {
+    }
+    var HTMLAtomicSmartSnippetSuggestionsElement: {
+        prototype: HTMLAtomicSmartSnippetSuggestionsElement;
+        new (): HTMLAtomicSmartSnippetSuggestionsElement;
+    };
+    interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
+    }
+    var HTMLAtomicSortDropdownElement: {
+        prototype: HTMLAtomicSortDropdownElement;
+        new (): HTMLAtomicSortDropdownElement;
+    };
+    interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
+    }
+    var HTMLAtomicSortExpressionElement: {
+        prototype: HTMLAtomicSortExpressionElement;
+        new (): HTMLAtomicSortExpressionElement;
+    };
+    interface HTMLAtomicTableElementElement extends Components.AtomicTableElement, HTMLStencilElement {
+    }
+    var HTMLAtomicTableElementElement: {
+        prototype: HTMLAtomicTableElementElement;
+        new (): HTMLAtomicTableElementElement;
+    };
+    interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
+    }
+    var HTMLAtomicTextElement: {
+        prototype: HTMLAtomicTextElement;
+        new (): HTMLAtomicTextElement;
+    };
+    interface HTMLAtomicTimeframeElement extends Components.AtomicTimeframe, HTMLStencilElement {
+    }
+    var HTMLAtomicTimeframeElement: {
+        prototype: HTMLAtomicTimeframeElement;
+        new (): HTMLAtomicTimeframeElement;
+    };
+    interface HTMLAtomicTimeframeFacetElement extends Components.AtomicTimeframeFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicTimeframeFacetElement: {
+        prototype: HTMLAtomicTimeframeFacetElement;
+        new (): HTMLAtomicTimeframeFacetElement;
+    };
     interface HTMLElementTagNameMap {
+        "atomic-aria-live": HTMLAtomicAriaLiveElement;
+        "atomic-breadbox": HTMLAtomicBreadboxElement;
+        "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-color-facet": HTMLAtomicColorFacetElement;
+        "atomic-component-error": HTMLAtomicComponentErrorElement;
+        "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
+        "atomic-external": HTMLAtomicExternalElement;
+        "atomic-facet": HTMLAtomicFacetElement;
+        "atomic-facet-date-input": HTMLAtomicFacetDateInputElement;
+        "atomic-facet-manager": HTMLAtomicFacetManagerElement;
+        "atomic-facet-number-input": HTMLAtomicFacetNumberInputElement;
+        "atomic-field-condition": HTMLAtomicFieldConditionElement;
+        "atomic-focus-detector": HTMLAtomicFocusDetectorElement;
+        "atomic-focus-trap": HTMLAtomicFocusTrapElement;
+        "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
+        "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
+        "atomic-format-number": HTMLAtomicFormatNumberElement;
+        "atomic-format-unit": HTMLAtomicFormatUnitElement;
+        "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
+        "atomic-html": HTMLAtomicHtmlElement;
+        "atomic-icon": HTMLAtomicIconElement;
+        "atomic-icon-button": HTMLAtomicIconButtonElement;
+        "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
+        "atomic-insight-facet": HTMLAtomicInsightFacetElement;
+        "atomic-insight-history-toggle": HTMLAtomicInsightHistoryToggleElement;
+        "atomic-insight-interface": HTMLAtomicInsightInterfaceElement;
+        "atomic-insight-layout": HTMLAtomicInsightLayoutElement;
+        "atomic-insight-no-results": HTMLAtomicInsightNoResultsElement;
+        "atomic-insight-numeric-facet": HTMLAtomicInsightNumericFacetElement;
+        "atomic-insight-pager": HTMLAtomicInsightPagerElement;
+        "atomic-insight-query-error": HTMLAtomicInsightQueryErrorElement;
+        "atomic-insight-query-summary": HTMLAtomicInsightQuerySummaryElement;
+        "atomic-insight-refine-modal": HTMLAtomicInsightRefineModalElement;
+        "atomic-insight-refine-toggle": HTMLAtomicInsightRefineToggleElement;
+        "atomic-insight-result": HTMLAtomicInsightResultElement;
+        "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
+        "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
+        "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
+        "atomic-insight-tab": HTMLAtomicInsightTabElement;
+        "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
+        "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
+        "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
+        "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
+        "atomic-layout-section": HTMLAtomicLayoutSectionElement;
+        "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
+        "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
+        "atomic-modal": HTMLAtomicModalElement;
+        "atomic-no-results": HTMLAtomicNoResultsElement;
+        "atomic-notifications": HTMLAtomicNotificationsElement;
+        "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
+        "atomic-numeric-range": HTMLAtomicNumericRangeElement;
+        "atomic-pager": HTMLAtomicPagerElement;
+        "atomic-popover": HTMLAtomicPopoverElement;
+        "atomic-query-error": HTMLAtomicQueryErrorElement;
+        "atomic-query-summary": HTMLAtomicQuerySummaryElement;
+        "atomic-rating-facet": HTMLAtomicRatingFacetElement;
+        "atomic-rating-range-facet": HTMLAtomicRatingRangeFacetElement;
+        "atomic-recs-interface": HTMLAtomicRecsInterfaceElement;
+        "atomic-recs-list": HTMLAtomicRecsListElement;
+        "atomic-recs-result": HTMLAtomicRecsResultElement;
+        "atomic-recs-result-template": HTMLAtomicRecsResultTemplateElement;
+        "atomic-refine-modal": HTMLAtomicRefineModalElement;
+        "atomic-refine-toggle": HTMLAtomicRefineToggleElement;
+        "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
+        "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-badge": HTMLAtomicResultBadgeElement;
+        "atomic-result-children": HTMLAtomicResultChildrenElement;
+        "atomic-result-children-template": HTMLAtomicResultChildrenTemplateElement;
+        "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-fields-list": HTMLAtomicResultFieldsListElement;
+        "atomic-result-html": HTMLAtomicResultHtmlElement;
+        "atomic-result-icon": HTMLAtomicResultIconElement;
+        "atomic-result-image": HTMLAtomicResultImageElement;
+        "atomic-result-link": HTMLAtomicResultLinkElement;
+        "atomic-result-list": HTMLAtomicResultListElement;
+        "atomic-result-localized-text": HTMLAtomicResultLocalizedTextElement;
+        "atomic-result-multi-value-text": HTMLAtomicResultMultiValueTextElement;
+        "atomic-result-number": HTMLAtomicResultNumberElement;
+        "atomic-result-placeholder": HTMLAtomicResultPlaceholderElement;
+        "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
+        "atomic-result-rating": HTMLAtomicResultRatingElement;
+        "atomic-result-section-actions": HTMLAtomicResultSectionActionsElement;
+        "atomic-result-section-badges": HTMLAtomicResultSectionBadgesElement;
+        "atomic-result-section-bottom-metadata": HTMLAtomicResultSectionBottomMetadataElement;
+        "atomic-result-section-children": HTMLAtomicResultSectionChildrenElement;
+        "atomic-result-section-emphasized": HTMLAtomicResultSectionEmphasizedElement;
+        "atomic-result-section-excerpt": HTMLAtomicResultSectionExcerptElement;
+        "atomic-result-section-title": HTMLAtomicResultSectionTitleElement;
+        "atomic-result-section-title-metadata": HTMLAtomicResultSectionTitleMetadataElement;
+        "atomic-result-section-visual": HTMLAtomicResultSectionVisualElement;
+        "atomic-result-table-placeholder": HTMLAtomicResultTablePlaceholderElement;
+        "atomic-result-template": HTMLAtomicResultTemplateElement;
+        "atomic-result-text": HTMLAtomicResultTextElement;
+        "atomic-result-timespan": HTMLAtomicResultTimespanElement;
+        "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
+        "atomic-search-box": HTMLAtomicSearchBoxElement;
+        "atomic-search-box-instant-results": HTMLAtomicSearchBoxInstantResultsElement;
+        "atomic-search-box-query-suggestions": HTMLAtomicSearchBoxQuerySuggestionsElement;
+        "atomic-search-box-recent-queries": HTMLAtomicSearchBoxRecentQueriesElement;
+        "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-search-layout": HTMLAtomicSearchLayoutElement;
+        "atomic-segmented-facet": HTMLAtomicSegmentedFacetElement;
+        "atomic-segmented-facet-scrollable": HTMLAtomicSegmentedFacetScrollableElement;
+        "atomic-smart-snippet": HTMLAtomicSmartSnippetElement;
+        "atomic-smart-snippet-answer": HTMLAtomicSmartSnippetAnswerElement;
+        "atomic-smart-snippet-expandable-answer": HTMLAtomicSmartSnippetExpandableAnswerElement;
+        "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
+        "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
+        "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
+        "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-table-element": HTMLAtomicTableElementElement;
+        "atomic-text": HTMLAtomicTextElement;
+        "atomic-timeframe": HTMLAtomicTimeframeElement;
+        "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
     }
 }
 declare namespace LocalJSX {
+    interface AtomicAriaLive {
+    }
+    interface AtomicBreadbox {
+    }
+    interface AtomicCategoryFacet {
+        /**
+          * The base path shared by all values for the facet.  Specify the property as an array using a JSON string representation: ```html  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet> ```
+         */
+        "basePath"?: string[];
+        /**
+          * The character that separates values of a multi-value field.
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc   ... ></atomic-category-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-category-facet   depends-on-abc="doc"   ... ></atomic-category-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to use basePath as a filter for the results.
+         */
+        "filterByBasePath"?: boolean;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric' and 'occurrences'.
+         */
+        "sortCriteria"?: CategoryFacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch"?: boolean;
+    }
+    interface AtomicColorFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc   ... ></atomic-color-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-color-facet   depends-on-abc="doc"   ... ></atomic-color-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or boxes (multiple selection). Possible values are 'checkbox', and 'box'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch"?: boolean;
+    }
+    interface AtomicComponentError {
+        "element": HTMLElement;
+        "error": Error;
+    }
+    interface AtomicDidYouMean {
+    }
+    interface AtomicExternal {
+        /**
+          * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
+         */
+        "selector"?: string;
+    }
+    interface AtomicFacet {
+        /**
+          * Specifies an explicit list of `allowedValues` in the Search API request, as a JSON string representation.  If you specify a list of values for this option, the facet uses only these values (if they are available in the current result set).  Example:  The following facet only uses the `Contact`, `Account`, and `File` values of the `objecttype` field. Even if the current result set contains other `objecttype` values, such as `Message`, or `Product`, the facet does not use those other values.  ```html <atomic-facet field="objecttype" allowed-values='["Contact","Account","File"]'></div> ```  The maximum amount of allowed values is 25.  Default value is `undefined`, and the facet uses all available values for its `field` in the current result set.
+         */
+        "allowedValues"?: string[];
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc   ... ></atomic-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box. When "true", the search is only enabled when more facet values are available.
+         */
+        "withSearch"?: boolean;
+    }
+    interface AtomicFacetDateInput {
+        "bindings": AnyBindings;
+        "filter": DateFilter;
+        "filterState": DateFilterState;
+        "label": string;
+        "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
+    }
+    interface AtomicFacetManager {
+        /**
+          * The number of expanded facets inside the manager. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded. Useful when you want to set the collapse state for each facet individually.
+         */
+        "collapseFacetsAfter"?: number;
+    }
+    interface AtomicFacetNumberInput {
+        "bindings": AnyBindings;
+        "filter": NumericFilter;
+        "filterState": NumericFilterState;
+        "label": string;
+        "onAtomic/numberInputApply"?: (event: AtomicFacetNumberInputCustomEvent<any>) => void;
+        "type": NumberInputType;
+    }
+    interface AtomicFieldCondition {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: ResultTemplateCondition[];
+        /**
+          * Verifies whether the specified fields are defined.
+         */
+        "ifDefined"?: string;
+        /**
+          * Verifies whether the specified fields are not defined.
+         */
+        "ifNotDefined"?: string;
+    }
+    interface AtomicFocusDetector {
+        "onFocusEnter"?: (event: AtomicFocusDetectorCustomEvent<any>) => void;
+        "onFocusExit"?: (event: AtomicFocusDetectorCustomEvent<any>) => void;
+    }
+    interface AtomicFocusTrap {
+        "active"?: boolean;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the focus trap is inactive.
+         */
+        "container"?: HTMLElement;
+        /**
+          * Whether the element should be hidden from screen readers & not interactive with the tab, when not active.
+         */
+        "shouldHideSelf"?: boolean;
+        /**
+          * The source to focus when the focus trap becomes inactive.
+         */
+        "source"?: HTMLElement;
+    }
+    interface AtomicFoldedResultList {
+        /**
+          * The name of the field that uniquely identifies a result within a collection.
+          * @defaultValue `foldingchild`
+         */
+        "childField"?: string;
+        /**
+          * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+          * @defaultValue `foldingcollection`
+         */
+        "collectionField"?: string;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+          * @defaultValue `foldingparent`
+         */
+        "parentField"?: string;
+    }
+    interface AtomicFormatCurrency {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB. See the current [currency & funds code list](https://www.six-group.com/en/products-services/financial-information/data-standards.html#scrollTo=maintenance-agency).
+         */
+        "currency": string;
+    }
+    interface AtomicFormatNumber {
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicFormatUnit {
+        /**
+          * The unit to use in unit formatting. Leverages the [Intl.NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat) constructor. The unit must be [sanctioned unit identifier](https://tc39.es/proposal-unified-intl-numberformat/section6/locales-currencies-tz_proposed_out.html#sec-issanctionedsimpleunitidentifier)
+         */
+        "unit": string;
+        /**
+          * The unit formatting style to use in unit formatting.  * "long" (e.g., 16 litres) * "short" (e.g., 16 l) * "narrow" (e.g., 16l)
+         */
+        "unitDisplay"?: 'long' | 'short' | 'narrow';
+    }
+    interface AtomicFrequentlyBoughtTogether {
+    }
+    interface AtomicHtml {
+        /**
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize"?: boolean;
+        /**
+          * The string value containing HTML to display;
+         */
+        "value": string;
+    }
+    interface AtomicIcon {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon": string;
+    }
+    interface AtomicIconButton {
+        "badge"?: VNode;
+        "buttonRef"?: (el?: HTMLButtonElement) => void;
+        "clickCallback"?: () => void;
+        "disabled"?: boolean;
+        "icon": string;
+        "labelI18nKey": string;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightEditToggle {
+        "clickCallback"?: () => void;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightFacet {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs"?: FacetDisplayValues;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: InsightFacetSortCriterion;
+    }
+    interface AtomicInsightHistoryToggle {
+        "clickCallback"?: () => void;
+        "tooltip"?: string;
+    }
+    interface AtomicInsightInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * The service insight interface headless engine.
+         */
+        "engine"?: InsightEngine;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface> ```
+         */
+        "fieldsToInclude"?: string[];
+        /**
+          * The service insight interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The service insight interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: InsightLogLevel;
+        /**
+          * The number of results per page. By default, this is set to `5`.
+         */
+        "resultsPerPage"?: number;
+    }
+    interface AtomicInsightLayout {
+        /**
+          * Whether the interface should be shown in widget format.
+         */
+        "widget"?: boolean;
+    }
+    interface AtomicInsightNoResults {
+    }
+    interface AtomicInsightNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc   ... ></atomic-insight-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-numeric-facet   depends-on-abc="doc"   ... ></atomic-insight-numeric-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs"?: NumericFacetDisplayValues;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm"?: InsightRangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: InsightRangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
+         */
+        "withInput"?: NumberInputType;
+    }
+    interface AtomicInsightPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicInsightPagerCustomEvent<any>) => void;
+    }
+    interface AtomicInsightQueryError {
+    }
+    interface AtomicInsightQuerySummary {
+    }
+    interface AtomicInsightRefineModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicInsightRefineToggle {
+    }
+    interface AtomicInsightResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": InsightInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * The result item.
+         */
+        "result": InsightResult;
+        /**
+          * Whether an atomic-result-link inside atomic-insight-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicInsightStore;
+    }
+    interface AtomicInsightResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicInsightResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: InsightResultTemplateCondition[];
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
+    }
+    interface AtomicInsightSearchBox {
+        /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch"?: boolean;
+        /**
+          * The number of query suggestions to display when interacting with the search box.
+         */
+        "numberOfSuggestions"?: number;
+    }
+    interface AtomicInsightTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active"?: boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label"?: string;
+    }
+    interface AtomicInsightTabs {
+    }
+    interface AtomicInsightTimeframeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-insight-facet facet-id="abc" field="objecttype" ...></atomic-insight-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc   ... ></atomic-insight-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-insight-timeframe-facet   depends-on-abc="doc"   ... ></atomic-insight-timeframe-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field"?: string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies if the facet is collapsed.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+         */
+        "withDatePicker"?: boolean;
+    }
+    interface AtomicIpxLayout {
+    }
+    interface AtomicIpxRefineModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicIpxRefineToggle {
+    }
+    interface AtomicLayoutSection {
+        /**
+          * For column sections, the maximum horizontal space it should take. E.g. '300px'
+         */
+        "maxWidth"?: string;
+        /**
+          * For column sections, the minimum horizontal space it should take. E.g. '300px'
+         */
+        "minWidth"?: string;
+        /**
+          * The name of the layout section.
+         */
+        "section": Section;
+    }
+    interface AtomicLoadMoreChildrenResults {
+        /**
+          * The non-localized label for the button used to load more results.
+         */
+        "label"?: string;
+    }
+    interface AtomicLoadMoreResults {
+    }
+    interface AtomicModal {
+        "close"?: () => void;
+        /**
+          * The container to hide from the tabindex and accessibility DOM when the modal is closed.
+         */
+        "container"?: HTMLElement;
+        "fullscreen"?: boolean;
+        "isOpen"?: boolean;
+        "onAnimationEnded"?: (event: AtomicModalCustomEvent<never>) => void;
+        "source"?: HTMLElement;
+    }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction"?: boolean;
+    }
+    interface AtomicNotifications {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use above the notifications, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * Specifies an icon to display at the left-end of a notification.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+    }
+    interface AtomicNumericFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc   ... ></atomic-numeric-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-numeric-facet   depends-on-abc="doc"   ... ></atomic-numeric-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges. If the number of values is 0, no ranges will be displayed.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range. The value of `"even"` generates equally sized facet ranges across all of the results.
+         */
+        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'ascending' and 'descending'.
+         */
+        "sortCriteria"?: RangeFacetSortCriterion;
+        /**
+          * Whether this facet should contain an input allowing users to set custom ranges. Depending on the field, the input can allow either decimal or integer values.
+         */
+        "withInput"?: NumberInputType;
+    }
+    interface AtomicNumericRange {
+        /**
+          * The ending value for the numeric range.
+         */
+        "end": number;
+        /**
+          * Specifies whether the end value should be included in the range.
+         */
+        "endInclusive"?: boolean;
+        /**
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The starting value for the numeric range.
+         */
+        "start": number;
+    }
+    interface AtomicPager {
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
+        "onAtomic/scrollToTop"?: (event: AtomicPagerCustomEvent<any>) => void;
+    }
+    interface AtomicPopover {
+    }
+    interface AtomicQueryError {
+    }
+    interface AtomicQuerySummary {
+    }
+    interface AtomicRatingFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc   ... ></atomic-rating-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-facet   depends-on-abc="doc"   ... ></atomic-rating-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection) or links (single selection). Possible values are 'checkbox' and 'link'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The maximum value in the field's index and the number of rating icons to display in the facet. If not assigned a value, this property will default to the same value as `numberOfIntervals`.
+         */
+        "maxValueInIndex"?: number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex"?: number;
+        /**
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
+         */
+        "numberOfIntervals"?: number;
+    }
+    interface AtomicRatingRangeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc   ... ></atomic-rating-range-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-rating-range-facet   depends-on-abc="doc"   ... ></atomic-rating-range-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The maximum value in the field's index and the number of rating icons to display in the facet. This property will default to the same value as `numberOfIntervals`, if not assigned a value.
+         */
+        "maxValueInIndex"?: number;
+        /**
+          * The minimum value of the field.
+         */
+        "minValueInIndex"?: number;
+        /**
+          * The number of options to display in the facet. If `maxValueInIndex` isn't specified, it will be assumed that this is also the maximum number of rating icons.
+         */
+        "numberOfIntervals"?: number;
+    }
+    interface AtomicRecsInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * The recommendation interface headless engine.
+         */
+        "engine"?: RecommendationEngine;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-recs-interface fields-to-include='["fieldA", "fieldB"]'></atomic-recs-interface> ```
+         */
+        "fieldsToInclude"?: string[];
+        /**
+          * The recommendation interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The recommendation interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: RecsLogLevel;
+        /**
+          * The recommendation interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * The recommendation interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub"?: string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
+    }
+    interface AtomicRecsList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The layout to apply when displaying results themselves. This does not affect the display of the surrounding list itself. To modify the number of recommendations per column, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "display"?: ResultDisplayBasicLayout;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The non-localized label for the list of recommendations.
+         */
+        "label"?: string;
+        /**
+          * The total number of recommendations to display. This does not modify the number of recommendations per column. To do so, modify the --atomic-recs-number-of-columns CSS variable.
+         */
+        "numberOfRecommendations"?: number;
+        /**
+          * The number of recommendations to display, per page. Setting a value greater than and lower than the numberOfRecommendations value activates the carousel. This does not affect the display of the list itself, only the number of recommendation pages.
+         */
+        "numberOfRecommendationsPerPage"?: number;
+        /**
+          * The Recommendation identifier used by the Coveo platform to retrieve recommended documents. Make sure to set a different value for each atomic-recs-list in your page.
+         */
+        "recommendation"?: string;
+    }
+    interface AtomicRecsResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * The size of the results.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The layout to apply to display results.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": RecsInteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": RecsResult;
+        /**
+          * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicRecsStore;
+    }
+    interface AtomicRecsResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: RecsResultTemplateCondition[];
+        /**
+          * The field that, when defined on a result item, would allow the template to be applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are defined: `if-defined="filetype,sourcetype"`
+         */
+        "ifDefined"?: string;
+        /**
+          * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
+         */
+        "ifNotDefined"?: string;
+    }
+    interface AtomicRefineModal {
+        "isOpen"?: boolean;
+        "openButton"?: HTMLElement;
+    }
+    interface AtomicRefineToggle {
+    }
+    interface AtomicRelevanceInspector {
+        /**
+          * The Atomic interface bindings, namely the headless search engine and i18n instances.
+         */
+        "bindings": Bindings;
+    }
+    interface AtomicResult {
+        /**
+          * The classes to add to the result element.
+         */
+        "classes"?: string;
+        /**
+          * The result content to display.
+         */
+        "content"?: ParentNode;
+        /**
+          * How large or small results should be.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * How results should be displayed.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The size of the visual section in result list items.  This is overwritten by the image size defined in the result content, if it exists.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The InteractiveResult item.
+         */
+        "interactiveResult": InteractiveResult;
+        "loadingFlag"?: string;
+        /**
+          * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
+         */
+        "renderingFunction"?: ResultRenderingFunction;
+        /**
+          * The result item.
+         */
+        "result": Result | FoldedResult;
+        /**
+          * Whether an atomic-result-link inside atomic-result should stop click event propagation.
+         */
+        "stopPropagation"?: boolean;
+        /**
+          * Global Atomic state.
+         */
+        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+    }
+    interface AtomicResultBadge {
+        /**
+          * The field to display in the badge.  Not compatible with `label` nor slotted elements.
+         */
+        "field"?: string;
+        /**
+          * Specifies an icon to display at the left-end of the badge. This can be used in conjunction with `field`, `label` or slotted elements.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly
+         */
+        "icon"?: string;
+        /**
+          * The text to display in the badge.  Not compatible with `field` nor slotted elements.
+         */
+        "label"?: string;
+    }
+    interface AtomicResultChildren {
+        /**
+          * The expected size of the image displayed in the children results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * Whether to inherit templates defined in a parent atomic-result-children. Only works for the second level of child nesting.
+         */
+        "inheritTemplates"?: boolean;
+        /**
+          * The non-localized copy for an empty result state.
+         */
+        "noResultText"?: string;
+    }
+    interface AtomicResultChildrenTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: ResultTemplateCondition[];
+    }
+    interface AtomicResultDate {
+        /**
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Available formats: https://day.js.org/docs/en/display/format
+         */
+        "format"?: string;
+        /**
+          * Whether the date should display in the [relative time format](https://day.js.org/docs/en/plugin/calendar).  To modify the relative time string, use the [localization feature](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).
+         */
+        "relativeTime"?: boolean;
+    }
+    interface AtomicResultFieldsList {
+    }
+    interface AtomicResultHtml {
+        /**
+          * The result field which the component should use. If set, Atomic searches for the specified field in the `Result` object first. If there's no such a field, Atomic searches throught the `Result.raw` object. It's important to include the necessary field in the `ResultList` component.
+         */
+        "field": string;
+        /**
+          * Specify if the content should be sanitized, using [`DOMPurify`](https://www.npmjs.com/package/dompurify).
+         */
+        "sanitize"?: boolean;
+    }
+    interface AtomicResultIcon {
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+    }
+    interface AtomicResultLink {
+        /**
+          * Specifies a template literal from which to generate the `href` attribute value (see [Template literals](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals)).  The template literal can reference any number of result properties from the parent result. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`. ```html <atomic-result-link href-template='${clickUri}?id=${raw.itemtitle}'></atomic-result-link> ```
+         */
+        "hrefTemplate"?: string;
+    }
+    interface AtomicResultList {
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The desired layout to use when displaying results. Layouts affect how many results to display per row and how visually distinct they are from each other.
+         */
+        "display"?: ResultDisplayLayout;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicResultLocalizedText {
+        /**
+          * The numerical field value used to determine whether to use the singular or plural value of a translation.
+         */
+        "fieldCount"?: string;
+        /**
+          * The i18n translation key.
+         */
+        "localeKey": string;
+    }
+    interface AtomicResultMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter"?: string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay"?: number;
+    }
+    interface AtomicResultNumber {
+        /**
+          * The field that the component should use. The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
+         */
+        "field": string;
+    }
+    interface AtomicResultPlaceholder {
+        "density": ResultDisplayDensity;
+        "display": ResultDisplayLayout;
+        "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicResultPrintableUri {
+        /**
+          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
+         */
+        "maxNumberOfParts"?: number;
+    }
+    interface AtomicResultRating {
+        /**
+          * The field whose values you want to display as a rating.
+         */
+        "field": string;
+        /**
+          * The SVG icon to use to display the rating.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.  When using a custom icon, at least part of your icon should have the color set to `fill="currentColor"`. This part of the SVG will take on the colors set in the following [variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties):  - `--atomic-rating-icon-active-color` - `--atomic-rating-icon-inactive-color`
+         */
+        "icon"?: string;
+        /**
+          * The maximum value of the field. This value is also used as the number of icons to be displayed.
+         */
+        "maxValueInIndex"?: number;
+    }
+    interface AtomicResultSectionActions {
+    }
+    interface AtomicResultSectionBadges {
+    }
+    interface AtomicResultSectionBottomMetadata {
+    }
+    interface AtomicResultSectionChildren {
+    }
+    interface AtomicResultSectionEmphasized {
+    }
+    interface AtomicResultSectionExcerpt {
+    }
+    interface AtomicResultSectionTitle {
+    }
+    interface AtomicResultSectionTitleMetadata {
+    }
+    interface AtomicResultSectionVisual {
+        /**
+          * How large or small the visual section of results using this template should be.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+    }
+    interface AtomicResultTablePlaceholder {
+        "density": ResultDisplayDensity;
+        "imageSize": ResultDisplayImageSize;
+        "rows": number;
+    }
+    interface AtomicResultTemplate {
+        /**
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
+        "conditions"?: ResultTemplateCondition[];
+    }
+    interface AtomicResultText {
+        /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
+        /**
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * If this is set to true, it will look for the corresponding highlight property and use it if available.
+         */
+        "shouldHighlight"?: boolean;
+    }
+    interface AtomicResultTimespan {
+        /**
+          * The target result field. The component first looks for the field in the Result object, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The format to apply to the result field value.  By default, the format is HH:mm:ss when the duration is under a day, and it is an approximation when longer (days, months or years).  The string displayed when there is an approximation can be modified with [localization](https://docs.coveo.com/en/atomic/latest/usage/atomic-localization/).  Available formats: https://day.js.org/docs/en/durations/format
+         */
+        "format"?: string;
+        /**
+          * The unit of measurement of the field value. Available units: https://day.js.org/docs/en/durations/creating
+         */
+        "unit"?: string;
+    }
+    interface AtomicResultsPerPage {
+        /**
+          * A list of choices for the number of results to display per page, separated by commas.
+         */
+        "choicesDisplayed"?: string;
+        /**
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+         */
+        "initialChoice"?: number;
+    }
+    interface AtomicSearchBox {
+        /**
+          * Whether to clear all active query filters when the end user submits a new query from the search box. Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
+         */
+        "clearFilters"?: boolean;
+        /**
+          * Whether to prevent the user from triggering a search from the component. Perfect for use cases where you need to disable the search conditionally, like when the input is empty.
+         */
+        "disableSearch"?: boolean;
+        /**
+          * The amount of queries displayed when the user interacts with the search box. By default, a mix of query suggestions and recent queries will be shown. You can configure those settings using the following components as children:  - atomic-search-box-query-suggestions  - atomic-search-box-recent-queries
+         */
+        "numberOfQueries"?: number;
+        /**
+          * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.  Example: ```html <script>   document.querySelector('atomic-search-box').addEventListener((e) => {     e.preventDefault();     // handle redirection   }); </script> ... <atomic-search-box redirection-url="/search"></atomic-search-box> ```
+         */
+        "onRedirect"?: (event: AtomicSearchBoxCustomEvent<RedirectionPayload>) => void;
+        /**
+          * Defining this option makes the search box standalone (see [Use a Standalone Search Box](https://docs.coveo.com/en/atomic/latest/usage/ssb/)).  This option defines the default URL the user should be redirected to, when a query is submitted. If a query pipeline redirect is triggered, it will redirect to that URL instead (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
+         */
+        "redirectionUrl"?: string;
+        /**
+          * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
+         */
+        "suggestionTimeout"?: number;
+    }
+    interface AtomicSearchBoxInstantResults {
+        /**
+          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
+         */
+        "ariaLabelGenerator"?: AriaLabelGenerator;
+        /**
+          * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
+         */
+        "density"?: ResultDisplayDensity;
+        /**
+          * The expected size of the image displayed in the results.
+         */
+        "imageSize"?: ResultDisplayImageSize;
+        /**
+          * The maximum number of results to show.
+         */
+        "maxResultsPerQuery"?: number;
+    }
+    interface AtomicSearchBoxQuerySuggestions {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
+    interface AtomicSearchBoxRecentQueries {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon"?: string;
+        /**
+          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
+         */
+        "maxWithQuery"?: number;
+        /**
+          * The maximum number of suggestions that will be displayed initially when the input field is empty.
+         */
+        "maxWithoutQuery"?: number;
+    }
+    interface AtomicSearchInterface {
+        /**
+          * Whether analytics should be enabled.
+         */
+        "analytics"?: boolean;
+        /**
+          * The search interface headless engine.
+         */
+        "engine"?: SearchEngine;
+        /**
+          * A list of non-default fields to include in the query results.  Specify the property as an array using a JSON string representation: ```html <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface> ```
+         */
+        "fieldsToInclude"?: string[];
+        /**
+          * The search interface i18next instance.
+         */
+        "i18n"?: i18n;
+        /**
+          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
+         */
+        "iconAssetsPath"?: string;
+        /**
+          * The search interface language.
+         */
+        "language"?: string;
+        /**
+          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
+         */
+        "languageAssetsPath"?: string;
+        /**
+          * The severity level of the messages to log in the console.
+         */
+        "logLevel"?: LogLevel;
+        /**
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
+        "pipeline"?: string;
+        /**
+          * Whether the state should be reflected in the URL parameters.
+         */
+        "reflectStateInUrl"?: boolean;
+        /**
+          * The CSS selector for the container where the interface will scroll back to.
+         */
+        "scrollContainer"?: string;
+        /**
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+         */
+        "searchHub"?: string;
+        /**
+          * The [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) identifier of the time zone to use to correctly interpret dates in the query expression, facets, and result items. By default, the timezone will be [guessed](https://day.js.org/docs/en/timezone/guessing-user-timezone).  Example: "America/Montreal"
+         */
+        "timezone"?: string;
+    }
+    interface AtomicSearchLayout {
+        /**
+          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
+         */
+        "mobileBreakpoint"?: string;
+    }
+    interface AtomicSegmentedFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-segmented-facet facet-id="abc" field="objecttype" ...></atomic-segmented-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-segmented-facet   depends-on-abc   ... ></atomic-segmented-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-facet   depends-on-abc="doc"   ... ></atomic-segmented-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * The non-localized label for the facet. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+    }
+    interface AtomicSegmentedFacetScrollable {
+    }
+    interface AtomicSmartSnippet {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
+        /**
+          * Sets the style of the snippet.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetAnswer {
+        "htmlContent": string;
+        "innerStyle"?: string;
+        "onAnswerSizeUpdated"?: (event: AtomicSmartSnippetAnswerCustomEvent<{height: number}>) => void;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetAnswerCustomEvent<InlineLink>) => void;
+    }
+    interface AtomicSmartSnippetExpandableAnswer {
+        /**
+          * When the answer is partly hidden, how much of its height (in pixels) should be visible.
+         */
+        "collapsedHeight"?: number;
+        "expanded": boolean;
+        "htmlContent": string;
+        /**
+          * The maximum height (in pixels) a snippet can have before the component truncates it and displays a "show more" button.
+         */
+        "maximumHeight"?: number;
+        "onBeginDelayedSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
+        "onCancelPendingSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
+        "onCollapse"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
+        "onExpand"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<any>) => void;
+        "onSelectInlineLink"?: (event: AtomicSmartSnippetExpandableAnswerCustomEvent<InlineLink>) => void;
+        /**
+          * Sets the style of the snippet.  Example: ```ts expandableAnswer.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSmartSnippetFeedbackModal {
+        "isOpen"?: boolean;
+        "onFeedbackSent"?: (event: AtomicSmartSnippetFeedbackModalCustomEvent<any>) => void;
+        "source"?: HTMLElement;
+    }
+    interface AtomicSmartSnippetSource {
+        "onBeginDelayedSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "onCancelPendingSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "onSelectSource"?: (event: AtomicSmartSnippetSourceCustomEvent<any>) => void;
+        "source": Result;
+    }
+    interface AtomicSmartSnippetSuggestions {
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
+         */
+        "headingLevel"?: number;
+        /**
+          * Sets the style of the snippets.  Example: ```ts smartSnippet.snippetStyle = `   b {     color: blue;   } `; ```
+         */
+        "snippetStyle"?: string;
+    }
+    interface AtomicSortDropdown {
+    }
+    interface AtomicSortExpression {
+        /**
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are:  * `relevancy` * `date ascending`/`date descending` * `qre` * `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
+         */
+        "expression": string;
+        /**
+          * The non-localized label to display for this expression.
+         */
+        "label": string;
+    }
+    interface AtomicTableElement {
+        /**
+          * The label to display in the header of this column.
+         */
+        "label": string;
+    }
+    interface AtomicText {
+        /**
+          * The count value used for plurals.
+         */
+        "count"?: number;
+        /**
+          * The string key value.
+         */
+        "value": string;
+    }
+    interface AtomicTimeframe {
+        /**
+          * The amount of units from which to count.  E.g., 10 days, 1 year, etc.
+         */
+        "amount"?: number;
+        /**
+          * The non-localized label for the timeframe. When defined, it will appear instead of the formatted value. Used in the `atomic-breadbox` component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * The relative period of time to now.
+         */
+        "period"?: 'past' | 'next';
+        /**
+          * The unit used to define: - the start date of the timeframe, if the period is `past` - the end date of the timeframe, if the period is `future`
+         */
+        "unit": RelativeDateUnit;
+    }
+    interface AtomicTimeframeFacet {
+        /**
+          * The required facets and values for this facet to be displayed. Examples: ```html <atomic-facet facet-id="abc" field="objecttype" ...></atomic-facet>  <!-- To show the facet when any value is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc   ... ></atomic-timeframe-facet>  <!-- To show the facet when value "doc" is selected in the facet with id "abc": --> <atomic-timeframe-facet   depends-on-abc="doc"   ... ></atomic-timeframe-facet> ```
+         */
+        "dependsOn"?: Record<string, string>;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field"?: string;
+        /**
+          * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+         */
+        "filterFacetCount"?: boolean;
+        /**
+          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading over the facet, from 1 to 6.
+         */
+        "headingLevel"?: number;
+        /**
+          * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values. Note: A high injectionDepth may negatively impact the facet request performance. Minimum: `0` Default: `1000`
+         */
+        "injectionDepth"?: number;
+        /**
+          * Specifies whether the facet is collapsed. When the facet is the child of an `atomic-facet-manager` component, the facet manager controls this property.
+         */
+        "isCollapsed"?: boolean;
+        /**
+          * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
+         */
+        "label"?: string;
+        /**
+          * Whether this facet should contain an datepicker allowing users to set custom ranges.
+         */
+        "withDatePicker"?: boolean;
+    }
     interface IntrinsicElements {
+        "atomic-aria-live": AtomicAriaLive;
+        "atomic-breadbox": AtomicBreadbox;
+        "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-color-facet": AtomicColorFacet;
+        "atomic-component-error": AtomicComponentError;
+        "atomic-did-you-mean": AtomicDidYouMean;
+        "atomic-external": AtomicExternal;
+        "atomic-facet": AtomicFacet;
+        "atomic-facet-date-input": AtomicFacetDateInput;
+        "atomic-facet-manager": AtomicFacetManager;
+        "atomic-facet-number-input": AtomicFacetNumberInput;
+        "atomic-field-condition": AtomicFieldCondition;
+        "atomic-focus-detector": AtomicFocusDetector;
+        "atomic-focus-trap": AtomicFocusTrap;
+        "atomic-folded-result-list": AtomicFoldedResultList;
+        "atomic-format-currency": AtomicFormatCurrency;
+        "atomic-format-number": AtomicFormatNumber;
+        "atomic-format-unit": AtomicFormatUnit;
+        "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
+        "atomic-html": AtomicHtml;
+        "atomic-icon": AtomicIcon;
+        "atomic-icon-button": AtomicIconButton;
+        "atomic-insight-edit-toggle": AtomicInsightEditToggle;
+        "atomic-insight-facet": AtomicInsightFacet;
+        "atomic-insight-history-toggle": AtomicInsightHistoryToggle;
+        "atomic-insight-interface": AtomicInsightInterface;
+        "atomic-insight-layout": AtomicInsightLayout;
+        "atomic-insight-no-results": AtomicInsightNoResults;
+        "atomic-insight-numeric-facet": AtomicInsightNumericFacet;
+        "atomic-insight-pager": AtomicInsightPager;
+        "atomic-insight-query-error": AtomicInsightQueryError;
+        "atomic-insight-query-summary": AtomicInsightQuerySummary;
+        "atomic-insight-refine-modal": AtomicInsightRefineModal;
+        "atomic-insight-refine-toggle": AtomicInsightRefineToggle;
+        "atomic-insight-result": AtomicInsightResult;
+        "atomic-insight-result-list": AtomicInsightResultList;
+        "atomic-insight-result-template": AtomicInsightResultTemplate;
+        "atomic-insight-search-box": AtomicInsightSearchBox;
+        "atomic-insight-tab": AtomicInsightTab;
+        "atomic-insight-tabs": AtomicInsightTabs;
+        "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-ipx-layout": AtomicIpxLayout;
+        "atomic-ipx-refine-modal": AtomicIpxRefineModal;
+        "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
+        "atomic-layout-section": AtomicLayoutSection;
+        "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
+        "atomic-load-more-results": AtomicLoadMoreResults;
+        "atomic-modal": AtomicModal;
+        "atomic-no-results": AtomicNoResults;
+        "atomic-notifications": AtomicNotifications;
+        "atomic-numeric-facet": AtomicNumericFacet;
+        "atomic-numeric-range": AtomicNumericRange;
+        "atomic-pager": AtomicPager;
+        "atomic-popover": AtomicPopover;
+        "atomic-query-error": AtomicQueryError;
+        "atomic-query-summary": AtomicQuerySummary;
+        "atomic-rating-facet": AtomicRatingFacet;
+        "atomic-rating-range-facet": AtomicRatingRangeFacet;
+        "atomic-recs-interface": AtomicRecsInterface;
+        "atomic-recs-list": AtomicRecsList;
+        "atomic-recs-result": AtomicRecsResult;
+        "atomic-recs-result-template": AtomicRecsResultTemplate;
+        "atomic-refine-modal": AtomicRefineModal;
+        "atomic-refine-toggle": AtomicRefineToggle;
+        "atomic-relevance-inspector": AtomicRelevanceInspector;
+        "atomic-result": AtomicResult;
+        "atomic-result-badge": AtomicResultBadge;
+        "atomic-result-children": AtomicResultChildren;
+        "atomic-result-children-template": AtomicResultChildrenTemplate;
+        "atomic-result-date": AtomicResultDate;
+        "atomic-result-fields-list": AtomicResultFieldsList;
+        "atomic-result-html": AtomicResultHtml;
+        "atomic-result-icon": AtomicResultIcon;
+        "atomic-result-image": AtomicResultImage;
+        "atomic-result-link": AtomicResultLink;
+        "atomic-result-list": AtomicResultList;
+        "atomic-result-localized-text": AtomicResultLocalizedText;
+        "atomic-result-multi-value-text": AtomicResultMultiValueText;
+        "atomic-result-number": AtomicResultNumber;
+        "atomic-result-placeholder": AtomicResultPlaceholder;
+        "atomic-result-printable-uri": AtomicResultPrintableUri;
+        "atomic-result-rating": AtomicResultRating;
+        "atomic-result-section-actions": AtomicResultSectionActions;
+        "atomic-result-section-badges": AtomicResultSectionBadges;
+        "atomic-result-section-bottom-metadata": AtomicResultSectionBottomMetadata;
+        "atomic-result-section-children": AtomicResultSectionChildren;
+        "atomic-result-section-emphasized": AtomicResultSectionEmphasized;
+        "atomic-result-section-excerpt": AtomicResultSectionExcerpt;
+        "atomic-result-section-title": AtomicResultSectionTitle;
+        "atomic-result-section-title-metadata": AtomicResultSectionTitleMetadata;
+        "atomic-result-section-visual": AtomicResultSectionVisual;
+        "atomic-result-table-placeholder": AtomicResultTablePlaceholder;
+        "atomic-result-template": AtomicResultTemplate;
+        "atomic-result-text": AtomicResultText;
+        "atomic-result-timespan": AtomicResultTimespan;
+        "atomic-results-per-page": AtomicResultsPerPage;
+        "atomic-search-box": AtomicSearchBox;
+        "atomic-search-box-instant-results": AtomicSearchBoxInstantResults;
+        "atomic-search-box-query-suggestions": AtomicSearchBoxQuerySuggestions;
+        "atomic-search-box-recent-queries": AtomicSearchBoxRecentQueries;
+        "atomic-search-interface": AtomicSearchInterface;
+        "atomic-search-layout": AtomicSearchLayout;
+        "atomic-segmented-facet": AtomicSegmentedFacet;
+        "atomic-segmented-facet-scrollable": AtomicSegmentedFacetScrollable;
+        "atomic-smart-snippet": AtomicSmartSnippet;
+        "atomic-smart-snippet-answer": AtomicSmartSnippetAnswer;
+        "atomic-smart-snippet-expandable-answer": AtomicSmartSnippetExpandableAnswer;
+        "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
+        "atomic-smart-snippet-source": AtomicSmartSnippetSource;
+        "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
+        "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-sort-expression": AtomicSortExpression;
+        "atomic-table-element": AtomicTableElement;
+        "atomic-text": AtomicText;
+        "atomic-timeframe": AtomicTimeframe;
+        "atomic-timeframe-facet": AtomicTimeframeFacet;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-aria-live": LocalJSX.AtomicAriaLive & JSXBase.HTMLAttributes<HTMLAtomicAriaLiveElement>;
+            "atomic-breadbox": LocalJSX.AtomicBreadbox & JSXBase.HTMLAttributes<HTMLAtomicBreadboxElement>;
+            "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-color-facet": LocalJSX.AtomicColorFacet & JSXBase.HTMLAttributes<HTMLAtomicColorFacetElement>;
+            "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
+            "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
+            "atomic-external": LocalJSX.AtomicExternal & JSXBase.HTMLAttributes<HTMLAtomicExternalElement>;
+            "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
+            "atomic-facet-date-input": LocalJSX.AtomicFacetDateInput & JSXBase.HTMLAttributes<HTMLAtomicFacetDateInputElement>;
+            "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
+            "atomic-facet-number-input": LocalJSX.AtomicFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicFacetNumberInputElement>;
+            "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
+            "atomic-focus-detector": LocalJSX.AtomicFocusDetector & JSXBase.HTMLAttributes<HTMLAtomicFocusDetectorElement>;
+            "atomic-focus-trap": LocalJSX.AtomicFocusTrap & JSXBase.HTMLAttributes<HTMLAtomicFocusTrapElement>;
+            "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
+            "atomic-format-currency": LocalJSX.AtomicFormatCurrency & JSXBase.HTMLAttributes<HTMLAtomicFormatCurrencyElement>;
+            "atomic-format-number": LocalJSX.AtomicFormatNumber & JSXBase.HTMLAttributes<HTMLAtomicFormatNumberElement>;
+            "atomic-format-unit": LocalJSX.AtomicFormatUnit & JSXBase.HTMLAttributes<HTMLAtomicFormatUnitElement>;
+            "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
+            "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
+            "atomic-icon-button": LocalJSX.AtomicIconButton & JSXBase.HTMLAttributes<HTMLAtomicIconButtonElement>;
+            "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
+            "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
+            "atomic-insight-history-toggle": LocalJSX.AtomicInsightHistoryToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightHistoryToggleElement>;
+            "atomic-insight-interface": LocalJSX.AtomicInsightInterface & JSXBase.HTMLAttributes<HTMLAtomicInsightInterfaceElement>;
+            "atomic-insight-layout": LocalJSX.AtomicInsightLayout & JSXBase.HTMLAttributes<HTMLAtomicInsightLayoutElement>;
+            "atomic-insight-no-results": LocalJSX.AtomicInsightNoResults & JSXBase.HTMLAttributes<HTMLAtomicInsightNoResultsElement>;
+            "atomic-insight-numeric-facet": LocalJSX.AtomicInsightNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightNumericFacetElement>;
+            "atomic-insight-pager": LocalJSX.AtomicInsightPager & JSXBase.HTMLAttributes<HTMLAtomicInsightPagerElement>;
+            "atomic-insight-query-error": LocalJSX.AtomicInsightQueryError & JSXBase.HTMLAttributes<HTMLAtomicInsightQueryErrorElement>;
+            "atomic-insight-query-summary": LocalJSX.AtomicInsightQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicInsightQuerySummaryElement>;
+            "atomic-insight-refine-modal": LocalJSX.AtomicInsightRefineModal & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineModalElement>;
+            "atomic-insight-refine-toggle": LocalJSX.AtomicInsightRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightRefineToggleElement>;
+            "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
+            "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
+            "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
+            "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
+            "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
+            "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
+            "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
+            "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
+            "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
+            "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
+            "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
+            "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;
+            "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
+            "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
+            "atomic-notifications": LocalJSX.AtomicNotifications & JSXBase.HTMLAttributes<HTMLAtomicNotificationsElement>;
+            "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
+            "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
+            "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
+            "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
+            "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
+            "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
+            "atomic-rating-facet": LocalJSX.AtomicRatingFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingFacetElement>;
+            "atomic-rating-range-facet": LocalJSX.AtomicRatingRangeFacet & JSXBase.HTMLAttributes<HTMLAtomicRatingRangeFacetElement>;
+            "atomic-recs-interface": LocalJSX.AtomicRecsInterface & JSXBase.HTMLAttributes<HTMLAtomicRecsInterfaceElement>;
+            "atomic-recs-list": LocalJSX.AtomicRecsList & JSXBase.HTMLAttributes<HTMLAtomicRecsListElement>;
+            "atomic-recs-result": LocalJSX.AtomicRecsResult & JSXBase.HTMLAttributes<HTMLAtomicRecsResultElement>;
+            "atomic-recs-result-template": LocalJSX.AtomicRecsResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicRecsResultTemplateElement>;
+            "atomic-refine-modal": LocalJSX.AtomicRefineModal & JSXBase.HTMLAttributes<HTMLAtomicRefineModalElement>;
+            "atomic-refine-toggle": LocalJSX.AtomicRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicRefineToggleElement>;
+            "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
+            "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-badge": LocalJSX.AtomicResultBadge & JSXBase.HTMLAttributes<HTMLAtomicResultBadgeElement>;
+            "atomic-result-children": LocalJSX.AtomicResultChildren & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenElement>;
+            "atomic-result-children-template": LocalJSX.AtomicResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultChildrenTemplateElement>;
+            "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-fields-list": LocalJSX.AtomicResultFieldsList & JSXBase.HTMLAttributes<HTMLAtomicResultFieldsListElement>;
+            "atomic-result-html": LocalJSX.AtomicResultHtml & JSXBase.HTMLAttributes<HTMLAtomicResultHtmlElement>;
+            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
+            "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
+            "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
+            "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
+            "atomic-result-localized-text": LocalJSX.AtomicResultLocalizedText & JSXBase.HTMLAttributes<HTMLAtomicResultLocalizedTextElement>;
+            "atomic-result-multi-value-text": LocalJSX.AtomicResultMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicResultMultiValueTextElement>;
+            "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
+            "atomic-result-placeholder": LocalJSX.AtomicResultPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultPlaceholderElement>;
+            "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
+            "atomic-result-rating": LocalJSX.AtomicResultRating & JSXBase.HTMLAttributes<HTMLAtomicResultRatingElement>;
+            "atomic-result-section-actions": LocalJSX.AtomicResultSectionActions & JSXBase.HTMLAttributes<HTMLAtomicResultSectionActionsElement>;
+            "atomic-result-section-badges": LocalJSX.AtomicResultSectionBadges & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBadgesElement>;
+            "atomic-result-section-bottom-metadata": LocalJSX.AtomicResultSectionBottomMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionBottomMetadataElement>;
+            "atomic-result-section-children": LocalJSX.AtomicResultSectionChildren & JSXBase.HTMLAttributes<HTMLAtomicResultSectionChildrenElement>;
+            "atomic-result-section-emphasized": LocalJSX.AtomicResultSectionEmphasized & JSXBase.HTMLAttributes<HTMLAtomicResultSectionEmphasizedElement>;
+            "atomic-result-section-excerpt": LocalJSX.AtomicResultSectionExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultSectionExcerptElement>;
+            "atomic-result-section-title": LocalJSX.AtomicResultSectionTitle & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleElement>;
+            "atomic-result-section-title-metadata": LocalJSX.AtomicResultSectionTitleMetadata & JSXBase.HTMLAttributes<HTMLAtomicResultSectionTitleMetadataElement>;
+            "atomic-result-section-visual": LocalJSX.AtomicResultSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicResultSectionVisualElement>;
+            "atomic-result-table-placeholder": LocalJSX.AtomicResultTablePlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultTablePlaceholderElement>;
+            "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
+            "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
+            "atomic-result-timespan": LocalJSX.AtomicResultTimespan & JSXBase.HTMLAttributes<HTMLAtomicResultTimespanElement>;
+            "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
+            "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
+            "atomic-search-box-instant-results": LocalJSX.AtomicSearchBoxInstantResults & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInstantResultsElement>;
+            "atomic-search-box-query-suggestions": LocalJSX.AtomicSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxQuerySuggestionsElement>;
+            "atomic-search-box-recent-queries": LocalJSX.AtomicSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxRecentQueriesElement>;
+            "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-search-layout": LocalJSX.AtomicSearchLayout & JSXBase.HTMLAttributes<HTMLAtomicSearchLayoutElement>;
+            "atomic-segmented-facet": LocalJSX.AtomicSegmentedFacet & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetElement>;
+            "atomic-segmented-facet-scrollable": LocalJSX.AtomicSegmentedFacetScrollable & JSXBase.HTMLAttributes<HTMLAtomicSegmentedFacetScrollableElement>;
+            "atomic-smart-snippet": LocalJSX.AtomicSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetElement>;
+            "atomic-smart-snippet-answer": LocalJSX.AtomicSmartSnippetAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetAnswerElement>;
+            "atomic-smart-snippet-expandable-answer": LocalJSX.AtomicSmartSnippetExpandableAnswer & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetExpandableAnswerElement>;
+            "atomic-smart-snippet-feedback-modal": LocalJSX.AtomicSmartSnippetFeedbackModal & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetFeedbackModalElement>;
+            "atomic-smart-snippet-source": LocalJSX.AtomicSmartSnippetSource & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSourceElement>;
+            "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
+            "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
+            "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
+            "atomic-timeframe": LocalJSX.AtomicTimeframe & JSXBase.HTMLAttributes<HTMLAtomicTimeframeElement>;
+            "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
         }
     }
 }
