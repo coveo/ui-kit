@@ -27,7 +27,6 @@ export * from './query/query-actions-loader';
 export * from './query-set/query-set-actions-loader';
 export * from './instant-results/instant-results-actions-loader';
 export * from './query-suggest/query-suggest-actions-loader';
-export * from './redirection/redirection-actions-loader';
 export * from './search/search-actions-loader';
 export * from './search-hub/search-hub-actions-loader';
 export * from './sort-criteria/sort-criteria-actions-loader';

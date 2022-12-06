@@ -46,6 +46,7 @@
   },
   "peerDependencies": {
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react-dom": ">=18.0.0",
+    "@coveo/headless": "1.112.0"
   }
 }

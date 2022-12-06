@@ -900,7 +900,7 @@ describe('Facet v1 Test Suites', () => {
     before(() => {
       new TestFixture()
         .with(addFacet({field, label}))
-        .withHash(`f[${field}]=Cervantes`)
+        .withHash(`f-${field}=Cervantes`)
         .init();
     });
 
@@ -1075,36 +1075,20 @@ describe('Facet v1 Test Suites', () => {
   describe('with allowed-values', () => {
     beforeEach(() => {
       new TestFixture()
-        .with(addFacet({field: 'objecttype', 'allowed-values': 'FAQ,File'}))
-        .init();
-    });
-
-    it('returns only allowed values', () => {
-      FacetSelectors.values()
-        .should('contain.text', 'FAQ')
-        .should('contain.text', 'File')
-        .should('not.contain.text', 'Message');
-    });
-
-    CommonAssertions.assertConsoleWarningMessage(
-      'This will be enforced in the next major versio'
-    );
-  });
-
-  describe('with allowed-values as JSON string array', () => {
-    beforeEach(() => {
-      new TestFixture()
         .with(
-          addFacet({field: 'objecttype', 'allowed-values': '["FAQ","File"]'})
+          addFacet({
+            field: 'objecttype',
+            'allowed-values': JSON.stringify(['FAQ', 'File']),
+          })
         )
         .init();
     });
+
     it('returns only allowed values', () => {
       FacetSelectors.values()
         .should('contain.text', 'FAQ')
         .should('contain.text', 'File')
         .should('not.contain.text', 'Message');
     });
-    CommonAssertions.assertConsoleWarning(false);
   });
 });

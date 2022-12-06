@@ -44,6 +44,7 @@ describe('insight api client', () => {
         method: 'GET',
         contentType: 'application/json',
         url: `${insightRequest.url}/rest/organizations/${insightRequest.organizationId}/insight/v1/configs/${insightRequest.insightId}/interface`,
+        origin: 'insightApiFetch',
       });
     });
 
@@ -94,6 +95,7 @@ describe('insight api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${queryRequest.url}/rest/organizations/${queryRequest.organizationId}/insight/v1/configs/${queryRequest.insightId}/search`,
+        origin: 'insightApiFetch',
         requestParams: {
           caseContext: queryRequest.caseContext,
           facets: queryRequest.facets,
@@ -206,6 +208,7 @@ describe('insight api client', () => {
         method: 'POST',
         contentType: 'application/json',
         url: `${userActionsRequest.url}/rest/organizations/${userActionsRequest.organizationId}/insight/v1/configs/${userActionsRequest.insightId}/useractions`,
+        origin: 'insightApiFetch',
         requestParams: {
           ticketCreationDate: userActionsRequest.ticketCreationDate,
           numberSessionsBefore: userActionsRequest.numberSessionsBefore,

@@ -1,4 +1,5 @@
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetSlice} from '../../../test/mock-facet-slice';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {FacetRequest} from '../facet-set/interfaces/request';
 import {
@@ -12,14 +13,14 @@ describe('generic facet reducers', () => {
     it('when the facet id is registered, it updates the sort criterion to the passed value', () => {
       const id = '1';
       const criterion = 'alphanumeric';
-      const state = {[id]: buildMockFacetRequest()};
+      const state = {[id]: buildMockFacetSlice()};
 
-      handleFacetSortCriterionUpdate<FacetRequest>(state, {
+      handleFacetSortCriterionUpdate(state, {
         facetId: id,
         criterion,
       });
 
-      expect(state[id].sortCriteria).toBe(criterion);
+      expect(state[id]?.request.sortCriteria).toBe(criterion);
     });
 
     it('when the facet id is not registered, it does not throw', () => {
@@ -27,10 +28,7 @@ describe('generic facet reducers', () => {
       const criterion = 'alphanumeric';
 
       const method = () =>
-        handleFacetSortCriterionUpdate<FacetRequest>(
-          {},
-          {facetId: id, criterion}
-        );
+        handleFacetSortCriterionUpdate({}, {facetId: id, criterion});
       expect(method).not.toThrow();
     });
   });

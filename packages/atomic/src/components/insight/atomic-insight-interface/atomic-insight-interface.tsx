@@ -18,6 +18,7 @@ import {
   buildInsightResultsPerPage,
 } from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
+import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
@@ -87,9 +88,16 @@ export class AtomicInsightInterface
    */
   @Prop({reflect: true}) public iconAssetsPath = './assets';
   /**
-   * A list of non-default fields to include in the query results, separated by commas.
+   * A list of non-default fields to include in the query results.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   * <atomic-insight-interface fields-to-include='["fieldA", "fieldB"]'></atomic-insight-interface>
+   * ```
    */
-  @Prop({reflect: true}) public fieldsToInclude = '';
+  @ArrayProp()
+  @Prop({mutable: true})
+  public fieldsToInclude: string[] = [];
   /**
    * The number of results per page. By default, this is set to `5`.
    */
@@ -121,10 +129,10 @@ export class AtomicInsightInterface
   }
 
   public registerFieldsToInclude() {
-    if (this.fieldsToInclude) {
+    if (this.fieldsToInclude.length) {
       this.engine!.dispatch(
         loadFieldActions(this.engine!).registerFieldsToInclude(
-          this.fieldsToInclude.split(',').map((field) => field.trim())
+          this.fieldsToInclude
         )
       );
     }

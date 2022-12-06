@@ -1,4 +1,3 @@
-import {isArray} from '@coveo/bueno';
 import {
   CategoryFacet,
   buildCategoryFacet,
@@ -156,12 +155,10 @@ export class AtomicCategoryFacet
    * ```html
    *  <atomic-category-facet base-path='["first value", "second value"]' ></atomic-category-facet>
    * ```
-   *
-   * Specifying the property as a comma separated string is deprecated.
    */
-  @ArrayProp({deprecationWarning: true})
+  @ArrayProp()
   @Prop({reflect: true, mutable: true})
-  public basePath?: string | string[];
+  public basePath?: string[];
   /**
    * Whether to use basePath as a filter for the results.
    */
@@ -233,7 +230,7 @@ export class AtomicCategoryFacet
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
       facetSearch: {numberOfValues: this.numberOfValues},
-      basePath: this.processBasePath(),
+      basePath: this.basePath,
       delimitingCharacter: this.delimitingCharacter,
       filterByBasePath: this.filterByBasePath,
       injectionDepth: this.injectionDepth,
@@ -275,22 +272,6 @@ export class AtomicCategoryFacet
     }
 
     return true;
-  }
-
-  private processBasePath() {
-    // @deprecated
-    // TODO, V2:
-    // basePath should only support JSON string representation.
-    // deprecate comma delimited string
-    if (isArray(this.basePath)) {
-      return this.basePath;
-    }
-
-    if (this.basePath) {
-      return this.basePath.split(',').map((value) => value.trim());
-    }
-
-    return undefined;
   }
 
   private get hasParents() {

@@ -13,10 +13,7 @@ import {restoreSearchParameters} from '../../search-parameters/search-parameter-
 import {executeSearch, fetchFacetValues} from '../../search/search-actions';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 import {FacetResponse} from '../facet-set/interfaces/response';
-import {
-  deselectAllFacets,
-  updateFacetAutoSelection,
-} from '../generic/facet-actions';
+import {updateFacetAutoSelection} from '../generic/facet-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import * as CategoryFacetReducers from './category-facet-reducer-helpers';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
@@ -324,16 +321,6 @@ describe('category facet slice', () => {
           initialNumberOfValues
         );
       });
-    });
-
-    it('dispatching #deselectAllFacets calls #handleCategoryFacetDeselectAll for every facet', () => {
-      jest.spyOn(CategoryFacetReducers, 'handleCategoryFacetDeselectAll');
-
-      categoryFacetSetReducer(state, deselectAllFacets());
-
-      expect(
-        CategoryFacetReducers.handleCategoryFacetDeselectAll
-      ).toHaveBeenCalledTimes(2);
     });
 
     it('dispatching #updateFacetAutoSelection updates autoSelection for all facets', () => {

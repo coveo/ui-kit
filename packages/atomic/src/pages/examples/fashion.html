@@ -85,7 +85,7 @@
   </head>
 
   <body>
-    <atomic-search-interface pipeline="Search" search-hub="MainSearch" fields-to-include="cat_rating_count">
+    <atomic-search-interface pipeline="Search" search-hub="MainSearch" fields-to-include='["cat_rating_count"]'>
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
@@ -213,7 +213,7 @@
             <atomic-no-results></atomic-no-results>
           </atomic-layout-section>
 
-          <atomic-recs-interface fields-to-include="cat_rating_count">
+          <atomic-recs-interface fields-to-include='["cat_rating_count"]'>
             <atomic-recs-list class="tiles" label="Top clothing for you" display="grid" number-of-recommendations="3">
               <atomic-recs-result-template>
                 <template>

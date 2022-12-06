@@ -30,6 +30,7 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
+import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
@@ -70,9 +71,16 @@ export class AtomicSearchInterface
   @State() public error?: Error;
 
   /**
-   * A list of non-default fields to include in the query results, separated by commas.
+   * A list of non-default fields to include in the query results.
+   *
+   * Specify the property as an array using a JSON string representation:
+   * ```html
+   * <atomic-search-interface fields-to-include='["fieldA", "fieldB"]'></atomic-search-interface>
+   * ```
    */
-  @Prop({reflect: true}) public fieldsToInclude = '';
+  @ArrayProp()
+  @Prop({mutable: true})
+  public fieldsToInclude: string[] = [];
 
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
@@ -291,18 +299,8 @@ export class AtomicSearchInterface
   }
 
   private initFieldsToInclude() {
-    const fields = [...EcommerceDefaultFieldsToInclude];
-    if (this.fieldsToInclude) {
-      fields.push(
-        ...this.fieldsToInclude.split(',').map((field) => field.trim())
-      );
-    }
+    const fields = EcommerceDefaultFieldsToInclude.concat(this.fieldsToInclude);
     this.store.addFieldsToInclude(fields);
-
-    // TODO: delete v2 when fields-to-include prop on result list removed
-    this.store.onChange('fieldsToInclude', () =>
-      this.registerFieldsToInclude()
-    );
   }
 
   public registerFieldsToInclude() {

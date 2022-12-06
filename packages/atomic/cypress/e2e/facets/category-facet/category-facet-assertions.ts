@@ -38,7 +38,7 @@ export function assertNumberOfParentValues(value: number) {
 export function assertPathInUrl(path: string[]) {
   const categoryFacetListInUrl = path.join(',');
   it(`should display the selected path "${categoryFacetListInUrl}" in the url`, () => {
-    const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
+    const urlHash = `#cf-${hierarchicalField}=${encodeURI(
       categoryFacetListInUrl
     )}`;
     cy.url().should('include', urlHash);

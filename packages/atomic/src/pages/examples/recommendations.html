@@ -86,7 +86,7 @@
   <body>
     <div class="layout">
       <!-- Tiles -->
-      <atomic-recs-interface class="tiles" fields-to-include="cat_rating_count">
+      <atomic-recs-interface class="tiles" fields-to-include='["cat_rating_count"]'>
         <atomic-recs-list label="Top clothing for you" display="grid" number-of-recommendations="10">
           <atomic-recs-result-template>
             <template>
@@ -130,7 +130,7 @@
         </atomic-recs-list>
       </atomic-recs-interface>
       <!-- Rows -->
-      <atomic-recs-interface class="rows" fields-to-include="cat_rating_count">
+      <atomic-recs-interface class="rows" fields-to-include='["cat_rating_count"]'>
         <atomic-recs-list label="Frequently viewed" recommendation="frequentViewed" number-of-recommendations="6">
           <atomic-recs-result-template>
             <template>
@@ -174,7 +174,7 @@
         </atomic-recs-list>
       </atomic-recs-interface>
       <!-- Carousel -->
-      <atomic-recs-interface class="carousel" fields-to-include="cat_rating_count">
+      <atomic-recs-interface class="carousel" fields-to-include='["cat_rating_count"]'>
         <atomic-recs-list
           display="grid"
           label="Carousel"

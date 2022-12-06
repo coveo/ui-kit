@@ -9,7 +9,11 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../utils/validate-payload';
-import {SearchAction} from '../analytics/analytics-utils';
+import {
+  AnalyticsAsyncThunk,
+  AnalyticsType,
+  SearchAction,
+} from '../analytics/analytics-utils';
 import {
   deselectAllBreadcrumbs,
   deselectAllNonBreadcrumbs,
@@ -48,7 +52,7 @@ export interface ExecuteSearchThunkReturn {
   /** The original query that was performed when an automatic correction is executed.*/
   originalQuery: string;
   /** The analytics action to log after the query. */
-  analyticsAction: SearchAction;
+  analyticsAction: AnalyticsAsyncThunk<{analyticsType: AnalyticsType.Search}>;
 }
 
 interface PrepareForSearchWithQueryOptions {
@@ -87,15 +91,24 @@ export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/executeSearch', async (analyticsAction: SearchAction, config) => {
+>('search/executeSearch', async (searchAction: SearchAction, config) => {
   const state = config.getState();
   addEntryInActionsHistory(state);
+
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription, action: analyticsAction} =
+    searchAction.prepare({
+      getState: () => config.getState(),
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    });
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({...config, analyticsAction});
 
-  const request = await buildSearchRequest(state);
+  const request = await buildSearchRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
