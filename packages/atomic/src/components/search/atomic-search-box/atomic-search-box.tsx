@@ -667,7 +667,11 @@ export class AtomicSearchBox {
     return (
       <div
         id={this.searchBoxCommon.popupId}
-        part="suggestions-wrapper"
+        part={`suggestions-wrapper ${
+          this.isDoubleList
+            ? 'suggestions-double-list'
+            : 'suggestions-single-list'
+        }`}
         class={`flex w-full z-10 absolute left-0 top-full rounded-md bg-background border border-neutral ${
           this.searchBoxCommon.showSuggestions ? '' : 'hidden'
         }`}
