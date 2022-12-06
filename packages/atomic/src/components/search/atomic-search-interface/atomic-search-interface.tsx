@@ -437,7 +437,6 @@ export class AtomicSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
-    this.initFieldsToInclude();
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
