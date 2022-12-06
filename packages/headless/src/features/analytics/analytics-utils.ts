@@ -95,7 +95,7 @@ type PrepareAnalyticsFunction<
   StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
 > = (
   options: PreparableAnalyticsActionOptions<StateNeeded>
-) => PreparedAnalyticsAction<EventType, StateNeeded>;
+) => Promise<PreparedAnalyticsAction<EventType, StateNeeded>>;
 
 export interface PreparableAnalyticsAction<
   EventType extends WrappedAnalyticsType | void,
@@ -194,7 +194,7 @@ function makePreparableAnalyticsAction<
     }
   );
 
-  const prepare: PrepareAnalyticsFunction<EventType, StateNeeded> = ({
+  const prepare: PrepareAnalyticsFunction<EventType, StateNeeded> = async ({
     getState,
     analyticsClientMiddleware,
     preprocessRequest,
@@ -206,6 +206,16 @@ function makePreparableAnalyticsAction<
       preprocessRequest,
       logger,
     });
+
+    if (description) {
+      description.customData = (
+        await analyticsClientMiddleware<EventDescription>(
+          description.actionCause,
+          description
+        )
+      ).customData;
+    }
+
     return {
       description,
       action: createAnalyticsAction(async () => {
