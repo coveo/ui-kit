@@ -27,7 +27,8 @@
     "recommendation/"
   ],
   "dependencies": {
-    "@coveo/atomic": "1.124.3"
+    "@coveo/atomic": "1.124.3",
+    "@coveo/headless": "1.112.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
