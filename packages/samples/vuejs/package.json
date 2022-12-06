@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@coveo/atomic": "^1.123.0",
+    "@coveo/headless": "^1.112.0",
     "core-js": "3.24.1",
     "vue": "3.2.37"
   },
