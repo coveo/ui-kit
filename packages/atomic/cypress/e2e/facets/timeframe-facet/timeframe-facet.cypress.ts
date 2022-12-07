@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {TestFixture} from '../../../fixtures/test-fixture';
 import {
   addBreadbox,
@@ -270,13 +271,14 @@ describe('Timeframe Facet V1 Test Suites', () => {
   });
 
   describe('with custom #withInput only', () => {
-    function setupTimeframeWithInputOnly(inputType = '') {
+    function setupTimeframeWithInputOnly(props = {}) {
       new TestFixture()
         .with(
           addTimeframeFacet({
             label: timeframeFacetLabel,
             field: timeframeFacetField,
-            'with-date-picker': inputType,
+            'with-date-picker': 'true',
+            ...props,
           })
         )
         .init();
@@ -334,6 +336,40 @@ describe('Timeframe Facet V1 Test Suites', () => {
           clickApplyButton();
         });
         TimeframeFacetAssertions.assertDisplayInputWarning(2, 'or earlier.');
+      });
+
+      describe('when "min" is set on the input date', () => {
+        const min = dayjs(startDate).format('YYYY-MM-DD');
+        before(() => {
+          setupTimeframeWithInputOnly({
+            min,
+          });
+          inputStartDate(dayjs(min).subtract(1, 'day').format('YYYY-MM-DD'));
+          inputEndDate(endDate);
+          invokeSubmitButton();
+          clickApplyButton();
+        });
+        TimeframeFacetAssertions.assertDisplayInputWarning(
+          1,
+          `Value must be ${min} or later`
+        );
+      });
+
+      describe('when "max" is set on the input date', () => {
+        const max = dayjs(endDate).format('YYYY-MM-DD');
+        before(() => {
+          setupTimeframeWithInputOnly({
+            max,
+          });
+          inputStartDate(startDate);
+          inputEndDate(dayjs(max).add(1, 'day').format('YYYY-MM-DD'));
+          invokeSubmitButton();
+          clickApplyButton();
+        });
+        TimeframeFacetAssertions.assertDisplayInputWarning(
+          1,
+          `Value must be ${max} or earlier`
+        );
       });
     });
   });

@@ -23,6 +23,8 @@ export class FacetDateInput {
   @Prop() public filter!: DateFilter;
   @Prop() public filterState!: DateFilterState;
   @Prop() public label!: string;
+  @Prop() public min?: string;
+  @Prop() public max?: string;
 
   @Event({
     eventName: 'atomic/dateInputApply',
@@ -103,8 +105,8 @@ export class FacetDateInput {
           pattern={pattern}
           required
           // API/Index minimum supported date
-          min={this.formattedDateValue('1401-01-01')}
-          max={this.formattedDateValue(this.end)}
+          min={this.min || this.formattedDateValue('1401-01-01')}
+          max={this.end ? this.formattedDateValue(this.end) : this.max}
           value={this.formattedDateValue(this.filterState.range?.start)}
           onInput={(e) =>
             (this.start = parseDate(
@@ -129,7 +131,8 @@ export class FacetDateInput {
           placeholder={placeholder}
           pattern={pattern}
           required
-          min={this.formattedDateValue(this.start)}
+          min={this.min || this.formattedDateValue(this.start)}
+          max={this.max}
           value={this.formattedDateValue(this.filterState.range?.end)}
           onInput={(e) =>
             (this.end = parseDate(
