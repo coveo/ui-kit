@@ -80,7 +80,7 @@ export class AtomicSearchInterface
    */
   @ArrayProp()
   @Prop({mutable: true})
-  public fieldsToInclude: string[] = [];
+  public fieldsToInclude: string[] | string = '[]';
 
   /**
    * The search interface [query pipeline](https://docs.coveo.com/en/180/).
@@ -162,6 +162,9 @@ export class AtomicSearchInterface
   public connectedCallback() {
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
+  }
+
+  componentWillLoad() {
     this.initFieldsToInclude();
   }
 
@@ -434,7 +437,6 @@ export class AtomicSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
-    this.initFieldsToInclude();
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;

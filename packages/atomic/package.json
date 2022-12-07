@@ -44,7 +44,6 @@
     "cypress-insights-panel:test": "cypress run --config-file cypress-insights-panel.config.ts --browser chrome",
     "cypress-insights-panel:open": "cypress open --config-file cypress-insights-panel.config.ts --browser chrome",
     "npm:publish": "node ../../scripts/deploy/publish.mjs",
-    "npm:publish:alpha": "node ../../scripts/deploy/publish.mjs alpha",
     "storybook": "npm run storybook:lit-analyze && start-storybook -s ./dist -p 6006",
     "build:storybook": "npm run storybook:lit-analyze && build-storybook && ncp dist/ storybook-static/",
     "storybook:lit-analyze": "lit-analyzer dist/types/components.d.ts src/components/**/*.stories.tsx",

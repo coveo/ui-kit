@@ -7,7 +7,6 @@
     "build": "ng build && npm run copy:assets && npm run npm:modify:dist",
     "copy:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
     "npm:publish": "npm --prefix projects/atomic-angular/dist run npm:publish",
-    "npm:publish:alpha": "npm --prefix projects/atomic-angular/dist run npm:publish:alpha",
     "npm:modify:dist": "node modify-package-json.js"
   },
   "private": true,

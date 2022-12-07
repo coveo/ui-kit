@@ -108,7 +108,7 @@ export class AtomicRecsInterface
    */
   @ArrayProp()
   @Prop({mutable: true})
-  public fieldsToInclude: string[] = [];
+  public fieldsToInclude: string[] | string = '[]';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -223,7 +223,7 @@ export class AtomicRecsInterface
 
   public registerFieldsToInclude() {
     const fields = EcommerceDefaultFieldsToInclude.concat(
-      this.fieldsToInclude.filter((field) => !!field)
+      [...this.fieldsToInclude].filter((field) => !!field)
     );
     this.engine!.dispatch(
       loadFieldActions(this.engine!).registerFieldsToInclude(fields)
