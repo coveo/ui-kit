@@ -1,5 +1,5 @@
 export * from './stencil-generated/index';
-export * from '@coveo/atomic/headless';
+export * from '@coveo/headless';
 export {Bindings, i18n} from '@coveo/atomic';
 
 // Important: Re-exporting under the same name (eg: "AtomicSearchInterface") shadows the original component

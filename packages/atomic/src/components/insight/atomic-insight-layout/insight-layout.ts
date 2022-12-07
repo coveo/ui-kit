@@ -5,6 +5,12 @@ import {
 
 const tabsSelector = 'atomic-insight-tabs';
 const refineModalSelector = 'atomic-insight-refine-modal';
+const searchBoxSelector = 'atomic-insight-search-box';
+const toggleSelectors = [
+  'atomic-insight-refine-toggle',
+  'atomic-insight-edit-toggle',
+  'atomic-insight-history-toggle',
+];
 
 export function buildInsightLayout(element: HTMLElement, widget: boolean) {
   const id = element.id;
@@ -29,19 +35,27 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
 
   const search = `${sectionSelector('search')} {
       width: 100%;
-      display: grid;
-      grid-template-columns: 1fr auto;
+      display: flex;
+      flex-wrap: wrap;
       grid-gap: 0.5rem;
       background: var(--atomic-neutral-light);
       padding-top: 1.5rem;
       padding-left: 1.5rem;
       padding-right: 1.5rem;
       box-sizing: border-box;
+      overflow-x: auto;
       ${!hasTabs ? 'padding-bottom: 1.5rem;' : ''}
     }
-    ${sectionSelector('search')} ${tabsSelector} {
-      grid-column: 1 / 5;
+
+    ${sectionSelector('search')} ${searchBoxSelector} {
+      flex-grow: 1;
     }
+
+    ${toggleSelectors.map(
+      (toggleSelector) => `${sectionSelector('search')} ${toggleSelector} {
+      flex-shrink: 0;
+    }`
+    )}
     `;
 
   const results = `

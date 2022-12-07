@@ -1,5 +1,5 @@
 {
-  "name": "vuejs",
+  "name": "@coveo/atomic-vuejs-samples",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,8 @@
     "copy:assets": "ncp ../../atomic/dist/atomic/assets public/assets && ncp ../../atomic/dist/atomic/lang public/lang"
   },
   "dependencies": {
-    "@coveo/atomic": "^1.123.0",
+    "@coveo/atomic": "2.0.0-pre.1",
+    "@coveo/headless": "2.0.0-pre.1",
     "core-js": "3.24.1",
     "vue": "3.2.37"
   },

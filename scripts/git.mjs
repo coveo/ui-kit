@@ -10,7 +10,10 @@ import {execute} from './exec.mjs';
 const releaseBranch = 'master';
 
 async function getBranchName() {
-  return await execute('git', ['branch', '--show-current']);
+  return (
+    process.env.BRANCH_NAME ||
+    (await execute('git', ['rev-parse', '--abbrev-ref', 'HEAD']))
+  );
 }
 
 export async function isOnReleaseBranch() {

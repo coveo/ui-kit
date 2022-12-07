@@ -3,7 +3,7 @@ import type {JSX, i18n} from '@coveo/atomic';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-} from '@coveo/atomic/headless';
+} from '@coveo/headless';
 import {AtomicSearchInterface} from './stencil-generated/index';
 
 type ExecuteSearch = HTMLAtomicSearchInterfaceElement['executeFirstSearch'];

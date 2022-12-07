@@ -3,7 +3,7 @@ import type {JSX, i18n} from '@coveo/atomic';
 import {
   getSampleRecommendationEngineConfiguration,
   buildRecommendationEngine,
-} from '@coveo/atomic/headless/recommendation';
+} from '@coveo/headless/recommendation';
 import {AtomicRecsInterface} from '../stencil-generated/index';
 
 type GetRecommendations = HTMLAtomicRecsInterfaceElement['getRecommendations'];
