@@ -9,6 +9,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
       justify-self: start;
       width: 80%;
     }
+  }
 
 @media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {
@@ -48,6 +49,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
       justify-self: start;
       width: 80%;
     }
+  }
 
 atomic-search-layout#abc atomic-layout-section[section=\\"status\\"] atomic-sort-dropdown {
       display: none;
@@ -79,6 +81,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout componen
       justify-self: start;
       width: 80%;
     }
+  }
 
 @media only screen and (min-width: 1024px) {
       atomic-search-layout#abc atomic-layout-section[section=\\"horizontal-facets\\"] > atomic-popover:not(.atomic-hidden) {
@@ -96,6 +99,7 @@ exports[`Search Layout #buildSearchLayout when the atomic-search-layout has cust
       justify-self: start;
       width: 80%;
     }
+  }
 
 @media only screen and (min-width: 1024px) {
       atomic-search-layout#abc {
