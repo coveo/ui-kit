@@ -21,7 +21,8 @@ export function buildSearchLayout(
     ${layoutSelector} ${sectionSelector('search')} {
       justify-self: start;
       width: 80%;
-    }`;
+    }
+  }`;
 
   const facets = () => {
     const facetsSection = findSection(element, 'facets');
