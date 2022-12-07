@@ -35,18 +35,18 @@ export function MapProp(opts?: MapPropOptions) {
 export function ArrayProp() {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
+
     const attributeWithBackets = camelToKebab(variableName);
 
     component.componentWillLoad = function () {
-      const attr =
-        getElement(this).attributes.getNamedItem(attributeWithBackets);
-      if (!attr) {
+      const value = this[variableName];
+      if (!value || isArray(value)) {
         componentWillLoad?.call(this);
         return;
       }
 
       try {
-        const valueAsArray = JSON.parse(attr.value);
+        const valueAsArray = JSON.parse(value);
         if (isArray(valueAsArray)) {
           this[variableName] = valueAsArray;
         } else {

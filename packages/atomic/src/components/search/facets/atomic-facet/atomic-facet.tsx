@@ -182,7 +182,7 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
    */
   @ArrayProp()
   @Prop({mutable: true})
-  public allowedValues?: string[];
+  public allowedValues: string[] | string = '[]';
 
   @FocusTarget()
   private showLessFocus!: FocusTargetController;
@@ -202,7 +202,9 @@ export class AtomicFacet implements InitializableComponent, BaseFacet<Facet> {
       facetSearch: {numberOfValues: this.numberOfValues},
       filterFacetCount: this.filterFacetCount,
       injectionDepth: this.injectionDepth,
-      allowedValues: this.allowedValues,
+      allowedValues: this.allowedValues.length
+        ? [...this.allowedValues]
+        : undefined,
     };
 
     this.facet = buildFacet(this.bindings.engine, {options});

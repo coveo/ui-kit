@@ -97,7 +97,8 @@ export class AtomicInsightInterface
    */
   @ArrayProp()
   @Prop({mutable: true})
-  public fieldsToInclude: string[] = [];
+  public fieldsToInclude: string[] | string = '[]';
+
   /**
    * The number of results per page. By default, this is set to `5`.
    */
@@ -131,9 +132,9 @@ export class AtomicInsightInterface
   public registerFieldsToInclude() {
     if (this.fieldsToInclude.length) {
       this.engine!.dispatch(
-        loadFieldActions(this.engine!).registerFieldsToInclude(
-          this.fieldsToInclude
-        )
+        loadFieldActions(this.engine!).registerFieldsToInclude([
+          ...this.fieldsToInclude,
+        ])
       );
     }
   }
@@ -220,7 +221,6 @@ export class AtomicInsightInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
-    this.registerFieldsToInclude();
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
     this.initResultsPerPage();
     this.initialized = true;
