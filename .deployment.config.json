@@ -86,7 +86,7 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]/headless",
-        "source": "packages/atomic/headless/dist/browser",
+        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
@@ -97,7 +97,7 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/headless",
-        "source": "packages/atomic/headless/dist/browser",
+        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
@@ -108,7 +108,7 @@
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/headless",
-        "source": "packages/atomic/headless/dist/browser",
+        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }

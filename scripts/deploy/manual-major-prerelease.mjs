@@ -1,11 +1,9 @@
 import {getCurrentVersion, gitAdd} from '@coveo/semantic-monorepo-tools';
-import {resolve} from 'node:path';
-import {execute} from '../exec.mjs';
 import {commitVersionBump, tagExists, tagPackages} from '../git.mjs';
 import {
   getPackageDefinitionFromPackageName,
   getPackagePathFromPackageDir,
-  updatePackageVersion,
+  updatePackageVersionsAndDependents,
 } from '../packages.mjs';
 import {prereleaseSuffix} from '../prerelease.mjs';
 
@@ -41,15 +39,12 @@ async function getNewVersion(packageDef) {
  * @param {PackageDefinition[]} packages
  */
 async function locallyBumpVersions(packages) {
+  /** @type {{ [packageDir: import('../packages.mjs').PackageDir]: string }} */
+  const newVersions = {};
   for (const packageDef of packages) {
-    const newVersion = await getNewVersion(packageDef);
-    updatePackageVersion(
-      packageDef.name,
-      newVersion,
-      packages.map(({packageDir}) => packageDir)
-    );
+    newVersions[packageDef.packageDir] = await getNewVersion(packageDef);
   }
-  await execute('npm', ['install', '--package-lock-only']);
+  await updatePackageVersionsAndDependents(newVersions);
 }
 
 /**

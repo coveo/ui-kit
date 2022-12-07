@@ -1,5 +1,5 @@
 {
-  "name": "atomic-angular",
+  "name": "@coveo/atomic-angular-builder",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,6 @@
     "build": "ng build && npm run copy:assets && npm run npm:modify:dist",
     "copy:assets": "ncp ../atomic/dist/atomic/assets projects/atomic-angular/dist/assets && ncp ../atomic/dist/atomic/lang projects/atomic-angular/dist/lang",
     "npm:publish": "npm --prefix projects/atomic-angular/dist run npm:publish",
-    "npm:publish:alpha": "npm --prefix projects/atomic-angular/dist run npm:publish:alpha",
     "npm:modify:dist": "node modify-package-json.js"
   },
   "private": true,
@@ -20,8 +19,11 @@
     "@angular/platform-browser": "13.3.0",
     "@angular/platform-browser-dynamic": "13.3.0",
     "@angular/router": "13.3.0",
-    "@coveo/atomic": "^1.123.0",
+    "@coveo/atomic": "2.0.0-pre.1",
     "rxjs": "7.5.6"
+  },
+  "peerDependencies": {
+    "@coveo/headless": "2.0.0-pre.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "13.3.5",
@@ -37,6 +39,7 @@
     "karma-jasmine-html-reporter": "1.7.0",
     "ncp": "2.0.0",
     "ng-packagr": "13.3.1",
-    "typescript": "4.6.4"
+    "typescript": "4.6.4",
+    "@coveo/headless": "2.0.0-pre.1"
   }
 }

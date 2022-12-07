@@ -20,7 +20,7 @@ npm i
 To install a dependencies in a specific package, specify the workspace:
 
 ```sh
-npm i lodash -w headless-react
+npm i lodash -w @coveo/headless-react-samples
 ```
 
 To build all projects for production, run:
