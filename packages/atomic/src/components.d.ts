@@ -215,6 +215,8 @@ export namespace Components {
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
+        "max"?: string;
+        "min"?: string;
     }
     interface AtomicFacetManager {
         /**
@@ -1730,6 +1732,14 @@ export namespace Components {
          */
         "label": string;
         /**
+          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
+         */
+        "max"?: string;
+        /**
+          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
+         */
+        "min"?: string;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
@@ -2793,6 +2803,8 @@ declare namespace LocalJSX {
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
+        "max"?: string;
+        "min"?: string;
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
     }
     interface AtomicFacetManager {
@@ -4247,6 +4259,14 @@ declare namespace LocalJSX {
           * The non-localized label for the facet. Used in the atomic-breadbox component through the bindings store.
          */
         "label"?: string;
+        /**
+          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
+         */
+        "max"?: string;
+        /**
+          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
+         */
+        "min"?: string;
         /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */

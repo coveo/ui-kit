@@ -54,6 +54,8 @@ interface TimeframeFacetCommonOptions {
   initializeFacetForDatePicker(): DateFacet;
   initializeFacetForDateRange(values: DateRangeRequest[]): DateFacet;
   initializeFilter(): DateFilter;
+  min?: string;
+  max?: string;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -330,6 +332,8 @@ export class TimeframeFacetCommon {
   private renderDateInput() {
     return (
       <atomic-facet-date-input
+        min={this.props.min}
+        max={this.props.max}
         bindings={this.props.bindings}
         label={this.props.label}
         filter={this.filter!}
