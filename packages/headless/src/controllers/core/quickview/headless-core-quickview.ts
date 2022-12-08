@@ -39,6 +39,12 @@ export interface Quickview extends Controller {
    */
   fetchResultContent(): void;
 
+  /*
+   * Executes the callback function intended for when quickview content is fetched.
+   * Use this when using the quickview `srcPath` in an iframe.
+   */
+  executeOnFetchCallback(): void;
+
   /**
    * The state for the `Quickview` controller.
    */
@@ -100,6 +106,12 @@ export function buildCoreQuickview(
       dispatch(
         fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
       );
+      if (fetchResultContentCallback) {
+        fetchResultContentCallback();
+      }
+    },
+
+    executeOnFetchCallback() {
       if (fetchResultContentCallback) {
         fetchResultContentCallback();
       }
