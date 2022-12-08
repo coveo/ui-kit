@@ -7,7 +7,9 @@ export const ListDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
 ) =>
   props.getResultListState().results.map((result, index) =>
     props.renderResult({
-      key: props.getResultId(result),
+      key: `${props.getResultId(
+        result
+      )}${props.getDensity()}${props.getImageSize()}`,
       part: 'outline',
       result: result,
       interactiveResult: props.getInteractiveResult(

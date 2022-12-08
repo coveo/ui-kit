@@ -27,7 +27,9 @@ export const GridDisplayResults: FunctionalComponent<ResultListDisplayProps> = (
           ariaHidden={true}
         />
         {props.renderResult({
-          key: props.getResultId(result),
+          key: `${props.getResultId(
+            result
+          )}${props.getDensity()}${props.getImageSize()}`,
           result: result,
           interactiveResult: props.getInteractiveResult(unfoldedResult),
           store: props.bindings.store,
