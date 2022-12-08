@@ -5,6 +5,7 @@ import {
   buildMockSearchAppEngine,
   MockSearchEngine,
 } from '../../../test';
+import {buildMockResultPreviewRequest} from '../../../test/mock-result-preview-request-builder';
 import {buildMockResultPreviewState} from '../../../test/mock-result-preview-state';
 import {
   buildCoreQuickview,
@@ -17,8 +18,15 @@ describe('QuickviewCore', () => {
   let options: QuickviewOptions;
   let quickview: Quickview;
 
+  const path = '/html';
+
   function initQuickview() {
-    quickview = buildCoreQuickview(engine, {options});
+    quickview = buildCoreQuickview(
+      engine,
+      {options},
+      buildMockResultPreviewRequest,
+      path
+    );
   }
 
   beforeEach(() => {
