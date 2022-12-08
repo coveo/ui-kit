@@ -1,6 +1,6 @@
 <template>
-  <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral refine-button slds-is-relative" onclick={openModal}
-    title={buttonTitle} disabled={refineButtonDisabled}>
+  <button aria-hidden={modalIsOpen} class="slds-button slds-button_neutral refine-button slds-is-relative"
+    onclick={openModal} title={buttonTitle} disabled={refineButtonDisabled}>
     <slot name="button-content">
       {labels.sortAndFilters}
       <lightning-icon size="x-small" icon-name="utility:filterList" alternative-text={buttonTitle}
@@ -21,9 +21,9 @@
       <slot name="refine-title">
         <div class="slds-text-title_bold">{labels.sortAndFilters}</div>
       </slot>
-      <lightning-button data-focusable="true" class="slds-is-absolute slds-align_absolute-center slds-var-m-right_large refine-modal__action"
-        onclick={closeModal} variant="base" title="Close" icon-name="utility:close">
-      </lightning-button>
+      <lightning-button-icon data-focusable="true"
+        class="slds-is-absolute slds-align_absolute-center slds-var-m-right_large refine-modal__action"
+        onclick={closeModal} variant="bare" title="Close" icon-name="utility:close"></lightning-button-icon>
     </div>
     <div class="slds-align_absolute-center" slot="content">
       <div class="refine-modal__content">
