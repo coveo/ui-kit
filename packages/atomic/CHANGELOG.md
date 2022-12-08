@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.125.1](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.125.0...@coveo/atomic@1.125.1) (2022-12-06)
+
+### Bug Fixes
+
+- **atomic:** fixed insight search section grid behaviour ([#2583](https://github.com/coveo/ui-kit/issues/2583)) ([91013ce](https://github.com/coveo/ui-kit/commit/91013ce12f0472a4127f3392012368961c88e59f))
+
 # [1.125.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic@1.124.3...@coveo/atomic@1.125.0) (2022-12-02)
 
 ### Features
