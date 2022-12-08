@@ -120,7 +120,7 @@ export interface CategoryFieldSuggestions extends Subscribable {
 
 export interface CategoryFieldSuggestionsOptions {
   /**
-   * The options used to register the category facet used by the field suggestions controller.
+   * The options used to register the category facet used under the hood by the field suggestions controller.
    */
   facet: CategoryFacetOptions;
 }
@@ -135,8 +135,8 @@ export interface CategoryFieldSuggestionsProps {
 /**
  * Creates a `CategoryFieldSuggestions` controller instance.
  *
- * This controller initializes a category facet, but exposes state and methods that are relevant for suggesting fields values based on a query.
- * It's important not to initialize a category facet with the same `facetId` but different options, because only the options of the controller which is built first will be taken.
+ * This controller initializes a category facet under the hood, but exposes state and methods that are relevant for suggesting field values based on a query.
+ * It's important not to initialize a category facet with the same `facetId` but different options, because only the options of the controller which is built first will be taken into account.
  *
  * @param engine The headless engine.
  * @param props The configurable `CategoryFieldSuggestions` controller properties.

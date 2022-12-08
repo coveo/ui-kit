@@ -140,8 +140,8 @@ export interface FieldSuggestionsProps {
 /**
  * Creates a `FieldSuggestions` controller instance.
  *
- * This controller initializes a facet, but exposes state and methods that are relevant for suggesting fields values based on a query.
- * It's important not to initialize a facet with the same `facetId` but different options, because only the options of the controller which is built first will be taken.
+ * This controller initializes a facet under the hood, but exposes state and methods that are relevant for suggesting field values based on a query.
+ * It's important not to initialize a facet with the same `facetId` but different options, because only the options of the controller which is built first will be taken into account.
  *
  * @param engine The headless engine.
  * @param props The configurable `FieldSuggestions` controller properties.
