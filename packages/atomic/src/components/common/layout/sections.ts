@@ -9,6 +9,7 @@ export const resultSectionTags = new Set([
   'atomic-result-section-emphasized',
   'atomic-result-section-excerpt',
   'atomic-result-section-bottom-metadata',
+  'atomic-result-section-children',
 ] as const);
 
 type SetValueType<T> = T extends Set<infer U> ? U : never;
