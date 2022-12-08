@@ -78,6 +78,10 @@ describe('Category Facet Test Suites', () => {
         categoryFacetLabel
       );
       CategoryFacetAssertions.assertValuesSortedByOccurrences();
+      CategoryFacetAssertions.assertHierarchy({
+        type: 'values',
+        valueLabels: ['North America', 'Europe', 'Asia'],
+      });
     });
 
     describe('when selecting a value to go deeper one level (2nd level of the dataset)', () => {
@@ -216,7 +220,37 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    describe('when selecting values subsequently to go deeper three level (last level of the dataset)', () => {
+    describe('when selecting values subsequently to go deepeer three level', () => {
+      before(() => {
+        setupWithDefaultSettings();
+        selectChildValueAt(canadaHierarchyIndex[0]);
+        selectChildValueAt(canadaHierarchyIndex[1]);
+        selectChildValueAt(canadaHierarchyIndex[2]);
+        pressShowMore(CategoryFacetSelectors);
+      });
+
+      CategoryFacetAssertions.assertHierarchy({
+        type: 'hierarchy-root',
+        children: {
+          type: 'sub-parent',
+          valueLabel: canadaHierarchy[0],
+          children: {
+            type: 'sub-parent',
+            valueLabel: canadaHierarchy[1],
+            children: {
+              type: 'active-value',
+              valueLabel: canadaHierarchy[2],
+              children: {
+                type: 'values',
+                valueLabels: ['Montreal', 'Quebec', 'Sherbrooke'],
+              },
+            },
+          },
+        },
+      });
+    });
+
+    describe('when selecting values subsequently to go deeper four level (last level of the dataset)', () => {
       function setupGoDeeperLastLevel() {
         setupWithDefaultSettings();
         selectChildValueAt(canadaHierarchyIndex[0]);
