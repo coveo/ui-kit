@@ -349,10 +349,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           invokeSubmitButton();
           clickApplyButton();
         });
-        TimeframeFacetAssertions.assertDisplayInputWarning(
-          1,
-          `Value must be ${min} or later`
-        );
+        TimeframeFacetAssertions.assertDisplayInputWarning(1, 'or later');
       });
 
       describe('when "max" is set on the input date', () => {
@@ -366,10 +363,7 @@ describe('Timeframe Facet V1 Test Suites', () => {
           invokeSubmitButton();
           clickApplyButton();
         });
-        TimeframeFacetAssertions.assertDisplayInputWarning(
-          1,
-          `Value must be ${max} or earlier`
-        );
+        TimeframeFacetAssertions.assertDisplayInputWarning(1, 'or earlier');
       });
     });
   });
