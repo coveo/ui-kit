@@ -31,6 +31,7 @@ export * from './features/facets/range-facets/date-facet-set/date-facet-actions-
 export * from './features/case-context/case-context-actions-loader';
 export * from './features/insight-search/insight-search-analytics-actions-loader';
 export * from './features/fields/fields-actions-loader';
+export * from './features/attached-results/attached-results-actions-loader';
 
 // Controllers
 export type {

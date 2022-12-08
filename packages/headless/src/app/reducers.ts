@@ -1,5 +1,5 @@
 import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
-import {attachToCaseReducer} from '../features/attach-to-case/attach-to-case-slice';
+import {attachToCaseReducer} from '../features/attached-results/attached-results-slice';
 import {caseAssistConfigurationReducer} from '../features/case-assist-configuration/case-assist-configuration-slice';
 import {caseContextReducer} from '../features/case-context/case-context-slice';
 import {caseFieldReducer} from '../features/case-field/case-field-slice';
@@ -89,7 +89,7 @@ export const questionAnswering = questionAnsweringReducer;
 export const standaloneSearchBoxSet = standaloneSearchBoxSetReducer;
 export const recentResults = recentResultsReducer;
 export const recentQueries = recentQueriesReducer;
-export const attached = attachToCaseReducer;
+export const attachedResults = attachToCaseReducer;
 
 export const history = undoable({
   actionTypes: {

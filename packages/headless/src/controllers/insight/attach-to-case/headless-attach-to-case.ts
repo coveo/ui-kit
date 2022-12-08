@@ -1,8 +1,10 @@
 import {ArrayValue, RecordValue, Schema} from '@coveo/bueno';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
-import {configuration, attached} from '../../../app/reducers';
+import {configuration, attachedResults} from '../../../app/reducers';
+import {attachResult} from '../../../features/attached-results/attached-results-actions';
+import {AttachedResult} from '../../../features/attached-results/attached-results-state';
 import {
-  AttachToCaseSection,
+  AttachedResultsSection,
   ConfigurationSection,
 } from '../../../state/state-sections';
 import {loadReducerError} from '../../../utils/errors';
@@ -16,20 +18,6 @@ import {
   Controller,
 } from '../../controller/headless-controller';
 
-export interface AttachedResult {
-  caseId: string;
-  knowledgeArticleId?: string;
-  articleLanguage?: string;
-  articleVersionNumber?: number;
-  articlePublishStatus?: string;
-  uriHash?: string;
-  permanentId?: string;
-  resultUrl: string;
-  source: string;
-  title: string;
-  name?: string;
-}
-
 export interface AttachToCaseState {
   attachedResults: AttachedResult[];
 }
@@ -40,10 +28,19 @@ export interface AttachToCaseProps {
   initialState?: AttachToCaseInitialState;
 }
 
+export interface SearchResult {
+  title: string;
+  raw: {
+    permanentid?: string;
+    urihash?: string;
+  };
+}
+
+// TODO: DEFINE TYPES FOR THESE
 export interface AttachToCase extends Controller {
-  isAttached(result: AttachedResult): boolean;
+  isAttached(result: SearchResult): boolean;
   attach(result: AttachedResult): void;
-  detach(result: AttachedResult): void;
+  detach(result: SearchResult): void;
 }
 
 const initialStateSchema = new Schema({
@@ -77,41 +74,43 @@ export function buildAttachToCase(
   }
 
   const controller = buildController(engine);
-  // const {dispatch} = engine;
+  const {dispatch} = engine;
 
-  const initialState = validateInitialState(
+  validateInitialState(
     engine,
     initialStateSchema,
     props.initialState,
     'buildAttachToCase'
   );
 
-  const attachedResults = initialState.attachedResults;
-
-  const getAttachedResults = () => {
-    return attachedResults;
-  };
-
   return {
     ...controller,
 
     get state() {
       return {
-        ...engine.state.attached,
+        ...engine.state.attachedResults,
       };
     },
 
     isAttached(result) {
-      console.log(getAttachedResults());
-      return (
-        engine.state.attached.attachedResults.findIndex(
-          (attached) => attached.permanentId === result.permanentId
-        ) !== -1
+      console.log(
+        `AttachedResults: ${engine.state.attachedResults.results.map(
+          (r) => r.permanentId
+        )}`
       );
+      if (result.raw.permanentid || result.raw.urihash) {
+        const isAttached = engine.state.attachedResults.results.some(
+          (attached) =>
+            attached.permanentId === result.raw.permanentid ||
+            attached.uriHash === result.raw.urihash
+        );
+        return isAttached;
+      }
+      return false;
     },
 
     attach(result) {
-      console.log(result);
+      dispatch(attachResult({result}));
     },
 
     detach(result) {
@@ -122,7 +121,7 @@ export function buildAttachToCase(
 
 function loadAttachToCaseReducers(
   engine: InsightEngine
-): engine is InsightEngine<ConfigurationSection & AttachToCaseSection> {
-  engine.addReducers({configuration, attached});
+): engine is InsightEngine<ConfigurationSection & AttachedResultsSection> {
+  engine.addReducers({configuration, attachedResults});
   return true;
 }

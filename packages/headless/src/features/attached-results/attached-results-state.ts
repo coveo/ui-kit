@@ -1,22 +1,24 @@
 export interface AttachedResult {
-  knowledgeArticleId?: string;
   articleLanguage?: string;
   articleVersionNumber?: string;
   articlePublishStatus?: string;
-  uriHash?: string;
+  caseId: string;
+  knowledgeArticleId?: string;
+  name?: string;
   permanentId?: string;
   resultUrl: string;
   source: string;
   title: string;
-  name?: string;
+  uriHash?: string;
 }
 
 export interface AttachedResultsState {
-  attachedResults: AttachedResult[];
+  results: AttachedResult[];
+  message?: string;
 }
 
 export function getAttachedResultsInitialState(): AttachedResultsState {
   return {
-    attachedResults: [],
+    results: [],
   };
 }

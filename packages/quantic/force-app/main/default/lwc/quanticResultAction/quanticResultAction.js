@@ -29,18 +29,6 @@ export default class QuanticResultAction extends LightningElement {
    */
   @api iconName;
   /**
-   * Specifies whether the result action button is in selected state or not.
-   * @api
-   * @type {boolean}
-   */
-  @api selected;
-  /**
-   * Specifies whether the result action button is in loading state or not.
-   * @api
-   * @type {boolean}
-   */
-  @api loading;
-  /**
    * The name of the event to be dispatched.
    * @api
    * @type {string}
@@ -65,11 +53,35 @@ export default class QuanticResultAction extends LightningElement {
   _selected;
   /** @type {boolean} */
   _loading;
+  
+  /**
+   * Specifies whether the result action button is in selected state or not.
+   * @api
+   * @type {boolean}
+   */
+  @api 
+  get selected() {
+    return this._selected;
+  };
+
+  set selected(isSelected) {
+    this._selected = isSelected;
+  }
+
+  /**
+   * Specifies whether the result action button is in loading state or not.
+   * @api
+   * @type {boolean}
+   */
+  @api 
+  get loading() {
+    return this._loading;
+  }
+  set loading(isLoading) {
+    this._loading = isLoading;
+  }
 
   connectedCallback() {
-    this.setSelected(this.selected);
-    this.setLoading(this.loading);
-
     const resultActionRegister = new CustomEvent(
       'quantic__resultactionregister',
       {
@@ -106,22 +118,6 @@ export default class QuanticResultAction extends LightningElement {
   };
 
   /**
-   * Sets the loading state.
-   * @param {boolean} value
-   */
-  setLoading = (value) => {
-    this._loading = value;
-  };
-
-  /**
-   * Sets the selected state
-   * @param {boolean} value
-   */
-  setSelected = (value) => {
-    this._selected = value;
-  };
-
-  /**
    * Dispatches a custon event.
    */
   handleClick(event) {
@@ -132,9 +128,9 @@ export default class QuanticResultAction extends LightningElement {
       composed: true,
       detail: {
         result: resultCopy,
-        setLoading: this.setLoading,
-        setSelected: this.setSelected,
-        isSelected: this._selected,
+        setLoading: this.loading,
+        setSelected: this.selected,
+        isSelected: this.selected,
       },
     });
 
