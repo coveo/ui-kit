@@ -14,7 +14,7 @@
       </div>
     </template>
   </button>
-  <c-quantic-modal data-id={modalId} full-screen={fullScreen}>
+  <c-quantic-modal data-id={modalId}>
     <div
       class="slds-var-p-vertical_medium slds-is-relative slds-align_absolute-center slds-border_bottom refine-modal__header"
       slot="header">
@@ -32,7 +32,7 @@
             {labels.noFilterForCurrentTab}
           </div>
         </template>
-        <c-quantic-refine-modal-content engine-id={engineId} hide-sort={hideSort}></c-quantic-refine-modal-content>
+        <c-quantic-refine-modal-content engine-id={engineId}></c-quantic-refine-modal-content>
       </div>
     </div>
     <div class="slds-align_absolute-center slds-var-p-vertical_medium slds-border_top refine-modal__footer"
