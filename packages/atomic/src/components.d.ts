@@ -1732,11 +1732,11 @@ export namespace Components {
          */
         "label": string;
         /**
-          * The latest date to accept when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `yyyy-mm-dd`.  If the format is not respected, the datepicker will behave as if there was no `max` value set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
+          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
          */
         "max"?: string;
         /**
-          * The earliest date to accept when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `yyyy-mm-dd`.  If the format is not respected, the datepicker will behave as if there was no `min` value set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
+          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
          */
         "min"?: string;
         /**
@@ -4260,11 +4260,11 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
-          * The latest date to accept when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `yyyy-mm-dd`.  If the format is not respected, the datepicker will behave as if there was no `max` value set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
+          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
          */
         "max"?: string;
         /**
-          * The earliest date to accept when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `yyyy-mm-dd`.  If the format is not respected, the datepicker will behave as if there was no `min` value set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
+          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
          */
         "min"?: string;
         /**

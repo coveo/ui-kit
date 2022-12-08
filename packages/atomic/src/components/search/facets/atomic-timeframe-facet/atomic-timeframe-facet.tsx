@@ -143,22 +143,22 @@ export class AtomicTimeframeFacet
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   /**
-   * The earliest date to accept when the `withDatepicker` option is enabled.
+   * The earliest date to accept from user input when the `withDatepicker` option is enabled.
    *
    * This value must be a valid date string in the format `YYYY-MM-DD`.
    *
-   * If the format is not respected, the datepicker will behave as if there was no `min` value set.
+   * If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.
    *
    * See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
    */
   @Prop({reflect: true}) public min?: string;
 
   /**
-   * The latest date to accept when the `withDatepicker` option is enabled.
+   * The latest date to accept from user input when the `withDatepicker` option is enabled.
    *
    * This value must be a valid date string in the format `YYYY-MM-DD`.
    *
-   * If the format is not respected, the datepicker will behave as if there was no `max` value set.
+   * If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.
    *
    * See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
    */
