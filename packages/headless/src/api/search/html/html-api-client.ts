@@ -27,6 +27,18 @@ export interface HtmlAPIClientOptions {
   requestMetadata?: RequestMetadata;
 }
 
+export const buildSrcPath = (req: HtmlRequest, path: string) => {
+  // eslint-disable-next-line node/no-unsupported-features/node-builtins
+  const url = new URL(`${req.url}${path}`);
+  url.searchParams.append('access_token', req.accessToken);
+  url.searchParams.append('organizationId', req.organizationId);
+  url.searchParams.append('uniqueId', req.uniqueId);
+  if (req.q) {
+    url.searchParams.append('q', req.q);
+  }
+  return url.href;
+};
+
 export const getHtml = async (
   req: HtmlRequest,
   options: HtmlAPIClientOptions

@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {fetchResultContent} from './result-preview-actions';
+import {fetchResultContent, updateSrcPath} from './result-preview-actions';
 import {getResultPreviewInitialState} from './result-preview-state';
 
 export const resultPreviewReducer = createReducer(
@@ -15,6 +15,10 @@ export const resultPreviewReducer = createReducer(
         state.content = content;
         state.uniqueId = uniqueId;
         state.isLoading = false;
+      })
+      .addCase(updateSrcPath.fulfilled, (state, action) => {
+        const {srcPath} = action.payload;
+        state.srcPath = srcPath;
       });
   }
 );

@@ -1,6 +1,6 @@
-import {baseInsightUrl} from '../../../api/service/insight/insight-params';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
+import {buildResultPreviewRequest} from '../../../features/result-preview/result-preview-request-builder';
 import {
   QuickviewProps,
   QuickviewOptions,
@@ -25,17 +25,13 @@ export function buildQuickview(
     engine.dispatch(logDocumentQuickview(props.options.result));
   };
 
-  const {accessToken, organizationId, platformUrl} = engine.state.configuration;
-  const {insightId} = engine.state.insightConfiguration;
-  const htmlUrl = baseInsightUrl(
-    {
-      accessToken,
-      organizationId,
-      url: platformUrl,
-      insightId,
-    },
-    '/quickview'
-  );
+  const path = '/quickview';
 
-  return buildCoreQuickview(engine, props, fetchResultContentCallback, htmlUrl);
+  return buildCoreQuickview(
+    engine,
+    props,
+    buildResultPreviewRequest,
+    path,
+    fetchResultContentCallback
+  );
 }

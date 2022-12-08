@@ -1,9 +1,17 @@
 import {CoreEngine} from '../../..';
 import {HtmlApiClient} from '../../../api/search/html/html-api-client';
+import {
+  HtmlRequest,
+  HtmlRequestOptions,
+} from '../../../api/search/html/html-request';
 import {Result} from '../../../api/search/search/result';
 import {configuration, resultPreview} from '../../../app/reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
-import {fetchResultContent} from '../../../features/result-preview/result-preview-actions';
+import {
+  fetchResultContent,
+  updateSrcPath,
+} from '../../../features/result-preview/result-preview-actions';
+import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
 import {
   ConfigurationSection,
   ResultPreviewSection,
@@ -86,8 +94,12 @@ export interface QuickviewState {
 export function buildCoreQuickview(
   engine: CoreEngine,
   props: QuickviewProps,
-  fetchResultContentCallback?: () => void,
-  htmlUrl?: string
+  buildResultPreviewRequest: (
+    state: StateNeededByHtmlEndpoint,
+    options: HtmlRequestOptions
+  ) => Promise<HtmlRequest>,
+  path: string,
+  fetchResultContentCallback?: () => void
 ): Quickview {
   if (!loadQuickviewReducers(engine)) {
     throw loadReducerError;
@@ -98,6 +110,15 @@ export function buildCoreQuickview(
   const controller = buildController(engine);
   const {result, maximumPreviewSize} = props.options;
   const uniqueId = result.uniqueId;
+
+  dispatch(
+    updateSrcPath({
+      uniqueId,
+      requestedOutputSize: maximumPreviewSize,
+      buildResultPreviewRequest,
+      path,
+    })
+  );
 
   return {
     ...controller,
@@ -119,14 +140,11 @@ export function buildCoreQuickview(
 
     get state() {
       const state = getState();
-      const {accessToken, organizationId} = state.configuration;
       const resultHasPreview = result.hasHtmlVersion;
       const preview = state.resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
-      const srcPath = htmlUrl
-        ? `${htmlUrl}?access_token=${accessToken}&organizationId=${organizationId}&uniqueId=${result.uniqueId}`
-        : undefined;
+      const srcPath = preview.srcPath;
 
       return {
         content,

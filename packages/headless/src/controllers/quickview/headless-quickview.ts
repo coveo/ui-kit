@@ -1,5 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
 import {
   buildCoreQuickview,
   QuickviewOptions,
@@ -24,8 +25,13 @@ export function buildQuickview(
   const fetchResultContentCallback = () => {
     engine.dispatch(logDocumentQuickview(props.options.result));
   };
+  const path = '/html';
 
-  const htmlUrl = `${engine.state.configuration.search.apiBaseUrl}/html`;
-
-  return buildCoreQuickview(engine, props, fetchResultContentCallback, htmlUrl);
+  return buildCoreQuickview(
+    engine,
+    props,
+    buildResultPreviewRequest,
+    path,
+    fetchResultContentCallback
+  );
 }
