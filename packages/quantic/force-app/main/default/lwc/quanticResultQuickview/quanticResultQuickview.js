@@ -107,7 +107,6 @@ export default class QuanticResultQuickview extends LightningElement {
   renderedCallback() {
     if (this.contentContainer && this.state?.resultHasPreview) {
       if (this.isQuickviewOpen && this.isFirstPreviewRender) {
-        // this.quickview.fetchSrcPath();
         this.isFirstPreviewRender = false;
         this.setFocusToHeader();
       }
