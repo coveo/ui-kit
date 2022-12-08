@@ -33,8 +33,17 @@ export const buildSrcPath = (req: HtmlRequest, path: string) => {
   url.searchParams.append('access_token', req.accessToken);
   url.searchParams.append('organizationId', req.organizationId);
   url.searchParams.append('uniqueId', req.uniqueId);
-  if (req.q) {
+  if (req.q !== undefined) {
     url.searchParams.append('q', req.q);
+  }
+  if (req.enableNavigation !== undefined) {
+    url.searchParams.append('enableNavigation', `${req.enableNavigation}`);
+  }
+  if (req.requestedOutputSize !== undefined) {
+    url.searchParams.append(
+      'requestedOutputSize',
+      `${req.requestedOutputSize}`
+    );
   }
   return url.href;
 };
