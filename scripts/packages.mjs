@@ -1,7 +1,35 @@
 import detectIndent from 'detect-indent';
+import glob from 'glob';
 import {existsSync, writeFileSync, readFileSync} from 'node:fs';
-import {resolve} from 'node:path';
+import {resolve, relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import rimraf from 'rimraf';
+import {execute} from './exec.mjs';
+
+export const workspacesRoot = resolve(
+  fileURLToPath(import.meta.url),
+  '..',
+  '..'
+);
+
+/** @type {PackageDir[]} */
+const allPackageDirs = getPackageManifestFromPackagePath(
+  workspacesRoot
+).workspaces.reduce(
+  (packageDirs, workspacesEntry) => [
+    ...packageDirs,
+    ...glob
+      .sync(workspacesEntry)
+      .map((packagePath) => relative('packages', packagePath)),
+  ],
+  []
+);
+
+export const privatePackageDirs = allPackageDirs.filter(
+  (packageDir) =>
+    getPackageManifestFromPackagePath(getPackagePathFromPackageDir(packageDir))
+      .private
+);
 
 export const packageDirsNpmTag = /** @type {const} */ ([
   'atomic',
@@ -19,12 +47,6 @@ export const packageDirsNpmTag = /** @type {const} */ ([
 
 /** @type {PackageDir[]} */
 export const packageDirsSnyk = ['headless', 'atomic'];
-
-export const workspacesRoot = resolve(
-  fileURLToPath(import.meta.url),
-  '..',
-  '..'
-);
 
 /**
  * @typedef PackageDefinition
@@ -73,14 +95,10 @@ export function getPackageDefinitionFromPackageName(name) {
 /**
  * @param {string} packageName
  * @param {string} newVersion
- * @param {PackageDir[]} depdendenciesPackageDirs E.g.: [`samples/some-package`]
+ * @param {PackageDir[]} packageDirsToUpdate E.g.: [`samples/some-package`]
  */
-export function updatePackageVersion(
-  packageName,
-  newVersion,
-  depdendenciesPackageDirs
-) {
-  depdendenciesPackageDirs.forEach((packageDir) => {
+function updatePackageDependents(packageName, newVersion, packageDirsToUpdate) {
+  packageDirsToUpdate.forEach((packageDir) => {
     const manifestPath = resolve(
       getPackagePathFromPackageDir(packageDir),
       'package.json'
@@ -90,22 +108,67 @@ export function updatePackageVersion(
     /** @type {import('@lerna/package').RawManifest} */
     const manifest = JSON.parse(originalContentAsText);
 
-    if (manifest.name === packageName) {
-      manifest.version = newVersion;
-    } else {
-      if (packageName in (manifest.dependencies || {})) {
-        manifest.dependencies[packageName] = newVersion;
-      }
-      if (packageName in (manifest.devDependencies || {})) {
-        manifest.devDependencies[packageName] = newVersion;
-      }
-      if (packageName in (manifest.peerDependencies || {})) {
-        manifest.peerDependencies[packageName] = newVersion;
-      }
+    if (packageName in (manifest.dependencies || {})) {
+      manifest.dependencies[packageName] = newVersion;
+    }
+    if (packageName in (manifest.devDependencies || {})) {
+      manifest.devDependencies[packageName] = newVersion;
+    }
+    if (packageName in (manifest.peerDependencies || {})) {
+      manifest.peerDependencies[packageName] = newVersion;
     }
     writeFileSync(
       manifestPath,
       JSON.stringify(manifest, undefined, indent || '  ')
     );
   });
+}
+
+/**
+ * @param {string} packageDir
+ * @param {string} newVersion
+ */
+function updatePackageVersion(packageDir, newVersion) {
+  const manifestPath = resolve(
+    getPackagePathFromPackageDir(packageDir),
+    'package.json'
+  );
+  const originalContentAsText = readFileSync(manifestPath).toString();
+  const {indent} = detectIndent(originalContentAsText);
+  /** @type {import('@lerna/package').RawManifest} */
+  const manifest = JSON.parse(originalContentAsText);
+  manifest.version = newVersion;
+  writeFileSync(
+    manifestPath,
+    JSON.stringify(manifest, undefined, indent || '  ')
+  );
+}
+
+/**
+ * @param {{ [packageDir: PackageDir]: string }} newVersions
+ */
+export async function updatePackageVersionsAndDependents(newVersions) {
+  const dependentPackageDirs = Array.from(
+    new Set([...Object.keys(newVersions), ...privatePackageDirs]).values()
+  );
+  const packages = Object.keys(newVersions).map((packageDir) =>
+    getPackageDefinitionFromPackageDir(packageDir)
+  );
+  for (const packageDef of packages) {
+    updatePackageVersion(
+      packageDef.packageDir,
+      newVersions[packageDef.packageDir]
+    );
+    updatePackageDependents(packageDef.name, '*', dependentPackageDirs);
+  }
+  await execute('npm', ['install', '--package-lock-only', '--ignore-scripts']);
+  for (const packageDef of packages) {
+    updatePackageDependents(
+      packageDef.name,
+      newVersions[packageDef.packageDir],
+      dependentPackageDirs
+    );
+  }
+  await new Promise((resolve) => rimraf('**/node_modules', resolve));
+  await execute('npm', ['install']);
 }
