@@ -1,4 +1,7 @@
-import {LightningElement, api, track} from 'lwc';
+import close from '@salesforce/label/c.quantic_Close';
+import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
+import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
+import openPreview from '@salesforce/label/c.quantic_OpenPreview';
 import {
   getHeadlessBundle,
   getHeadlessEnginePromise,
@@ -6,11 +9,7 @@ import {
   isHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {I18nUtils, getLastFocusableElement} from 'c/quanticUtils';
-
-import close from '@salesforce/label/c.quantic_Close';
-import openPreview from '@salesforce/label/c.quantic_OpenPreview';
-import noPreview from '@salesforce/label/c.quantic_NoPreviewAvailable';
-import openFileForPreview from '@salesforce/label/c.quantic_OpenFileForPreview';
+import {LightningElement, api, track} from 'lwc';
 
 /** @typedef {import("coveo").Result} Result */
 /** @typedef {import("coveo").Quickview} Quickview */
@@ -107,9 +106,8 @@ export default class QuanticResultQuickview extends LightningElement {
 
   renderedCallback() {
     if (this.contentContainer && this.state?.resultHasPreview) {
-      // eslint-disable-next-line @lwc/lwc/no-inner-html
-      this.contentContainer.innerHTML = this.state.content;
       if (this.isQuickviewOpen && this.isFirstPreviewRender) {
+        // this.quickview.fetchSrcPath();
         this.isFirstPreviewRender = false;
         this.setFocusToHeader();
       }
@@ -206,7 +204,7 @@ export default class QuanticResultQuickview extends LightningElement {
     return !!this.previewButtonIcon;
   }
 
-  /** @type {HTMLElement} */
+  /** @type {HTMLIFrameElement} */
   get contentContainer() {
     return this.template.querySelector('.quickview__content-container');
   }
@@ -241,6 +239,10 @@ export default class QuanticResultQuickview extends LightningElement {
 
   get hasButtonLabel() {
     return !!this.previewButtonLabel;
+  }
+
+  get srcPath() {
+    return this.state.srcPath;
   }
 
   setFocusToHeader() {

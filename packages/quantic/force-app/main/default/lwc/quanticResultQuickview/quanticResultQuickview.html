@@ -39,7 +39,12 @@
           </div>
         </template>
         <template if:false={isLoading}>
-          <div onclick={stopPropagation} class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap" id="quickview__content-container" lwc:dom="manual"></div>
+          <iframe
+            id="quickview__content-container"
+            class="quickview__content-container slds-modal__content slds-p-around_large slds-wrap"
+            src={srcPath}
+            height="100%"
+          ></iframe>
           <footer onclick={stopPropagation} class="slds-modal__footer slds-p-top_none slds-p-bottom_none">
             <slot name="footer"></slot>
           </footer>
