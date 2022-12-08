@@ -62,6 +62,11 @@ export interface QuickviewState {
    * `true` if content is being fetched, and `false` otherwise.
    */
   isLoading: boolean;
+
+  /**
+   * The `src` path to use if rendering the quickview in an iframe.
+   */
+  srcPath?: string;
 }
 
 /**
@@ -75,7 +80,8 @@ export interface QuickviewState {
 export function buildCoreQuickview(
   engine: CoreEngine,
   props: QuickviewProps,
-  fetchResultContentCallback?: () => void
+  fetchResultContentCallback?: () => void,
+  htmlUrl?: string
 ): Quickview {
   if (!loadQuickviewReducers(engine)) {
     throw loadReducerError;
@@ -100,15 +106,21 @@ export function buildCoreQuickview(
     },
 
     get state() {
+      const state = getState();
+      const {accessToken, organizationId} = state.configuration;
       const resultHasPreview = result.hasHtmlVersion;
-      const preview = getState().resultPreview;
+      const preview = state.resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
+      const srcPath = htmlUrl
+        ? `${htmlUrl}?access_token=${accessToken}&organizationId=${organizationId}&uniqueId=${result.uniqueId}`
+        : undefined;
 
       return {
         content,
         resultHasPreview,
         isLoading,
+        srcPath,
       };
     },
   };

@@ -1,3 +1,4 @@
+import {baseInsightUrl} from '../../../api/service/insight/insight-params';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {logDocumentQuickview} from '../../../features/result-preview/result-preview-analytics-actions';
 import {
@@ -24,5 +25,17 @@ export function buildQuickview(
     engine.dispatch(logDocumentQuickview(props.options.result));
   };
 
-  return buildCoreQuickview(engine, props, fetchResultContentCallback);
+  const {accessToken, organizationId, platformUrl} = engine.state.configuration;
+  const {insightId} = engine.state.insightConfiguration;
+  const htmlUrl = baseInsightUrl(
+    {
+      accessToken,
+      organizationId,
+      url: platformUrl,
+      insightId,
+    },
+    '/quickview'
+  );
+
+  return buildCoreQuickview(engine, props, fetchResultContentCallback, htmlUrl);
 }

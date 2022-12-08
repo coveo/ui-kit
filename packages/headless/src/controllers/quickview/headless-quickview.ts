@@ -25,5 +25,7 @@ export function buildQuickview(
     engine.dispatch(logDocumentQuickview(props.options.result));
   };
 
-  return buildCoreQuickview(engine, props, fetchResultContentCallback);
+  const htmlUrl = `${engine.state.configuration.search.apiBaseUrl}/html`;
+
+  return buildCoreQuickview(engine, props, fetchResultContentCallback, htmlUrl);
 }
