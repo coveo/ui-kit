@@ -12,10 +12,10 @@ import {LightningElement, api} from 'lwc';
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
 
 /**
- * The `QuanticResultCopyToClipboard` component allows the end user to copy a result to clipboard.
+ * The `QuanticResultCopyToClipboard` component allows the end user to copy a result's details to clipboard.
  * @category Insight Panel
  * @example
- * <c-quantic-result-copy-to-clipboard engine-id={engineId} result={result} label="Copy" success-label="Copied!" text-template="${title}\n${clickUri}"></c-quantic-result-copy-to-clipboard>
+ * <c-quantic-result-copy-to-clipboard engine-id={engineId} result={result} text-template="${title}\n${clickUri}"></c-quantic-result-copy-to-clipboard>
  */
 export default class QuanticResultCopyToClipboard extends LightningElement {
   labels = {
