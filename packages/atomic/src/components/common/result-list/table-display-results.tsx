@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import {extractUnfoldedResult} from '../interface/result';
 import {ResultListDisplayProps} from './result-list-common-interface';
 
@@ -84,7 +85,7 @@ const getFieldTableColumnsFromRenderingFunction = (
   contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
 
   return Array.from(
-    contentOfRenderingFunction.querySelectorAll('atomic-table-element')
+    contentOfRenderingFunction.querySelectorAll(tableElementTagName)
   );
 };
 
@@ -94,5 +95,5 @@ const getFieldTableColumnsFromHTMLTemplate = (
   Array.from(
     props.resultTemplateProvider
       .getTemplateContent(props.getResultListState().results[0])
-      .querySelectorAll('atomic-table-element')
+      .querySelectorAll(tableElementTagName)
   );
