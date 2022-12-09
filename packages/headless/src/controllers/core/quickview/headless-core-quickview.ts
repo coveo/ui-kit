@@ -39,19 +39,20 @@ export interface QuickviewOptions {
    * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
    */
   maximumPreviewSize?: number;
+
+  /**
+   * Whether to only update the `srcPath` attribute when using `fetchResultContent` rather than updating `content`.
+   * Use this if you are using an iframe with `state.srcPath` as the source url.
+   */
+  onlySrcPath?: boolean;
 }
 
 export interface Quickview extends Controller {
   /**
    * Retrieves the preview content for the configured result.
+   * If `options.onlySrcPath` is `true` this will update the `srcPath` state property rather than `content`.
    */
   fetchResultContent(): void;
-
-  /*
-   * Executes the callback function intended for when quickview content is fetched.
-   * Use this when using the quickview `srcPath` in an iframe.
-   */
-  executeOnFetchCallback(): void;
 
   /**
    * The state for the `Quickview` controller.
@@ -111,28 +112,25 @@ export function buildCoreQuickview(
   const {result, maximumPreviewSize} = props.options;
   const uniqueId = result.uniqueId;
 
-  dispatch(
-    updateSrcPath({
-      uniqueId,
-      requestedOutputSize: maximumPreviewSize,
-      buildResultPreviewRequest,
-      path,
-    })
-  );
-
   return {
     ...controller,
 
     fetchResultContent() {
-      dispatch(
-        fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
-      );
-      if (fetchResultContentCallback) {
-        fetchResultContentCallback();
-      }
-    },
-
-    executeOnFetchCallback() {
+      props.options.onlySrcPath
+        ? dispatch(
+            updateSrcPath({
+              uniqueId,
+              requestedOutputSize: maximumPreviewSize,
+              buildResultPreviewRequest,
+              path,
+            })
+          )
+        : dispatch(
+            fetchResultContent({
+              uniqueId,
+              requestedOutputSize: maximumPreviewSize,
+            })
+          );
       if (fetchResultContentCallback) {
         fetchResultContentCallback();
       }
