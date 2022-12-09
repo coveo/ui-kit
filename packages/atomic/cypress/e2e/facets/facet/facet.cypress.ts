@@ -686,6 +686,21 @@ describe('Facet v1 Test Suites', () => {
       before(() => setupSelectShowMore());
 
       FacetAssertions.assertLogFacetShowMore(field);
+      it('should include analytics in the v2 call', async () => {
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+          expect(firstSearch.request.body).to.have.property('analytics');
+          const analyticsBody = firstSearch.request.body.analytics;
+          expect(analyticsBody).to.have.property('eventType', 'facet');
+          expect(analyticsBody).to.have.property(
+            'eventValue',
+            'showMoreFacetResults'
+          );
+          expect(analyticsBody.customData).to.have.property(
+            'facetField',
+            field
+          );
+        });
+      });
     });
 
     describe('when there\'s no more "Show more" button', () => {

@@ -1,5 +1,6 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {EventDescription} from 'coveo.analytics';
 import {historyStore} from '../../api/analytics/search-analytics';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
@@ -118,9 +119,18 @@ export const fetchPage = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/fetchPage', async (analyticsAction: SearchAction, config) => {
+>('search/fetchPage', async (searchAction: SearchAction, config) => {
   const state = config.getState();
   addEntryInActionsHistory(state);
+
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription, action: analyticsAction} =
+    searchAction.prepare({
+      getState: () => config.getState(),
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    });
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
@@ -129,7 +139,7 @@ export const fetchPage = createAsyncThunk<
     analyticsAction,
   });
 
-  const request = await buildSearchRequest(state);
+  const request = await buildSearchRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -142,14 +152,23 @@ export const fetchMoreResults = createAsyncThunk<
 >('search/fetchMoreResults', async (_, config) => {
   const state = config.getState();
 
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription, action: analyticsAction} =
+    logFetchMoreResults().prepare({
+      getState: () => config.getState(),
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    });
+
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({
     ...config,
-    analyticsAction: logFetchMoreResults(),
+    analyticsAction,
   });
 
-  const request = await buildFetchMoreRequest(state);
+  const request = await buildFetchMoreRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {origin: 'mainSearch'});
 
   return await processor.process(fetched);
@@ -159,14 +178,23 @@ export const fetchFacetValues = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->('search/fetchFacetValues', async (analyticsAction: SearchAction, config) => {
+>('search/fetchFacetValues', async (searchAction: SearchAction, config) => {
   const state = config.getState();
+
+  const {analyticsClientMiddleware, preprocessRequest, logger} = config.extra;
+  const {description: eventDescription, action: analyticsAction} =
+    searchAction.prepare({
+      getState: () => config.getState(),
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    });
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
   >({...config, analyticsAction});
 
-  const request = await buildFetchFacetValuesRequest(state);
+  const request = await buildFetchFacetValuesRequest(state, eventDescription);
   const fetched = await processor.fetchFromAPI(request, {
     origin: 'facetValues',
   });
@@ -222,9 +250,10 @@ export const fetchInstantResults = createAsyncThunk<
 );
 
 const buildFetchMoreRequest = async (
-  state: StateNeededByExecuteSearch
+  state: StateNeededByExecuteSearch,
+  eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
-  const mappedRequest = await buildSearchRequest(state);
+  const mappedRequest = await buildSearchRequest(state, eventDescription);
   mappedRequest.request = {
     ...mappedRequest.request,
     firstResult:
@@ -253,9 +282,10 @@ export const buildInstantResultSearchRequest = async (
 };
 
 const buildFetchFacetValuesRequest = async (
-  state: StateNeededByExecuteSearch
+  state: StateNeededByExecuteSearch,
+  eventDescription?: EventDescription
 ): Promise<MappedSearchRequest> => {
-  const mappedRequest = await buildSearchRequest(state);
+  const mappedRequest = await buildSearchRequest(state, eventDescription);
   // Specifying a numberOfResults of 0 will not log the query as a full fledged query in the API
   // it will also alleviate the load on the index
   mappedRequest.request.numberOfResults = 0;
