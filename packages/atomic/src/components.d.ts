@@ -674,6 +674,12 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface AtomicIpxButton {
+        /**
+          * The label that will be shown to the user.
+         */
+        "label": string;
+    }
     interface AtomicIpxLayout {
     }
     interface AtomicIpxRefineModal {
@@ -2026,6 +2032,12 @@ declare global {
         prototype: HTMLAtomicInsightTimeframeFacetElement;
         new (): HTMLAtomicInsightTimeframeFacetElement;
     };
+    interface HTMLAtomicIpxButtonElement extends Components.AtomicIpxButton, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxButtonElement: {
+        prototype: HTMLAtomicIpxButtonElement;
+        new (): HTMLAtomicIpxButtonElement;
+    };
     interface HTMLAtomicIpxLayoutElement extends Components.AtomicIpxLayout, HTMLStencilElement {
     }
     var HTMLAtomicIpxLayoutElement: {
@@ -2530,6 +2542,7 @@ declare global {
         "atomic-insight-tab": HTMLAtomicInsightTabElement;
         "atomic-insight-tabs": HTMLAtomicInsightTabsElement;
         "atomic-insight-timeframe-facet": HTMLAtomicInsightTimeframeFacetElement;
+        "atomic-ipx-button": HTMLAtomicIpxButtonElement;
         "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
@@ -3231,6 +3244,12 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
+    }
+    interface AtomicIpxButton {
+        /**
+          * The label that will be shown to the user.
+         */
+        "label"?: string;
     }
     interface AtomicIpxLayout {
     }
@@ -4294,6 +4313,7 @@ declare namespace LocalJSX {
         "atomic-insight-tab": AtomicInsightTab;
         "atomic-insight-tabs": AtomicInsightTabs;
         "atomic-insight-timeframe-facet": AtomicInsightTimeframeFacet;
+        "atomic-ipx-button": AtomicIpxButton;
         "atomic-ipx-layout": AtomicIpxLayout;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
@@ -4418,6 +4438,7 @@ declare module "@stencil/core" {
             "atomic-insight-tab": LocalJSX.AtomicInsightTab & JSXBase.HTMLAttributes<HTMLAtomicInsightTabElement>;
             "atomic-insight-tabs": LocalJSX.AtomicInsightTabs & JSXBase.HTMLAttributes<HTMLAtomicInsightTabsElement>;
             "atomic-insight-timeframe-facet": LocalJSX.AtomicInsightTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightTimeframeFacetElement>;
+            "atomic-ipx-button": LocalJSX.AtomicIpxButton & JSXBase.HTMLAttributes<HTMLAtomicIpxButtonElement>;
             "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;

@@ -5,13 +5,21 @@
 atomic-ipx-layout {
   display: grid;
   grid-template-rows: auto auto auto 8fr 1fr;
-  max-height: 100%;
+  max-height: 40rem;
   box-sizing: border-box;
-  width: var(--atomic-ipx-width, 500px);
-  height: var(--atomic-ipx-height, 1000px);
+  width: var(--atomic-ipx-width, 31.25rem);
+  height: var(--atomic-ipx-height, 37.5rem);
   margin-left: auto;
   margin-right: auto;
-  box-shadow: 0px 3px 24px 0px #0000001a;
+  box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+  transition-property: opacity, margin;
+  transition-duration: 0.7s;
+  transition-timing-function: ease-in;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  border-radius: 0.5rem;
+  inset: auto 3rem 3.75rem auto;
 
   atomic-layout-section[section='search'] {
     width: 100%;
@@ -28,7 +36,7 @@ atomic-ipx-layout {
   }
 
   atomic-layout-section[section='status'] {
-    padding: 1.5rem;
+    padding: 0.8rem 1.5rem 0.8rem 1.5rem;
   }
 
   atomic-layout-section[section='results'] {
