@@ -28,7 +28,6 @@ export interface HtmlAPIClientOptions {
 }
 
 export const buildSrcPath = (req: HtmlRequest, path: string) => {
-  // eslint-disable-next-line node/no-unsupported-features/node-builtins
   const url = new URL(`${req.url}${path}`);
   url.searchParams.append('access_token', req.accessToken);
   url.searchParams.append('organizationId', req.organizationId);
