@@ -55,6 +55,7 @@ export const buildInsightSearchRequest = (
     ...(state.sortCriteria && {
       sortCriteria: state.sortCriteria,
     }),
+    tab: state.configuration.analytics.originLevel2,
   });
 };
 

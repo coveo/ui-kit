@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.113.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.112.0...@coveo/headless@1.113.0) (2022-12-09)
+
+### Features
+
+- **headless:** tab query parameter added to the insight search query ([#2599](https://github.com/coveo/ui-kit/issues/2599)) ([1347597](https://github.com/coveo/ui-kit/commit/1347597d9a41be3d87ff6df0fd293f516022d5db))
+
 # [1.112.0](https://github.com/coveo/ui-kit/compare/@coveo/headless@1.111.5...@coveo/headless@1.112.0) (2022-12-01)
 
 ### Features
