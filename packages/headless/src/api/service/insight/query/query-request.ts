@@ -7,6 +7,7 @@ import {
   FirstResultParam,
   QueryParam,
   SortCriteriaParam,
+  TabParam,
 } from '../../../search/search-api-params';
 import {
   baseInsightRequest,
@@ -24,7 +25,8 @@ export type InsightQueryRequest = InsightParam &
   SortCriteriaParam &
   FieldsToIncludeParam &
   EnableDidYouMeanParam &
-  ConstantQueryParam;
+  ConstantQueryParam &
+  TabParam;
 
 interface CaseContextParam {
   caseContext?: Record<string, string>;
