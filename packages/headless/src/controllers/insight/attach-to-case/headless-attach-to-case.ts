@@ -1,7 +1,10 @@
 import {ArrayValue, RecordValue, Schema} from '@coveo/bueno';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine';
 import {configuration, attachedResults} from '../../../app/reducers';
-import {attachResult} from '../../../features/attached-results/attached-results-actions';
+import {
+  attachResult,
+  detachResult,
+} from '../../../features/attached-results/attached-results-actions';
 import {AttachedResult} from '../../../features/attached-results/attached-results-state';
 import {
   AttachedResultsSection,
@@ -36,11 +39,10 @@ export interface SearchResult {
   };
 }
 
-// TODO: DEFINE TYPES FOR THESE
 export interface AttachToCase extends Controller {
   isAttached(result: SearchResult): boolean;
   attach(result: AttachedResult): void;
-  detach(result: SearchResult): void;
+  detach(result: AttachedResult): void;
 }
 
 const initialStateSchema = new Schema({
@@ -114,7 +116,7 @@ export function buildAttachToCase(
     },
 
     detach(result) {
-      console.log(result);
+      dispatch(detachResult({result}));
     },
   };
 }

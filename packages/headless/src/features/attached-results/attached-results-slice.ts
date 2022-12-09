@@ -25,9 +25,16 @@ export const attachToCaseReducer = createReducer(
         state.results = [action.payload.result, ...state.results];
       })
       .addCase(detachResult, (state, action) => {
-        state.results = state.results.filter(
-          (result) => result.permanentId !== action.payload
-        );
+        state.results = state.results.filter((result) => {
+          const isPermanentIdEqual =
+            result?.permanentId !== undefined &&
+            result?.permanentId === action.payload?.result?.permanentId;
+          const isUriHashEqual =
+            result?.uriHash !== undefined &&
+            result?.uriHash === action.payload?.result?.uriHash;
+          const isCaseIdEqual = result.caseId === action.payload.result.caseId;
+          return !isCaseIdEqual || (!isPermanentIdEqual && !isUriHashEqual);
+        });
       });
   }
 );

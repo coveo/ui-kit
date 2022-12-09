@@ -23,6 +23,10 @@ export interface SetAttachToCaseAttachActionCreatorPayload {
   result: AttachedResult;
 }
 
+export interface SetAttachToCaseDetachActionCreatorPayload {
+  result: AttachedResult;
+}
+
 const RequiredAttachedResultRecord = new RecordValue({
   options: {
     required: true,
@@ -34,7 +38,7 @@ const RequiredAttachedResultRecord = new RecordValue({
     caseId: requiredNonEmptyString,
     knowledgeArticleId: nonEmptyString,
     name: nonEmptyString,
-    permanentId: requiredNonEmptyString,
+    permanentId: nonEmptyString,
     resultUrl: nonEmptyString,
     source: nonEmptyString,
     title: requiredNonEmptyString,
@@ -63,5 +67,8 @@ export const attachResult = createAction(
 
 export const detachResult = createAction(
   'insight/attachToCase/detach',
-  (payload: string) => validatePayload(payload, RequiredAttachedResultRecord)
+  (payload: SetAttachToCaseDetachActionCreatorPayload) =>
+    validatePayload(payload, {
+      result: RequiredAttachedResultRecord,
+    })
 );
