@@ -44,6 +44,7 @@ export const InterceptAliases = {
     DocumentOpen: uaAlias('documentOpen'),
     DocumentQuickview: uaAlias('documentQuickview'),
     SearchFromLink: uaAlias('searchFromLink'),
+    CopyToClipboard: uaAlias('copyToClipboard'),
   },
   QuerySuggestions: '@coveoQuerySuggest',
   Search: '@coveoSearch',
