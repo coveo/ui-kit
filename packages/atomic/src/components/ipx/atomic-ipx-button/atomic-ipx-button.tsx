@@ -74,7 +74,7 @@ export class AtomicIPXButton {
 
   private open() {
     this.ipxLayout.style.height = `${Math.min(
-      600,
+      540,
       document.documentElement.clientHeight
     )}px`;
     this.ipxLayout.style.visibility = 'visible';
