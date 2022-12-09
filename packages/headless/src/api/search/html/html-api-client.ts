@@ -44,6 +44,9 @@ export const buildSrcPath = (req: HtmlRequest, path: string) => {
       `${req.requestedOutputSize}`
     );
   }
+  if (req.visitorId !== undefined) {
+    url.searchParams.append('visitorId', `${req.visitorId}`);
+  }
   return url.href;
 };
 
