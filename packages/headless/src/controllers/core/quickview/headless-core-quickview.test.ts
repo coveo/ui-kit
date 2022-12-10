@@ -1,7 +1,7 @@
 import {configuration, resultPreview} from '../../../app/reducers';
 import {
   fetchResultContent,
-  updateSrcPath,
+  updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {
   buildMockResult,
@@ -61,16 +61,16 @@ describe('QuickviewCore', () => {
     const uniqueId = '1';
     const requestedOutputSize = 0;
 
-    describe('when #onlySrcPath is true', () => {
+    describe('when #onlyContentURL is true', () => {
       beforeEach(() => {
         defaultOptions.result = buildMockResult({uniqueId});
-        initQuickview({...defaultOptions, onlySrcPath: true});
+        initQuickview({...defaultOptions, onlyContentURL: true});
 
         quickview.fetchResultContent();
       });
 
-      it('dispatches a #updateSrcPath action with the result uniqueId', () => {
-        const action = engine.findAsyncAction(updateSrcPath.pending);
+      it('dispatches a #updateContentURL action with the result uniqueId', () => {
+        const action = engine.findAsyncAction(updateContentURL.pending);
         expect(action?.meta.arg).toEqual({
           uniqueId,
           requestedOutputSize,
@@ -80,7 +80,7 @@ describe('QuickviewCore', () => {
       });
     });
 
-    describe('when #onlySrcPath is falsy', () => {
+    describe('when #onlyContentURL is falsy', () => {
       beforeEach(() => {
         defaultOptions.result = buildMockResult({uniqueId});
         initQuickview();

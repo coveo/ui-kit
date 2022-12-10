@@ -2,7 +2,7 @@ export interface ResultPreviewState {
   uniqueId: string;
   content: string;
   isLoading: boolean;
-  srcPath?: string;
+  contentURL?: string;
 }
 
 export function getResultPreviewInitialState(): ResultPreviewState {

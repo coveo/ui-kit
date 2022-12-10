@@ -124,7 +124,7 @@ export default class QuanticResultQuickview extends LightningElement {
     const options = {
       result: this.result,
       maximumPreviewSize: Number(this.maximumPreviewSize),
-      onlySrcPath: true,
+      onlyContentURL: true,
     };
     this.quickview = this.headless.buildQuickview(engine, {options});
     this.unsubscribe = this.quickview.subscribe(() => this.updateState());
@@ -244,11 +244,11 @@ export default class QuanticResultQuickview extends LightningElement {
     return !!this.previewButtonLabel;
   }
 
-  get srcPath() {
-    return this.state.srcPath?.includes(
+  get contentURL() {
+    return this.state.contentURL?.includes(
       encodeURIComponent(this.result.uniqueId)
     )
-      ? this.state.srcPath
+      ? this.state.contentURL
       : undefined;
   }
 

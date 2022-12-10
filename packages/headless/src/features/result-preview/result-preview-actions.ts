@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  buildSrcPath,
+  buildContentURL,
   HtmlApiClient,
 } from '../../api/search/html/html-api-client';
 import {
@@ -21,11 +21,11 @@ interface FetchResultContentResponse {
   uniqueId: string;
 }
 
-interface UpdateSrcPathActionCreatorPayload {
+interface UpdateContentURLActionCreatorPayload {
   /**
    * The path to retrieve result quickview content.
    */
-  srcPath?: string;
+  contentURL?: string;
 }
 
 export interface AsyncThunkGlobalOptions<T>
@@ -55,7 +55,7 @@ export const fetchResultContent = createAsyncThunk<
   }
 );
 
-type UpdateSrcPathOptions = HtmlRequestOptions & {
+type UpdateContentURLOptions = HtmlRequestOptions & {
   path: string;
   buildResultPreviewRequest: (
     state: StateNeededByHtmlEndpoint,
@@ -63,15 +63,15 @@ type UpdateSrcPathOptions = HtmlRequestOptions & {
   ) => Promise<HtmlRequest>;
 };
 
-export const updateSrcPath = createAsyncThunk<
-  UpdateSrcPathActionCreatorPayload,
-  UpdateSrcPathOptions,
+export const updateContentURL = createAsyncThunk<
+  UpdateContentURLActionCreatorPayload,
+  UpdateContentURLOptions,
   AsyncThunkGlobalOptions<StateNeededByHtmlEndpoint>
 >(
-  'resultPreview/updateSrcPath',
-  async (options: UpdateSrcPathOptions, {getState}) => {
+  'resultPreview/updateContentURL',
+  async (options: UpdateContentURLOptions, {getState}) => {
     const state = getState();
-    const srcPath = buildSrcPath(
+    const contentURL = buildContentURL(
       await options.buildResultPreviewRequest(state, {
         uniqueId: options.uniqueId,
         requestedOutputSize: options.requestedOutputSize,
@@ -80,7 +80,7 @@ export const updateSrcPath = createAsyncThunk<
     );
 
     return {
-      srcPath,
+      contentURL: contentURL,
     };
   }
 );

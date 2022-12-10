@@ -9,7 +9,7 @@ import {configuration, resultPreview} from '../../../app/reducers';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments';
 import {
   fetchResultContent,
-  updateSrcPath,
+  updateContentURL,
 } from '../../../features/result-preview/result-preview-actions';
 import {StateNeededByHtmlEndpoint} from '../../../features/result-preview/result-preview-request-builder';
 import {
@@ -41,16 +41,16 @@ export interface QuickviewOptions {
   maximumPreviewSize?: number;
 
   /**
-   * Whether to only update the `srcPath` attribute when using `fetchResultContent` rather than updating `content`.
-   * Use this if you are using an iframe with `state.srcPath` as the source url.
+   * Whether to only update the `contentURL` attribute when using `fetchResultContent` rather than updating `content`.
+   * Use this if you are using an iframe with `state.contentURL` as the source url.
    */
-  onlySrcPath?: boolean;
+  onlyContentURL?: boolean;
 }
 
 export interface Quickview extends Controller {
   /**
    * Retrieves the preview content for the configured result.
-   * If `options.onlySrcPath` is `true` this will update the `srcPath` state property rather than `content`.
+   * If `options.onlyContentURL` is `true` this will update the `contentURL` state property rather than `content`.
    */
   fetchResultContent(): void;
 
@@ -81,7 +81,7 @@ export interface QuickviewState {
   /**
    * The `src` path to use if rendering the quickview in an iframe.
    */
-  srcPath?: string;
+  contentURL?: string;
 }
 
 /**
@@ -116,9 +116,9 @@ export function buildCoreQuickview(
     ...controller,
 
     fetchResultContent() {
-      props.options.onlySrcPath
+      props.options.onlyContentURL
         ? dispatch(
-            updateSrcPath({
+            updateContentURL({
               uniqueId,
               requestedOutputSize: maximumPreviewSize,
               buildResultPreviewRequest,
@@ -142,13 +142,13 @@ export function buildCoreQuickview(
       const preview = state.resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
-      const srcPath = preview.srcPath;
+      const contentURL = preview.contentURL;
 
       return {
         content,
         resultHasPreview,
         isLoading,
-        srcPath,
+        contentURL,
       };
     },
   };

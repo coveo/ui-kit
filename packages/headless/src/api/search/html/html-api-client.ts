@@ -27,7 +27,7 @@ export interface HtmlAPIClientOptions {
   requestMetadata?: RequestMetadata;
 }
 
-export const buildSrcPath = (req: HtmlRequest, path: string) => {
+export const buildContentURL = (req: HtmlRequest, path: string) => {
   const url = new URL(`${req.url}${path}`);
   url.searchParams.append('access_token', req.accessToken);
   url.searchParams.append('organizationId', req.organizationId);
