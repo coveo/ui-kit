@@ -1,5 +1,6 @@
 import {Logger} from 'pino';
 import {TextDecoder} from 'web-encoding';
+import {URLPath} from '../../../utils/url-utils';
 import {pickNonBaseParams, unwrapError} from '../../api-client-utils';
 import {PlatformClient} from '../../platform-client';
 import {PreprocessRequest, RequestMetadata} from '../../preprocess-request';
@@ -28,24 +29,21 @@ export interface HtmlAPIClientOptions {
 }
 
 export const buildContentURL = (req: HtmlRequest, path: string) => {
-  const url = new URL(`${req.url}${path}`);
-  url.searchParams.append('access_token', req.accessToken);
-  url.searchParams.append('organizationId', req.organizationId);
-  url.searchParams.append('uniqueId', req.uniqueId);
+  const url = new URLPath(`${req.url}${path}`);
+  url.addParam('access_token', req.accessToken);
+  url.addParam('organizationId', req.organizationId);
+  url.addParam('uniqueId', req.uniqueId);
   if (req.q !== undefined) {
-    url.searchParams.append('q', req.q);
+    url.addParam('q', req.q);
   }
   if (req.enableNavigation !== undefined) {
-    url.searchParams.append('enableNavigation', `${req.enableNavigation}`);
+    url.addParam('enableNavigation', `${req.enableNavigation}`);
   }
   if (req.requestedOutputSize !== undefined) {
-    url.searchParams.append(
-      'requestedOutputSize',
-      `${req.requestedOutputSize}`
-    );
+    url.addParam('requestedOutputSize', `${req.requestedOutputSize}`);
   }
   if (req.visitorId !== undefined) {
-    url.searchParams.append('visitorId', `${req.visitorId}`);
+    url.addParam('visitorId', `${req.visitorId}`);
   }
   return url.href;
 };
