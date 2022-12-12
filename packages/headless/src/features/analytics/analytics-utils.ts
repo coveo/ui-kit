@@ -95,7 +95,7 @@ type PrepareAnalyticsFunction<
   StateNeeded extends ConfigurationSection = StateNeededBySearchAnalyticsProvider
 > = (
   options: PreparableAnalyticsActionOptions<StateNeeded>
-) => PreparedAnalyticsAction<EventType, StateNeeded>;
+) => Promise<PreparedAnalyticsAction<EventType, StateNeeded>>;
 
 export interface PreparableAnalyticsAction<
   EventType extends WrappedAnalyticsType | void,
@@ -160,10 +160,14 @@ function makePreparableAnalyticsAction<
   StateNeeded extends ConfigurationSection
 >(
   prefix: string,
-  buildEvent: (options: PreparableAnalyticsActionOptions<StateNeeded>) => {
-    log: () => Promise<EventType>;
+  buildEvent: (
+    options: PreparableAnalyticsActionOptions<StateNeeded>
+  ) => Promise<{
+    log: (
+      options: AsyncThunkAnalyticsOptions<StateNeeded>
+    ) => Promise<EventType>;
     description?: EventDescription;
-  }
+  }>
 ): PreparableAnalyticsAction<EventType, StateNeeded> {
   const createAnalyticsAction = (
     body: AsyncThunkPayloadCreator<
@@ -180,27 +184,25 @@ function makePreparableAnalyticsAction<
       >(prefix, body) as unknown as AnalyticsAsyncThunk<EventType, StateNeeded>
     );
 
-  const rootAction = createAnalyticsAction(
-    async (
-      _,
-      {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
-    ) => {
-      return await buildEvent({
+  const rootAction = createAnalyticsAction(async (_, {getState, extra}) => {
+    const {analyticsClientMiddleware, preprocessRequest, logger} = extra;
+    return await (
+      await buildEvent({
         getState,
         analyticsClientMiddleware,
         preprocessRequest,
         logger,
-      }).log();
-    }
-  );
+      })
+    ).log({state: getState(), extra});
+  });
 
-  const prepare: PrepareAnalyticsFunction<EventType, StateNeeded> = ({
+  const prepare: PrepareAnalyticsFunction<EventType, StateNeeded> = async ({
     getState,
     analyticsClientMiddleware,
     preprocessRequest,
     logger,
   }) => {
-    const {description, log} = buildEvent({
+    const {description, log} = await buildEvent({
       getState,
       analyticsClientMiddleware,
       preprocessRequest,
@@ -208,9 +210,11 @@ function makePreparableAnalyticsAction<
     });
     return {
       description,
-      action: createAnalyticsAction(async () => {
-        return await log();
-      }),
+      action: createAnalyticsAction(
+        async (_, {getState: getNewState, extra: newExtra}) => {
+          return await log({state: getNewState(), extra: newExtra});
+        }
+      ),
     };
   };
 
@@ -227,7 +231,7 @@ export const makeAnalyticsAction = <EventType extends AnalyticsType>(
   getBuilder: (
     client: CoveoSearchPageClient,
     state: StateNeededBySearchAnalyticsProvider
-  ) => EventBuilder | null,
+  ) => Promise<EventBuilder | null> | null,
   provider: (
     getState: () => StateNeededBySearchAnalyticsProvider
   ) => SearchPageClientProvider = (getState) =>
@@ -238,7 +242,12 @@ export const makeAnalyticsAction = <EventType extends AnalyticsType>(
 > => {
   return makePreparableAnalyticsAction(
     prefix,
-    ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
       const client = configureAnalytics({
         getState,
         logger,
@@ -246,11 +255,13 @@ export const makeAnalyticsAction = <EventType extends AnalyticsType>(
         preprocessRequest,
         provider: provider(getState),
       });
-      const builder = getBuilder(client, getState());
+      const builder = await getBuilder(client, getState());
       return {
         description: builder?.description,
-        log: async () => {
-          const response = await builder?.log();
+        log: async ({state}) => {
+          const response = await builder?.log(
+            state.search?.searchResponseId ?? ''
+          );
           logger.info(
             {client: client.coveoAnalyticsClient, response},
             'Analytics response'
@@ -278,7 +289,12 @@ export const makeCaseAssistAnalyticsAction = (
 ): PreparableAnalyticsAction<void, StateNeededByCaseAssistAnalytics> => {
   return makePreparableAnalyticsAction(
     prefix,
-    ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
       const client = configureCaseAssistAnalytics({
         state: getState(),
         logger,
@@ -315,7 +331,12 @@ export const makeInsightAnalyticsAction = <EventType extends AnalyticsType>(
 > => {
   return makePreparableAnalyticsAction(
     prefix,
-    ({getState, analyticsClientMiddleware, preprocessRequest, logger}) => {
+    async ({
+      getState,
+      analyticsClientMiddleware,
+      preprocessRequest,
+      logger,
+    }) => {
       const client = configureInsightAnalytics({
         getState,
         logger,

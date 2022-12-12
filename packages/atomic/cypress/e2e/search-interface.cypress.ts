@@ -147,11 +147,16 @@ describe('Search Interface Component', () => {
       });
 
       it('should include analytics in the search request', () => {
-        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) =>
-          expect(firstSearch.request.body)
-            .to.have.property('analytics')
-            .to.have.property('actionCause', 'interfaceLoad')
-        );
+        cy.wait(TestFixture.interceptAliases.Search).should((firstSearch) => {
+          expect(firstSearch.request.body).to.have.property('analytics');
+          expect(firstSearch.request.body.analytics).to.have.property(
+            'actionCause',
+            'interfaceLoad'
+          );
+          expect(firstSearch.request.body.analytics)
+            .to.have.property('customData')
+            .to.have.property('coveoAtomicVersion');
+        });
       });
     });
 
