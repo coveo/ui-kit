@@ -61,7 +61,7 @@ export default class QuanticResultText extends LightningElement {
    */
   get fieldValue() {
     // @ts-ignore
-    return this.result.raw[this.field];
+    return this.result?.raw[this.field];
   }
 
   /**
