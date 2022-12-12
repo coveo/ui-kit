@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@coveo/headless": "2.0.1",
-    "fs-extra": "10.1.0"
+    "@coveo/bueno": "0.42.3"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -56,6 +56,7 @@
     "cypress": "10.8.0",
     "cypress-plugin-tab": "1.0.5",
     "dotenv": "10.0.0",
+    "fs-extra": "10.1.0",
     "jest-junit": "12.3.0",
     "jsdoc": "3.6.11",
     "jsdoc-tsimport-plugin": "1.0.5",
