@@ -68,5 +68,9 @@
     "@microsoft/tsdoc": "0.14.1",
     "jest-fetch-mock": "3.0.3",
     "ts-node": "10.9.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.6.0"
   }
 }
