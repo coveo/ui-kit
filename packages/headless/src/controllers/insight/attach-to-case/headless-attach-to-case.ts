@@ -95,11 +95,6 @@ export function buildAttachToCase(
     },
 
     isAttached(result) {
-      console.log(
-        `AttachedResults: ${engine.state.attachedResults.results.map(
-          (r) => r.permanentId
-        )}`
-      );
       if (result.raw.permanentid || result.raw.urihash) {
         const isAttached = engine.state.attachedResults.results.some(
           (attached) =>
