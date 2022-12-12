@@ -3,65 +3,44 @@
 /**
  * @prop --atomic-ipx-button-height: height of the IPX button.
  */
-.btn {
-  font-size: 0.75rem;
-  position: fixed;
-  inset: auto 3rem 0.1rem auto;
-  display: block;
+[part='ipx-button'] {
+  @apply btn-primary fixed bottom-1 right-12 text-sm block px-3;
   max-width: 9.5rem;
   min-width: 2.75rem;
-  padding: 0rem 0.75rem;
   height: var(--atomic-ipx-button-height, 2.75rem);
   color: var(--atomic-neutral-light);
   background-color: var(--atomic-primary-dark);
   background-image: linear-gradient(315deg, var(--atomic-primary-light) 0%, var(--atomic-primary-dark) 74%);
 }
 
-.btn:before {
-  position: absolute;
-  content: '';
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-}
-
-.btn-span {
-  padding: 0;
+[part='button-icon'] {
+  @apply p-0 inline-block mr-2 w-4 h-4 align-middle relative;
   font-size: 100%;
-  display: inline-block;
-  margin-right: 8px;
-  width: 15px;
-  height: 15px;
-  vertical-align: middle;
-  position: relative;
 }
 
-.svg-open,
-.svg-close {
+[part='ipx-close-icon'],
+[part='ipx-search-icon'] {
+  @apply absolute left-0;
   transition: transform 500ms;
-  position: absolute;
-  left: 0;
 }
 
-.svg-close {
-  transform: translateY(0);
+[part='ipx-search-icon'] {
+  @apply translate-y-0;
 }
 
-.btn-open .svg-close {
-  transform: translateY(50px);
+.btn-open [part='ipx-search-icon'] {
+  @apply translate-y-12;
 }
 
-.svg-open {
-  transform: translateY(50px);
+[part='ipx-close-icon'] {
+  @apply translate-y-12;
 }
 
-.btn-open .svg-open {
-  transform: translateY(0);
+.btn-open [part='ipx-close-icon'] {
+  @apply translate-y-0;
 }
 
-.buttonText {
-  overflow: hidden;
+[part='button-text'] {
+  @apply overflow-hidden;
   max-width: 100px;
 }

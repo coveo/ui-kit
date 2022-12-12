@@ -36,24 +36,20 @@ export class AtomicIPXButton {
       <Button
         style="primary"
         part="ipx-button"
-        class="my-2 btn"
+        class="my-2"
         onClick={() => this.onClick()}
       >
-        <span class="btn-span" part="button-icon">
+        <span part="button-icon">
           <atomic-icon
-            class="svg-open"
             part="ipx-close-icon"
             icon={this.getIcon(CloseIcon)}
           ></atomic-icon>
           <atomic-icon
-            class="svg-close"
             part="ipx-search-icon"
             icon={this.getIcon(SearchIcon)}
           ></atomic-icon>
         </span>
-        <span class="buttonText" part="button-text">
-          {this.label}
-        </span>
+        <span part="button-text">{this.label}</span>
       </Button>
     );
   }
