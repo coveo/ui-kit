@@ -4,7 +4,7 @@ import {
   ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {h} from '@stencil/core';
-import {isElementNode, isVisualNode} from '../../../utils/utils';
+import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import {isResultSectionNode} from '../layout/sections';
 
@@ -17,7 +17,13 @@ interface ResultTemplateCommonProps {
   setError: (error: Error) => void;
 }
 
-export function getTemplateNodeType(node: Node) {
+type TemplateNodeType =
+  | 'section'
+  | 'metadata'
+  | 'table-column-definition'
+  | 'other';
+
+export function getTemplateNodeType(node: Node): TemplateNodeType {
   if (isResultSectionNode(node)) {
     return 'section';
   }
@@ -33,18 +39,8 @@ export function getTemplateNodeType(node: Node) {
   return 'other';
 }
 
-function separateSectionAndNonSectionNodes(nodes: NodeList) {
-  const sectionNodes: Node[] = [];
-  const otherNodes: Node[] = [];
-  for (const node of Array.from(nodes)) {
-    const nodeType = getTemplateNodeType(node);
-    if (nodeType === 'section') {
-      sectionNodes.push(node);
-    } else if (nodeType === 'other') {
-      otherNodes.push(node);
-    }
-  }
-  return {sectionNodes, otherNodes};
+function groupNodesByType(nodes: NodeList) {
+  return aggregate(Array.from(nodes), (node) => getTemplateNodeType(node));
 }
 
 export class ResultTemplateCommon {
@@ -107,10 +103,10 @@ export class ResultTemplateCommon {
       );
     }
 
-    const {sectionNodes, otherNodes} = separateSectionAndNonSectionNodes(
+    const {section: sectionNodes, other: otherNodes} = groupNodesByType(
       template.content.childNodes
     );
-    if (sectionNodes.length && otherNodes.length) {
+    if (sectionNodes?.length && otherNodes?.length) {
       console.warn(
         'Result templates should only contain section elements or non-section elements. Future updates could unpredictably affect this result template.',
         host,

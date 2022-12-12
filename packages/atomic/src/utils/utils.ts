@@ -234,3 +234,17 @@ export function isAncestorOf(
   const parent = getParent(element);
   return parent === null ? false : isAncestorOf(ancestor, parent);
 }
+
+export function aggregate<V, K extends PropertyKey>(
+  values: V[],
+  getKey: (value: V, index: number) => K
+): Record<K, V[] | undefined> {
+  return values.reduce((aggregatedValues, value, i) => {
+    const key = getKey(value, i);
+    if (!(key in aggregatedValues)) {
+      aggregatedValues[key] = [];
+    }
+    aggregatedValues[key]!.push(value);
+    return aggregatedValues;
+  }, <Record<K, V[] | undefined>>{});
+}
