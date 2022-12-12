@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
+import CloseIcon from '../../../images/close.svg';
 import {popoverClass} from '../../search/facets/atomic-popover/popover-type';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';

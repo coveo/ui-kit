@@ -13,7 +13,7 @@ import {
   FacetConditionsManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
-import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
+import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import {
   FocusTarget,
   FocusTargetController,
