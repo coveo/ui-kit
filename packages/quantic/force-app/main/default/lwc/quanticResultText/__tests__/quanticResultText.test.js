@@ -34,7 +34,16 @@ function createTestComponent(options = defaultOptions) {
   return element;
 }
 
+// Helper function to wait until the microtask queue is empty.
+function flushPromises() {
+  // eslint-disable-next-line @lwc/lwc/no-async-operation
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
 describe('c-quantic-result-text', () => {
+  let mockedConsoleError;
+  let isStringMock;
+
   function cleanup() {
     // The jsdom instance is shared across test cases in a single file so reset the DOM
     while (document.body.firstChild) {
@@ -43,14 +52,26 @@ describe('c-quantic-result-text', () => {
     jest.clearAllMocks();
   }
 
+  beforeEach(() => {
+    mockedConsoleError = jest.fn();
+    isStringMock = jest.fn().mockReturnValue(true);
+    console.error = mockedConsoleError;
+    // @ts-ignore
+    global.Bueno = {
+      isString: isStringMock,
+    };
+  });
+
   afterEach(() => {
     cleanup();
   });
 
   describe('when no result is given', () => {
-    it('should show an error', () => {
+    it('should show an error', async () => {
       // @ts-ignore
       const element = createTestComponent({field: exampleField});
+      await flushPromises();
+
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
@@ -58,9 +79,13 @@ describe('c-quantic-result-text', () => {
   });
 
   describe('when no field is given', () => {
-    it('should show an error', () => {
+    it('should show an error', async () => {
+      isStringMock.mockReturnValue(false);
+
       // @ts-ignore
       const element = createTestComponent({result: exampleResult});
+      await flushPromises();
+
       const errorMessage = element.shadowRoot.querySelector(errorSelector);
 
       expect(errorMessage).not.toBeNull();
