@@ -73,6 +73,12 @@ export default class QuanticResultQuickview extends LightningElement {
    * @defaultValue `'search'`
    */
   @api useCase = 'search';
+  /**
+   * @api
+   * @type {boolean}
+   * The label displayed in the tooltip of the quiick view button.
+   */
+  @api tooltip;
 
   /** @type {QuickviewState} */
   @track state;
@@ -87,6 +93,8 @@ export default class QuanticResultQuickview extends LightningElement {
   headless;
   /** @type {boolean} */
   isFirstPreviewRender = true;
+  /** @type {string} */
+  resultActionOrderClasses;
 
   labels = {
     close,
@@ -103,6 +111,18 @@ export default class QuanticResultQuickview extends LightningElement {
       .catch((error) => {
         console.error(error.message);
       });
+
+    const resultActionRegister = new CustomEvent(
+      'quantic__resultactionregister',
+      {
+        bubbles: true,
+        composed: true,
+        detail: {
+          applyCssOrderClass: this.applyCssOrderClass,
+        },
+      }
+    );
+    this.dispatchEvent(resultActionRegister);
   }
 
   renderedCallback() {
@@ -225,6 +245,7 @@ export default class QuanticResultQuickview extends LightningElement {
       this.previewButtonVariant
         ? `slds-button_${this.previewButtonVariant}`
         : 'quickview__button-base',
+      this.resultActionOrderClasses,
     ].join(' ');
   }
 
@@ -313,5 +334,31 @@ export default class QuanticResultQuickview extends LightningElement {
       },
     });
     this.dispatchEvent(resultPreviewEvent);
+  }
+
+  /**
+   * Applies the proper CSS order class.
+   * This method is inspired from how the lightning-button-group component works:
+   * https://github.com/salesforce/base-components-recipes/blob/master/force-app/main/default/lwc/buttonGroup/buttonGroup.js
+   * @param {'first' | 'middle' | 'last'} order
+   */
+     applyCssOrderClass = (order) => {
+      const commonButtonClass = 'result-action_button';
+      let orderClass = '';
+  
+      if (order === 'first') {
+        orderClass = 'result-action_first';
+      } else if (order === 'middle') {
+        orderClass = 'result-action_middle';
+      } else if (order === 'last') {
+        orderClass = 'result-action_last';
+      }
+      this.resultActionOrderClasses = orderClass
+        ? `${commonButtonClass} ${orderClass}`
+        : commonButtonClass;
+    };
+
+  get buttonTitle() {
+    return this.tooltip ? null : this.buttonLabel;
   }
 }
