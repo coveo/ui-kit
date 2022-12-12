@@ -236,7 +236,7 @@ export function isAncestorOf(
 }
 
 export function aggregate<V, K extends PropertyKey>(
-  values: V[],
+  values: readonly V[],
   getKey: (value: V, index: number) => K
 ): Record<K, V[] | undefined> {
   return values.reduce((aggregatedValues, value, i) => {
