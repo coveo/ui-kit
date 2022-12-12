@@ -44,12 +44,10 @@ export function execute(command, args = []) {
     proc.on('exit', (code) =>
       code === 0
         ? resolve(trimNewline(dataBuffer.toString('utf8')))
-        : reject(
-            JSON.stringify({
-              code,
-              error: trimNewline(errorBuffer.toString('utf8')),
-            })
-          )
+        : reject({
+            code,
+            error: trimNewline(errorBuffer.toString('utf8')),
+          })
     );
   });
 }

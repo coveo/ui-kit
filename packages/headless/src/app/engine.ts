@@ -13,9 +13,11 @@ import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
+  UpdateAnalyticsConfigurationActionCreatorPayload,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
 import {SearchParametersState} from '../state/search-app-state';
+import {doNotTrack} from '../utils/utils';
 import {analyticsMiddleware} from './analytics-middleware';
 import {EngineConfiguration} from './engine-configuration';
 import {LoggerOptions} from './logger';
@@ -136,6 +138,22 @@ export interface ExternalEngineOptions<State extends object> {
   loggerOptions?: LoggerOptions;
 }
 
+function getUpdateAnalyticsConfigurationPayload(
+  options: EngineOptions<ReducersMapObject>,
+  logger: Logger
+): UpdateAnalyticsConfigurationActionCreatorPayload | null {
+  const {analyticsClientMiddleware: _, ...payload} =
+    options.configuration.analytics ?? {};
+  if (doNotTrack()) {
+    logger.info('Analytics disabled since doNotTrack is active.');
+    return {
+      ...payload,
+      enabled: false,
+    };
+  }
+  return options.configuration.analytics ? payload : null;
+}
+
 export function buildEngine<
   Reducers extends ReducersMapObject,
   ExtraArguments extends ThunkExtraArguments
@@ -144,8 +162,7 @@ export function buildEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
-  const {accessToken, organizationId, platformUrl, analytics} =
-    options.configuration;
+  const {accessToken, organizationId, platformUrl} = options.configuration;
 
   engine.dispatch(
     updateBasicConfiguration({
@@ -155,9 +172,12 @@ export function buildEngine<
     })
   );
 
-  if (analytics) {
-    const {analyticsClientMiddleware, ...rest} = analytics;
-    engine.dispatch(updateAnalyticsConfiguration(rest));
+  const analyticsPayload = getUpdateAnalyticsConfigurationPayload(
+    options,
+    engine.logger
+  );
+  if (analyticsPayload) {
+    engine.dispatch(updateAnalyticsConfiguration(analyticsPayload));
   }
 
   return engine;

@@ -215,6 +215,8 @@ export namespace Components {
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
+        "max"?: string;
+        "min"?: string;
     }
     interface AtomicFacetManager {
         /**
@@ -681,6 +683,22 @@ export namespace Components {
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+    }
+    interface AtomicIpxTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active": boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label": string;
+    }
+    interface AtomicIpxTabs {
     }
     interface AtomicLayoutSection {
         /**
@@ -1714,6 +1732,14 @@ export namespace Components {
          */
         "label": string;
         /**
+          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
+         */
+        "max"?: string;
+        /**
+          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
+         */
+        "min"?: string;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
@@ -2027,6 +2053,18 @@ declare global {
     var HTMLAtomicIpxRefineToggleElement: {
         prototype: HTMLAtomicIpxRefineToggleElement;
         new (): HTMLAtomicIpxRefineToggleElement;
+    };
+    interface HTMLAtomicIpxTabElement extends Components.AtomicIpxTab, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxTabElement: {
+        prototype: HTMLAtomicIpxTabElement;
+        new (): HTMLAtomicIpxTabElement;
+    };
+    interface HTMLAtomicIpxTabsElement extends Components.AtomicIpxTabs, HTMLStencilElement {
+    }
+    var HTMLAtomicIpxTabsElement: {
+        prototype: HTMLAtomicIpxTabsElement;
+        new (): HTMLAtomicIpxTabsElement;
     };
     interface HTMLAtomicLayoutSectionElement extends Components.AtomicLayoutSection, HTMLStencilElement {
     }
@@ -2505,6 +2543,8 @@ declare global {
         "atomic-ipx-layout": HTMLAtomicIpxLayoutElement;
         "atomic-ipx-refine-modal": HTMLAtomicIpxRefineModalElement;
         "atomic-ipx-refine-toggle": HTMLAtomicIpxRefineToggleElement;
+        "atomic-ipx-tab": HTMLAtomicIpxTabElement;
+        "atomic-ipx-tabs": HTMLAtomicIpxTabsElement;
         "atomic-layout-section": HTMLAtomicLayoutSectionElement;
         "atomic-load-more-children-results": HTMLAtomicLoadMoreChildrenResultsElement;
         "atomic-load-more-results": HTMLAtomicLoadMoreResultsElement;
@@ -2763,6 +2803,8 @@ declare namespace LocalJSX {
         "filter": DateFilter;
         "filterState": DateFilterState;
         "label": string;
+        "max"?: string;
+        "min"?: string;
         "onAtomic/dateInputApply"?: (event: AtomicFacetDateInputCustomEvent<any>) => void;
     }
     interface AtomicFacetManager {
@@ -3209,6 +3251,22 @@ declare namespace LocalJSX {
         "openButton"?: HTMLElement;
     }
     interface AtomicIpxRefineToggle {
+    }
+    interface AtomicIpxTab {
+        /**
+          * Whether this tab is active upon rendering. If multiple tabs are set to active on render, the last one to be rendered will override the others.
+         */
+        "active"?: boolean;
+        /**
+          * The expression that will be passed to the search as a `cq` paramenter upon being selected.
+         */
+        "expression": string;
+        /**
+          * The label that will be shown to the user.
+         */
+        "label"?: string;
+    }
+    interface AtomicIpxTabs {
     }
     interface AtomicLayoutSection {
         /**
@@ -4202,6 +4260,14 @@ declare namespace LocalJSX {
          */
         "label"?: string;
         /**
+          * The latest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `max` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#max).
+         */
+        "max"?: string;
+        /**
+          * The earliest date to accept from user input when the `withDatepicker` option is enabled.  This value must be a valid date string in the format `YYYY-MM-DD`.  If this format is not respected, the date picker ignores this property, behaving as if no `min` value had been set.  See also [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date#min).
+         */
+        "min"?: string;
+        /**
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
@@ -4251,6 +4317,8 @@ declare namespace LocalJSX {
         "atomic-ipx-layout": AtomicIpxLayout;
         "atomic-ipx-refine-modal": AtomicIpxRefineModal;
         "atomic-ipx-refine-toggle": AtomicIpxRefineToggle;
+        "atomic-ipx-tab": AtomicIpxTab;
+        "atomic-ipx-tabs": AtomicIpxTabs;
         "atomic-layout-section": AtomicLayoutSection;
         "atomic-load-more-children-results": AtomicLoadMoreChildrenResults;
         "atomic-load-more-results": AtomicLoadMoreResults;
@@ -4373,6 +4441,8 @@ declare module "@stencil/core" {
             "atomic-ipx-layout": LocalJSX.AtomicIpxLayout & JSXBase.HTMLAttributes<HTMLAtomicIpxLayoutElement>;
             "atomic-ipx-refine-modal": LocalJSX.AtomicIpxRefineModal & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineModalElement>;
             "atomic-ipx-refine-toggle": LocalJSX.AtomicIpxRefineToggle & JSXBase.HTMLAttributes<HTMLAtomicIpxRefineToggleElement>;
+            "atomic-ipx-tab": LocalJSX.AtomicIpxTab & JSXBase.HTMLAttributes<HTMLAtomicIpxTabElement>;
+            "atomic-ipx-tabs": LocalJSX.AtomicIpxTabs & JSXBase.HTMLAttributes<HTMLAtomicIpxTabsElement>;
             "atomic-layout-section": LocalJSX.AtomicLayoutSection & JSXBase.HTMLAttributes<HTMLAtomicLayoutSectionElement>;
             "atomic-load-more-children-results": LocalJSX.AtomicLoadMoreChildrenResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreChildrenResultsElement>;
             "atomic-load-more-results": LocalJSX.AtomicLoadMoreResults & JSXBase.HTMLAttributes<HTMLAtomicLoadMoreResultsElement>;

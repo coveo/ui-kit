@@ -468,4 +468,12 @@
       <label>Aucun filtre disponible pour cette requête dans l'onglet actuel</label>
       <name>quantic_NoFilterForCurrentTab</name>
     </customLabels>
+    <customLabels>
+      <label>Copier</label>
+      <name>quantic_Copy</name>
+    </customLabels>
+    <customLabels>
+      <label>Copié!</label>
+      <name>quantic_Copied</name>
+    </customLabels>
 </Translations>

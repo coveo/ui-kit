@@ -1,5 +1,5 @@
 {
-  "name": "stencil",
+  "name": "@coveo/atomic-stencil-samples",
   "version": "0.0.0",
   "private": true,
   "scripts": {
