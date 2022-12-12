@@ -889,4 +889,18 @@
       <protected>false</protected>
       <shortDescription>No filters available in the current tab</shortDescription>
     </labels>
+    <labels>
+      <fullName>quantic_Copy</fullName>
+      <value>Copy</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Copy</shortDescription>
+    </labels>
+    <labels>
+      <fullName>quantic_Copied</fullName>
+      <value>Copied!</value>
+      <language>en_US</language>
+      <protected>false</protected>
+      <shortDescription>Copied!</shortDescription>
+    </labels>
 </CustomLabels>

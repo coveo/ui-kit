@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.34.0](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.33.19...@coveo/atomic-angular@1.34.0) (2022-12-09)
+
+### Features
+
+- **atomic:** add support for min and max for atomic-timeframe-facet ([#2596](https://github.com/coveo/ui-kit/issues/2596)) ([0f34acc](https://github.com/coveo/ui-kit/commit/0f34acc1b15c1bcbf27202f4586ae77cb2a76ed5))
+
 ## [1.33.19](https://github.com/coveo/ui-kit/compare/@coveo/atomic-angular@1.33.18...@coveo/atomic-angular@1.33.19) (2022-12-06)
 
 **Note:** Version bump only for package @coveo/atomic-angular
