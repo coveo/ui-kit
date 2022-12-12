@@ -19,7 +19,7 @@ export default class QuanticResultText extends LightningElement {
    * (Optional) The label to display.
    * @api
    * @type {string}
-   * @defaultValue `none`
+   * @defaultValue `undefined`
    */
   @api label;
   /**
@@ -29,10 +29,11 @@ export default class QuanticResultText extends LightningElement {
    */
   @api field;
   /**
-   * A function used to format the displayed value.
+   * The function used to format the displayed value.
    * @api
-   * @type {(result?: string) => string}
-   * @defaultValue `undefined`
+   * @type {Function}
+   * @param {string} value
+   * @returns {string}
    */
   @api formattingFunction;
 
