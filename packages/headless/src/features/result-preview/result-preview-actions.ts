@@ -63,13 +63,15 @@ type UpdateContentURLOptions = HtmlRequestOptions & {
   ) => Promise<HtmlRequest>;
 };
 
+const MAX_GET_LENGTH = 2048;
+
 export const updateContentURL = createAsyncThunk<
   UpdateContentURLActionCreatorPayload,
   UpdateContentURLOptions,
   AsyncThunkGlobalOptions<StateNeededByHtmlEndpoint>
 >(
   'resultPreview/updateContentURL',
-  async (options: UpdateContentURLOptions, {getState}) => {
+  async (options: UpdateContentURLOptions, {getState, extra}) => {
     const state = getState();
     const contentURL = buildContentURL(
       await options.buildResultPreviewRequest(state, {
@@ -78,6 +80,12 @@ export const updateContentURL = createAsyncThunk<
       }),
       options.path
     );
+
+    if (contentURL.length > MAX_GET_LENGTH) {
+      extra.logger.error(
+        `The content URL was truncated as it exceeds the maximum allowed length of ${MAX_GET_LENGTH} characters.`
+      );
+    }
 
     return {
       contentURL: contentURL,
